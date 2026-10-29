@@ -1,0 +1,3 @@
+# Mantém LF em tudo (o StyLua e os scripts esperam LF, mesmo no Windows).
+* text=auto eol=lf
+*.png binary
