@@ -6,8 +6,9 @@ local Workspace = game:GetService("Workspace")
 
 local Palette = require(ReplicatedStorage.Shared.Palette)
 local Theme = require(ReplicatedStorage.Shared.Theme)
+local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 
-local GROUND_SIZE = Vector3.new(256, 2, 256)
+local GROUND_SIZE = Vector3.new(WorldConfig.size, 2, WorldConfig.size)
 
 local WorldService = {}
 
