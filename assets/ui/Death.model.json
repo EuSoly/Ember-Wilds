@@ -2,8 +2,8 @@
   "className": "ScreenGui",
   "properties": {
     "ResetOnSpawn": false,
-    "IgnoreGuiInset": false,
-    "ScreenInsets": "CoreUISafeInsets",
+    "IgnoreGuiInset": true,
+    "ScreenInsets": "None",
     "DisplayOrder": 10,
     "ZIndexBehavior": "Sibling",
     "Enabled": false
@@ -19,8 +19,8 @@
           "className": "Frame",
           "properties": {
             "AnchorPoint": [0.5, 0.5],
-            "Position": { "UDim2": [[0.5, 0], [0.5, 0]] },
-            "Size": { "UDim2": [[0.44, 0], [0.9, 0]] },
+            "Position": { "UDim2": [[0.5, 0], [0.53, 0]] },
+            "Size": { "UDim2": [[0.44, 0], [0.84, 0]] },
             "BackgroundColor3": [0.118, 0.133, 0.188],
             "BackgroundTransparency": 0.15,
             "BorderSizePixel": 0

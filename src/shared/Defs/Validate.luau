@@ -223,15 +223,33 @@ local function isFiniteNumber(value: any): boolean
 	return type(value) == "number" and value == value and value > -math.huge and value < math.huge
 end
 
+local function isWholeNumber(value: any, min: number): boolean
+	return isFiniteNumber(value) and value % 1 == 0 and value >= min
+end
+
+-- order: inteiro ≥ 1 e sem repetir. A ordem decide a posição na tela, e
+-- repetida deixaria a lista instável (depende da ordem da tabela).
+local function checkOrder(errors: { string }, kind: string, key: string, order: any, seen: { [number]: string })
+	if not isWholeNumber(order, 1) then
+		table.insert(errors, `{kind} "{key}": order deve ser inteiro maior ou igual a 1`)
+	elseif seen[order] ~= nil then
+		table.insert(errors, `{kind} "{key}": order {order} repetida (também em "{seen[order]}")`)
+	else
+		seen[order] = key
+	end
+end
+
 local function validateSettings(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	local settings: { [string]: Types.SettingDef }? = (defs :: any).Settings
 	if settings == nil then
 		return
 	end
 
+	local orders: { [number]: string } = {}
 	for key, setting in settings do
 		checkDataId(errors, "Setting", key, setting.id)
 		checkString(errors, "Setting", key, "nameKey", setting.nameKey, hasString)
+		checkOrder(errors, "Setting", key, setting.order, orders)
 		local kind = setting.kind
 		if not table.find(SETTING_KINDS, kind) then
 			table.insert(errors, `Setting "{key}": kind "{kind}" não existe`)
@@ -288,10 +306,6 @@ local function validateSettings(errors: { string }, defs: Types.DefsTables, hasS
 	end
 end
 
-local function isWholeNumber(value: any, min: number): boolean
-	return isFiniteNumber(value) and value % 1 == 0 and value >= min
-end
-
 local function validateKits(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	local kits: { [string]: Types.KitDef }? = (defs :: any).Kits
 	if kits == nil then
@@ -302,15 +316,7 @@ local function validateKits(errors: { string }, defs: Types.DefsTables, hasStrin
 	for key, kit in kits do
 		checkId(errors, "Kit", key, kit.id)
 		checkString(errors, "Kit", key, "nameKey", kit.nameKey, hasString)
-
-		if not isWholeNumber(kit.order, 1) then
-			table.insert(errors, `Kit "{key}": order deve ser inteiro maior ou igual a 1`)
-		elseif orders[kit.order] ~= nil then
-			-- A ordem decide a posição na tela: repetida deixaria a lista instável.
-			table.insert(errors, `Kit "{key}": order {kit.order} repetida (também em "{orders[kit.order]}")`)
-		else
-			orders[kit.order] = key
-		end
+		checkOrder(errors, "Kit", key, kit.order, orders)
 
 		if not isWholeNumber(kit.price, 0) then
 			table.insert(errors, `Kit "{key}": price deve ser inteiro maior ou igual a 0`)

@@ -72,6 +72,7 @@ export type SettingValue = number | boolean | string
 export type SettingDef = {
 	id: string,
 	nameKey: string,
+	order: number, -- posição na tela de configurações (1 = primeira)
 	kind: SettingKind,
 	default: SettingValue,
 	min: number?, -- "number"

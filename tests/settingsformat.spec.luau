@@ -30,6 +30,15 @@ return {
 		assert(SettingsFormat.cycle(def, "ultra", 1) == "auto", "opção desconhecida volta à primeira")
 	end,
 
+	["sorted follows the order field"] = function()
+		local ids: { string } = {}
+		for _, def in SettingsFormat.sorted(Defs.Settings) do
+			table.insert(ids, def.id)
+		end
+		local expected = "music_volume,ambient_volume,effects_volume,ui_scale,quality,left_handed"
+		assert(table.concat(ids, ",") == expected, `ordem: {table.concat(ids, ",")}`)
+	end,
+
 	["display formats each kind"] = function()
 		assert(SettingsFormat.display(Defs.Settings.music_volume, 0.8, fake) == "80%", "número em %")
 		assert(SettingsFormat.display(Defs.Settings.ui_scale, 1.25, fake) == "125%", "escala em %")

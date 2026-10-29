@@ -98,6 +98,7 @@ return table.freeze({
 	["death.playAgain"] = "Jogar de novo",
 	["death.menu"] = "Menu",
 	["death.cause.dev"] = "Teste",
+	["death.cause.fall"] = "Caiu do mapa",
 	["death.cause.unknown"] = "Desconhecida",
 
 	-- Kits iniciais

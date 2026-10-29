@@ -11,6 +11,18 @@ local STEP = 0.1
 
 local SettingsFormat = {}
 
+-- Configurações numa lista, na ordem da tela (campo order).
+function SettingsFormat.sorted(defs: { [string]: SettingDef }): { SettingDef }
+	local list: { SettingDef } = {}
+	for _, def in defs do
+		table.insert(list, def)
+	end
+	table.sort(list, function(a: SettingDef, b: SettingDef): boolean
+		return a.order < b.order
+	end)
+	return list
+end
+
 -- Valor ±0.1, preso a [min, max] e arredondado a 2 casas (evita 0.30000000000000004,
 -- que o servidor aceitaria mas a tela mostraria estranho).
 function SettingsFormat.step(def: SettingDef, value: number, direction: number): number

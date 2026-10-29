@@ -2,8 +2,8 @@
   "className": "ScreenGui",
   "properties": {
     "ResetOnSpawn": false,
-    "IgnoreGuiInset": false,
-    "ScreenInsets": "CoreUISafeInsets",
+    "IgnoreGuiInset": true,
+    "ScreenInsets": "None",
     "DisplayOrder": 10,
     "ZIndexBehavior": "Sibling",
     "Enabled": false
@@ -19,8 +19,8 @@
           "className": "TextLabel",
           "properties": {
             "AnchorPoint": [0.5, 0],
-            "Position": { "UDim2": [[0.5, 0], [0.03, 0]] },
-            "Size": { "UDim2": [[0.5, 0], [0.13, 0]] },
+            "Position": { "UDim2": [[0.5, 0], [0.08, 0]] },
+            "Size": { "UDim2": [[0.46, 0], [0.12, 0]] },
             "BackgroundTransparency": 1,
             "Text": "Ember Wilds",
             "TextColor3": [1, 0.541, 0.122],
@@ -38,8 +38,8 @@
           "className": "TextLabel",
           "properties": {
             "AnchorPoint": [1, 0],
-            "Position": { "UDim2": [[0.98, 0], [0.03, 0]] },
-            "Size": { "UDim2": [[0.24, 0], [0.07, 0]] },
+            "Position": { "UDim2": [[0.98, 0], [0, 64]] },
+            "Size": { "UDim2": [[0.2, 0], [0.065, 0]] },
             "BackgroundColor3": [0.118, 0.133, 0.188],
             "BackgroundTransparency": 0.15,
             "BorderSizePixel": 0,
@@ -59,8 +59,8 @@
           "className": "Frame",
           "properties": {
             "AnchorPoint": [0.5, 0.5],
-            "Position": { "UDim2": [[0.5, 0], [0.57, 0]] },
-            "Size": { "UDim2": [[0.42, 0], [0.7, 0]] },
+            "Position": { "UDim2": [[0.5, 0], [0.6, 0]] },
+            "Size": { "UDim2": [[0.42, 0], [0.68, 0]] },
             "BackgroundColor3": [0.118, 0.133, 0.188],
             "BackgroundTransparency": 0.15,
             "BorderSizePixel": 0

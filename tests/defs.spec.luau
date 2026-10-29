@@ -56,6 +56,7 @@ local function validDataDefs(): any
 			music_volume = {
 				id = "music_volume",
 				nameKey = "setting.music_volume",
+				order = 1,
 				kind = "number",
 				default = 0.8,
 				min = 0,
@@ -64,11 +65,18 @@ local function validDataDefs(): any
 			quality = {
 				id = "quality",
 				nameKey = "setting.quality",
+				order = 2,
 				kind = "choice",
 				default = "auto",
 				options = { "auto", "low" },
 			},
-			left_handed = { id = "left_handed", nameKey = "setting.left_handed", kind = "boolean", default = false },
+			left_handed = {
+				id = "left_handed",
+				nameKey = "setting.left_handed",
+				order = 3,
+				kind = "boolean",
+				default = false,
+			},
 		},
 	}
 end
@@ -427,6 +435,28 @@ return {
 		defs.Kits.kit_b.items = {}
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "items"), `faltou erro de items: {table.concat(errors, "; ")}`)
+	end,
+
+	["settings with repeated order is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.left_handed.order = 1
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "order"), `faltou erro de order: {table.concat(errors, "; ")}`)
+	end,
+
+	["setting without a whole order is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.quality.order = nil
+		defs.Settings.left_handed.order = 2.5
+		local errors = Validate.all(defs, alwaysHas)
+		assert(
+			containsError(errors, `Setting "quality": order`),
+			`faltou erro de quality: {table.concat(errors, "; ")}`
+		)
+		assert(
+			containsError(errors, `Setting "left_handed": order`),
+			`faltou erro de left_handed: {table.concat(errors, "; ")}`
+		)
 	end,
 
 	["boolean setting needs a boolean default"] = function()

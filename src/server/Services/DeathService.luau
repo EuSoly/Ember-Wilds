@@ -1,13 +1,21 @@
 --!strict
 -- A função única de morte (kill). Toda morte de jogador passa por aqui: as
--- fases G chamam ao matar; o comando de dev DevEndLife também; e qualquer
--- morte do Humanoid que não veio daqui (ex. cair fora do mapa) é trazida para
--- cá com a causa "death.cause.unknown" — nunca fica um corpo parado sem tela.
+-- fases G chamam ao matar; o comando de dev DevEndLife também; qualquer morte
+-- do Humanoid que não veio daqui é trazida para cá com a causa
+-- "death.cause.unknown"; e a queda do mapa vira "death.cause.fall" (abaixo) —
+-- nunca fica um corpo parado sem tela.
 --
 -- A morte: fim de vida da F4 (pontos → Golden Ember, estatísticas), guarda os
 -- pontos para comprar kit (KitPoints), zera o inventário e tira a mochila (no
 -- Starve a morte perde tudo), remove o personagem e manda ao jogador o resumo
 -- (Net.LifeEnded) para a tela de morte. Quem renasce é o SpawnService, a pedido.
+--
+-- Queda do mapa: ao passar de Workspace.FallenPartsDestroyHeight, o Roblox
+-- apaga o HumanoidRootPart SEM matar o Humanoid e sem disparar Died (visto no
+-- Studio: vida 100, estado Freefall, sem raiz). O Died sozinho deixaria o
+-- jogador preso sem corpo e sem tela de morte. Por isso um laço único confere
+-- os personagens a cada FALL_CHECK_INTERVAL e mata quem está sem raiz ou
+-- abaixo de WorldConfig.KILL_Y (antes de o Roblox apagar a raiz).
 --
 -- Futuro (spec F5, não-objetivos): revive por Robux — pagar para voltar com os
 -- mesmos itens. Para caber, a morte poderia guardar o inventário da morte por
@@ -16,11 +24,14 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
 local Net = require(script.Parent.Parent.Net)
 
 local UNKNOWN_CAUSE = "death.cause.unknown"
+local FALL_CAUSE = "death.cause.fall"
+local FALL_CHECK_INTERVAL = 0.25 -- segundos
 -- Limites do contrato LifeEnded (net/game.blink): Days u16, Points u32, Currency u16.
 local MAX_U16 = 65535
 local MAX_U32 = 4294967295
@@ -84,11 +95,42 @@ local function setupPlayer(player: Player)
 	end
 end
 
+-- true se o personagem atual caiu do mapa: sem raiz (o Roblox já a apagou) ou
+-- com a raiz abaixo de KILL_Y.
+local function hasFallen(character: Model): boolean
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if root == nil or not root:IsA("BasePart") then
+		return true
+	end
+	return root.Position.Y < WorldConfig.KILL_Y
+end
+
+local function checkFalls()
+	for _, player in Players:GetPlayers() do
+		local character = player.Character
+		-- Só personagens já montados: logo depois do CharacterAdded a raiz pode
+		-- ainda não estar dentro do modelo (Humanoid é o sinal de que montou).
+		if character and character.Parent and character:FindFirstChildOfClass("Humanoid") then
+			if hasFallen(character) then
+				DeathService.kill(player, FALL_CAUSE)
+			end
+		end
+	end
+end
+
 function DeathService.Start(_self)
 	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)
 	end
+
+	-- Uma thread só para todos os jogadores.
+	task.spawn(function()
+		while true do
+			task.wait(FALL_CHECK_INTERVAL)
+			checkFalls()
+		end
+	end)
 end
 
 return DeathService

@@ -1,6 +1,6 @@
 --!strict
 -- Configurações (molde Settings): janela por cima do menu e do jogo. Uma linha
--- por configuração de Defs.Settings (ordem alfabética do id), clonando o molde
+-- por configuração de Defs.Settings (na ordem do campo order), clonando o molde
 -- do tipo: SettingRowNumber, SettingRowBoolean ou SettingRowChoice. Configuração
 -- nova num update aparece sozinha.
 --
@@ -120,13 +120,8 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 
 	local list = Template.find(gui, "List", "GuiObject")
 	if list then
-		local ids: { string } = {}
-		for id in Defs.Settings do
-			table.insert(ids, id)
-		end
-		table.sort(ids)
-		for order, id in ids do
-			buildRow(list, Defs.Settings[id], order)
+		for _, def in SettingsFormat.sorted(Defs.Settings) do
+			buildRow(list, def, def.order)
 		end
 	end
 
