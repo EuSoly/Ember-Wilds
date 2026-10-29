@@ -72,6 +72,16 @@ return table.freeze({
 	-- tremulação em cada uma.
 	FireLightTag = "FireLight",
 
+	-- Sobrevivência (G1).
+	-- Id do item de armadura vestido (category "armor"), ou nil; atributo no
+	-- Player (escrito pelo ArmorService).
+	Armor = "Armor",
+	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
+	-- o frio sobe (SurvivalService).
+	HeatSourceTag = "HeatSource",
+	-- Raio do calor (studs), atributo no modelo com a tag HeatSource.
+	HeatRadius = "HeatRadius",
+
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
 	WarningFraction = 0.35,

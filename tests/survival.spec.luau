@@ -1,6 +1,7 @@
 --!strict
 local ArmorRules = require("../src/shared/Survival/ArmorRules")
 local SurvivalConfig = require("../src/shared/SurvivalConfig")
+local Strings = require("../src/shared/Strings")
 local SurvivalRules = require("../src/shared/Survival/SurvivalRules")
 
 local function near(a: number, b: number): boolean
@@ -165,6 +166,12 @@ return {
 			local r = SurvivalRules.step(SurvivalRules.full(), ctx(), dt)
 			expect("fome", r.bars.hunger, 100)
 			expect("dano", r.damage, 0)
+		end
+	end,
+
+	["cause keys exist in strings"] = function()
+		for cause, key in SurvivalRules.CAUSE_KEYS do
+			assert(Strings.has(key), `falta o texto {key} da causa {cause}`)
 		end
 	end,
 
