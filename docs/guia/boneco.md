@@ -41,7 +41,7 @@ Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService
 | `src/client/Boneco/BonecoModel.luau` | Monta o boneco visual (peças, cores, olhos, ferramenta, nome) |
 | `src/client/Boneco/BonecoRenderer.luau` | O loop que segue, anima e troca expressões de todos os bonecos |
 | `src/server/Services/CharacterService.luau` | `StarterCharacter`, tag, `hurt` (a função única de dano) |
-| `src/server/Services/CosmeticService.luau` | Skin equipada de cada jogador |
+| `src/server/Services/CosmeticService.luau` | Posse e skin equipada de cada jogador (salvas no perfil) |
 | `src/server/Services/DevBonecoService.luau` | Comandos de teste (só no Studio) |
 | `src/character/` | `Animate` e `Health` vazios, para o Roblox não colocar os scripts padrão |
 
@@ -130,6 +130,10 @@ Pronto. A validação no boot confere o id, o slot, as cores (`#RRGGBB`) e o tex
 
 Se uma skin for removida num update e alguém ainda estiver com ela, o boneco usa a skin padrão do slot (`CosmeticSlots.body.default`) e aparece um aviso no Output.
 
+### Skin salva no perfil
+
+A skin equipada e as skins que o jogador possui ficam no **perfil salvo** (`Cosmetics.Equipped` e `Cosmetics.Owned`, veja `dados.md`). Quando o perfil carrega, o `CosmeticService` aplica a skin salva, mas só se ela ainda existe, é do slot certo e o jogador a possui. Senão usa a padrão. A skin padrão de cada slot conta como possuída sempre. Equipar uma skin que o jogador não possui falha (`equip` devolve `false`). Até a loja (F5), a posse vem do comando `DevGrantCosmetic`.
+
 ## Adicionar uma expressão
 
 Uma entrada em `src/shared/Defs/Expressions.luau`. Fica ativa a de **maior prioridade** entre as que estão valendo agora (`hurt` 100 > `blink` 10 > `neutral` 0).
@@ -168,8 +172,9 @@ local SS = game:GetService("ServerStorage")
 local player = game.Players:GetPlayers()[1]
 
 SS.DevHurt:Invoke(player, 10) -- dano: "> <", flash vermelho e -10 de vida
-print(SS.DevCosmetic:Invoke(player, "body_ember")) -- troca a skin (false se o id não existe)
-SS.DevCosmetic:Invoke(player, "body_default") -- volta à padrão
+SS.DevGrantCosmetic:Invoke(player, "body_ember") -- dá a posse (DevDataService); sem isso a troca falha
+print(SS.DevCosmetic:Invoke(player, "body_ember")) -- troca a skin e salva (false se não existe ou não possui)
+SS.DevCosmetic:Invoke(player, "body_default") -- volta à padrão (sempre possuída)
 print(SS.DevCrowd:Invoke(30)) -- 30 bonecos de teste em círculo em volta de (0, 0, 40)
 SS.DevCrowd:Invoke(0) -- apaga os bonecos de teste
 ```
