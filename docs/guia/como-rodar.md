@@ -5,7 +5,8 @@
 1. Instale o [Rokit](https://github.com/rojo-rbx/rokit).
 2. Na raiz do repo: `rokit install` (baixa Rojo 7.7.1, Wally, selene, StyLua, luau-lsp, Blink e Lune nas versões do `rokit.toml`).
 3. No Git Bash, coloque as ferramentas no PATH: `export PATH="$HOME/.rokit/bin:$PATH"` (vale pôr no `~/.bashrc`).
-4. No Studio, instale o plugin do Rojo.
+4. Instale os pacotes Luau (Vide etc.): `wally install` (o `scripts/check.sh` faz isso sozinho se a pasta `Packages/` não existir).
+5. No Studio, instale o plugin do Rojo.
 
 ## No dia a dia
 

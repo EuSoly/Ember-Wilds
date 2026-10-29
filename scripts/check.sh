@@ -6,6 +6,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$HOME/.rokit/bin:$PATH"
 
+if [ ! -d Packages ]; then
+	echo "== Wally (instalando pacotes)"
+	wally install
+fi
+
 echo "== StyLua (formatação)"
 stylua --check src tests
 
@@ -18,6 +23,7 @@ rojo build -o build/check.rbxlx
 
 echo "== luau-lsp (tipos)"
 rojo sourcemap default.project.json -o sourcemap.json
+wally-package-types --sourcemap sourcemap.json Packages/ > /dev/null
 DEFS=.luau-lsp/globalTypes.d.luau
 if [ ! -f "$DEFS" ]; then
 	mkdir -p .luau-lsp

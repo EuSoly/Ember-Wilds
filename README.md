@@ -13,6 +13,7 @@ Survival multiplayer top-down para Roblox, inspirado no Starve.io. Projeto Rojo 
 
 ```bash
 rokit install          # instala as ferramentas do projeto
+wally install          # instala os pacotes Luau (Vide)
 bash scripts/check.sh  # formatação, lint, build, tipos e testes
 rojo serve             # depois conecte pelo plugin do Rojo no Studio
 ```
