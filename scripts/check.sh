@@ -16,6 +16,9 @@ if [ ! -d Packages ]; then
 	FRESH_PACKAGES=1
 fi
 
+echo "== Blink (gerando código de rede)"
+blink net/game > /dev/null
+
 echo "== StyLua (formatação)"
 stylua --check src tests
 

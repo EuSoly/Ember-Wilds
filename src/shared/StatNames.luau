@@ -13,6 +13,10 @@ return table.freeze({
 	Score = "Score",
 	Rank = "Rank",
 
+	-- Id do item da mochila vestida (ex.: "leather_bag"), ou nil sem mochila; atributo no Player.
+	-- A capacidade do inventário vem da mochila (ver InventoryService.equipBag).
+	Bag = "Bag",
+
 	-- Instante (GetServerTimeNow) em que o ciclo de dia começou, atributo no Workspace
 	CycleStart = "CycleStart",
 

@@ -14,6 +14,16 @@ local Items: { [string]: ItemDef } = {
 	-- Comida
 	berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255 },
 
+	-- Mochilas (vestidas, não ocupam slot; dão bagSlots slots a mais).
+	-- Para uma mochila maior num update, é só adicionar outra entrada aqui.
+	leather_bag = {
+		id = "leather_bag",
+		nameKey = "item.leather_bag",
+		category = "bag",
+		maxStack = 1,
+		bagSlots = 6,
+	},
+
 	-- Ferramentas
 	wood_pickaxe = {
 		id = "wood_pickaxe",

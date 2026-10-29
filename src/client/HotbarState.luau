@@ -1,37 +1,29 @@
 --!strict
--- Estado da hotbar no cliente: o que tem em cada slot e qual está selecionado.
---
--- POR ENQUANTO os itens são fixos, só para a hotbar ter o que mostrar.
--- Na Fase 3 `slots` passa a vir do inventário do servidor (snapshot + deltas)
--- e a seleção passa a ser enviada ao servidor.
+-- Estado da hotbar no cliente: os 10 primeiros slots do inventário e qual está
+-- selecionado. Selecionar avisa o servidor (que mostra o item na mão).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local InventoryConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("InventoryConfig"))
+local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
+local Net = require(script.Parent:WaitForChild("Net"))
 
-export type Slot = { id: string, count: number }
-
-local SLOT_COUNT = 10
+local SLOT_COUNT = InventoryConfig.HOTBAR_SLOTS
 
 local HotbarState = {}
 
 HotbarState.SLOT_COUNT = SLOT_COUNT
 
--- Itens de teste (índice = slot).
-local testSlots: { [number]: Slot } = {
-	[1] = { id = "wood", count = 24 },
-	[2] = { id = "stone", count = 12 },
-	[3] = { id = "berry", count = 8 },
-	[4] = { id = "wood_pickaxe", count = 1 },
-}
-
-HotbarState.slots = vide.source(testSlots)
+-- A hotbar são os slots 1 a 10 do inventário.
+HotbarState.slots = InventoryState.slots
 
 -- Slot selecionado (1 a 10).
 HotbarState.selected = vide.source(1)
 
 function HotbarState.select(index: number)
-	if index >= 1 and index <= SLOT_COUNT then
+	if index >= 1 and index <= SLOT_COUNT and index ~= vide.untrack(HotbarState.selected) then
 		HotbarState.selected(index)
+		Net.SelectSlot.Fire(index)
 	end
 end
 

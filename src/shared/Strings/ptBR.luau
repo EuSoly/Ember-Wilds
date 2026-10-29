@@ -32,6 +32,7 @@ return table.freeze({
 	["item.stone"] = "Pedra",
 	["item.gold"] = "Ouro",
 	["item.berry"] = "Frutinha",
+	["item.leather_bag"] = "Mochila de Couro",
 	["item.wood_pickaxe"] = "Picareta de Madeira",
 	["item.stone_pickaxe"] = "Picareta de Pedra",
 	["item.gold_pickaxe"] = "Picareta de Ouro",

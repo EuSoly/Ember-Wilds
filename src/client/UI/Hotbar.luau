@@ -1,6 +1,8 @@
 --!strict
--- Hotbar de 10 slots (embaixo, no centro). O slot selecionado ganha borda laranja.
--- Seleciona tocando/clicando no slot ou pelas teclas 1 … 0 (InputActions Slot1 … Slot10).
+-- Hotbar de 10 slots (embaixo, no centro): os slots 1–10 do inventário.
+-- O slot selecionado ganha borda laranja. Seleciona tocando/clicando no slot ou
+-- pelas teclas 1 … 0 (InputActions Slot1 … Slot10). Mover itens é arrastando
+-- (veja DragState).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -9,53 +11,11 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local InputNames = require(Shared:WaitForChild("InputNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local HotbarState = require(script.Parent.Parent:WaitForChild("HotbarState"))
-local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
+local SlotButton = require(script.Parent:WaitForChild("SlotButton"))
 
 local create = vide.create
 
-local SELECTED_STROKE = 2
-
-local function Slot(index: number): TextButton
-	local isSelected = vide.derive(function()
-		return HotbarState.selected() == index
-	end)
-	local item = vide.derive(function()
-		return HotbarState.slots()[index]
-	end)
-
-	return create("TextButton")({
-		Name = `Slot{index}`,
-		LayoutOrder = index,
-		Text = "",
-		AutoButtonColor = false,
-		Size = UDim2.fromScale(0.09, 1),
-		BackgroundColor3 = function()
-			return if isSelected() then Theme.ui.panelRaised else Theme.ui.panel
-		end,
-		BackgroundTransparency = Theme.panelTransparency,
-		BorderSizePixel = 0,
-		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
-		-- Escala com a tela, mas nunca menor que o mínimo de toque nem gigante em 1080p.
-		create("UISizeConstraint")({ MinSize = Theme.slotMinSize, MaxSize = Theme.slotMaxSize }),
-		create("UICorner")({ CornerRadius = Theme.slotCorner }),
-		create("UIStroke")({
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			Color = function()
-				return if isSelected() then Theme.ui.action else Theme.ui.border
-			end,
-			Thickness = function()
-				return if isSelected() then SELECTED_STROKE else Theme.strokeThickness
-			end,
-		}),
-		Activated = function()
-			HotbarState.select(index)
-		end,
-		-- Ícone do item (ou nada, se o slot está vazio).
-		vide.show(item, function(current)
-			return ItemIcon({ item = current })
-		end),
-	}) :: TextButton
-end
+local SLOT_WIDTH = 0.09 -- fração da largura da hotbar
 
 -- Liga as teclas 1 … 0: cada InputAction SlotN seleciona o slot N.
 local function bindSlotKeys()
@@ -77,7 +37,7 @@ local function Hotbar(above: { Instance }?): Frame
 
 	local slots = {}
 	for index = 1, HotbarState.SLOT_COUNT do
-		table.insert(slots, Slot(index))
+		table.insert(slots, SlotButton({ index = index, Size = UDim2.fromScale(SLOT_WIDTH, 1) }))
 	end
 
 	return create("Frame")({

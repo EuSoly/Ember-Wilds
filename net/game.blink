@@ -1,0 +1,64 @@
+-- Contrato de rede do jogo (Blink). O limite de slots (40) é InventoryConfig.MAX_SLOTS. Depois de editar, rode `blink net/game`
+-- (o scripts/check.sh faz isso) para gerar src/server/Net.luau e src/client/Net.luau.
+-- O Blink valida no servidor tudo que chega do cliente (tipos e faixas abaixo).
+option ServerOutput = "../src/server/Net.luau"
+option ClientOutput = "../src/client/Net.luau"
+option Casing = Pascal
+
+-- Um slot ocupado do inventário. IDs de item são os mesmos de Defs/Items.
+struct Slot {
+	Id: string(1..32),
+	Count: u16(1..)
+}
+
+map SlotMap = { [u8(1..40)]: Slot }
+
+-- Inventário inteiro (ao entrar ou quando o cliente pede).
+event InventorySync {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Capacity: u8(1..40),
+		Slots: SlotMap
+	}
+}
+
+-- Um slot mudou (nil = ficou vazio).
+event InventorySlot {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: (u8(1..40), Slot?)
+}
+
+-- A capacidade mudou (ganhou a mochila).
+event InventoryCapacity {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: u8(1..40)
+}
+
+-- O cliente está pronto e pede o inventário inteiro.
+event RequestInventory {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+-- Mover o conteúdo de um slot para outro (de, para).
+event MoveSlot {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: (u8(1..40), u8(1..40))
+}
+
+-- Selecionar um slot da hotbar.
+event SelectSlot {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: u8(1..10)
+}

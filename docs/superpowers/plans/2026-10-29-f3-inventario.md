@@ -47,9 +47,9 @@
   - `Inventory.count(inv, id: string): number`
   - `Inventory.move(inv, from: number, to: number, maxStackOf: (string) -> number): { number }` — origem vazia, índices fora de `1..capacity` ou `from == to` → `{}`; destino vazio → move; mesmo item → junta até o `maxStack` (resto fica na origem); item diferente → troca. Devolve slots alterados.
   - `Inventory.setCapacity(inv, capacity: number)` — só aumenta (diminuir é ignorado nesta fase).
-- [ ] **Step 1: Write the failing tests** (`tests/inventory.spec.luau`): add em vazio (`add("wood", 30, 255)` → slot 1 `{wood,30}`, sobra 0, alterados `{1}`); add completa pilha e transborda (`maxStack 10`: com `{wood,8}` no slot 1, `add("wood", 15, 10)` → slot1 10, slot2 10, slot3 3); add sem espaço devolve sobra; remove tudo-ou-nada (`remove` de mais do que tem → false e nada muda); count soma pilhas; move para vazio; move troca itens diferentes; move junta mesmo item respeitando `maxStack` (`{wood,8}`→`{wood,5}` com max 10 → destino 10, origem 3); move inválido (`0`, `capacity+1`, origem vazia, `from == to`) → `{}` e nada muda; capacidade 10 rejeita índice 11; `setCapacity(16)` libera 11.
-- [ ] **Step 2: Verify fail**, **Step 3:** implementar, **Step 4: Verify pass** (`lune run tests/run`).
-- [ ] **Step 5: Commit** `feat: lógica pura do inventário (adicionar, remover, mover, empilhar)`.
+- [x] **Step 1: Write the failing tests** (`tests/inventory.spec.luau`): add em vazio (`add("wood", 30, 255)` → slot 1 `{wood,30}`, sobra 0, alterados `{1}`); add completa pilha e transborda (`maxStack 10`: com `{wood,8}` no slot 1, `add("wood", 15, 10)` → slot1 10, slot2 10, slot3 3); add sem espaço devolve sobra; remove tudo-ou-nada (`remove` de mais do que tem → false e nada muda); count soma pilhas; move para vazio; move troca itens diferentes; move junta mesmo item respeitando `maxStack` (`{wood,8}`→`{wood,5}` com max 10 → destino 10, origem 3); move inválido (`0`, `capacity+1`, origem vazia, `from == to`) → `{}` e nada muda; capacidade 10 rejeita índice 11; `setCapacity(16)` libera 11.
+- [x] **Step 2: Verify fail**, **Step 3:** implementar, **Step 4: Verify pass** (`lune run tests/run`).
+- [x] **Step 5: Commit** `feat: lógica pura do inventário (adicionar, remover, mover, empilhar)`.
 
 ### Task 2: Contrato de rede com Blink
 
@@ -67,9 +67,9 @@
   - `event RequestInventory { From: Client, Type: Reliable, Call: SingleAsync }`
   - `event MoveSlot { From: Client, Type: Reliable, Call: SingleAsync, Data: (u8(1..16), u8(1..16)) }`
   - `event SelectSlot { From: Client, Type: Reliable, Call: SingleAsync, Data: u8(1..10) }`
-- [ ] **Step 1:** Escrever o `.blink`, gerar, excluir os gerados do StyLua (`.styluaignore`: `src/server/Net.luau`, `src/client/Net.luau`) e do selene (`exclude` em `selene.toml`).
-- [ ] **Step 2: Verify:** `bash scripts/check.sh` passa (luau-lsp aceita o código gerado); `require` dos dois módulos no Studio (Play pelo MCP) sem erro.
-- [ ] **Step 3: Commit** `feat: contrato de rede do inventário com Blink`.
+- [x] **Step 1:** Escrever o `.blink`, gerar, excluir os gerados do StyLua (`.styluaignore`: `src/server/Net.luau`, `src/client/Net.luau`) e do selene (`exclude` em `selene.toml`).
+- [x] **Step 2: Verify:** `bash scripts/check.sh` passa (luau-lsp aceita o código gerado); `require` dos dois módulos no Studio (Play pelo MCP) sem erro.
+- [x] **Step 3: Commit** `feat: contrato de rede do inventário com Blink`.
 
 ### Task 3: InventoryService (servidor)
 
@@ -86,9 +86,9 @@
   - Handlers: `RequestInventory` → `InventorySync` do jogador; `MoveSlot(from, to)` → `Inventory.move` + deltas (inválido = ignorado); `SelectSlot(i)` → guarda a seleção e avisa `onSelected`. Capacidade = 10 + 6 se `Player:GetAttribute("HasBag")`; ao mudar o atributo, `setCapacity` + `InventoryCapacity`.
   - Inventário criado no `PlayerAdded` (e jogadores já presentes) e apagado no `PlayerRemoving`.
   - `DevItemsService` (só no Studio): ao entrar, dá `wood 24, stone 12, gold 5, berry 8, wood_pickaxe 1, stone_pickaxe 1, gold_pickaxe 1` e liga `HasBag`; cria `ServerStorage.DevGive` (`BindableFunction`: `(player, id, count) -> sobra`) para testes pelo MCP. Comentário: some quando a coleta existir.
-- [ ] **Step 1:** Implementar.
-- [ ] **Step 2: Verify:** check; Play pelo MCP: no servidor, `ServerStorage.DevGive:Invoke(player, "wood", 300)` devolve a sobra certa (pilhas de 255); o cliente recebeu os slots (ver Task 4).
-- [ ] **Step 3: Commit** `feat: inventário autoritativo no servidor com pedidos validados`.
+- [x] **Step 1:** Implementar.
+- [x] **Step 2: Verify:** check; Play pelo MCP: no servidor, `ServerStorage.DevGive:Invoke(player, "wood", 300)` devolve a sobra certa (pilhas de 255); o cliente recebeu os slots (ver Task 4).
+- [x] **Step 3: Commit** `feat: inventário autoritativo no servidor com pedidos validados`.
 
 ### Task 4: Estado no cliente, hotbar e mochila ligadas ao inventário
 
@@ -102,9 +102,9 @@
   - `HotbarState.slots` = slots 1–10 de `InventoryState`; `HotbarState.select(i)` também dispara `SelectSlot(i)`.
   - Mover no PC e no celular: **toque/clique na origem, depois no destino** (`InventoryState.pick: Source<number?>` guarda a origem; segundo toque dispara `MoveSlot(origem, destino)` e limpa; tocar de novo na origem cancela). A origem escolhida fica com borda `Theme.ui.warning`.
   - `InventoryGrid()`: grade 4×4 no painel da mochila com os slots 1–16; 11–16 aparecem trancados (fundo escuro, sem ícone) enquanto `capacity() < 16`. Hotbar e grade usam o mesmo componente de slot (extrair `UI/SlotButton.luau` do `Hotbar`).
-- [ ] **Step 1:** Implementar.
-- [ ] **Step 2: Verify:** check; Play pelo MCP: hotbar mostra os itens do `DevItemsService`; abrir a mochila (B) mostra 16 slots com 11–16 liberados (`HasBag`); clicar slot 1 e depois slot 12 move a madeira (servidor confirma pelo `InventoryService.get`); clicar slot de pedra e depois de madeira troca; `screen_capture` da grade.
-- [ ] **Step 3: Commit** `feat: hotbar e mochila ligadas ao inventário do servidor, mover com dois toques`.
+- [x] **Step 1:** Implementar.
+- [x] **Step 2: Verify:** check; Play pelo MCP: hotbar mostra os itens do `DevItemsService`; abrir a mochila (B) mostra 16 slots com 11–16 liberados (`HasBag`); clicar slot 1 e depois slot 12 move a madeira (servidor confirma pelo `InventoryService.get`); clicar slot de pedra e depois de madeira troca; `screen_capture` da grade.
+- [x] **Step 3: Commit** `feat: hotbar e mochila ligadas ao inventário do servidor, mover com dois toques`.
 
 ### Task 5: Item na mão
 
@@ -116,14 +116,14 @@
 - Produces:
   - `ToolModel.build(itemId: string): Model?` — só para `category == "tool"` por enquanto: cabo (cilindro marrom `Palette.biome.forest[3]`) + cabeça (cunha/bloco na cor do tier), tamanho proporcional ao avatar de ~5 studs, peças sem colisão (`CanCollide/CanQuery/CanTouch = false`, `Massless = true`), com `PrimaryPart` = `Handle` e um `Attachment` "Grip". Outros itens → `nil`.
   - `EquipService`: ao selecionar, grava `Character:SetAttribute("Equipped", id)` (ou `nil` se o slot está vazio) e troca o modelo `HeldItem` soldado (`WeldConstraint`) à `RightHand`; refaz no `CharacterAdded` se houver item selecionado (Review Focus 4); limpa ao selecionar slot vazio ou item que não é ferramenta (Review Focus 5).
-- [ ] **Step 1:** Implementar.
-- [ ] **Step 2: Verify:** check; Play pelo MCP: tecla 5 (picareta de madeira) → `Equipped == "wood_pickaxe"` e `HeldItem` na mão; `screen_capture` mostra a picareta; tecla de slot vazio → sem modelo; resetar o personagem com a picareta selecionada → modelo volta.
-- [ ] **Step 3: Commit** `feat: ferramenta selecionada aparece na mão do personagem`.
+- [x] **Step 1:** Implementar.
+- [x] **Step 2: Verify:** check; Play pelo MCP: tecla 5 (picareta de madeira) → `Equipped == "wood_pickaxe"` e `HeldItem` na mão; `screen_capture` mostra a picareta; tecla de slot vazio → sem modelo; resetar o personagem com a picareta selecionada → modelo volta.
+- [x] **Step 3: Commit** `feat: ferramenta selecionada aparece na mão do personagem`.
 
 ### Task 6: Fechamento
 
-- [ ] **Step 1:** `docs/guia/inventario.md` (como o inventário funciona, fluxo de rede, como dar itens no Studio, como adicionar um modelo de ferramenta); `docs/guia/hud.md` e `arquitetura.md` atualizados (Blink, `Net`, `InventoryState`); remover menções a "itens fixos" no `HotbarState`.
-- [ ] **Step 2: Verify:** `bash scripts/check.sh`; `graphify update .`.
-- [ ] **Step 3: Commit** `docs: guia do inventário`.
+- [x] **Step 1:** `docs/guia/inventario.md` (como o inventário funciona, fluxo de rede, como dar itens no Studio, como adicionar um modelo de ferramenta); `docs/guia/hud.md` e `arquitetura.md` atualizados (Blink, `Net`, `InventoryState`); remover menções a "itens fixos" no `HotbarState`.
+- [x] **Step 2: Verify:** `bash scripts/check.sh`; `graphify update .`.
+- [x] **Step 3: Commit** `docs: guia do inventário`.
 
 **Fora desta fase:** largar item no chão, dividir pilha, arrastar com o dedo (toque-toque por enquanto), modelos de armas/capacetes/comida na mão, lentidão por arma (entram com combate), perda do inventário na morte (entra com morte/PvP).
