@@ -57,7 +57,12 @@ local function giveKit(player: Player, kitId: string)
 	for _, entry in kit.items do
 		local def = Defs.Items[entry.id]
 		if def and def.category ~= "bag" then
-			InventoryService.give(player, entry.id, entry.count)
+			-- A validação garante que o kit cabe num inventário novo; sobra aqui
+			-- quer dizer que algo mudou (ex. o inventário não estava vazio).
+			local rest = InventoryService.give(player, entry.id, entry.count)
+			if rest > 0 then
+				warn(`[SpawnService] kit "{kit.id}" de {player.Name}: {rest}× {entry.id} não couberam`)
+			end
 		end
 	end
 end

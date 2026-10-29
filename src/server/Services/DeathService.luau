@@ -50,6 +50,13 @@ function DeathService.kill(player: Player, causeKey: string)
 	if player.Parent ~= Players then
 		return
 	end
+	-- Idempotente: sem personagem, já morreu (ou nunca nasceu). Uma segunda
+	-- chamada (ex. queda + Died no mesmo instante) não pode zerar os KitPoints
+	-- nem mandar outra tela de morte.
+	local character = player.Character
+	if character == nil then
+		return
+	end
 	-- nil = sem vida ativa ou sem perfil: a tela de morte mostra zeros.
 	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0 }
 
@@ -59,11 +66,8 @@ function DeathService.kill(player: Player, causeKey: string)
 
 	-- Remove o personagem antes de avisar: o Humanoid.Died de um personagem
 	-- que já não é o atual é ignorado abaixo, então não conta duas vezes.
-	local character = player.Character
 	player.Character = nil
-	if character then
-		character:Destroy()
-	end
+	character:Destroy()
 
 	Net.LifeEnded.Fire(player, {
 		CauseKey = causeKey,
@@ -112,7 +116,8 @@ local function checkFalls()
 		-- ainda não estar dentro do modelo (Humanoid é o sinal de que montou).
 		if character and character.Parent and character:FindFirstChildOfClass("Humanoid") then
 			if hasFallen(character) then
-				DeathService.kill(player, FALL_CAUSE)
+				-- Thread própria: um erro na morte nunca derruba este laço.
+				task.spawn(DeathService.kill, player, FALL_CAUSE)
 			end
 		end
 	end

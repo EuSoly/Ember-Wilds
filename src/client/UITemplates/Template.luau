@@ -34,6 +34,8 @@ local PRESS_INFO = TweenInfo.new(0.04, Enum.EasingStyle.Quad, Enum.EasingDirecti
 -- Abrir/fechar: fade de ~0.15 s com leve escala.
 local SHOW_INFO = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local SHOW_START_SCALE = 0.96
+-- Nomes dos UIScale que o código cria quando o molde não tem um (se tiver,
+-- o do molde é reusado: veja uiScaleOf).
 local SHOW_SCALE_NAME = "ShowScale"
 local PRESS_SCALE_NAME = "PressScale"
 local UI_SCALE_NAME = "UIScaleSetting"
@@ -108,17 +110,37 @@ local function applyTextKey(instance: Instance)
 	end
 end
 
-local function addPressFeedback(button: GuiButton)
-	if button:FindFirstChild(PRESS_SCALE_NAME) ~= nil then
-		return -- já ligado (bind chamado duas vezes)
+-- UIScale direto em `parent`: reusa o que já existir (importadores do Figma
+-- costumam criar um; dois UIScale no mesmo objeto brigam), senão cria um com
+-- o nome dado. Devolve também a escala que o molde já tinha (a do designer),
+-- para o código multiplicar em vez de apagar o ajuste dele.
+local function uiScaleOf(parent: Instance, name: string): (UIScale, number)
+	local existing = parent:FindFirstChildOfClass("UIScale")
+	if existing ~= nil then
+		local base = existing:GetAttribute("BaseScale")
+		if type(base) ~= "number" then
+			base = existing.Scale
+			existing:SetAttribute("BaseScale", base)
+		end
+		return existing, base :: number
 	end
 	local scale = Instance.new("UIScale")
-	scale.Name = PRESS_SCALE_NAME
-	scale.Parent = button
+	scale.Name = name
+	scale:SetAttribute("BaseScale", 1)
+	scale.Parent = parent
+	return scale, 1
+end
+
+local function addPressFeedback(button: GuiButton)
+	if button:GetAttribute("PressFeedback") == true then
+		return -- já ligado (bind chamado duas vezes)
+	end
+	button:SetAttribute("PressFeedback", true)
+	local scale, base = uiScaleOf(button, PRESS_SCALE_NAME)
 	button.Activated:Connect(function()
-		local down = TweenService:Create(scale, PRESS_INFO, { Scale = PRESS_SCALE })
+		local down = TweenService:Create(scale, PRESS_INFO, { Scale = base * PRESS_SCALE })
 		down.Completed:Once(function()
-			TweenService:Create(scale, PRESS_INFO, { Scale = 1 }):Play()
+			TweenService:Create(scale, PRESS_INFO, { Scale = base }):Play()
 		end)
 		down:Play()
 	end)
@@ -128,18 +150,10 @@ end
 -- mudança chega no cliente). Usado pelas telas e pela HUD.
 function Template.bindUiScale(parent: Instance)
 	local player = Players.LocalPlayer
-	local existing = parent:FindFirstChild(UI_SCALE_NAME)
-	local scale: UIScale
-	if existing ~= nil and existing:IsA("UIScale") then
-		scale = existing
-	else
-		scale = Instance.new("UIScale")
-		scale.Name = UI_SCALE_NAME
-		scale.Parent = parent
-	end
+	local scale, base = uiScaleOf(parent, UI_SCALE_NAME)
 	local function apply()
 		local value = player:GetAttribute(UI_SCALE_SETTING)
-		scale.Scale = if type(value) == "number" and value > 0 then value else 1
+		scale.Scale = base * (if type(value) == "number" and value > 0 then value else 1)
 	end
 	apply()
 	local connection = player:GetAttributeChangedSignal(UI_SCALE_SETTING):Connect(apply)
@@ -171,17 +185,6 @@ local function rootGroup(gui: ScreenGui): CanvasGroup?
 	return if root ~= nil and root:IsA("CanvasGroup") then root else nil
 end
 
-local function showScaleOf(group: CanvasGroup): UIScale
-	local existing = group:FindFirstChild(SHOW_SCALE_NAME)
-	if existing ~= nil and existing:IsA("UIScale") then
-		return existing
-	end
-	local scale = Instance.new("UIScale")
-	scale.Name = SHOW_SCALE_NAME
-	scale.Parent = group
-	return scale
-end
-
 -- Mostra/esconde a tela. Com um CanvasGroup "Root", faz fade e leve escala
 -- (~0.15 s); sem ele, só liga/desliga (o molde funciona, mas sem animação).
 function Template.show(gui: ScreenGui, visible: boolean)
@@ -192,15 +195,15 @@ function Template.show(gui: ScreenGui, visible: boolean)
 		gui.Enabled = visible
 		return
 	end
-	local scale = showScaleOf(group)
+	local scale, base = uiScaleOf(group, SHOW_SCALE_NAME)
 	if visible then
 		if not gui.Enabled then
 			group.GroupTransparency = 1
-			scale.Scale = SHOW_START_SCALE
+			scale.Scale = base * SHOW_START_SCALE
 		end
 		gui.Enabled = true
 		TweenService:Create(group, SHOW_INFO, { GroupTransparency = 0 }):Play()
-		TweenService:Create(scale, SHOW_INFO, { Scale = 1 }):Play()
+		TweenService:Create(scale, SHOW_INFO, { Scale = base }):Play()
 	elseif gui.Enabled then
 		local fade = TweenService:Create(group, SHOW_INFO, { GroupTransparency = 1 })
 		fade.Completed:Once(function()
@@ -209,7 +212,7 @@ function Template.show(gui: ScreenGui, visible: boolean)
 			end
 		end)
 		fade:Play()
-		TweenService:Create(scale, SHOW_INFO, { Scale = SHOW_START_SCALE }):Play()
+		TweenService:Create(scale, SHOW_INFO, { Scale = base * SHOW_START_SCALE }):Play()
 	end
 end
 

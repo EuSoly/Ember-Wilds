@@ -5,7 +5,7 @@
 -- nova num update aparece sozinha.
 --
 -- Nomes combinados:
--- - Settings: TitleLabel, List (onde entram as linhas), CloseButton.
+-- - Settings: List (onde entram as linhas), CloseButton.
 -- - Todas as linhas: NameLabel e ValueLabel (TextLabel).
 -- - SettingRowNumber: MinusButton / PlusButton (passo 0,1).
 -- - SettingRowBoolean: ToggleButton.

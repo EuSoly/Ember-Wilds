@@ -329,27 +329,52 @@ local function validateKits(errors: { string }, defs: Types.DefsTables, hasStrin
 		end
 
 		local bags = 0
+		local bagSlots = 0
+		-- Quantidade total por item (o mesmo item pode aparecer mais de uma vez).
+		local totals: { [string]: number } = {}
+		local allValid = true
 		for _, entry in items do
 			local item = defs.Items[entry.id]
 			if item == nil then
 				table.insert(errors, `Kit "{key}": item "{tostring(entry.id)}" não existe em Items`)
+				allValid = false
 				continue
 			end
-			-- Um kit nunca pode dar mais do que cabe no maior inventário possível.
-			local maxCount = item.maxStack * InventoryConfig.MAX_SLOTS
-			if not isWholeNumber(entry.count, 1) or entry.count > maxCount then
-				table.insert(errors, `Kit "{key}": count de "{entry.id}" deve ser inteiro entre 1 e {maxCount}`)
+			if not isWholeNumber(entry.count, 1) then
+				table.insert(errors, `Kit "{key}": count de "{entry.id}" deve ser inteiro maior ou igual a 1`)
+				allValid = false
+				continue
 			end
 			if item.category == "bag" then
 				bags += 1
+				bagSlots = item.bagSlots or 0
 				-- A mochila é vestida, e só se veste uma.
 				if entry.count ~= 1 then
 					table.insert(errors, `Kit "{key}": mochila "{entry.id}" deve ter count 1`)
 				end
+			else
+				totals[entry.id] = (totals[entry.id] or 0) + entry.count
 			end
 		end
 		if bags > 1 then
 			table.insert(errors, `Kit "{key}": no máximo uma mochila por kit (há {bags})`)
+		end
+
+		-- O kit é dado logo depois de nascer, num inventário novo e vazio: tem
+		-- que caber nos slots base + os da mochila do próprio kit (sem contar o
+		-- gamepass, que nem todo jogador tem). Senão os itens sobrariam e sumiriam.
+		if allValid and bags <= 1 then
+			local slotsNeeded = 0
+			for id, total in totals do
+				slotsNeeded += math.ceil(total / defs.Items[id].maxStack)
+			end
+			local capacity = InventoryConfig.BASE_SLOTS + bagSlots
+			if slotsNeeded > capacity then
+				table.insert(
+					errors,
+					`Kit "{key}": não cabe num inventário novo (precisa de {slotsNeeded} slots, há {capacity})`
+				)
+			end
 		end
 	end
 end

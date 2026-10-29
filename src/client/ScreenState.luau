@@ -49,7 +49,12 @@ function ScreenState.start()
 		ScreenState.send("died")
 	end)
 
-	player.CharacterAdded:Connect(function()
+	player.CharacterAdded:Connect(function(character: Model)
+		-- Morreu antes de o sinal chegar (o servidor já destruiu o corpo): não
+		-- entra em "playing" sem personagem; o LifeEnded leva para a morte.
+		if character.Parent == nil then
+			return
+		end
 		ScreenState.send("spawned")
 	end)
 

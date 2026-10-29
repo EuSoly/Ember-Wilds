@@ -427,7 +427,33 @@ return {
 		defs.Kits.kit_b.items = { { id = "wood", count = 1.5 } }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "price"), `faltou erro de price: {table.concat(errors, "; ")}`)
-		assert(containsError(errors, "count"), `faltou erro de count: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "count de"), `faltou erro de count: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit that does not fit a new inventory is an error"] = function()
+		local defs = validKitDefs()
+		-- Sem mochila: 10 slots (BASE_SLOTS). 11 pilhas cheias de madeira não cabem.
+		defs.Kits.kit_b.items = { { id = "wood", count = 255 * 11 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit bag slots count for the fit"] = function()
+		local defs = validKitDefs()
+		-- Com a mochila do próprio kit (6 slots): 16 pilhas cabem, 17 não.
+		defs.Kits.kit_a.items = { { id = "wood", count = 255 * 16 }, { id = "leather_bag", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(#errors == 0, `16 pilhas deveriam caber: {table.concat(errors, "; ")}`)
+		defs.Kits.kit_a.items = { { id = "wood", count = 255 * 16 + 1 }, { id = "leather_bag", count = 1 } }
+		errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with the same item twice sums the slots"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = { { id = "wood", count = 255 * 6 }, { id = "wood", count = 255 * 5 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
 	end,
 
 	["kit without items is an error"] = function()

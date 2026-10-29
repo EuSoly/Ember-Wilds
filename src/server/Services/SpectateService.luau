@@ -40,7 +40,8 @@ end
 local function aliveOthers(viewer: Player): { Player }
 	local list: { Player } = {}
 	for _, other in Players:GetPlayers() do
-		if other ~= viewer and rootOf(other) ~= nil then
+		-- Parent ~= Players: está saindo (o PlayerRemoving ainda não terminou).
+		if other ~= viewer and other.Parent == Players and rootOf(other) ~= nil then
 			table.insert(list, other)
 		end
 	end
@@ -126,6 +127,9 @@ local function setupPlayer(player: Player)
 	player:SetAttribute(StatNames.SpectateTarget, 0)
 	player.CharacterAdded:Connect(setupCharacter)
 	player.CharacterRemoving:Connect(queueRefresh)
+	-- A morte (DeathService.kill) zera player.Character antes de destruir o
+	-- corpo: reagir à propriedade troca os alvos na hora.
+	player:GetPropertyChangedSignal("Character"):Connect(queueRefresh)
 	if player.Character then
 		task.spawn(setupCharacter, player.Character)
 	end

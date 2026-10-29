@@ -15,12 +15,12 @@ loading ──ready──▶ menu ──spawned──▶ playing ──died─�
 
 | Estado | O que aparece | Quando muda |
 |---|---|---|
-| `loading` | Tela de carregamento | `ready`: o jogo carregou e o perfil está pronto (atributo `DataReady` do Player) |
+| `loading` | Tela de carregamento | `ready`: o perfil está pronto (atributo `DataReady` do Player). A tela de carregamento também espera o jogo carregar e cobre a espera até lá |
 | `menu` | Menu: logo, saldo, kits, Jogar, Configurações. Sem personagem; a câmera passeia pelo mapa | `spawned`: o personagem nasceu (o jogador clicou Jogar) |
 | `playing` | HUD | `died`: chegou o resumo da vida (`Net.LifeEnded`) |
 | `dead` | Tela de morte: causa, dias, pontos virando Golden Ember, kits, Jogar de novo, Menu | `spawned` (Jogar de novo) ou `toMenu` (Menu) |
 
-**Configurações** não é um estado: é uma janela por cima. Abre no `menu` (botão) e no `playing` (engrenagem da HUD), e fecha sozinha se o estado mudar para outro.
+**Configurações** não é um estado: é uma janela por cima. Abre no `menu` (botão) e no `playing` (engrenagem da HUD). Só fecha sozinha quando o estado novo não permite a janela: na prática, ao morrer com ela aberta (`dead`). De `menu` para `playing` ela continua aberta.
 
 As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). Evento que não vale no estado atual é ignorado (ex. `died` no menu).
 
@@ -134,7 +134,7 @@ Textos com dados (saldo, pontos, dias) são escritos pelo código nos elementos 
 
 Como no Starve.io: antes de nascer, o jogador pode comprar **um** kit com os **pontos da vida que acabou** (não com Golden Ember). Esses pontos ficam no atributo `KitPoints` do Player, só em memória (ao sair do jogo, perde). Os mesmos pontos também viram Golden Ember normalmente na morte: são duas coisas independentes.
 
-O servidor (`SpawnService`) confere o kit e os pontos, desconta e dá os itens depois de nascer; uma mochila no kit é vestida. Kit inexistente ou caro demais faz nascer sem kit, sem descontar nada.
+O servidor (`SpawnService`) confere o kit e os pontos, desconta e dá os itens depois de nascer; uma mochila no kit é vestida primeiro. Kit inexistente ou caro demais faz nascer sem kit, sem descontar nada. Se algum item não couber (não deveria, por causa da validação abaixo), aparece um `warn` no Output.
 
 ### Como adicionar um kit
 
@@ -157,7 +157,8 @@ kit_miner = {
 
 Pronto: o kit aparece no menu e na tela de morte. A validação no boot recusa:
 - item que não existe;
-- quantidade que não seja inteira ≥ 1, ou que não caiba no maior inventário;
+- quantidade que não seja inteira ≥ 1;
+- kit que **não cabe num inventário novo**: os slots base (10) mais os da mochila do próprio kit, se tiver uma (o bônus do gamepass não conta, porque nem todo jogador tem). Cada item ocupa `ceil(quantidade / maxStack)` slots, somando as entradas repetidas do mesmo item. Ex.: sem mochila, 2.550 de madeira (maxStack 255) já ocupam os 10 slots;
 - preço negativo ou quebrado;
 - `order` repetida;
 - mais de uma mochila por kit (e a mochila precisa ter `count = 1`).
