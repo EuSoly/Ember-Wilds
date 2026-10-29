@@ -41,4 +41,33 @@ return table.freeze({
 	["cosmeticSlot.body"] = "Corpo",
 	["cosmetic.body_default"] = "Clássico",
 	["cosmetic.body_ember"] = "Brasa",
+
+	-- Moeda
+	["currency.name"] = "Golden Ember",
+
+	-- Dados salvos (mensagens de expulsão)
+	["data.loadFailed"] = "Não foi possível carregar seus dados. Tente entrar de novo.",
+	["data.sessionTaken"] = "Seus dados foram abertos em outro servidor.",
+	["data.newerVersion"] = "O jogo foi atualizado. Entre de novo para continuar.",
+	["data.devReset"] = "Perfil de desenvolvimento apagado. Entre de novo.",
+	["data.corrupt"] = "Seus dados precisam de ajuda do suporte. Fale com a equipe do jogo.",
+
+	-- Estatísticas
+	["stat.players_killed"] = "Jogadores derrotados",
+	["stat.mobs_killed"] = "Criaturas derrotadas",
+	["stat.resources_gathered"] = "Recursos coletados",
+	["stat.items_crafted"] = "Itens criados",
+	["stat.deaths"] = "Mortes",
+	["stat.score_total"] = "Pontuação total",
+	["stat.score_best"] = "Melhor pontuação",
+	["stat.days_best"] = "Mais dias vivo",
+	["stat.playtime_seconds"] = "Tempo de jogo",
+
+	-- Configurações
+	["setting.music_volume"] = "Volume da música",
+	["setting.ambient_volume"] = "Volume do ambiente",
+	["setting.effects_volume"] = "Volume dos efeitos",
+	["setting.quality"] = "Qualidade gráfica",
+	["setting.ui_scale"] = "Tamanho da interface",
+	["setting.left_handed"] = "Modo canhoto",
 })

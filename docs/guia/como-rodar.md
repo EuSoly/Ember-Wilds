@@ -5,7 +5,7 @@
 1. Instale o [Rokit](https://github.com/rojo-rbx/rokit).
 2. Na raiz do repo: `rokit install` (baixa Rojo 7.7.1, Wally, selene, StyLua, luau-lsp, Blink e Lune nas versões do `rokit.toml`).
 3. No Git Bash, coloque as ferramentas no PATH: `export PATH="$HOME/.rokit/bin:$PATH"` (vale pôr no `~/.bashrc`).
-4. Instale os pacotes Luau (Vide etc.): `wally install` (o `scripts/check.sh` faz isso sozinho se a pasta `Packages/` não existir).
+4. Instale os pacotes Luau: `wally install`. Ele cria `Packages/` (Vide etc., compartilhados) e `ServerPackages/` (ProfileStore, só no servidor). O `scripts/check.sh` faz isso sozinho se alguma das duas pastas não existir. Depois de mudar o `wally.toml`, apague as duas pastas e rode o `check.sh` (ele reinstala e prepara os tipos para o luau-lsp).
 5. No Studio, instale o plugin do Rojo.
 
 ## No dia a dia
@@ -32,7 +32,7 @@ O `rojo build` grava essas propriedades no arquivo, mas a sincronização ao viv
 - **Workspace → StreamingEnabled = true**, `StreamOutBehavior = Opportunistic`, `StreamingIntegrityMode = PauseOutsideLoadedArea`, `ModelStreamingBehavior = Improved`.
 - **StarterPlayer → CharacterUseJumpPower = false, CharacterJumpHeight = 0, EnableMouseLockOption = false.**
 - **StarterPlayer → CreateDefaultPlayerModule = false.** (Obrigatório: sem isso o Roblox usa o PlayerModule padrão, que religa o `AutoRotate` e o boneco não consegue olhar para trás andando. Veja "PlayerModule próprio" em `arquitetura.md`.)
-- **Game Settings → Security → Enable Studio Access to API Services** (necessário a partir da Fase 4, para salvar dados).
+- **Game Settings → Security → Enable Studio Access to API Services.** Necessário para salvar dados (moeda, estatísticas, configurações, skin) no Studio, no store de desenvolvimento `Dev_PlayerData`. O place precisa estar publicado. Sem isso o jogo roda com um perfil falso, avisa no Output e não salva nada. Veja `dados.md`.
 
 Depois de mudar, salve e publique o place.
 

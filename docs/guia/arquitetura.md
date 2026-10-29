@@ -8,9 +8,11 @@
 | `src/shared/Defs` | `Shared.Defs` | Conteúdo do jogo como **dados**: tiers, itens (depois receitas, mobs, biomas…) |
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
+| `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |
 | `net/game.blink` | — | Contrato de rede; gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server` | `ServerScriptService.Server` | Bootstrap do servidor |
 | `src/server/Services` | `Server.Services` | Um módulo por sistema do servidor |
+| `ServerPackages` | `ServerScriptService.ServerPackages` | Pacotes do Wally só do servidor (ProfileStore); criado pelo `wally install` |
 | `src/client` | `StarterPlayerScripts.Client` | Bootstrap do cliente |
 | `src/client/Controllers` | `Client.Controllers` | Um módulo por sistema do cliente |
 | `src/client/Boneco` | `Client.Boneco` | Boneco visual (montagem e renderer); quem liga é o `BonecoController` |
@@ -96,6 +98,10 @@ A cópia **não recebe atualizações do Roblox**. Para atualizar: com o jogo ro
 ## Boneco
 
 O personagem é um corpo simulado mínimo e invisível (`Humanoid` + `HumanoidRootPart` + `Head` invisível), igual para todos e marcado com a tag `Boneco`. Cada cliente monta um boneco visual **só local** para cada personagem com essa tag e o faz seguir, animar e mudar de expressão a partir dos atributos `Using`, `Equipped`, `HurtAt` e `Cosmetic_body`. Skins e expressões são dados em `Defs`. Veja `boneco.md`.
+
+## Dados salvos
+
+O que sobrevive à morte (Golden Ember, estatísticas, cosméticos, configurações) fica num perfil por jogador, salvo com o ProfileStore. O `DataService` abre e fecha o perfil e avisa quando ele carregou (`onLoaded`), antes de cada save (`onBeforeSave`) e antes do último save (`onUnloading`). Serviços pequenos usam esses avisos: `CurrencyService`, `StatsService`, `LifeService`, `SettingsService` e `CosmeticService`. As regras ficam em módulos puros em `src/shared/Data`, testados no Lune. O cliente só lê atributos do Player (`Currency`, `Setting_<id>`). Veja `dados.md`.
 
 ## Interface (HUD)
 

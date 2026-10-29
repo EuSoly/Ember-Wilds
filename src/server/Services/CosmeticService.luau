@@ -1,15 +1,17 @@
 --!strict
--- Cosméticos equipados (skins). Guarda em memória, por jogador e por slot, o id
--- equipado e grava no personagem o atributo Cosmetic_<slot> (ex. Cosmetic_body).
--- Cada cliente lê esse atributo e pinta o boneco visual: todos veem a mesma skin.
--- Por enquanto todo mundo começa com o padrão de cada slot e só o comando de
--- dev troca (DevBonecoService). Na F4 o equipado virá do perfil salvo
--- (Equipped = slot → id); aqui só muda de onde vem o valor inicial.
+-- Cosméticos (skins): posse e equipado ficam no perfil salvo
+-- (Cosmetics.Owned = id → true, Cosmetics.Equipped = slot → id). Guarda em
+-- memória, por jogador e por slot, o id equipado e grava no personagem o
+-- atributo Cosmetic_<slot> (ex. Cosmetic_body). Cada cliente lê esse atributo e
+-- pinta o boneco visual: todos veem a mesma skin.
+-- O padrão de cada slot conta como possuído sempre. Equipar um cosmético não
+-- possuído falha. Até a loja (F5), a posse vem do comando de dev (DevDataService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local DataService = require(script.Parent.DataService)
 
 local CosmeticService = {}
 
@@ -35,22 +37,66 @@ local function writeSlot(character: Model, slot: string, id: string)
 	end
 end
 
--- Equipa o cosmético no slot dele. false se o id não existe.
-function CosmeticService.equip(player: Player, cosmeticId: string): boolean
+-- true se o cosmético existe e o jogador o possui (o padrão do slot conta sempre).
+function CosmeticService.owns(player: Player, cosmeticId: string): boolean
 	local cosmetic = Defs.Cosmetics[cosmeticId]
 	if cosmetic == nil then
 		return false
 	end
+	local slotDef = Defs.CosmeticSlots[cosmetic.slot]
+	if slotDef ~= nil and slotDef.default == cosmeticId then
+		return true
+	end
+	local data = DataService.data(player)
+	return data ~= nil and data.Cosmetics.Owned[cosmeticId] == true
+end
+
+-- Dá a posse de um cosmético (loja/dev). false se não existe ou sem perfil.
+function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boolean
+	local data = DataService.data(player)
+	if Defs.Cosmetics[cosmeticId] == nil or data == nil then
+		return false
+	end
+	data.Cosmetics.Owned[cosmeticId] = true
+	return true
+end
+
+-- Põe o id no slot (memória + personagem atual), sem checar posse.
+local function apply(player: Player, slot: string, cosmeticId: string)
 	local equipped = equippedByPlayer[player]
 	if equipped == nil then
 		equipped = {}
 		equippedByPlayer[player] = equipped
 	end
-	equipped[cosmetic.slot] = cosmeticId
+	equipped[slot] = cosmeticId
 	if player.Character then
-		writeSlot(player.Character, cosmetic.slot, cosmeticId)
+		writeSlot(player.Character, slot, cosmeticId)
 	end
+end
+
+-- Equipa o cosmético no slot dele e grava no perfil. false se o id não existe,
+-- se o jogador não o possui ou se o perfil ainda não carregou.
+function CosmeticService.equip(player: Player, cosmeticId: string): boolean
+	local cosmetic = Defs.Cosmetics[cosmeticId]
+	local data = DataService.data(player)
+	if cosmetic == nil or data == nil or not CosmeticService.owns(player, cosmeticId) then
+		return false
+	end
+	data.Cosmetics.Equipped[cosmetic.slot] = cosmeticId
+	apply(player, cosmetic.slot, cosmeticId)
+	DataService.save(player)
 	return true
+end
+
+-- Perfil carregou: usa o equipado salvo de cada slot se ainda for válido
+-- (existe, é do slot certo e é possuído); senão o padrão.
+local function loadEquipped(player: Player, data: { [string]: any })
+	for slot, slotDef in Defs.CosmeticSlots do
+		local saved = data.Cosmetics.Equipped[slot]
+		local cosmetic = if type(saved) == "string" then Defs.Cosmetics[saved] else nil
+		local valid = cosmetic ~= nil and cosmetic.slot == slot and CosmeticService.owns(player, saved)
+		apply(player, slot, if valid then saved else slotDef.default)
+	end
 end
 
 -- Personagem novo nasce sem atributos: grava todos os slots.
@@ -70,6 +116,7 @@ local function setupPlayer(player: Player)
 end
 
 function CosmeticService.Start(_self)
+	DataService.onLoaded(loadEquipped)
 	Players.PlayerAdded:Connect(setupPlayer)
 	Players.PlayerRemoving:Connect(function(player)
 		equippedByPlayer[player] = nil

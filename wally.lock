@@ -10,4 +10,9 @@ dependencies = []
 [[package]]
 name = "eusoly/ember-wilds"
 version = "0.1.0"
-dependencies = [["Vide", "centau/vide@0.4.1"]]
+dependencies = [["Vide", "centau/vide@0.4.1"], ["ProfileStore", "lm-loleris/profilestore@1.0.3"]]
+
+[[package]]
+name = "lm-loleris/profilestore"
+version = "1.0.3"
+dependencies = []

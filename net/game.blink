@@ -62,3 +62,18 @@ event SelectSlot {
 	Call: SingleAsync,
 	Data: u8(1..10)
 }
+
+-- Mudar uma configuração do jogador (Id = id em Defs/Settings). Só o campo do
+-- tipo da configuração é lido (number → Number, boolean → Flag, choice →
+-- Choice); o servidor valida faixa e opções (SettingsRules) e ignora o inválido.
+event SetSetting {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Id: string(1..32),
+		Number: f64?,
+		Flag: boolean?,
+		Choice: string(1..16)?
+	}
+}

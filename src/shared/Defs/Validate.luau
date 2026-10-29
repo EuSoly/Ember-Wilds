@@ -10,6 +10,11 @@ local HEX_PATTERN = "^#%x%x%x%x%x%x$"
 -- Strings de atributo têm no máximo 50 caracteres no Server Authority, e o id
 -- do cosmético vai num atributo (Cosmetic_<slot>).
 local MAX_COSMETIC_ID_LENGTH = 50
+-- Ids de estatística e configuração: o de configuração viaja no evento Blink
+-- SetSetting (Id string(1..32)); o de estatística usa o mesmo limite por coerência.
+local MAX_DATA_ID_LENGTH = 32
+-- Opções de configuração "choice" viajam no SetSetting (Choice string(1..16)).
+local MAX_SETTING_OPTION_LENGTH = 16
 
 local Validate = {}
 
@@ -26,6 +31,9 @@ Validate.HURT_EVENT = "hurt" -- dano (atributo HurtAt)
 Validate.KNOWN_EVENTS = table.freeze({ Validate.HURT_EVENT })
 
 local TRIGGERS = table.freeze({ "always", "periodic", "event", "condition" })
+local STAT_KINDS = table.freeze({ "counter", "max", "keyed" })
+local STAT_KEY_KINDS = table.freeze({ "mob", "item" })
+local SETTING_KINDS = table.freeze({ "number", "boolean", "choice" })
 
 local function isHex(value: any): boolean
 	return type(value) == "string" and string.match(value, HEX_PATTERN) ~= nil
@@ -181,6 +189,105 @@ local function validateExpressions(errors: { string }, defs: Types.DefsTables)
 	end
 end
 
+local function checkDataId(errors: { string }, kind: string, key: string, id: string)
+	checkId(errors, kind, key, id)
+	if #key > MAX_DATA_ID_LENGTH then
+		table.insert(errors, `{kind} "{key}": id com mais de {MAX_DATA_ID_LENGTH} caracteres`)
+	end
+end
+
+local function validateStats(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local stats: { [string]: Types.StatDef }? = (defs :: any).Stats
+	if stats == nil then
+		return
+	end
+
+	for key, stat in stats do
+		checkDataId(errors, "Stat", key, stat.id)
+		checkString(errors, "Stat", key, "nameKey", stat.nameKey, hasString)
+		if not table.find(STAT_KINDS, stat.kind) then
+			table.insert(errors, `Stat "{key}": kind "{stat.kind}" não existe`)
+		elseif stat.kind == "keyed" then
+			-- A chave precisa dizer o que é (mob, item) para validar e para as telas.
+			local keyKind = stat.keyKind
+			if keyKind == nil or not table.find(STAT_KEY_KINDS, keyKind :: string) then
+				table.insert(errors, `Stat "{key}": kind "keyed" precisa de keyKind "mob" ou "item"`)
+			end
+		elseif stat.keyKind ~= nil then
+			table.insert(errors, `Stat "{key}": keyKind só vale para kind "keyed"`)
+		end
+	end
+end
+
+local function isFiniteNumber(value: any): boolean
+	return type(value) == "number" and value == value and value > -math.huge and value < math.huge
+end
+
+local function validateSettings(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local settings: { [string]: Types.SettingDef }? = (defs :: any).Settings
+	if settings == nil then
+		return
+	end
+
+	for key, setting in settings do
+		checkDataId(errors, "Setting", key, setting.id)
+		checkString(errors, "Setting", key, "nameKey", setting.nameKey, hasString)
+		local kind = setting.kind
+		if not table.find(SETTING_KINDS, kind) then
+			table.insert(errors, `Setting "{key}": kind "{kind}" não existe`)
+			continue
+		end
+
+		-- Campos de faixa/opções só no kind que os usa (senão seriam ignorados em silêncio).
+		if kind ~= "number" and (setting.min ~= nil or setting.max ~= nil) then
+			table.insert(errors, `Setting "{key}": min/max só valem para kind "number"`)
+		end
+		if kind ~= "choice" and setting.options ~= nil then
+			table.insert(errors, `Setting "{key}": options só vale para kind "choice"`)
+		end
+
+		local default = setting.default
+		if kind == "number" then
+			local min, max = setting.min, setting.max
+			if not isFiniteNumber(min) or not isFiniteNumber(max) or (min :: number) >= (max :: number) then
+				table.insert(errors, `Setting "{key}": kind "number" precisa de min < max`)
+			else
+				local low, high = min :: number, max :: number
+				if not isFiniteNumber(default) or (default :: number) < low or (default :: number) > high then
+					table.insert(errors, `Setting "{key}": default deve ser número entre {low} e {high}`)
+				end
+			end
+		elseif kind == "boolean" then
+			if type(default) ~= "boolean" then
+				table.insert(errors, `Setting "{key}": default deve ser true ou false`)
+			end
+		else
+			local options = setting.options
+			if type(options) ~= "table" or #options == 0 then
+				table.insert(errors, `Setting "{key}": kind "choice" precisa de options`)
+			else
+				local seen: { [string]: boolean } = {}
+				for _, option in options do
+					if seen[option] then
+						table.insert(errors, `Setting "{key}": opção "{option}" repetida`)
+					end
+					-- Senão o cliente nunca conseguiria pedir essa opção pela rede.
+					if type(option) ~= "string" or #option < 1 or #option > MAX_SETTING_OPTION_LENGTH then
+						table.insert(
+							errors,
+							`Setting "{key}": opção "{option}" deve ter de 1 a {MAX_SETTING_OPTION_LENGTH} caracteres`
+						)
+					end
+					seen[option] = true
+				end
+				if type(default) ~= "string" or not seen[default] then
+					table.insert(errors, `Setting "{key}": default "{tostring(default)}" não está em options`)
+				end
+			end
+		end
+	end
+end
+
 -- Devolve a lista de erros encontrados (vazia = tudo certo).
 function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): { string }
 	local errors: { string } = {}
@@ -225,6 +332,8 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 
 	validateCosmetics(errors, defs, hasString)
 	validateExpressions(errors, defs)
+	validateStats(errors, defs, hasString)
+	validateSettings(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors
