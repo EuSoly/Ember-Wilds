@@ -107,7 +107,7 @@ Visual mínimo com as cores do `Theme`/`Palette` (painel `#1E2230` a 85%, borda 
 2. Jogar → nasce e a HUD aparece; engrenagem abre Configurações; mudar o tamanho da interface muda na hora e continua depois de sair e voltar.
 3. `DevEndLife` → personagem some, mundo cinza, tela de morte com os números certos (pontos descendo enquanto a Golden Ember sobe); Jogar de novo → nasce de novo **sem itens**; Menu → volta ao menu.
 3b. Com 5.000 pontos na vida: na tela de morte o `kit_survivor` (4.000) está disponível e o `kit_veteran` (8.000) desabilitado; escolher o de 4.000 e Jogar de novo → nasce com os itens dele e vestindo a mochila, sobrando 1.000 pontos para kit.
-3c. No menu, a câmera segue um jogador vivo e troca a cada ~8 s (teste com 2 jogadores ou bonecos de teste); sem ninguém vivo, gira sobre o centro.
+3c. No menu, a câmera segue um jogador vivo e troca a cada ~8 s (teste com 2 jogadores; bonecos de teste não contam, não são jogadores); sem ninguém vivo, gira sobre o centro.
 4. Cliente pedindo para nascer duas vezes, ou já vivo → servidor ignora.
 5. Apagar/renomear um elemento num molde → `warn` claro no Output e o resto funciona.
 6. `check.sh` verde; testes Lune para a lógica pura (estados e transições de tela, passo/formatação das configurações, contagem pontos→moeda, compra de kit e validação de `Defs/Kits`).
