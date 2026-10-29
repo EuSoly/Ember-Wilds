@@ -5,6 +5,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local ScreenFlow = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("UIFlow"):WaitForChild("ScreenFlow"))
+local ScreenState = require(script.Parent.Parent:WaitForChild("ScreenState"))
 local AimStick = require(script.Parent:WaitForChild("AimStick"))
 local Backpack = require(script.Parent:WaitForChild("Backpack"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
@@ -34,6 +36,10 @@ local function App(): ScreenGui
 	return create("ScreenGui")({
 		Name = "Hud",
 		ResetOnSpawn = false, -- o HUD sobrevive ao respawn
+		-- Só jogando: no carregamento, menu e morte quem aparece são as telas.
+		Enabled = function()
+			return ScreenFlow.hudVisible(ScreenState.current())
+		end,
 		IgnoreGuiInset = false,
 		-- Desvia da barra superior do Roblox e do notch do celular.
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,
