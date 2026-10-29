@@ -19,7 +19,7 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		id = "body_ember",
 		nameKey = "cosmetic.body_ember",
 		slot = "body",
-		body = { bodyColor = "#FFE2C4", outlineColor = "#C9774A" },
+		body = { bodyColor = "#D8250D", outlineColor = "#5F1802" },
 	},
 }
 

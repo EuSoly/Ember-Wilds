@@ -217,7 +217,7 @@ return {
 	["real cosmetics and expressions load"] = function()
 		assert(Defs.CosmeticSlots.body.default == "body_default", "padrão do slot body")
 		local ember = Defs.Cosmetics.body_ember.body
-		assert(ember ~= nil and ember.outlineColor == "#C9774A", "contorno da skin brasa")
+		assert(ember ~= nil and ember.outlineColor == "#5F1802", "contorno da skin brasa")
 		assert(Defs.Expressions.hurt.priority == 100, "prioridade do dano")
 		assert(Defs.Expressions.blink.intervalMax == 6, "intervalo máximo do piscar")
 	end,
