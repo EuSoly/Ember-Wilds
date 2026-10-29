@@ -16,6 +16,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 
 local SWITCH_SECONDS = 8
 
@@ -137,7 +138,7 @@ local function setupPlayer(player: Player)
 end
 
 function SpectateService.Start(_self)
-	-- Âncora do foco de streaming sem alvo: centro do mapa, invisível e sem
+	-- Âncora do foco de streaming sem alvo: centro da floresta (SPAWN), invisível e sem
 	-- colisão/consulta/toque (não atrapalha nada no mundo).
 	anchor = Instance.new("Part")
 	anchor.Name = "SpectateAnchor"
@@ -147,7 +148,7 @@ function SpectateService.Start(_self)
 	anchor.CanTouch = false
 	anchor.Transparency = 1
 	anchor.Size = Vector3.new(1, 1, 1)
-	anchor.Position = Vector3.zero
+	anchor.Position = Vector3.new(WorldConfig.SPAWN.x, WorldConfig.SPAWN.y, WorldConfig.SPAWN.z)
 	anchor.Parent = Workspace
 
 	Players.PlayerAdded:Connect(setupPlayer)

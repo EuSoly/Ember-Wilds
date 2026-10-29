@@ -51,6 +51,27 @@ return table.freeze({
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",
 
+	-- Mundo (F6).
+	-- true enquanto a raiz do personagem está dentro de Map/Water, atributo no
+	-- Player (escrito pelo WaterService; lido pela sede na G1).
+	InWater = "InWater",
+	-- Fôlego, 0 a StatusMax, atributo no Player (WaterService): cai na água.
+	Oxygen = "Oxygen",
+	-- Id em Defs.Resources: nos marcadores de Map/Resources (feitos no Studio)
+	-- e nos modelos montados em Workspace.Resources.
+	ResourceId = "ResourceId",
+	-- Variação do modelo (1..variants), opcional nos marcadores de Map/Resources.
+	Variant = "Variant",
+	-- Id em Defs.ResourceZones, nas peças de Map/Zones.
+	ZoneType = "ZoneType",
+	-- Tag (CollectionService) dos recursos montados (a fase de coleta usa).
+	ResourceTag = "Resource",
+	-- Tag das peças que ficam semitransparentes entre a câmera e o boneco (copas).
+	OccluderTag = "Occluder",
+	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a
+	-- tremulação em cada uma.
+	FireLightTag = "FireLight",
+
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
 	WarningFraction = 0.35,

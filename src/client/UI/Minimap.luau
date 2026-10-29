@@ -1,8 +1,8 @@
 --!strict
--- Minimapa (canto superior direito). Por enquanto mostra o chão da floresta e
--- um ponto na posição do jogador; o mapa desenhado de verdade entra na Fase 6.
--- Lê só a posição do próprio personagem (o resto do mundo pode nem estar
--- carregado por causa do streaming).
+-- Minimapa (canto superior direito): o mapa inteiro de forma esquemática,
+-- montado a partir do WorldConfig (os quatro biomas nos cantos sobre o
+-- oceano), com as regiões ainda fechadas escurecidas e um ponto na posição do
+-- jogador. Não lê o mapa desenhado: com streaming, o cliente nem o tem inteiro.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -17,13 +17,49 @@ local create = vide.create
 
 local REFRESH = 0.1 -- 10 vezes por segundo
 
--- Posição no mundo (x, z) → posição no minimapa (0 a 1).
+-- Cor de cada bioma no minimapa.
+local BIOME_COLORS: { [string]: string } = {
+	forest = Palette.biome.forest[1],
+	winter = Palette.biome.winter[1],
+	lava = Palette.biome.lava[2],
+	desert = Palette.biome.desert[1],
+}
+local LOCKED_SHADE = 0.55 -- quanto escurece uma região ainda fechada
+
+-- Posição no mundo (x, z) → fração do minimapa (0 a 1); o mapa é centrado na origem.
+local function toScale(x: number, z: number): (number, number)
+	local half = WorldConfig.MAP_SIZE / 2
+	return math.clamp((x + half) / WorldConfig.MAP_SIZE, 0, 1), math.clamp((z + half) / WorldConfig.MAP_SIZE, 0, 1)
+end
+
 local function toMap(position: Vector3): UDim2
-	local half = WorldConfig.size / 2
-	return UDim2.fromScale(
-		math.clamp((position.X + half) / WorldConfig.size, 0, 1),
-		math.clamp((position.Z + half) / WorldConfig.size, 0, 1)
-	)
+	local x, z = toScale(position.X, position.Z)
+	return UDim2.fromScale(x, z)
+end
+
+local function sameRect(a: WorldConfig.Rect, b: WorldConfig.Rect): boolean
+	return a.minX == b.minX and a.minZ == b.minZ and a.maxX == b.maxX and a.maxZ == b.maxZ
+end
+
+-- Um retângulo de bioma; fora da área jogável, com uma sombra por cima.
+local function Biome(name: string, area: WorldConfig.Rect): Frame
+	local x0, z0 = toScale(area.minX, area.minZ)
+	local x1, z1 = toScale(area.maxX, area.maxZ)
+	local locked = not sameRect(area, WorldConfig.PLAYABLE)
+	return create("Frame")({
+		Name = name,
+		Position = UDim2.fromScale(x0, z0),
+		Size = UDim2.fromScale(x1 - x0, z1 - z0),
+		BackgroundColor3 = Theme.color(BIOME_COLORS[name] or Palette.biome.forest[2]),
+		BorderSizePixel = 0,
+		create("Frame")({
+			Name = "Locked",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Theme.ui.panel,
+			BackgroundTransparency = if locked then 1 - LOCKED_SHADE else 1,
+			BorderSizePixel = 0,
+		}),
+	}) :: Frame
 end
 
 local function Minimap(): Frame
@@ -51,16 +87,23 @@ local function Minimap(): Frame
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.88, 0.88),
-			BackgroundColor3 = Theme.color(Palette.biome.forest[2]),
+			-- Fundo = oceano; os biomas por cima.
+			BackgroundColor3 = Theme.color(Palette.biome.ocean[3]),
 			BorderSizePixel = 0,
+			ClipsDescendants = true,
 			create("UICorner")({ CornerRadius = Theme.slotCorner }),
+			Biome("forest", WorldConfig.BIOMES.forest),
+			Biome("winter", WorldConfig.BIOMES.winter),
+			Biome("lava", WorldConfig.BIOMES.lava),
+			Biome("desert", WorldConfig.BIOMES.desert),
 			create("Frame")({
 				Name = "PlayerDot",
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = dot,
-				Size = UDim2.fromScale(0.08, 0.08),
+				Size = UDim2.fromScale(0.07, 0.07),
 				BackgroundColor3 = Theme.ui.text,
 				BorderSizePixel = 0,
+				ZIndex = 2,
 				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			}),
 		}),

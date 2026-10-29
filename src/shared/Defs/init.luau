@@ -26,6 +26,8 @@ export type SettingValue = Types.SettingValue
 export type SettingDef = Types.SettingDef
 export type KitItem = Types.KitItem
 export type KitDef = Types.KitDef
+export type ResourceDef = Types.ResourceDef
+export type ResourceZoneDef = Types.ResourceZoneDef
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
@@ -36,6 +38,8 @@ local Defs: Types.DefsTables = table.freeze({
 	Stats = require("@self/Stats"),
 	Settings = require("@self/Settings"),
 	Kits = require("@self/Kits"),
+	Resources = require("@self/Resources"),
+	ResourceZones = require("@self/ResourceZones"),
 })
 
 local errors = Validate.all(Defs, Strings.has)

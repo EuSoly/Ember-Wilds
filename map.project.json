@@ -1,0 +1,12 @@
+{
+  "name": "ember-wilds-map",
+  "tree": {
+    "$className": "DataModel",
+    "Workspace": {
+      "$className": "Workspace",
+      "Map": {
+        "$path": "map"
+      }
+    }
+  }
+}

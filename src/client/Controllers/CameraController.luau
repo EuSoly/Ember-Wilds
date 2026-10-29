@@ -17,6 +17,7 @@ local Workspace = game:GetService("Workspace")
 
 local CameraMath = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("CameraMath"))
 local StatNames = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("StatNames"))
+local WorldConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("WorldConfig"))
 
 local PITCH = 65 -- graus (90 seria olhar reto para baixo)
 local DEFAULT_DISTANCE = 34
@@ -29,7 +30,8 @@ local WHEEL_STEP = 2 -- studs por "clique" da roda
 local SPECTATE_EXTRA_DISTANCE = 6 -- um pouco mais alta ao assistir alguém
 local ORBIT_SPEED = 6 -- graus por segundo, girando sem alvo
 local YAW_SHARPNESS = 3 -- volta ao ângulo normal (câmera do jogo nunca gira)
-local MAP_CENTER = Vector3.zero
+-- Sem alvo, a câmera do menu gira em volta do centro da floresta (onde se nasce).
+local MAP_CENTER = Vector3.new(WorldConfig.SPAWN.x, WorldConfig.SPAWN.y, WorldConfig.SPAWN.z)
 
 local CameraController = {}
 
@@ -97,9 +99,36 @@ local function updateYaw(mode: Mode, dt: number)
 	end
 end
 
+-- Só no Studio: Shift + P liga a câmera livre do Roblox (Freecam). Enquanto
+-- ela está ligada, esta câmera fica pausada, senão as duas brigam pelo
+-- CFrame a cada quadro e a Freecam não consegue se mover. Jogadores nunca
+-- têm a Freecam, então fora do Studio isto não existe.
+local devFreecam = false
+
+local function connectDevFreecam()
+	if not RunService:IsStudio() then
+		return
+	end
+	UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean)
+		-- gameProcessed: um "P" maiúsculo digitado no chat não liga a câmera livre.
+		if gameProcessed or input.KeyCode ~= Enum.KeyCode.P then
+			return
+		end
+		if
+			UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
+		then
+			devFreecam = not devFreecam
+			-- Ao voltar, recomeça em cima do alvo (sem "viajar" de onde a Freecam parou).
+			if not devFreecam then
+				focus = nil
+			end
+		end
+	end)
+end
+
 local function update(dt: number)
 	local camera = Workspace.CurrentCamera
-	if not camera then
+	if not camera or devFreecam then
 		return
 	end
 	-- Os scripts padrão do Roblox podem trocar o tipo da câmera ao renascer.
@@ -149,6 +178,7 @@ local function connectZoom()
 end
 
 function CameraController.Start(_self)
+	connectDevFreecam()
 	connectZoom()
 	RunService:BindToRenderStep("TopDownCamera", Enum.RenderPriority.Camera.Value + 1, update)
 end

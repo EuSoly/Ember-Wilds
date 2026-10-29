@@ -114,6 +114,20 @@ local function validKitDefs(): any
 	}
 end
 
+-- Defs falsas só com recursos e zonas válidos; cada teste estraga um campo.
+local function validWorldDefs(): any
+	return {
+		Tiers = {},
+		Items = {},
+		Resources = {
+			tree = { id = "tree", nameKey = "resource.tree", radius = 5, collisionRadius = 1.2, variants = 3 },
+		},
+		ResourceZones = {
+			forest_dense = { id = "forest_dense", nameKey = "zone.forest_dense", densities = { tree = 14 } },
+		},
+	}
+end
+
 local function containsError(errors: { string }, fragment: string): boolean
 	for _, message in errors do
 		if string.find(message, fragment, 1, true) then
@@ -483,6 +497,63 @@ return {
 			containsError(errors, `Setting "left_handed": order`),
 			`faltou erro de left_handed: {table.concat(errors, "; ")}`
 		)
+	end,
+
+	["real resources and zones load"] = function()
+		local tree = Defs.Resources.tree
+		assert(tree ~= nil and tree.radius == 5 and tree.collisionRadius == 1.2, "árvore real")
+		assert(Defs.Resources.gold_vein.variants == 1, "variações da jazida de ouro")
+		assert(Defs.Resources.pebble.decorative == true, "pedra do chão é enfeite")
+		assert(Defs.Resources.tree.size == 9, "tamanho da árvore")
+		assert(Defs.ResourceZones.forest_dense.densities.tree == 14, "densidade de árvores na floresta densa")
+		assert(Defs.ResourceZones.forest_open.densities.gold_vein == 0.3, "ouro na floresta aberta")
+	end,
+
+	["valid fake world defs give no errors"] = function()
+		local errors = Validate.all(validWorldDefs(), alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["zone with unknown resource is an error"] = function()
+		local defs = validWorldDefs()
+		defs.ResourceZones.forest_dense.densities.cactus = 3
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "cactus"), `faltou erro do recurso: {table.concat(errors, "; ")}`)
+	end,
+
+	["collision radius above radius is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.collisionRadius = 6
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "collisionRadius"), `faltou erro de colisão: {table.concat(errors, "; ")}`)
+	end,
+
+	["resource with bad radius or variants is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.radius = 0
+		defs.Resources.tree.variants = 1.5
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "radius"), `faltou erro de radius: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "variants"), `faltou erro de variants: {table.concat(errors, "; ")}`)
+	end,
+
+	["resource with bad size or jitter is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.size = 0
+		defs.Resources.tree.sizeJitter = 0.7
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "size deve"), `faltou erro de size: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "sizeJitter"), `faltou erro de sizeJitter: {table.concat(errors, "; ")}`)
+	end,
+
+	["zone with empty or negative densities is an error"] = function()
+		local defs = validWorldDefs()
+		defs.ResourceZones.forest_dense.densities = {}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "densities"), `faltou erro de vazio: {table.concat(errors, "; ")}`)
+		defs.ResourceZones.forest_dense.densities = { tree = -1 }
+		errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "densidade"), `faltou erro de negativo: {table.concat(errors, "; ")}`)
 	end,
 
 	["boolean setting needs a boolean default"] = function()

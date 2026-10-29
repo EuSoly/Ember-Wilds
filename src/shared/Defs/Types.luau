@@ -91,9 +91,35 @@ export type KitDef = {
 	items: { KitItem },
 }
 
+-- Recursos do mundo (árvore, rocha...). radius = espaço que ocupa (para o
+-- espalhador não encostar outro); collisionRadius = raio da única peça que
+-- bloqueia a passagem; variants = quantas variações de modelo existem.
+export type ResourceDef = {
+	id: string,
+	nameKey: string,
+	radius: number,
+	collisionRadius: number,
+	variants: number,
+	-- Largura (studs, a maior medida vista de cima) do modelo no jogo: o modelo
+	-- do Studio é redimensionado para ela. nil = usa o tamanho do modelo.
+	size: number?,
+	-- Variação de tamanho de cada exemplar (0.15 = ±15%). nil = 0.
+	sizeJitter: number?,
+	-- true = só enfeite (pedras do chão): sem colisão e sem a tag Resource.
+	decorative: boolean?,
+}
+
+-- Zona de recursos desenhada no mapa (Map/Zones, atributo ZoneType).
+-- densities: id em Resources → quantos por 10.000 studs².
+export type ResourceZoneDef = {
+	id: string,
+	nameKey: string,
+	densities: { [string]: number },
+}
+
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
--- CosmeticSlots/Cosmetics/Expressions/Stats/Settings/Kits para os testes
--- poderem validar só Tiers/Items.
+-- CosmeticSlots/Cosmetics/Expressions/Stats/Settings/Kits/Resources/ResourceZones
+-- para os testes poderem validar só Tiers/Items.
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
@@ -103,6 +129,8 @@ export type DefsTables = {
 	Stats: { [string]: StatDef },
 	Settings: { [string]: SettingDef },
 	Kits: { [string]: KitDef },
+	Resources: { [string]: ResourceDef },
+	ResourceZones: { [string]: ResourceZoneDef },
 }
 
 return nil

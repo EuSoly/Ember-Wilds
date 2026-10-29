@@ -9,6 +9,7 @@
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |
+| `src/shared/World` | `Shared.World` | Formas do mapa vistas de cima, espalhador de recursos (puros) e leitura das peças do mapa |
 | `src/shared/UIFlow` | `Shared.UIFlow` | Regras puras das telas: estados, compra de kit, contagem pontos→moeda, formato das configurações |
 | `assets/ui` | `ReplicatedStorage.UITemplates` | Moldes das telas (instâncias em arquivo, sem scripts) |
 | `net/game.blink` | — | Contrato de rede; gera `src/server/Net.luau` e `src/client/Net.luau` |
@@ -19,9 +20,11 @@
 | `src/client/Controllers` | `Client.Controllers` | Um módulo por sistema do cliente |
 | `src/client/Boneco` | `Client.Boneco` | Boneco visual (montagem e renderer); quem liga é o `BonecoController` |
 | `src/client/Screens` | `Client.Screens` | Telas de molde (menu, morte, configurações, lista de kits); quem liga é o `ScreenController` |
+| `src/client/World` | `Client.World` | Efeitos do mundo no cliente: bolha de ar, copas transparentes, aviso de borda; quem liga é o `WorldFxController` |
 | `src/client/UITemplates` | `Client.UITemplates` | `Template.luau`: liga os moldes ao código pelos nomes |
 | `src/character` | `StarterPlayer.StarterCharacterScripts` | `Animate` e `Health` vazios (para o Roblox não pôr os padrões) |
 | `src/first` | `ReplicatedFirst.First` | Tela de carregamento (script + molde; roda antes de tudo) |
+| `map.project.json` + `map/` | — | Só para o backup do mapa com `rojo syncback` (o `rojo serve` não usa) |
 | `tests` | — | Testes do Lune |
 
 ## Ciclo de vida: Init e Start
@@ -124,6 +127,12 @@ No servidor:
 
 Veja `telas.md`.
 
+## Mundo e mapa
+
+O mapa é desenhado à mão no Studio (`Workspace.Map`, fora do Rojo) e o `MapService` espalha os recursos por zona com semente fixa (mesmas posições em toda partida). A geometria e o espalhador são puros e testados (`Shared/World`). A água deixa lento **dentro da simulação** (`Simulation/WaterSim.luau`, dos dois lados, como o `FacingSim`); o fôlego e o "na água" são atributos do Player (`WaterService`). Iluminação de dia e noite, bolha de ar, copas transparentes e aviso de borda são do cliente. Veja `mapa.md`.
+
+**Regra:** o `WaterSim` é o dono de `Humanoid.WalkSpeed` (escreve a cada passo da simulação). Qualquer outro modificador de velocidade no futuro (armas na mão, frio, montaria) tem de entrar **na simulação**, junto dele, senão é sobrescrito.
+
 ## Câmera
 
-`CameraController`: câmera `Scriptable` a 65°, sem girar, distância 34 (zoom entre 28 e 40), seguindo o personagem com suavização. Sem personagem (menu e morte), segue o jogador do `SpectateTarget` um pouco mais alto ou, sem ninguém vivo, gira devagar sobre o centro do mapa. As contas estão em `src/shared/CameraMath.luau`.
+`CameraController`: câmera `Scriptable` a 65°, sem girar, distância 34 (zoom entre 28 e 40), seguindo o personagem com suavização. Sem personagem (menu e morte), segue o jogador do `SpectateTarget` um pouco mais alto ou, sem ninguém vivo, gira devagar sobre o centro da floresta (`WorldConfig.SPAWN`). No Studio, **Shift + P** liga a câmera livre do Roblox e pausa esta. As contas estão em `src/shared/CameraMath.luau`.
