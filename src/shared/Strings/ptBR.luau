@@ -108,4 +108,19 @@ return table.freeze({
 	["kit.kit_veteran"] = "Veterano",
 	["kit.price"] = "{price} pts",
 	["kit.points"] = "Pontos para kit: {points}",
+
+	-- Mundo
+	["world.locked"] = "Região ainda não descoberta",
+
+	-- Recursos do mundo
+	["resource.tree"] = "Árvore",
+	["resource.rock"] = "Rocha",
+	["resource.gold_vein"] = "Jazida de ouro",
+	["resource.berry_bush"] = "Arbusto de frutinha",
+
+	-- Zonas de recurso (Map/Zones, atributo ZoneType)
+	["zone.forest_dense"] = "Floresta densa",
+	["zone.forest_open"] = "Floresta aberta",
+	["zone.quarry"] = "Pedreira",
+	["zone.berry_field"] = "Campo de frutinhas",
 })

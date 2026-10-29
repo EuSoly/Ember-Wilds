@@ -379,6 +379,51 @@ local function validateKits(errors: { string }, defs: Types.DefsTables, hasStrin
 	end
 end
 
+local function validateResources(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	-- Tabelas ausentes (testes antigos) contam como vazias.
+	local resources: { [string]: Types.ResourceDef } = (defs :: any).Resources or {}
+	local zones: { [string]: Types.ResourceZoneDef }? = (defs :: any).ResourceZones
+
+	for key, resource in resources do
+		checkId(errors, "Resource", key, resource.id)
+		checkString(errors, "Resource", key, "nameKey", resource.nameKey, hasString)
+		local radius, collision = resource.radius, resource.collisionRadius
+		if not isFiniteNumber(radius) or radius <= 0 then
+			table.insert(errors, `Resource "{key}": radius deve ser maior que 0`)
+		elseif not isFiniteNumber(collision) or collision <= 0 or collision > radius then
+			-- A peça sólida não pode ser maior que o espaço que o recurso ocupa.
+			table.insert(errors, `Resource "{key}": collisionRadius deve ser maior que 0 e no máximo radius`)
+		end
+		if not isWholeNumber(resource.variants, 1) then
+			table.insert(errors, `Resource "{key}": variants deve ser inteiro maior ou igual a 1`)
+		end
+	end
+
+	if zones == nil then
+		return
+	end
+	for key, zone in zones do
+		checkId(errors, "ResourceZone", key, zone.id)
+		checkString(errors, "ResourceZone", key, "nameKey", zone.nameKey, hasString)
+		local densities = zone.densities
+		if type(densities) ~= "table" or next(densities) == nil then
+			table.insert(errors, `ResourceZone "{key}": densities não pode ser vazio`)
+			continue
+		end
+		for resourceId, density in densities do
+			if resources[resourceId] == nil then
+				table.insert(errors, `ResourceZone "{key}": recurso "{resourceId}" não existe em Resources`)
+			end
+			if not isFiniteNumber(density) or density < 0 then
+				table.insert(
+					errors,
+					`ResourceZone "{key}": densidade de "{resourceId}" deve ser número maior ou igual a 0`
+				)
+			end
+		end
+	end
+end
+
 -- Devolve a lista de erros encontrados (vazia = tudo certo).
 function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): { string }
 	local errors: { string } = {}
@@ -426,6 +471,7 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 	validateStats(errors, defs, hasString)
 	validateSettings(errors, defs, hasString)
 	validateKits(errors, defs, hasString)
+	validateResources(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors
