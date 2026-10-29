@@ -1,1 +1,34 @@
-print("Hello world, from client!")
+--!strict
+-- Bootstrap do cliente: carrega todo ModuleScript dentro de Controllers/
+-- (em ordem alfabética) e roda o ciclo Init/Start de todos.
+-- Para criar um controlador novo, basta adicionar um arquivo em src/client/Controllers.
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Lifecycle = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Lifecycle"))
+
+-- Carrega (e valida) as definições de conteúdo antes de tudo: se algum item ou
+-- tier estiver errado, o jogo para aqui com a lista de erros no Output.
+require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Defs"))
+
+local function loadSystems(folder: Instance): { Lifecycle.System }
+	local modules = {}
+	for _, child in folder:GetChildren() do
+		if child:IsA("ModuleScript") then
+			table.insert(modules, child)
+		end
+	end
+	table.sort(modules, function(a, b)
+		return a.Name < b.Name
+	end)
+
+	local systems = {}
+	for _, module in modules do
+		local system = (require :: any)(module) :: Lifecycle.System
+		system.Name = system.Name or module.Name
+		table.insert(systems, system)
+	end
+	return systems
+end
+
+Lifecycle.run(loadSystems(script:WaitForChild("Controllers")))
+print("[Client] pronto")
