@@ -288,6 +288,66 @@ local function validateSettings(errors: { string }, defs: Types.DefsTables, hasS
 	end
 end
 
+local function isWholeNumber(value: any, min: number): boolean
+	return isFiniteNumber(value) and value % 1 == 0 and value >= min
+end
+
+local function validateKits(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local kits: { [string]: Types.KitDef }? = (defs :: any).Kits
+	if kits == nil then
+		return
+	end
+
+	local orders: { [number]: string } = {}
+	for key, kit in kits do
+		checkId(errors, "Kit", key, kit.id)
+		checkString(errors, "Kit", key, "nameKey", kit.nameKey, hasString)
+
+		if not isWholeNumber(kit.order, 1) then
+			table.insert(errors, `Kit "{key}": order deve ser inteiro maior ou igual a 1`)
+		elseif orders[kit.order] ~= nil then
+			-- A ordem decide a posição na tela: repetida deixaria a lista instável.
+			table.insert(errors, `Kit "{key}": order {kit.order} repetida (também em "{orders[kit.order]}")`)
+		else
+			orders[kit.order] = key
+		end
+
+		if not isWholeNumber(kit.price, 0) then
+			table.insert(errors, `Kit "{key}": price deve ser inteiro maior ou igual a 0`)
+		end
+
+		local items = kit.items
+		if type(items) ~= "table" or #items == 0 then
+			table.insert(errors, `Kit "{key}": items não pode ser vazio`)
+			continue
+		end
+
+		local bags = 0
+		for _, entry in items do
+			local item = defs.Items[entry.id]
+			if item == nil then
+				table.insert(errors, `Kit "{key}": item "{tostring(entry.id)}" não existe em Items`)
+				continue
+			end
+			-- Um kit nunca pode dar mais do que cabe no maior inventário possível.
+			local maxCount = item.maxStack * InventoryConfig.MAX_SLOTS
+			if not isWholeNumber(entry.count, 1) or entry.count > maxCount then
+				table.insert(errors, `Kit "{key}": count de "{entry.id}" deve ser inteiro entre 1 e {maxCount}`)
+			end
+			if item.category == "bag" then
+				bags += 1
+				-- A mochila é vestida, e só se veste uma.
+				if entry.count ~= 1 then
+					table.insert(errors, `Kit "{key}": mochila "{entry.id}" deve ter count 1`)
+				end
+			end
+		end
+		if bags > 1 then
+			table.insert(errors, `Kit "{key}": no máximo uma mochila por kit (há {bags})`)
+		end
+	end
+end
+
 -- Devolve a lista de erros encontrados (vazia = tudo certo).
 function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): { string }
 	local errors: { string } = {}
@@ -334,6 +394,7 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 	validateExpressions(errors, defs)
 	validateStats(errors, defs, hasString)
 	validateSettings(errors, defs, hasString)
+	validateKits(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors

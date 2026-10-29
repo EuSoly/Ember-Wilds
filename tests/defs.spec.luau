@@ -73,6 +73,39 @@ local function validDataDefs(): any
 	}
 end
 
+-- Defs falsas só com itens e kits válidos; cada teste estraga um campo.
+local function validKitDefs(): any
+	return {
+		Tiers = {},
+		Items = {
+			wood = validItem("wood"),
+			leather_bag = {
+				id = "leather_bag",
+				nameKey = "item.leather_bag",
+				category = "bag",
+				maxStack = 1,
+				bagSlots = 6,
+			},
+		},
+		Kits = {
+			kit_a = {
+				id = "kit_a",
+				nameKey = "kit.kit_a",
+				order = 1,
+				price = 1000,
+				items = { { id = "wood", count = 20 }, { id = "leather_bag", count = 1 } },
+			},
+			kit_b = {
+				id = "kit_b",
+				nameKey = "kit.kit_b",
+				order = 2,
+				price = 0,
+				items = { { id = "wood", count = 1 } },
+			},
+		},
+	}
+end
+
 local function containsError(errors: { string }, fragment: string): boolean
 	for _, message in errors do
 		if string.find(message, fragment, 1, true) then
@@ -333,6 +366,67 @@ return {
 		defs.Settings.quality.options = { "auto", string.rep("a", 16) }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["real kits load"] = function()
+		local kit = Defs.Kits.kit_survivor
+		assert(kit.price == 4000, `preço do kit_survivor: {kit.price}`)
+		local hasBag = false
+		for _, item in kit.items do
+			if item.id == "leather_bag" then
+				hasBag = true
+			end
+		end
+		assert(hasBag, "kit_survivor deveria ter leather_bag")
+	end,
+
+	["valid fake kits give no errors"] = function()
+		local errors = Validate.all(validKitDefs(), alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with unknown item is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = { { id = "plastic", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "plastic"), `faltou erro do item: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with two bags is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.items = { { id = "leather_bag", count = 1 }, { id = "leather_bag", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "mochila"), `faltou erro de mochila: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with a bag count above one is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.items = { { id = "leather_bag", count = 2 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "mochila"), `faltou erro de mochila: {table.concat(errors, "; ")}`)
+	end,
+
+	["kits with repeated order is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.order = 1
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "order"), `faltou erro de order: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with invalid price or count is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.price = -1
+		defs.Kits.kit_b.items = { { id = "wood", count = 1.5 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "price"), `faltou erro de price: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "count"), `faltou erro de count: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit without items is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = {}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "items"), `faltou erro de items: {table.concat(errors, "; ")}`)
 	end,
 
 	["boolean setting needs a boolean default"] = function()

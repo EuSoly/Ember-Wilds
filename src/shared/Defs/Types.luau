@@ -79,9 +79,20 @@ export type SettingDef = {
 	options: { string }?, -- "choice"
 }
 
+-- Kits iniciais: comprados antes de nascer com os pontos da vida que acabou.
+-- Uma mochila na lista é vestida em vez de ir para um slot.
+export type KitItem = { id: string, count: number }
+export type KitDef = {
+	id: string,
+	nameKey: string,
+	order: number, -- posição na lista (1 = primeiro)
+	price: number, -- em pontos
+	items: { KitItem },
+}
+
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
--- CosmeticSlots/Cosmetics/Expressions/Stats/Settings para os testes poderem
--- validar só Tiers/Items.
+-- CosmeticSlots/Cosmetics/Expressions/Stats/Settings/Kits para os testes
+-- poderem validar só Tiers/Items.
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
@@ -90,6 +101,7 @@ export type DefsTables = {
 	Expressions: { [string]: ExpressionDef },
 	Stats: { [string]: StatDef },
 	Settings: { [string]: SettingDef },
+	Kits: { [string]: KitDef },
 }
 
 return nil
