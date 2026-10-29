@@ -19,6 +19,7 @@ return {
 		local m = ArmorRules.modifiers(helmet({ defense = 0.25 }))
 		assert(m.defense == 0.25, `defense {m.defense}`)
 		assert(m.coldFactor == 1 and m.hungerFactor == 1 and m.thirstFactor == 1, "fatores ausentes = 1")
+		assert(m.heatFactor == 1, "heatFactor ausente = 1")
 		assert(ArmorRules.reduce(20, m) == 15, `20 com 25% de defesa deu {ArmorRules.reduce(20, m)}`)
 	end,
 

@@ -85,6 +85,7 @@ function CampfireModel.build(): Model
 	flame.PivotOffset = flame.CFrame:Inverse()
 	model:AddTag(StatNames.HeatSourceTag)
 	model:SetAttribute(StatNames.HeatRadius, SurvivalConfig.CAMPFIRE_RADIUS)
+	model:SetAttribute(StatNames.BurnRadius, SurvivalConfig.BURN_RADIUS)
 	return model
 end
 

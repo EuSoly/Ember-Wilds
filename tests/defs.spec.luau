@@ -253,6 +253,7 @@ return {
 			{ stats = { coldFactor = -1 }, field = "coldFactor" },
 			{ stats = { hungerFactor = 0 / 0 }, field = "hungerFactor" },
 			{ stats = { thirstFactor = 2.5 }, field = "thirstFactor" },
+			{ stats = { heatFactor = 3 }, field = "heatFactor" },
 		}
 		for _, case in cases do
 			local item = validItem("helmet")

@@ -31,7 +31,7 @@ wood_helmet = {
 },
 coat = {
 	id = "coat", nameKey = "item.coat", category = "armor", maxStack = 1,
-	armor = { coldFactor = 0.5 },  -- o frio cai na metade da velocidade (0 a 2; também hungerFactor e thirstFactor)
+	armor = { coldFactor = 0.5 },  -- o frio cai na metade da velocidade (0 a 2; também hungerFactor, thirstFactor e heatFactor)
 },
 ```
 

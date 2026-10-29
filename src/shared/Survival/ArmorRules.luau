@@ -8,12 +8,14 @@ export type Modifiers = {
 	coldFactor: number, -- multiplica a queda do frio
 	hungerFactor: number, -- multiplica a queda da fome
 	thirstFactor: number, -- multiplica a queda da sede
+	heatFactor: number, -- multiplica quanto o calor sobe
 }
 
 local ArmorRules = {}
 
 -- Sem armadura: não corta dano, barras caem no ritmo normal.
-ArmorRules.NONE = table.freeze({ defense = 0, coldFactor = 1, hungerFactor = 1, thirstFactor = 1 }) :: Modifiers
+ArmorRules.NONE =
+	table.freeze({ defense = 0, coldFactor = 1, hungerFactor = 1, thirstFactor = 1, heatFactor = 1 }) :: Modifiers
 
 -- Modificadores de um item (nil ou sem bloco armor = NONE).
 function ArmorRules.modifiers(def: Types.ItemDef?): Modifiers
@@ -26,6 +28,7 @@ function ArmorRules.modifiers(def: Types.ItemDef?): Modifiers
 		coldFactor = armor.coldFactor or 1,
 		hungerFactor = armor.hungerFactor or 1,
 		thirstFactor = armor.thirstFactor or 1,
+		heatFactor = armor.heatFactor or 1,
 	}
 end
 

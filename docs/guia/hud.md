@@ -55,7 +55,7 @@ Cuidado com efeitos (`vide.effect`): ler uma fonte dentro de um efeito faz o efe
 
 O HUD **não lê o Workspace** (com streaming, partes do mapa podem nem estar carregadas). Ele lê:
 
-- **Atributos do Player**: `Health`, `Hunger`, `Cold`, `Thirst` (0–100), `Score`, `Rank`. Nomes em `src/shared/StatNames.luau`.
+- **Atributos do Player**: `Health`, `Hunger`, `Cold`, `Thirst`, `Heat` (0–100; o anel do frio mostra o calor quando ele passa de 0), `Score`, `Rank`. Nomes em `src/shared/StatNames.luau`.
 - **Atributo do Workspace**: `CycleStart`, o início do ciclo de dia (`src/shared/DayCycle.luau` calcula dia, hora e aviso de noite).
 - **InputActions** do contexto `Gameplay` (seleção de slot, mochila).
 - **Inventário** (`InventoryState`): cópia mantida pelo servidor via rede (Blink). A hotbar e a mochila só leem daqui; para mover ou selecionar, o cliente pede ao servidor. Veja `inventario.md`.

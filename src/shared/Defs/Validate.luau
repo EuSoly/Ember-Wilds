@@ -480,6 +480,7 @@ local ARMOR_LIMITS = {
 	{ field = "coldFactor", max = SurvivalConfig.MAX_FACTOR },
 	{ field = "hungerFactor", max = SurvivalConfig.MAX_FACTOR },
 	{ field = "thirstFactor", max = SurvivalConfig.MAX_FACTOR },
+	{ field = "heatFactor", max = SurvivalConfig.MAX_FACTOR },
 }
 local function validateArmor(errors: { string }, key: string, item: Types.ItemDef)
 	local armor = item.armor

@@ -18,6 +18,8 @@ local function ctx(overrides: { [string]: any }?): SurvivalRules.Context
 		isNight = false,
 		inWater = false,
 		nearFire = false,
+		onFire = false,
+		biomeHeat = 0,
 		oxygen = 100,
 		mods = ArmorRules.NONE,
 		biomeColdFactor = 1,
@@ -58,11 +60,17 @@ return {
 			EAT_INTERVAL = 0.5,
 			MAX_DEFENSE = 0.9,
 			MAX_FACTOR = 2,
+			BURN_RADIUS = 3,
+			ON_FIRE_HEAT = 20,
+			HEAT_COOL = 5,
+			HEAT_FULL_DAMAGE = 1.2,
+			REGEN_MAX_HEAT = 65,
 		}
 		for key, value in approved do
 			assert((SurvivalConfig :: any)[key] == value, `{key} = {(SurvivalConfig :: any)[key]}, aprovado {value}`)
 		end
 		assert(SurvivalConfig.BIOME_COLD_FACTOR.forest == 1, "floresta = 1")
+		assert(SurvivalConfig.BIOME_HEAT.forest == 0, "floresta não esquenta")
 	end,
 
 	["day drains hunger thirst and cold"] = function()
@@ -173,6 +181,60 @@ return {
 		for cause, key in SurvivalRules.CAUSE_KEYS do
 			assert(Strings.has(key), `falta o texto {key} da causa {cause}`)
 		end
+	end,
+
+	["full bars start without heat"] = function()
+		assert(SurvivalRules.full().heat == 0, "começa sem calor")
+	end,
+
+	["fire tops up cold then overflows into heat"] = function()
+		local r = SurvivalRules.step(bars({ cold = 90 }), ctx({ nearFire = true, onFire = true }), 1)
+		expect("frio", r.bars.cold, 100)
+		expect("calor", r.bars.heat, 10)
+		local again = SurvivalRules.step(r.bars, ctx({ nearFire = true, onFire = true }), 1)
+		expect("calor depois de mais 1 s", again.bars.heat, 30)
+	end,
+
+	["near the fire only fills cold"] = function()
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ nearFire = true }), 10)
+		expect("frio", r.bars.cold, 100)
+		expect("calor", r.bars.heat, 0)
+	end,
+
+	["heat cools before cold drops"] = function()
+		local r = SurvivalRules.step(bars({ heat = 50 }), ctx({ isNight = true }), 2)
+		expect("calor", r.bars.heat, 40)
+		expect("frio parado", r.bars.cold, 100)
+	end,
+
+	["full heat hurts with heat cause"] = function()
+		local r = SurvivalRules.step(bars({ heat = 100 }), ctx({ nearFire = true, onFire = true }), 1)
+		expect("dano", r.damage, 1.2)
+		assert(r.cause == "heat", `causa {r.cause}`)
+	end,
+
+	["no regen while too hot"] = function()
+		local hot = SurvivalRules.step(bars({ health = 50, heat = 70 }), ctx(), 0.5)
+		expect("vida com calor 67,5", hot.bars.health, 50)
+		local warm = SurvivalRules.step(bars({ health = 50, heat = 40 }), ctx(), 2)
+		expect("vida com calor 30", warm.bars.health, 51)
+	end,
+
+	["armor heat factor slows the heat"] = function()
+		local mods = { defense = 0, coldFactor = 1, hungerFactor = 1, thirstFactor = 1, heatFactor = 0.5 }
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ nearFire = true, onFire = true, mods = mods }), 1)
+		expect("calor", r.bars.heat, 10)
+	end,
+
+	["biome heat warms without fire"] = function()
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ biomeHeat = 4 }), 2)
+		expect("calor", r.bars.heat, 8)
+		expect("frio", r.bars.cold, 100)
+	end,
+
+	["nil or NaN heat counts as none"] = function()
+		local r = SurvivalRules.step({ health = 100, hunger = 100, cold = 100, thirst = 100, heat = 0 / 0 }, ctx(), 1)
+		expect("calor", r.bars.heat, 0)
 	end,
 
 	["eating adds and caps"] = function()

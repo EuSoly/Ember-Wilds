@@ -15,7 +15,7 @@
 -- - ServerStorage.DevCampfire:Invoke(player): fogueira de teste 6 studs à frente
 --   do personagem (luz do fogo de noite; também esquenta: tag HeatSource).
 -- - ServerStorage.DevBar:Invoke(player, "Hunger", 0): grava uma barra (Health,
---   Hunger, Cold ou Thirst), de 0 a 100, para testar a sobrevivência.
+--   Hunger, Cold, Thirst ou Heat), de 0 a 100, para testar a sobrevivência.
 -- - ServerStorage.DevArmor:Invoke(player, "helmet") -> boolean: veste uma
 --   armadura (category "armor"); nil tira.
 local HttpService = game:GetService("HttpService")
@@ -80,10 +80,10 @@ function DevDataService.Start(_self)
 		return DataService.resetForDev(player)
 	end)
 
-	local bars = { StatNames.Health, StatNames.Hunger, StatNames.Cold, StatNames.Thirst }
+	local bars = { StatNames.Health, StatNames.Hunger, StatNames.Cold, StatNames.Thirst, StatNames.Heat }
 	newCommand("DevBar", function(player: Player, name: string, value: number)
 		if not table.find(bars, name) or type(value) ~= "number" or value ~= value then
-			warn(`[DevBar] use Health, Hunger, Cold ou Thirst com um número`)
+			warn(`[DevBar] use Health, Hunger, Cold, Thirst ou Heat com um número`)
 			return
 		end
 		player:SetAttribute(name, math.clamp(value, 0, StatNames.StatusMax))

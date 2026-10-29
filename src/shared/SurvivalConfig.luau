@@ -15,6 +15,15 @@ return table.freeze({
 	FIRE_WARMTH = 5, -- perto do fogo o frio SOBE isso por segundo (no lugar de cair)
 	CAMPFIRE_RADIUS = 12, -- studs de alcance do calor da fogueira (atributo HeatRadius)
 
+	-- Calor (por cima do frio): só enche com o frio cheio e continuando a esquentar.
+	BURN_RADIUS = 3, -- studs do centro da fogueira que contam como "em cima do fogo" (atributo BurnRadius)
+	ON_FIRE_HEAT = 20, -- em cima do fogo, esquenta isso por segundo (frio, depois calor)
+	HEAT_COOL = 5, -- fora do calor, o calor esfria isso por segundo (o frio só cai depois)
+	HEAT_FULL_DAMAGE = 1.2, -- vida por segundo com o calor cheio
+	REGEN_MAX_HEAT = 65, -- a vida só regenera com o calor abaixo disso
+	-- Calor do bioma por segundo. Reservado para deserto de dia e lava (N4).
+	BIOME_HEAT = table.freeze({ forest = 0 }),
+
 	REGEN_MIN = 35, -- fome, frio e sede precisam estar nisso ou mais para a vida regenerar
 	REGEN_RATE = 0.5, -- vida que volta por segundo
 

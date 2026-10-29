@@ -19,7 +19,13 @@ export type FoodEffect = { hunger: number?, thirst: number?, health: number? }
 -- Armadura vestida (uma por vez, como o item de cabeça do Starve).
 -- defense: fração do dano de COMBATE cortada (0 a 0,9).
 -- *Factor: multiplica quanto a barra cai (0,5 = metade da velocidade; até 2).
-export type ArmorStats = { defense: number?, coldFactor: number?, hungerFactor: number?, thirstFactor: number? }
+export type ArmorStats = {
+	defense: number?,
+	coldFactor: number?,
+	hungerFactor: number?,
+	thirstFactor: number?,
+	heatFactor: number?, -- multiplica quanto o calor sobe (proteções de calor, N4)
+}
 
 export type ItemDef = {
 	id: string,

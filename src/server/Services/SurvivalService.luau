@@ -1,6 +1,6 @@
 --!strict
--- Sobrevivência (G1): dono dos atributos Health, Hunger, Cold e Thirst do
--- Player (o HUD lê). A cada SurvivalConfig.TICK, para cada jogador vivo, monta
+-- Sobrevivência (G1): dono dos atributos Health, Hunger, Cold, Thirst e Heat
+-- do Player (o HUD lê). A cada SurvivalConfig.TICK, para cada jogador vivo, monta
 -- o contexto (noite, água, fôlego, fogo perto, armadura) e chama
 -- SurvivalRules.step; o dano das barras vazias vai para CharacterService.hurt
 -- (que mata com a causa certa quando a vida zera). Cada vida nova começa cheia.
@@ -42,6 +42,7 @@ local function readBars(player: Player): SurvivalRules.Bars
 		hunger = player:GetAttribute(StatNames.Hunger) :: any,
 		cold = player:GetAttribute(StatNames.Cold) :: any,
 		thirst = player:GetAttribute(StatNames.Thirst) :: any,
+		heat = player:GetAttribute(StatNames.Heat) :: any,
 	}
 end
 
@@ -50,6 +51,7 @@ local function writeBars(player: Player, bars: SurvivalRules.Bars)
 	setIfChanged(player, StatNames.Hunger, bars.hunger)
 	setIfChanged(player, StatNames.Cold, bars.cold)
 	setIfChanged(player, StatNames.Thirst, bars.thirst)
+	setIfChanged(player, StatNames.Heat, bars.heat)
 end
 
 -- Raiz do personagem vivo do jogador (nil no menu, morto ou montando).
@@ -70,8 +72,11 @@ local function isNight(): boolean
 	return DayCycle.at(Workspace:GetServerTimeNow() - start).isNight
 end
 
--- Alguma fonte de calor (tag HeatSource) alcança `position` no plano XZ?
-local function nearFire(position: Vector3): boolean
+-- Fontes de calor (tag HeatSource) em volta de `position`, no plano XZ:
+-- near = dentro do HeatRadius de alguma (enche o frio); on = dentro do
+-- BurnRadius de alguma (em cima do fogo: enche o calor).
+local function fireAround(position: Vector3): (boolean, boolean)
+	local near, on = false, false
 	for _, source in CollectionService:GetTagged(StatNames.HeatSourceTag) do
 		-- Fogueira apagada/destruída no meio do tick: ignora.
 		if source.Parent == nil then
@@ -81,6 +86,7 @@ local function nearFire(position: Vector3): boolean
 		if type(radius) ~= "number" then
 			continue
 		end
+		local burn = source:GetAttribute(StatNames.BurnRadius)
 		local center: Vector3
 		if source:IsA("Model") then
 			center = source:GetPivot().Position
@@ -90,11 +96,15 @@ local function nearFire(position: Vector3): boolean
 			continue
 		end
 		local dx, dz = center.X - position.X, center.Z - position.Z
-		if dx * dx + dz * dz <= radius * radius then
-			return true
+		local distanceSquared = dx * dx + dz * dz
+		if distanceSquared <= radius * radius then
+			near = true
+		end
+		if type(burn) == "number" and distanceSquared <= burn * burn then
+			on = true
 		end
 	end
-	return false
+	return near, on
 end
 
 local function step(player: Player, dt: number, night: boolean)
@@ -109,14 +119,17 @@ local function step(player: Player, dt: number, night: boolean)
 		return
 	end
 	local oxygen = player:GetAttribute(StatNames.Oxygen)
+	local near, on = fireAround(root.Position)
 	local result = SurvivalRules.step(readBars(player), {
 		isNight = night,
 		inWater = player:GetAttribute(StatNames.InWater) == true,
-		nearFire = nearFire(root.Position),
+		nearFire = near,
+		onFire = on,
 		oxygen = if type(oxygen) == "number" then oxygen else StatNames.StatusMax,
 		mods = ArmorService.modifiers(player),
 		-- Só a floresta é jogável; o inverno (N2) vai escolher pelo bioma da posição.
 		biomeColdFactor = SurvivalConfig.BIOME_COLD_FACTOR.forest,
+		biomeHeat = SurvivalConfig.BIOME_HEAT.forest,
 	}, dt)
 	writeBars(player, result.bars)
 	local cause = result.cause
