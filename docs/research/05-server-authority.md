@@ -51,4 +51,11 @@ Racing, Soccer e Laser Tag (Server Authority Templates no Roblox). Laser Tag usa
 - **Binding scriptable**: as definições de tipo atuais (luau-lsp 1.70.1) têm `InputBinding.Type = Enum.InputBindingType.Scriptable` e `InputBinding:Fire(state)`; `InputAction:Fire` está marcado como depreciado. Usamos `AimBinding:Fire(Vector2)`.
 - **RunService:BindToSimulation(func, frequency: Enum.StepFrequency?, priority: number?)** com `Enum.StepFrequency.Hz60` (há Hz1, Hz5, Hz10, Hz15, Hz30, Hz60).
 - **`Humanoid:ApplyDescription` está depreciado** → `ApplyDescriptionAsync`.
-- **Pendente de teste no Studio**: rotação do HumanoidRootPart via CFrame dentro da simulação (tremor/correções com latência), thumbstick nativo sob IAS, e se o botão de pulo do celular some com `JumpHeight = 0`.
+- **O plugin do Rojo NÃO aplica `AuthorityMode` ao vivo** num place existente (confirmado no Studio em 29/10/2026: com o código sincronizado, `HumanoidRootPart:GetNetworkOwner()` era o jogador = modelo antigo). Precisa setar à mão: Workspace → Properties → AuthorityMode = Server, e salvar. A propriedade também não pode ser lida nem escrita por script (capability RobloxScript).
+- **Teste do spike F1 via MCP do Studio (29/10/2026), com AuthorityMode = Server:**
+  - `GetNetworkOwner()` do root = `nil` (servidor é dono).
+  - A mira enviada pelo cliente com `AimBinding:Fire(Vector2)` chega no servidor: `Aim:GetState()` dá o mesmo valor dentro e fora do `BindToSimulation`.
+  - O servidor gira o personagem pela simulação; LookVector do servidor = do cliente.
+  - Movimento nativo (WASD) sob IAS funciona: W anda para −Z (topo da tela) e o personagem continua olhando para o mouse.
+  - Com 150 ms de `IncomingReplicationLag`: andando na diagonal, maior passo de giro 0,9°/frame, posição sem saltos (máx. 0,27 stud/frame); volta completa do mouse ao redor do personagem sem nenhuma inversão/correção depois de alinhado. (Ressalva: Studio sem foco reduziu o FPS da amostragem; suavidade visual confirmada a olho pelo Elizeu.)
+- **Pendente**: botão de pulo do celular com `JumpHeight = 0` e thumbstick no emulador (o MCP não emula dispositivo).

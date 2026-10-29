@@ -25,7 +25,7 @@ Se o StyLua reclamar de formatação, `stylua src tests` corrige sozinho.
 O `rojo build` grava essas propriedades no arquivo, mas a sincronização ao vivo do plugin pode não aplicá-las num place que já existia. Confira uma vez:
 
 - **Apague o `Baseplate` antigo** do Workspace, se existir. O chão agora é criado pelo `WorldService` com o topo em Y = 0, e o Baseplate antigo fica no mesmo plano: os dois piscam (z-fighting).
-- **Workspace → AuthorityMode = Server.** Isso também liga StreamingEnabled, SignalBehavior Deferred, NextGen Replication, Input Action System e a simulação fixa.
+- **Workspace → AuthorityMode = Server.** (Obrigatório fazer à mão: o plugin do Rojo não aplica essa propriedade ao vivo — testado.) Isso também liga StreamingEnabled, SignalBehavior Deferred, NextGen Replication, Input Action System e a simulação fixa.
 - **Workspace → StreamingEnabled = true**, `StreamOutBehavior = Opportunistic`, `StreamingIntegrityMode = PauseOutsideLoadedArea`, `ModelStreamingBehavior = Improved`.
 - **StarterPlayer → CharacterUseJumpPower = false, CharacterJumpHeight = 0, EnableMouseLockOption = false.**
 - **Game Settings → Avatar:** preset "Consistent Gameplay" (ou Custom Scale com colisor único). Trava a proporção dos avatares.
