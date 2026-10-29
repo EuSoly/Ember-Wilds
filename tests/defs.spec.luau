@@ -203,6 +203,42 @@ return {
 		assert(containsError(errors, "intervalMax"), `faltou erro de intervalo: {table.concat(errors, "; ")}`)
 	end,
 
+	["flash only on event expressions"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.blink.flash = { color = "#E5484D", duration = 0.1 }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "flash só vale"), `faltou erro de flash: {table.concat(errors, "; ")}`)
+	end,
+
+	["event must be a known event"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.sneeze = {
+			id = "sneeze",
+			priority = 20,
+			eyes = "closed",
+			trigger = "event",
+			event = "sneeze",
+			duration = 0.3,
+		}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, `event "sneeze"`), `faltou erro de evento: {table.concat(errors, "; ")}`)
+	end,
+
+	["known event with flash gives no errors"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.hurt = {
+			id = "hurt",
+			priority = 100,
+			eyes = "squeeze",
+			trigger = "event",
+			event = "hurt",
+			duration = 0.5,
+			flash = { color = "#E5484D", duration = 0.15 },
+		}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
 	["exactly one always expression"] = function()
 		local defs = validLookDefs()
 		defs.Expressions.calm = { id = "calm", priority = 1, eyes = "open", trigger = "always" }

@@ -7,6 +7,7 @@
 -- O que aparece na tela é o boneco visual que cada cliente monta (BonecoModel).
 -- (Só roda no Roblox: cria instâncias.)
 local C = require("../BonecoConfig")
+local StatNames = require("../StatNames")
 
 local CharacterBody = {}
 
@@ -21,6 +22,8 @@ function CharacterBody.build(): Model
 	root.CanCollide = true
 	root.CastShadow = false
 	root.Anchored = false
+	-- Bonecos atravessam uns aos outros (o grupo é registrado no CharacterService).
+	root.CollisionGroup = StatNames.BonecoCollisionGroup
 	root.TopSurface = Enum.SurfaceType.Smooth
 	root.BottomSurface = Enum.SurfaceType.Smooth
 	-- Centro a HIP_HEIGHT + ROOT_HEIGHT/2 do chão (o spawn reposiciona de qualquer jeito).
@@ -36,6 +39,7 @@ function CharacterBody.build(): Model
 	head.CanTouch = false
 	head.Massless = true
 	head.CastShadow = false
+	head.CollisionGroup = StatNames.BonecoCollisionGroup
 	head.CFrame = root.CFrame * CFrame.new(0, C.HEAD_HEIGHT, 0)
 	head.Parent = model
 

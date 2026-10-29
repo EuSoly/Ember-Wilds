@@ -19,6 +19,12 @@ local EYE_STYLES: { Types.EyeStyle } = { "open", "closed", "squeeze" }
 table.freeze(EYE_STYLES)
 Validate.EYE_STYLES = EYE_STYLES
 
+-- Eventos que o boneco visual sabe disparar (BonecoRenderer). Uma expressão de
+-- evento com outro nome nunca apareceria, então é erro: evento novo precisa de
+-- código no renderer e de entrar nesta lista.
+Validate.HURT_EVENT = "hurt" -- dano (atributo HurtAt)
+Validate.KNOWN_EVENTS = table.freeze({ Validate.HURT_EVENT })
+
 local TRIGGERS = table.freeze({ "always", "periodic", "event", "condition" })
 
 local function isHex(value: any): boolean
@@ -121,6 +127,14 @@ local function validateExpressions(errors: { string }, defs: Types.DefsTables)
 		elseif trigger == "event" then
 			if type(expression.event) ~= "string" then
 				table.insert(errors, `Expression "{key}": trigger "event" precisa de event`)
+			elseif not table.find(Validate.KNOWN_EVENTS, expression.event) then
+				table.insert(
+					errors,
+					`Expression "{key}": event "{expression.event}" não existe (conhecidos: {table.concat(
+						Validate.KNOWN_EVENTS,
+						", "
+					)})`
+				)
 			end
 			if not isPositive(expression.duration) then
 				table.insert(errors, `Expression "{key}": duration deve ser maior que 0`)
@@ -145,7 +159,11 @@ local function validateExpressions(errors: { string }, defs: Types.DefsTables)
 			end
 		end
 
+		-- O flash é medido a partir do disparo do evento: fora de "event" nunca apareceria.
 		local flash = expression.flash
+		if flash ~= nil and trigger ~= "event" then
+			table.insert(errors, `Expression "{key}": flash só vale para trigger "event"`)
+		end
 		if flash ~= nil then
 			if not isHex(flash.color) then
 				table.insert(errors, `Expression "{key}": flash.color inválida (use #RRGGBB)`)

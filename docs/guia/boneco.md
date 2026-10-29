@@ -9,6 +9,10 @@ O jogador não é mais o avatar do Roblox: é um **boneco próprio** no estilo S
 | **Simulado** | servidor (e previsto no cliente pelo Server Authority) | O personagem do Roblox: `Humanoid` + `HumanoidRootPart` (o colisor) + uma `Head` invisível (só para o balão do chat). Tudo invisível. É ele que anda, gira para a mira e guarda os atributos. Montado por `src/shared/Models/CharacterBody.luau` e colocado em `StarterPlayer.StarterCharacter` pelo `CharacterService`. |
 | **Visual** | só no cliente, um para cada personagem que ele enxerga | O boneco que aparece na tela, numa pasta local `Workspace.BonecoVisuals`. Segue o `HumanoidRootPart` a cada quadro, anima e faz expressões. Não entra na simulação e não replica nada. |
 
+**Bonecos não colidem entre si:** o corpo simulado (`HumanoidRootPart` e `Head`) fica no grupo de colisão `Bonecos` (nome em `StatNames.BonecoCollisionGroup`), registrado pelo `CharacterService.Init` sem colisão consigo mesmo. Com o chão e o resto do mundo eles continuam colidindo. Para voltar a colidir, apague a linha `CollisionGroupSetCollidable` no `CharacterService`.
+
+Se o personagem ficar sem `HumanoidRootPart` (o streaming tirou, ou o Humanoid trocou a peça), o boneco visual some e volta quando a raiz reaparecer.
+
 Por que dois: é o jeito oficial de fazer visual com Server Authority. O visual nunca sofre rollback nem gera correção, e todos veem a mesma coisa porque cada cliente desenha a partir do **mesmo estado replicado**.
 
 ### O estado (atributos no personagem)
@@ -137,7 +141,7 @@ Uma entrada em `src/shared/Defs/Expressions.luau`. Fica ativa a de **maior prior
 | `"event"` | por `duration` segundos depois do evento | `event`, `duration` |
 | `"condition"` | enquanto um atributo está abaixo/acima de um limiar | `condition = { attribute, below?, above? }` |
 
-Estilos de olho (`eyes`): `"open"`, `"closed"`, `"squeeze"` ("> <"). Opcional: `flash = { color = "#RRGGBB", duration = s }` pinta corpo e mãos nessa cor (só funciona em expressões de evento).
+Estilos de olho (`eyes`): `"open"`, `"closed"`, `"squeeze"` ("> <"). Opcional: `flash = { color = "#RRGGBB", duration = s }` pinta corpo e mãos nessa cor.
 
 Exemplo: olhos fechados quando o frio fica abaixo de 35:
 
@@ -153,7 +157,7 @@ cold = {
 
 O atributo da condição é lido no **Player** do personagem (onde ficam as barras de status) ou, nos bonecos de teste, no próprio modelo.
 
-Hoje o único evento é `"hurt"` (disparado pelo `HurtAt`). Um evento novo precisa de código no `BonecoRenderer`. Um estilo de olho novo (ex. `"wink"`) também: o nome em `Validate.EYE_STYLES` e o desenho em `BonecoModel` (`buildEye`).
+O `flash` só é aceito em expressões de evento (a validação dá erro nos outros). Hoje o único evento é `"hurt"` (disparado pelo `HurtAt`); a lista fica em `Validate.KNOWN_EVENTS`, e um `event` fora dela dá erro no boot. Um evento novo precisa de código no `BonecoRenderer` e de entrar nessa lista. Um estilo de olho novo (ex. `"wink"`) também: o nome em `Validate.EYE_STYLES` e o desenho em `BonecoModel` (`buildEye`).
 
 ## Comandos de teste (Studio)
 

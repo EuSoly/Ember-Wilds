@@ -20,12 +20,15 @@ local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
 
 local ROOT_TIMEOUT = 10
 local BODY_SLOT = "body"
--- Evento que a expressão de dano escuta (Defs/Expressions: event = "hurt").
-local HURT_EVENT = "hurt"
+-- Evento que a expressão de dano escuta (um dos Validate.KNOWN_EVENTS).
+local HURT_EVENT = Validate.HURT_EVENT
+-- Pasta dos bonecos de teste (DevBonecoService): o nome deles é o do modelo.
+local DEV_CROWD_FOLDER = "DevCrowd"
 local RENDER_NAME = "Boneco"
 -- Pivô do golpe: centro do corpo, na altura das mãos (a mão faz um arco pela frente).
 local SWING_PIVOT = CFrame.new(0, C.VISUAL_OFFSET_Y + C.HAND_Y, 0)
@@ -44,23 +47,29 @@ type Entry = {
 	cosmeticId: string?,
 	equippedId: string?,
 	hurtAt: number?,
+	-- Sem raiz no personagem: o visual fica escondido até ela voltar.
+	hidden: boolean,
+	-- false enquanto o nome mostrado ainda não é o DisplayName do jogador.
+	nameResolved: boolean,
 	connections: { RBXScriptConnection },
 }
 
 local BonecoRenderer = {}
 
 local entries: { [Model]: Entry } = {}
--- Personagens esperando o HumanoidRootPart (para nunca montar dois visuais).
-local pending: { [Model]: boolean } = {}
+-- Personagens esperando o HumanoidRootPart. Cada chamada de add guarda uma
+-- ficha própria: se o personagem sair e voltar durante a espera, só a chamada
+-- mais nova monta o visual (nunca dois visuais para o mesmo personagem).
+local pending: { [Model]: {} } = {}
 local started = false
 
 local function isAlive(character: Model): boolean
 	return character:IsDescendantOf(Workspace) and CollectionService:HasTag(character, StatNames.BonecoTag)
 end
 
-local function displayNameOf(character: Model): string
-	local player = Players:GetPlayerFromCharacter(character)
-	return if player then player.DisplayName else character.Name
+local function isDevCrowd(character: Model): boolean
+	local parent = character.Parent
+	return parent ~= nil and parent.Name == DEV_CROWD_FOLDER
 end
 
 -- Condição de uma expressão (ex. frio): lê o atributo no Player do personagem
@@ -135,6 +144,15 @@ end
 -- personagens e custa só três GetAttribute por boneco.
 local function syncAttributes(entry: Entry)
 	local character = entry.character
+	-- O Player pode ainda não estar ligado ao personagem quando o visual nasce:
+	-- até achar, o nome é o do modelo; depois vira o DisplayName.
+	if not entry.nameResolved then
+		local player = Players:GetPlayerFromCharacter(character)
+		if player then
+			entry.boneco.nameLabel.Text = player.DisplayName
+			entry.nameResolved = true
+		end
+	end
 	local cosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT)
 	if cosmeticId ~= entry.cosmeticId then
 		applyCosmetic(entry, cosmeticId)
@@ -150,7 +168,8 @@ local function syncAttributes(entry: Entry)
 end
 
 local function build(character: Model, hrp: BasePart)
-	local boneco = BonecoModel.build(displayNameOf(character))
+	local player = Players:GetPlayerFromCharacter(character)
+	local boneco = BonecoModel.build(if player then player.DisplayName else character.Name)
 	boneco.root.CFrame = hrp.CFrame
 	local entry: Entry = {
 		character = character,
@@ -165,6 +184,9 @@ local function build(character: Model, hrp: BasePart)
 		cosmeticId = nil,
 		equippedId = nil,
 		hurtAt = nil,
+		hidden = false,
+		-- Bonecos de teste não têm Player: o nome do modelo já é o certo.
+		nameResolved = player ~= nil or isDevCrowd(character),
 		connections = {},
 	}
 	entries[character] = entry
@@ -198,11 +220,13 @@ local function add(instance: Instance)
 	if entries[character] or pending[character] then
 		return
 	end
-	pending[character] = true
+	local token = {}
+	pending[character] = token
 	task.spawn(function()
 		local hrp = character:WaitForChild("HumanoidRootPart", ROOT_TIMEOUT)
-		-- Saiu enquanto esperava (remove limpou o pending): não monta.
-		if not pending[character] then
+		-- Saiu enquanto esperava (remove limpou o pending) ou outra chamada mais
+		-- nova assumiu: esta não monta.
+		if pending[character] ~= token then
 			return
 		end
 		pending[character] = nil
@@ -249,6 +273,22 @@ local function animate(entry: Entry, dt: number, speed: number, now: number)
 	end
 end
 
+-- A raiz guardada ainda é do personagem? Se não (o Humanoid trocou a peça, ou o
+-- streaming a tirou), procura de novo. false = o personagem está sem raiz agora.
+local function refreshRoot(entry: Entry): boolean
+	if entry.hrp.Parent == entry.character then
+		return true
+	end
+	local found = entry.character:FindFirstChild("HumanoidRootPart")
+	if found and found:IsA("BasePart") then
+		entry.hrp = found
+		-- Recomeça a medir a velocidade daqui (sem pulo de velocidade falsa).
+		entry.lastPosition = found.Position
+		return true
+	end
+	return false
+end
+
 local function update(dt: number)
 	local camera = Workspace.CurrentCamera
 	local cameraPosition = if camera then camera.CFrame.Position else nil
@@ -263,11 +303,21 @@ local function update(dt: number)
 		-- Todo boneco, inclusive os longe da câmera (skin e item certos ao chegar perto).
 		syncAttributes(entry)
 
-		local hrp = entry.hrp
-		if hrp.Parent == nil then
-			continue -- raiz saiu (ex. streaming): o visual espera o personagem sumir
+		-- Sem raiz, o visual some (melhor que ficar congelado no último lugar)
+		-- e volta quando ela reaparecer.
+		local hasRoot = refreshRoot(entry)
+		if hasRoot == entry.hidden then
+			entry.hidden = not hasRoot
+			BonecoModel.setVisible(entry.boneco, hasRoot)
+			if hasRoot then
+				entry.lastPosition = entry.hrp.Position
+			end
 		end
-		local target = hrp.CFrame
+		if not hasRoot then
+			continue
+		end
+
+		local target = entry.hrp.CFrame
 		table.insert(roots, entry.boneco.root)
 		table.insert(cframes, target)
 

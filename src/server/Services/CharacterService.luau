@@ -2,11 +2,13 @@
 -- Personagem do jogo = corpo simulado mínimo e invisível (CharacterBody), igual
 -- para todos (mesmo hitbox no PvP; não há mais avatar do Roblox). O visual é
 -- o boneco que cada cliente monta para os personagens com a tag Boneco.
--- - Init: coloca o StarterCharacter em StarterPlayer antes do primeiro spawn.
+-- - Init: registra o grupo de colisão dos bonecos (não colidem entre si) e
+--   coloca o StarterCharacter em StarterPlayer antes do primeiro spawn.
 -- - Todo personagem nasce sem pulo e sem rotação automática (quem gira é a
 --   simulação de mira, FacingSim).
 -- - hurt(): a função única de dano (marca HurtAt para a careta e tira vida).
 local CollectionService = game:GetService("CollectionService")
+local PhysicsService = game:GetService("PhysicsService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
@@ -32,7 +34,8 @@ end
 -- e, se for de um jogador, tira `amount` do atributo Health do Player.
 -- Hoje só o comando de dev chama; nas fases G, combate/fome/frio.
 function CharacterService.hurt(character: Model, amount: number)
-	if amount <= 0 or character:FindFirstChildOfClass("Humanoid") == nil then
+	-- `not (amount > 0)` também recusa NaN (NaN <= 0 seria false e passaria).
+	if not (amount > 0) or character:FindFirstChildOfClass("Humanoid") == nil then
 		return
 	end
 	character:SetAttribute(StatNames.HurtAt, Workspace:GetServerTimeNow())
@@ -59,6 +62,14 @@ local function setupPlayer(player: Player)
 end
 
 function CharacterService.Init(_self)
+	-- Bonecos não colidem entre si (pedido de design): o grupo do corpo simulado
+	-- só desliga a colisão consigo mesmo; com o mundo continua colidindo.
+	local group = StatNames.BonecoCollisionGroup
+	if not PhysicsService:IsCollisionGroupRegistered(group) then
+		PhysicsService:RegisterCollisionGroup(group)
+	end
+	PhysicsService:CollisionGroupSetCollidable(group, group, false)
+
 	-- Precisa estar em StarterPlayer antes do primeiro spawn para valer já nele.
 	local old = StarterPlayer:FindFirstChild("StarterCharacter")
 	if old then

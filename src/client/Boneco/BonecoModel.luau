@@ -387,6 +387,15 @@ function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?): boolean
 	return true
 end
 
+-- Mostra ou esconde o boneco (tira do Workspace). Usado quando o personagem
+-- fica sem HumanoidRootPart: é melhor sumir do que ficar congelado no lugar.
+function BonecoModel.setVisible(boneco: Boneco, visible: boolean)
+	local parent: Instance? = if visible then visualFolder() else nil
+	if boneco.model.Parent ~= parent then
+		boneco.model.Parent = parent
+	end
+end
+
 function BonecoModel.destroy(boneco: Boneco)
 	boneco.model:Destroy()
 end

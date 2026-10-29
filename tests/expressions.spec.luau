@@ -68,6 +68,20 @@ return {
 		end
 	end,
 
+	["long gap does not blink late and schedules after now"] = function()
+		local defs = fakeDefs()
+		local state = ExpressionState.new()
+		currentId(state, defs, 0) -- agenda o piscar para 3
+		-- Boneco sem atualizar por 100 s (ex. longe da câmera): não "paga" as
+		-- piscadas perdidas nem pisca logo ao voltar.
+		local id = currentId(state, defs, 100)
+		assert(id == "neutral", `em 100 esperava neutral, veio {id}`)
+		assert(currentId(state, defs, 100.05) == "neutral", "não deveria piscar logo depois")
+		-- random = 0 → intervalo mínimo (3 s): a próxima piscada é em 103.
+		local next = currentId(state, defs, 103.05)
+		assert(next == "blink", `em 103,05 esperava blink, veio {next}`)
+	end,
+
 	["hurt wins over blink"] = function()
 		local defs = fakeDefs()
 		local state = ExpressionState.new()

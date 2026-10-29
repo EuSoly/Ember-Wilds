@@ -31,6 +31,9 @@ return table.freeze({
 	CosmeticPrefix = "Cosmetic_",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
+	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
+	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
+	BonecoCollisionGroup = "Bonecos",
 
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
