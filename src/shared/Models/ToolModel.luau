@@ -5,7 +5,7 @@
 -- Quando os modelos de verdade chegarem, só este arquivo muda.
 --
 -- O modelo tem PrimaryPart = Handle e um Attachment "Grip" no cabo: quem segura
--- alinha o Grip com o RightGripAttachment da mão (veja EquipService).
+-- alinha o Grip com o centro da mão direita do boneco (veja BonecoModel.setHeldItem).
 -- Eixos do Grip: Y = ao longo do cabo (para a frente da mão), X = lado da
 -- cabeça (fica deitada, visível da câmera de cima).
 -- (Só roda no Roblox: cria instâncias.)
@@ -15,11 +15,11 @@ local Theme = require("../Theme")
 
 local ToolModel = {}
 
--- Medidas em studs, para um avatar de ~5 studs.
-local HANDLE_LENGTH = 2.4
-local HANDLE_THICKNESS = 0.25
-local HEAD_LENGTH = 1.5
-local HEAD_THICKNESS = 0.32
+-- Medidas em studs, na escala do boneco (corpo de 3,6 studs, mão de 1,3).
+local HANDLE_LENGTH = 3.4
+local HANDLE_THICKNESS = 0.35
+local HEAD_LENGTH = 2.0
+local HEAD_THICKNESS = 0.45
 -- Onde a mão segura: perto do fim do cabo (oposto à cabeça).
 local GRIP_OFFSET = -HANDLE_LENGTH * 0.3
 
@@ -44,7 +44,9 @@ local function newPart(name: string, size: Vector3, color: Color3): Part
 end
 
 -- Monta o modelo do item, ou nil se o item não tem modelo na mão.
-function ToolModel.build(itemId: string): Model?
+-- `cosmeticId` é ignorado por enquanto: é o gancho para skins de ferramenta no
+-- futuro (slot "tool" em CosmeticSlots).
+function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
 	if def == nil or def.category ~= "tool" then
 		return nil

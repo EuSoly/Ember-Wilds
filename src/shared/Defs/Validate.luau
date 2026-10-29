@@ -16,7 +16,8 @@ local Validate = {}
 -- Lista única de estilos de olho: usada aqui e pelo boneco visual (que monta
 -- uma variação de olho para cada um).
 local EYE_STYLES: { Types.EyeStyle } = { "open", "closed", "squeeze" }
-Validate.EYE_STYLES = table.freeze(EYE_STYLES)
+table.freeze(EYE_STYLES)
+Validate.EYE_STYLES = EYE_STYLES
 
 local TRIGGERS = table.freeze({ "always", "periodic", "event", "condition" })
 
