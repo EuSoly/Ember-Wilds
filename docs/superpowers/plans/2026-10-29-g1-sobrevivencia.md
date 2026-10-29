@@ -282,3 +282,20 @@ Comportamento:
 - [ ] **Passo 2:** check passa; `graphify update .`.
 - [ ] **Passo 3:** commit `docs: guia da sobrevivência e comandos de teste`.
 - [ ] **PARADA FINAL:** avise. O Claude valida no Studio e faz a revisão final.
+
+---
+
+### Tarefa 7 (adendo): calor por cima do frio
+
+**Spec:** seção "Adendo (29/10)" do design.
+
+**Interfaces:**
+- `SurvivalConfig`: `BURN_RADIUS = 3`, `ON_FIRE_HEAT = 20`, `HEAT_COOL = 5`, `HEAT_FULL_DAMAGE = 1.2`, `REGEN_MAX_HEAT = 65`, `BIOME_HEAT = { forest = 0 }`.
+- `SurvivalRules.Bars` ganha `heat: number` (nil/NaN = 0; `full()` tem `heat = 0`); `Context` ganha `onFire: boolean` e `biomeHeat: number`; `Cause` ganha `"heat"` (`CAUSE_KEYS.heat = "death.cause.heat"`); ordem de desempate: hunger, cold, heat, thirst, oxygen.
+- Regra: `heating = (onFire and ON_FIRE_HEAT or 0) + biomeHeat`. Com `heating > 0`: o frio sobe até 100 e o que sobra (×`mods.heatFactor`) enche o calor; o frio não cai. Sem: calor > 0 esfria `HEAT_COOL`/s e o frio fica parado; calor 0 → frio como antes. Calor ≥ 100 → `HEAT_FULL_DAMAGE`/s. Regen exige calor < `REGEN_MAX_HEAT`.
+- `ArmorStats`/`Modifiers` ganham `heatFactor` (0 a `MAX_FACTOR`, padrão 1).
+- `StatNames.Heat = "Heat"`, `StatNames.BurnRadius = "BurnRadius"` (atributo na fonte de calor; a fogueira sai com `BURN_RADIUS`).
+- `UIMath.temperatureRing(cold, heat) -> (value: number, hot: boolean)`: com calor > 0 mostra o calor (`hot = true`), senão o frio.
+- HUD: o anel do frio usa `temperatureRing`; em modo quente, cor `Theme.status.heat`, pulso com calor ≥ 65 e pisca com calor cheio.
+
+Testes: survival.spec (fogo enche frio e transborda no calor; calor esfria e o frio fica; calor cheio tira 1,2/s com causa "heat"; sem regen com calor ≥ 65; heatFactor; calor do bioma; calor nil = 0; números aprovados), armor.spec (heatFactor), defs.spec (heatFactor fora da faixa), uimath.spec (temperatureRing).

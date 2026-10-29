@@ -86,3 +86,16 @@ Tudo vazio = morte em ~30 s; só a fome vazia = ~67 s.
 ## O que fica para quem implementa
 
 Nomes internos de variáveis, formato exato das mensagens de aviso, e os testes extras além dos listados no plano.
+
+## Adendo (29/10): temperatura = frio + calor por cima
+
+Pedido do Elizeu durante a implementação: "a barra não é só de frio, é de temperatura, então precisa ter dano por calor também". Ele escolheu o modelo **"frio + calor por cima"** (no lugar de uma barra única com faixa confortável no meio):
+
+- O frio continua como aprovado (100 = quentinho, 0 = congelando).
+- Uma segunda barra, **calor** (atributo `Heat`, 0 a 100, começa em 0), só enche quando o jogador **continua esquentando com o frio já cheio**: em cima do fogo (perto da fogueira só enche o frio, não passa do topo) e, no futuro, deserto de dia e lava (`BIOME_HEAT`, hoje 0 na floresta).
+- Fora disso o calor esfria sozinho, e o frio só volta a cair depois que o calor zera.
+- Calor cheio tira vida (causa "Calor"). A vida só regenera com o calor abaixo de 65 (regra do Starve na lava).
+- O anel do frio no HUD vira laranja e mostra o calor enquanto o calor for maior que 0.
+- Armaduras ganham `heatFactor` (multiplica quanto o calor sobe), preparando as proteções de calor (N4).
+
+Números (minha sugestão, ajustáveis em `SurvivalConfig`): em cima do fogo = até 3 studs do centro da fogueira; esquenta +20/s (calor cheio em ~5 s depois do frio cheio); esfria −5/s; calor cheio = −1,2 de vida/s (Starve: −12 de 200 a cada 5 s).
