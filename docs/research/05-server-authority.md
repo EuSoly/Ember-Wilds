@@ -44,3 +44,11 @@ Workspace.AuthorityMode = Server define automaticamente: NextGenerationReplicati
 
 ## Templates oficiais
 Racing, Soccer e Laser Tag (Server Authority Templates no Roblox). Laser Tag usa RemoteEvents para os tiros.
+
+## Achados na implementação (F0/F1, 29/10/2026)
+
+- **Rojo 7.7.1** grava `AuthorityMode` (token 0 = Server), `StreamingEnabled`, `SignalBehavior` (como `SignalBehavior2`), `StreamOutBehavior`, `StreamingIntegrityMode` e `ModelStreamingBehavior` pelo `$properties` do Workspace num `rojo build`. Ainda não confirmado se o plugin aplica essas propriedades **ao vivo** num place existente — conferir no Studio.
+- **Binding scriptable**: as definições de tipo atuais (luau-lsp 1.70.1) têm `InputBinding.Type = Enum.InputBindingType.Scriptable` e `InputBinding:Fire(state)`; `InputAction:Fire` está marcado como depreciado. Usamos `AimBinding:Fire(Vector2)`.
+- **RunService:BindToSimulation(func, frequency: Enum.StepFrequency?, priority: number?)** com `Enum.StepFrequency.Hz60` (há Hz1, Hz5, Hz10, Hz15, Hz30, Hz60).
+- **`Humanoid:ApplyDescription` está depreciado** → `ApplyDescriptionAsync`.
+- **Pendente de teste no Studio**: rotação do HumanoidRootPart via CFrame dentro da simulação (tremor/correções com latência), thumbstick nativo sob IAS, e se o botão de pulo do celular some com `JumpHeight = 0`.

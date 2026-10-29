@@ -35,3 +35,4 @@ Cada arquivo `tests/**/*.spec.luau` devolve uma tabela `{ ["nome do teste"] = fu
 - `docs/superpowers/specs/` — design do MVP.
 - `docs/superpowers/plans/` — planos de implementação por fase.
 - `docs/research/` — pesquisas técnicas que embasam as escolhas.
+- `docs/guia/` — como rodar, arquitetura do código e como adicionar conteúdo.
