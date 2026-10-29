@@ -23,6 +23,11 @@
         "$path": "ServerPackages"
       }
     },
+    "Players": {
+      "$properties": {
+        "CharacterAutoLoads": false
+      }
+    },
     "StarterPlayer": {
       "$properties": {
         "CharacterUseJumpPower": false,

@@ -77,3 +77,30 @@ event SetSetting {
 		Choice: string(1..16)?
 	}
 }
+
+-- Pedido para nascer (botões Jogar / Jogar de novo). KitId = id em Defs/Kits,
+-- opcional. O servidor (SpawnService) ignora se o perfil não carregou, se o
+-- jogador já está vivo ou nascendo; kit inexistente ou caro demais = nasce sem kit.
+event RequestSpawn {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		KitId: string(1..32)?
+	}
+}
+
+-- Resumo da vida que acabou, para a tela de morte (DeathService.kill).
+-- CauseKey = chave de Strings (ex. "death.cause.dev"); Days = ciclos vividos;
+-- Points = pontos da vida; Currency = Golden Ember concedida de fato (após tetos).
+event LifeEnded {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		CauseKey: string(1..48),
+		Days: u16,
+		Points: u32,
+		Currency: u16
+	}
+}

@@ -6,8 +6,8 @@
 -- - Uma vez por vida (LifeRules): morreu e saiu, ou PlayerRemoving e
 --   desligamento juntos, contam uma vez só. A próxima vida começa no próximo
 --   CharacterAdded.
--- - NÃO limpa inventário/status nem faz renascer: isso é da morte de verdade
---   (fases G, que chamam endLife ao morrer).
+-- - NÃO limpa inventário/status nem faz renascer: isso é da morte
+--   (DeathService.kill, que chama endLife e usa o resumo devolvido).
 -- - Sair do jogo e o servidor fechando contam como fim de vida (onUnloading).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -21,6 +21,10 @@ local StatsService = require(script.Parent.StatsService)
 
 local LifeService = {}
 
+-- Resumo de uma vida terminada (tela de morte): pontos, dias vividos
+-- (LifeRules.daysSurvived) e Golden Ember concedida de fato (depois dos tetos).
+export type LifeSummary = { points: number, days: number, currency: number }
+
 local lives: { [Player]: LifeRules.Life } = {}
 
 -- Pontos da vida atual: número finito e não negativo, senão 0.
@@ -32,30 +36,33 @@ local function readScore(player: Player): number
 	return score
 end
 
--- Fim de vida (as fases G chamam ao morrer). Já terminada = não faz nada.
-function LifeService.endLife(player: Player)
+-- Fim de vida (DeathService.kill e a saída do jogo). Devolve o resumo, ou nil
+-- se não havia vida ativa (já terminada) ou perfil carregado.
+function LifeService.endLife(player: Player): LifeSummary?
 	-- Sem perfil (carregando, falhou ou já fechou) não há onde contabilizar:
 	-- a vida continua ativa e os pontos ficam, para não sumirem sem virar moeda.
 	if DataService.data(player) == nil then
 		if lives[player] ~= nil and lives[player].active then
 			warn(`[LifeService] fim de vida de {player.Name} sem perfil carregado: ignorado`)
 		end
-		return
+		return nil
 	end
 	local seconds = LifeRules.finish(lives[player], os.clock())
 	if seconds == nil then
-		return
+		return nil
 	end
 	local score = readScore(player)
-	CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score), "life_end")
+	local days = LifeRules.daysSurvived(seconds)
+	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score), "life_end")
 	if score > 0 then
 		StatsService.add(player, "score_total", score)
 	end
 	StatsService.record(player, "score_best", score)
-	StatsService.record(player, "days_best", LifeRules.daysSurvived(seconds))
+	StatsService.record(player, "days_best", days)
 	StatsService.add(player, "deaths", 1)
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
+	return { points = score, days = days, currency = granted }
 end
 
 local function startLifeIfNone(player: Player)

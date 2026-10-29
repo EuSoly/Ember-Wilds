@@ -163,6 +163,7 @@ local SerdesThread: thread?
 Queue.Reliable[0] = table.create(256)
 Queue.Reliable[1] = table.create(256)
 Queue.Reliable[2] = table.create(256)
+Queue.Reliable[8] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
@@ -277,6 +278,35 @@ function SerdesFunctions.WriteEVENT_SetSetting(Value: { Id: string, Number: numb
 	end
 end
 
+function SerdesFunctions.WriteEVENT_RequestSpawn(Value: { KitId: string? }): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 7)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.KitId ~= nil and 1 or 0)
+	if Value.KitId ~= nil then
+		-- Allocate BLOCK: 1 bytes
+		local BLOCK_START = Allocate(1)
+		local Length = #Value.KitId
+		buffer.writeu8(SendBuffer, BLOCK_START + 0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Value.KitId, Length)
+	end
+end
+
+function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number })
+	-- Read BLOCK: 9 bytes
+	local BLOCK_START = Read(9)
+	local Value = {} :: any
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.CauseKey = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.CauseKey < 1 then error(`Expected length of "Value.CauseKey" to be larger than or equal to 1, got {#Value.CauseKey} instead.`) end
+	if #Value.CauseKey > 48 then error(`Expected length of "Value.CauseKey" to be smaller than or equal to  48, got {#Value.CauseKey} instead.`) end
+	Value.Days = buffer.readu16(RecieveBuffer, BLOCK_START + 1)
+	Value.Points = buffer.readu32(RecieveBuffer, BLOCK_START + 3)
+	Value.Currency = buffer.readu16(RecieveBuffer, BLOCK_START + 7)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -300,6 +330,12 @@ if not RunService:IsRunning() then
 	},
 	SetSetting = {
 		Fire = NOOP
+	},
+	RequestSpawn = {
+		Fire = NOOP
+	},
+	LifeEnded = {
+		On = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -372,6 +408,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"InventoryCapacity\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[2], {Value} :: {any})
+			end
+		elseif Index == 8 then
+			local Value: { CauseKey: string, Days: number, Points: number, Currency: number } = SerdesFunctions.ReadEVENT_LifeEnded()
+			if Events.Reliable[8] ~= nil then
+				task.spawn(Events.Reliable[8], Value)
+			else
+				if #Queue.Reliable[8] > 256 then
+					warn("[Blink]: Event queue of \"LifeEnded\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[8], {Value} :: {any})
 			end
 		end
 	end
@@ -458,6 +504,25 @@ local Returns = table.freeze({
 	SetSetting = {
 		Fire = function(Value: { Id: string, Number: number?, Flag: boolean?, Choice: string? }): ()
 			SerdesFunctions.WriteEVENT_SetSetting(Value)
+		end
+	},
+	RequestSpawn = {
+		Fire = function(Value: { KitId: string? }): ()
+			SerdesFunctions.WriteEVENT_RequestSpawn(Value)
+		end
+	},
+	LifeEnded = {
+		On = function(Listener: (Value: { CauseKey: string, Days: number, Points: number, Currency: number }) -> ()): () -> ()
+			Events.Reliable[8] = Listener
+			for Index, Arguments in Queue.Reliable[8] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[8] = {}
+			return function (): ()
+				if Events.Reliable[8] == Listener then
+					Events.Reliable[8] = nil
+				end
+			end
 		end
 	},
 })
