@@ -404,6 +404,13 @@ local function validateResources(errors: { string }, defs: Types.DefsTables, has
 		if jitter ~= nil and (not isFiniteNumber(jitter) or jitter < 0 or jitter >= 0.5) then
 			table.insert(errors, `Resource "{key}": sizeJitter deve ficar entre 0 e 0.5`)
 		end
+		if resource.sizeAxis ~= nil and resource.sizeAxis ~= "width" and resource.sizeAxis ~= "height" then
+			table.insert(errors, `Resource "{key}": sizeAxis deve ser "width" ou "height"`)
+		end
+		local sink = resource.sink
+		if sink ~= nil and (not isFiniteNumber(sink) or sink < 0 or sink >= 1) then
+			table.insert(errors, `Resource "{key}": sink deve ficar entre 0 e 1`)
+		end
 		if resource.decorative ~= nil and type(resource.decorative) ~= "boolean" then
 			table.insert(errors, `Resource "{key}": decorative deve ser true ou false`)
 		end

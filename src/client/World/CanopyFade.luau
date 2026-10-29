@@ -1,7 +1,7 @@
 --!strict
 -- Copas transparentes: a câmera é de cima, então a copa de uma árvore
 -- esconderia o boneco que passa embaixo dela. As peças com a tag Occluder
--- (copas) que ficam entre a câmera e o PRÓPRIO boneco ficam semitransparentes
+-- (árvores) que ficam entre a câmera e o PRÓPRIO boneco ficam semitransparentes
 -- só para este jogador (LocalTransparencyModifier) e voltam ao normal depois.
 --
 -- Barato: só olha copas perto do boneco (no plano) e mede a distância do
@@ -14,7 +14,7 @@ local Workspace = game:GetService("Workspace")
 local StatNames = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("StatNames"))
 
 local CHECK_EVERY = 0.1 -- segundos
-local FADED = 0.6 -- 0 = normal, 1 = invisível
+local FADED = 0.85 -- 0 = normal, 1 = invisível (testado: com 0.6 o boneco sumia embaixo)
 local NEAR = 24 -- só copas a até essa distância (studs, no plano) do boneco
 
 local CanopyFade = {}
@@ -33,6 +33,17 @@ end
 local function covers(part: BasePart, from: Vector3, to: Vector3): boolean
 	local radius = math.max(part.Size.X, part.Size.Y, part.Size.Z) / 2
 	return distanceToSegment(part.Position, from, to) < radius
+end
+
+-- A peça e as texturas/decals dela: Texture não some junto com a peça, e as
+-- folhas dos modelos do Studio usam Textures nas faces.
+local function setFade(part: BasePart, value: number)
+	part.LocalTransparencyModifier = value
+	for _, child in part:GetChildren() do
+		if child:IsA("Decal") then
+			child.LocalTransparencyModifier = value
+		end
+	end
 end
 
 -- Liga o efeito (chamado uma vez pelo WorldFxController).
@@ -62,12 +73,12 @@ function CanopyFade.start()
 			-- Só mexe nas que mudaram.
 			for part in now do
 				if not faded[part] then
-					part.LocalTransparencyModifier = FADED
+					setFade(part, FADED)
 				end
 			end
 			for part in faded do
 				if not now[part] and part.Parent then
-					part.LocalTransparencyModifier = 0
+					setFade(part, 0)
 				end
 			end
 			faded = now

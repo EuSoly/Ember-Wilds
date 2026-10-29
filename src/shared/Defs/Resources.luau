@@ -12,7 +12,13 @@ local Types = require("./Types")
 
 type ResourceDef = Types.ResourceDef
 
-type Options = { size: number?, sizeJitter: number?, decorative: boolean? }
+type Options = {
+	size: number?,
+	sizeAxis: ("width" | "height")?,
+	sizeJitter: number?,
+	sink: number?,
+	decorative: boolean?,
+}
 
 local function resource(
 	id: string,
@@ -29,7 +35,9 @@ local function resource(
 		collisionRadius = collisionRadius,
 		variants = variants,
 		size = o.size,
+		sizeAxis = o.sizeAxis,
 		sizeJitter = o.sizeJitter,
+		sink = o.sink,
 		decorative = o.decorative,
 	})
 end
@@ -38,12 +46,14 @@ end
 -- "<id>_<variação>" (ex. tree_2); sem modelo, entra o provisório feito por
 -- código (Models/ResourceModels). Ver docs/guia/mapa.md.
 local Resources: { [string]: ResourceDef } = {
-	tree = resource("tree", 5, 1.2, 3, { size = 9, sizeJitter = 0.15 }),
-	rock = resource("rock", 4, 3, 3, { size = 7, sizeJitter = 0.15 }),
-	gold_vein = resource("gold_vein", 4, 3, 1, { size = 7, sizeJitter = 0.15 }),
-	berry_bush = resource("berry_bush", 3, 2, 1, { size = 5, sizeJitter = 0.15 }),
-	-- Pedras do chão: só enfeite, espalhadas junto com os recursos.
-	pebble = resource("pebble", 1.5, 0.4, 10, { size = 1.8, sizeJitter = 0.4, decorative = true }),
+	-- Árvores medidas pela altura (~14): a câmera fica a ~30 studs, mais alto
+	-- que isso as copas cobrem a tela.
+	tree = resource("tree", 5, 1.4, 3, { size = 14, sizeAxis = "height", sizeJitter = 0.15 }),
+	rock = resource("rock", 5, 3.8, 3, { size = 9, sizeJitter = 0.15 }),
+	gold_vein = resource("gold_vein", 5, 3.8, 1, { size = 9, sizeJitter = 0.15 }),
+	berry_bush = resource("berry_bush", 4, 2.8, 1, { size = 7, sizeJitter = 0.15 }),
+	-- Pedras do chão: só enfeite, metade enterradas, espalhadas junto com os recursos.
+	pebble = resource("pebble", 1.5, 0.4, 10, { size = 1.8, sizeJitter = 0.4, sink = 0.5, decorative = true }),
 }
 
 return table.freeze(Resources)

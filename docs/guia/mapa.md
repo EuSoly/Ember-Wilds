@@ -89,9 +89,10 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 
 - **Trocar um modelo:** substitua o modelo com o mesmo nome. **Mais uma variação:** coloque `tree_4` (por exemplo) e suba o `variants` do recurso em `src/shared/Defs/Resources.luau`. Se faltar a variação pedida, o jogo usa a `_1`; se faltar o modelo inteiro, usa um provisório feito por código.
 - **Tamanho:** modele em qualquer escala. Cada recurso tem um **tamanho padrão** (`size`, a maior largura vista de cima, em studs) em `Defs/Resources.luau`, e o jogo redimensiona o modelo para ele. Cada exemplar ainda varia (`sizeJitter`: árvores, rochas, ouro e arbustos ±15%; pedras do chão ±40%) e sai **girado** aleatoriamente (o giro vem do sorteio do espalhador; nos recursos colocados à mão, é o giro do marcador). Tudo é sorteado com semente fixa: o mapa continua igual em toda partida.
-- **Altura das árvores:** a câmera fica a uns 30 studs de altura; árvores altas demais cobrem a tela. Hoje a árvore tem `size = 9` (fica com ~13 de altura).
+- **Largura ou altura:** o `size` mede a largura (maior medida vista de cima), a não ser que o recurso tenha `sizeAxis = "height"`. As **árvores** usam a altura (`size = 14`): a câmera fica a uns 30 studs de altura, e copas com proporções diferentes não deixam nenhuma árvore minúscula. Rocha e ouro têm 9 de largura, arbusto 7.
+- **Enterrar:** `sink` diz quanto da altura fica abaixo do chão (as pedras do chão têm `sink = 0.5`, metade enterradas).
 - **Colisão:** você não precisa fazer nada. O jogo deixa todas as peças do seu modelo sem colisão e cria uma peça invisível no pé (o tronco, nas árvores; a base nos outros), com o raio `collisionRadius` de `Defs/Resources.luau`, que cresce e diminui junto com o exemplar. As pedras do chão não têm colisão nenhuma e podem ficar coladas nas rochas e árvores.
-- **Copa:** nas árvores, as peças acima de 40% da altura viram copa (ficam transparentes quando o boneco passa embaixo).
+- **Transparência:** a árvore inteira (copa e tronco) fica transparente quando o boneco passa embaixo ou atrás dela.
 - **Peças:** quanto menos peças por modelo, mais leve no celular (uma união ou MeshPart em vez de dezenas de Parts).
 - Outros modelos guardados: `ServerStorage.Assets.Future` (minério de diamante, para o inverno) e `ServerStorage.Assets.Unused`.
 

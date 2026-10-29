@@ -501,10 +501,14 @@ return {
 
 	["real resources and zones load"] = function()
 		local tree = Defs.Resources.tree
-		assert(tree ~= nil and tree.radius == 5 and tree.collisionRadius == 1.2, "árvore real")
+		assert(tree ~= nil and tree.radius == 5 and tree.collisionRadius == 1.4, "árvore real")
 		assert(Defs.Resources.gold_vein.variants == 1, "variações da jazida de ouro")
 		assert(Defs.Resources.pebble.decorative == true, "pedra do chão é enfeite")
-		assert(Defs.Resources.tree.size == 9, "tamanho da árvore")
+		assert(
+			Defs.Resources.tree.size == 14 and Defs.Resources.tree.sizeAxis == "height",
+			"árvore medida pela altura"
+		)
+		assert(Defs.Resources.pebble.sink == 0.5, "pedra do chão meio enterrada")
 		assert(Defs.ResourceZones.forest_dense.densities.tree == 14, "densidade de árvores na floresta densa")
 		assert(Defs.ResourceZones.forest_open.densities.gold_vein == 0.3, "ouro na floresta aberta")
 	end,
@@ -544,6 +548,15 @@ return {
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "size deve"), `faltou erro de size: {table.concat(errors, "; ")}`)
 		assert(containsError(errors, "sizeJitter"), `faltou erro de sizeJitter: {table.concat(errors, "; ")}`)
+	end,
+
+	["resource with bad size axis or sink is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.sizeAxis = "depth"
+		defs.Resources.tree.sink = 1.5
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "sizeAxis"), `faltou erro de sizeAxis: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "sink"), `faltou erro de sink: {table.concat(errors, "; ")}`)
 	end,
 
 	["zone with empty or negative densities is an error"] = function()

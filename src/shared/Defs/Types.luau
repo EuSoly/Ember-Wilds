@@ -100,9 +100,15 @@ export type ResourceDef = {
 	radius: number,
 	collisionRadius: number,
 	variants: number,
-	-- Largura (studs, a maior medida vista de cima) do modelo no jogo: o modelo
-	-- do Studio é redimensionado para ela. nil = usa o tamanho do modelo.
+	-- Tamanho (studs) do modelo no jogo: o modelo do Studio é redimensionado
+	-- para ele. Medido na largura (maior medida vista de cima) ou na altura,
+	-- conforme sizeAxis. nil = usa o tamanho do modelo.
 	size: number?,
+	-- "width" (padrão) ou "height": árvores usam a altura, para copas com
+	-- proporções diferentes não deixarem uma árvore minúscula.
+	sizeAxis: ("width" | "height")?,
+	-- Fração da altura enterrada no chão (0.5 = metade). nil = 0.
+	sink: number?,
 	-- Variação de tamanho de cada exemplar (0.15 = ±15%). nil = 0.
 	sizeJitter: number?,
 	-- true = só enfeite (pedras do chão): sem colisão e sem a tag Resource.

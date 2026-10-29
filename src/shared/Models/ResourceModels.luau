@@ -214,9 +214,6 @@ local BUILDERS: { [string]: Builder } = {
 
 -- Altura da peça de colisão (invisível) dos modelos do Studio.
 local COLLIDER_HEIGHT = 6
--- Nas árvores do Studio, peças com o centro acima desta fração da altura são
--- copa (tag Occluder: ficam transparentes sobre o boneco).
-local CANOPY_FROM = 0.4
 
 -- Modelo feito no Studio: ServerStorage.Assets.Resources/<id>_<variação>
 -- (ou <id>_1 se a variação não existir). nil = usa o provisório de código.
@@ -245,8 +242,8 @@ local function halfHeight(part: BasePart): number
 end
 
 -- Clona e prepara um modelo do Studio: redimensiona para def.size × scale,
--- deixa tudo como enfeite (ancorado, sem colisão nem raycast), marca a copa
--- das árvores e cria a peça de colisão (invisível) no pé do tronco/base.
+-- deixa tudo como enfeite (ancorado, sem colisão nem raycast), marca as
+-- árvores inteiras como Occluder e cria a peça de colisão (invisível) no pé do tronco/base.
 -- O pivô fica no chão, embaixo da peça de colisão.
 local function fromTemplate(template: Model, def: Types.ResourceDef, scale: number): Model
 	local model = template:Clone()
@@ -258,8 +255,8 @@ local function fromTemplate(template: Model, def: Types.ResourceDef, scale: numb
 	end
 
 	local _, boxSize = model:GetBoundingBox()
-	local width = math.max(boxSize.X, boxSize.Z)
-	local factor = if def.size and width > 0 then def.size * scale / width else scale
+	local measured = if def.sizeAxis == "height" then boxSize.Y else math.max(boxSize.X, boxSize.Z)
+	local factor = if def.size and measured > 0 then def.size * scale / measured else scale
 	if factor ~= 1 then
 		model:ScaleTo(model:GetScale() * factor)
 	end
@@ -291,12 +288,15 @@ local function fromTemplate(template: Model, def: Types.ResourceDef, scale: numb
 		part.CanCollide = false
 		part.CanQuery = false
 		part.CanTouch = false
-		if def.id == "tree" and part.Position.Y > minY + height * CANOPY_FROM then
+		-- Árvore inteira (copa e tronco com galhos): o tronco também esconde o
+		-- boneco quando ele passa atrás dela.
+		if def.id == "tree" then
 			part:AddTag(StatNames.OccluderTag)
 		end
 	end
 
-	local ground = CFrame.new(foot.X, minY, foot.Z)
+	-- Pivô no chão; com `sink`, parte da altura fica enterrada (pedras do chão).
+	local ground = CFrame.new(foot.X, minY + height * (def.sink or 0), foot.Z)
 	local primary: Part
 	if def.decorative then
 		-- Enfeite: sem colisão; uma âncora invisível só para o pivô.
