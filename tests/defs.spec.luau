@@ -43,6 +43,36 @@ local function validLookDefs(): any
 	}
 end
 
+-- Defs falsas só com estatísticas e configurações válidas; cada teste estraga um campo.
+local function validDataDefs(): any
+	return {
+		Tiers = {},
+		Items = {},
+		Stats = {
+			deaths = { id = "deaths", nameKey = "stat.deaths", kind = "counter" },
+			mobs_killed = { id = "mobs_killed", nameKey = "stat.mobs_killed", kind = "keyed", keyKind = "mob" },
+		},
+		Settings = {
+			music_volume = {
+				id = "music_volume",
+				nameKey = "setting.music_volume",
+				kind = "number",
+				default = 0.8,
+				min = 0,
+				max = 1,
+			},
+			quality = {
+				id = "quality",
+				nameKey = "setting.quality",
+				kind = "choice",
+				default = "auto",
+				options = { "auto", "low" },
+			},
+			left_handed = { id = "left_handed", nameKey = "setting.left_handed", kind = "boolean", default = false },
+		},
+	}
+end
+
 local function containsError(errors: { string }, fragment: string): boolean
 	for _, message in errors do
 		if string.find(message, fragment, 1, true) then
@@ -244,5 +274,53 @@ return {
 		defs.Expressions.calm = { id = "calm", priority = 1, eyes = "open", trigger = "always" }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "always"), `faltou erro de always: {table.concat(errors, "; ")}`)
+	end,
+
+	["real stats and settings load"] = function()
+		assert(Defs.Stats.mobs_killed.kind == "keyed", "mobs_killed deveria ser keyed")
+		assert(Defs.Stats.mobs_killed.keyKind == "mob", "mobs_killed deveria ter chave de mob")
+		assert(Defs.Stats.score_best.kind == "max", "score_best deveria ser max")
+		assert(Defs.Settings.quality.default == "auto", "qualidade padrão deveria ser auto")
+		assert(Defs.Settings.ui_scale.max == 1.25, "ui_scale máximo deveria ser 1.25")
+	end,
+
+	["valid fake data defs give no errors"] = function()
+		local errors = Validate.all(validDataDefs(), alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["keyed stat without keyKind is an error"] = function()
+		local defs = validDataDefs()
+		defs.Stats.mobs_killed.keyKind = nil
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "keyKind"), `faltou erro de keyKind: {table.concat(errors, "; ")}`)
+	end,
+
+	["counter stat with keyKind is an error"] = function()
+		local defs = validDataDefs()
+		defs.Stats.deaths.keyKind = "item"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "keyKind"), `faltou erro de keyKind: {table.concat(errors, "; ")}`)
+	end,
+
+	["number setting default out of range is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.music_volume.default = 2
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "default"), `faltou erro de default: {table.concat(errors, "; ")}`)
+	end,
+
+	["choice setting default must be an option"] = function()
+		local defs = validDataDefs()
+		defs.Settings.quality.default = "ultra"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "default"), `faltou erro de default: {table.concat(errors, "; ")}`)
+	end,
+
+	["boolean setting needs a boolean default"] = function()
+		local defs = validDataDefs()
+		defs.Settings.left_handed.default = "sim"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "default"), `faltou erro de default: {table.concat(errors, "; ")}`)
 	end,
 }

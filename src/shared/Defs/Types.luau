@@ -59,14 +59,37 @@ export type CosmeticDef = {
 	body: BodyLook?, -- dados do slot "body"
 }
 
+-- Estatísticas salvas no perfil. "counter" só soma, "max" guarda o maior valor,
+-- "keyed" tem um contador por chave (ex. mobs_killed["cow"]); keyKind diz o que
+-- a chave é, para validação e para telas futuras.
+export type StatKind = "counter" | "max" | "keyed"
+export type StatKeyKind = "mob" | "item"
+export type StatDef = { id: string, nameKey: string, kind: StatKind, keyKind: StatKeyKind? }
+
+-- Configurações do jogador salvas no perfil (o cliente pede, o servidor valida).
+export type SettingKind = "number" | "boolean" | "choice"
+export type SettingValue = number | boolean | string
+export type SettingDef = {
+	id: string,
+	nameKey: string,
+	kind: SettingKind,
+	default: SettingValue,
+	min: number?, -- "number"
+	max: number?, -- "number"
+	options: { string }?, -- "choice"
+}
+
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
--- CosmeticSlots/Cosmetics/Expressions para os testes poderem validar só Tiers/Items.
+-- CosmeticSlots/Cosmetics/Expressions/Stats/Settings para os testes poderem
+-- validar só Tiers/Items.
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
 	CosmeticSlots: { [string]: CosmeticSlotDef },
 	Cosmetics: { [string]: CosmeticDef },
 	Expressions: { [string]: ExpressionDef },
+	Stats: { [string]: StatDef },
+	Settings: { [string]: SettingDef },
 }
 
 return nil

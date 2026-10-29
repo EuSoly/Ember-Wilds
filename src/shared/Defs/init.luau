@@ -18,6 +18,12 @@ export type ExpressionDef = Types.ExpressionDef
 export type BodyLook = Types.BodyLook
 export type CosmeticSlotDef = Types.CosmeticSlotDef
 export type CosmeticDef = Types.CosmeticDef
+export type StatKind = Types.StatKind
+export type StatKeyKind = Types.StatKeyKind
+export type StatDef = Types.StatDef
+export type SettingKind = Types.SettingKind
+export type SettingValue = Types.SettingValue
+export type SettingDef = Types.SettingDef
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
@@ -25,6 +31,8 @@ local Defs: Types.DefsTables = table.freeze({
 	CosmeticSlots = require("@self/CosmeticSlots"),
 	Cosmetics = require("@self/Cosmetics"),
 	Expressions = require("@self/Expressions"),
+	Stats = require("@self/Stats"),
+	Settings = require("@self/Settings"),
 })
 
 local errors = Validate.all(Defs, Strings.has)
