@@ -117,6 +117,17 @@ local function sortedResourceIds(densities: { [string]: number }, resources: { [
 end
 
 -- Devolve só os recursos gerados (os fixos não se repetem na lista).
+-- Fator de tamanho de um exemplar (1 ± jitter), sorteado a partir da posição:
+-- o mesmo lugar dá sempre o mesmo tamanho, então o mapa continua igual em
+-- toda partida sem guardar nada a mais.
+function Scatter.sizeFactor(x: number, z: number, jitter: number): number
+	if jitter <= 0 then
+		return 1
+	end
+	local rng = Rng.new(math.floor(x * 1000) * 31 + math.floor(z * 1000))
+	return 1 + jitter * (2 * rng:nextNumber() - 1)
+end
+
 function Scatter.generate(params: Params): { Placement }
 	local resources = params.resources
 	local minPassage = params.minPassage

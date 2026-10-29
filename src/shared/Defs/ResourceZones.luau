@@ -17,10 +17,10 @@ local function zone(id: string, densities: { [string]: number }): ResourceZoneDe
 end
 
 local ResourceZones: { [string]: ResourceZoneDef } = {
-	forest_dense = zone("forest_dense", { tree = 14, rock = 2, berry_bush = 2 }),
-	forest_open = zone("forest_open", { tree = 6, rock = 3, berry_bush = 3, gold_vein = 0.3 }),
-	quarry = zone("quarry", { rock = 8, gold_vein = 3, tree = 1 }),
-	berry_field = zone("berry_field", { berry_bush = 8, tree = 1 }),
+	forest_dense = zone("forest_dense", { tree = 14, rock = 2, berry_bush = 2, pebble = 3 }),
+	forest_open = zone("forest_open", { tree = 6, rock = 3, berry_bush = 3, gold_vein = 0.3, pebble = 5 }),
+	quarry = zone("quarry", { rock = 8, gold_vein = 3, tree = 1, pebble = 10 }),
+	berry_field = zone("berry_field", { berry_bush = 8, tree = 1, pebble = 3 }),
 }
 
 return table.freeze(ResourceZones)

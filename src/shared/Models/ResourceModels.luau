@@ -17,10 +17,13 @@
 -- mesmo id e variação dão sempre o mesmo modelo.
 -- Medidas na escala do boneco (corpo de 3,6 studs de largura e ~2 de altura).
 -- (Só roda no Roblox: cria instâncias.)
+local ServerStorage = game:GetService("ServerStorage")
+
 local Defs = require("../Defs")
 local Palette = require("../Palette")
 local StatNames = require("../StatNames")
 local Theme = require("../Theme")
+local Types = require("../Defs/Types")
 
 local ResourceModels = {}
 
@@ -193,6 +196,13 @@ local function buildBerryBush(model: Model, r: number, variant: number): Part
 	return bush
 end
 
+-- Pedra do chão (provisória): uma bolinha cinza, sem colisão.
+local function buildPebble(model: Model, r: number, _variant: number): Part
+	local pebble = newPart("Pebble", Enum.PartType.Ball, Vector3.one * r * 2, CFrame.new(0, r * 0.4, 0), STONE)
+	add(model, pebble)
+	return pebble
+end
+
 type Builder = (model: Model, collisionRadius: number, variant: number) -> Part
 
 local BUILDERS: { [string]: Builder } = {
@@ -200,31 +210,162 @@ local BUILDERS: { [string]: Builder } = {
 	rock = buildRock,
 	gold_vein = buildGoldVein,
 	berry_bush = buildBerryBush,
+	pebble = buildPebble,
 }
 
--- Monta o modelo, ou nil para id desconhecido (ou ainda sem modelo). A
--- variação é limitada a 1..variants.
-function ResourceModels.build(resourceId: string, variant: number): Model?
+-- Altura da peça de colisão (invisível) dos modelos do Studio.
+local COLLIDER_HEIGHT = 6
+-- Nas árvores do Studio, peças com o centro acima desta fração da altura são
+-- copa (tag Occluder: ficam transparentes sobre o boneco).
+local CANOPY_FROM = 0.4
+
+-- Modelo feito no Studio: ServerStorage.Assets.Resources/<id>_<variação>
+-- (ou <id>_1 se a variação não existir). nil = usa o provisório de código.
+local function findTemplate(resourceId: string, variant: number): Model?
+	local assets = ServerStorage:FindFirstChild("Assets")
+	local folder = assets and assets:FindFirstChild("Resources")
+	if folder == nil then
+		return nil
+	end
+	local template = folder:FindFirstChild(`{resourceId}_{variant}`) or folder:FindFirstChild(`{resourceId}_1`)
+	if template and template:IsA("Model") then
+		return template
+	end
+	return nil
+end
+
+-- Meia altura de uma peça no eixo Y do mundo (considera o giro dela).
+local function halfHeight(part: BasePart): number
+	local cf, size = part.CFrame, part.Size
+	return 0.5
+		* (math.abs(cf.RightVector.Y) * size.X + math.abs(cf.UpVector.Y) * size.Y + math.abs(cf.LookVector.Y) * size.Z)
+end
+
+-- Clona e prepara um modelo do Studio: redimensiona para def.size × scale,
+-- deixa tudo como enfeite (ancorado, sem colisão nem raycast), marca a copa
+-- das árvores e cria a peça de colisão (invisível) no pé do tronco/base.
+-- O pivô fica no chão, embaixo da peça de colisão.
+local function fromTemplate(template: Model, def: Types.ResourceDef, scale: number): Model
+	local model = template:Clone()
+	-- Modelo de recurso não roda código: remove scripts que vierem junto.
+	for _, descendant in model:GetDescendants() do
+		if descendant:IsA("LuaSourceContainer") then
+			descendant:Destroy()
+		end
+	end
+
+	local _, boxSize = model:GetBoundingBox()
+	local width = math.max(boxSize.X, boxSize.Z)
+	local factor = if def.size and width > 0 then def.size * scale / width else scale
+	if factor ~= 1 then
+		model:ScaleTo(model:GetScale() * factor)
+	end
+
+	-- Altura e "pé" do modelo: a peça mais baixa (o tronco, nas árvores).
+	local minY, maxY = math.huge, -math.huge
+	local lowest: BasePart? = nil
+	local lowestBottom = math.huge
+	local parts: { BasePart } = {}
+	for _, descendant in model:GetDescendants() do
+		if descendant:IsA("BasePart") then
+			table.insert(parts, descendant)
+			local half = halfHeight(descendant)
+			local bottom = descendant.Position.Y - half
+			minY = math.min(minY, bottom)
+			maxY = math.max(maxY, descendant.Position.Y + half)
+			if bottom < lowestBottom then
+				lowestBottom = bottom
+				lowest = descendant
+			end
+		end
+	end
+	local boxCFrame = model:GetBoundingBox()
+	local foot = if def.id == "tree" and lowest then lowest.Position else boxCFrame.Position
+	local height = maxY - minY
+
+	for _, part in parts do
+		part.Anchored = true
+		part.CanCollide = false
+		part.CanQuery = false
+		part.CanTouch = false
+		if def.id == "tree" and part.Position.Y > minY + height * CANOPY_FROM then
+			part:AddTag(StatNames.OccluderTag)
+		end
+	end
+
+	local ground = CFrame.new(foot.X, minY, foot.Z)
+	local primary: Part
+	if def.decorative then
+		-- Enfeite: sem colisão; uma âncora invisível só para o pivô.
+		primary = newPart("Anchor", Enum.PartType.Block, Vector3.one * 0.2, ground, STONE)
+		primary.Transparency = 1
+	else
+		local r = def.collisionRadius
+		primary = solid(
+			newPart(
+				"Collision",
+				Enum.PartType.Cylinder,
+				Vector3.new(COLLIDER_HEIGHT, r * 2, r * 2),
+				ground * CFrame.new(0, COLLIDER_HEIGHT / 2, 0) * UPRIGHT,
+				STONE
+			)
+		)
+		primary.Transparency = 1
+	end
+	primary.Parent = model
+	model.PrimaryPart = primary
+	primary.PivotOffset = primary.CFrame:Inverse() * ground
+	return model
+end
+
+-- Monta o modelo do recurso, ou nil para id desconhecido. Usa o modelo do
+-- Studio (ServerStorage.Assets.Resources) se existir; senão o provisório de
+-- código. `scale` = variação de tamanho deste exemplar (1 = normal). A
+-- variação é limitada a 1..variants. Só no servidor (lê o ServerStorage).
+function ResourceModels.build(resourceId: string, variant: number, scale: number?): Model?
 	local def = Defs.Resources[resourceId]
-	local builder = BUILDERS[resourceId]
-	if def == nil or builder == nil then
+	if def == nil then
 		return nil
 	end
 	local v = math.clamp(math.floor(variant), 1, def.variants)
+	local s = scale or 1
 
-	local model = Instance.new("Model")
+	local model: Model
+	local template = findTemplate(resourceId, v)
+	if template then
+		model = fromTemplate(template, def, s)
+	else
+		local builder = BUILDERS[resourceId]
+		if builder == nil then
+			return nil
+		end
+		model = Instance.new("Model")
+		local primary = builder(model, def.collisionRadius, v)
+		model.PrimaryPart = primary
+		-- Pivô no centro da base, no chão, sem giro. Com PrimaryPart, o pivô do
+		-- modelo é o da PrimaryPart (WorldPivot não vale): sem este ajuste o pivô
+		-- herdaria o giro do tronco (cilindro deitado + UPRIGHT) e o PivotTo
+		-- derrubaria a árvore.
+		primary.PivotOffset = primary.CFrame:Inverse()
+		if def.decorative then
+			for _, descendant in model:GetDescendants() do
+				if descendant:IsA("BasePart") then
+					descendant.CanCollide = false
+					descendant.CanQuery = false
+				end
+			end
+		end
+		if s ~= 1 then
+			model:ScaleTo(s)
+		end
+	end
+
 	model.Name = resourceId
 	model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
 	model:SetAttribute(StatNames.ResourceId, resourceId)
-	model:AddTag(StatNames.ResourceTag)
-
-	local primary = builder(model, def.collisionRadius, v)
-	model.PrimaryPart = primary
-	-- Pivô no centro da base, no chão, sem giro. Com PrimaryPart, o pivô do
-	-- modelo é o da PrimaryPart (WorldPivot não vale): sem este ajuste o pivô
-	-- herdaria o giro do tronco (cilindro deitado + UPRIGHT) e o PivotTo
-	-- derrubaria a árvore.
-	primary.PivotOffset = primary.CFrame:Inverse()
+	if not def.decorative then
+		model:AddTag(StatNames.ResourceTag)
+	end
 	return model
 end
 

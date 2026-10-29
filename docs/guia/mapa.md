@@ -48,10 +48,10 @@ Cada peça em `Map/Zones` precisa do atributo `ZoneType` com um destes valores:
 
 | `ZoneType` | O que tem (por 10.000 studs², ≈ um quadrado de 100 × 100) |
 |---|---|
-| `forest_dense` | 14 árvores, 2 rochas, 2 arbustos |
-| `forest_open` | 6 árvores, 3 rochas, 3 arbustos, 0,3 de ouro |
-| `quarry` (pedreira) | 8 rochas, 3 de ouro, 1 árvore |
-| `berry_field` | 8 arbustos de frutinha, 1 árvore |
+| `forest_dense` | 14 árvores, 2 rochas, 2 arbustos, 3 pedras do chão |
+| `forest_open` | 6 árvores, 3 rochas, 3 arbustos, 0,3 de ouro, 5 pedras do chão |
+| `quarry` (pedreira) | 8 rochas, 3 de ouro, 1 árvore, 10 pedras do chão |
+| `berry_field` | 8 arbustos de frutinha, 1 árvore, 3 pedras do chão |
 
 - Os números ficam em `src/shared/Defs/ResourceZones.luau`. Mudou um número, o mapa muda na próxima partida.
 - **Tipo de zona novo:** uma entrada em `ResourceZones.luau` (com as densidades) + o texto `zone.<id>` em `Strings/ptBR.luau`.
@@ -66,18 +66,35 @@ Para um recurso num lugar exato: coloque uma Part (ou um Model) em `Map/Resource
 |---|---|
 | `tree` | Árvore (3 variações) |
 | `rock` | Rocha (3 variações) |
-| `gold_vein` | Jazida de ouro (2 variações) |
-| `berry_bush` | Arbusto de frutinha (2 variações) |
+| `gold_vein` | Jazida de ouro (1 variação) |
+| `berry_bush` | Arbusto de frutinha (1 variação) |
+| `pebble` | Pedra do chão, só enfeite (10 variações) |
 
 - O atributo opcional **`Variant`** (número) escolhe a variação; sem ele, é a 1.
 - O que vale é a **posição e a rotação** da peça: ela fica invisível e o jogo põe o modelo padrão no lugar. (Recursos com modelo único, feito à mão, ficam para quando precisarmos.)
 - Os recursos à mão entram antes do espalhamento e ocupam espaço: nada nasce colado neles.
 
-## Recursos sólidos
+## Os modelos dos recursos
 
-Árvores, rochas, ouro e arbustos **bloqueiam a passagem**. Nas árvores, **só o tronco** é sólido: a copa não. Quando o boneco passa embaixo de uma copa, ela fica transparente só para ele.
+Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome **`<id>_<variação>`**:
 
-Os modelos dos recursos são feitos por código em `src/shared/Models/ResourceModels.luau`.
+| Nome | O que é |
+|---|---|
+| `tree_1`, `tree_2`, `tree_3` | árvores |
+| `rock_1`, `rock_2`, `rock_3` | rochas |
+| `gold_vein_1` | jazida de ouro |
+| `berry_bush_1` | arbusto de frutinha |
+| `pebble_1` … `pebble_10` | pedras do chão (enfeite) |
+
+- **Trocar um modelo:** substitua o modelo com o mesmo nome. **Mais uma variação:** coloque `tree_4` (por exemplo) e suba o `variants` do recurso em `src/shared/Defs/Resources.luau`. Se faltar a variação pedida, o jogo usa a `_1`; se faltar o modelo inteiro, usa um provisório feito por código.
+- **Tamanho:** modele em qualquer escala. Cada recurso tem um **tamanho padrão** (`size`, a maior largura vista de cima, em studs) em `Defs/Resources.luau`, e o jogo redimensiona o modelo para ele. Cada exemplar ainda varia (`sizeJitter`: árvores, rochas, ouro e arbustos ±15%; pedras do chão ±40%) e sai **girado** aleatoriamente. Tamanho e giro dependem só da posição: o mapa continua igual em toda partida.
+- **Altura das árvores:** a câmera fica a uns 30 studs de altura; árvores altas demais cobrem a tela. Hoje a árvore tem `size = 9` (fica com ~13 de altura).
+- **Colisão:** você não precisa fazer nada. O jogo deixa todas as peças do seu modelo sem colisão e cria uma peça invisível no pé (o tronco, nas árvores; a base nos outros). As pedras do chão não têm colisão nenhuma.
+- **Copa:** nas árvores, as peças acima de 40% da altura viram copa (ficam transparentes quando o boneco passa embaixo).
+- **Peças:** quanto menos peças por modelo, mais leve no celular (uma união ou MeshPart em vez de dezenas de Parts).
+- Outros modelos guardados: `ServerStorage.Assets.Future` (minério de diamante, para o inverno) e `ServerStorage.Assets.Unused`.
+
+`ServerStorage` também não é do Rojo: os modelos ficam salvos no place (salve com Ctrl+S).
 
 ## Avisos no Output
 

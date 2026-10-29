@@ -397,6 +397,16 @@ local function validateResources(errors: { string }, defs: Types.DefsTables, has
 		if not isWholeNumber(resource.variants, 1) then
 			table.insert(errors, `Resource "{key}": variants deve ser inteiro maior ou igual a 1`)
 		end
+		if resource.size ~= nil and (not isFiniteNumber(resource.size) or resource.size <= 0) then
+			table.insert(errors, `Resource "{key}": size deve ser maior que 0`)
+		end
+		local jitter = resource.sizeJitter
+		if jitter ~= nil and (not isFiniteNumber(jitter) or jitter < 0 or jitter >= 0.5) then
+			table.insert(errors, `Resource "{key}": sizeJitter deve ficar entre 0 e 0.5`)
+		end
+		if resource.decorative ~= nil and type(resource.decorative) ~= "boolean" then
+			table.insert(errors, `Resource "{key}": decorative deve ser true ou false`)
+		end
 	end
 
 	if zones == nil then

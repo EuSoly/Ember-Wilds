@@ -117,6 +117,7 @@ return table.freeze({
 	["resource.rock"] = "Rocha",
 	["resource.gold_vein"] = "Jazida de ouro",
 	["resource.berry_bush"] = "Arbusto de frutinha",
+	["resource.pebble"] = "Pedra do chão",
 
 	-- Zonas de recurso (Map/Zones, atributo ZoneType)
 	["zone.forest_dense"] = "Floresta densa",

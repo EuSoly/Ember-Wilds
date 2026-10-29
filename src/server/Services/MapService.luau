@@ -132,7 +132,10 @@ end
 local function buildResources(placements: { Scatter.Placement }, folder: Folder): number
 	local built = 0
 	for _, placement in placements do
-		local model = ResourceModels.build(placement.resourceId, placement.variant)
+		local def = Defs.Resources[placement.resourceId]
+		local jitter = if def and def.sizeJitter then def.sizeJitter else 0
+		local scale = Scatter.sizeFactor(placement.x, placement.z, jitter)
+		local model = ResourceModels.build(placement.resourceId, placement.variant, scale)
 		if model then
 			model:PivotTo(CFrame.new(placement.x, 0, placement.z) * CFrame.Angles(0, placement.yaw, 0))
 			model.Parent = folder

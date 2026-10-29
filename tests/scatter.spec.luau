@@ -58,6 +58,23 @@ local function dist(ax: number, az: number, bx: number, bz: number): number
 end
 
 return {
+	["size factor is deterministic and within the jitter"] = function()
+		assert(
+			Scatter.sizeFactor(10.5, -20.25, 0.15) == Scatter.sizeFactor(10.5, -20.25, 0.15),
+			"mesmo lugar, mesmo tamanho"
+		)
+		assert(Scatter.sizeFactor(1, 2, 0) == 1, "sem variação dá 1")
+		local differs = false
+		for i = 1, 50 do
+			local f = Scatter.sizeFactor(i * 7.3, i * -3.1, 0.15)
+			assert(f >= 0.85 and f <= 1.15, `fora da faixa: {f}`)
+			if math.abs(f - 1) > 0.01 then
+				differs = true
+			end
+		end
+		assert(differs, "os tamanhos deveriam variar")
+	end,
+
 	["same seed gives identical lists"] = function()
 		local a = Scatter.generate(baseParams(20261029))
 		local b = Scatter.generate(baseParams(20261029))

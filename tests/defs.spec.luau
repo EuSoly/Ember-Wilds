@@ -502,7 +502,9 @@ return {
 	["real resources and zones load"] = function()
 		local tree = Defs.Resources.tree
 		assert(tree ~= nil and tree.radius == 5 and tree.collisionRadius == 1.2, "árvore real")
-		assert(Defs.Resources.gold_vein.variants == 2, "variações da jazida de ouro")
+		assert(Defs.Resources.gold_vein.variants == 1, "variações da jazida de ouro")
+		assert(Defs.Resources.pebble.decorative == true, "pedra do chão é enfeite")
+		assert(Defs.Resources.tree.size == 9, "tamanho da árvore")
 		assert(Defs.ResourceZones.forest_dense.densities.tree == 14, "densidade de árvores na floresta densa")
 		assert(Defs.ResourceZones.forest_open.densities.gold_vein == 0.3, "ouro na floresta aberta")
 	end,
@@ -533,6 +535,15 @@ return {
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "radius"), `faltou erro de radius: {table.concat(errors, "; ")}`)
 		assert(containsError(errors, "variants"), `faltou erro de variants: {table.concat(errors, "; ")}`)
+	end,
+
+	["resource with bad size or jitter is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.size = 0
+		defs.Resources.tree.sizeJitter = 0.7
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "size deve"), `faltou erro de size: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "sizeJitter"), `faltou erro de sizeJitter: {table.concat(errors, "; ")}`)
 	end,
 
 	["zone with empty or negative densities is an error"] = function()

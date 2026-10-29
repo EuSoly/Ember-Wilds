@@ -100,6 +100,13 @@ export type ResourceDef = {
 	radius: number,
 	collisionRadius: number,
 	variants: number,
+	-- Largura (studs, a maior medida vista de cima) do modelo no jogo: o modelo
+	-- do Studio é redimensionado para ela. nil = usa o tamanho do modelo.
+	size: number?,
+	-- Variação de tamanho de cada exemplar (0.15 = ±15%). nil = 0.
+	sizeJitter: number?,
+	-- true = só enfeite (pedras do chão): sem colisão e sem a tag Resource.
+	decorative: boolean?,
 }
 
 -- Zona de recursos desenhada no mapa (Map/Zones, atributo ZoneType).
