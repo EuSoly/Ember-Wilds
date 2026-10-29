@@ -68,6 +68,9 @@ return table.freeze({
 	ResourceTag = "Resource",
 	-- Tag das peças que ficam semitransparentes entre a câmera e o boneco (copas).
 	OccluderTag = "Occluder",
+	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a
+	-- tremulação em cada uma.
+	FireLightTag = "FireLight",
 
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
