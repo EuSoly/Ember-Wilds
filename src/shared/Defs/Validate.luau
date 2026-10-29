@@ -2,6 +2,7 @@
 -- Validação das definições. Roda no boot (Defs/init.luau): um erro de digitação
 -- nas tabelas de conteúdo derruba o jogo com mensagem clara, em vez de virar
 -- um bug silencioso no meio da partida.
+local InventoryConfig = require("../InventoryConfig")
 local Types = require("./Types")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
@@ -51,6 +52,16 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		end
 		if type(item.maxStack) ~= "number" or item.maxStack < 1 or item.maxStack % 1 ~= 0 then
 			table.insert(errors, `Item "{key}": maxStack deve ser inteiro >= 1`)
+		end
+		-- Mochilas: precisam de bagSlots, e só elas podem ter.
+		local maxBagSlots = InventoryConfig.MAX_SLOTS - InventoryConfig.BASE_SLOTS
+		if item.category == "bag" then
+			local slots = item.bagSlots
+			if type(slots) ~= "number" or slots < 1 or slots % 1 ~= 0 or slots > maxBagSlots then
+				table.insert(errors, `Item "{key}": mochila precisa de bagSlots inteiro entre 1 e {maxBagSlots}`)
+			end
+		elseif item.bagSlots ~= nil then
+			table.insert(errors, `Item "{key}": bagSlots só vale para category "bag"`)
 		end
 	end
 

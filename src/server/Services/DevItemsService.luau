@@ -1,15 +1,14 @@
 --!strict
 -- SÓ PARA DESENVOLVIMENTO (roda apenas no Studio).
--- Dá um kit de itens ao entrar e libera a mochila, para testar o inventário
+-- Dá um kit de itens ao entrar e veste a Mochila de Couro, para testar o inventário
 -- antes da coleta existir. Também cria ServerStorage.DevGive (BindableFunction)
--- para dar itens em testes: DevGive:Invoke(player, "wood", 300) -> sobra.
+-- para dar itens em testes: DevGive:Invoke(player, "wood", 300) -> sobra;
+-- e ServerStorage.DevEquipBag para vestir/tirar mochila.
 -- Some quando a coleta (fase de gameplay) estiver pronta.
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
 
 local KIT: { { id: string, count: number } } = {
@@ -25,7 +24,7 @@ local KIT: { { id: string, count: number } } = {
 local DevItemsService = {}
 
 local function giveKit(player: Player)
-	player:SetAttribute(StatNames.HasBag, true)
+	InventoryService.equipBag(player, "leather_bag")
 	for _, item in KIT do
 		InventoryService.give(player, item.id, item.count)
 	end
@@ -42,6 +41,14 @@ function DevItemsService.Start(_self)
 		return InventoryService.give(player, id, count)
 	end
 	devGive.Parent = ServerStorage
+
+	-- DevEquipBag:Invoke(player, "leather_bag") veste; DevEquipBag:Invoke(player, nil) tira.
+	local devEquipBag = Instance.new("BindableFunction")
+	devEquipBag.Name = "DevEquipBag"
+	devEquipBag.OnInvoke = function(player: Player, bagId: string?): boolean
+		return InventoryService.equipBag(player, bagId)
+	end
+	devEquipBag.Parent = ServerStorage
 
 	Players.PlayerAdded:Connect(giveKit)
 	for _, player in Players:GetPlayers() do

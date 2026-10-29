@@ -7,6 +7,8 @@
 -- Nenhuma função espera (yield): cada operação acontece inteira de uma vez,
 -- então dois pedidos nunca se misturam e não há como duplicar itens.
 
+local InventoryConfig = require("./InventoryConfig")
+
 export type Slot = { id: string, count: number }
 export type Inventory = { capacity: number, slots: { [number]: Slot } }
 
@@ -128,12 +130,26 @@ function Inventory.move(inv: Inventory, from: number, to: number, maxStackOf: (s
 	return { from, to }
 end
 
--- Aumenta a capacidade (ex.: ao ganhar a mochila). Diminuir é ignorado:
--- itens nos slots extras sumiriam, e isso só acontece na morte (outra regra).
-function Inventory.setCapacity(inv: Inventory, capacity: number)
-	if capacity > inv.capacity then
-		inv.capacity = capacity
+-- Capacidade para um jogador com uma mochila de `bagSlots` e `bonusSlots` de
+-- gamepass: base + mochila + bônus, entre BASE_SLOTS e MAX_SLOTS.
+function Inventory.capacityFor(bagSlots: number, bonusSlots: number): number
+	local total = InventoryConfig.BASE_SLOTS + math.max(bagSlots, 0) + math.max(bonusSlots, 0)
+	return math.clamp(total, InventoryConfig.BASE_SLOTS, InventoryConfig.MAX_SLOTS)
+end
+
+-- Muda a capacidade (ex.: vestiu ou trocou de mochila). Aumentar sempre pode;
+-- diminuir só se os slots que vão sumir estiverem vazios, para nenhum item se
+-- perder. Devolve true se a capacidade ficou igual a `capacity`.
+function Inventory.setCapacity(inv: Inventory, capacity: number): boolean
+	if capacity < inv.capacity then
+		for index = capacity + 1, inv.capacity do
+			if inv.slots[index] ~= nil then
+				return false
+			end
+		end
 	end
+	inv.capacity = capacity
+	return true
 end
 
 return Inventory

@@ -5,23 +5,28 @@
 --   serviço valida e aplica com a lógica pura de Shared/Inventory.
 -- - Toda mudança manda ao cliente apenas os slots alterados.
 -- - O inventário não é salvo: morre com a partida (spec, seção 7).
+-- - Capacidade = base + mochila vestida + bônus do gamepass VIP (InventoryConfig).
+local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
+local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
 local Net = require(script.Parent.Parent.Net)
 
-local BASE_SLOTS = 10
-local BAG_SLOTS = 6
-local HOTBAR_SLOTS = 10
+local HOTBAR_SLOTS = InventoryConfig.HOTBAR_SLOTS
+local VIP_PASS = InventoryConfig.vipPass
 
 type Slot = Inventory.Slot
 type SelectedListener = (Player, Slot?) -> ()
 
 local inventories: { [Player]: Inventory.Inventory } = {}
 local selected: { [Player]: number } = {}
+-- Mochila vestida (id do item) e slots extras do gamepass, por jogador.
+local bags: { [Player]: string? } = {}
+local passBonus: { [Player]: number } = {}
 local selectedListeners: { SelectedListener } = {}
 
 local InventoryService = {}
@@ -31,8 +36,13 @@ local function maxStackOf(id: string): number
 	return if def then def.maxStack else 1
 end
 
+local function bagSlotsOf(bagId: string?): number
+	local def = bagId and Defs.Items[bagId]
+	return if def and def.bagSlots then def.bagSlots else 0
+end
+
 local function capacityFor(player: Player): number
-	return BASE_SLOTS + (if player:GetAttribute(StatNames.HasBag) == true then BAG_SLOTS else 0)
+	return Inventory.capacityFor(bagSlotsOf(bags[player]), passBonus[player] or 0)
 end
 
 local function toNet(slot: Slot?): Net.Slot?
@@ -117,6 +127,53 @@ function InventoryService.take(player: Player, id: string, count: number): boole
 	return ok
 end
 
+-- Recalcula a capacidade (mochila + gamepass) e avisa o cliente se mudou.
+-- Devolve false se não deu para diminuir (slots que sumiriam não estão vazios).
+local function refreshCapacity(player: Player): boolean
+	local inv = ensure(player)
+	local before = inv.capacity
+	local ok = Inventory.setCapacity(inv, capacityFor(player))
+	if inv.capacity ~= before then
+		Net.InventoryCapacity.Fire(player, inv.capacity)
+	end
+	return ok
+end
+
+-- Veste a mochila `bagId` (um item com category "bag"), ou tira com nil.
+-- A mochila vestida não ocupa slot. Trocar por uma menor (ou tirar) só funciona
+-- se os slots que vão sumir estiverem vazios. Devolve true se deu certo.
+-- (Hoje quem chama é o DevItemsService; depois, o crafting/equipamentos.)
+function InventoryService.equipBag(player: Player, bagId: string?): boolean
+	if bagId ~= nil then
+		local def = Defs.Items[bagId]
+		if def == nil or def.category ~= "bag" then
+			return false
+		end
+	end
+	local previous = bags[player]
+	bags[player] = bagId
+	if not refreshCapacity(player) then
+		bags[player] = previous
+		return false
+	end
+	player:SetAttribute(StatNames.Bag, bagId)
+	return true
+end
+
+-- Gamepass VIP: confere se o jogador tem o passe e soma os slots extras.
+local function checkVipPass(player: Player)
+	if VIP_PASS.gamePassId == 0 then
+		return -- gamepass ainda não criado (InventoryConfig.vipPass.gamePassId)
+	end
+	local ok, owns = pcall(function()
+		return MarketplaceService:UserOwnsGamePassAsync(player.UserId, VIP_PASS.gamePassId)
+	end)
+	if ok and owns and player.Parent then
+		passBonus[player] = VIP_PASS.bonusSlots
+		refreshCapacity(player)
+	end
+end
+
 local function onMove(player: Player, from: number, to: number)
 	local inv = inventories[player]
 	if inv == nil then
@@ -138,17 +195,6 @@ local function onSelect(player: Player, index: number)
 	end
 end
 
-local function watchBag(player: Player)
-	player:GetAttributeChangedSignal(StatNames.HasBag):Connect(function()
-		local inv = ensure(player)
-		local before = inv.capacity
-		Inventory.setCapacity(inv, capacityFor(player))
-		if inv.capacity ~= before then
-			Net.InventoryCapacity.Fire(player, inv.capacity)
-		end
-	end)
-end
-
 function InventoryService.Start(_self)
 	Net.RequestInventory.On(function(player: Player)
 		sendSnapshot(player, ensure(player))
@@ -156,17 +202,26 @@ function InventoryService.Start(_self)
 	Net.MoveSlot.On(onMove)
 	Net.SelectSlot.On(onSelect)
 
-	Players.PlayerAdded:Connect(function(player)
+	local function onPlayer(player: Player)
 		ensure(player)
-		watchBag(player)
-	end)
-	for _, player in Players:GetPlayers() do
-		ensure(player)
-		watchBag(player)
+		task.spawn(checkVipPass, player) -- consulta a Roblox (pode demorar)
 	end
+	Players.PlayerAdded:Connect(onPlayer)
+	for _, player in Players:GetPlayers() do
+		onPlayer(player)
+	end
+	-- Comprou o passe durante a partida: libera na hora.
+	MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, gamePassId, purchased)
+		if purchased and gamePassId == VIP_PASS.gamePassId then
+			passBonus[player] = VIP_PASS.bonusSlots
+			refreshCapacity(player)
+		end
+	end)
 	Players.PlayerRemoving:Connect(function(player)
 		inventories[player] = nil
 		selected[player] = nil
+		bags[player] = nil
+		passBonus[player] = nil
 	end)
 end
 

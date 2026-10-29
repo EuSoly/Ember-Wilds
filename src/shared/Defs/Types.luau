@@ -11,7 +11,7 @@ export type TierDef = {
 	nameKey: string, -- chave em Strings
 }
 
-export type ItemCategory = "resource" | "food" | "tool" | "weapon" | "armor" | "placeable" | "misc"
+export type ItemCategory = "resource" | "food" | "tool" | "weapon" | "armor" | "bag" | "placeable" | "misc"
 
 export type ItemDef = {
 	id: string,
@@ -19,6 +19,8 @@ export type ItemDef = {
 	category: ItemCategory,
 	tier: string?, -- id em Tiers; nil = moldura neutra (recursos, comida)
 	maxStack: number,
+	-- Só para category "bag": quantos slots a mochila dá quando vestida.
+	bagSlots: number?,
 }
 
 export type DefsTables = {

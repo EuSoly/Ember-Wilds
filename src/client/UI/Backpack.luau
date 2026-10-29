@@ -1,8 +1,9 @@
 --!strict
 -- Mochila: o botão (só no celular) e o painel que ele abre.
 -- No PC a tecla B (InputAction Backpack) abre e fecha o mesmo painel.
--- Os dois só existem com a mochila equipada (HasBag). O painel mostra os 6
--- slots da mochila (InventoryGrid); trocar itens com a hotbar é arrastando.
+-- Os dois só existem quando há slots além da hotbar (mochila vestida e/ou
+-- gamepass). O painel mostra esses slots (InventoryGrid) e cresce com eles;
+-- trocar itens com a hotbar é arrastando.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -12,11 +13,14 @@ local InputNames = require(Shared:WaitForChild("InputNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local BackpackState = require(script.Parent.Parent:WaitForChild("BackpackState"))
+local InventoryState = require(script.Parent.Parent:WaitForChild("InventoryState"))
 local InventoryGrid = require(script.Parent:WaitForChild("InventoryGrid"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 
 local create = vide.create
+
+local TITLE_HEIGHT = 48 -- pixels
 
 local Backpack = {}
 
@@ -74,19 +78,20 @@ function Backpack.Panel(): Frame
 		Active = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.45),
-		Size = UDim2.fromScale(0.34, 0.34),
-		create("UIAspectRatioConstraint")({ AspectRatio = 1.4 }),
-		create("UISizeConstraint")({ MinSize = Vector2.new(210, 150) }),
+		-- Tamanho em pixels a partir da grade: título + linhas de slots.
+		Size = function()
+			local gridHeight = InventoryGrid.height(InventoryState.capacity())
+			return UDim2.fromOffset(InventoryGrid.WIDTH + 44, TITLE_HEIGHT + gridHeight + 24)
+		end,
 		Kit.text({
 			Name = "Title",
-			Size = UDim2.fromScale(0.9, 0.12),
-			Position = UDim2.fromScale(0.5, 0.06),
-			AnchorPoint = Vector2.new(0.5, 0),
+			Size = UDim2.new(1, -24, 0, TITLE_HEIGHT - 16),
+			Position = UDim2.fromOffset(12, 10),
 			FontFace = Theme.font.title,
 			Text = Strings.get("hud.backpack"),
 			maxSize = 32,
 		}),
-		InventoryGrid(),
+		InventoryGrid.Component(),
 	})
 end
 

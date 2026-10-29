@@ -26,7 +26,7 @@ create("TextLabel")({
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
 | `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
-| `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com mochila equipada) com os 6 slots da mochila |
+| `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com slots além da hotbar), com a grade que cresce com a capacidade |
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 
 ## Como adicionar um componente

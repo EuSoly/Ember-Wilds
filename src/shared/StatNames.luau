@@ -13,8 +13,9 @@ return table.freeze({
 	Score = "Score",
 	Rank = "Rank",
 
-	-- true quando o jogador tem a mochila equipada (libera os slots 11–16), atributo no Player
-	HasBag = "HasBag",
+	-- Id do item da mochila vestida (ex.: "leather_bag"), ou nil sem mochila; atributo no Player.
+	-- A capacidade do inventário vem da mochila (ver InventoryService.equipBag).
+	Bag = "Bag",
 
 	-- Instante (GetServerTimeNow) em que o ciclo de dia começou, atributo no Workspace
 	CycleStart = "CycleStart",

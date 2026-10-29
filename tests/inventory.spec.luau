@@ -139,13 +139,32 @@ return {
 		end
 	end,
 
-	["capacity grows but never shrinks"] = function()
+	["capacity grows freely"] = function()
 		local inv = Inventory.new(10)
 		Inventory.add(inv, "wood", 5, 255)
 		assert(#Inventory.move(inv, 1, 12, maxOf(255)) == 0, "slot 12 fora da capacidade")
-		Inventory.setCapacity(inv, 16)
+		assert(Inventory.setCapacity(inv, 16) == true, "aumentar deveria funcionar")
 		assert(#Inventory.move(inv, 1, 12, maxOf(255)) == 2, "slot 12 liberado")
-		Inventory.setCapacity(inv, 10)
-		assert(inv.capacity == 16, "não deveria diminuir")
+	end,
+
+	["capacity shrinks only when extra slots are empty"] = function()
+		local inv = Inventory.new(16)
+		inv.slots[14] = { id = "wood", count = 3 }
+		assert(Inventory.setCapacity(inv, 10) == false, "slot 14 ocupado: não pode diminuir")
+		assert(inv.capacity == 16, "capacidade não deveria mudar")
+		inv.slots[14] = nil
+		assert(Inventory.setCapacity(inv, 10) == true, "slots extras vazios: pode diminuir")
+		assert(inv.capacity == 10, "capacidade deveria ser 10")
+	end,
+
+	["capacity formula adds bag and bonus"] = function()
+		assert(Inventory.capacityFor(0, 0) == 10, "só a base")
+		assert(Inventory.capacityFor(6, 0) == 16, "mochila de 6")
+		assert(Inventory.capacityFor(6, 3) == 19, "mochila + bônus")
+	end,
+
+	["capacity formula is capped"] = function()
+		assert(Inventory.capacityFor(100, 100) == 40, "limite de 40 slots")
+		assert(Inventory.capacityFor(-5, 0) == 10, "nunca abaixo da base")
 	end,
 }

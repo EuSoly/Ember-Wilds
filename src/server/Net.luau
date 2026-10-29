@@ -220,10 +220,10 @@ function SerdesFunctions.ReadEVENT_MoveSlot(): (number, number)
 	local BLOCK_START = Read(2)
 	local Value1 = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	if Value1 < 1 then error(`Expected "Value1" to be larger than or equal to 1, got {Value1} instead.`) end
-	if Value1 > 16 then error(`Expected "Value1" to be smaller than or equal to 16, got {Value1} instead.`) end
+	if Value1 > 40 then error(`Expected "Value1" to be smaller than or equal to 40, got {Value1} instead.`) end
 	local Value2 = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
 	if Value2 < 1 then error(`Expected "Value2" to be larger than or equal to 1, got {Value2} instead.`) end
-	if Value2 > 16 then error(`Expected "Value2" to be smaller than or equal to 16, got {Value2} instead.`) end
+	if Value2 > 40 then error(`Expected "Value2" to be smaller than or equal to 40, got {Value2} instead.`) end
 	return Value1, Value2
 end
 

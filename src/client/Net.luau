@@ -171,14 +171,14 @@ function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: 
 	local Value = {} :: any
 	Value.Capacity = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	if Value.Capacity < 1 then error(`Expected "Value.Capacity" to be larger than or equal to 1, got {Value.Capacity} instead.`) end
-	if Value.Capacity > 16 then error(`Expected "Value.Capacity" to be smaller than or equal to 16, got {Value.Capacity} instead.`) end
+	if Value.Capacity > 40 then error(`Expected "Value.Capacity" to be smaller than or equal to 40, got {Value.Capacity} instead.`) end
 	Value.Slots = {}
 	local Elements_1 = buffer.readu16(RecieveBuffer, BLOCK_START + 1)
 	for _ = 1, Elements_1 do
 		local OFFSET_0 = Read(1)
 		local Key_1 = buffer.readu8(RecieveBuffer, OFFSET_0)
 		if Key_1 < 1 then error(`Expected "Key_1" to be larger than or equal to 1, got {Key_1} instead.`) end
-		if Key_1 > 16 then error(`Expected "Key_1" to be smaller than or equal to 16, got {Key_1} instead.`) end
+		if Key_1 > 40 then error(`Expected "Key_1" to be smaller than or equal to 40, got {Key_1} instead.`) end
 		local Element_1 = {} :: any
 		local OFFSET_1 = Read(1)
 		local Length = buffer.readu8(RecieveBuffer, OFFSET_1)
@@ -199,7 +199,7 @@ function SerdesFunctions.ReadEVENT_InventorySlot(): (number, { Id: string, Count
 	local BLOCK_START = Read(2)
 	local Value1 = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	if Value1 < 1 then error(`Expected "Value1" to be larger than or equal to 1, got {Value1} instead.`) end
-	if Value1 > 16 then error(`Expected "Value1" to be smaller than or equal to 16, got {Value1} instead.`) end
+	if Value1 > 40 then error(`Expected "Value1" to be smaller than or equal to 40, got {Value1} instead.`) end
 	local Value2
 	if buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1 then
 		-- Read BLOCK: 3 bytes
@@ -221,7 +221,7 @@ function SerdesFunctions.ReadEVENT_InventoryCapacity(): (number)
 	local BLOCK_START = Read(1)
 	local Value = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	if Value < 1 then error(`Expected "Value" to be larger than or equal to 1, got {Value} instead.`) end
-	if Value > 16 then error(`Expected "Value" to be smaller than or equal to 16, got {Value} instead.`) end
+	if Value > 40 then error(`Expected "Value" to be smaller than or equal to 40, got {Value} instead.`) end
 	return Value
 end
 

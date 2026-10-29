@@ -64,6 +64,39 @@ return {
 		assert(containsError(errors, "maxStack"), `faltou erro de maxStack: {table.concat(errors, "; ")}`)
 	end,
 
+	["real bag has bag slots"] = function()
+		local bag = Defs.Items.leather_bag
+		assert(bag ~= nil and bag.category == "bag", "mochila de couro deveria existir")
+		assert(bag.bagSlots == 6, `mochila de couro deveria dar 6 slots, deu {bag.bagSlots}`)
+	end,
+
+	["bag without bag slots is an error"] = function()
+		local item = validItem("sack")
+		item.category = "bag"
+		item.maxStack = 1
+		local errors = Validate.all({ Tiers = {}, Items = { sack = item } }, alwaysHas)
+		assert(containsError(errors, "bagSlots"), `faltou erro de bagSlots: {table.concat(errors, "; ")}`)
+	end,
+
+	["bag slots only on bags"] = function()
+		local item = validItem("wood")
+		item.bagSlots = 4
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(
+			containsError(errors, "bagSlots"),
+			`faltou erro de bagSlots fora de mochila: {table.concat(errors, "; ")}`
+		)
+	end,
+
+	["bag slots cannot pass the slot limit"] = function()
+		local item = validItem("huge_bag")
+		item.category = "bag"
+		item.maxStack = 1
+		item.bagSlots = 99
+		local errors = Validate.all({ Tiers = {}, Items = { huge_bag = item } }, alwaysHas)
+		assert(containsError(errors, "bagSlots"), `faltou erro de limite: {table.concat(errors, "; ")}`)
+	end,
+
 	["missing string is an error"] = function()
 		local errors = Validate.all({ Tiers = {}, Items = { wood = validItem("wood") } }, function(key)
 			return key ~= "item.wood"
