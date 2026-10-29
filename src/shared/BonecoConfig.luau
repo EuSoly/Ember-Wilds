@@ -20,7 +20,7 @@ return table.freeze({
 	HAND_Y = 0.2, -- acima do centro do corpo
 	HAND_Z = -1.45, -- à frente do centro do corpo
 	HAND_OUTLINE_DROP = 0.4, -- contorno da mão mais baixo que a mão
-	NAME_HEIGHT = 2.6, -- etiqueta do nome, acima do centro do corpo
+	NAME_HEIGHT = 3.2, -- etiqueta do nome, acima do centro do corpo
 
 	-- Corpo simulado (servidor, studs). O centro do HumanoidRootPart fica em
 	-- HIP_HEIGHT + ROOT_HEIGHT / 2 = 1 stud do chão = centro do corpo visual.

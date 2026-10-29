@@ -4,7 +4,9 @@
 -- HumanoidRootPart, anima (BonecoAnim) e troca a expressão (ExpressionState).
 -- Tudo o que o visual precisa vem de atributos replicados no personagem
 -- (Using, Equipped, HurtAt, Cosmetic_body): todos veem a mesma coisa.
--- O visual nunca entra na simulação: fica numa pasta local e não replica.
+-- Esses atributos são lidos a cada quadro (polling), não por sinal: veja
+-- syncAttributes. O visual nunca entra na simulação: fica numa pasta local e
+-- não replica.
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -38,6 +40,10 @@ type Entry = {
 	lastPosition: Vector3,
 	eyes: Defs.EyeStyle,
 	flash: string?,
+	-- Últimos valores lidos dos atributos (para só reagir quando mudam).
+	cosmeticId: string?,
+	equippedId: string?,
+	hurtAt: number?,
 	connections: { RBXScriptConnection },
 }
 
@@ -88,27 +94,58 @@ local function remove(character: Model)
 	BonecoModel.destroy(entry.boneco)
 end
 
-local function applyCosmetic(entry: Entry)
-	local id = entry.character:GetAttribute(StatNames.CosmeticPrefix .. BODY_SLOT)
-	local cosmetic = Cosmetic.resolve(Defs, BODY_SLOT, if type(id) == "string" then id else nil)
+local function stringAttribute(character: Model, name: string): string?
+	local value = character:GetAttribute(name)
+	return if type(value) == "string" then value else nil
+end
+
+local function numberAttribute(character: Model, name: string): number?
+	local value = character:GetAttribute(name)
+	return if type(value) == "number" then value else nil
+end
+
+local function applyCosmetic(entry: Entry, id: string?)
+	entry.cosmeticId = id
+	local cosmetic = Cosmetic.resolve(Defs, BODY_SLOT, id)
 	if cosmetic.body then
 		BonecoModel.applyLook(entry.boneco, cosmetic.body)
 	end
 end
 
-local function applyEquipped(entry: Entry)
-	local id = entry.character:GetAttribute(StatNames.Equipped)
-	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, if type(id) == "string" then id else nil)
+local function applyEquipped(entry: Entry, id: string?)
+	entry.equippedId = id
+	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id)
 end
 
 -- Só mostra a careta se o dano for recente: um HurtAt antigo chega quando o
 -- personagem entra no alcance do streaming e não deve tocar a expressão.
 -- O relógio do servidor só serve para essa checagem; a expressão usa os.clock.
-local function checkHurt(entry: Entry)
-	local at = entry.character:GetAttribute(StatNames.HurtAt)
-	local hurtAt = if type(at) == "number" then at else nil
+local function checkHurt(entry: Entry, hurtAt: number?)
+	entry.hurtAt = hurtAt
 	if ExpressionState.isRecent(hurtAt, Workspace:GetServerTimeNow(), C.HURT_RECENT) then
 		ExpressionState.trigger(entry.expression, HURT_EVENT, os.clock())
+	end
+end
+
+-- Lê os atributos do personagem e reage só ao que mudou desde a última leitura.
+-- Por que polling e não GetAttributeChangedSignal: com Server Authority, o
+-- personagem do jogador local é previsto pelo cliente, e o sinal de atributo
+-- não dispara para ele quando o valor chega do servidor (verificado no Studio:
+-- o valor chega, o sinal não). Ler a cada quadro funciona para todos os
+-- personagens e custa só três GetAttribute por boneco.
+local function syncAttributes(entry: Entry)
+	local character = entry.character
+	local cosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT)
+	if cosmeticId ~= entry.cosmeticId then
+		applyCosmetic(entry, cosmeticId)
+	end
+	local equippedId = stringAttribute(character, StatNames.Equipped)
+	if equippedId ~= entry.equippedId then
+		applyEquipped(entry, equippedId)
+	end
+	local hurtAt = numberAttribute(character, StatNames.HurtAt)
+	if hurtAt ~= entry.hurtAt then
+		checkHurt(entry, hurtAt)
 	end
 end
 
@@ -125,26 +162,23 @@ local function build(character: Model, hrp: BasePart)
 		lastPosition = hrp.Position,
 		eyes = "open",
 		flash = nil,
+		cosmeticId = nil,
+		equippedId = nil,
+		hurtAt = nil,
 		connections = {},
 	}
 	entries[character] = entry
 
-	applyCosmetic(entry)
-	applyEquipped(entry)
-	checkHurt(entry)
+	-- Estado inicial (a skin padrão já veio do build; o resto vem do polling).
+	applyCosmetic(entry, stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT))
+	applyEquipped(entry, stringAttribute(character, StatNames.Equipped))
+	checkHurt(entry, numberAttribute(character, StatNames.HurtAt))
 
 	local function listen(signal: RBXScriptSignal, handler: () -> ())
 		table.insert(entry.connections, signal:Connect(handler))
 	end
-	listen(character:GetAttributeChangedSignal(StatNames.CosmeticPrefix .. BODY_SLOT), function()
-		applyCosmetic(entry)
-	end)
-	listen(character:GetAttributeChangedSignal(StatNames.Equipped), function()
-		applyEquipped(entry)
-	end)
-	listen(character:GetAttributeChangedSignal(StatNames.HurtAt), function()
-		checkHurt(entry)
-	end)
+	-- Atributos são lidos por polling (syncAttributes); estes sinais de vida da
+	-- instância funcionam normalmente com Server Authority.
 	-- Personagem destruído ou tirado do Workspace (respawn, streaming): some o visual.
 	listen(character.Destroying, function()
 		remove(character)
@@ -226,6 +260,9 @@ local function update(dt: number)
 	local speeds: { number } = {}
 
 	for _, entry in entries do
+		-- Todo boneco, inclusive os longe da câmera (skin e item certos ao chegar perto).
+		syncAttributes(entry)
+
 		local hrp = entry.hrp
 		if hrp.Parent == nil then
 			continue -- raiz saiu (ex. streaming): o visual espera o personagem sumir
