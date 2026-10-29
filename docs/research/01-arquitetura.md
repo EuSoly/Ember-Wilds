@@ -17,7 +17,7 @@
 ## Rede
 - Blink v0.18.9 (set/2026) recomendado; Zap v0.6.29 alternativa [V]. ByteNet parado, Packet com falhas apontadas, Red arquivado [V].
 - Servidor decide tudo; Unreliable descarta >~1000 bytes; nunca InvokeClient [V].
-- Server Authority nativo em beta instável — não depender no MVP [V/O].
+- Server Authority nativo em beta instável — não depender no MVP [V/O]. **DESATUALIZADO:** o Server Authority está em full release (ver `05-server-authority.md`) e o Elizeu decidiu usá-lo desde o início (spec, seção 5).
 - Estado: barras via Attributes no Player; inventário via snapshot+delta Blink (ou Charm + charm-sync, ativo) [O]. Evitar ValueObjects.
 
 ## UI
