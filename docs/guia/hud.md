@@ -28,6 +28,13 @@ create("TextLabel")({
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
 | `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com slots além da hotbar), com a grade que cresce com a capacidade |
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
+| `src/client/UI/SettingsButton.luau` | Engrenagem (canto superior direito, abaixo do minimapa): abre e fecha as configurações |
+
+## Quando o HUD aparece
+
+O HUD só aparece **jogando** (estado `playing`). No carregamento, no menu e na tela de morte, quem aparece são as telas de molde (veja `telas.md`). Isso é a propriedade `Enabled` do ScreenGui `Hud`, ligada ao `ScreenState`.
+
+A configuração **Tamanho da interface** (`ui_scale`) também vale para o HUD: um `UIScale` no ScreenGui `Hud` segue o atributo `Setting_ui_scale`.
 
 ## Como adicionar um componente
 
