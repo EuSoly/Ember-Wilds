@@ -1,6 +1,7 @@
 --!strict
--- Monta o mundo. Por enquanto só um chão de teste com o verde da floresta e um
--- ponto de spawn; o gerador do mapa de verdade entra na Fase 6.
+-- Chão de teste: só existe quando o place NÃO tem um mapa desenhado
+-- (Workspace.Map, ver MapService e docs/guia/mapa.md). Fica centrado no
+-- WorldConfig.SPAWN, onde o boneco nasce. O SpawnLocation é do MapService.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
@@ -13,6 +14,10 @@ local GROUND_SIZE = Vector3.new(WorldConfig.size, 2, WorldConfig.size)
 local WorldService = {}
 
 function WorldService.Init(_self)
+	if Workspace:FindFirstChild("Map") then
+		return
+	end
+
 	local world = Instance.new("Folder")
 	world.Name = "World"
 
@@ -21,24 +26,12 @@ function WorldService.Init(_self)
 	ground.Name = "TestGround"
 	ground.Anchored = true
 	ground.Size = GROUND_SIZE
-	ground.Position = Vector3.new(0, -GROUND_SIZE.Y / 2, 0)
+	ground.Position = Vector3.new(WorldConfig.SPAWN.x, -GROUND_SIZE.Y / 2, WorldConfig.SPAWN.z)
 	ground.Color = Theme.color(Palette.biome.forest[1])
 	ground.Material = Enum.Material.SmoothPlastic
 	ground.TopSurface = Enum.SurfaceType.Smooth
+	ground.CastShadow = false -- uma placa enorme fazendo sombra em si mesma pisca
 	ground.Parent = world
-
-	-- Spawn invisível: o jogador nasce no centro e cai no chão.
-	local spawn = Instance.new("SpawnLocation")
-	spawn.Name = "Spawn"
-	spawn.Anchored = true
-	spawn.Neutral = true
-	spawn.Size = Vector3.new(6, 1, 6)
-	spawn.Position = Vector3.new(0, 0.5, 0)
-	spawn.Transparency = 1
-	spawn.CanCollide = false
-	spawn.CanQuery = false
-	spawn.Duration = 0 -- sem campo de força
-	spawn.Parent = world
 
 	world.Parent = Workspace
 end

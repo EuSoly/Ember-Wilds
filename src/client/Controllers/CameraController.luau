@@ -17,6 +17,7 @@ local Workspace = game:GetService("Workspace")
 
 local CameraMath = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("CameraMath"))
 local StatNames = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("StatNames"))
+local WorldConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("WorldConfig"))
 
 local PITCH = 65 -- graus (90 seria olhar reto para baixo)
 local DEFAULT_DISTANCE = 34
@@ -29,7 +30,8 @@ local WHEEL_STEP = 2 -- studs por "clique" da roda
 local SPECTATE_EXTRA_DISTANCE = 6 -- um pouco mais alta ao assistir alguém
 local ORBIT_SPEED = 6 -- graus por segundo, girando sem alvo
 local YAW_SHARPNESS = 3 -- volta ao ângulo normal (câmera do jogo nunca gira)
-local MAP_CENTER = Vector3.zero
+-- Sem alvo, a câmera do menu gira em volta do centro da floresta (onde se nasce).
+local MAP_CENTER = Vector3.new(WorldConfig.SPAWN.x, WorldConfig.SPAWN.y, WorldConfig.SPAWN.z)
 
 local CameraController = {}
 

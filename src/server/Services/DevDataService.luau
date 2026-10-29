@@ -12,10 +12,13 @@
 -- - ServerStorage.DevProfile:Invoke(player) -> string: o perfil atual em JSON.
 -- - ServerStorage.DevResetProfile:Invoke(player) -> boolean: apaga o perfil de
 --   dev (store Dev_) e expulsa o jogador.
+-- - ServerStorage.DevCampfire:Invoke(player): fogueira de teste 6 studs à frente
+--   do personagem (para ver a luz do fogo de noite).
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
+local Workspace = game:GetService("Workspace")
 
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CosmeticService = require(script.Parent.CosmeticService)
@@ -23,6 +26,7 @@ local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
 local StatsService = require(script.Parent.StatsService)
+local CampfireModel = require(ReplicatedStorage.Shared.Models.CampfireModel)
 
 local DevDataService = {}
 
@@ -69,6 +73,18 @@ function DevDataService.Start(_self)
 
 	newCommand("DevResetProfile", function(player: Player): boolean
 		return DataService.resetForDev(player)
+	end)
+
+	newCommand("DevCampfire", function(player: Player)
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		if root == nil or not root:IsA("BasePart") then
+			return
+		end
+		local spot = root.Position + root.CFrame.LookVector * 6
+		local campfire = CampfireModel.build()
+		campfire:PivotTo(CFrame.new(spot.X, 0, spot.Z))
+		campfire.Parent = Workspace
 	end)
 end
 
