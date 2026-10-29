@@ -47,7 +47,7 @@ Primeiro a parte gráfica e a base (câmera, HUD, inventário, telas iniciais, s
 - **Mobile-first**, celular em paisagem; PC e gamepad também.
 - **Server Authority ligado desde o início** [decidido] (`Workspace.AuthorityMode = Server`), para não ter de refatorar quando o jogo crescer. Consequências na seção 5.
 - Desenvolvedor solo + IA; prazo do N0 não fixado.
-- Avatar R15 do próprio jogador com proporções travadas (hitbox justa).
+- ~~Avatar R15 do próprio jogador com proporções travadas (hitbox justa).~~ Substituído por boneco próprio igual para todos (hitbox justa) [29/10/2026, ver `specs/2026-10-29-boneco-design.md`].
 - **Place de desenvolvimento** [decidido]: o Elizeu criou um place, já conectado ao Rojo (`rojo serve` sincroniza ao vivo). Para testar persistência real no Studio, ele precisa estar publicado com "Enable Studio Access to API Services" ligado; os dados de desenvolvimento usam um nome/escopo de DataStore separado do que será o jogo real (ex.: prefixo `Dev_`), trocado por configuração. Developer Products, Game Pass e Avatar Settings são configurados nesse place pelo Elizeu quando a fase pedir — o plano lista esses passos manuais.
 - **Git** [decidido]: commit ao fim de cada fase (ou parte dela), mensagens em português, sem push.
 - O grafo do graphify (`graphify-out/`) deve ser atualizado após mudanças de código (`python -m graphify update .`; o comando `graphify` não está no PATH desta máquina). Docs ficam em `docs/` para entrarem no grafo.
@@ -152,7 +152,7 @@ Base: `docs/research/03-visual-cliente.md` + identidade visual.
 
 - **Câmera**: `Scriptable`, `BindToRenderStep` em `Camera + 1`, pitch ~65°, yaw fixo, suavização exponencial, zoom curto limitado (valores iniciais [builder]). Fade de oclusão só em peças com tag `Occluder` (copas, telhados) — pode vir depois.
 - **CoreGui**: desligar Backpack e Health; chat padrão (TextChatService) mantido.
-- **Avatar**: Avatar Settings da experiência (Custom Scale/Build, colisor único, limite de acessórios) + reaplicação de escala no servidor ao carregar o personagem.
+- **Avatar**: Boneco próprio (StarterCharacter mínimo + visual no cliente) [decidido em 29/10/2026, ver specs/2026-10-29-boneco-design.md]
 - **ScreenGuis** com `ScreenInsets = CoreUISafeInsets`; respeitar a TopBar (`GuiService.TopbarInset`, ~58 px, que chega zerado no 1º frame).
 - **Layout**: o da imagem `docs/game-design/img/hud-mobile.png` — pontos/ranking (sup. esq.), relógio dia/noite (topo), minimapa (sup. dir.), receitas prontas (esq.), aviso (dir.), anéis de vida/fome/frio/sede acima da hotbar, hotbar de 10 slots, **joystick direito de mira/ação** no lugar do botão "Coletar" do mockup, e botões de construir e mochila (dir.). No PC/gamepad os botões de toque somem (`UserInputService.PreferredInput`), hotbar responde a 1–0.
 - **Regras de UI** da identidade visual: tokens de cor do `Theme`, fontes `LuckiestGuy`, `FredokaOne`, `BuilderSans` via `FontFace`, `TextScaled` + `UITextSizeConstraint`, Scale + `UIAspectRatioConstraint`, botões ≥ 44 px, UICorner/UIStroke, notificações máx. 2 por 3 s.
@@ -179,7 +179,7 @@ Cada fase termina testável no Studio (incluindo emulador de celular em paisagem
 | Fase | Entrega | Pronto quando |
 |---|---|---|
 | F0 Fundação | Rokit com rojo 7.7.1, wally, selene, stylua, luau-lsp, blink; estrutura de pastas; bootstraps Init/Start; `Theme`, `Tiers`, Defs iniciais com validação; Workspace com Server Authority; README de como rodar | `rojo build` gera o place, Play roda sem erros, lint e type-check limpos |
-| F1 Câmera e movimento | Câmera top-down 65°, movimento nativo com predição, pulo desligado, avatar com proporção travada, personagem virando para o mouse no PC (na simulação) e para o movimento no celular, chão de teste | Andar no PC e no emulador de celular, câmera suave, rotação para o mouse sem tremer; **confirma o spike de Server Authority** |
+| F1 Câmera e movimento | Câmera top-down 65°, movimento nativo com predição, pulo desligado, avatar com proporção travada (depois trocado pelo boneco próprio, ver `specs/2026-10-29-boneco-design.md`), personagem virando para o mouse no PC (na simulação) e para o movimento no celular, chão de teste | Andar no PC e no emulador de celular, câmera suave, rotação para o mouse sem tremer; **confirma o spike de Server Authority** |
 | F2 HUD | Componentes Vide do HUD do layout, com dados falsos vindos de atributos; troca PC/celular; joystick direito de mira/ação no celular (mira + segurar para bater) e botões ligados a InputActions | HUD legível no celular pequeno, tablet e 1080p; joystick direito gira o personagem e dispara a ação de bater (verificado no servidor) |
 | F3 Inventário | Inventário autoritativo + snapshot/delta via Blink; grade 4×4, hotbar, selecionar slot, item visual na mão; itens de teste por comando de debug | Mover, empilhar, selecionar e equipar funcionam e o servidor rejeita operações inválidas |
 | F4 Dados | ProfileStore, schema v1, migrações, configurações e moeda persistidas, escopo de DataStore de desenvolvimento | No place publicado com API Services: sair e voltar mantém configurações e moeda; sem API Services, cai para mock com aviso no Output |

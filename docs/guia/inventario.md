@@ -15,8 +15,8 @@ O inventário de cada jogador existe **só no servidor**. O cliente recebe uma c
 | `src/shared/Inventory.luau` | Lógica pura (`new`, `add`, `remove`, `count`, `move`, `setCapacity`, `capacityFor`), testada no Lune (`tests/inventory.spec.luau`) |
 | `net/game.blink` | Contrato de rede (Blink). Gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server/Services/InventoryService.luau` | Inventário de cada jogador, valida os pedidos, manda as mudanças (deltas), veste mochilas (`equipBag`) e soma o gamepass |
-| `src/server/Services/EquipService.luau` | Item selecionado na mão (atributo `Equipped` + modelo `HeldItem`) |
-| `src/shared/Models/ToolModel.luau` | Modelo provisório de ferramenta (cabo + cabeça na cor do tier) |
+| `src/server/Services/EquipService.luau` | Item selecionado na mão (só o atributo `Equipped` no personagem) |
+| `src/shared/Models/ToolModel.luau` | Modelo provisório de ferramenta (cabo + cabeça na cor do tier), desenhado pelo cliente |
 | `src/server/Services/DevItemsService.luau` | Só no Studio: dá um kit, veste a Mochila de Couro e cria `ServerStorage.DevGive` e `DevEquipBag` |
 | `src/client/InventoryState.luau` | Cópia do inventário no cliente (fontes do Vide) |
 | `src/client/DragState.luau` | Arrastar itens entre slots (toque × arrasto, slot debaixo do dedo, `MoveSlot`) |
@@ -64,13 +64,9 @@ Tocar num slot da hotbar só **seleciona**; mover é sempre arrastando.
 
 ## Item na mão
 
-Quando o jogador seleciona um slot, o `EquipService`:
+Quando o jogador seleciona um slot, o `EquipService` **só** grava o atributo `Equipped` no personagem com o id do item (ou `nil` se o slot está vazio). Refaz no respawn e quando o conteúdo do slot selecionado muda.
 
-- grava `Character:GetAttribute("Equipped")` com o id do item (ou `nil` se o slot está vazio);
-- para ferramentas (`category = "tool"`), solda um modelo `HeldItem` na `RightHand`, alinhado ao `RightGripAttachment`;
-- refaz tudo no respawn e quando o conteúdo do slot selecionado muda.
-
-Outros itens (recursos, comida) ficam só no atributo, sem modelo.
+O modelo da ferramenta não existe no servidor: cada cliente lê o `Equipped` e desenha a ferramenta na mão direita do boneco visual (`BonecoModel.setHeldItem`, com o `ToolModel`). Assim todos veem o item na mão de todos. Outros itens (recursos, comida) ficam só no atributo, sem modelo. Veja `boneco.md`.
 
 ## Dar itens no Studio
 
@@ -115,7 +111,7 @@ Com `gamePassId = 0` o bônus fica desligado. Para ligar: crie o gamepass no Cre
 
 ## Adicionar um modelo de ferramenta
 
-1. Crie o item em `Defs/Items.luau` com `category = "tool"` (veja `adicionar-item.md`). Ele já aparece na mão com o modelo provisório, na cor do tier.
+1. Crie o item em `Defs/Items.luau` com `category = "tool"` (veja `adicionar-item.md`). Ele já aparece na mão do boneco com o modelo provisório, na cor do tier.
 2. Para um formato próprio, mude `ToolModel.build`: devolva um `Model` com `PrimaryPart` = `Handle`, um `Attachment` chamado `Grip` no cabo (Y = ao longo do cabo, X = lado da cabeça) e todas as peças com `CanCollide/CanQuery/CanTouch = false` e `Massless = true`.
 
 ## Mudando o contrato de rede

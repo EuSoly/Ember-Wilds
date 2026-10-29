@@ -6,8 +6,34 @@ local InventoryConfig = require("../InventoryConfig")
 local Types = require("./Types")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
+local HEX_PATTERN = "^#%x%x%x%x%x%x$"
+-- Strings de atributo têm no máximo 50 caracteres no Server Authority, e o id
+-- do cosmético vai num atributo (Cosmetic_<slot>).
+local MAX_COSMETIC_ID_LENGTH = 50
 
 local Validate = {}
+
+-- Lista única de estilos de olho: usada aqui e pelo boneco visual (que monta
+-- uma variação de olho para cada um).
+local EYE_STYLES: { Types.EyeStyle } = { "open", "closed", "squeeze" }
+table.freeze(EYE_STYLES)
+Validate.EYE_STYLES = EYE_STYLES
+
+-- Eventos que o boneco visual sabe disparar (BonecoRenderer). Uma expressão de
+-- evento com outro nome nunca apareceria, então é erro: evento novo precisa de
+-- código no renderer e de entrar nesta lista.
+Validate.HURT_EVENT = "hurt" -- dano (atributo HurtAt)
+Validate.KNOWN_EVENTS = table.freeze({ Validate.HURT_EVENT })
+
+local TRIGGERS = table.freeze({ "always", "periodic", "event", "condition" })
+
+local function isHex(value: any): boolean
+	return type(value) == "string" and string.match(value, HEX_PATTERN) ~= nil
+end
+
+local function isPositive(value: any): boolean
+	return type(value) == "number" and value > 0
+end
 
 local function checkId(errors: { string }, kind: string, key: string, id: string)
 	if id ~= key then
@@ -28,6 +54,130 @@ local function checkString(
 )
 	if not hasString(value) then
 		table.insert(errors, `{kind} "{key}": {field} "{value}" sem texto em Strings`)
+	end
+end
+
+local function validateCosmetics(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	-- Tabelas ausentes (testes antigos) contam como vazias.
+	local slots: { [string]: Types.CosmeticSlotDef } = (defs :: any).CosmeticSlots or {}
+	local cosmetics: { [string]: Types.CosmeticDef } = (defs :: any).Cosmetics or {}
+
+	for key, cosmetic in cosmetics do
+		checkId(errors, "Cosmetic", key, cosmetic.id)
+		if #key > MAX_COSMETIC_ID_LENGTH then
+			table.insert(errors, `Cosmetic "{key}": id com mais de {MAX_COSMETIC_ID_LENGTH} caracteres`)
+		end
+		checkString(errors, "Cosmetic", key, "nameKey", cosmetic.nameKey, hasString)
+		if slots[cosmetic.slot] == nil then
+			table.insert(errors, `Cosmetic "{key}": slot "{cosmetic.slot}" não existe em CosmeticSlots`)
+		end
+		if cosmetic.slot == "body" then
+			local body = cosmetic.body
+			if body == nil then
+				table.insert(errors, `Cosmetic "{key}": slot "body" precisa de body`)
+			else
+				for _, field in { "bodyColor", "outlineColor" } do
+					if not isHex((body :: any)[field]) then
+						table.insert(errors, `Cosmetic "{key}": {field} inválida (use #RRGGBB)`)
+					end
+				end
+				for _, field in { "handColor", "eyeColor" } do
+					local value = (body :: any)[field]
+					if value ~= nil and not isHex(value) then
+						table.insert(errors, `Cosmetic "{key}": {field} inválida (use #RRGGBB)`)
+					end
+				end
+			end
+		end
+	end
+
+	for key, slot in slots do
+		checkId(errors, "CosmeticSlot", key, slot.id)
+		checkString(errors, "CosmeticSlot", key, "nameKey", slot.nameKey, hasString)
+		local default = cosmetics[slot.default]
+		if default == nil then
+			table.insert(errors, `CosmeticSlot "{key}": default "{slot.default}" não existe em Cosmetics`)
+		elseif default.slot ~= key then
+			table.insert(errors, `CosmeticSlot "{key}": default "{slot.default}" é do slot "{default.slot}"`)
+		end
+	end
+end
+
+local function validateExpressions(errors: { string }, defs: Types.DefsTables)
+	local expressions: { [string]: Types.ExpressionDef }? = (defs :: any).Expressions
+	if expressions == nil then
+		return
+	end
+
+	local alwaysCount = 0
+	for key, expression in expressions do
+		checkId(errors, "Expression", key, expression.id)
+		if type(expression.priority) ~= "number" then
+			table.insert(errors, `Expression "{key}": priority deve ser número`)
+		end
+		if not table.find(Validate.EYE_STYLES, expression.eyes) then
+			table.insert(errors, `Expression "{key}": eyes "{expression.eyes}" não existe`)
+		end
+
+		local trigger = expression.trigger
+		if not table.find(TRIGGERS, trigger) then
+			table.insert(errors, `Expression "{key}": trigger "{trigger}" não existe`)
+		elseif trigger == "always" then
+			alwaysCount += 1
+		elseif trigger == "event" then
+			if type(expression.event) ~= "string" then
+				table.insert(errors, `Expression "{key}": trigger "event" precisa de event`)
+			elseif not table.find(Validate.KNOWN_EVENTS, expression.event) then
+				table.insert(
+					errors,
+					`Expression "{key}": event "{expression.event}" não existe (conhecidos: {table.concat(
+						Validate.KNOWN_EVENTS,
+						", "
+					)})`
+				)
+			end
+			if not isPositive(expression.duration) then
+				table.insert(errors, `Expression "{key}": duration deve ser maior que 0`)
+			end
+		elseif trigger == "periodic" then
+			if not isPositive(expression.duration) then
+				table.insert(errors, `Expression "{key}": duration deve ser maior que 0`)
+			end
+			local min, max = expression.intervalMin, expression.intervalMax
+			if not isPositive(min) then
+				table.insert(errors, `Expression "{key}": intervalMin deve ser maior que 0`)
+			end
+			if type(max) ~= "number" or type(min) ~= "number" or max < min then
+				table.insert(errors, `Expression "{key}": intervalMax deve ser maior ou igual a intervalMin`)
+			end
+		elseif trigger == "condition" then
+			local condition = expression.condition
+			if condition == nil or type(condition.attribute) ~= "string" then
+				table.insert(errors, `Expression "{key}": trigger "condition" precisa de condition.attribute`)
+			elseif type(condition.below) ~= "number" and type(condition.above) ~= "number" then
+				table.insert(errors, `Expression "{key}": condition precisa de below ou above`)
+			end
+		end
+
+		-- O flash é medido a partir do disparo do evento: fora de "event" nunca apareceria.
+		local flash = expression.flash
+		if flash ~= nil and trigger ~= "event" then
+			table.insert(errors, `Expression "{key}": flash só vale para trigger "event"`)
+		end
+		if flash ~= nil then
+			if not isHex(flash.color) then
+				table.insert(errors, `Expression "{key}": flash.color inválida (use #RRGGBB)`)
+			end
+			if not isPositive(flash.duration) then
+				table.insert(errors, `Expression "{key}": flash.duration deve ser maior que 0`)
+			end
+		end
+	end
+
+	-- A expressão "always" é a base (olhos normais): sem ela o boneco ficaria sem
+	-- olhos; com duas, a escolha dependeria da ordem da tabela.
+	if alwaysCount ~= 1 then
+		table.insert(errors, `Expressions: deve haver exatamente uma com trigger "always" (há {alwaysCount})`)
 	end
 end
 
@@ -72,6 +222,9 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 			table.insert(errors, `Item "{key}": bagSlots só vale para category "bag"`)
 		end
 	end
+
+	validateCosmetics(errors, defs, hasString)
+	validateExpressions(errors, defs)
 
 	table.sort(errors)
 	return errors

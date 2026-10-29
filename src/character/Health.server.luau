@@ -1,0 +1,4 @@
+--!strict
+-- Vazio de propósito. Com um filho chamado "Health" em StarterCharacterScripts,
+-- o Roblox não injeta o script padrão que regenera a vida do Humanoid: a vida
+-- do jogo é o atributo Health do Player (StatNames), controlado pelo servidor.

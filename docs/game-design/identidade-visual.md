@@ -21,12 +21,12 @@ A direção é um low-poly "de brinquedo" visto de cima, com o contraste entre o
 |  | Starve.io | Nosso jogo |
 |---|---|---|
 | Estilo | 2D chapado, formas de círculo, quase sem animação | 3D low-poly com volume, sombra e animação em tudo que se mexe |
-| Personagem | Bolinha com duas mãos | O avatar Roblox do próprio jogador, com capacete e roupa do jogo por cima |
+| Personagem | Bolinha com duas mãos | Boneco próprio em 3D (corpo arredondado, olhos, mãos soltas), com skins do jogo (decidido em 29/10/2026, ver `superpowers/specs/2026-10-29-boneco-design.md`) |
 | Interface | Barras retas embaixo da tela | Anéis de status, hotbar grande para o polegar e cartas de crafting |
 | Noite | Tela escurece por igual | Escurece e fica azul, e a luz do fogo pinta o chão em volta |
 | Nomes e ícones | Do jogo original | Todos próprios |
 
-Usar o avatar do jogador é a decisão mais importante: no Roblox as pessoas gostam de ver o próprio personagem, e isso abre espaço para cosméticos que combinam com o avatar.
+~~Usar o avatar do jogador é a decisão mais importante~~. **Atualizado em 29/10/2026:** o jogador passou a ser um boneco próprio no estilo Starve.io (identidade visual legível de cima, mesmo hitbox para todos e skins de corpo inteiro como cosméticos). Ver `superpowers/specs/2026-10-29-boneco-design.md`.
 
 ### Nome e logo
 
@@ -182,7 +182,7 @@ Um só modelo serve para todos os tiers: muda a cor da paleta e ganha um detalhe
 
 #### Personagem e mobs
 
-- O jogador usa o próprio avatar R15, mas com proporções travadas pelo servidor (HumanoidDescription com altura e largura fixas). Sem isso, avatares gigantes ou minúsculos teriam hitbox diferente no PvP.
+- O jogador é um boneco próprio, igual para todos (mesmo hitbox no PvP), com skins como cosméticos; substitui o avatar R15 com proporções travadas (29/10/2026, ver `superpowers/specs/2026-10-29-boneco-design.md` e `docs/guia/boneco.md`).
 
 - Mobs são designs próprios: formas exageradas, cabeça grande, cor de corpo + uma cor de destaque. Hostis têm olhos com brilho de noite; passivos, não.
 
@@ -197,7 +197,7 @@ Toda ação do jogador responde em menos de 100 ms com movimento, partícula e s
 | Evento | O que acontece na tela | Duração | Como fazer no Roblox |
 |---|---|---|---|
 | Golpe em árvore ou rocha | A jazida encolhe e volta (100% → 92% → 100%), solta lascas na cor do tier, e um "+3" sobe e some | 150 ms + 600 ms do número | TweenService, ParticleEmitter:Emit(8), BillboardGui |
-| Ataque com arma | Golpe do avatar com rastro na cor do tier | 250–350 ms | Animation no Animator + Trail na arma |
+| Ataque com arma | Golpe do boneco com rastro na cor do tier | 250–350 ms | Animação por código no boneco (`BonecoAnim`; ver `superpowers/specs/2026-10-29-boneco-design.md`) + Trail na arma |
 | Tomar dano | Borda da tela pisca vermelho, personagem brilha vermelho e recua um pouco, número de dano | 120–200 ms | Highlight, ImageLabel de vinheta, BillboardGui |
 | Barra abaixo de 35% | O anel pulsa e o ícone treme; com vida abaixo de 25%, batimento cardíaco | Pulso a cada 0,8 s | Tween em loop + Sound |
 | Barra vazia | Anel cinza piscando e vinheta na cor da barra (azul no frio, laranja na fome) | Contínuo | ImageLabel com transparência animada |

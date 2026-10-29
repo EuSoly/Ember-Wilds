@@ -7,12 +7,14 @@
 | `src/shared` | `ReplicatedStorage.Shared` | Código e dados usados pelos dois lados |
 | `src/shared/Defs` | `Shared.Defs` | Conteúdo do jogo como **dados**: tiers, itens (depois receitas, mobs, biomas…) |
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
-| `src/shared/Models` | `Shared.Models` | Modelos montados por código (ex.: ferramenta na mão) |
+| `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `net/game.blink` | — | Contrato de rede; gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server` | `ServerScriptService.Server` | Bootstrap do servidor |
 | `src/server/Services` | `Server.Services` | Um módulo por sistema do servidor |
 | `src/client` | `StarterPlayerScripts.Client` | Bootstrap do cliente |
 | `src/client/Controllers` | `Client.Controllers` | Um módulo por sistema do cliente |
+| `src/client/Boneco` | `Client.Boneco` | Boneco visual (montagem e renderer); quem liga é o `BonecoController` |
+| `src/character` | `StarterPlayer.StarterCharacterScripts` | `Animate` e `Health` vazios (para o Roblox não pôr os padrões) |
 | `src/first` | `ReplicatedFirst.First` | Tela de carregamento (Fase 5) |
 | `tests` | — | Testes do Lune |
 
@@ -58,6 +60,7 @@ O jogo roda com `Workspace.AuthorityMode = Server`. O servidor é a fonte da ver
   - **não** use `Destroy()` nem troque `Parent` de algo que já existe — marque num atributo e remova em `RunService.PostSimulation` no servidor;
   - efeitos visuais e sons ficam fora, em `RenderStepped`.
 - Atributos replicados: no máximo 64 por instância, strings de até 50 caracteres.
+- **No cliente, estado do personagem vindo do servidor é lido por polling, não por sinal de atributo.** Com Server Authority o personagem do jogador local é previsto, e `GetAttributeChangedSignal` não dispara para ele quando o valor chega do servidor (verificado no Studio: o valor chega, o sinal não). Leia o atributo a cada quadro e compare com o último valor (ex.: `syncAttributes` em `BonecoRenderer`). Sinais de vida da instância (`Destroying`, `AncestryChanged`) funcionam normalmente.
 - Ações discretas (mover item, selecionar slot; depois coletar, craftar, construir) vão por eventos de rede validados no servidor. Veja "Rede (Blink)" abaixo.
 
 ## Rede (Blink)
@@ -89,6 +92,10 @@ Solução (a oficial, segundo a equipe do Roblox no [DevForum](https://devforum.
 - na cópia, as 3 linhas que religavam o `AutoRotate` viraram um comentário `-- EMBER WILDS: ...` (procure por esse texto).
 
 A cópia **não recebe atualizações do Roblox**. Para atualizar: com o jogo rodando e `CreateDefaultPlayerModule` ligado, visão **Server**, botão direito em `StarterPlayer.PlayerModule` → *Save to File* (`.rbxmx`), e refaça as 3 trocas `EMBER WILDS`. O arquivo é código do Roblox: não passa por StyLua nem selene.
+
+## Boneco
+
+O personagem é um corpo simulado mínimo e invisível (`Humanoid` + `HumanoidRootPart` + `Head` invisível), igual para todos e marcado com a tag `Boneco`. Cada cliente monta um boneco visual **só local** para cada personagem com essa tag e o faz seguir, animar e mudar de expressão a partir dos atributos `Using`, `Equipped`, `HurtAt` e `Cosmetic_body`. Skins e expressões são dados em `Defs`. Veja `boneco.md`.
 
 ## Interface (HUD)
 

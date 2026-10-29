@@ -6,8 +6,9 @@
 local RunService = game:GetService("RunService")
 
 local InputNames = require("../InputNames")
+local StatNames = require("../StatNames")
 
-local ATTRIBUTE = "Using"
+local ATTRIBUTE = StatNames.Using
 
 local UseSim = {}
 

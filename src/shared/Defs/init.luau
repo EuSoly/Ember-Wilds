@@ -12,10 +12,19 @@ local Validate = require("@self/Validate")
 export type TierDef = Types.TierDef
 export type ItemDef = Types.ItemDef
 export type ItemCategory = Types.ItemCategory
+export type EyeStyle = Types.EyeStyle
+export type ExpressionTrigger = Types.ExpressionTrigger
+export type ExpressionDef = Types.ExpressionDef
+export type BodyLook = Types.BodyLook
+export type CosmeticSlotDef = Types.CosmeticSlotDef
+export type CosmeticDef = Types.CosmeticDef
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
 	Items = require("@self/Items"),
+	CosmeticSlots = require("@self/CosmeticSlots"),
+	Cosmetics = require("@self/Cosmetics"),
+	Expressions = require("@self/Expressions"),
 })
 
 local errors = Validate.all(Defs, Strings.has)
