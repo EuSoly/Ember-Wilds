@@ -1,8 +1,8 @@
 --!strict
 -- Hotbar de 10 slots (embaixo, no centro): os slots 1–10 do inventário.
 -- O slot selecionado ganha borda laranja. Seleciona tocando/clicando no slot ou
--- pelas teclas 1 … 0 (InputActions Slot1 … Slot10). Com a mochila aberta, tocar
--- num slot serve para mover itens (veja SlotButton).
+-- pelas teclas 1 … 0 (InputActions Slot1 … Slot10). Mover itens é arrastando
+-- (veja DragState).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

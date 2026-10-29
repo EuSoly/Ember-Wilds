@@ -14,7 +14,7 @@ local InventoryState = {}
 
 -- Slots ocupados (índice → item). Slots vazios não aparecem na tabela.
 InventoryState.slots = vide.source({} :: { [number]: Item })
--- Quantos slots o jogador pode usar (10, ou 16 com a mochila).
+-- Quantos slots o jogador pode usar (10 + mochila + gamepass, até 40).
 InventoryState.capacity = vide.source(10)
 
 local function fromNet(slot: Net.Slot?): Item?

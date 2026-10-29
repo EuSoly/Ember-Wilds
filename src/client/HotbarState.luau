@@ -4,10 +4,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local InventoryConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("InventoryConfig"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 local Net = require(script.Parent:WaitForChild("Net"))
 
-local SLOT_COUNT = 10
+local SLOT_COUNT = InventoryConfig.HOTBAR_SLOTS
 
 local HotbarState = {}
 

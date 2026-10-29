@@ -121,6 +121,9 @@ end
 
 -- Tira itens do jogador, tudo ou nada.
 function InventoryService.take(player: Player, id: string, count: number): boolean
+	if count < 1 or count % 1 ~= 0 then
+		return false
+	end
 	local inv = ensure(player)
 	local ok, changed = Inventory.remove(inv, id, count)
 	sendChanges(player, inv, changed)
@@ -142,7 +145,9 @@ end
 -- Veste a mochila `bagId` (um item com category "bag"), ou tira com nil.
 -- A mochila vestida não ocupa slot. Trocar por uma menor (ou tirar) só funciona
 -- se os slots que vão sumir estiverem vazios. Devolve true se deu certo.
--- (Hoje quem chama é o DevItemsService; depois, o crafting/equipamentos.)
+-- Contrato: esta função NÃO tira o item da mochila do inventário nem devolve a
+-- mochila antiga; quem chama (crafting/equipamentos) cuida disso.
+-- (Hoje quem chama é o DevItemsService.)
 function InventoryService.equipBag(player: Player, bagId: string?): boolean
 	if bagId ~= nil then
 		local def = Defs.Items[bagId]
@@ -185,7 +190,7 @@ local function onMove(player: Player, from: number, to: number)
 end
 
 local function onSelect(player: Player, index: number)
-	if index < 1 or index > HOTBAR_SLOTS or index % 1 ~= 0 then
+	if player.Parent == nil or index < 1 or index > HOTBAR_SLOTS or index % 1 ~= 0 then
 		return
 	end
 	ensure(player)
@@ -197,6 +202,10 @@ end
 
 function InventoryService.Start(_self)
 	Net.RequestInventory.On(function(player: Player)
+		-- Pedido que chegou depois de o jogador sair: não recria o estado dele.
+		if player.Parent == nil then
+			return
+		end
 		sendSnapshot(player, ensure(player))
 	end)
 	Net.MoveSlot.On(onMove)

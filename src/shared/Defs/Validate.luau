@@ -50,8 +50,16 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		if item.tier ~= nil and defs.Tiers[item.tier] == nil then
 			table.insert(errors, `Item "{key}": tier "{item.tier}" não existe em Tiers`)
 		end
-		if type(item.maxStack) ~= "number" or item.maxStack < 1 or item.maxStack % 1 ~= 0 then
-			table.insert(errors, `Item "{key}": maxStack deve ser inteiro >= 1`)
+		if #key > InventoryConfig.MAX_ITEM_ID_LENGTH then
+			table.insert(errors, `Item "{key}": id com mais de {InventoryConfig.MAX_ITEM_ID_LENGTH} caracteres`)
+		end
+		if
+			type(item.maxStack) ~= "number"
+			or item.maxStack < 1
+			or item.maxStack % 1 ~= 0
+			or item.maxStack > InventoryConfig.MAX_STACK
+		then
+			table.insert(errors, `Item "{key}": maxStack deve ser inteiro entre 1 e {InventoryConfig.MAX_STACK}`)
 		end
 		-- Mochilas: precisam de bagSlots, e só elas podem ter.
 		local maxBagSlots = InventoryConfig.MAX_SLOTS - InventoryConfig.BASE_SLOTS

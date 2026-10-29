@@ -58,7 +58,9 @@ A hotbar mostra os slots 1–10 e a mochila (tecla **B** no PC, botão **Mochila
 
 Um toque rápido (o dedo anda menos de 8 px) não é arrasto: num slot da hotbar, seleciona. A regra está em `UIMath.isDrag` (testada no Lune).
 
-Com a mochila fechada, tocar num slot da hotbar só **seleciona**.
+Tocar num slot da hotbar só **seleciona**; mover é sempre arrastando.
+
+> Tirar a mochila exige que os slots **do fim** do inventário estejam vazios (os que vão sumir). Com o gamepass VIP, esses são os 3 do bônus e os últimos da mochila, não necessariamente os primeiros slots da mochila.
 
 ## Item na mão
 

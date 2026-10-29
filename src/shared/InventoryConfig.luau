@@ -11,6 +11,11 @@ return table.freeze({
 	-- Limite absoluto de slots (mochila maior + gamepass).
 	MAX_SLOTS = 40,
 
+	-- Limites do contrato de rede (net/game.blink: Id string(1..32), Count u16).
+	-- Validate rejeita itens que passem disso, senão o cliente não decodifica.
+	MAX_ITEM_ID_LENGTH = 32,
+	MAX_STACK = 65535,
+
 	-- Gamepass "VIP": conveniência leve, slots extras na mochila (spec, seção 7).
 	-- gamePassId = 0 deixa desligado. Crie o passe no Roblox e coloque o ID aqui.
 	vipPass = table.freeze({

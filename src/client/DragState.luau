@@ -116,6 +116,13 @@ function DragState.start()
 		DragState.target(slotAt(position))
 	end)
 
+	-- A janela perdeu o foco no meio do arrasto: o "soltar" nunca chega, então cancela.
+	UserInputService.WindowFocusReleased:Connect(function()
+		pressed = nil
+		DragState.current(nil)
+		DragState.target(nil)
+	end)
+
 	UserInputService.InputEnded:Connect(function(input: InputObject)
 		local press = pressed
 		if press == nil then

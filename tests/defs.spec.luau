@@ -103,4 +103,22 @@ return {
 		end)
 		assert(containsError(errors, "item.wood"), `faltou erro de texto: {table.concat(errors, "; ")}`)
 	end,
+	["item id longer than the network limit is an error"] = function()
+		local id = string.rep("a", 33)
+		local errors = Validate.all({ Tiers = {}, Items = { [id] = validItem(id) } }, alwaysHas)
+		assert(
+			containsError(errors, "mais de 32 caracteres"),
+			`esperava erro de id longo: {table.concat(errors, "; ")}`
+		)
+	end,
+
+	["maxStack above the network limit is an error"] = function()
+		local item = validItem("wood")
+		item.maxStack = 70000
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(
+			containsError(errors, "maxStack deve ser inteiro entre 1 e 65535"),
+			`esperava erro de maxStack: {table.concat(errors, "; ")}`
+		)
+	end,
 }

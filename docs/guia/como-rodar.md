@@ -31,6 +31,7 @@ O `rojo build` grava essas propriedades no arquivo, mas a sincronização ao viv
 - **Workspace → AuthorityMode = Server.** (Obrigatório fazer à mão: o plugin do Rojo não aplica essa propriedade ao vivo — testado.) Isso também liga StreamingEnabled, SignalBehavior Deferred, NextGen Replication, Input Action System e a simulação fixa.
 - **Workspace → StreamingEnabled = true**, `StreamOutBehavior = Opportunistic`, `StreamingIntegrityMode = PauseOutsideLoadedArea`, `ModelStreamingBehavior = Improved`.
 - **StarterPlayer → CharacterUseJumpPower = false, CharacterJumpHeight = 0, EnableMouseLockOption = false.**
+- **StarterPlayer → CreateDefaultPlayerModule = false.** (Obrigatório: sem isso o Roblox usa o PlayerModule padrão, que religa o `AutoRotate` e o boneco não consegue olhar para trás andando. Veja "PlayerModule próprio" em `arquitetura.md`.)
 - **Game Settings → Avatar:** preset "Consistent Gameplay" (ou Custom Scale com colisor único). Trava a proporção dos avatares.
 - **Game Settings → Security → Enable Studio Access to API Services** (necessário a partir da Fase 4, para salvar dados).
 

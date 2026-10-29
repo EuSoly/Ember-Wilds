@@ -37,11 +37,20 @@ local function selectedItem(player: Player): Inventory.Slot?
 	return inv and inv.slots[InventoryService.selectedSlot(player)]
 end
 
--- Coloca (ou tira) o item na mão do personagem.
-local function apply(character: Model, item: Inventory.Slot?)
-	character:SetAttribute(EQUIPPED, if item then item.id else nil)
-
+-- Coloca (ou tira) o item na mão do personagem. Se o mesmo item já está na
+-- mão, não faz nada (a menos que `force`, usado quando a mão foi recriada).
+local function apply(character: Model, item: Inventory.Slot?, force: boolean?)
+	local itemId = if item then item.id else nil
 	local old = character:FindFirstChild(HELD_ITEM)
+	if
+		not force
+		and character:GetAttribute(EQUIPPED) == itemId
+		and (old == nil or old:GetAttribute("ItemId") == itemId)
+	then
+		return
+	end
+	character:SetAttribute(EQUIPPED, itemId)
+
 	if old then
 		old:Destroy()
 	end
@@ -80,18 +89,29 @@ local function apply(character: Model, item: Inventory.Slot?)
 	model.Parent = character
 end
 
+-- Pedidos de troca do mesmo jogador no mesmo quadro viram uma só (um cliente
+-- trocando de slot sem parar não faz o servidor criar/destruir peças a cada pedido).
+local pending: { [Player]: boolean } = {}
+
 local function applyToPlayer(player: Player)
-	local character = player.Character
-	if character then
-		apply(character, selectedItem(player))
+	if pending[player] then
+		return
 	end
+	pending[player] = true
+	task.defer(function()
+		pending[player] = nil
+		local character = player.Character
+		if character and player.Parent then
+			apply(character, selectedItem(player))
+		end
+	end)
 end
 
 local function setupCharacter(player: Player, character: Model)
 	-- Mão recriada (ApplyDescription troca partes do avatar): solda de novo.
 	character.ChildAdded:Connect(function(child)
 		if table.find(HAND_NAMES, child.Name) and character:GetAttribute(EQUIPPED) ~= nil then
-			task.defer(apply, character, selectedItem(player))
+			task.defer(apply, character, selectedItem(player), true)
 		end
 	end)
 
