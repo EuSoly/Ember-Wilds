@@ -24,6 +24,34 @@ function UIMath.ringRotations(fraction: number): (number, number)
 	return right, left
 end
 
+-- Palavras pequenas que não entram nas iniciais ("Picareta de Madeira" → "PM").
+local CONNECTORS = { de = true, da = true, ["do"] = true, das = true, dos = true, e = true }
+
+-- Primeiros `count` caracteres de `word` (respeitando acentos em UTF-8).
+local function firstChars(word: string, count: number): string
+	local stop = utf8.offset(word, count + 1)
+	return if stop then string.sub(word, 1, stop - 1) else word
+end
+
+-- Iniciais para o ícone provisório de um item (até os ícones desenhados chegarem).
+-- Várias palavras: a primeira letra das duas primeiras palavras que contam.
+-- Uma palavra só: as duas primeiras letras ("Frutinha" → "Fr").
+function UIMath.initials(name: string): string
+	local words = {}
+	for word in string.gmatch(name, "%S+") do
+		if not CONNECTORS[word] then
+			table.insert(words, word)
+		end
+	end
+	if #words == 0 then
+		return ""
+	end
+	if #words == 1 then
+		return string.upper(firstChars(words[1], 1)) .. firstChars(words[1], 2):sub(#firstChars(words[1], 1) + 1)
+	end
+	return string.upper(firstChars(words[1], 1)) .. string.upper(firstChars(words[2], 1))
+end
+
 -- Joystick: a partir do deslocamento do dedo (dx, dy) em pixels, devolve a
 -- direção unitária (x para a direita, y para baixo) e se está ativo.
 -- Dentro da zona morta fica inativo. Como a câmera não gira, essa direção de

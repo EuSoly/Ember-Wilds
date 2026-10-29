@@ -41,6 +41,16 @@ return {
 		expectRing(1, 180, 360) -- cheio
 	end,
 
+	["initials of multi-word names skip connectors"] = function()
+		assert(UIMath.initials("Picareta de Madeira") == "PM", UIMath.initials("Picareta de Madeira"))
+		assert(UIMath.initials("Garrafa d'água") == "GD", UIMath.initials("Garrafa d'água"))
+	end,
+
+	["initials of one word use two letters"] = function()
+		assert(UIMath.initials("Frutinha") == "Fr", UIMath.initials("Frutinha"))
+		assert(UIMath.initials("Ouro") == "Ou", UIMath.initials("Ouro"))
+	end,
+
 	["stick gives unit direction"] = function()
 		expectStick(30, 0, 1, 0, true)
 		expectStick(0, -30, 0, -1, true)

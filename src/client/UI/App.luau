@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
+local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
@@ -27,6 +28,7 @@ local function App(): ScreenGui
 		Minimap(),
 		Notifications.Component(),
 		StatusRings(),
+		Hotbar(),
 	}) :: ScreenGui
 end
 
