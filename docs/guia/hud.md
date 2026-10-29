@@ -24,9 +24,10 @@ create("TextLabel")({
 | `src/client/UI/StatusRing(s).luau` | Anéis de vida, fome, frio e sede |
 | `src/client/UI/ScorePill.luau`, `Clock.luau`, `Minimap.luau` | Topo da tela |
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
-| `src/client/UI/Hotbar.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar |
+| `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
-| `src/client/UI/Backpack.luau` | Botão e painel da mochila |
+| `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila com a grade 4×4 |
+| `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 
 ## Como adicionar um componente
 
@@ -48,9 +49,10 @@ O HUD **não lê o Workspace** (com streaming, partes do mapa podem nem estar ca
 - **Atributos do Player**: `Health`, `Hunger`, `Cold`, `Thirst` (0–100), `Score`, `Rank`. Nomes em `src/shared/StatNames.luau`.
 - **Atributo do Workspace**: `CycleStart`, o início do ciclo de dia (`src/shared/DayCycle.luau` calcula dia, hora e aviso de noite).
 - **InputActions** do contexto `Gameplay` (seleção de slot, mochila).
+- **Inventário** (`InventoryState`): cópia mantida pelo servidor via rede (Blink). A hotbar e a mochila só leem daqui; para mover ou selecionar, o cliente pede ao servidor. Veja `inventario.md`.
 - Exceção: o minimapa lê a posição do próprio personagem.
 
-Enquanto a gameplay não existe, o `DevStatsService` (só no Studio) preenche os atributos com valores que se mexem. Na fase G1 o `SurvivalService` passa a escrever os mesmos atributos e o `DevStatsService` é apagado. A hotbar mostra itens de teste (`HotbarState`) até a Fase 3.
+Enquanto a gameplay não existe, o `DevStatsService` (só no Studio) preenche os atributos com valores que se mexem. Na fase G1 o `SurvivalService` passa a escrever os mesmos atributos e o `DevStatsService` é apagado. Os itens vêm do `DevItemsService` (só no Studio) até a coleta existir.
 
 ## Controles por dispositivo
 
@@ -61,5 +63,6 @@ Enquanto a gameplay não existe, o `DevStatsService` (só no Studio) preenche os
 | Bater (atacar/coletar) | Segurar botão esquerdo | Segurar o joystick direito |
 | Slot da hotbar | Teclas 1 … 0 ou clique | Toque no slot |
 | Mochila | Tecla B | Botão "Mochila" |
+| Mover item (mochila aberta) | Clique na origem, depois no destino | Toque na origem, depois no destino |
 
 Os controles de toque (joystick direito e botão de mochila) aparecem só quando `UserInputService.PreferredInput` é `Touch`, e trocam sozinhos se o jogador mudar de dispositivo.
