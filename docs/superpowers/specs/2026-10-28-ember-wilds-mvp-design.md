@@ -152,7 +152,7 @@ Base: `docs/research/03-visual-cliente.md` + identidade visual.
 
 - **Câmera**: `Scriptable`, `BindToRenderStep` em `Camera + 1`, pitch ~65°, yaw fixo, suavização exponencial, zoom curto limitado (valores iniciais [builder]). Fade de oclusão só em peças com tag `Occluder` (copas, telhados) — pode vir depois.
 - **CoreGui**: desligar Backpack e Health; chat padrão (TextChatService) mantido.
-- **Avatar**: Avatar Settings da experiência (Custom Scale/Build, colisor único, limite de acessórios) + reaplicação de escala no servidor ao carregar o personagem.
+- **Avatar**: Boneco próprio (StarterCharacter mínimo + visual no cliente) [decidido em 29/10/2026, ver specs/2026-10-29-boneco-design.md]
 - **ScreenGuis** com `ScreenInsets = CoreUISafeInsets`; respeitar a TopBar (`GuiService.TopbarInset`, ~58 px, que chega zerado no 1º frame).
 - **Layout**: o da imagem `docs/game-design/img/hud-mobile.png` — pontos/ranking (sup. esq.), relógio dia/noite (topo), minimapa (sup. dir.), receitas prontas (esq.), aviso (dir.), anéis de vida/fome/frio/sede acima da hotbar, hotbar de 10 slots, **joystick direito de mira/ação** no lugar do botão "Coletar" do mockup, e botões de construir e mochila (dir.). No PC/gamepad os botões de toque somem (`UserInputService.PreferredInput`), hotbar responde a 1–0.
 - **Regras de UI** da identidade visual: tokens de cor do `Theme`, fontes `LuckiestGuy`, `FredokaOne`, `BuilderSans` via `FontFace`, `TextScaled` + `UITextSizeConstraint`, Scale + `UIAspectRatioConstraint`, botões ≥ 44 px, UICorner/UIStroke, notificações máx. 2 por 3 s.
