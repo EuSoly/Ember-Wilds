@@ -202,6 +202,77 @@ return {
 		)
 	end,
 
+	["berry restores hunger"] = function()
+		local food = Defs.Items.berry.food
+		assert(food ~= nil and food.hunger == 10, "frutinha repõe 10 de fome")
+	end,
+
+	["food item without food effect is an error"] = function()
+		local item = validItem("apple")
+		item.category = "food"
+		local errors = Validate.all({ Tiers = {}, Items = { apple = item } }, alwaysHas)
+		assert(containsError(errors, "food"), `faltou erro de food: {table.concat(errors, "; ")}`)
+	end,
+
+	["food effect only on food"] = function()
+		local item = validItem("wood")
+		item.food = { hunger = 5 }
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(containsError(errors, "food"), `faltou erro de food fora de comida: {table.concat(errors, "; ")}`)
+	end,
+
+	["food effect out of range is an error"] = function()
+		for _, effect in { { hunger = 0 }, { hunger = 150 }, {}, { thirst = 0 / 0 } } do
+			local item = validItem("apple")
+			item.category = "food"
+			item.food = effect
+			local errors = Validate.all({ Tiers = {}, Items = { apple = item } }, alwaysHas)
+			assert(containsError(errors, "food"), `faltou erro de food inválido: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["armor item without armor stats is an error"] = function()
+		local item = validItem("helmet")
+		item.category = "armor"
+		item.maxStack = 1
+		local errors = Validate.all({ Tiers = {}, Items = { helmet = item } }, alwaysHas)
+		assert(containsError(errors, "armor"), `faltou erro de armor: {table.concat(errors, "; ")}`)
+	end,
+
+	["armor stats only on armor"] = function()
+		local item = validItem("wood")
+		item.armor = { defense = 0.2 }
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(containsError(errors, "armor"), `faltou erro de armor fora de armadura: {table.concat(errors, "; ")}`)
+	end,
+
+	["armor stats out of range is an error"] = function()
+		local cases = {
+			{ stats = { defense = 0.95 }, field = "defense" },
+			{ stats = { coldFactor = 3 }, field = "coldFactor" },
+			{ stats = { coldFactor = -1 }, field = "coldFactor" },
+			{ stats = { hungerFactor = 0 / 0 }, field = "hungerFactor" },
+			{ stats = { thirstFactor = 2.5 }, field = "thirstFactor" },
+		}
+		for _, case in cases do
+			local item = validItem("helmet")
+			item.category = "armor"
+			item.maxStack = 1
+			item.armor = case.stats
+			local errors = Validate.all({ Tiers = {}, Items = { helmet = item } }, alwaysHas)
+			assert(containsError(errors, case.field), `faltou erro de {case.field}: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["valid armor passes"] = function()
+		local item = validItem("helmet")
+		item.category = "armor"
+		item.maxStack = 1
+		item.armor = { defense = 0.25, coldFactor = 0.5 }
+		local errors = Validate.all({ Tiers = {}, Items = { helmet = item } }, alwaysHas)
+		assert(#errors == 0, `armadura válida deu erro: {table.concat(errors, "; ")}`)
+	end,
+
 	["bag slots cannot pass the slot limit"] = function()
 		local item = validItem("huge_bag")
 		item.category = "bag"
