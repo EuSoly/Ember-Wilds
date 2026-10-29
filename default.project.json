@@ -11,6 +11,9 @@
       "Shared": {
         "$path": "src/shared"
       },
+      "UITemplates": {
+        "$path": "assets/ui"
+      },
       "Packages": {
         "$path": "Packages"
       }
