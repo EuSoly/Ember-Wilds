@@ -12,7 +12,7 @@ Trocar o chão de teste pelo **mapa de verdade**, no layout do Starve.io: um qua
 ## 2. Objetivos, não-objetivos e anti-objetivos
 
 **Objetivos**
-1. Layout do mapa inteiro (≈ 4.500 × 4.500 studs) com a floresta (≈ 1.920 × 1.920, **2 min** para atravessar a 16 studs/s [Elizeu]) no canto inferior esquerdo.
+1. Layout do mapa inteiro (≈ 2.220 × 2.220 studs) com a floresta (960 × 960, **~1 min** para atravessar a 16 studs/s [Elizeu; reduzido à metade em 29/10]) no canto inferior esquerdo.
 2. Ferramentas de desenho para o Elizeu: chão, **córregos** e lago [Elizeu], caminhos/clareiras, **zonas de recurso** e recursos colocados à mão.
 3. Espalhador de recursos por zona, determinístico (mesmo mapa a cada partida), sem cair em água nem em caminhos.
 4. Modelos dos recursos da floresta (árvore, rocha, jazida de ouro, arbusto de frutinha), 2–3 variações cada.
@@ -43,9 +43,9 @@ Trocar o chão de teste pelo **mapa de verdade**, no layout do Starve.io: um qua
 ## 4. Coordenadas do mapa [Claude]
 
 - Centro do mapa na origem; −Z é "para cima" na tela (câmera fixa).
-- Quadrado total `MAP_SIZE = 4440` (2 × 1920 + cruz do oceano de 600).
-- Floresta: X de −2220 a −300, Z de +300 a +2220 (canto inferior esquerdo da tela). Inverno em cima à esquerda, lava em cima à direita, deserto embaixo à direita, oceano na cruz do meio e em volta.
-- Spawn e âncora da câmera do menu passam para o **centro da floresta** (−1260, 0, 1260).
+- Quadrado total `MAP_SIZE = 2220` (2 × 960 + cruz do oceano de 300). **Reduzido à metade em 29/10** [Elizeu, depois de ver no Studio: "está bem grande"] — a floresta leva ~1 min para atravessar (o Starve.io, 1 min 16 s).
+- Floresta: X de −1110 a −150, Z de +150 a +1110 (canto inferior esquerdo da tela). Inverno em cima à esquerda, lava em cima à direita, deserto embaixo à direita, oceano na cruz do meio e em volta.
+- Spawn e âncora da câmera do menu passam para o **centro da floresta** (−630, 0, 630).
 - Tudo em `WorldConfig` (números), para ajustar sem caçar no código.
 
 ## 5. Como o Elizeu desenha (convenções) [Claude]

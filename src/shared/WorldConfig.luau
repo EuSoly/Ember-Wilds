@@ -13,10 +13,10 @@ end
 
 -- Quatro biomas nos cantos; o resto do quadrado (a cruz do meio e a volta) é oceano.
 local BIOMES = table.freeze({
-	forest = rect(-2220, 300, -300, 2220), -- canto inferior esquerdo da tela
-	winter = rect(-2220, -2220, -300, -300), -- superior esquerdo
-	lava = rect(300, -2220, 2220, -300), -- superior direito
-	desert = rect(300, 300, 2220, 2220), -- inferior direito
+	forest = rect(-1110, 150, -150, 1110), -- canto inferior esquerdo da tela
+	winter = rect(-1110, -1110, -150, -150), -- superior esquerdo
+	lava = rect(150, -1110, 1110, -150), -- superior direito
+	desert = rect(150, 150, 1110, 1110), -- inferior direito
 })
 
 return table.freeze({
@@ -29,13 +29,15 @@ return table.freeze({
 	KILL_Y = -100,
 
 	-- Lado do mapa inteiro (de -MAP_SIZE/2 a +MAP_SIZE/2 em X e Z):
-	-- 2 × 1920 de biomas + 600 da cruz do oceano.
-	MAP_SIZE = 4440,
+	-- 2 × 960 de biomas + 300 da cruz do oceano. A floresta (960) leva ~1 min
+	-- para atravessar a 16 studs/s (decidido pelo Elizeu em 29/10; o Starve.io
+	-- leva 1 min 16 s).
+	MAP_SIZE = 2220,
 	BIOMES = BIOMES,
 	-- Área jogável no lançamento (só a floresta); a borda tem paredes (Map/Borders).
 	PLAYABLE = BIOMES.forest,
 	-- Onde o boneco nasce e para onde a câmera do menu olha: centro da floresta.
-	SPAWN = table.freeze({ x = -1260, y = 0, z = 1260 }),
+	SPAWN = table.freeze({ x = -630, y = 0, z = 630 }),
 
 	-- Semente do espalhador de recursos: mesmo mapa em toda partida.
 	SEED = 20261029,
