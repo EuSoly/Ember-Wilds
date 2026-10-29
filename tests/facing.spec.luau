@@ -41,6 +41,23 @@ return {
 		assert(result > -math.pi and result <= math.pi, `fora de (-π, π]: {result}`)
 	end,
 
+	["dead character does not turn"] = function()
+		assert(Facing.desiredYaw(false, 1, 0, 0, -1) == nil, "morto não deveria virar para a mira")
+		assert(Facing.desiredYaw(false, 0, 0, 0, -1) == nil, "morto não deveria virar para o movimento")
+	end,
+
+	["aim wins over movement"] = function()
+		near(Facing.desiredYaw(true, 1, 0, 0, -1), -math.pi / 2, "mira para +X andando para a frente")
+	end,
+
+	["without aim faces movement"] = function()
+		near(Facing.desiredYaw(true, 0, 0, -1, 0), math.pi / 2, "sem mira, andando para -X")
+	end,
+
+	["without aim or movement keeps direction"] = function()
+		assert(Facing.desiredYaw(true, 0, 0, 0, 0) == nil, "parado e sem mira deveria manter (nil)")
+	end,
+
 	["step result stays in range"] = function()
 		local result = Facing.stepYaw(math.rad(178), math.rad(-170), math.rad(5))
 		assert(result > -math.pi and result <= math.pi, `fora de (-π, π]: {result}`)

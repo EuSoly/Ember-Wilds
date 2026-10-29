@@ -42,17 +42,12 @@ local function stepPlayer(player: Player, dt: number)
 		return
 	end
 
-	local targetYaw: number? = nil
-	local aim = readAim(player)
-	if aim then
-		targetYaw = Facing.yawFromDirection(aim.X, aim.Y)
-	end
+	local aim = readAim(player) or Vector2.zero
+	local move = humanoid.MoveDirection
+	local isAlive = humanoid.Health > 0
+	local targetYaw = Facing.desiredYaw(isAlive, aim.X, aim.Y, move.X, move.Z)
 	if targetYaw == nil then
-		local move = humanoid.MoveDirection
-		targetYaw = Facing.yawFromDirection(move.X, move.Z)
-	end
-	if targetYaw == nil then
-		return -- parado e sem mira: mantém a direção
+		return -- morto, ou parado e sem mira: não mexe na rotação
 	end
 
 	local look = root.CFrame.LookVector

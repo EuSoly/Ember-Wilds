@@ -6,6 +6,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Lifecycle = require(ReplicatedStorage.Shared.Lifecycle)
 
+-- Carrega (e valida) as definições de conteúdo antes de tudo: se algum item ou
+-- tier estiver errado, o jogo para aqui com a lista de erros no Output.
+require(ReplicatedStorage.Shared.Defs)
+
 local function loadSystems(folder: Instance): { Lifecycle.System }
 	local modules = {}
 	for _, child in folder:GetChildren() do

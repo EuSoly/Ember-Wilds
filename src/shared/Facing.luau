@@ -27,6 +27,16 @@ function Facing.yawFromDirection(x: number, z: number): number?
 	return math.atan2(-x, -z)
 end
 
+-- Para onde o personagem deve virar (regra da seção 5 do spec):
+-- morto não vira; com mira, vira para a mira; sem mira, para onde anda;
+-- parado e sem mira devolve nil (mantém a direção atual).
+function Facing.desiredYaw(isAlive: boolean, aimX: number, aimZ: number, moveX: number, moveZ: number): number?
+	if not isAlive then
+		return nil
+	end
+	return Facing.yawFromDirection(aimX, aimZ) or Facing.yawFromDirection(moveX, moveZ)
+end
+
 -- Gira de `current` até `target` pelo caminho mais curto, no máximo `maxDelta`.
 function Facing.stepYaw(current: number, target: number, maxDelta: number): number
 	local diff = wrap(target - current)
