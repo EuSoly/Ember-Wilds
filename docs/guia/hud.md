@@ -23,6 +23,8 @@ create("TextLabel")({
 | `src/client/UI/Sources.luau` | Fontes reativas: `attribute`, `isTouch`, `preferredInput`, `cycle` |
 | `src/client/UI/StatusRing(s).luau` | Anéis de vida, fome, frio e sede |
 | `src/client/UI/ScorePill.luau`, `Clock.luau`, `Minimap.luau` | Topo da tela |
+| `src/client/UI/Minimap.luau` | Mapa inteiro esquemático (os quatro biomas a partir do `WorldConfig`, regiões fechadas escurecidas) e o ponto do jogador |
+| `src/client/World/OxygenBubble.luau` | Bolha de ar ao lado do próprio boneco (no mundo, não na HUD): aparece na água ou com o fôlego abaixo do cheio, pisca abaixo de 25% |
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
 | `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
