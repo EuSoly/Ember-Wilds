@@ -1,7 +1,8 @@
 --!strict
 -- Mochila: o botão (só no celular) e o painel que ele abre.
 -- No PC a tecla B (InputAction Backpack) abre e fecha o mesmo painel.
--- POR ENQUANTO o painel é vazio; a grade 4×4 do inventário entra na Fase 3.
+-- O painel mostra a grade 4×4 do inventário (InventoryGrid). Aberto/fechado
+-- fica em BackpackState, porque os slots também precisam saber.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -10,6 +11,8 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local InputNames = require(Shared:WaitForChild("InputNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local BackpackState = require(script.Parent.Parent:WaitForChild("BackpackState"))
+local InventoryGrid = require(script.Parent:WaitForChild("InventoryGrid"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 
@@ -17,19 +20,12 @@ local create = vide.create
 
 local Backpack = {}
 
--- Painel aberto ou fechado.
-Backpack.open = vide.source(false)
-
-function Backpack.toggle()
-	Backpack.open(not Backpack.open())
-end
-
 -- Tecla B no PC.
 local function bindKey()
 	task.spawn(function()
 		local context = Players.LocalPlayer:WaitForChild(InputNames.Context)
 		local action = context:WaitForChild(InputNames.Backpack) :: InputAction
-		action.Pressed:Connect(Backpack.toggle)
+		action.Pressed:Connect(BackpackState.toggle)
 	end)
 end
 
@@ -54,7 +50,7 @@ function Backpack.Button(): TextButton
 		}),
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		create("UIStroke")({ Color = Theme.ui.border, Thickness = Theme.strokeThickness }),
-		Activated = Backpack.toggle,
+		Activated = BackpackState.toggle,
 		Kit.text({
 			Size = UDim2.fromScale(0.8, 0.4),
 			Position = UDim2.fromScale(0.5, 0.5),
@@ -69,7 +65,7 @@ function Backpack.Panel(): Frame
 	bindKey()
 	return Kit.panel({
 		Name = "BackpackPanel",
-		Visible = Backpack.open,
+		Visible = BackpackState.open,
 		-- Captura o clique: clicar no painel não pode "bater" no mundo atrás dele.
 		Active = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -85,6 +81,7 @@ function Backpack.Panel(): Frame
 			Text = Strings.get("hud.backpack"),
 			maxSize = 32,
 		}),
+		InventoryGrid(),
 	})
 end
 
