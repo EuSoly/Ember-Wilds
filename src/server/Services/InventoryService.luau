@@ -9,14 +9,13 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local Net = require(script.Parent.Parent.Net)
 
 local BASE_SLOTS = 10
 local BAG_SLOTS = 6
 local HOTBAR_SLOTS = 10
--- Atributo do Player que libera os 6 slots da mochila.
-local HAS_BAG = "HasBag"
 
 type Slot = Inventory.Slot
 type SelectedListener = (Player, Slot?) -> ()
@@ -33,7 +32,7 @@ local function maxStackOf(id: string): number
 end
 
 local function capacityFor(player: Player): number
-	return BASE_SLOTS + (if player:GetAttribute(HAS_BAG) == true then BAG_SLOTS else 0)
+	return BASE_SLOTS + (if player:GetAttribute(StatNames.HasBag) == true then BAG_SLOTS else 0)
 end
 
 local function toNet(slot: Slot?): Net.Slot?
@@ -140,7 +139,7 @@ local function onSelect(player: Player, index: number)
 end
 
 local function watchBag(player: Player)
-	player:GetAttributeChangedSignal(HAS_BAG):Connect(function()
+	player:GetAttributeChangedSignal(StatNames.HasBag):Connect(function()
 		local inv = ensure(player)
 		local before = inv.capacity
 		Inventory.setCapacity(inv, capacityFor(player))

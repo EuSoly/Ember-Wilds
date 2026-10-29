@@ -51,6 +51,16 @@ return {
 		assert(UIMath.initials("Ouro") == "Ou", UIMath.initials("Ouro"))
 	end,
 
+	["small finger movement is still a tap"] = function()
+		assert(UIMath.isDrag(3, 4, 8) == false, "5 px não é arrasto")
+		assert(UIMath.isDrag(0, 0, 8) == false, "parado não é arrasto")
+	end,
+
+	["movement past threshold is a drag"] = function()
+		assert(UIMath.isDrag(6, 8, 8) == true, "10 px é arrasto")
+		assert(UIMath.isDrag(-9, 0, 8) == true, "para a esquerda também")
+	end,
+
 	["stick gives unit direction"] = function()
 		expectStick(30, 0, 1, 0, true)
 		expectStick(0, -30, 0, -1, true)

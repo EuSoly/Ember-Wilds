@@ -52,6 +52,12 @@ function UIMath.initials(name: string): string
 	return string.upper(firstChars(words[1], 1)) .. string.upper(firstChars(words[2], 1))
 end
 
+-- Um toque/clique segurado vira "arrasto" quando o dedo anda mais que
+-- `threshold` pixels; antes disso ainda é um toque simples.
+function UIMath.isDrag(dx: number, dy: number, threshold: number): boolean
+	return dx * dx + dy * dy > threshold * threshold
+end
+
 -- Joystick: a partir do deslocamento do dedo (dx, dy) em pixels, devolve a
 -- direção unitária (x para a direita, y para baixo) e se está ativo.
 -- Dentro da zona morta fica inativo. Como a câmera não gira, essa direção de

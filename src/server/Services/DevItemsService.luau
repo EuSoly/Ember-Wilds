@@ -5,9 +5,11 @@
 -- para dar itens em testes: DevGive:Invoke(player, "wood", 300) -> sobra.
 -- Some quando a coleta (fase de gameplay) estiver pronta.
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
 
 local KIT: { { id: string, count: number } } = {
@@ -23,7 +25,7 @@ local KIT: { { id: string, count: number } } = {
 local DevItemsService = {}
 
 local function giveKit(player: Player)
-	player:SetAttribute("HasBag", true)
+	player:SetAttribute(StatNames.HasBag, true)
 	for _, item in KIT do
 		InventoryService.give(player, item.id, item.count)
 	end

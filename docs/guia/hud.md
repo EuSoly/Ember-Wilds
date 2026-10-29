@@ -26,7 +26,7 @@ create("TextLabel")({
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
 | `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
-| `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila com a grade 4×4 |
+| `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com mochila equipada) com os 6 slots da mochila |
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 
 ## Como adicionar um componente
@@ -63,6 +63,6 @@ Enquanto a gameplay não existe, o `DevStatsService` (só no Studio) preenche os
 | Bater (atacar/coletar) | Segurar botão esquerdo | Segurar o joystick direito |
 | Slot da hotbar | Teclas 1 … 0 ou clique | Toque no slot |
 | Mochila | Tecla B | Botão "Mochila" |
-| Mover item (mochila aberta) | Clique na origem, depois no destino | Toque na origem, depois no destino |
+| Mover item | Arrastar com o mouse entre slots | Arrastar com o dedo entre slots |
 
 Os controles de toque (joystick direito e botão de mochila) aparecem só quando `UserInputService.PreferredInput` é `Touch`, e trocam sozinhos se o jogador mudar de dispositivo.

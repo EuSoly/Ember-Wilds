@@ -8,6 +8,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local AimStick = require(script.Parent:WaitForChild("AimStick"))
 local Backpack = require(script.Parent:WaitForChild("Backpack"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
+local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
@@ -27,6 +28,7 @@ local function App(): ScreenGui
 		AimStick(),
 		Backpack.Button(),
 		Backpack.Panel(),
+		DragGhost(), -- por último: o item arrastado fica por cima de tudo
 	}
 
 	return create("ScreenGui")({

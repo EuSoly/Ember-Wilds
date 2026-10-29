@@ -2,7 +2,7 @@
 
 O inventário de cada jogador existe **só no servidor**. O cliente recebe uma cópia para desenhar a hotbar e a mochila, e para mudar algo ele **pede**: o servidor valida, aplica e manda de volta só o que mudou.
 
-- 10 slots básicos (a hotbar = slots 1–10) + 6 da mochila (11–16), liberados quando o Player tem o atributo `HasBag = true`.
+- 10 slots básicos (a hotbar = slots 1–10) + 6 da mochila (11–16), liberados quando o Player tem o atributo `HasBag = true` (mochila equipada). Sem mochila, o botão e o painel da mochila nem aparecem.
 - O tamanho máximo de cada pilha vem de `Defs.Items[id].maxStack`. Itens que não existem em `Defs` são recusados.
 - O inventário **não é salvo**: acaba junto com a partida.
 
@@ -16,11 +16,13 @@ O inventário de cada jogador existe **só no servidor**. O cliente recebe uma c
 | `src/server/Services/EquipService.luau` | Item selecionado na mão (atributo `Equipped` + modelo `HeldItem`) |
 | `src/shared/Models/ToolModel.luau` | Modelo provisório de ferramenta (cabo + cabeça na cor do tier) |
 | `src/server/Services/DevItemsService.luau` | Só no Studio: dá um kit de itens e cria `ServerStorage.DevGive` |
-| `src/client/InventoryState.luau` | Cópia do inventário no cliente (fontes do Vide) e o "mover com dois toques" |
+| `src/client/InventoryState.luau` | Cópia do inventário no cliente (fontes do Vide) |
+| `src/client/DragState.luau` | Arrastar itens entre slots (toque × arrasto, slot debaixo do dedo, `MoveSlot`) |
+| `src/client/UI/DragGhost.luau` | O item que segue o dedo durante o arrasto |
 | `src/client/HotbarState.luau` | Slot selecionado; selecionar avisa o servidor |
-| `src/client/BackpackState.luau` | Mochila aberta ou fechada |
+| `src/client/BackpackState.luau` | Mochila equipada (`HasBag`) e painel aberto/fechado |
 | `src/client/UI/SlotButton.luau` | Um slot (usado pela hotbar e pela grade) |
-| `src/client/UI/InventoryGrid.luau` | Grade 4×4 dentro do painel da mochila |
+| `src/client/UI/InventoryGrid.luau` | Os 6 slots da mochila (11–16) dentro do painel |
 
 ## Fluxo de rede
 
@@ -30,7 +32,7 @@ InventoryState.start()
   liga os ouvintes ──────────────────────
   RequestInventory ─────────────────────▶ envia o inventário inteiro
                    ◀───────────────────── InventorySync { Capacity, Slots }
-toque origem + toque destino
+arrasta de um slot e solta em outro
   MoveSlot(de, para) ───────────────────▶ Inventory.move (inválido = ignorado)
                    ◀───────────────────── InventorySlot(i, slot|nil) para cada slot alterado
 tecla 1…0 / toque na hotbar
@@ -43,14 +45,16 @@ HasBag muda       ◀───────────────────�
 
 ## Mover itens
 
-Abra a mochila (tecla **B** no PC, botão **Mochila** no celular):
+A hotbar mostra os slots 1–10 e a mochila (tecla **B** no PC, botão **Mochila** no celular, só com mochila equipada) mostra os slots 11–16.
 
-1. Toque/clique num slot com item: ele ganha borda amarela (origem).
-2. Toque/clique em outro slot: o servidor move.
+1. Segure um slot com item e arraste: o item passa a seguir o dedo/mouse e o slot debaixo dele ganha borda amarela.
+2. Solte em cima de outro slot (da hotbar ou da mochila): o servidor move.
    - Destino vazio: o item muda de slot.
    - Mesmo item: as pilhas se juntam até o `maxStack`, e o que sobra fica na origem.
    - Item diferente: os dois trocam de lugar.
-3. Tocar de novo na origem, ou fechar a mochila, cancela.
+3. Soltar fora de um slot cancela.
+
+Um toque rápido (o dedo anda menos de 8 px) não é arrasto: num slot da hotbar, seleciona. A regra está em `UIMath.isDrag` (testada no Lune).
 
 Com a mochila fechada, tocar num slot da hotbar só **seleciona**.
 

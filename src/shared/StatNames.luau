@@ -13,6 +13,9 @@ return table.freeze({
 	Score = "Score",
 	Rank = "Rank",
 
+	-- true quando o jogador tem a mochila equipada (libera os slots 11–16), atributo no Player
+	HasBag = "HasBag",
+
 	-- Instante (GetServerTimeNow) em que o ciclo de dia começou, atributo no Workspace
 	CycleStart = "CycleStart",
 

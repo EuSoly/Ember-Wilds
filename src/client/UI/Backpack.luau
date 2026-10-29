@@ -1,8 +1,8 @@
 --!strict
 -- Mochila: o botão (só no celular) e o painel que ele abre.
 -- No PC a tecla B (InputAction Backpack) abre e fecha o mesmo painel.
--- O painel mostra a grade 4×4 do inventário (InventoryGrid). Aberto/fechado
--- fica em BackpackState, porque os slots também precisam saber.
+-- Os dois só existem com a mochila equipada (HasBag). O painel mostra os 6
+-- slots da mochila (InventoryGrid); trocar itens com a hotbar é arrastando.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -33,7 +33,9 @@ function Backpack.Button(): TextButton
 	local isTouch = Sources.isTouch()
 	return create("TextButton")({
 		Name = "BackpackButton",
-		Visible = isTouch,
+		Visible = function()
+			return isTouch() and BackpackState.hasBag()
+		end,
 		Text = "",
 		AutoButtonColor = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -65,13 +67,16 @@ function Backpack.Panel(): Frame
 	bindKey()
 	return Kit.panel({
 		Name = "BackpackPanel",
-		Visible = BackpackState.open,
+		Visible = function()
+			return BackpackState.open() and BackpackState.hasBag()
+		end,
 		-- Captura o clique: clicar no painel não pode "bater" no mundo atrás dele.
 		Active = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.45),
-		Size = UDim2.fromScale(0.4, 0.5),
-		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
+		Size = UDim2.fromScale(0.34, 0.34),
+		create("UIAspectRatioConstraint")({ AspectRatio = 1.4 }),
+		create("UISizeConstraint")({ MinSize = Vector2.new(210, 150) }),
 		Kit.text({
 			Name = "Title",
 			Size = UDim2.fromScale(0.9, 0.12),
