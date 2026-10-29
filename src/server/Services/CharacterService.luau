@@ -1,45 +1,51 @@
 --!strict
--- Configura todo personagem que nasce:
--- - sem pulo e sem rotação automática (quem gira o personagem é a simulação de mira);
--- - proporções travadas, para todo mundo ter o mesmo hitbox no PvP.
--- As Avatar Settings da experiência (no Studio) já limitam a escala; aqui é a
--- segunda camada de defesa, caso algum avatar escape delas.
+-- Personagem do jogo = corpo simulado mínimo e invisível (CharacterBody), igual
+-- para todos (mesmo hitbox no PvP; não há mais avatar do Roblox). O visual é
+-- o boneco que cada cliente monta para os personagens com a tag Boneco.
+-- - Init: coloca o StarterCharacter em StarterPlayer antes do primeiro spawn.
+-- - Todo personagem nasce sem pulo e sem rotação automática (quem gira é a
+--   simulação de mira, FacingSim).
+-- - hurt(): a função única de dano (marca HurtAt para a careta e tira vida).
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
+local Workspace = game:GetService("Workspace")
 
--- Valores da HumanoidDescription que todo personagem deve ter.
-local LOCKED_SCALES: { [string]: number } = {
-	HeightScale = 1,
-	WidthScale = 1,
-	DepthScale = 1,
-	HeadScale = 1,
-	BodyTypeScale = 0,
-	ProportionScale = 0,
-}
+local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
+local StatNames = require(ReplicatedStorage.Shared.StatNames)
 
 local CharacterService = {}
 
-local function lockProportions(humanoid: Humanoid)
-	local description = humanoid:GetAppliedDescription()
-	local changed = false
-	for property, value in LOCKED_SCALES do
-		if (description :: any)[property] ~= value then
-			(description :: any)[property] = value
-			changed = true
-		end
+-- Configuração comum a jogadores e bonecos de teste (DevBonecoService):
+-- a tag faz o cliente montar o boneco visual, e o nome padrão do Roblox some
+-- (o boneco visual tem a própria etiqueta).
+function CharacterService.prepare(character: Model)
+	CollectionService:AddTag(character, StatNames.BonecoTag)
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 	end
-	-- Só reaplica quando precisa: aplicar a descrição recria partes do avatar.
-	if changed then
-		local ok, err = pcall(function()
-			humanoid:ApplyDescriptionAsync(description)
-		end)
-		if not ok then
-			warn(`[CharacterService] não consegui travar as proporções: {err}`)
-		end
+end
+
+-- Dano num personagem: grava HurtAt (o visual de todos mostra "> <" e o flash)
+-- e, se for de um jogador, tira `amount` do atributo Health do Player.
+-- Hoje só o comando de dev chama; nas fases G, combate/fome/frio.
+function CharacterService.hurt(character: Model, amount: number)
+	if amount <= 0 or character:FindFirstChildOfClass("Humanoid") == nil then
+		return
+	end
+	character:SetAttribute(StatNames.HurtAt, Workspace:GetServerTimeNow())
+	local player = Players:GetPlayerFromCharacter(character)
+	if player then
+		local health = (player:GetAttribute(StatNames.Health) :: number?) or StatNames.StatusMax
+		player:SetAttribute(StatNames.Health, math.max(health - amount, 0))
 	end
 end
 
 local function setupCharacter(character: Model)
 	local humanoid = character:WaitForChild("Humanoid") :: Humanoid
+	CharacterService.prepare(character)
 	humanoid.AutoRotate = false
 	humanoid.UseJumpPower = false
 	humanoid.JumpHeight = 0
@@ -47,15 +53,18 @@ end
 
 local function setupPlayer(player: Player)
 	player.CharacterAdded:Connect(setupCharacter)
-	player.CharacterAppearanceLoaded:Connect(function(character)
-		local humanoid = character:FindFirstChildOfClass("Humanoid")
-		if humanoid then
-			lockProportions(humanoid)
-		end
-	end)
 	if player.Character then
 		task.spawn(setupCharacter, player.Character)
 	end
+end
+
+function CharacterService.Init(_self)
+	-- Precisa estar em StarterPlayer antes do primeiro spawn para valer já nele.
+	local old = StarterPlayer:FindFirstChild("StarterCharacter")
+	if old then
+		old:Destroy()
+	end
+	CharacterBody.build().Parent = StarterPlayer
 end
 
 function CharacterService.Start(_self)

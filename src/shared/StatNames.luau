@@ -20,6 +20,18 @@ return table.freeze({
 	-- Instante (GetServerTimeNow) em que o ciclo de dia começou, atributo no Workspace
 	CycleStart = "CycleStart",
 
+	-- Estado do boneco, atributos no personagem (o visual de cada cliente lê daqui).
+	-- true enquanto o jogador segura o botão de bater (escrito pelo UseSim).
+	Using = "Using",
+	-- Id do item na mão (slot selecionado da hotbar), ou nil (escrito pelo EquipService).
+	Equipped = "Equipped",
+	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
+	HurtAt = "HurtAt",
+	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
+	CosmeticPrefix = "Cosmetic_",
+	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
+	BonecoTag = "Boneco",
+
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
 	WarningFraction = 0.35,
