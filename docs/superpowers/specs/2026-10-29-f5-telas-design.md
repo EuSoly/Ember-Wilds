@@ -17,6 +17,7 @@ Fechar o fluxo do jogo — **carregamento → menu → jogar → morte → menu/
 3. Menu: câmera passeando sobre o mapa, logo, saldo de Golden Ember, **Jogar** e **Configurações**; o boneco só nasce ao clicar Jogar [spec].
 4. Morte: "Você morreu", dias vividos, pontos, Golden Ember ganha (contando para cima), **Jogar de novo** e **Menu** [spec, Elizeu].
 5. Configurações (no menu e durante o jogo), salvando no perfil (F4).
+7. **Kits iniciais** como no Starve.io [Elizeu]: antes de nascer, o jogador pode comprar **um** kit com os **pontos da vida que acabou**; os kits são dados fáceis de customizar (seção 7b).
 6. HUD só aparece jogando.
 
 **Não-objetivos (agora)**
@@ -24,6 +25,7 @@ Fechar o fluxo do jogo — **carregamento → menu → jogar → morte → menu/
 - Loja, ranking e livro de receitas (quando houver conteúdo) [Elizeu].
 - Morte de verdade (combate é fase G): a morte é simulada pelo comando de dev.
 - Converter a HUD atual (código Vide) para moldes — só se o Elizeu quiser redesenhá-la.
+- **Revive por Robux** [Elizeu, futuro]: ao morrer, pagar para voltar com os mesmos itens; os pontos zeram e viram Golden Ember normalmente. Não entra agora, mas a função de morte deve ficar num formato em que isso caiba depois (ex. guardar o inventário da morte por alguns segundos).
 
 **Anti-objetivos**
 - Designer renomear/apagar um elemento e o jogo quebrar sem dizer o quê (tem que avisar qual elemento falta e seguir funcionando).
@@ -52,9 +54,9 @@ Fechar o fluxo do jogo — **carregamento → menu → jogar → morte → menu/
 Um único estado de tela no cliente: `loading` → `menu` → `playing` → `dead` → (`playing` ou `menu`). Configurações é uma janela por cima (abre no `menu` e no `playing`).
 
 - **loading:** tira o carregamento padrão do Roblox, mostra o molde `Loading` (texto + barra). Termina quando o jogo carregou **e** o servidor marcou o perfil como pronto (atributo `DataReady` no Player, gravado quando o perfil da F4 carrega). Então vai para `menu`.
-- **menu:** sem personagem. Câmera do menu: gira devagar em volta do centro do mapa, do alto. Mostra o saldo (`Currency`). **Jogar** → pede ao servidor para nascer.
+- **menu:** sem personagem. **Câmera do menu acompanha jogadores aleatórios** [Elizeu]: a cada ~8 s troca para outro jogador vivo e o segue de cima (como a câmera do jogo, um pouco mais alta); sem ninguém vivo, gira devagar sobre o centro do mapa. Mostra o saldo (`Currency`) e a escolha de kit (7b). **Jogar** → pede ao servidor para nascer (com o kit escolhido).
 - **playing:** HUD visível, câmera do jogo (a atual). Botão de engrenagem na HUD abre Configurações.
-- **dead:** HUD escondida, o mundo perde a cor (saturação até −1 em ~1 s, como na identidade visual), molde `Death` com causa, dias, pontos e Golden Ember contando de 0 até o ganho. **Jogar de novo** → pede para nascer; **Menu** → volta ao `menu`. Ao nascer, a cor volta.
+- **dead:** HUD escondida, o mundo perde a cor (saturação até −1 em ~1 s, como na identidade visual), molde `Death` com causa e dias. **Animação dos pontos virando Golden Ember** [Elizeu]: o contador de pontos da vida desce até 0 enquanto o de Golden Ember sobe de 0 até o ganho (mesma duração, ~2 s). Abaixo, a escolha de kit (7b). **Jogar de novo** → pede para nascer (com o kit escolhido); **Menu** → volta ao `menu`. Ao nascer, a cor volta.
 
 ## 6. Servidor [Claude]
 
@@ -64,7 +66,7 @@ Um único estado de tela no cliente: `loading` → `menu` → `playing` → `dea
 - **Mortes "do Roblox"** [Claude]: o botão "Reset Character" do menu do Roblox fica **desligado** (não é um jogo de se matar); e qualquer morte do `Humanoid` que não passou pela função (ex. cair fora do mapa) é levada para ela com a causa `death.cause.unknown` — nunca fica um corpo parado sem tela de morte.
 - **"Vivo"** para o pedido de nascer = tem personagem com `Humanoid` de vida > 0. Uma marca "nascendo" no servidor impede dois pedidos rápidos de passarem juntos.
 - **Status ao nascer:** quem dá os valores iniciais de vida/fome/frio/sede ao nascer é o `DevStatsService` (Studio) até o sistema de sobrevivência das fases G existir. No Studio, o `DevItemsService` dá o kit de teste **a cada nascimento** (senão o inventário fica vazio depois da primeira morte).
-- **Mapa no menu:** sem personagem, o servidor aponta o foco de streaming (`ReplicationFocus`) do jogador para o centro do mapa, para a câmera do menu ter o que mostrar.
+- **Mapa no menu / quem a câmera segue:** o servidor escolhe, para cada jogador no menu ou na tela de morte, um jogador vivo aleatório a cada ~8 s, grava no atributo `SpectateTarget` (UserId, 0 = ninguém) e aponta o foco de streaming (`ReplicationFocus`) para a raiz desse alvo (ou para o centro do mapa, sem alvo). O cliente só segue o que o atributo diz.
 - `DataReady` no Player quando o perfil carrega (F4 `DataService.onLoaded`).
 - Causa da morte = chave de `Strings` (ex. `death.cause.dev` = "Teste"); as fases G adicionam as suas.
 
@@ -75,22 +77,40 @@ Um único estado de tela no cliente: `loading` → `menu` → `playing` → `dea
 - Cada mudança chama o evento `SetSetting` da F4 (o servidor valida); a tela mostra o valor dos atributos `Setting_<id>` (fonte da verdade).
 - **O que já é aplicado:** `ui_scale` (UIScale em todas as telas e na HUD); volumes nos três `SoundGroup` do jogo (Música, Ambiente, Efeitos), criados agora para os sons futuros. **Só salvos por enquanto:** `quality` (vai controlar os nossos efeitos quando existirem) e `left_handed` (trocar os controles de toque de lado exige mexer no joystick do PlayerModule; fica para quando testarmos o celular a fundo).
 
+## 7b. Kits iniciais [Elizeu: igual ao Starve.io; Claude: como]
+
+- **Como no Starve.io:** antes de nascer, o jogador pode comprar **um** kit pagando com os **pontos da vida que acabou** (não com Golden Ember). Os pontos também viram Golden Ember normalmente na morte — são duas coisas independentes.
+- **Dados:** `Defs/Kits.luau`, cada kit com `id`, `nameKey`, `order` (posição na lista), `price` (pontos) e `items` (lista de `{ id, count }` de `Defs.Items`; uma mochila no kit é vestida em vez de ir para um slot). Validação no boot: itens existem, contagens inteiras > 0, preço inteiro ≥ 0. **Kit novo = uma entrada** no arquivo (+ texto em Strings).
+- **Servidor:** guarda por jogador os "pontos para kit" = pontos da última vida (só em memória; ao sair do jogo, perde). Na primeira entrada no servidor são 0. Ao nascer com um kit escolhido: confere se o kit existe e se os pontos bastam, desconta, e dá os itens depois do inventário zerado. Kit inválido ou caro demais → nasce sem kit (sem erro).
+- **Telas:** menu e morte mostram os kits (molde de linha `KitRow` clonado por kit, em ordem), com preço e itens; os que custam mais que os pontos disponíveis aparecem desabilitados; um clique seleciona (ou tira a seleção). Os pontos disponíveis ficam no atributo `KitPoints` do Player.
+- **Kits iniciais (provisórios, o Elizeu ajusta):**
+
+| id | preço | itens |
+|---|---|---|
+| `kit_starter` | 1.000 | 8 frutinhas, 20 madeira |
+| `kit_explorer` | 2.000 | 16 frutinhas, 40 madeira, 20 pedra, picareta de madeira |
+| `kit_survivor` | 4.000 | 20 frutinhas, 140 madeira, 80 pedra, picareta de pedra, Mochila de Couro |
+| `kit_veteran` | 8.000 | 30 frutinhas, 200 madeira, 150 pedra, 20 ouro, picareta de ouro, Mochila de Couro |
+
 ## 8. Moldes iniciais (provisórios) [Claude]
 
 Visual mínimo com as cores do `Theme`/`Palette` (painel `#1E2230` a 85%, borda `#3A4258`, botão principal `#FF8A1F`, texto `#F4F1EA`; fontes Luckiest Guy no título, Fredoka One nos números/botões, Builder Sans no resto), tudo em Scale, centralizado:
 - `Loading` (ReplicatedFirst): fundo escuro, "Ember Wilds", texto de status e barra.
-- `MainMenu`: logo em texto, saldo, botões Jogar e Configurações.
-- `Death`: título, linhas de causa/dias/pontos/moeda, dois botões.
+- `MainMenu`: logo em texto, saldo, lista de kits, botões Jogar e Configurações.
+- `Death`: título, linhas de causa/dias, contadores de pontos e Golden Ember, lista de kits, dois botões.
+- `KitRow`: nome, preço, itens, estado selecionado/desabilitado.
 - `Settings` + 3 moldes de linha + botão Fechar.
 
 ## 9. Critérios de pronto
 
 1. Play no Studio: aparece o carregamento, depois o menu com o saldo correto; sem personagem no mapa até clicar Jogar.
 2. Jogar → nasce e a HUD aparece; engrenagem abre Configurações; mudar o tamanho da interface muda na hora e continua depois de sair e voltar.
-3. `DevEndLife` → personagem some, mundo cinza, tela de morte com os números certos (moeda contando); Jogar de novo → nasce de novo; Menu → volta ao menu.
+3. `DevEndLife` → personagem some, mundo cinza, tela de morte com os números certos (pontos descendo enquanto a Golden Ember sobe); Jogar de novo → nasce de novo **sem itens**; Menu → volta ao menu.
+3b. Com 5.000 pontos na vida: na tela de morte o `kit_survivor` (4.000) está disponível e o `kit_veteran` (8.000) desabilitado; escolher o de 4.000 e Jogar de novo → nasce com os itens dele e vestindo a mochila, sobrando 1.000 pontos para kit.
+3c. No menu, a câmera segue um jogador vivo e troca a cada ~8 s (teste com 2 jogadores ou bonecos de teste); sem ninguém vivo, gira sobre o centro.
 4. Cliente pedindo para nascer duas vezes, ou já vivo → servidor ignora.
 5. Apagar/renomear um elemento num molde → `warn` claro no Output e o resto funciona.
-6. `check.sh` verde; testes Lune para a lógica pura (estados e transições de tela, passo/formatação das configurações, contagem da moeda).
+6. `check.sh` verde; testes Lune para a lógica pura (estados e transições de tela, passo/formatação das configurações, contagem pontos→moeda, compra de kit e validação de `Defs/Kits`).
 7. Docs: `docs/guia/telas.md` (como trocar um molde pelo Studio ou Figma→plugin, lista de nomes de cada tela, `TextKey`, o que o código anima) e `arquitetura.md`.
 
 ## 10. Deixado para o builder
