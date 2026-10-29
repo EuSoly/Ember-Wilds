@@ -6,6 +6,7 @@
 --
 -- Também mede o tempo de jogo (playtime_seconds): soma o tempo desde a última
 -- soma a cada save (autosave incluso, para não perder numa queda) e ao sair.
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
@@ -41,6 +42,11 @@ function StatsService.add(player: Player, statId: string, amount: number, key: s
 	local def = findDef(statId)
 	local data = DataService.data(player)
 	if def == nil or data == nil then
+		return
+	end
+	-- Chave de item precisa existir em Defs.Items (mob ainda não tem Defs: só o formato).
+	if def.keyKind == "item" and key ~= nil and Defs.Items[key] == nil then
+		warn(`[StatsService] item "{key}" não existe em Defs/Items (estatística "{statId}")`)
 		return
 	end
 	local value = StatsRules.add(data.Stats, def, amount, key)
@@ -108,6 +114,13 @@ function StatsService.Start(_self)
 	DataService.onUnloading(function(player)
 		flushPlaytime(player)
 		lastPlaytimeAt[player] = nil
+	end)
+	-- Também limpa aqui: sem perfil (reset de dev) o onUnloading não vem.
+	-- task.defer: roda depois do onUnloading desta mesma saída.
+	Players.PlayerRemoving:Connect(function(player)
+		task.defer(function()
+			lastPlaytimeAt[player] = nil
+		end)
 	end)
 end
 

@@ -67,6 +67,26 @@ return {
 		assert(deepEqual(data, { SchemaVersion = 1, Currency = { Balance = 7 } }), "dados mudaram")
 	end,
 
+	["step with an error fails and keeps data"] = function()
+		local steps = fakeSteps()
+		steps[2] = function(data)
+			data.Titles = {}
+			error("quebrou")
+		end
+		local data: { [string]: any } = { SchemaVersion = 1, Currency = { Balance = 7 } }
+		local ok, err = Migrations.run(data, steps, 3)
+		assert(ok == false, "deveria falhar")
+		assert(type(err) == "string" and string.find(err, "passo v2 falhou", 1, true) ~= nil, `mensagem {err}`)
+		assert(deepEqual(data, { SchemaVersion = 1, Currency = { Balance = 7 } }), "dados mudaram")
+	end,
+
+	["invalid version is corrupt and untouched"] = function()
+		local data: { [string]: any } = { SchemaVersion = "1", Currency = { Balance = 7 } }
+		local ok, err = Migrations.run(data, fakeSteps(), 3)
+		assert(ok == false and err == "corrupt", `esperava corrupt, veio {err}`)
+		assert(deepEqual(data, { SchemaVersion = "1", Currency = { Balance = 7 } }), "dados mudaram")
+	end,
+
 	["new profile without version is ok"] = function()
 		local data: { [string]: any } = {}
 		local ok = Migrations.run(data, fakeSteps(), 3)

@@ -78,6 +78,8 @@ Regras: ids e chaves em `snake_case`, até 32 caracteres. A quantidade precisa s
 
 Estatísticas não são salvas a cada mudança (limites do DataStore). Quem salva é o autosave, o fim de vida e a saída.
 
+`DataService.save` grava no máximo uma vez a cada `DataConfig.MIN_SAVE_INTERVAL` segundos (8) por jogador. Um pedido feito durante a espera vira um único save no fim dela, então trocar de skin várias vezes seguidas não estoura os limites.
+
 ### Aviso de mudança (conquistas e maestria)
 
 `StatsService.onChanged` avisa toda vez que um valor muda de fato. É aqui que as conquistas e a maestria vão se ligar:
@@ -186,6 +188,6 @@ Para ver se salva de verdade: com o acesso às APIs ligado, mude moeda, estatís
 Todo perfil chama `AddUserId(UserId)`, e a chave segue o padrão `Player_<UserId>`. Para a Roblox apagar os dados sozinha quando um jogador pedir:
 
 1. Abra o **Creator Dashboard** → sua experiência → **Data Stores Manager**.
-2. Na aba de **deleção (Right to Erasure / RTBF)**, configure o template `Player_{UserId}` para o store `PlayerData`.
+2. Na aba de **deleção (Right to Erasure / RTBF)**, configure o template `Player_{UserId}` para o store `PlayerData` **e também** para o store `Dev_PlayerData`. Os testes no Studio gravam perfis de UserIds reais (os seus e os de quem testa com você) no store de desenvolvimento.
 
 Faça isso uma vez, depois de publicar a experiência com a F4.

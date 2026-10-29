@@ -10,6 +10,9 @@ return table.freeze({
 	KEY_PREFIX = "Player_",
 	-- Versão atual do formato do perfil; subir junto com um passo em Migrations.STEPS.
 	SCHEMA_VERSION = 1,
+	-- Intervalo mínimo (s) entre saves pedidos por jogador (DataService.save).
+	-- Pedidos no meio da espera viram um único save no fim dela (limites do DataStore).
+	MIN_SAVE_INTERVAL = 8,
 
 	-- Golden Ember: floor(pontos / POINTS_PER_CURRENCY), no máximo por vida e por hora.
 	POINTS_PER_CURRENCY = 1000,

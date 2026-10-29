@@ -317,6 +317,24 @@ return {
 		assert(containsError(errors, "default"), `faltou erro de default: {table.concat(errors, "; ")}`)
 	end,
 
+	["choice option longer than the network limit is an error"] = function()
+		local defs = validDataDefs()
+		local long = string.rep("a", 17)
+		defs.Settings.quality.options = { "auto", long }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(
+			containsError(errors, "de 1 a 16 caracteres"),
+			`faltou erro de opção longa: {table.concat(errors, "; ")}`
+		)
+	end,
+
+	["choice option at the network limit is ok"] = function()
+		local defs = validDataDefs()
+		defs.Settings.quality.options = { "auto", string.rep("a", 16) }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
 	["boolean setting needs a boolean default"] = function()
 		local defs = validDataDefs()
 		defs.Settings.left_handed.default = "sim"

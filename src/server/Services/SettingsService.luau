@@ -43,7 +43,8 @@ local function onSetSetting(player: Player, request: SetSettingRequest)
 		elseif def.kind == "boolean" then request.Flag
 		else request.Choice
 	local ok, value = SettingsRules.validate(def, raw)
-	if not ok then
+	-- Inválido ou igual ao salvo: nada a fazer (não regrava o atributo).
+	if not ok or data.Settings[def.id] == value then
 		return
 	end
 	data.Settings[def.id] = value

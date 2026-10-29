@@ -27,7 +27,10 @@ end
 
 -- Leva `data` até `target`. Em qualquer falha devolve (false, motivo) e os
 -- dados ficam como estavam: os passos rodam numa cópia, que só é copiada de
--- volta no fim. "newer" = perfil salvo por uma versão mais nova do jogo.
+-- volta no fim. Motivos estáveis (o DataService escolhe a mensagem por eles):
+-- "newer" = perfil salvo por uma versão mais nova do jogo; "corrupt" =
+-- SchemaVersion não é número (precisa do suporte). Os outros (passo faltando
+-- ou com erro) são texto livre para o log.
 function Migrations.run(data: { [string]: any }, steps: { [number]: Step }, target: number): (boolean, string?)
 	local version = data.SchemaVersion
 	if version == nil then
@@ -36,7 +39,7 @@ function Migrations.run(data: { [string]: any }, steps: { [number]: Step }, targ
 		return true, nil
 	end
 	if type(version) ~= "number" then
-		return false, "SchemaVersion inválida"
+		return false, "corrupt"
 	end
 	if version > target then
 		return false, "newer"
@@ -51,7 +54,14 @@ function Migrations.run(data: { [string]: any }, steps: { [number]: Step }, targ
 		if step == nil then
 			return false, `sem migração de v{v}`
 		end
-		step(work)
+		-- Um passo com erro não pode deixar o perfil pela metade: a cópia é
+		-- descartada e os dados originais ficam intactos.
+		local ok, err = pcall(function()
+			step(work)
+		end)
+		if not ok then
+			return false, `passo v{v} falhou: {err}`
+		end
 		work.SchemaVersion = v + 1
 	end
 

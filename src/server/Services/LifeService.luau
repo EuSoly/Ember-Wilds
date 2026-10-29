@@ -34,6 +34,14 @@ end
 
 -- Fim de vida (as fases G chamam ao morrer). Já terminada = não faz nada.
 function LifeService.endLife(player: Player)
+	-- Sem perfil (carregando, falhou ou já fechou) não há onde contabilizar:
+	-- a vida continua ativa e os pontos ficam, para não sumirem sem virar moeda.
+	if DataService.data(player) == nil then
+		if lives[player] ~= nil and lives[player].active then
+			warn(`[LifeService] fim de vida de {player.Name} sem perfil carregado: ignorado`)
+		end
+		return
+	end
 	local seconds = LifeRules.finish(lives[player], os.clock())
 	if seconds == nil then
 		return
@@ -77,6 +85,13 @@ function LifeService.Start(_self)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)
 	end
+	-- Também limpa aqui: sem perfil (falhou, reset de dev) o onUnloading não vem.
+	-- task.defer: roda depois do onUnloading desta mesma saída.
+	Players.PlayerRemoving:Connect(function(player)
+		task.defer(function()
+			lives[player] = nil
+		end)
+	end)
 end
 
 return LifeService

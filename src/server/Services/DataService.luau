@@ -37,6 +37,10 @@ local profiles: { [Player]: Profile } = {}
 local unloadNotified: { [Player]: boolean } = {}
 -- Sessões que nós mesmos encerramos (saída, reset de dev): não é "sessão tomada".
 local endedByUs: { [Player]: boolean } = {}
+-- Limite de saves pedidos (DataService.save): instante (os.clock) do último e
+-- a thread do save agendado, por jogador.
+local lastSaveAt: { [Player]: number } = {}
+local pendingSave: { [Player]: thread } = {}
 local warnedMock = false
 
 local loadedListeners: { LoadedListener } = {}
@@ -99,47 +103,78 @@ local function loadProfile(player: Player)
 		return
 	end
 
-	-- Perfil salvo por uma versão mais nova do jogo (ou sem migração): não mexe
-	-- em nada e pede para o jogador entrar de novo (num servidor atualizado).
-	local migrated, reason = Migrations.run(profile.Data, Migrations.STEPS, DataConfig.SCHEMA_VERSION)
-	if not migrated then
-		warn(`[DataService] perfil de {player.UserId} não migrou: {reason}`)
-		-- OnSessionEnd ainda não foi ligado: fechar aqui não expulsa como "sessão tomada".
+	-- Tudo entre abrir a sessão e guardar o perfil roda protegido: um erro aqui
+	-- não pode deixar uma sessão aberta "pendurada" (sem dono e sem EndSession).
+	-- Devolve nil se deu tudo certo, ou a chave de Strings do kick.
+	local ok, result = pcall(function(): string?
+		-- Migração falhou: os dados não foram mexidos. "corrupt" precisa do
+		-- suporte; o resto (versão mais nova, passo faltando ou com erro) pede
+		-- para entrar de novo (num servidor atualizado).
+		local migrated, reason = Migrations.run(profile.Data, Migrations.STEPS, DataConfig.SCHEMA_VERSION)
+		if not migrated then
+			if reason == "corrupt" then
+				warn(
+					`[DataService] perfil de {player.UserId} com SchemaVersion inválido ({profile.Data.SchemaVersion}): precisa do suporte`
+				)
+				return "data.corrupt"
+			end
+			warn(`[DataService] perfil de {player.UserId} não migrou: {reason}`)
+			return "data.newerVersion"
+		end
+
+		profile:AddUserId(player.UserId) -- GDPR
+		profile:Reconcile() -- campos novos do template (ex. configuração nova)
+
+		-- Saiu durante o carregamento: fecha sem avisar ninguém.
+		if player.Parent ~= Players then
+			return ""
+		end
+
+		-- OnSave e OnLastSave disparam logo antes de gravar: o que os ouvintes
+		-- mudarem sem esperar (sem yield) entra neste save.
+		profile.OnSave:Connect(function()
+			if profiles[player] == profile then
+				callAll(beforeSaveListeners, "onBeforeSave", player, profile.Data)
+			end
+		end)
+		profile.OnLastSave:Connect(function()
+			notifyUnloading(player)
+		end)
+		profile.OnSessionEnd:Connect(function()
+			if profiles[player] == profile then
+				profiles[player] = nil
+			end
+			-- Outro servidor tomou a sessão: este não pode continuar mexendo no perfil.
+			if not endedByUs[player] and not ProfileStore.IsClosing then
+				kickIfPresent(player, "data.sessionTaken")
+			end
+		end)
+
+		profiles[player] = profile
+		return nil
+	end)
+
+	if not ok then
+		warn(`[DataService] erro ao preparar o perfil de {player.UserId}: {result}`)
+		result = "data.loadFailed"
+	end
+	if result ~= nil then
+		-- Fechamos nós mesmos: não é "sessão tomada".
+		endedByUs[player] = true
+		profiles[player] = nil
 		profile:EndSession()
-		kickIfPresent(player, "data.newerVersion")
+		if result ~= "" and player.Parent == Players then
+			-- O PlayerRemoving do kick limpa a marca endedByUs.
+			player:Kick(Strings.get(result))
+		else
+			-- Já saiu (o PlayerRemoving já rodou): os sinais do EndSession são
+			-- síncronos, então as marcas podem ser limpas aqui sem vazar.
+			endedByUs[player] = nil
+			unloadNotified[player] = nil
+		end
 		return
 	end
 
-	profile:AddUserId(player.UserId) -- GDPR
-	profile:Reconcile() -- campos novos do template (ex. configuração nova)
-
-	-- Saiu durante o carregamento: fecha sem avisar ninguém.
-	if player.Parent ~= Players then
-		profile:EndSession()
-		return
-	end
-
-	-- OnSave e OnLastSave disparam logo antes de gravar: o que os ouvintes
-	-- mudarem sem esperar (sem yield) entra neste save.
-	profile.OnSave:Connect(function()
-		if profiles[player] == profile then
-			callAll(beforeSaveListeners, "onBeforeSave", player, profile.Data)
-		end
-	end)
-	profile.OnLastSave:Connect(function()
-		notifyUnloading(player)
-	end)
-	profile.OnSessionEnd:Connect(function()
-		if profiles[player] == profile then
-			profiles[player] = nil
-		end
-		-- Outro servidor tomou a sessão: este não pode continuar mexendo no perfil.
-		if not endedByUs[player] and not ProfileStore.IsClosing then
-			kickIfPresent(player, "data.sessionTaken")
-		end
-	end)
-
-	profiles[player] = profile
 	callAll(loadedListeners, "onLoaded", player, profile.Data)
 end
 
@@ -166,14 +201,45 @@ function DataService.onBeforeSave(listener: LoadedListener)
 	table.insert(beforeSaveListeners, listener)
 end
 
--- Pede um save agora (fim de vida, troca de cosmético). Durante o fechamento
--- não faz nada: o último save do ProfileStore já vai gravar tudo.
-function DataService.save(player: Player)
+-- Grava agora, se o perfil ainda está aberto. Durante o fechamento não faz
+-- nada: o último save do ProfileStore já vai gravar tudo.
+local function saveNow(player: Player)
 	local profile = profiles[player]
 	if profile == nil or unloadNotified[player] or not profile:IsActive() then
 		return
 	end
+	lastSaveAt[player] = os.clock()
 	profile:Save()
+end
+
+-- Pede um save (fim de vida, troca de cosmético). No máximo um a cada
+-- MIN_SAVE_INTERVAL segundos por jogador: um pedido no meio da espera vira UM
+-- save agendado para o fim dela (nunca mais de um pendente), para trocar de
+-- skin várias vezes seguidas não estourar os limites do DataStore.
+function DataService.save(player: Player)
+	if profiles[player] == nil or pendingSave[player] then
+		return
+	end
+	local last = lastSaveAt[player]
+	local wait = if last then DataConfig.MIN_SAVE_INTERVAL - (os.clock() - last) else 0
+	if wait <= 0 then
+		saveNow(player)
+		return
+	end
+	pendingSave[player] = task.delay(wait, function()
+		pendingSave[player] = nil
+		saveNow(player)
+	end)
+end
+
+-- Cancela o save agendado e esquece o último instante (saída/reset).
+local function clearSaveState(player: Player)
+	local pending = pendingSave[player]
+	if pending then
+		task.cancel(pending)
+	end
+	pendingSave[player] = nil
+	lastSaveAt[player] = nil
 end
 
 -- false quando o ProfileStore caiu no modo Mock (sem acesso às APIs).
@@ -193,6 +259,7 @@ function DataService.resetForDev(player: Player): boolean
 	end
 	unloadNotified[player] = true
 	endedByUs[player] = true
+	clearSaveState(player)
 	-- Mesma tabela que o ProfileStore guarda: troca o conteúdo, não a referência.
 	local data = profile.Data :: Data
 	table.clear(data)
@@ -225,6 +292,8 @@ function DataService.Start(_self)
 		-- do último save, que o EndSession dispara.
 		notifyUnloading(player)
 		endedByUs[player] = true
+		-- O último save do EndSession grava tudo: o agendado não é mais preciso.
+		clearSaveState(player)
 		local profile = profiles[player]
 		profiles[player] = nil
 		if profile ~= nil then

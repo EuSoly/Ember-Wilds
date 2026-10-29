@@ -50,6 +50,7 @@ return table.freeze({
 	["data.sessionTaken"] = "Seus dados foram abertos em outro servidor.",
 	["data.newerVersion"] = "O jogo foi atualizado. Entre de novo para continuar.",
 	["data.devReset"] = "Perfil de desenvolvimento apagado. Entre de novo.",
+	["data.corrupt"] = "Seus dados precisam de ajuda do suporte. Fale com a equipe do jogo.",
 
 	-- Estatísticas
 	["stat.players_killed"] = "Jogadores derrotados",

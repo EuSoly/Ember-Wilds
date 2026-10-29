@@ -13,6 +13,8 @@ local MAX_COSMETIC_ID_LENGTH = 50
 -- Ids de estatística e configuração: o de configuração viaja no evento Blink
 -- SetSetting (Id string(1..32)); o de estatística usa o mesmo limite por coerência.
 local MAX_DATA_ID_LENGTH = 32
+-- Opções de configuração "choice" viajam no SetSetting (Choice string(1..16)).
+local MAX_SETTING_OPTION_LENGTH = 16
 
 local Validate = {}
 
@@ -268,6 +270,13 @@ local function validateSettings(errors: { string }, defs: Types.DefsTables, hasS
 				for _, option in options do
 					if seen[option] then
 						table.insert(errors, `Setting "{key}": opção "{option}" repetida`)
+					end
+					-- Senão o cliente nunca conseguiria pedir essa opção pela rede.
+					if type(option) ~= "string" or #option < 1 or #option > MAX_SETTING_OPTION_LENGTH then
+						table.insert(
+							errors,
+							`Setting "{key}": opção "{option}" deve ter de 1 a {MAX_SETTING_OPTION_LENGTH} caracteres`
+						)
 					end
 					seen[option] = true
 				end
