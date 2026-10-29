@@ -19,6 +19,8 @@ No Studio: abra o place de desenvolvimento → plugin Rojo → **Connect**. Cada
 
 Se o StyLua reclamar de formatação, `stylua src tests` corrige sozinho.
 
+O código de rede é gerado pelo Blink a partir de `net/game.blink`: depois de editar o `.blink`, rode `blink net/game` (o `check.sh` também roda). Os arquivos gerados `src/server/Net.luau` e `src/client/Net.luau` são commitados e não devem ser editados à mão.
+
 > Rode os comandos no **Git Bash**. No PowerShell, `bash` abre o WSL (que não tem as ferramentas) e o check falha.
 
 ## Configurações que o Rojo não aplica ao vivo (fazer à mão no place)

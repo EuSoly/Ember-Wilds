@@ -1,4 +1,6 @@
 std = "roblox"
+# Código gerado pelo Blink (net/game.blink) não passa pelo lint.
+exclude = ["src/server/Net.luau", "src/client/Net.luau"]
 
 [lints]
 # O Vide usa tabelas mistas de propósito: propriedades e filhos na mesma tabela.
