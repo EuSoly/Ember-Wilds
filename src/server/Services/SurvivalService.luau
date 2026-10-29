@@ -20,6 +20,13 @@ local CharacterService = require(script.Parent.CharacterService)
 
 local SurvivalService = {}
 
+-- Personagem da vida que o laço já conhece, por jogador. Quando muda, a vida é
+-- nova: as barras voltam a 100 sem dano naquele passo. Não dá para confiar só
+-- no CharacterAdded: com sinais adiados (SignalBehavior Deferred) o laço pode
+-- rodar antes dele e usar as barras da vida anterior (ex. fome 0 mataria o
+-- personagem recém-nascido).
+local lifeOf: { [Player]: Model } = {}
+
 -- Grava o valor exato: arredondar a cada passo acumula erro (com passos de
 -- 0,25 a barra caía 0,3 por passo, ~18% rápido demais).
 local function setIfChanged(player: Player, name: string, value: any)
@@ -92,7 +99,13 @@ end
 
 local function step(player: Player, dt: number, night: boolean)
 	local root = aliveRoot(player)
-	if root == nil then
+	local character = player.Character
+	if root == nil or character == nil then
+		return
+	end
+	if lifeOf[player] ~= character then
+		lifeOf[player] = character
+		writeBars(player, SurvivalRules.full())
 		return
 	end
 	local oxygen = player:GetAttribute(StatNames.Oxygen)
@@ -108,10 +121,7 @@ local function step(player: Player, dt: number, night: boolean)
 	writeBars(player, result.bars)
 	local cause = result.cause
 	if result.damage > 0 and cause then
-		local character = player.Character
-		if character then
-			CharacterService.hurt(character, result.damage, SurvivalRules.CAUSE_KEYS[cause :: any], "survival")
-		end
+		CharacterService.hurt(character, result.damage, SurvivalRules.CAUSE_KEYS[cause :: any], "survival")
 	end
 end
 
@@ -141,6 +151,9 @@ end
 
 function SurvivalService.Start(_self)
 	Players.PlayerAdded:Connect(setupPlayer)
+	Players.PlayerRemoving:Connect(function(player)
+		lifeOf[player] = nil
+	end)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)
 	end
