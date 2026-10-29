@@ -20,13 +20,25 @@ local INITIAL: { [string]: number } = {
 }
 -- Barras que descem 1 por segundo (e voltam a 100 ao zerar).
 local DRAINING = { StatNames.Hunger, StatNames.Cold, StatNames.Thirst }
+-- Barras de status que voltam ao valor inicial a cada nascimento (até o
+-- sistema de sobrevivência existir). A pontuação não: quem a zera é a morte.
+local STATUS = { StatNames.Health, StatNames.Hunger, StatNames.Cold, StatNames.Thirst }
 
 local DevStatsService = {}
+
+local function resetStatus(player: Player)
+	for _, name in STATUS do
+		player:SetAttribute(name, INITIAL[name])
+	end
+end
 
 local function setup(player: Player)
 	for name, value in INITIAL do
 		player:SetAttribute(name, value)
 	end
+	player.CharacterAdded:Connect(function()
+		resetStatus(player)
+	end)
 end
 
 local function tick()
