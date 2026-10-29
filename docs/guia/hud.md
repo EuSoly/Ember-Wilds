@@ -35,6 +35,10 @@ create("TextLabel")({
 3. Posicione e dimensione com **Scale** (`UDim2.fromScale`) e trave a proporção com `UIAspectRatioConstraint`.
 4. Cores do `Theme`, textos de `Strings`. Nada de cor ou texto escrito direto.
 
+Conexões feitas dentro de um `task.spawn` (ex.: esperar uma InputAction e ligar `Pressed`) não são limpas sozinhas pelo Vide: registre a limpeza com `vide.cleanup` antes do `task.spawn`.
+
+Tamanhos: tudo escala com a tela, mas botões de toque e slots têm `UISizeConstraint` (mínimo 44 px, slots até 56 px — `Theme.touchMinSize`, `Theme.slotMinSize`, `Theme.slotMaxSize`). Componentes presos a outro (os anéis acima da hotbar) vão como filhos dele, para nunca se sobreporem.
+
 Cuidado com efeitos (`vide.effect`): ler uma fonte dentro de um efeito faz o efeito depender dela. Se o efeito também **escreve** nessa fonte, ele entra em loop. Use `vide.untrack(fonte)` para ler sem depender, ou `task.defer` para escrever fora do efeito (foi o bug do aviso "A noite está chegando").
 
 ## De onde vêm os dados

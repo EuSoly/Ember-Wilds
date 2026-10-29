@@ -48,6 +48,10 @@ function Backpack.Button(): TextButton
 		BackgroundColor3 = Theme.ui.panel,
 		BackgroundTransparency = Theme.panelTransparency,
 		BorderSizePixel = 0,
+		create("UISizeConstraint")({
+			MinSize = Theme.touchMinSize + Vector2.new(12, 12),
+			MaxSize = Vector2.new(72, 72),
+		}),
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		create("UIStroke")({ Color = Theme.ui.border, Thickness = Theme.strokeThickness }),
 		Activated = Backpack.toggle,
@@ -66,6 +70,8 @@ function Backpack.Panel(): Frame
 	return Kit.panel({
 		Name = "BackpackPanel",
 		Visible = Backpack.open,
+		-- Captura o clique: clicar no painel não pode "bater" no mundo atrás dele.
+		Active = true,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.45),
 		Size = UDim2.fromScale(0.4, 0.5),

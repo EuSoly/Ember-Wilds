@@ -33,6 +33,7 @@ local function StatusRings(): Frame
 				BackgroundTransparency = 1,
 				Size = UDim2.fromScale(0.25, 1),
 				create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
+				create("UISizeConstraint")({ MinSize = Vector2.new(40, 40), MaxSize = Vector2.new(72, 72) }),
 				StatusRing({
 					name = "Ring",
 					value = Sources.attribute(player, ring.stat, StatNames.StatusMax),
@@ -44,10 +45,10 @@ local function StatusRings(): Frame
 
 	return create("Frame")({
 		Name = "StatusRings",
+		-- Vai dentro da hotbar (ver Hotbar.above): preso 8 px acima do topo dela.
 		AnchorPoint = Vector2.new(0.5, 1),
-		-- Logo acima da hotbar (que ocupa a faixa de baixo).
-		Position = UDim2.fromScale(0.5, 0.86),
-		Size = UDim2.fromScale(0.3, 0.085),
+		Position = UDim2.new(0.5, 0, 0, -8),
+		Size = UDim2.fromScale(0.5, 1.25),
 		BackgroundTransparency = 1,
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,

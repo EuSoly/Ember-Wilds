@@ -128,6 +128,33 @@ local function StatusRing(props: Props): Frame
 		half("Right", props.color, rightRotation),
 		half("Left", props.color, leftRotation),
 
+		-- Pontes de 2 px nas emendas das metades (6 h e 12 h): o recorte das
+		-- duas metades deixa um fio de fundo aparecendo quando o arco passa por ali.
+		create("Frame")({
+			Name = "BottomSeam",
+			Visible = function()
+				return fraction() > 0.5
+			end,
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.fromScale(0.5, 1),
+			Size = UDim2.new(0, 2, (1 - CORE_SIZE) / 2, 1),
+			BackgroundColor3 = props.color,
+			BorderSizePixel = 0,
+			ZIndex = 2,
+		}),
+		create("Frame")({
+			Name = "TopSeam",
+			Visible = function()
+				return fraction() >= 1
+			end,
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.fromScale(0.5, 0),
+			Size = UDim2.new(0, 2, (1 - CORE_SIZE) / 2, 1),
+			BackgroundColor3 = props.color,
+			BorderSizePixel = 0,
+			ZIndex = 2,
+		}),
+
 		-- Miolo escuro: transforma o disco em anel.
 		disc({
 			Name = "Core",

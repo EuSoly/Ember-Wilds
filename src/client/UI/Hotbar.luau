@@ -35,6 +35,8 @@ local function Slot(index: number): TextButton
 		BackgroundTransparency = Theme.panelTransparency,
 		BorderSizePixel = 0,
 		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
+		-- Escala com a tela, mas nunca menor que o mínimo de toque nem gigante em 1080p.
+		create("UISizeConstraint")({ MinSize = Theme.slotMinSize, MaxSize = Theme.slotMaxSize }),
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
 		create("UIStroke")({
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
@@ -50,7 +52,7 @@ local function Slot(index: number): TextButton
 		end,
 		-- Ícone do item (ou nada, se o slot está vazio).
 		vide.show(item, function(current)
-			return ItemIcon({ itemId = current().id, count = current().count })
+			return ItemIcon({ item = current })
 		end),
 	}) :: TextButton
 end
@@ -68,7 +70,9 @@ local function bindSlotKeys()
 	end)
 end
 
-local function Hotbar(): Frame
+-- `above`: componentes presos logo acima da hotbar (os anéis de status).
+-- Ficam como filhos dela para nunca se sobreporem, qualquer que seja o tamanho da tela.
+local function Hotbar(above: { Instance }?): Frame
 	bindSlotKeys()
 
 	local slots = {}
@@ -82,14 +86,27 @@ local function Hotbar(): Frame
 		Position = UDim2.fromScale(0.5, 0.98),
 		Size = UDim2.fromScale(0.62, 0.085),
 		BackgroundTransparency = 1,
-		create("UIListLayout")({
-			FillDirection = Enum.FillDirection.Horizontal,
-			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			VerticalAlignment = Enum.VerticalAlignment.Center,
-			Padding = UDim.new(0.008, 0),
-			SortOrder = Enum.SortOrder.LayoutOrder,
+		-- A altura acompanha o slot: entre o mínimo de toque e o máximo.
+		create("UISizeConstraint")({
+			MinSize = Vector2.new(0, Theme.slotMinSize.Y),
+			MaxSize = Vector2.new(math.huge, Theme.slotMaxSize.Y),
 		}),
-		slots,
+		-- Os slots ficam numa fileira própria, para o layout não arrumar
+		-- também os componentes de `above`.
+		create("Frame")({
+			Name = "Row",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			create("UIListLayout")({
+				FillDirection = Enum.FillDirection.Horizontal,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				Padding = UDim.new(0.008, 0),
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}),
+			slots,
+		}),
+		above or {},
 	}) :: Frame
 end
 

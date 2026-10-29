@@ -105,6 +105,7 @@ local function AimStick(): Frame
 		BackgroundColor3 = Theme.ui.panel,
 		BackgroundTransparency = 0.4,
 		BorderSizePixel = 0,
+		create("UISizeConstraint")({ MinSize = Vector2.new(110, 110), MaxSize = Vector2.new(170, 170) }),
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		create("UIStroke")({ Color = Theme.ui.border, Thickness = 2 }),
 		InputBegan = function(input: InputObject)

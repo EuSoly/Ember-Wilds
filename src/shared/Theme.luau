@@ -48,4 +48,10 @@ Theme.corner = UDim.new(0, 12)
 Theme.slotCorner = UDim.new(0, 8)
 Theme.strokeThickness = 1
 
+-- Tamanhos em pixels (referência da identidade visual): botões de toque com
+-- no mínimo 44 px; slots entre 44 e 56 px.
+Theme.touchMinSize = Vector2.new(44, 44)
+Theme.slotMinSize = Vector2.new(44, 44)
+Theme.slotMaxSize = Vector2.new(56, 56)
+
 return table.freeze(Theme)
