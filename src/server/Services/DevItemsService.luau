@@ -1,9 +1,10 @@
 --!strict
 -- SÓ PARA DESENVOLVIMENTO (roda apenas no Studio).
--- Dá um kit de itens ao entrar e veste a Mochila de Couro, para testar o inventário
--- antes da coleta existir. Também cria ServerStorage.DevGive (BindableFunction)
--- para dar itens em testes: DevGive:Invoke(player, "wood", 300) -> sobra;
--- e ServerStorage.DevEquipBag para vestir/tirar mochila.
+-- Dá um kit de itens e veste a Mochila de Couro a CADA nascimento (a morte zera
+-- o inventário), para testar o inventário antes da coleta existir. Também cria
+-- ServerStorage.DevGive (BindableFunction) para dar itens em testes:
+-- DevGive:Invoke(player, "wood", 300) -> sobra; e ServerStorage.DevEquipBag
+-- para vestir/tirar mochila.
 -- Some quando a coleta (fase de gameplay) estiver pronta.
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -50,9 +51,17 @@ function DevItemsService.Start(_self)
 	end
 	devEquipBag.Parent = ServerStorage
 
-	Players.PlayerAdded:Connect(giveKit)
+	local function setupPlayer(player: Player)
+		player.CharacterAdded:Connect(function()
+			giveKit(player)
+		end)
+		if player.Character then
+			giveKit(player)
+		end
+	end
+	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
-		giveKit(player)
+		setupPlayer(player)
 	end
 end
 

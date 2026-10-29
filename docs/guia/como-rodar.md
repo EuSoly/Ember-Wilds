@@ -31,12 +31,17 @@ O `rojo build` grava essas propriedades no arquivo, mas a sincronização ao viv
 - **Workspace → AuthorityMode = Server.** (Obrigatório fazer à mão: o plugin do Rojo não aplica essa propriedade ao vivo — testado.) Isso também liga StreamingEnabled, SignalBehavior Deferred, NextGen Replication, Input Action System e a simulação fixa.
 - **Workspace → StreamingEnabled = true**, `StreamOutBehavior = Opportunistic`, `StreamingIntegrityMode = PauseOutsideLoadedArea`, `ModelStreamingBehavior = Improved`.
 - **StarterPlayer → CharacterUseJumpPower = false, CharacterJumpHeight = 0, EnableMouseLockOption = false.**
+- **Players → CharacterAutoLoads = false.** O personagem só nasce quando o jogador clica **Jogar** no menu (ou **Jogar de novo** na tela de morte). Sem isso, o personagem nasce sozinho por baixo do menu. Veja `telas.md`.
 - **StarterPlayer → CreateDefaultPlayerModule = false.** (Obrigatório: sem isso o Roblox usa o PlayerModule padrão, que religa o `AutoRotate` e o boneco não consegue olhar para trás andando. Veja "PlayerModule próprio" em `arquitetura.md`.)
 - **Game Settings → Security → Enable Studio Access to API Services.** Necessário para salvar dados (moeda, estatísticas, configurações, skin) no Studio, no store de desenvolvimento `Dev_PlayerData`. O place precisa estar publicado. Sem isso o jogo roda com um perfil falso, avisa no Output e não salva nada. Veja `dados.md`.
 
 Depois de mudar, salve e publique o place.
 
 O personagem não usa mais o avatar do Roblox (veja `boneco.md`), então as Avatar Settings da experiência não importam. O corpo do personagem é criado pelo `CharacterService` ao abrir o servidor (`StarterPlayer.StarterCharacter`), e o Rojo coloca `src/character` em `StarterPlayer.StarterCharacterScripts` (scripts `Animate` e `Health` vazios, para o Roblox não pôr os padrões). Se o place tiver um `StarterCharacter` antigo feito à mão, pode apagar: o servidor troca pelo dele.
+
+## Dando Play
+
+O jogo abre na tela de carregamento e depois no menu, **sem personagem**. Clique **Jogar** para nascer. Os comandos de teste que mexem no personagem ou no inventário (`DevGive`, `DevEquipBag`, `DevHurt` etc.) precisam de um personagem vivo: clique Jogar antes. O `DevEndLife` agora mata de verdade (tela de morte); para voltar, clique Jogar de novo.
 
 ## Testando como celular
 

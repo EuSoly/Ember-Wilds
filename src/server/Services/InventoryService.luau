@@ -165,6 +165,23 @@ function InventoryService.equipBag(player: Player, bagId: string?): boolean
 	return true
 end
 
+-- Zera o inventário (a morte perde tudo): inventário novo vazio, sem mochila,
+-- slot 1 selecionado. Manda o snapshot inteiro e avisa os ouvintes de seleção
+-- (o EquipService limpa a mão). Sem a regra de "slots vazios" do equipBag,
+-- porque o inventário novo já está todo vazio.
+function InventoryService.reset(player: Player)
+	if player.Parent == nil then
+		return
+	end
+	bags[player] = nil
+	player:SetAttribute(StatNames.Bag, nil)
+	local inv = Inventory.new(capacityFor(player))
+	inventories[player] = inv
+	selected[player] = 1
+	sendSnapshot(player, inv)
+	notifySelected(player)
+end
+
 -- Gamepass VIP: confere se o jogador tem o passe e soma os slots extras.
 local function checkVipPass(player: Player)
 	if VIP_PASS.gamePassId == 0 then

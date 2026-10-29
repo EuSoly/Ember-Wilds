@@ -1,0 +1,80 @@
+{
+  "className": "Frame",
+  "properties": {
+    "Size": { "UDim2": [[1, -10], [0, 64]] },
+    "BackgroundColor3": [0.165, 0.188, 0.259],
+    "BackgroundTransparency": 0,
+    "BorderSizePixel": 0
+  },
+  "children": [
+    { "name": "Corner", "className": "UICorner", "properties": { "CornerRadius": { "UDim": [0, 8] } } },
+    {
+      "name": "Stroke",
+      "className": "UIStroke",
+      "properties": { "Color": [0.227, 0.259, 0.345], "Thickness": 1, "ApplyStrokeMode": "Border" }
+    },
+    {
+      "name": "NameLabel",
+      "className": "TextLabel",
+      "properties": {
+        "Position": { "UDim2": [[0.04, 0], [0.08, 0]] },
+        "Size": { "UDim2": [[0.6, 0], [0.45, 0]] },
+        "BackgroundTransparency": 1,
+        "Text": "Kit",
+        "TextColor3": [0.957, 0.945, 0.918],
+        "TextScaled": true,
+        "TextXAlignment": "Left",
+        "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+      },
+      "children": [
+        { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MinTextSize": 12, "MaxTextSize": 24 } }
+      ]
+    },
+    {
+      "name": "PriceLabel",
+      "className": "TextLabel",
+      "properties": {
+        "AnchorPoint": [1, 0],
+        "Position": { "UDim2": [[0.96, 0], [0.08, 0]] },
+        "Size": { "UDim2": [[0.32, 0], [0.45, 0]] },
+        "BackgroundTransparency": 1,
+        "Text": "0 pts",
+        "TextColor3": [1, 0.541, 0.122],
+        "TextScaled": true,
+        "TextXAlignment": "Right",
+        "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+      },
+      "children": [
+        { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MinTextSize": 12, "MaxTextSize": 22 } }
+      ]
+    },
+    {
+      "name": "ItemsLabel",
+      "className": "TextLabel",
+      "properties": {
+        "Position": { "UDim2": [[0.04, 0], [0.55, 0]] },
+        "Size": { "UDim2": [[0.92, 0], [0.38, 0]] },
+        "BackgroundTransparency": 1,
+        "Text": "",
+        "TextColor3": [0.663, 0.69, 0.761],
+        "TextScaled": true,
+        "TextXAlignment": "Left",
+        "FontFace": { "Font": { "family": "rbxasset://fonts/families/BuilderSans.json", "weight": "Medium", "style": "Normal" } }
+      },
+      "children": [
+        { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MinTextSize": 10, "MaxTextSize": 18 } }
+      ]
+    },
+    {
+      "name": "SelectButton",
+      "className": "TextButton",
+      "properties": {
+        "Size": { "UDim2": [[1, 0], [1, 0]] },
+        "BackgroundTransparency": 1,
+        "Text": "",
+        "ZIndex": 3,
+        "AutoButtonColor": false
+      }
+    }
+  ]
+}

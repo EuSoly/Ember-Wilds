@@ -56,6 +56,7 @@ local function validDataDefs(): any
 			music_volume = {
 				id = "music_volume",
 				nameKey = "setting.music_volume",
+				order = 1,
 				kind = "number",
 				default = 0.8,
 				min = 0,
@@ -64,11 +65,51 @@ local function validDataDefs(): any
 			quality = {
 				id = "quality",
 				nameKey = "setting.quality",
+				order = 2,
 				kind = "choice",
 				default = "auto",
 				options = { "auto", "low" },
 			},
-			left_handed = { id = "left_handed", nameKey = "setting.left_handed", kind = "boolean", default = false },
+			left_handed = {
+				id = "left_handed",
+				nameKey = "setting.left_handed",
+				order = 3,
+				kind = "boolean",
+				default = false,
+			},
+		},
+	}
+end
+
+-- Defs falsas só com itens e kits válidos; cada teste estraga um campo.
+local function validKitDefs(): any
+	return {
+		Tiers = {},
+		Items = {
+			wood = validItem("wood"),
+			leather_bag = {
+				id = "leather_bag",
+				nameKey = "item.leather_bag",
+				category = "bag",
+				maxStack = 1,
+				bagSlots = 6,
+			},
+		},
+		Kits = {
+			kit_a = {
+				id = "kit_a",
+				nameKey = "kit.kit_a",
+				order = 1,
+				price = 1000,
+				items = { { id = "wood", count = 20 }, { id = "leather_bag", count = 1 } },
+			},
+			kit_b = {
+				id = "kit_b",
+				nameKey = "kit.kit_b",
+				order = 2,
+				price = 0,
+				items = { { id = "wood", count = 1 } },
+			},
 		},
 	}
 end
@@ -184,7 +225,7 @@ return {
 	["real cosmetics and expressions load"] = function()
 		assert(Defs.CosmeticSlots.body.default == "body_default", "padrão do slot body")
 		local ember = Defs.Cosmetics.body_ember.body
-		assert(ember ~= nil and ember.outlineColor == "#C9774A", "contorno da skin brasa")
+		assert(ember ~= nil and ember.outlineColor == "#5F1802", "contorno da skin brasa")
 		assert(Defs.Expressions.hurt.priority == 100, "prioridade do dano")
 		assert(Defs.Expressions.blink.intervalMax == 6, "intervalo máximo do piscar")
 	end,
@@ -333,6 +374,115 @@ return {
 		defs.Settings.quality.options = { "auto", string.rep("a", 16) }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["real kits load"] = function()
+		local kit = Defs.Kits.kit_survivor
+		assert(kit.price == 4000, `preço do kit_survivor: {kit.price}`)
+		local hasBag = false
+		for _, item in kit.items do
+			if item.id == "leather_bag" then
+				hasBag = true
+			end
+		end
+		assert(hasBag, "kit_survivor deveria ter leather_bag")
+	end,
+
+	["valid fake kits give no errors"] = function()
+		local errors = Validate.all(validKitDefs(), alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with unknown item is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = { { id = "plastic", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "plastic"), `faltou erro do item: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with two bags is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.items = { { id = "leather_bag", count = 1 }, { id = "leather_bag", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "mochila"), `faltou erro de mochila: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with a bag count above one is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.items = { { id = "leather_bag", count = 2 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "mochila"), `faltou erro de mochila: {table.concat(errors, "; ")}`)
+	end,
+
+	["kits with repeated order is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.order = 1
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "order"), `faltou erro de order: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with invalid price or count is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_a.price = -1
+		defs.Kits.kit_b.items = { { id = "wood", count = 1.5 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "price"), `faltou erro de price: {table.concat(errors, "; ")}`)
+		assert(containsError(errors, "count de"), `faltou erro de count: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit that does not fit a new inventory is an error"] = function()
+		local defs = validKitDefs()
+		-- Sem mochila: 10 slots (BASE_SLOTS). 11 pilhas cheias de madeira não cabem.
+		defs.Kits.kit_b.items = { { id = "wood", count = 255 * 11 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit bag slots count for the fit"] = function()
+		local defs = validKitDefs()
+		-- Com a mochila do próprio kit (6 slots): 16 pilhas cabem, 17 não.
+		defs.Kits.kit_a.items = { { id = "wood", count = 255 * 16 }, { id = "leather_bag", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(#errors == 0, `16 pilhas deveriam caber: {table.concat(errors, "; ")}`)
+		defs.Kits.kit_a.items = { { id = "wood", count = 255 * 16 + 1 }, { id = "leather_bag", count = 1 } }
+		errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit with the same item twice sums the slots"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = { { id = "wood", count = 255 * 6 }, { id = "wood", count = 255 * 5 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "não cabe"), `faltou erro de espaço: {table.concat(errors, "; ")}`)
+	end,
+
+	["kit without items is an error"] = function()
+		local defs = validKitDefs()
+		defs.Kits.kit_b.items = {}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "items"), `faltou erro de items: {table.concat(errors, "; ")}`)
+	end,
+
+	["settings with repeated order is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.left_handed.order = 1
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "order"), `faltou erro de order: {table.concat(errors, "; ")}`)
+	end,
+
+	["setting without a whole order is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.quality.order = nil
+		defs.Settings.left_handed.order = 2.5
+		local errors = Validate.all(defs, alwaysHas)
+		assert(
+			containsError(errors, `Setting "quality": order`),
+			`faltou erro de quality: {table.concat(errors, "; ")}`
+		)
+		assert(
+			containsError(errors, `Setting "left_handed": order`),
+			`faltou erro de left_handed: {table.concat(errors, "; ")}`
+		)
 	end,
 
 	["boolean setting needs a boolean default"] = function()

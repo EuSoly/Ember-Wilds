@@ -17,6 +17,7 @@ local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Strings = require(ReplicatedStorage.Shared.Strings)
 local DataConfig = require(ReplicatedStorage.Shared.Data.DataConfig)
 local Migrations = require(ReplicatedStorage.Shared.Data.Migrations)
@@ -175,6 +176,9 @@ local function loadProfile(player: Player)
 		return
 	end
 
+	-- Antes dos ouvintes: a tela de carregamento e o pedido de nascer
+	-- (SpawnService) esperam por esta marca.
+	player:SetAttribute(StatNames.DataReady, true)
 	callAll(loadedListeners, "onLoaded", player, profile.Data)
 end
 

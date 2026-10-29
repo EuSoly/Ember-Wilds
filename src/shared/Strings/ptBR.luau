@@ -70,4 +70,42 @@ return table.freeze({
 	["setting.quality"] = "Qualidade gráfica",
 	["setting.ui_scale"] = "Tamanho da interface",
 	["setting.left_handed"] = "Modo canhoto",
+	["setting.quality.auto"] = "Automática",
+	["setting.quality.low"] = "Baixa",
+	["setting.quality.medium"] = "Média",
+	["setting.quality.high"] = "Alta",
+	["setting.on"] = "Ligado",
+	["setting.off"] = "Desligado",
+	["settings.title"] = "Configurações",
+	["settings.close"] = "Fechar",
+
+	-- Carregamento
+	["loading.title"] = "Ember Wilds",
+	["loading.status"] = "Carregando…",
+
+	-- Menu
+	["menu.play"] = "Jogar",
+	["menu.settings"] = "Configurações",
+	["menu.balance"] = "{amount} Golden Ember",
+	["menu.kits"] = "Kit inicial",
+
+	-- Morte
+	["death.title"] = "Você morreu",
+	["death.cause"] = "Causa: {cause}",
+	["death.days"] = "Dias vividos: {days}",
+	["death.points"] = "{points} pts",
+	["death.currency"] = "+{amount} Golden Ember",
+	["death.playAgain"] = "Jogar de novo",
+	["death.menu"] = "Menu",
+	["death.cause.dev"] = "Teste",
+	["death.cause.fall"] = "Caiu do mapa",
+	["death.cause.unknown"] = "Desconhecida",
+
+	-- Kits iniciais
+	["kit.kit_starter"] = "Iniciante",
+	["kit.kit_explorer"] = "Explorador",
+	["kit.kit_survivor"] = "Sobrevivente",
+	["kit.kit_veteran"] = "Veterano",
+	["kit.price"] = "{price} pts",
+	["kit.points"] = "Pontos para kit: {points}",
 })

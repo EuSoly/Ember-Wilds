@@ -9,6 +9,8 @@
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |
+| `src/shared/UIFlow` | `Shared.UIFlow` | Regras puras das telas: estados, compra de kit, contagem pontos→moeda, formato das configurações |
+| `assets/ui` | `ReplicatedStorage.UITemplates` | Moldes das telas (instâncias em arquivo, sem scripts) |
 | `net/game.blink` | — | Contrato de rede; gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server` | `ServerScriptService.Server` | Bootstrap do servidor |
 | `src/server/Services` | `Server.Services` | Um módulo por sistema do servidor |
@@ -16,8 +18,10 @@
 | `src/client` | `StarterPlayerScripts.Client` | Bootstrap do cliente |
 | `src/client/Controllers` | `Client.Controllers` | Um módulo por sistema do cliente |
 | `src/client/Boneco` | `Client.Boneco` | Boneco visual (montagem e renderer); quem liga é o `BonecoController` |
+| `src/client/Screens` | `Client.Screens` | Telas de molde (menu, morte, configurações, lista de kits); quem liga é o `ScreenController` |
+| `src/client/UITemplates` | `Client.UITemplates` | `Template.luau`: liga os moldes ao código pelos nomes |
 | `src/character` | `StarterPlayer.StarterCharacterScripts` | `Animate` e `Health` vazios (para o Roblox não pôr os padrões) |
-| `src/first` | `ReplicatedFirst.First` | Tela de carregamento (Fase 5) |
+| `src/first` | `ReplicatedFirst.First` | Tela de carregamento (script + molde; roda antes de tudo) |
 | `tests` | — | Testes do Lune |
 
 ## Ciclo de vida: Init e Start
@@ -101,12 +105,25 @@ O personagem é um corpo simulado mínimo e invisível (`Humanoid` + `HumanoidRo
 
 ## Dados salvos
 
-O que sobrevive à morte (Golden Ember, estatísticas, cosméticos, configurações) fica num perfil por jogador, salvo com o ProfileStore. O `DataService` abre e fecha o perfil e avisa quando ele carregou (`onLoaded`), antes de cada save (`onBeforeSave`) e antes do último save (`onUnloading`). Serviços pequenos usam esses avisos: `CurrencyService`, `StatsService`, `LifeService`, `SettingsService` e `CosmeticService`. As regras ficam em módulos puros em `src/shared/Data`, testados no Lune. O cliente só lê atributos do Player (`Currency`, `Setting_<id>`). Veja `dados.md`.
+O que sobrevive à morte (Golden Ember, estatísticas, cosméticos, configurações) fica num perfil por jogador, salvo com o ProfileStore. O `DataService` abre e fecha o perfil e avisa quando ele carregou (`onLoaded`), antes de cada save (`onBeforeSave`) e antes do último save (`onUnloading`). Serviços pequenos usam esses avisos: `CurrencyService`, `StatsService`, `LifeService`, `SettingsService` e `CosmeticService`. As regras ficam em módulos puros em `src/shared/Data`, testados no Lune. O cliente só lê atributos do Player (`Currency`, `Setting_<id>`, `DataReady`, `KitPoints`). Veja `dados.md`.
 
 ## Interface (HUD)
 
-Feita com Vide em `src/client/UI`. Veja `hud.md`.
+Feita com Vide em `src/client/UI`. Só aparece jogando. Veja `hud.md`.
+
+## Telas e moldes
+
+Carregamento, menu, morte e configurações são **moldes**: instâncias em arquivo (`assets/ui`, no jogo `ReplicatedStorage.UITemplates`) que o código clona e liga pelos **nomes** dos elementos (`UITemplates/Template.luau`). O visual pode ser trocado no Studio ou vindo do Figma sem mexer em código. Elemento faltando gera um `warn` com molde e nome, e o resto funciona. Textos vêm do atributo `TextKey`; animações, feedback dos botões e tamanho da interface ficam no código.
+
+Um único estado de tela no cliente (`ScreenState`: `loading` → `menu` → `playing` → `dead`) decide o que aparece; as transições ficam em `Shared/UIFlow/ScreenFlow.luau`.
+
+No servidor:
+- o personagem só nasce a pedido (`Players.CharacterAutoLoads = false`, `SpawnService` + evento `RequestSpawn`), com kit inicial opcional pago com os pontos da última vida;
+- toda morte passa pelo `DeathService.kill` (fim de vida, inventário zerado, personagem removido, evento `LifeEnded` com o resumo);
+- quem está sem personagem "assiste" um jogador vivo (`SpectateService`, atributo `SpectateTarget`).
+
+Veja `telas.md`.
 
 ## Câmera
 
-`CameraController`: câmera `Scriptable` a 65°, sem girar, distância 34 (zoom entre 28 e 40), seguindo o personagem com suavização. As contas estão em `src/shared/CameraMath.luau`.
+`CameraController`: câmera `Scriptable` a 65°, sem girar, distância 34 (zoom entre 28 e 40), seguindo o personagem com suavização. Sem personagem (menu e morte), segue o jogador do `SpectateTarget` um pouco mais alto ou, sem ninguém vivo, gira devagar sobre o centro do mapa. As contas estão em `src/shared/CameraMath.luau`.

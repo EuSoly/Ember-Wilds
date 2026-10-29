@@ -2,8 +2,9 @@
 -- SÓ PARA DESENVOLVIMENTO (roda apenas no Studio).
 -- Comandos para testar os dados salvos (barra de comandos do Studio, lado servidor):
 -- - ServerStorage.DevScore:Invoke(player, 12345): pontos da vida atual.
--- - ServerStorage.DevEndLife:Invoke(player): termina a vida (pontos → Golden
---   Ember e estatísticas) e faz o personagem renascer (vida nova).
+-- - ServerStorage.DevEndLife:Invoke(player): mata o jogador pela morte de
+--   verdade (DeathService.kill, causa "death.cause.dev"): pontos → Golden Ember,
+--   inventário zerado, personagem removido e tela de morte. Renascer = Jogar de novo.
 -- - ServerStorage.DevCurrency:Invoke(player, 100) -> number: dá (positivo) ou
 --   tira (negativo) Golden Ember, sem tetos; devolve o saldo.
 -- - ServerStorage.DevStat:Invoke(player, "mobs_killed", 10, "cow"): soma numa estatística.
@@ -20,7 +21,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
-local LifeService = require(script.Parent.LifeService)
+local DeathService = require(script.Parent.DeathService)
 local StatsService = require(script.Parent.StatsService)
 
 local DevDataService = {}
@@ -42,8 +43,7 @@ function DevDataService.Start(_self)
 	end)
 
 	newCommand("DevEndLife", function(player: Player)
-		LifeService.endLife(player)
-		player:LoadCharacter()
+		DeathService.kill(player, "death.cause.dev")
 	end)
 
 	newCommand("DevCurrency", function(player: Player, amount: number): number

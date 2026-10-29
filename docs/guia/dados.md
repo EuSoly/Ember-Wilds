@@ -1,6 +1,6 @@
 # Dados salvos
 
-Tudo o que sobrevive à morte fica salvo por jogador num **perfil**: a moeda Golden Ember, as estatísticas, os cosméticos e as configurações. Inventário, base e pontos da partida continuam morrendo com o jogador.
+Tudo o que sobrevive à morte fica salvo por jogador num **perfil**: a moeda Golden Ember, as estatísticas, os cosméticos e as configurações. Inventário, base e pontos da partida continuam morrendo com o jogador: **a morte perde tudo** (inventário zerado e mochila tirada, como no Starve).
 
 O perfil usa o [ProfileStore](https://madstudioroblox.github.io/ProfileStore/) (pacote `lm-loleris/profilestore`, instalado pelo Wally em `ServerPackages/`). Ele cuida do **session lock** (dois servidores nunca mexem no mesmo perfil), do autosave e do save ao sair.
 
@@ -41,6 +41,8 @@ O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat
 | `src/server/Services/CurrencyService.luau` | Função única para mudar o saldo |
 | `src/server/Services/StatsService.luau` | Função única para estatísticas + tempo de jogo |
 | `src/server/Services/LifeService.luau` | Fim de vida (pontos → moeda e estatísticas) |
+| `src/server/Services/DeathService.luau` | Morte (fim de vida + perde tudo + tela de morte) |
+| `src/server/Services/SpawnService.luau` | Nascer a pedido, com kit inicial |
 | `src/server/Services/SettingsService.luau` | Configurações (atributos + evento `SetSetting`) |
 | `src/server/Services/CosmeticService.luau` | Posse e skin equipada |
 | `src/server/Services/DevDataService.luau` | Comandos de teste (só no Studio) |
@@ -97,7 +99,13 @@ end)
 1. Uma entrada em `src/shared/Defs/Settings.luau`:
 
 ```lua
-camera_shake = { id = "camera_shake", nameKey = "setting.camera_shake", kind = "boolean", default = true },
+camera_shake = {
+	id = "camera_shake",
+	nameKey = "setting.camera_shake",
+	order = 7, -- posição na tela de configurações (inteiro ≥ 1, sem repetir)
+	kind = "boolean",
+	default = true,
+},
 ```
 
 2. O texto em `Strings/ptBR.luau`: `["setting.camera_shake"] = "Tremor da câmera",`.
@@ -116,7 +124,7 @@ Net.SetSetting.Fire({ Id = "music_volume", Number = 0.5 })
 
 Pedido inválido (id inexistente, fora da faixa, tipo trocado, opção inexistente) é **ignorado em silêncio**, sem `warn`, para um cliente malicioso não encher o Output. Se a faixa de uma configuração mudar num update, o valor salvo que ficou inválido volta para o padrão quando o jogador entra.
 
-A tela de configurações e o efeito de verdade (volume, qualidade) são da F5.
+A linha da configuração aparece sozinha na tela de configurações, na posição do `order` (veja `telas.md`, que também diz o que cada configuração já aplica).
 
 ## Migrações (quando o formato do perfil muda)
 
@@ -152,9 +160,20 @@ Como funciona: ao abrir o perfil, os passos que faltam rodam em ordem **antes** 
 
 ### Vida e fim de vida
 
-- A vida começa quando o personagem nasce.
-- `LifeService.endLife(player)` é o fim de vida: converte os pontos (`Score`), soma `score_total` e `deaths`, registra `score_best` e `days_best` (ciclos completos de 480 s vividos), zera os pontos e salva. As fases G chamam essa função ao morrer.
+- A vida começa quando o personagem nasce (só a pedido: botão Jogar).
+- `LifeService.endLife(player)` é o fim de vida: converte os pontos (`Score`), soma `score_total` e `deaths`, registra `score_best` e `days_best` (ciclos completos de 480 s vividos), zera os pontos e salva. Devolve o resumo `{ points, days, currency }` (moeda = a concedida de fato, depois dos tetos), ou `nil` se não havia vida ativa ou perfil.
 - Só faz a contabilidade: não limpa o inventário nem faz renascer.
+
+### Morte
+
+`DeathService.kill(player, causeKey)` é a **função única de morte** (as fases G chamam ao matar). Ela:
+1. faz o fim de vida (`LifeService.endLife`);
+2. guarda os pontos da vida no atributo **`KitPoints`** do Player, para comprar um kit inicial antes de renascer (só em memória: ao sair do jogo, perde; na primeira entrada é 0);
+3. zera o inventário e tira a mochila (`InventoryService.reset`);
+4. remove o personagem;
+5. manda ao jogador o resumo (`Net.LifeEnded`: causa, dias, pontos, moeda) para a tela de morte.
+
+A causa é uma chave de `Strings` (`death.cause.dev`, `death.cause.fall`, `death.cause.unknown`; as fases G adicionam as suas). Uma morte do `Humanoid` que não passou pela função vira `death.cause.unknown`. Cair do mapa (abaixo de `WorldConfig.KILL_Y`, ou o Roblox apagar a raiz do personagem) vira `death.cause.fall`. O renascer é a pedido (`SpawnService`), com o kit escolhido, se os `KitPoints` pagarem. Veja `telas.md`.
 - **Uma vez por vida:** morrer e sair, ou sair enquanto o servidor fecha, conta uma vez só. A próxima vida começa no próximo nascimento.
 - **Sair do jogo e o servidor fechando contam como fim de vida.**
 - `playtime_seconds` é somado a cada save (autosave incluso) e ao sair.
@@ -168,7 +187,7 @@ local SS = game:GetService("ServerStorage")
 local player = game.Players:GetPlayers()[1]
 
 SS.DevScore:Invoke(player, 12345) -- pontos da vida atual
-SS.DevEndLife:Invoke(player) -- fim de vida (+12 Golden Ember) e renasce
+SS.DevEndLife:Invoke(player) -- morte de teste (+12 Golden Ember, 12345 KitPoints, tela de morte)
 print(SS.DevCurrency:Invoke(player, 100)) -- +100 sem tetos; devolve o saldo
 print(SS.DevCurrency:Invoke(player, -30)) -- gasta 30 (não gasta se faltar saldo)
 SS.DevStat:Invoke(player, "mobs_killed", 10, "cow") -- soma numa estatística

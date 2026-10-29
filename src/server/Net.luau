@@ -165,6 +165,7 @@ Queue.Reliable[3] = table.create(256)
 Queue.Reliable[4] = table.create(256)
 Queue.Reliable[5] = table.create(256)
 Queue.Reliable[6] = table.create(256)
+Queue.Reliable[7] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -266,6 +267,34 @@ function SerdesFunctions.ReadEVENT_SetSetting(): ({ Id: string, Number: number?,
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_RequestSpawn(): ({ KitId: string? })
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = {} :: any
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		Value.KitId = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Value.KitId < 1 then error(`Expected length of "Value.KitId" to be larger than or equal to 1, got {#Value.KitId} instead.`) end
+		if #Value.KitId > 32 then error(`Expected length of "Value.KitId" to be smaller than or equal to  32, got {#Value.KitId} instead.`) end
+	end
+	return Value
+end
+
+function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
+	-- Allocate BLOCK: 10 bytes
+	local BLOCK_START = Allocate(10)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 8)
+	local Length = #Value.CauseKey
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.CauseKey, Length)
+	buffer.writeu16(SendBuffer, BLOCK_START + 2, Value.Days)
+	buffer.writeu32(SendBuffer, BLOCK_START + 4, Value.Points)
+	buffer.writeu16(SendBuffer, BLOCK_START + 8, Value.Currency)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -298,6 +327,15 @@ if not RunService:IsRunning() then
 	},
 	SetSetting = {
 		On = NOOP
+	},
+	RequestSpawn = {
+		On = NOOP
+	},
+	LifeEnded = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -400,6 +438,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"SetSetting\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[6], {Player, Value} :: {any})
+			end
+		elseif Index == 7 then
+			local Value: { KitId: string? } = SerdesFunctions.ReadEVENT_RequestSpawn()
+			if Events.Reliable[7] ~= nil then
+				task.spawn(Events.Reliable[7], Player, Value)
+			else
+				if #Queue.Reliable[7] > 256 then
+					warn("[Blink]: Event queue of \"RequestSpawn\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[7], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -619,6 +667,66 @@ local Returns = table.freeze({
 				end
 			end
 		end
+	},
+	RequestSpawn = {
+		On = function(Listener: (Player: Player, Value: { KitId: string? }) -> ()): () -> ()
+			Events.Reliable[7] = Listener
+			for Index, Arguments in Queue.Reliable[7] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[7] = {}
+			return function (): ()
+				if Events.Reliable[7] == Listener then
+					Events.Reliable[7] = nil
+				end
+			end
+		end
+	},
+	LifeEnded = {
+		Fire = function(Player: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_LifeEnded(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_LifeEnded(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_LifeEnded(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_LifeEnded(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
 	},
 })
 type BLINK_EVENTS_SYMBOL = typeof(Returns)

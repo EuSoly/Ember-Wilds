@@ -1,0 +1,171 @@
+{
+  "className": "ScreenGui",
+  "properties": {
+    "ResetOnSpawn": false,
+    "IgnoreGuiInset": true,
+    "ScreenInsets": "None",
+    "DisplayOrder": 10,
+    "ZIndexBehavior": "Sibling",
+    "Enabled": false
+  },
+  "children": [
+    {
+      "name": "Root",
+      "className": "CanvasGroup",
+      "properties": { "Size": { "UDim2": [[1, 0], [1, 0]] }, "BackgroundTransparency": 1, "BorderSizePixel": 0 },
+      "children": [
+        {
+          "name": "LogoLabel",
+          "className": "TextLabel",
+          "properties": {
+            "AnchorPoint": [0.5, 0],
+            "Position": { "UDim2": [[0.5, 0], [0.08, 0]] },
+            "Size": { "UDim2": [[0.46, 0], [0.12, 0]] },
+            "BackgroundTransparency": 1,
+            "Text": "Ember Wilds",
+            "TextColor3": [1, 0.541, 0.122],
+            "TextScaled": true,
+            "FontFace": { "Font": { "family": "rbxasset://fonts/families/LuckiestGuy.json", "weight": "Regular", "style": "Normal" } }
+          },
+          "attributes": { "TextKey": "loading.title" },
+          "children": [
+            { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 96 } },
+            { "name": "Stroke", "className": "UIStroke", "properties": { "Color": [0.118, 0.133, 0.188], "Thickness": 3 } }
+          ]
+        },
+        {
+          "name": "BalanceLabel",
+          "className": "TextLabel",
+          "properties": {
+            "AnchorPoint": [1, 0],
+            "Position": { "UDim2": [[0.98, 0], [0, 64]] },
+            "Size": { "UDim2": [[0.2, 0], [0.065, 0]] },
+            "BackgroundColor3": [0.118, 0.133, 0.188],
+            "BackgroundTransparency": 0.15,
+            "BorderSizePixel": 0,
+            "Text": "0 Golden Ember",
+            "TextColor3": [0.949, 0.714, 0.196],
+            "TextScaled": true,
+            "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+          },
+          "children": [
+            { "name": "Corner", "className": "UICorner", "properties": { "CornerRadius": { "UDim": [1, 0] } } },
+            { "name": "Padding", "className": "UIPadding", "properties": { "PaddingLeft": { "UDim": [0.06, 0] }, "PaddingRight": { "UDim": [0.06, 0] }, "PaddingTop": { "UDim": [0.15, 0] }, "PaddingBottom": { "UDim": [0.15, 0] } } },
+            { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 28 } }
+          ]
+        },
+        {
+          "name": "Panel",
+          "className": "Frame",
+          "properties": {
+            "AnchorPoint": [0.5, 0.5],
+            "Position": { "UDim2": [[0.5, 0], [0.6, 0]] },
+            "Size": { "UDim2": [[0.42, 0], [0.68, 0]] },
+            "BackgroundColor3": [0.118, 0.133, 0.188],
+            "BackgroundTransparency": 0.15,
+            "BorderSizePixel": 0
+          },
+          "children": [
+            { "name": "Corner", "className": "UICorner", "properties": { "CornerRadius": { "UDim": [0, 12] } } },
+            { "name": "Stroke", "className": "UIStroke", "properties": { "Color": [0.227, 0.259, 0.345], "Thickness": 1, "ApplyStrokeMode": "Border" } },
+            {
+              "name": "KitsTitle",
+              "className": "TextLabel",
+              "properties": {
+                "Position": { "UDim2": [[0.05, 0], [0.03, 0]] },
+                "Size": { "UDim2": [[0.9, 0], [0.08, 0]] },
+                "BackgroundTransparency": 1,
+                "Text": "Kit inicial",
+                "TextColor3": [0.957, 0.945, 0.918],
+                "TextScaled": true,
+                "TextXAlignment": "Left",
+                "FontFace": { "Font": { "family": "rbxasset://fonts/families/BuilderSans.json", "weight": "Bold", "style": "Normal" } }
+              },
+              "attributes": { "TextKey": "menu.kits" },
+              "children": [{ "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 28 } }]
+            },
+            {
+              "name": "KitPointsLabel",
+              "className": "TextLabel",
+              "properties": {
+                "Position": { "UDim2": [[0.05, 0], [0.11, 0]] },
+                "Size": { "UDim2": [[0.9, 0], [0.06, 0]] },
+                "BackgroundTransparency": 1,
+                "Text": "",
+                "TextColor3": [0.663, 0.69, 0.761],
+                "TextScaled": true,
+                "TextXAlignment": "Left",
+                "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+              },
+              "children": [{ "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 20 } }]
+            },
+            {
+              "name": "KitList",
+              "className": "ScrollingFrame",
+              "properties": {
+                "Position": { "UDim2": [[0.05, 0], [0.19, 0]] },
+                "Size": { "UDim2": [[0.9, 0], [0.5, 0]] },
+                "BackgroundTransparency": 1,
+                "BorderSizePixel": 0,
+                "CanvasSize": { "UDim2": [[0, 0], [0, 0]] },
+                "AutomaticCanvasSize": "Y",
+                "ScrollingDirection": "Y",
+                "ScrollBarThickness": 6,
+                "ScrollBarImageColor3": [0.227, 0.259, 0.345]
+              },
+              "children": [
+                { "name": "Layout", "className": "UIListLayout", "properties": { "SortOrder": "LayoutOrder", "Padding": { "UDim": [0, 6] } } },
+                { "name": "Padding", "className": "UIPadding", "properties": { "PaddingTop": { "UDim": [0, 2] }, "PaddingLeft": { "UDim": [0, 2] } } }
+              ]
+            },
+            {
+              "name": "PlayButton",
+              "className": "TextButton",
+              "properties": {
+                "AnchorPoint": [0.5, 0],
+                "Position": { "UDim2": [[0.5, 0], [0.73, 0]] },
+                "Size": { "UDim2": [[0.9, 0], [0.13, 0]] },
+                "BackgroundColor3": [1, 0.541, 0.122],
+                "BorderSizePixel": 0,
+                "AutoButtonColor": true,
+                "Text": "Jogar",
+                "TextColor3": [0.957, 0.945, 0.918],
+                "TextScaled": true,
+                "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+              },
+              "attributes": { "TextKey": "menu.play" },
+              "children": [
+                { "name": "Corner", "className": "UICorner", "properties": { "CornerRadius": { "UDim": [0, 12] } } },
+                { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 36 } },
+                { "name": "Padding", "className": "UIPadding", "properties": { "PaddingTop": { "UDim": [0.15, 0] }, "PaddingBottom": { "UDim": [0.15, 0] } } }
+              ]
+            },
+            {
+              "name": "SettingsButton",
+              "className": "TextButton",
+              "properties": {
+                "AnchorPoint": [0.5, 0],
+                "Position": { "UDim2": [[0.5, 0], [0.88, 0]] },
+                "Size": { "UDim2": [[0.9, 0], [0.09, 0]] },
+                "BackgroundColor3": [0.165, 0.188, 0.259],
+                "BorderSizePixel": 0,
+                "AutoButtonColor": true,
+                "Text": "Configurações",
+                "TextColor3": [0.957, 0.945, 0.918],
+                "TextScaled": true,
+                "FontFace": { "Font": { "family": "rbxasset://fonts/families/FredokaOne.json", "weight": "Regular", "style": "Normal" } }
+              },
+              "attributes": { "TextKey": "menu.settings" },
+              "children": [
+                { "name": "Corner", "className": "UICorner", "properties": { "CornerRadius": { "UDim": [0, 12] } } },
+                { "name": "Stroke", "className": "UIStroke", "properties": { "Color": [0.227, 0.259, 0.345], "Thickness": 1, "ApplyStrokeMode": "Border" } },
+                { "name": "TextSize", "className": "UITextSizeConstraint", "properties": { "MaxTextSize": 24 } },
+                { "name": "Padding", "className": "UIPadding", "properties": { "PaddingTop": { "UDim": [0.18, 0] }, "PaddingBottom": { "UDim": [0.18, 0] } } }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

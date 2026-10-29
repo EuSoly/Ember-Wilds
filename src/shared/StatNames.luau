@@ -19,6 +19,16 @@ return table.freeze({
 	-- no Player (escritos pelo SettingsService a partir do perfil).
 	SettingPrefix = "Setting_",
 
+	-- true quando o perfil salvo carregou (DataService), atributo no Player: a tela
+	-- de carregamento espera por ele e o servidor só deixa nascer depois dele.
+	DataReady = "DataReady",
+	-- Pontos da última vida, disponíveis para comprar um kit inicial (só em
+	-- memória, escrito pelo DeathService/SpawnService), atributo no Player.
+	KitPoints = "KitPoints",
+	-- UserId do jogador que a câmera do menu acompanha (0 = ninguém: gira sobre
+	-- o centro), atributo no Player (escrito pelo SpectateService).
+	SpectateTarget = "SpectateTarget",
+
 	-- Id do item da mochila vestida (ex.: "leather_bag"), ou nil sem mochila; atributo no Player.
 	-- A capacidade do inventário vem da mochila (ver InventoryService.equipBag).
 	Bag = "Bag",
