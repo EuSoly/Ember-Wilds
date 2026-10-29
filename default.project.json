@@ -2,25 +2,24 @@
   "name": "starve",
   "tree": {
     "$className": "DataModel",
-
     "ReplicatedFirst": {
       "First": {
         "$path": "src/first"
       }
     },
-
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
+      },
+      "Packages": {
+        "$path": "Packages"
       }
     },
-
     "ServerScriptService": {
       "Server": {
         "$path": "src/server"
       }
     },
-
     "StarterPlayer": {
       "$properties": {
         "CharacterUseJumpPower": false,
@@ -33,7 +32,6 @@
         }
       }
     },
-
     "Workspace": {
       "$properties": {
         "FilteringEnabled": true,
@@ -45,17 +43,19 @@
         "ModelStreamingBehavior": "Improved"
       }
     },
-
     "Lighting": {
       "$properties": {
-        "Ambient": [0, 0, 0],
+        "Ambient": [
+          0,
+          0,
+          0
+        ],
         "Brightness": 2,
         "GlobalShadows": true,
         "Outlines": false,
         "Technology": "ShadowMap"
       }
     },
-
     "SoundService": {
       "$properties": {
         "RespectFilteringEnabled": true

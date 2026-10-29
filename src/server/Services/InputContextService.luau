@@ -5,14 +5,38 @@
 -- InputAction, e o InputContext tem de estar dentro do Player. O servidor cria
 -- a estrutura; o cliente só alimenta os valores.
 --
--- Por enquanto só existe a mira (Aim). Os botões de ação, construir, mochila e
--- hotbar entram na Fase 2, neste mesmo contexto.
+-- Ações: mira (Aim), bater (Use), mochila (Backpack) e seleção de slot (Slot1 … Slot10).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local InputNames = require(ReplicatedStorage.Shared.InputNames)
 
+-- Tecla de cada slot da hotbar (1 … 9 e 0 para o décimo).
+local SLOT_KEYS: { Enum.KeyCode } = {
+	Enum.KeyCode.One,
+	Enum.KeyCode.Two,
+	Enum.KeyCode.Three,
+	Enum.KeyCode.Four,
+	Enum.KeyCode.Five,
+	Enum.KeyCode.Six,
+	Enum.KeyCode.Seven,
+	Enum.KeyCode.Eight,
+	Enum.KeyCode.Nine,
+	Enum.KeyCode.Zero,
+}
+
 local InputContextService = {}
+
+-- Ação de botão (Bool) com uma tecla.
+local function keyAction(context: InputContext, name: string, key: Enum.KeyCode)
+	local action = Instance.new("InputAction")
+	action.Name = name
+	action.Type = Enum.InputActionType.Bool
+	local binding = Instance.new("InputBinding")
+	binding.KeyCode = key
+	binding.Parent = action
+	action.Parent = context
+end
 
 local function createContext(player: Player)
 	if player:FindFirstChild(InputNames.Context) then
@@ -35,6 +59,28 @@ local function createContext(player: Player)
 	binding.Name = InputNames.AimBinding
 	binding.Type = Enum.InputBindingType.Scriptable
 	binding.Parent = aim
+
+	-- Bater (atacar/coletar): segurar o botão esquerdo no PC, ou segurar o
+	-- joystick direito no celular (binding scriptable, alimentado pelo AimStick).
+	local use = Instance.new("InputAction")
+	use.Name = InputNames.Use
+	use.Type = Enum.InputActionType.Bool
+	local mouseButton = Instance.new("InputBinding")
+	mouseButton.KeyCode = Enum.KeyCode.MouseLeftButton
+	mouseButton.Parent = use
+	local useBinding = Instance.new("InputBinding")
+	useBinding.Name = InputNames.UseBinding
+	useBinding.Type = Enum.InputBindingType.Scriptable
+	useBinding.Parent = use
+	use.Parent = context
+
+	-- Mochila (B no PC — o Tab é da lista de jogadores do Roblox; no celular o botão da tela chama direto).
+	keyAction(context, InputNames.Backpack, Enum.KeyCode.B)
+
+	-- Seleção de slot da hotbar pelas teclas 1 … 0 (no celular, toque no slot).
+	for index, name in InputNames.Slot do
+		keyAction(context, name, SLOT_KEYS[index])
+	end
 
 	context.Parent = player
 end

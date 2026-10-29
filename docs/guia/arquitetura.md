@@ -49,7 +49,7 @@ Regras:
 
 O jogo roda com `Workspace.AuthorityMode = Server`. O servidor é a fonte da verdade e o cliente prevê o próprio personagem.
 
-- **Input que muda a simulação vem de InputAction.** O servidor cria o contexto `Gameplay` dentro de cada Player (`InputContextService`); o cliente só alimenta os valores (ex.: `AimController` dispara a `AimBinding` com a direção do mouse).
+- **Input que muda a simulação vem de InputAction.** O servidor cria o contexto `Gameplay` dentro de cada Player (`InputContextService`) com as ações `Aim` (mira), `Use` (bater), `Backpack` (mochila) e `Slot1`…`Slot10`; os nomes ficam em `src/shared/InputNames.luau`. O cliente só alimenta os valores (ex.: `AimController` e o joystick direito disparam a `AimBinding`).
 - **Código de simulação** fica em `src/shared/Simulation` e é ligado dos dois lados: `SimulationService` (servidor, todos os jogadores) e `SimulationController` (cliente, só o próprio personagem). Mesma função nos dois lados, então o resultado bate.
 - Dentro de `BindToSimulation`:
   - use `time()` para tempo (não `tick`/`os.clock`);
@@ -66,6 +66,10 @@ O jogo roda com `Workspace.AuthorityMode = Server`. O servidor é a fonte da ver
 - parado e sem mira: mantém.
 
 A matemática está em `src/shared/Facing.luau` e é testada no Lune.
+
+## Interface (HUD)
+
+Feita com Vide em `src/client/UI`. Veja `hud.md`.
 
 ## Câmera
 

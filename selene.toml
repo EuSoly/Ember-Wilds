@@ -1,1 +1,5 @@
 std = "roblox"
+
+[lints]
+# O Vide usa tabelas mistas de propósito: propriedades e filhos na mesma tabela.
+mixed_table = "allow"
