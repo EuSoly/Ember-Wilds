@@ -99,9 +99,35 @@ local function updateYaw(mode: Mode, dt: number)
 	end
 end
 
+-- Só no Studio: Shift + P liga a câmera livre do Roblox (Freecam). Enquanto
+-- ela está ligada, esta câmera fica pausada, senão as duas brigam pelo
+-- CFrame a cada quadro e a Freecam não consegue se mover. Jogadores nunca
+-- têm a Freecam, então fora do Studio isto não existe.
+local devFreecam = false
+
+local function connectDevFreecam()
+	if not RunService:IsStudio() then
+		return
+	end
+	UserInputService.InputBegan:Connect(function(input: InputObject)
+		if input.KeyCode ~= Enum.KeyCode.P then
+			return
+		end
+		if
+			UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
+		then
+			devFreecam = not devFreecam
+			-- Ao voltar, recomeça em cima do alvo (sem "viajar" de onde a Freecam parou).
+			if not devFreecam then
+				focus = nil
+			end
+		end
+	end)
+end
+
 local function update(dt: number)
 	local camera = Workspace.CurrentCamera
-	if not camera then
+	if not camera or devFreecam then
 		return
 	end
 	-- Os scripts padrão do Roblox podem trocar o tipo da câmera ao renascer.
@@ -151,6 +177,7 @@ local function connectZoom()
 end
 
 function CameraController.Start(_self)
+	connectDevFreecam()
 	connectZoom()
 	RunService:BindToRenderStep("TopDownCamera", Enum.RenderPriority.Camera.Value + 1, update)
 end
