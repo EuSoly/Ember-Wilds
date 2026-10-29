@@ -6,8 +6,8 @@
 -- nunca fica um corpo parado sem tela.
 --
 -- A morte: fim de vida da F4 (pontos → Golden Ember, estatísticas), guarda os
--- pontos para comprar kit (KitPoints), zera o inventário e tira a mochila (no
--- Starve a morte perde tudo), remove o personagem e manda ao jogador o resumo
+-- pontos para comprar kit (KitPoints), zera o inventário e tira a mochila e a
+-- armadura (no Starve a morte perde tudo), remove o personagem e manda ao jogador o resumo
 -- (Net.LifeEnded) para a tela de morte. Quem renasce é o SpawnService, a pedido.
 --
 -- Queda do mapa: ao passar de Workspace.FallenPartsDestroyHeight, o Roblox
@@ -25,6 +25,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
+local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
 local Net = require(script.Parent.Parent.Net)
@@ -63,6 +64,7 @@ function DeathService.kill(player: Player, causeKey: string)
 	-- Pontos da vida que acabou ficam para comprar um kit antes de renascer.
 	player:SetAttribute(StatNames.KitPoints, summary.points)
 	InventoryService.reset(player)
+	ArmorService.wear(player, nil)
 
 	-- Remove o personagem antes de avisar: o Humanoid.Died de um personagem
 	-- que já não é o atual é ignorado abaixo, então não conta duas vezes.

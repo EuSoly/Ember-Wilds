@@ -3,6 +3,8 @@
 -- nas tabelas de conteúdo derruba o jogo com mensagem clara, em vez de virar
 -- um bug silencioso no meio da partida.
 local InventoryConfig = require("../InventoryConfig")
+local StatNames = require("../StatNames")
+local SurvivalConfig = require("../SurvivalConfig")
 local Types = require("./Types")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
@@ -441,6 +443,65 @@ local function validateResources(errors: { string }, defs: Types.DefsTables, has
 	end
 end
 
+-- Comida: precisa do bloco food (e só ela pode ter), com pelo menos um campo,
+-- cada um em (0, StatusMax].
+local FOOD_FIELDS = { "hunger", "thirst", "health" }
+local function validateFood(errors: { string }, key: string, item: Types.ItemDef)
+	local food = item.food
+	if item.category ~= "food" then
+		if food ~= nil then
+			table.insert(errors, `Item "{key}": food só vale para category "food"`)
+		end
+		return
+	end
+	if type(food) ~= "table" then
+		table.insert(errors, `Item "{key}": comida precisa do bloco food`)
+		return
+	end
+	local count = 0
+	for _, field in FOOD_FIELDS do
+		local value = (food :: any)[field]
+		if value ~= nil then
+			count += 1
+			if not isFiniteNumber(value) or value <= 0 or value > StatNames.StatusMax then
+				table.insert(errors, `Item "{key}": food.{field} deve ficar entre 0 e {StatNames.StatusMax}`)
+			end
+		end
+	end
+	if count == 0 then
+		table.insert(errors, `Item "{key}": food precisa repor ao menos uma barra`)
+	end
+end
+
+-- Armadura: precisa do bloco armor (e só ela pode ter); defense em
+-- [0, MAX_DEFENSE], fatores em [0, MAX_FACTOR].
+local ARMOR_LIMITS = {
+	{ field = "defense", max = SurvivalConfig.MAX_DEFENSE },
+	{ field = "coldFactor", max = SurvivalConfig.MAX_FACTOR },
+	{ field = "hungerFactor", max = SurvivalConfig.MAX_FACTOR },
+	{ field = "thirstFactor", max = SurvivalConfig.MAX_FACTOR },
+	{ field = "heatFactor", max = SurvivalConfig.MAX_FACTOR },
+}
+local function validateArmor(errors: { string }, key: string, item: Types.ItemDef)
+	local armor = item.armor
+	if item.category ~= "armor" then
+		if armor ~= nil then
+			table.insert(errors, `Item "{key}": armor só vale para category "armor"`)
+		end
+		return
+	end
+	if type(armor) ~= "table" then
+		table.insert(errors, `Item "{key}": armadura precisa do bloco armor`)
+		return
+	end
+	for _, limit in ARMOR_LIMITS do
+		local value = (armor :: any)[limit.field]
+		if value ~= nil and (not isFiniteNumber(value) or value < 0 or value > limit.max) then
+			table.insert(errors, `Item "{key}": armor.{limit.field} deve ficar entre 0 e {limit.max}`)
+		end
+	end
+end
+
 -- Devolve a lista de erros encontrados (vazia = tudo certo).
 function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): { string }
 	local errors: { string } = {}
@@ -481,6 +542,8 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		elseif item.bagSlots ~= nil then
 			table.insert(errors, `Item "{key}": bagSlots só vale para category "bag"`)
 		end
+		validateFood(errors, key, item)
+		validateArmor(errors, key, item)
 	end
 
 	validateCosmetics(errors, defs, hasString)

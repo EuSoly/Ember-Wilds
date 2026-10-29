@@ -12,7 +12,7 @@ local Items: { [string]: ItemDef } = {
 	gold = { id = "gold", nameKey = "item.gold", category = "resource", maxStack = 255 },
 
 	-- Comida
-	berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255 },
+	berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255, food = { hunger = 10 } },
 
 	-- Mochilas (vestidas, não ocupam slot; dão bagSlots slots a mais).
 	-- Para uma mochila maior num update, é só adicionar outra entrada aqui.
@@ -49,6 +49,12 @@ local Items: { [string]: ItemDef } = {
 }
 
 for _, item in Items do
+	if item.food ~= nil then
+		table.freeze(item.food)
+	end
+	if item.armor ~= nil then
+		table.freeze(item.armor)
+	end
 	table.freeze(item)
 end
 

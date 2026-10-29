@@ -14,6 +14,17 @@ local function expectStick(dx: number, dy: number, x: number, y: number, active:
 end
 
 return {
+	["temperature ring shows heat when hot"] = function()
+		local value, hot = UIMath.temperatureRing(100, 30)
+		near(value, 30, "valor com calor")
+		assert(hot == true, "modo quente")
+		local cold, notHot = UIMath.temperatureRing(60, 0)
+		near(cold, 60, "valor sem calor")
+		assert(notHot == false, "modo frio")
+		local _, nilHot = UIMath.temperatureRing(80, nil :: any)
+		assert(nilHot == false, "calor nil = frio")
+	end,
+
 	["fraction is proportional"] = function()
 		near(UIMath.fraction(50, 100), 0.5, "metade")
 		near(UIMath.fraction(34, 100), 0.34, "34%")

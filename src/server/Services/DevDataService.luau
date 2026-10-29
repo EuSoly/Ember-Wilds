@@ -13,7 +13,11 @@
 -- - ServerStorage.DevResetProfile:Invoke(player) -> boolean: apaga o perfil de
 --   dev (store Dev_) e expulsa o jogador.
 -- - ServerStorage.DevCampfire:Invoke(player): fogueira de teste 6 studs à frente
---   do personagem (para ver a luz do fogo de noite).
+--   do personagem (luz do fogo de noite; também esquenta: tag HeatSource).
+-- - ServerStorage.DevBar:Invoke(player, "Hunger", 0): grava uma barra (Health,
+--   Hunger, Cold, Thirst ou Heat), de 0 a 100, para testar a sobrevivência.
+-- - ServerStorage.DevArmor:Invoke(player, "helmet") -> boolean: veste uma
+--   armadura (category "armor"); nil tira.
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -21,6 +25,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local ArmorService = require(script.Parent.ArmorService)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
@@ -73,6 +78,19 @@ function DevDataService.Start(_self)
 
 	newCommand("DevResetProfile", function(player: Player): boolean
 		return DataService.resetForDev(player)
+	end)
+
+	local bars = { StatNames.Health, StatNames.Hunger, StatNames.Cold, StatNames.Thirst, StatNames.Heat }
+	newCommand("DevBar", function(player: Player, name: string, value: number)
+		if not table.find(bars, name) or type(value) ~= "number" or value ~= value then
+			warn(`[DevBar] use Health, Hunger, Cold, Thirst ou Heat com um número`)
+			return
+		end
+		player:SetAttribute(name, math.clamp(value, 0, StatNames.StatusMax))
+	end)
+
+	newCommand("DevArmor", function(player: Player, itemId: string?): boolean
+		return ArmorService.wear(player, itemId)
 	end)
 
 	newCommand("DevCampfire", function(player: Player)

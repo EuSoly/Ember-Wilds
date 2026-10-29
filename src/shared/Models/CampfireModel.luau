@@ -1,11 +1,15 @@
 --!strict
 -- Modelo provisório de fogueira (só peças): círculo de pedras, duas toras
 -- cruzadas e uma chama laranja com a luz de fogo (FireLight). Sem colisão.
--- Por enquanto só o comando de dev DevCampfire usa (para testar a noite); a
--- fogueira construível chega na fase de construção.
+-- Esquenta: sai com a tag HeatSource e o atributo HeatRadius (o
+-- SurvivalService sobe o frio de quem está perto). Por enquanto só o comando
+-- de dev DevCampfire usa; a fogueira construível chega na fase de construção
+-- e só precisa deste mesmo modelo (ou da mesma tag e atributo).
 -- Pivô no centro, no chão (Y = 0). (Só roda no Roblox: cria instâncias.)
 local FireLight = require("./FireLight")
 local Palette = require("../Palette")
+local StatNames = require("../StatNames")
+local SurvivalConfig = require("../SurvivalConfig")
 local Theme = require("../Theme")
 
 local CampfireModel = {}
@@ -79,6 +83,9 @@ function CampfireModel.build(): Model
 	model.PrimaryPart = flame
 	-- Pivô no chão, no centro (com PrimaryPart, o pivô do modelo é o dela).
 	flame.PivotOffset = flame.CFrame:Inverse()
+	model:AddTag(StatNames.HeatSourceTag)
+	model:SetAttribute(StatNames.HeatRadius, SurvivalConfig.CAMPFIRE_RADIUS)
+	model:SetAttribute(StatNames.BurnRadius, SurvivalConfig.BURN_RADIUS)
 	return model
 end
 

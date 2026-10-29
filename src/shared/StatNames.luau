@@ -8,6 +8,9 @@ return table.freeze({
 	Hunger = "Hunger",
 	Cold = "Cold",
 	Thirst = "Thirst",
+	-- Calor "por cima" do frio, 0 a StatusMax (0 = nenhum), atributo no Player
+	-- (SurvivalService). Enquanto > 0, o anel do frio mostra o calor.
+	Heat = "Heat",
 
 	-- Pontuação da vida atual e posição no ranking do servidor, atributos no Player
 	Score = "Score",
@@ -71,6 +74,19 @@ return table.freeze({
 	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a
 	-- tremulação em cada uma.
 	FireLightTag = "FireLight",
+
+	-- Sobrevivência (G1).
+	-- Id do item de armadura vestido (category "armor"), ou nil; atributo no
+	-- Player (escrito pelo ArmorService).
+	Armor = "Armor",
+	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
+	-- o frio sobe (SurvivalService).
+	HeatSourceTag = "HeatSource",
+	-- Raio do calor (studs), atributo no modelo com a tag HeatSource.
+	HeatRadius = "HeatRadius",
+	-- Raio (studs) em que a fonte de calor queima ("em cima do fogo"): passa
+	-- do frio cheio e enche o calor. Atributo no modelo com a tag HeatSource.
+	BurnRadius = "BurnRadius",
 
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)

@@ -14,6 +14,29 @@ diamond_pickaxe = {
 },
 ```
 
+### Comida e armadura
+
+Comida (`category = "food"`) precisa do bloco `food`, com o que repõe ao comer (0 a 100 cada):
+
+```lua
+berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255, food = { hunger = 10 } },
+```
+
+Armadura (`category = "armor"`) precisa do bloco `armor` (todos os campos opcionais):
+
+```lua
+wood_helmet = {
+	id = "wood_helmet", nameKey = "item.wood_helmet", category = "armor", tier = "wood", maxStack = 1,
+	armor = { defense = 0.2 },  -- corta 20% do dano de combate (máx. 0,9)
+},
+coat = {
+	id = "coat", nameKey = "item.coat", category = "armor", maxStack = 1,
+	armor = { coldFactor = 0.5 },  -- o frio cai na metade da velocidade (0 a 2; também hungerFactor, thirstFactor e heatFactor)
+},
+```
+
+Veja `sobrevivencia.md`.
+
 O `id` vai para o save do jogador, então **nunca renomeie um id já publicado**. Se precisar, crie um novo e faça uma migração.
 
 ## 2. O texto — `src/shared/Strings/ptBR.luau`
@@ -33,6 +56,7 @@ A validação (`src/shared/Defs/Validate.luau`) roda no boot do jogo e nos teste
 - `id` diferente da chave, ou com maiúsculas e símbolos;
 - `tier` que não existe em `Tiers`;
 - `maxStack` menor que 1 ou não inteiro;
+- comida sem `food`, armadura sem `armor`, ou esses blocos em outra categoria, ou valores fora da faixa;
 - `nameKey` (ou `rarityKey` de tier) sem texto em `Strings`.
 
 Se algo estiver errado, o jogo para no início com a lista de erros no Output, em vez de quebrar no meio da partida.

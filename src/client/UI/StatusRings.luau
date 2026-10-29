@@ -1,6 +1,8 @@
 --!strict
--- Os quatro anéis de status (vida, fome, frio, sede), lado a lado acima da hotbar.
+-- Os quatro anéis de status (vida, fome, temperatura, sede), lado a lado acima da hotbar.
 -- Lê os atributos do jogador; enquanto um atributo não existe, mostra o anel cheio.
+-- Temperatura: mostra o frio (azul); com calor (atributo Heat > 0) mostra o
+-- calor em laranja, pulsando com o calor alto e piscando com ele cheio.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -8,6 +10,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local UIMath = require(Shared:WaitForChild("UIMath"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 local StatusRing = require(script.Parent:WaitForChild("StatusRing"))
 
@@ -21,10 +24,39 @@ local RINGS = {
 	{ stat = StatNames.Thirst, color = Theme.status.thirst },
 }
 
+-- O anel do frio vira anel de temperatura (frio + calor por cima).
+local function temperatureProps(player: Player): { [string]: any }
+	local cold = Sources.attribute(player, StatNames.Cold, StatNames.StatusMax)
+	local heat = Sources.attribute(player, StatNames.Heat, 0)
+	local hot = vide.derive(function()
+		local _, isHot = UIMath.temperatureRing(cold(), heat())
+		return isHot
+	end)
+	local hotWarning = (1 - StatNames.WarningFraction) * StatNames.StatusMax
+	return {
+		value = function()
+			local value = UIMath.temperatureRing(cold(), heat())
+			return value
+		end,
+		color = function()
+			return if hot() then Theme.status.heat else Theme.status.cold
+		end,
+		warning = function()
+			return if hot() then heat() >= hotWarning else cold() < StatNames.WarningFraction * StatNames.StatusMax
+		end,
+		critical = function()
+			return if hot() then heat() >= StatNames.StatusMax else cold() <= 0
+		end,
+	}
+end
+
 local function StatusRings(): Frame
 	local player = Players.LocalPlayer
 	local rings = {}
 	for order, ring in RINGS do
+		local props: { [string]: any } = if ring.stat == StatNames.Cold
+			then temperatureProps(player)
+			else { value = Sources.attribute(player, ring.stat, StatNames.StatusMax), color = ring.color }
 		table.insert(
 			rings,
 			create("Frame")({
@@ -36,8 +68,10 @@ local function StatusRings(): Frame
 				create("UISizeConstraint")({ MinSize = Vector2.new(40, 40), MaxSize = Vector2.new(72, 72) }),
 				StatusRing({
 					name = "Ring",
-					value = Sources.attribute(player, ring.stat, StatNames.StatusMax),
-					color = ring.color,
+					value = props.value,
+					color = props.color,
+					warning = props.warning,
+					critical = props.critical,
 				}),
 			})
 		)

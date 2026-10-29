@@ -17,6 +17,15 @@ end
 -- UIGradient de corte seco no meio. Devolve a Rotation (graus) do gradiente de
 -- cada metade para mostrar o arco de `fraction`, começando no topo (12 h) e
 -- seguindo no sentido horário. A metade direita cobre 0..50% e a esquerda 50..100%.
+-- Anel de temperatura: com calor (> 0) mostra o calor em modo quente; senão,
+-- o frio. Devolve (valor 0..100, quente?).
+function UIMath.temperatureRing(cold: number, heat: number?): (number, boolean)
+	if type(heat) == "number" and heat > 0 then
+		return heat, true
+	end
+	return cold, false
+end
+
 function UIMath.ringRotations(fraction: number): (number, number)
 	local degrees = 360 * math.clamp(fraction, 0, 1)
 	local right = math.min(degrees, 180)

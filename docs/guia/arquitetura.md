@@ -131,6 +131,8 @@ Veja `telas.md`.
 
 O mapa é desenhado à mão no Studio (`Workspace.Map`, fora do Rojo) e o `MapService` espalha os recursos por zona com semente fixa (mesmas posições em toda partida). A geometria e o espalhador são puros e testados (`Shared/World`). A água deixa lento **dentro da simulação** (`Simulation/WaterSim.luau`, dos dois lados, como o `FacingSim`); o fôlego e o "na água" são atributos do Player (`WaterService`). Iluminação de dia e noite, bolha de ar, copas transparentes e aviso de borda são do cliente. Veja `mapa.md`.
 
+**Sobrevivência (G1):** o `SurvivalService` é o dono das barras (`Health`, `Hunger`, `Cold` + `Heat` por cima, `Thirst`); as regras são puras e testadas (`Shared/Survival`), os números ficam em `SurvivalConfig`. **Todo dano** passa por `CharacterService.hurt(character, quantidade, causa, tipo)` (`"combat"` sofre a defesa da armadura; `"survival"` não), e vida zerada chama `DeathService.kill` com a causa. Veja `sobrevivencia.md`.
+
 **Regra:** o `WaterSim` é o dono de `Humanoid.WalkSpeed` (escreve a cada passo da simulação). Qualquer outro modificador de velocidade no futuro (armas na mão, frio, montaria) tem de entrar **na simulação**, junto dele, senão é sobrescrito.
 
 ## Câmera

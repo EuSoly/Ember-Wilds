@@ -100,6 +100,11 @@ return table.freeze({
 	["death.cause.dev"] = "Teste",
 	["death.cause.fall"] = "Caiu do mapa",
 	["death.cause.unknown"] = "Desconhecida",
+	["death.cause.hunger"] = "Fome",
+	["death.cause.cold"] = "Frio",
+	["death.cause.thirst"] = "Sede",
+	["death.cause.drown"] = "Afogado",
+	["death.cause.heat"] = "Calor",
 
 	-- Kits iniciais
 	["kit.kit_starter"] = "Iniciante",

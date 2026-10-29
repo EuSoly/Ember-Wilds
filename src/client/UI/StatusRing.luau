@@ -1,5 +1,5 @@
 --!strict
--- Um anel de status (vida, fome, frio ou sede): uma barra contínua em volta,
+-- Um anel de status (vida, fome, temperatura ou sede): uma barra contínua em volta,
 -- que vai se fechando no sentido horário a partir do topo conforme o valor.
 -- Abaixo de 35% o anel pulsa; zerado, o trilho pisca.
 --
@@ -32,8 +32,12 @@ local HALF_MASK = NumberSequence.new({
 
 export type Props = {
 	value: () -> number, -- 0 a StatNames.StatusMax
-	color: Color3,
+	color: Color3 | () -> Color3, -- fixa ou reativa (o anel de temperatura troca de cor)
 	name: string,
+	-- Alerta (pulso) e crítico (trilho piscando). Padrão: abaixo de 35% / zerado.
+	-- O anel de temperatura em modo quente inverte (calor alto é o perigo).
+	warning: (() -> boolean)?,
+	critical: (() -> boolean)?,
 }
 
 local function disc(props: { [any]: any }): Frame
@@ -45,7 +49,7 @@ local function disc(props: { [any]: any }): Frame
 end
 
 -- Uma metade do arco. `side` = "Right" (0..50%) ou "Left" (50..100%).
-local function half(side: "Right" | "Left", color: Color3, rotation: () -> number): Frame
+local function half(side: "Right" | "Left", color: Color3 | () -> Color3, rotation: () -> number): Frame
 	local isRight = side == "Right"
 	-- Metade sem arco fica escondida: o corte do gradiente deixaria uma
 	-- linha de 1 px na emenda.
@@ -87,9 +91,15 @@ local function StatusRing(props: Props): Frame
 		return left
 	end)
 	local warning = vide.derive(function()
+		if props.warning then
+			return props.warning()
+		end
 		return fraction() < StatNames.WarningFraction
 	end)
 	local empty = vide.derive(function()
+		if props.critical then
+			return props.critical()
+		end
 		return fraction() <= 0
 	end)
 
