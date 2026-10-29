@@ -15,7 +15,9 @@ local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
+local SettingsButton = require(script.Parent:WaitForChild("SettingsButton"))
 local StatusRings = require(script.Parent:WaitForChild("StatusRings"))
+local Template = require(script.Parent.Parent:WaitForChild("UITemplates"):WaitForChild("Template"))
 
 local create = vide.create
 
@@ -25,6 +27,7 @@ local function App(): ScreenGui
 		ScorePill(),
 		Clock(),
 		Minimap(),
+		SettingsButton(),
 		Notifications.Component(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),
@@ -33,7 +36,7 @@ local function App(): ScreenGui
 		DragGhost(), -- por último: o item arrastado fica por cima de tudo
 	}
 
-	return create("ScreenGui")({
+	local hud = create("ScreenGui")({
 		Name = "Hud",
 		ResetOnSpawn = false, -- o HUD sobrevive ao respawn
 		-- Só jogando: no carregamento, menu e morte quem aparece são as telas.
@@ -46,6 +49,9 @@ local function App(): ScreenGui
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 		children,
 	}) :: ScreenGui
+	-- Mesmo "Tamanho da interface" (ui_scale) das telas de molde.
+	Template.bindUiScale(hud)
+	return hud
 end
 
 return App
