@@ -17,10 +17,8 @@ local TICK = 0.1 -- segundos (10 vezes por segundo)
 
 local WaterService = {}
 
-local function round1(value: number): number
-	return math.floor(value * 10 + 0.5) / 10
-end
-
+-- Grava o valor exato: arredondar a cada passo acumula erro (com passos de
+-- 0,25 a barra caía 0,3 por passo, ~18% rápido demais).
 local function setIfChanged(player: Player, name: string, value: any)
 	if player:GetAttribute(name) ~= value then
 		player:SetAttribute(name, value)
@@ -42,7 +40,7 @@ local function step(player: Player, dt: number)
 		then -StatNames.StatusMax / WorldConfig.OXYGEN_EMPTY_SECONDS
 		else StatNames.StatusMax / WorldConfig.OXYGEN_REFILL_SECONDS
 	oxygen = math.clamp(oxygen + rate * dt, 0, StatNames.StatusMax)
-	setIfChanged(player, StatNames.Oxygen, round1(oxygen))
+	setIfChanged(player, StatNames.Oxygen, oxygen)
 end
 
 local function setupPlayer(player: Player)

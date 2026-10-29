@@ -20,10 +20,8 @@ local CharacterService = require(script.Parent.CharacterService)
 
 local SurvivalService = {}
 
-local function round1(value: number): number
-	return math.floor(value * 10 + 0.5) / 10
-end
-
+-- Grava o valor exato: arredondar a cada passo acumula erro (com passos de
+-- 0,25 a barra caía 0,3 por passo, ~18% rápido demais).
 local function setIfChanged(player: Player, name: string, value: any)
 	if player:GetAttribute(name) ~= value then
 		player:SetAttribute(name, value)
@@ -41,10 +39,10 @@ local function readBars(player: Player): SurvivalRules.Bars
 end
 
 local function writeBars(player: Player, bars: SurvivalRules.Bars)
-	setIfChanged(player, StatNames.Health, round1(bars.health))
-	setIfChanged(player, StatNames.Hunger, round1(bars.hunger))
-	setIfChanged(player, StatNames.Cold, round1(bars.cold))
-	setIfChanged(player, StatNames.Thirst, round1(bars.thirst))
+	setIfChanged(player, StatNames.Health, bars.health)
+	setIfChanged(player, StatNames.Hunger, bars.hunger)
+	setIfChanged(player, StatNames.Cold, bars.cold)
+	setIfChanged(player, StatNames.Thirst, bars.thirst)
 end
 
 -- Raiz do personagem vivo do jogador (nil no menu, morto ou montando).
