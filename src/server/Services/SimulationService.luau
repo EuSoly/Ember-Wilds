@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local FacingSim = require(ReplicatedStorage.Shared.Simulation.FacingSim)
 local UseSim = require(ReplicatedStorage.Shared.Simulation.UseSim)
+local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 
 local SimulationService = {}
 
@@ -15,6 +16,7 @@ function SimulationService.Start(_self)
 	end
 	FacingSim.start(allPlayers)
 	UseSim.start(allPlayers)
+	WaterSim.start(allPlayers)
 end
 
 return SimulationService

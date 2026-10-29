@@ -181,6 +181,9 @@ function MapService.Init(_self)
 	readShapes(map:FindFirstChild("Water"), function(part, shape)
 		-- Dá para atravessar a água andando (a lentidão vem do WaterSim).
 		part.CanCollide = false
+		-- Opaca: água transparente é desenhada por cima das etiquetas (nome do
+		-- jogador, bolha de ar) e as deixa apagadas (visto no Studio em 29/10).
+		part.Transparency = 0
 		table.insert(blockers, shape)
 	end)
 	readShapes(map:FindFirstChild("NoSpawn"), function(part, shape)

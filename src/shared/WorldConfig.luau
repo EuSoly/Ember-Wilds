@@ -45,6 +45,9 @@ return table.freeze({
 	-- (o corpo do boneco tem 3 de largura).
 	MIN_PASSAGE = 5,
 
+	-- Velocidade normal de andar (studs/s), a do Humanoid; a água multiplica por
+	-- WATER_SPEED_FACTOR.
+	WALK_SPEED = 16,
 	-- Fração da velocidade normal dentro da água (Map/Water).
 	WATER_SPEED_FACTOR = 0.6,
 	-- Segundos na água para o fôlego ir de cheio a zero.

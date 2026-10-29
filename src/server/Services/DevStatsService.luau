@@ -41,11 +41,19 @@ local function setup(player: Player)
 	end)
 end
 
+-- Na água a sede enche (provisório até o sistema de sobrevivência da G1).
+local THIRST_IN_WATER = 5 -- por segundo
+
 local function tick()
 	for _, player in Players:GetPlayers() do
+		local inWater = player:GetAttribute(StatNames.InWater) == true
 		for _, name in DRAINING do
 			local value = (player:GetAttribute(name) :: number?) or StatNames.StatusMax
-			player:SetAttribute(name, if value <= 0 then StatNames.StatusMax else value - 1)
+			if inWater and name == StatNames.Thirst then
+				player:SetAttribute(name, math.min(value + THIRST_IN_WATER, StatNames.StatusMax))
+			else
+				player:SetAttribute(name, if value <= 0 then StatNames.StatusMax else value - 1)
+			end
 		end
 	end
 end
