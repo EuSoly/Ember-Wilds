@@ -4,8 +4,8 @@
 -- - Na água, o fôlego cai até zerar em WorldConfig.OXYGEN_EMPTY_SECONDS.
 -- - Fora, enche em WorldConfig.OXYGEN_REFILL_SECONDS.
 -- - Cada vida nova começa com o fôlego cheio.
--- O dano com o fôlego zerado (e a sede enchendo na água) é da fase de
--- sobrevivência (G1); no Studio o DevStatsService enche a sede como provisório.
+-- O dano com o fôlego zerado e a sede enchendo na água são do SurvivalService
+-- (que só lê InWater e Oxygen).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
