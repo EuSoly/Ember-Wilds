@@ -20,6 +20,13 @@ return table.freeze({
 	["tier.reidite"] = "Reidite",
 	["tier.emerald"] = "Esmeralda",
 
+	-- HUD
+	["hud.day"] = "Dia {day}",
+	["hud.points"] = "{points} pts",
+	["hud.rank"] = "#{rank}",
+	["hud.nightComing"] = "A noite está chegando",
+	["hud.backpack"] = "Mochila",
+
 	-- Itens
 	["item.wood"] = "Madeira",
 	["item.stone"] = "Pedra",
