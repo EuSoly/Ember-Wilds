@@ -61,9 +61,15 @@ local function apply(character: Model, item: Inventory.Slot?)
 		return
 	end
 
-	-- Alinha o Grip do cabo com o ponto de pegada da mão.
+	-- Posição: o ponto de pegada da mão. Orientação: a do personagem, não a da
+	-- mão. Sem a animação de "segurar Tool" o braço fica caído, e a ferramenta
+	-- apontaria para o chão; vista de cima ela precisa apontar para a frente,
+	-- com a cabeça deitada (Grip: Y = ao longo do cabo, X = lado da cabeça).
 	local handGrip = hand:FindFirstChild("RightGripAttachment")
-	local target = if handGrip and handGrip:IsA("Attachment") then handGrip.WorldCFrame else hand.CFrame
+	local gripPosition = if handGrip and handGrip:IsA("Attachment") then handGrip.WorldPosition else hand.Position
+	local root = character:FindFirstChild("HumanoidRootPart")
+	local facing = if root and root:IsA("BasePart") then root.CFrame else hand.CFrame
+	local target = CFrame.fromMatrix(gripPosition, facing.RightVector, facing.LookVector)
 	model:PivotTo(target * grip.CFrame:Inverse())
 
 	local weld = Instance.new("WeldConstraint")
