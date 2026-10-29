@@ -31,6 +31,7 @@ local Items: { [string]: ItemDef } = {
 		category = "tool",
 		tier = "wood",
 		maxStack = 1,
+		pickaxe = { level = 1 },
 	},
 	stone_pickaxe = {
 		id = "stone_pickaxe",
@@ -38,6 +39,7 @@ local Items: { [string]: ItemDef } = {
 		category = "tool",
 		tier = "stone",
 		maxStack = 1,
+		pickaxe = { level = 2 },
 	},
 	gold_pickaxe = {
 		id = "gold_pickaxe",
@@ -45,6 +47,7 @@ local Items: { [string]: ItemDef } = {
 		category = "tool",
 		tier = "gold",
 		maxStack = 1,
+		pickaxe = { level = 3 },
 	},
 }
 
@@ -54,6 +57,9 @@ for _, item in Items do
 	end
 	if item.armor ~= nil then
 		table.freeze(item.armor)
+	end
+	if item.pickaxe ~= nil then
+		table.freeze(item.pickaxe)
 	end
 	table.freeze(item)
 end

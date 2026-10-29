@@ -39,6 +39,9 @@ export type ItemDef = {
 	food: FoodEffect?,
 	-- Só (e obrigatório) para category "armor": proteção e modificadores das barras.
 	armor: ArmorStats?,
+	-- Só para category "tool": picareta de nível `level` (madeira 1, pedra 2,
+	-- ouro 3...). Rende `level - dureza + 1` por golpe (ver Gather/GatherRules).
+	pickaxe: { level: number }?,
 }
 
 -- Estilos de olho do boneco (a lista para validar fica em Validate.EYE_STYLES).
@@ -112,6 +115,22 @@ export type KitDef = {
 -- Recursos do mundo (árvore, rocha...). radius = espaço que ocupa (para o
 -- espalhador não encostar outro); collisionRadius = raio da única peça que
 -- bloqueia a passagem; variants = quantas variações de modelo existem.
+-- Coleta de um recurso (G2). Material escolhe som e lasquinhas (GatherFxConfig).
+export type GatherMaterial = "wood" | "stone" | "gold" | "leaves"
+export type GatherDef = {
+	item: string, -- id em Items que o golpe dá
+	points: number, -- pontos por unidade coletada
+	material: GatherMaterial,
+	-- Exatamente um dos dois: dureza (picareta mínima; 0 = mão) ou rendimento
+	-- fixo por golpe com qualquer coisa na mão (ex. frutinha).
+	hardness: number?,
+	fixedYield: number?,
+	-- Reserva; min diferente de max = cresce com o tamanho do exemplar (o menor = min).
+	amount: { min: number, max: number },
+	-- Volta `amount` a cada `every` segundos, até a reserva máxima.
+	regen: { amount: number, every: number },
+}
+
 export type ResourceDef = {
 	id: string,
 	nameKey: string,
@@ -131,6 +150,8 @@ export type ResourceDef = {
 	sizeJitter: number?,
 	-- true = só enfeite (pedras do chão): sem colisão e sem a tag Resource.
 	decorative: boolean?,
+	-- Coleta (obrigatória em todo recurso que não é enfeite; proibida nos enfeites).
+	gather: GatherDef?,
 }
 
 -- Zona de recursos desenhada no mapa (Map/Zones, atributo ZoneType).
