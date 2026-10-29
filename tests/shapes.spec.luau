@@ -78,4 +78,18 @@ return {
 		assert(not Shapes.anyContains(shapes, 50, 0), "não deveria estar em nenhuma")
 		assert(not Shapes.anyContains({}, 0, 0), "lista vazia não contém nada")
 	end,
+
+	["box yaw follows CFrame.Angles (sign check)"] = function()
+		-- Caixa comprida (20 × 2) girada +30°: o eixo X local aponta para (cos, -sin).
+		local yaw = math.rad(30)
+		local long = box(0, 0, 20, 2, yaw)
+		assert(
+			Shapes.contains(long, 8 * math.cos(yaw), -8 * math.sin(yaw)),
+			"ponto no eixo girado deveria estar dentro"
+		)
+		assert(
+			not Shapes.contains(long, 8 * math.cos(yaw), 8 * math.sin(yaw)),
+			"o giro com sinal trocado não pode valer"
+		)
+	end,
 }

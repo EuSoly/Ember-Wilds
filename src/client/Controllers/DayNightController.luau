@@ -76,8 +76,9 @@ end
 function DayNightController.Start(_self)
 	Lighting.ClockTime = LightingConfig.CLOCK_TIME
 	colorCorrection = ensure("ColorCorrectionEffect", "DayNight")
-	local foundAtmosphere = Lighting:FindFirstChildOfClass("Atmosphere")
-	atmosphere = foundAtmosphere
+	-- Usa a Atmosphere do place; sem nenhuma, cria uma (senão os valores de
+	-- névoa do LightingConfig não fariam nada).
+	atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or ensure("Atmosphere", "Atmosphere")
 
 	task.spawn(function()
 		local current: boolean? = nil

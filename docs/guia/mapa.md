@@ -54,6 +54,7 @@ Cada peça em `Map/Zones` precisa do atributo `ZoneType` com um destes valores:
 | `berry_field` | 8 arbustos de frutinha, 1 árvore, 3 pedras do chão |
 
 - Os números ficam em `src/shared/Defs/ResourceZones.luau`. Mudou um número, o mapa muda na próxima partida.
+- Densidade quebrada (ex. 0,3 de ouro) é sorteada: uma zona pequena pode ganhar 0 ou 1, em vez de nunca ter nenhum.
 - **Tipo de zona novo:** uma entrada em `ResourceZones.luau` (com as densidades) + o texto `zone.<id>` em `Strings/ptBR.luau`.
 - O espalhador sempre deixa **pelo menos 5 studs de vão** entre as partes sólidas de dois recursos, para dar para passar mesmo na floresta densa. Se a zona não tiver espaço para a densidade pedida, ele coloca o que couber (sem erro).
 - Zonas podem se sobrepor; recursos de uma não nascem em cima dos da outra.
@@ -87,9 +88,9 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 | `pebble_1` … `pebble_10` | pedras do chão (enfeite) |
 
 - **Trocar um modelo:** substitua o modelo com o mesmo nome. **Mais uma variação:** coloque `tree_4` (por exemplo) e suba o `variants` do recurso em `src/shared/Defs/Resources.luau`. Se faltar a variação pedida, o jogo usa a `_1`; se faltar o modelo inteiro, usa um provisório feito por código.
-- **Tamanho:** modele em qualquer escala. Cada recurso tem um **tamanho padrão** (`size`, a maior largura vista de cima, em studs) em `Defs/Resources.luau`, e o jogo redimensiona o modelo para ele. Cada exemplar ainda varia (`sizeJitter`: árvores, rochas, ouro e arbustos ±15%; pedras do chão ±40%) e sai **girado** aleatoriamente. Tamanho e giro dependem só da posição: o mapa continua igual em toda partida.
+- **Tamanho:** modele em qualquer escala. Cada recurso tem um **tamanho padrão** (`size`, a maior largura vista de cima, em studs) em `Defs/Resources.luau`, e o jogo redimensiona o modelo para ele. Cada exemplar ainda varia (`sizeJitter`: árvores, rochas, ouro e arbustos ±15%; pedras do chão ±40%) e sai **girado** aleatoriamente (o giro vem do sorteio do espalhador; nos recursos colocados à mão, é o giro do marcador). Tudo é sorteado com semente fixa: o mapa continua igual em toda partida.
 - **Altura das árvores:** a câmera fica a uns 30 studs de altura; árvores altas demais cobrem a tela. Hoje a árvore tem `size = 9` (fica com ~13 de altura).
-- **Colisão:** você não precisa fazer nada. O jogo deixa todas as peças do seu modelo sem colisão e cria uma peça invisível no pé (o tronco, nas árvores; a base nos outros). As pedras do chão não têm colisão nenhuma.
+- **Colisão:** você não precisa fazer nada. O jogo deixa todas as peças do seu modelo sem colisão e cria uma peça invisível no pé (o tronco, nas árvores; a base nos outros), com o raio `collisionRadius` de `Defs/Resources.luau`, que cresce e diminui junto com o exemplar. As pedras do chão não têm colisão nenhuma e podem ficar coladas nas rochas e árvores.
 - **Copa:** nas árvores, as peças acima de 40% da altura viram copa (ficam transparentes quando o boneco passa embaixo).
 - **Peças:** quanto menos peças por modelo, mais leve no celular (uma união ou MeshPart em vez de dezenas de Parts).
 - Outros modelos guardados: `ServerStorage.Assets.Future` (minério de diamante, para o inverno) e `ServerStorage.Assets.Unused`.
@@ -98,7 +99,7 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 
 ## Avisos no Output
 
-Ao dar Play, o servidor imprime quantos recursos montou e em quanto tempo, por exemplo `[MapService] 1119 recursos (2 à mão + 1117 espalhados) em 46 ms`. E avisa, com o caminho da peça:
+Ao dar Play, o servidor imprime quantos recursos montou e em quanto tempo, por exemplo `[MapService] 1599 recursos (2 à mão + 1597 espalhados) em 1421 ms` (com os modelos do Studio; redimensionar cada um é o que mais pesa). E avisa, com o caminho da peça:
 - forma não aceita ou inclinada;
 - `ZoneType` que não existe;
 - `ResourceId` que não existe.

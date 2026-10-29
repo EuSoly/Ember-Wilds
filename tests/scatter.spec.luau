@@ -75,6 +75,40 @@ return {
 		assert(differs, "os tamanhos deveriam variar")
 	end,
 
+	["decorative items only keep their own space"] = function()
+		local defs = {
+			big = { id = "big", nameKey = "x", radius = 4, collisionRadius = 3, variants = 1 },
+			deco = { id = "deco", nameKey = "x", radius = 1.5, collisionRadius = 0.4, variants = 1, decorative = true },
+		}
+		local list = Scatter.generate({
+			zones = {
+				{
+					shape = { kind = "box", cx = 0, cz = 0, sx = 60, sz = 60, yaw = 0 },
+					densities = { big = 20, deco = 300 },
+				},
+			},
+			blockers = {},
+			fixed = {},
+			resources = defs :: any,
+			seed = 7,
+			minPassage = 5,
+			maxAttemptsPerItem = 200,
+		})
+		-- Um enfeite pode chegar a 4 studs (o radius do grande) de um recurso sólido.
+		local closest = math.huge
+		for _, a in list do
+			if a.resourceId == "deco" then
+				for _, b in list do
+					if b.resourceId == "big" then
+						closest = math.min(closest, math.sqrt((a.x - b.x) ^ 2 + (a.z - b.z) ^ 2))
+					end
+				end
+			end
+		end
+		assert(closest >= 4 - 1e-9, `enfeite dentro do espaço do sólido: {closest}`)
+		assert(closest < 4 + 3 + 0.4 + 5, `enfeite ainda guardando o vão de passagem: {closest}`)
+	end,
+
 	["same seed gives identical lists"] = function()
 		local a = Scatter.generate(baseParams(20261029))
 		local b = Scatter.generate(baseParams(20261029))

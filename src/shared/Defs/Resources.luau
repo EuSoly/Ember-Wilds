@@ -39,9 +39,9 @@ end
 -- código (Models/ResourceModels). Ver docs/guia/mapa.md.
 local Resources: { [string]: ResourceDef } = {
 	tree = resource("tree", 5, 1.2, 3, { size = 9, sizeJitter = 0.15 }),
-	rock = resource("rock", 4, 2.6, 3, { size = 7, sizeJitter = 0.15 }),
-	gold_vein = resource("gold_vein", 4, 2.6, 1, { size = 7, sizeJitter = 0.15 }),
-	berry_bush = resource("berry_bush", 3, 1.8, 1, { size = 5, sizeJitter = 0.15 }),
+	rock = resource("rock", 4, 3, 3, { size = 7, sizeJitter = 0.15 }),
+	gold_vein = resource("gold_vein", 4, 3, 1, { size = 7, sizeJitter = 0.15 }),
+	berry_bush = resource("berry_bush", 3, 2, 1, { size = 5, sizeJitter = 0.15 }),
 	-- Pedras do chão: só enfeite, espalhadas junto com os recursos.
 	pebble = resource("pebble", 1.5, 0.4, 10, { size = 1.8, sizeJitter = 0.4, decorative = true }),
 }

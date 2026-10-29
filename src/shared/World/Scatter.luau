@@ -55,10 +55,20 @@ local function addToGrid(grid: Grid, placed: Placed)
 	table.insert(cell, placed)
 end
 
+-- Raio da peça de colisão no maior tamanho que o exemplar pode ter (a
+-- colisão cresce junto com o modelo: ver Scatter.sizeFactor).
+local function maxCollision(def: ResourceDef): number
+	return def.collisionRadius * (1 + (def.sizeJitter or 0))
+end
+
 -- Distância mínima entre os centros de dois recursos: um não invade o espaço
 -- do outro (radius) e entre as peças de colisão sobra um vão para passar.
+-- Enfeite (decorative) não tem colisão: só respeita o espaço, sem o vão.
 local function minDistance(a: ResourceDef, b: ResourceDef, minPassage: number): number
-	return math.max(a.radius, b.radius, a.collisionRadius + b.collisionRadius + minPassage)
+	if a.decorative or b.decorative then
+		return math.max(a.radius, b.radius)
+	end
+	return math.max(a.radius, b.radius, maxCollision(a) + maxCollision(b) + minPassage)
 end
 
 local function hasRoom(grid: Grid, reach: number, x: number, z: number, def: ResourceDef, minPassage: number): boolean
@@ -160,7 +170,13 @@ function Scatter.generate(params: Params): { Placement }
 
 		for _, resourceId in sortedResourceIds(zone.densities, resources) do
 			local def = resources[resourceId]
-			local target = math.floor(area * math.max(zone.densities[resourceId], 0) / DENSITY_AREA)
+			-- Parte quebrada sorteada (0,3 de ouro numa zona pequena ainda pode dar 1):
+			-- com floor, densidades baixas nunca apareceriam em zonas pequenas.
+			local exact = area * math.max(zone.densities[resourceId], 0) / DENSITY_AREA
+			local target = math.floor(exact)
+			if rng:nextNumber() < exact - target then
+				target += 1
+			end
 			local placed = 0
 			local failures = 0
 			-- Depois de maxAttempts falhas seguidas a zona está cheia para este

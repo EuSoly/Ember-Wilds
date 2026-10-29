@@ -109,8 +109,9 @@ local function connectDevFreecam()
 	if not RunService:IsStudio() then
 		return
 	end
-	UserInputService.InputBegan:Connect(function(input: InputObject)
-		if input.KeyCode ~= Enum.KeyCode.P then
+	UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean)
+		-- gameProcessed: um "P" maiúsculo digitado no chat não liga a câmera livre.
+		if gameProcessed or input.KeyCode ~= Enum.KeyCode.P then
 			return
 		end
 		if

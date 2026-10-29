@@ -55,7 +55,7 @@ Uma pasta `Workspace.Map` feita no Studio, com subpastas de nome combinado:
 | Pasta | O que vai dentro | Como o jogo usa |
 |---|---|---|
 | `Map/Ground` | o chão (Parts/WedgeParts planos, topo em Y = 0), por bioma | só visual/colisão |
-| `Map/Water` | córregos e lago (Parts finas, topo um pouco abaixo de Y = 0) | quem está dentro conta como "na água" |
+| `Map/Water` | córregos e lago (Parts finas, topo **um pouco acima** de Y = 0, sempre opacas — transparentes apagavam as etiquetas; decidido na implementação) | quem está dentro conta como "na água" |
 | `Map/NoSpawn` | Parts invisíveis cobrindo caminhos e clareiras | o espalhador não põe recurso ali |
 | `Map/Zones` | Parts invisíveis com o atributo `ZoneType` (ex. `"forest_dense"`) | o espalhador preenche cada uma conforme `Defs/ResourceZones` |
 | `Map/Resources` | modelos/marcadores colocados à mão com o atributo `ResourceId` (ex. `"gold_vein"`) | viram recurso igual aos espalhados |

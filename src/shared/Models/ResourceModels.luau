@@ -1,22 +1,21 @@
 --!strict
--- Modelos provisórios dos recursos do mundo (low-poly, só peças), montados
--- pelo MapService em Workspace.Resources. Quando os modelos de verdade
--- chegarem, só este arquivo muda (como o ToolModel).
+-- Modelos dos recursos do mundo, montados pelo MapService em Workspace.Resources.
+-- 1. Se existe um modelo do Studio em ServerStorage.Assets.Resources com o nome
+--    "<id>_<variação>" (ou "<id>_1"), ele é clonado, redimensionado para
+--    Defs.Resources.size × a variação do exemplar, e ganha uma peça de colisão
+--    invisível no pé (tronco/base). Todas as peças do modelo viram enfeite.
+-- 2. Senão, entra o modelo provisório feito por código (abaixo).
 --
 -- Padrão de todo recurso:
--- - pivô no centro da base, no chão (Y = 0): quem monta só faz
+-- - pivô no chão (Y = 0), sem giro: quem monta só faz
 --   model:PivotTo(CFrame.new(x, 0, z) * CFrame.Angles(0, yaw, 0));
--- - no máximo 6 peças, todas ancoradas, CanTouch = false;
--- - UMA peça sólida (a PrimaryPart: tronco ou base) com raio = collisionRadius
---   de Defs.Resources; o resto não colide nem é atingido por raycast;
--- - CastShadow só no topo (copa/pedra de cima), para a sombra ficar leve;
+-- - UMA peça sólida (a PrimaryPart) com raio = collisionRadius × variação;
+--   enfeites (decorative, ex. pedras do chão) não têm colisão;
 -- - copas das árvores com a tag Occluder (ficam transparentes sobre o boneco);
--- - atributo ResourceId e tag Resource no modelo (a fase de coleta usa);
+-- - atributo ResourceId; tag Resource (menos nos enfeites);
 -- - ModelStreamingMode = Atomic (chega inteiro ao cliente).
--- As variações (1..variants) mudam tamanho e forma de leve, sem sorteio: o
--- mesmo id e variação dão sempre o mesmo modelo.
 -- Medidas na escala do boneco (corpo de 3,6 studs de largura e ~2 de altura).
--- (Só roda no Roblox: cria instâncias.)
+-- (Só roda no Roblox, e o build só no servidor: lê o ServerStorage.)
 local ServerStorage = game:GetService("ServerStorage")
 
 local Defs = require("../Defs")
@@ -228,10 +227,14 @@ local function findTemplate(resourceId: string, variant: number): Model?
 		return nil
 	end
 	local template = folder:FindFirstChild(`{resourceId}_{variant}`) or folder:FindFirstChild(`{resourceId}_1`)
-	if template and template:IsA("Model") then
-		return template
+	if template == nil then
+		return nil
 	end
-	return nil
+	if not template:IsA("Model") then
+		warn(`[ResourceModels] {template:GetFullName()} precisa ser um Model; usando o provisório`)
+		return nil
+	end
+	return template
 end
 
 -- Meia altura de uma peça no eixo Y do mundo (considera o giro dela).
@@ -300,7 +303,8 @@ local function fromTemplate(template: Model, def: Types.ResourceDef, scale: numb
 		primary = newPart("Anchor", Enum.PartType.Block, Vector3.one * 0.2, ground, STONE)
 		primary.Transparency = 1
 	else
-		local r = def.collisionRadius
+		-- A colisão cresce junto com o exemplar (o espalhador conta com isso).
+		local r = def.collisionRadius * scale
 		primary = solid(
 			newPart(
 				"Collision",

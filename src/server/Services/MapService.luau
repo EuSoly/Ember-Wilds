@@ -146,8 +146,9 @@ local function buildResources(placements: { Scatter.Placement }, folder: Folder)
 end
 
 -- Um SpawnLocation no centro da floresta, a menos que o mapa já tenha o seu.
-local function ensureSpawn(map: Instance?)
-	if map and map:FindFirstChildWhichIsA("SpawnLocation", true) then
+local function ensureSpawn()
+	-- Qualquer SpawnLocation no Workspace conta (ex. um que veio do template do place).
+	if Workspace:FindFirstChildWhichIsA("SpawnLocation", true) then
 		return
 	end
 	local spawn = Instance.new("SpawnLocation")
@@ -172,7 +173,7 @@ end
 function MapService.Init(_self)
 	local map = Workspace:FindFirstChild(MAP_NAME)
 	hasMap = map ~= nil
-	ensureSpawn(map)
+	ensureSpawn()
 	if map == nil then
 		return
 	end
