@@ -246,6 +246,37 @@ function SerdesFunctions.WriteEVENT_SelectSlot(Value: number): ()
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
 end
 
+function SerdesFunctions.WriteEVENT_SetSetting(Value: { Id: string, Number: number?, Flag: boolean?, Choice: string? }): ()
+	-- Allocate BLOCK: 5 bytes
+	local BLOCK_START = Allocate(5)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 6)
+	local Length = #Value.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Number ~= nil and 1 or 0)
+	if Value.Number ~= nil then
+		-- Allocate BLOCK: 8 bytes
+		local BLOCK_START = Allocate(8)
+		buffer.writef64(SendBuffer, BLOCK_START + 0, Value.Number)
+	end
+	buffer.writeu8(SendBuffer, BLOCK_START + 3, Value.Flag ~= nil and 1 or 0)
+	if Value.Flag ~= nil then
+		-- Allocate BLOCK: 1 bytes
+		local BLOCK_START = Allocate(1)
+		buffer.writeu8(SendBuffer, BLOCK_START + 0, Value.Flag and 1 or 0)
+	end
+	buffer.writeu8(SendBuffer, BLOCK_START + 4, Value.Choice ~= nil and 1 or 0)
+	if Value.Choice ~= nil then
+		-- Allocate BLOCK: 1 bytes
+		local BLOCK_START = Allocate(1)
+		local Length = #Value.Choice
+		buffer.writeu8(SendBuffer, BLOCK_START + 0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Value.Choice, Length)
+	end
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -265,6 +296,9 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	SelectSlot = {
+		Fire = NOOP
+	},
+	SetSetting = {
 		Fire = NOOP
 	},
 	})
@@ -419,6 +453,11 @@ local Returns = table.freeze({
 	SelectSlot = {
 		Fire = function(Value: number): ()
 			SerdesFunctions.WriteEVENT_SelectSlot(Value)
+		end
+	},
+	SetSetting = {
+		Fire = function(Value: { Id: string, Number: number?, Flag: boolean?, Choice: string? }): ()
+			SerdesFunctions.WriteEVENT_SetSetting(Value)
 		end
 	},
 })

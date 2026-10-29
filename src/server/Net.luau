@@ -164,6 +164,7 @@ local SerdesThread: thread?
 Queue.Reliable[3] = table.create(256)
 Queue.Reliable[4] = table.create(256)
 Queue.Reliable[5] = table.create(256)
+Queue.Reliable[6] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -236,6 +237,35 @@ function SerdesFunctions.ReadEVENT_SelectSlot(): (number)
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_SetSetting(): ({ Id: string, Number: number?, Flag: boolean?, Choice: string? })
+	-- Read BLOCK: 4 bytes
+	local BLOCK_START = Read(4)
+	local Value = {} :: any
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Id < 1 then error(`Expected length of "Value.Id" to be larger than or equal to 1, got {#Value.Id} instead.`) end
+	if #Value.Id > 32 then error(`Expected length of "Value.Id" to be smaller than or equal to  32, got {#Value.Id} instead.`) end
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1 then
+		-- Read BLOCK: 8 bytes
+		local BLOCK_START = Read(8)
+		Value.Number = buffer.readf64(RecieveBuffer, BLOCK_START + 0)
+	end
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 2) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		Value.Flag = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	end
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 3) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		Value.Choice = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Value.Choice < 1 then error(`Expected length of "Value.Choice" to be larger than or equal to 1, got {#Value.Choice} instead.`) end
+		if #Value.Choice > 16 then error(`Expected length of "Value.Choice" to be smaller than or equal to  16, got {#Value.Choice} instead.`) end
+	end
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -264,6 +294,9 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	SelectSlot = {
+		On = NOOP
+	},
+	SetSetting = {
 		On = NOOP
 	},
 	})
@@ -357,6 +390,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"SelectSlot\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[5], {Player, Value} :: {any})
+			end
+		elseif Index == 6 then
+			local Value: { Id: string, Number: number?, Flag: boolean?, Choice: string? } = SerdesFunctions.ReadEVENT_SetSetting()
+			if Events.Reliable[6] ~= nil then
+				task.spawn(Events.Reliable[6], Player, Value)
+			else
+				if #Queue.Reliable[6] > 256 then
+					warn("[Blink]: Event queue of \"SetSetting\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[6], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -559,6 +602,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[5] == Listener then
 					Events.Reliable[5] = nil
+				end
+			end
+		end
+	},
+	SetSetting = {
+		On = function(Listener: (Player: Player, Value: { Id: string, Number: number?, Flag: boolean?, Choice: string? }) -> ()): () -> ()
+			Events.Reliable[6] = Listener
+			for Index, Arguments in Queue.Reliable[6] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[6] = {}
+			return function (): ()
+				if Events.Reliable[6] == Listener then
+					Events.Reliable[6] = nil
 				end
 			end
 		end

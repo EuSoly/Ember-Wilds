@@ -2,7 +2,8 @@
 -- SÓ PARA DESENVOLVIMENTO (roda apenas no Studio).
 -- Comandos para testar o boneco (use na barra de comandos do Studio, lado servidor):
 -- - ServerStorage.DevHurt:Invoke(player, 10): dano no jogador (careta + flash).
--- - ServerStorage.DevCosmetic:Invoke(player, "body_ember") -> boolean: troca a skin.
+-- - ServerStorage.DevCosmetic:Invoke(player, "body_ember") -> boolean: troca a skin
+--   (só se o jogador a possui: antes, ServerStorage.DevGrantCosmetic do DevDataService).
 -- - ServerStorage.DevCrowd:Invoke(30) -> number: cria 30 bonecos de teste andando
 --   em círculo, batendo, trocando o item na mão e levando dano (0 = só apaga).
 --   São criados no servidor para testar o caminho real de replicação.

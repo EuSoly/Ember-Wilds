@@ -104,7 +104,7 @@ local function loadProfile(player: Player)
 	local migrated, reason = Migrations.run(profile.Data, Migrations.STEPS, DataConfig.SCHEMA_VERSION)
 	if not migrated then
 		warn(`[DataService] perfil de {player.UserId} não migrou: {reason}`)
-		endedByUs[player] = true
+		-- OnSessionEnd ainda não foi ligado: fechar aqui não expulsa como "sessão tomada".
 		profile:EndSession()
 		kickIfPresent(player, "data.newerVersion")
 		return
