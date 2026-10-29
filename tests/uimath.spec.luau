@@ -14,23 +14,31 @@ local function expectStick(dx: number, dy: number, x: number, y: number, active:
 end
 
 return {
-	["filled count proportional"] = function()
-		assert(UIMath.filledCount(50, 100, 20) == 10, "metade")
-		assert(UIMath.filledCount(34, 100, 20) == 7, "34%")
+	["fraction is proportional"] = function()
+		near(UIMath.fraction(50, 100), 0.5, "metade")
+		near(UIMath.fraction(34, 100), 0.34, "34%")
 	end,
 
-	["filled count clamps out of range"] = function()
-		assert(UIMath.filledCount(150, 100, 20) == 20, "acima do máximo")
-		assert(UIMath.filledCount(-10, 100, 20) == 0, "negativo")
+	["fraction clamps out of range"] = function()
+		near(UIMath.fraction(150, 100), 1, "acima do máximo")
+		near(UIMath.fraction(-10, 100), 0, "negativo")
 	end,
 
-	["filled count treats NaN as empty"] = function()
-		assert(UIMath.filledCount(0 / 0, 100, 20) == 0, "NaN")
+	["fraction treats NaN as empty"] = function()
+		near(UIMath.fraction(0 / 0, 100), 0, "NaN")
 	end,
 
-	["segment angles start at the top"] = function()
-		near(UIMath.segmentAngle(1, 20), -math.pi / 2, "segmento 1")
-		near(UIMath.segmentAngle(6, 20), 0, "segmento 6")
+	["ring rotations reveal the arc clockwise"] = function()
+		local function expectRing(f: number, right: number, left: number)
+			local r, l = UIMath.ringRotations(f)
+			near(r, right, `fração {f} metade direita`)
+			near(l, left, `fração {f} metade esquerda`)
+		end
+		expectRing(0, 0, 180) -- vazio
+		expectRing(0.25, 90, 180) -- até as 3 h
+		expectRing(0.5, 180, 180) -- metade direita cheia
+		expectRing(0.75, 180, 270) -- até as 9 h
+		expectRing(1, 180, 360) -- cheio
 	end,
 
 	["stick gives unit direction"] = function()
