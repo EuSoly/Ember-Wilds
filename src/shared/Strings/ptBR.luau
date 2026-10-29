@@ -36,4 +36,9 @@ return table.freeze({
 	["item.wood_pickaxe"] = "Picareta de Madeira",
 	["item.stone_pickaxe"] = "Picareta de Pedra",
 	["item.gold_pickaxe"] = "Picareta de Ouro",
+
+	-- Cosméticos
+	["cosmeticSlot.body"] = "Corpo",
+	["cosmetic.body_default"] = "Clássico",
+	["cosmetic.body_ember"] = "Brasa",
 })

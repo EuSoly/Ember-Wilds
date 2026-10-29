@@ -14,6 +14,35 @@ local function alwaysHas(_key: string): boolean
 	return true
 end
 
+-- Defs falsas com cosméticos e expressões válidos; cada teste estraga um campo.
+local function validLookDefs(): any
+	return {
+		Tiers = {},
+		Items = {},
+		CosmeticSlots = { body = { id = "body", nameKey = "cosmeticSlot.body", default = "body_default" } },
+		Cosmetics = {
+			body_default = {
+				id = "body_default",
+				nameKey = "cosmetic.body_default",
+				slot = "body",
+				body = { bodyColor = "#DDF3F8", outlineColor = "#1F6F7A" },
+			},
+		},
+		Expressions = {
+			neutral = { id = "neutral", priority = 0, eyes = "open", trigger = "always" },
+			blink = {
+				id = "blink",
+				priority = 10,
+				eyes = "closed",
+				trigger = "periodic",
+				duration = 0.12,
+				intervalMin = 3,
+				intervalMax = 6,
+			},
+		},
+	}
+end
+
 local function containsError(errors: { string }, fragment: string): boolean
 	for _, message in errors do
 		if string.find(message, fragment, 1, true) then
@@ -120,5 +149,64 @@ return {
 			containsError(errors, "maxStack deve ser inteiro entre 1 e 65535"),
 			`esperava erro de maxStack: {table.concat(errors, "; ")}`
 		)
+	end,
+
+	["real cosmetics and expressions load"] = function()
+		assert(Defs.CosmeticSlots.body.default == "body_default", "padrão do slot body")
+		local ember = Defs.Cosmetics.body_ember.body
+		assert(ember ~= nil and ember.outlineColor == "#C9774A", "contorno da skin brasa")
+		assert(Defs.Expressions.hurt.priority == 100, "prioridade do dano")
+		assert(Defs.Expressions.blink.intervalMax == 6, "intervalo máximo do piscar")
+	end,
+
+	["valid fake look defs give no errors"] = function()
+		local errors = Validate.all(validLookDefs(), alwaysHas)
+		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["cosmetic with unknown slot is an error"] = function()
+		local defs = validLookDefs()
+		defs.Cosmetics.hat_red = { id = "hat_red", nameKey = "cosmetic.hat_red", slot = "hat" }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(
+			containsError(errors, "não existe em CosmeticSlots"),
+			`faltou erro de slot: {table.concat(errors, "; ")}`
+		)
+	end,
+
+	["body cosmetic with bad color is an error"] = function()
+		local defs = validLookDefs()
+		defs.Cosmetics.body_default.body.bodyColor = "azul"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "bodyColor"), `faltou erro de cor: {table.concat(errors, "; ")}`)
+	end,
+
+	["slot default must exist and match the slot"] = function()
+		local defs = validLookDefs()
+		defs.CosmeticSlots.body.default = "body_missing"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "default"), `faltou erro de padrão: {table.concat(errors, "; ")}`)
+	end,
+
+	["expression with unknown eye style is an error"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.blink.eyes = "wink"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "eyes"), `faltou erro de olho: {table.concat(errors, "; ")}`)
+	end,
+
+	["periodic expression needs a valid interval"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.blink.intervalMin = 5
+		defs.Expressions.blink.intervalMax = 2
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "intervalMax"), `faltou erro de intervalo: {table.concat(errors, "; ")}`)
+	end,
+
+	["exactly one always expression"] = function()
+		local defs = validLookDefs()
+		defs.Expressions.calm = { id = "calm", priority = 1, eyes = "open", trigger = "always" }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "always"), `faltou erro de always: {table.concat(errors, "; ")}`)
 	end,
 }

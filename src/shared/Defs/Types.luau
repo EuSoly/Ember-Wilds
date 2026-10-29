@@ -23,9 +23,50 @@ export type ItemDef = {
 	bagSlots: number?,
 }
 
+-- Estilos de olho do boneco (a lista para validar fica em Validate.EYE_STYLES).
+export type EyeStyle = "open" | "closed" | "squeeze"
+
+-- Como uma expressão fica ativa: sempre (a base), de tempos em tempos,
+-- quando um evento acontece (ex. dano) ou enquanto um atributo passa de um limiar.
+export type ExpressionTrigger = "always" | "periodic" | "event" | "condition"
+
+export type ExpressionDef = {
+	id: string,
+	priority: number, -- maior ganha
+	eyes: EyeStyle,
+	trigger: ExpressionTrigger,
+	duration: number?, -- segundos; obrigatório em "periodic" e "event"
+	intervalMin: number?, -- "periodic": intervalo sorteado entre min e max
+	intervalMax: number?,
+	event: string?, -- "event": nome do evento (ex. "hurt")
+	condition: { attribute: string, below: number?, above: number? }?, -- "condition"
+	flash: { color: string, duration: number }?, -- pisca o corpo nessa cor
+}
+
+-- Cores de uma skin de corpo. handColor ausente = cor do corpo; eyeColor ausente = preto.
+export type BodyLook = { bodyColor: string, outlineColor: string, handColor: string?, eyeColor: string? }
+
+export type CosmeticSlotDef = {
+	id: string,
+	nameKey: string,
+	default: string, -- id em Cosmetics usado por quem não equipou nada
+}
+
+export type CosmeticDef = {
+	id: string,
+	nameKey: string,
+	slot: string, -- id em CosmeticSlots
+	body: BodyLook?, -- dados do slot "body"
+}
+
+-- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
+-- CosmeticSlots/Cosmetics/Expressions para os testes poderem validar só Tiers/Items.
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
+	CosmeticSlots: { [string]: CosmeticSlotDef },
+	Cosmetics: { [string]: CosmeticDef },
+	Expressions: { [string]: ExpressionDef },
 }
 
 return nil
