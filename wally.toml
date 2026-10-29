@@ -6,3 +6,6 @@ realm = "shared"
 
 [dependencies]
 Vide = "centau/vide@0.4.1"
+
+[server-dependencies]
+ProfileStore = "lm-loleris/profilestore@1.0.3"
