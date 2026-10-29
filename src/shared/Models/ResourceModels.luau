@@ -218,9 +218,13 @@ function ResourceModels.build(resourceId: string, variant: number): Model?
 	model:SetAttribute(StatNames.ResourceId, resourceId)
 	model:AddTag(StatNames.ResourceTag)
 
-	model.PrimaryPart = builder(model, def.collisionRadius, v)
-	-- Pivô no centro da base, no chão.
-	model.WorldPivot = CFrame.identity
+	local primary = builder(model, def.collisionRadius, v)
+	model.PrimaryPart = primary
+	-- Pivô no centro da base, no chão, sem giro. Com PrimaryPart, o pivô do
+	-- modelo é o da PrimaryPart (WorldPivot não vale): sem este ajuste o pivô
+	-- herdaria o giro do tronco (cilindro deitado + UPRIGHT) e o PivotTo
+	-- derrubaria a árvore.
+	primary.PivotOffset = primary.CFrame:Inverse()
 	return model
 end
 

@@ -77,7 +77,8 @@ function CampfireModel.build(): Model
 	FireLight.attach(flame)
 
 	model.PrimaryPart = flame
-	model.WorldPivot = CFrame.identity
+	-- Pivô no chão, no centro (com PrimaryPart, o pivô do modelo é o dela).
+	flame.PivotOffset = flame.CFrame:Inverse()
 	return model
 end
 
