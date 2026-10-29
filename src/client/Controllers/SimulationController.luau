@@ -4,15 +4,19 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local FacingSim = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Simulation"):WaitForChild("FacingSim"))
+local Simulation = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Simulation")
+local FacingSim = require(Simulation:WaitForChild("FacingSim"))
+local UseSim = require(Simulation:WaitForChild("UseSim"))
 
 local SimulationController = {}
 
 function SimulationController.Start(_self)
 	local localPlayer = Players.LocalPlayer
-	FacingSim.start(function()
+	local function onlyMe()
 		return { localPlayer }
-	end)
+	end
+	FacingSim.start(onlyMe)
+	UseSim.start(onlyMe)
 end
 
 return SimulationController

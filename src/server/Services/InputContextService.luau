@@ -5,8 +5,7 @@
 -- InputAction, e o InputContext tem de estar dentro do Player. O servidor cria
 -- a estrutura; o cliente só alimenta os valores.
 --
--- Ações: mira (Aim) e seleção de slot (Slot1 … Slot10). Bater, mochila etc.
--- entram neste mesmo contexto.
+-- Ações: mira (Aim), bater (Use), mochila (Backpack) e seleção de slot (Slot1 … Slot10).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -60,6 +59,23 @@ local function createContext(player: Player)
 	binding.Name = InputNames.AimBinding
 	binding.Type = Enum.InputBindingType.Scriptable
 	binding.Parent = aim
+
+	-- Bater (atacar/coletar): segurar o botão esquerdo no PC, ou segurar o
+	-- joystick direito no celular (binding scriptable, alimentado pelo AimStick).
+	local use = Instance.new("InputAction")
+	use.Name = InputNames.Use
+	use.Type = Enum.InputActionType.Bool
+	local mouseButton = Instance.new("InputBinding")
+	mouseButton.KeyCode = Enum.KeyCode.MouseLeftButton
+	mouseButton.Parent = use
+	local useBinding = Instance.new("InputBinding")
+	useBinding.Name = InputNames.UseBinding
+	useBinding.Type = Enum.InputBindingType.Scriptable
+	useBinding.Parent = use
+	use.Parent = context
+
+	-- Mochila (B no PC — o Tab é da lista de jogadores do Roblox; no celular o botão da tela chama direto).
+	keyAction(context, InputNames.Backpack, Enum.KeyCode.B)
 
 	-- Seleção de slot da hotbar pelas teclas 1 … 0 (no celular, toque no slot).
 	for index, name in InputNames.Slot do

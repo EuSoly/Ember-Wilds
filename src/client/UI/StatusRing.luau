@@ -47,8 +47,14 @@ end
 -- Uma metade do arco. `side` = "Right" (0..50%) ou "Left" (50..100%).
 local function half(side: "Right" | "Left", color: Color3, rotation: () -> number): Frame
 	local isRight = side == "Right"
+	-- Metade sem arco fica escondida: o corte do gradiente deixaria uma
+	-- linha de 1 px na emenda.
+	local visible = function()
+		return if isRight then rotation() > 0 else rotation() > 180
+	end
 	return create("Frame")({
 		Name = side,
+		Visible = visible,
 		BackgroundTransparency = 1,
 		ClipsDescendants = true,
 		Position = UDim2.fromScale(if isRight then 0.5 else 0, 0),
