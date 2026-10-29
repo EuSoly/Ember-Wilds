@@ -9,3 +9,15 @@ sourcemap.json
 
 # graphify (grafo gerado localmente)
 graphify-out/
+
+# Pacotes do Wally (instalados localmente)
+Packages/
+ServerPackages/
+
+# Saídas de build e cache de ferramentas
+build/
+.luau-lsp/
+*.rbxlx
+
+# Workspace das skills de execução
+.superpowers/
