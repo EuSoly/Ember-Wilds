@@ -1,7 +1,8 @@
 --!strict
 -- Avisos curtos no lado direito da tela ("A noite está chegando" etc.).
 -- No máximo 2 ao mesmo tempo; cada um some sozinho em 3 s.
--- Qualquer parte do cliente pode chamar Notifications.push("chave.do.texto").
+-- Qualquer parte do cliente pode chamar Notifications.push("chave.do.texto"),
+-- ou com valores no texto: Notifications.push("gather.needTool", { item = "..." }).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -28,13 +29,13 @@ local function remove(id: number)
 	visible(current)
 end
 
-function Notifications.push(textKey: string)
+function Notifications.push(textKey: string, vars: { [string]: string | number }?)
 	nextId += 1
 	local id = nextId
 	-- untrack: se push for chamado de dentro de um efeito, ler a lista não pode
 	-- fazer esse efeito depender dela (senão cada aviso dispara o efeito de novo).
 	local current = table.clone(vide.untrack(visible))
-	current[id] = Strings.get(textKey)
+	current[id] = if vars then Strings.format(textKey, vars) else Strings.get(textKey)
 
 	-- Passou do limite: sai o mais antigo.
 	local ids = {}
