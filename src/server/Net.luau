@@ -295,6 +295,40 @@ function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: n
 	buffer.writeu16(SendBuffer, BLOCK_START + 8, Value.Currency)
 end
 
+function SerdesFunctions.WriteEVENT_ResourceHit(Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }): ()
+	-- Allocate BLOCK: 18 bytes
+	local BLOCK_START = Allocate(18)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 0)
+	table.insert(SendInstances, Value.Resource or Null)
+	buffer.writef32(SendBuffer, BLOCK_START + 1, Value.X)
+	buffer.writef32(SendBuffer, BLOCK_START + 5, Value.Z)
+	buffer.writef32(SendBuffer, BLOCK_START + 9, Value.DirX)
+	buffer.writef32(SendBuffer, BLOCK_START + 13, Value.DirZ)
+	local Length = #Value.Material
+	buffer.writeu8(SendBuffer, BLOCK_START + 17, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Material, Length)
+end
+
+function SerdesFunctions.WriteEVENT_GatherNotice(Value: { Key: string, ItemId: string? }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 9)
+	local Length = #Value.Key
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Key, Length)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.ItemId ~= nil and 1 or 0)
+	if Value.ItemId ~= nil then
+		-- Allocate BLOCK: 1 bytes
+		local BLOCK_START = Allocate(1)
+		local Length = #Value.ItemId
+		buffer.writeu8(SendBuffer, BLOCK_START + 0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Value.ItemId, Length)
+	end
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -332,6 +366,18 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	LifeEnded = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	ResourceHit = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	GatherNotice = {
 		Fire = NOOP,
 		FireAll = NOOP,
 		FireList = NOOP,
@@ -715,6 +761,89 @@ local Returns = table.freeze({
 		FireExcept = function(Except: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_LifeEnded(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	ResourceHit = {
+		Fire = function(Player: Player, Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_ResourceHit(Value)
+			local Buffer = buffer.create(SendCursor)
+			buffer.copy(Buffer, 0, SendBuffer, 0, SendCursor)
+			Unreliable:FireClient(Player, Buffer, SendInstances)
+		end,
+		FireAll = function(Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_ResourceHit(Value)
+			local Buffer = buffer.create(SendCursor)
+			buffer.copy(Buffer, 0, SendBuffer, 0, SendCursor)
+			Unreliable:FireAllClients(Buffer, SendInstances)
+		end,
+		FireList = function(List: {Player}, Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_ResourceHit(Value)
+			local Buffer = buffer.create(SendCursor)
+			buffer.copy(Buffer, 0, SendBuffer, 0, SendCursor)
+			for _, Player in List do
+				Unreliable:FireClient(Player, Buffer, SendInstances)
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_ResourceHit(Value)
+			local Buffer = buffer.create(SendCursor)
+			buffer.copy(Buffer, 0, SendBuffer, 0, SendCursor)
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Unreliable:FireClient(Player, Buffer, SendInstances)
+			end
+		end,
+	},
+	GatherNotice = {
+		Fire = function(Player: Player, Value: { Key: string, ItemId: string? }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_GatherNotice(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Key: string, ItemId: string? }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_GatherNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Key: string, ItemId: string? }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_GatherNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Key: string, ItemId: string? }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_GatherNotice(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
 			for _, Player in Players:GetPlayers() do
 				if Player == Except then
