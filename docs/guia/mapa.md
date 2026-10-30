@@ -92,6 +92,7 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 - **Largura ou altura:** o `size` mede a largura (maior medida vista de cima), a não ser que o recurso tenha `sizeAxis = "height"`. As **árvores** usam a altura (`size = 14`): a câmera fica a uns 30 studs de altura, e copas com proporções diferentes não deixam nenhuma árvore minúscula. Rocha e ouro têm 9 de largura, arbusto 7.
 - **Enterrar:** `sink` diz quanto da altura fica abaixo do chão (as pedras do chão têm `sink = 0.5`, metade enterradas).
 - **Colisão:** você não precisa fazer nada. O jogo deixa todas as peças do seu modelo sem colisão e cria uma peça invisível no pé (o tronco, nas árvores; a base nos outros), com o raio `collisionRadius` de `Defs/Resources.luau`, que cresce e diminui junto com o exemplar. As pedras do chão não têm colisão nenhuma e podem ficar coladas nas rochas e árvores.
+- **Frutinhas:** peças chamadas `Berry` mostram quanto o recurso ainda tem (somem conforme é colhido e voltam quando regenera). O `berry_bush_1` tem 7. Veja `coleta.md`.
 - **Transparência:** a árvore inteira (copa e tronco) fica transparente quando o boneco passa embaixo ou atrás dela.
 - **Peças:** quanto menos peças por modelo, mais leve no celular (uma união ou MeshPart em vez de dezenas de Parts).
 - Outros modelos guardados: `ServerStorage.Assets.Future` (minério de diamante, para o inverno) e `ServerStorage.Assets.Unused`.

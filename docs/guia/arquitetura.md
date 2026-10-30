@@ -133,6 +133,8 @@ O mapa é desenhado à mão no Studio (`Workspace.Map`, fora do Rojo) e o `MapSe
 
 **Sobrevivência (G1):** o `SurvivalService` é o dono das barras (`Health`, `Hunger`, `Cold` + `Heat` por cima, `Thirst`); as regras são puras e testadas (`Shared/Survival`), os números ficam em `SurvivalConfig`. **Todo dano** passa por `CharacterService.hurt(character, quantidade, causa, tipo)` (`"combat"` sofre a defesa da armadura; `"survival"` não), e vida zerada chama `DeathService.kill` com a causa. Veja `sobrevivencia.md`.
 
+**Coleta (G2):** o `MapService` registra cada recurso montado no `ResourceService` (reserva nos atributos `Amount`/`AmountMax`, grade espacial, regeneração); o `GatherService` faz o golpe; o `ScoreService` é o dono de `Score` e `Rank`. O cliente só mostra: tranco, lasquinhas e som via `Net.ResourceHit`, avisos via `Net.GatherNotice`, frutinhas pelo atributo `Amount`. Veja `coleta.md`.
+
 **Regra:** o `WaterSim` é o dono de `Humanoid.WalkSpeed` (escreve a cada passo da simulação). Qualquer outro modificador de velocidade no futuro (armas na mão, frio, montaria) tem de entrar **na simulação**, junto dele, senão é sobrescrito.
 
 ## Câmera
