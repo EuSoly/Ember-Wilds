@@ -118,9 +118,23 @@ end
 local function validWorldDefs(): any
 	return {
 		Tiers = {},
-		Items = {},
+		Items = { wood = validItem("wood") },
 		Resources = {
-			tree = { id = "tree", nameKey = "resource.tree", radius = 5, collisionRadius = 1.2, variants = 3 },
+			tree = {
+				id = "tree",
+				nameKey = "resource.tree",
+				radius = 5,
+				collisionRadius = 1.2,
+				variants = 3,
+				gather = {
+					item = "wood",
+					points = 1,
+					material = "wood",
+					hardness = 0,
+					amount = { min = 20, max = 80 },
+					regen = { amount = 2, every = 10 },
+				},
+			},
 		},
 		ResourceZones = {
 			forest_dense = { id = "forest_dense", nameKey = "zone.forest_dense", densities = { tree = 14 } },
@@ -588,6 +602,114 @@ return {
 	["valid fake world defs give no errors"] = function()
 		local errors = Validate.all(validWorldDefs(), alwaysHas)
 		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
+	end,
+
+	["gather numbers match the design"] = function()
+		local function expectGather(
+			id: string,
+			item: string,
+			points: number,
+			material: string,
+			minA: number,
+			maxA: number,
+			regenA: number,
+			every: number
+		)
+			local g = Defs.Resources[id].gather
+			assert(g ~= nil, `{id} sem gather`)
+			assert(g.item == item and g.points == points and g.material == material, `{id}: item/pontos/material`)
+			assert(g.amount.min == minA and g.amount.max == maxA, `{id}: reserva {g.amount.min}-{g.amount.max}`)
+			assert(g.regen.amount == regenA and g.regen.every == every, `{id}: regeneração`)
+		end
+		expectGather("tree", "wood", 1, "wood", 20, 80, 2, 10)
+		expectGather("rock", "stone", 2, "stone", 40, 40, 2, 10)
+		expectGather("gold_vein", "gold", 3, "gold", 20, 20, 1, 10)
+		expectGather("berry_bush", "berry", 2, "leaves", 7, 7, 1, 10)
+		assert(Defs.Resources.tree.gather.hardness == 0, "árvore dureza 0")
+		assert(Defs.Resources.rock.gather.hardness == 1, "rocha dureza 1")
+		assert(Defs.Resources.gold_vein.gather.hardness == 2, "ouro dureza 2")
+		assert(Defs.Resources.berry_bush.gather.fixedYield == 1, "frutinha rende 1")
+		assert(Defs.Resources.pebble.gather == nil, "pedra do chão não coleta")
+		assert(Defs.Items.wood_pickaxe.pickaxe.level == 1, "picareta de madeira nível 1")
+		assert(Defs.Items.stone_pickaxe.pickaxe.level == 2, "picareta de pedra nível 2")
+		assert(Defs.Items.gold_pickaxe.pickaxe.level == 3, "picareta de ouro nível 3")
+	end,
+
+	["resource without gather is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.gather = nil
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "gather"), `faltou erro de gather: {table.concat(errors, "; ")}`)
+	end,
+
+	["decorative with gather is an error"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.decorative = true
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "gather"), `faltou erro de gather em enfeite: {table.concat(errors, "; ")}`)
+	end,
+
+	["gather needs hardness or fixed yield"] = function()
+		local none = validWorldDefs()
+		none.Resources.tree.gather.hardness = nil
+		assert(containsError(Validate.all(none, alwaysHas), "hardness"), "sem dureza nem fixo")
+		local both = validWorldDefs()
+		both.Resources.tree.gather.fixedYield = 1
+		assert(containsError(Validate.all(both, alwaysHas), "hardness"), "dureza e fixo juntos")
+	end,
+
+	["gather item must exist"] = function()
+		local defs = validWorldDefs()
+		defs.Resources.tree.gather.item = "unobtainium"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "unobtainium"), `faltou erro do item: {table.concat(errors, "; ")}`)
+	end,
+
+	["gather amounts must be valid"] = function()
+		local cases: { (any) -> () } = {
+			function(g)
+				g.amount.min = 0
+			end,
+			function(g)
+				g.amount.max = 10
+			end,
+			function(g)
+				g.regen.every = 0
+			end,
+			function(g)
+				g.regen.amount = 0
+			end,
+			function(g)
+				g.material = "lava"
+			end,
+			function(g)
+				g.points = -1
+			end,
+		}
+		for i, spoil in cases do
+			local defs = validWorldDefs()
+			spoil(defs.Resources.tree.gather)
+			local errors = Validate.all(defs, alwaysHas)
+			assert(containsError(errors, "gather"), `caso {i} sem erro: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["pickaxe only on tools"] = function()
+		local item = validItem("wood")
+		item.pickaxe = { level = 1 }
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(containsError(errors, "pickaxe"), `faltou erro de pickaxe: {table.concat(errors, "; ")}`)
+	end,
+
+	["pickaxe level must be a positive integer"] = function()
+		for _, level in { 0, 1.5, -2 } do
+			local item = validItem("pick")
+			item.category = "tool"
+			item.maxStack = 1
+			item.pickaxe = { level = level }
+			local errors = Validate.all({ Tiers = {}, Items = { pick = item } }, alwaysHas)
+			assert(containsError(errors, "pickaxe"), `nível {level} sem erro: {table.concat(errors, "; ")}`)
+		end
 	end,
 
 	["zone with unknown resource is an error"] = function()

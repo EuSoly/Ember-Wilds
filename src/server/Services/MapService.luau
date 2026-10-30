@@ -20,6 +20,7 @@ local MapShapes = require(ReplicatedStorage.Shared.World.MapShapes)
 local Scatter = require(ReplicatedStorage.Shared.World.Scatter)
 local Shapes = require(ReplicatedStorage.Shared.World.Shapes)
 local ResourceModels = require(ReplicatedStorage.Shared.Models.ResourceModels)
+local ResourceService = require(script.Parent.ResourceService)
 
 local MAP_NAME = "Map"
 local RESOURCES_FOLDER = "Resources"
@@ -139,6 +140,10 @@ local function buildResources(placements: { Scatter.Placement }, folder: Folder)
 		if model then
 			model:PivotTo(CFrame.new(placement.x, 0, placement.z) * CFrame.Angles(0, placement.yaw, 0))
 			model.Parent = folder
+			if def then
+				-- Reserva e alvo do golpe de coleta.
+				ResourceService.register(model, def, placement.x, placement.z, scale)
+			end
 			built += 1
 		end
 	end

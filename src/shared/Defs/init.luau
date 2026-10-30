@@ -29,6 +29,8 @@ export type SettingDef = Types.SettingDef
 export type KitItem = Types.KitItem
 export type KitDef = Types.KitDef
 export type ResourceDef = Types.ResourceDef
+export type GatherDef = Types.GatherDef
+export type GatherMaterial = Types.GatherMaterial
 export type ResourceZoneDef = Types.ResourceZoneDef
 
 local Defs: Types.DefsTables = table.freeze({

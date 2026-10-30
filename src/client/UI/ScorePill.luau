@@ -23,10 +23,12 @@ local function ScorePill(): Frame
 		Size = UDim2.fromScale(0.2, 0.065),
 		create("UIAspectRatioConstraint")({ AspectRatio = 4 }),
 		text = function()
-			return `{Strings.format("hud.points", { points = score() })} · {Strings.format(
-				"hud.rank",
-				{ rank = rank() }
-			)}`
+			local points = Strings.format("hud.points", { points = score() })
+			-- Sem posição (ainda não calculada): só os pontos.
+			if rank() <= 0 then
+				return points
+			end
+			return `{points} · {Strings.format("hud.rank", { rank = rank() })}`
 		end,
 	})
 end

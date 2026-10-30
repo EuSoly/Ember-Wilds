@@ -61,7 +61,7 @@ O HUD **não lê o Workspace** (com streaming, partes do mapa podem nem estar ca
 - **Inventário** (`InventoryState`): cópia mantida pelo servidor via rede (Blink). A hotbar e a mochila só leem daqui; para mover ou selecionar, o cliente pede ao servidor. Veja `inventario.md`.
 - Exceção: o minimapa lê a posição do próprio personagem.
 
-As barras (`Health`, `Hunger`, `Cold`, `Thirst`) são do `SurvivalService` desde a G1 (veja `sobrevivencia.md`). Pontos e ranking ainda são falsos: o `DevStatsService` (só no Studio) põe 1240 pontos e #3 até a pontuação existir. Os itens vêm do `DevItemsService` (só no Studio) até a coleta existir.
+As barras (`Health`, `Hunger`, `Cold`, `Thirst`) são do `SurvivalService` desde a G1 (veja `sobrevivencia.md`). Pontos e ranking são de verdade desde a G2 (`ScoreService`: a coleta dá pontos; o ranking é a posição entre os jogadores vivos; veja `coleta.md`). Os itens iniciais de teste ainda vêm do `DevItemsService` (só no Studio).
 
 ## Controles por dispositivo
 

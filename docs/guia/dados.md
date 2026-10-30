@@ -200,7 +200,7 @@ Para testar os tetos: `DevScore` com 800000 e depois `DevEndLife` dá 300 (com a
 
 Para ver se salva de verdade: com o acesso às APIs ligado, mude moeda, estatística, configuração e skin, pare o teste e dê Play de novo. Confira com `DevProfile`.
 
-> O `DevStatsService` (valores falsos do HUD) põe 1240 pontos em todo jogador que entra. Por isso, sair sem usar `DevScore` também converte esses pontos (1 Golden Ember).
+> Desde a G2 os pontos são de verdade (coleta, `ScoreService`). Para testar a conversão sem coletar, use `DevScore`.
 
 ## GDPR (direito ao esquecimento)
 

@@ -106,6 +106,11 @@ return table.freeze({
 	["death.cause.drown"] = "Afogado",
 	["death.cause.heat"] = "Calor",
 
+	-- Coleta
+	["gather.empty"] = "Este recurso acabou",
+	["gather.needTool"] = "Precisa de {item}",
+	["gather.full"] = "Inventário cheio",
+
 	-- Kits iniciais
 	["kit.kit_starter"] = "Iniciante",
 	["kit.kit_explorer"] = "Explorador",

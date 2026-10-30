@@ -37,6 +37,8 @@ coat = {
 
 Veja `sobrevivencia.md`.
 
+Picareta (`category = "tool"`) ganha `pickaxe = { level = n }`: quanto maior o nível, mais pega por golpe e mais duros os recursos que ela coleta. Veja `coleta.md`.
+
 O `id` vai para o save do jogador, então **nunca renomeie um id já publicado**. Se precisar, crie um novo e faça uma migração.
 
 ## 2. O texto — `src/shared/Strings/ptBR.luau`

@@ -381,6 +381,65 @@ local function validateKits(errors: { string }, defs: Types.DefsTables, hasStrin
 	end
 end
 
+-- Coleta: obrigatória nos recursos (menos enfeites), com item existente,
+-- material conhecido, dureza OU rendimento fixo, reserva e regeneração válidas.
+local GATHER_MATERIALS = { "wood", "stone", "gold", "leaves" }
+local function validateGather(
+	errors: { string },
+	key: string,
+	resource: Types.ResourceDef,
+	items: { [string]: Types.ItemDef }
+)
+	local g = resource.gather
+	if resource.decorative then
+		if g ~= nil then
+			table.insert(errors, `Resource "{key}": enfeite (decorative) não pode ter gather`)
+		end
+		return
+	end
+	if type(g) ~= "table" then
+		table.insert(errors, `Resource "{key}": recurso precisa do bloco gather`)
+		return
+	end
+	local function bad(message: string)
+		table.insert(errors, `Resource "{key}": gather.{message}`)
+	end
+	if type(g.item) ~= "string" or items[g.item] == nil then
+		bad(`item "{g.item}" não existe em Items`)
+	end
+	if not isFiniteNumber(g.points) or g.points < 0 then
+		bad("points deve ser número maior ou igual a 0")
+	end
+	if not table.find(GATHER_MATERIALS, g.material) then
+		bad(`material deve ser um de: {table.concat(GATHER_MATERIALS, ", ")}`)
+	end
+	local hasHardness, hasFixed = g.hardness ~= nil, g.fixedYield ~= nil
+	if hasHardness == hasFixed then
+		bad("precisa de hardness OU fixedYield (exatamente um)")
+	elseif hasHardness and not isWholeNumber(g.hardness, 0) then
+		bad("hardness deve ser inteiro maior ou igual a 0")
+	elseif hasFixed and not isWholeNumber(g.fixedYield, 1) then
+		bad("fixedYield deve ser inteiro maior ou igual a 1")
+	end
+	local amount, regen = g.amount, g.regen
+	if
+		type(amount) ~= "table"
+		or not isWholeNumber(amount.min, 1)
+		or not isWholeNumber(amount.max, 1)
+		or amount.max < amount.min
+	then
+		bad("amount precisa de min e max inteiros, 1 <= min <= max")
+	end
+	if
+		type(regen) ~= "table"
+		or not isWholeNumber(regen.amount, 1)
+		or not isFiniteNumber(regen.every)
+		or regen.every <= 0
+	then
+		bad("regen precisa de amount inteiro >= 1 e every > 0")
+	end
+end
+
 local function validateResources(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	-- Tabelas ausentes (testes antigos) contam como vazias.
 	local resources: { [string]: Types.ResourceDef } = (defs :: any).Resources or {}
@@ -416,6 +475,7 @@ local function validateResources(errors: { string }, defs: Types.DefsTables, has
 		if resource.decorative ~= nil and type(resource.decorative) ~= "boolean" then
 			table.insert(errors, `Resource "{key}": decorative deve ser true ou false`)
 		end
+		validateGather(errors, key, resource, defs.Items)
 	end
 
 	if zones == nil then
@@ -544,6 +604,14 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		end
 		validateFood(errors, key, item)
 		validateArmor(errors, key, item)
+		local pickaxe = item.pickaxe
+		if pickaxe ~= nil then
+			if item.category ~= "tool" then
+				table.insert(errors, `Item "{key}": pickaxe só vale para category "tool"`)
+			elseif type(pickaxe) ~= "table" or not isWholeNumber(pickaxe.level, 1) then
+				table.insert(errors, `Item "{key}": pickaxe.level deve ser inteiro maior ou igual a 1`)
+			end
+		end
 	end
 
 	validateCosmetics(errors, defs, hasString)

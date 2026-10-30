@@ -1,6 +1,6 @@
 --!strict
 -- Nomes dos atributos que o servidor publica e a interface lê.
--- Quem escreve (SurvivalService na fase G1; DevStatsService no Studio por enquanto)
+-- Quem escreve (SurvivalService, ScoreService, ResourceService...)
 -- e quem lê (HUD) usam estes nomes, nunca strings soltas.
 return table.freeze({
 	-- Barras de status, 0 a StatusMax, atributos no Player
@@ -69,6 +69,10 @@ return table.freeze({
 	ZoneType = "ZoneType",
 	-- Tag (CollectionService) dos recursos montados (a fase de coleta usa).
 	ResourceTag = "Resource",
+	-- Reserva atual e máxima de um recurso coletável, atributos no modelo em
+	-- Workspace.Resources (ResourceService; o cliente mostra as frutinhas).
+	Amount = "Amount",
+	AmountMax = "AmountMax",
 	-- Tag das peças que ficam semitransparentes entre a câmera e o boneco (copas).
 	OccluderTag = "Occluder",
 	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a

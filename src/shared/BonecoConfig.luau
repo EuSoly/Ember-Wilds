@@ -41,7 +41,7 @@ return table.freeze({
 	SPEED_SMOOTHING = 12, -- 1/s; maior = troca parado↔andando mais rápido
 
 	-- Golpe e soco.
-	SWING_PERIOD = 0.45, -- segundos por golpe (ida + volta)
+	SWING_PERIOD = 0.5, -- segundos por golpe (ida + volta); igual ao GatherRules.HIT_INTERVAL
 	SWING_ATTACK_FRACTION = 0.35, -- fração do golpe gasta na ida (o resto é a volta)
 	SWING_REST_ANGLE = 35, -- graus; a ferramenta em repouso aponta para fora (direita)
 	SWING_ARC = 90, -- graus; quanto a mão da ferramenta gira no golpe

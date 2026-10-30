@@ -104,3 +104,33 @@ event LifeEnded {
 		Currency: u16
 	}
 }
+
+-- Coleta (G2). Um golpe acertou um recurso: vai para os jogadores perto, que
+-- mostram o tranco, as lasquinhas e o som. Resource pode chegar nil no cliente
+-- (fora do streaming). X/Z = ponto do golpe; DirX/DirZ = direção (unitária)
+-- do golpe no plano; Material = GatherDef.material.
+event ResourceHit {
+	From: Server,
+	Type: Unreliable,
+	Call: SingleAsync,
+	Data: struct {
+		Resource: Instance?,
+		X: f32,
+		Z: f32,
+		DirX: f32,
+		DirZ: f32,
+		Material: string(1..16)
+	}
+}
+
+-- Aviso da coleta para quem bateu (Key = chave de Strings; ItemId = item
+-- citado no texto, ex. a picareta que falta).
+event GatherNotice {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Key: string(1..48),
+		ItemId: string(1..32)?
+	}
+}

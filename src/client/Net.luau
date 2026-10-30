@@ -164,6 +164,8 @@ Queue.Reliable[0] = table.create(256)
 Queue.Reliable[1] = table.create(256)
 Queue.Reliable[2] = table.create(256)
 Queue.Reliable[8] = table.create(256)
+Queue.Unreliable[0] = table.create(256)
+Queue.Reliable[9] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
@@ -307,6 +309,47 @@ function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: numbe
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_ResourceHit(): ({ Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string })
+	-- Read BLOCK: 17 bytes
+	local BLOCK_START = Read(17)
+	local Value = {} :: any
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value.Resource = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Resource) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Resource)} instead.`) end
+	end
+	Value.X = buffer.readf32(RecieveBuffer, BLOCK_START + 0)
+	Value.Z = buffer.readf32(RecieveBuffer, BLOCK_START + 4)
+	Value.DirX = buffer.readf32(RecieveBuffer, BLOCK_START + 8)
+	Value.DirZ = buffer.readf32(RecieveBuffer, BLOCK_START + 12)
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 16)
+	Value.Material = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Material < 1 then error(`Expected length of "Value.Material" to be larger than or equal to 1, got {#Value.Material} instead.`) end
+	if #Value.Material > 16 then error(`Expected length of "Value.Material" to be smaller than or equal to  16, got {#Value.Material} instead.`) end
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_GatherNotice(): ({ Key: string, ItemId: string? })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Key = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Key < 1 then error(`Expected length of "Value.Key" to be larger than or equal to 1, got {#Value.Key} instead.`) end
+	if #Value.Key > 48 then error(`Expected length of "Value.Key" to be smaller than or equal to  48, got {#Value.Key} instead.`) end
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		Value.ItemId = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Value.ItemId < 1 then error(`Expected length of "Value.ItemId" to be larger than or equal to 1, got {#Value.ItemId} instead.`) end
+		if #Value.ItemId > 32 then error(`Expected length of "Value.ItemId" to be smaller than or equal to  32, got {#Value.ItemId} instead.`) end
+	end
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -335,6 +378,12 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	LifeEnded = {
+		On = NOOP
+	},
+	ResourceHit = {
+		On = NOOP
+	},
+	GatherNotice = {
 		On = NOOP
 	},
 	})
@@ -419,6 +468,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				end
 				table.insert(Queue.Reliable[8], {Value} :: {any})
 			end
+		elseif Index == 9 then
+			local Value: { Key: string, ItemId: string? } = SerdesFunctions.ReadEVENT_GatherNotice()
+			if Events.Reliable[9] ~= nil then
+				task.spawn(Events.Reliable[9], Value)
+			else
+				if #Queue.Reliable[9] > 256 then
+					warn("[Blink]: Event queue of \"GatherNotice\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[9], {Value} :: {any})
+			end
 		end
 	end
 end)
@@ -437,6 +496,12 @@ Unreliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 		-- Read BLOCK: 1 bytes
 		local BLOCK_START = Read(1)
 		local Index = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		if Index == 0 then
+			local Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string } = SerdesFunctions.ReadEVENT_ResourceHit()
+			if Events.Unreliable[0] ~= nil then
+				task.spawn(Events.Unreliable[0], Value)
+			end
+		end
 	end
 end)
 
@@ -521,6 +586,30 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[8] == Listener then
 					Events.Reliable[8] = nil
+				end
+			end
+		end
+	},
+	ResourceHit = {
+		On = function(Listener: (Value: { Resource: Instance?, X: number, Z: number, DirX: number, DirZ: number, Material: string }) -> ()): () -> ()
+			Events.Unreliable[0] = Listener
+			return function (): ()
+				if Events.Unreliable[0] == Listener then
+					Events.Unreliable[0] = nil
+				end
+			end
+		end
+	},
+	GatherNotice = {
+		On = function(Listener: (Value: { Key: string, ItemId: string? }) -> ()): () -> ()
+			Events.Reliable[9] = Listener
+			for Index, Arguments in Queue.Reliable[9] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[9] = {}
+			return function (): ()
+				if Events.Reliable[9] == Listener then
+					Events.Reliable[9] = nil
 				end
 			end
 		end
