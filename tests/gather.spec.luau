@@ -72,6 +72,13 @@ return {
 		eq(GatherRules.pickTarget({}, 0, 0, 2.5), nil, "sem candidato")
 	end,
 
+	["hits keep the arm rhythm"] = function()
+		-- Golpe previsto para 1,0 e conferido em 1,06: o próximo é 1,5 (não 1,56).
+		eq(GatherRules.nextHit(1.0, 1.06), 1.5, "segue o compasso")
+		eq(GatherRules.nextHit(nil, 3), 3.5, "primeiro golpe")
+		eq(GatherRules.nextHit(1.0, 2.0), 2.5, "soltou e apertou de novo: recomeça")
+	end,
+
 	["hit rhythm and reach match the design"] = function()
 		eq(GatherRules.HIT_INTERVAL, 0.5, "2 golpes por segundo")
 		eq(GatherRules.HIT_REACH, 3.5, "alcance")

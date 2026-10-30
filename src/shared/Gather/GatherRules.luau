@@ -12,6 +12,17 @@ GatherRules.HIT_INTERVAL = 0.5 -- segundos entre golpes (2 por segundo)
 GatherRules.HIT_REACH = 3.5 -- studs da raiz até o centro do golpe, na direção do olhar
 GatherRules.HIT_RADIUS = 2.5 -- raio do círculo do golpe
 
+-- Instante do próximo golpe, depois de um golpe dado em `now`. Segurando, conta
+-- a partir do golpe previsto (`due`), não de quando o laço conferiu: assim o
+-- golpe não escorrega e cai junto com o braço do boneco (que bate a cada
+-- HIT_INTERVAL exatos). Se o previsto ficou para trás (soltou o botão), recomeça.
+function GatherRules.nextHit(due: number?, now: number): number
+	if due and now - due < GatherRules.HIT_INTERVAL then
+		return due + GatherRules.HIT_INTERVAL
+	end
+	return now + GatherRules.HIT_INTERVAL
+end
+
 -- Nível de coleta do que está na mão: picareta = o nível dela; mão ou qualquer
 -- outro item = 0.
 local function levelOf(tool: Types.ItemDef?): number

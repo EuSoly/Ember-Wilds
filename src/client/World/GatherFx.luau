@@ -25,16 +25,37 @@ local CHIP_HEIGHT = 2 -- altura (studs) de onde saem as lasquinhas
 
 local GatherFx = {}
 
--- Pivô original de cada modelo em tranco (golpes seguidos não acumulam).
-local shaking: { [Model]: { origin: CFrame, started: number, dir: Vector3 } } = {}
+-- Modelos em tranco: só as peças visuais se mexem. A PrimaryPart é a peça de
+-- colisão; movê-la no cliente empurraria o boneco previsto contra algo que o
+-- servidor nunca viu. `origins` guarda o CFrame original de cada peça, então
+-- golpes seguidos não acumulam deslocamento.
+type Shake = { parts: { BasePart }, origins: { CFrame }, started: number, dir: Vector3 }
+local shaking: { [Model]: Shake } = {}
 
 local function nudge(model: Model, dir: Vector3)
 	local current = shaking[model]
-	shaking[model] = {
-		origin = if current then current.origin else model:GetPivot(),
-		started = os.clock(),
-		dir = dir,
-	}
+	if current then
+		current.started = os.clock()
+		current.dir = dir
+		return
+	end
+	local parts: { BasePart } = {}
+	local origins: { CFrame } = {}
+	for _, descendant in model:GetDescendants() do
+		if descendant:IsA("BasePart") and descendant ~= model.PrimaryPart then
+			table.insert(parts, descendant)
+			table.insert(origins, descendant.CFrame)
+		end
+	end
+	shaking[model] = { parts = parts, origins = origins, started = os.clock(), dir = dir }
+end
+
+local function place(shake: Shake, offset: Vector3)
+	local cframes = table.create(#shake.origins)
+	for i, origin in shake.origins do
+		cframes[i] = origin + offset
+	end
+	Workspace:BulkMoveTo(shake.parts, cframes, Enum.BulkMoveMode.FireCFrameChanged)
 end
 
 local function stepShakes()
@@ -42,14 +63,12 @@ local function stepShakes()
 	for model, shake in shaking do
 		local t = (now - shake.started) / NUDGE_TIME
 		if t >= 1 or model.Parent == nil then
-			if model.Parent then
-				model:PivotTo(shake.origin)
-			end
+			-- Sempre volta ao lugar (o streaming pode devolver a mesma instância).
+			place(shake, Vector3.zero)
 			shaking[model] = nil
 		else
-			-- Sobe e desce (seno): sai do lugar e volta.
-			local offset = shake.dir * (NUDGE * math.sin(t * math.pi))
-			model:PivotTo(shake.origin + offset)
+			-- Sai do lugar e volta (seno).
+			place(shake, shake.dir * (NUDGE * math.sin(t * math.pi)))
 		end
 	end
 end

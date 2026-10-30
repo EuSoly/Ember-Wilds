@@ -133,7 +133,7 @@ local function step()
 		if def and def.food then
 			continue
 		end
-		nextHit[player] = now + GatherRules.HIT_INTERVAL
+		nextHit[player] = GatherRules.nextHit(nextHit[player], now)
 		local ok, err = pcall(hit :: any, player, character, root)
 		if not ok then
 			warn(`[GatherService] {player.Name}: {err}`)
