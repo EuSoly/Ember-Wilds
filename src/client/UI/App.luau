@@ -17,6 +17,7 @@ local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local RecipeBookButton = require(script.Parent:WaitForChild("RecipeBookButton"))
+local RotateButton = require(script.Parent:WaitForChild("RotateButton"))
 local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
 local SettingsButton = require(script.Parent:WaitForChild("SettingsButton"))
 local StatusRings = require(script.Parent:WaitForChild("StatusRings"))
@@ -37,6 +38,7 @@ local function App(): ScreenGui
 		ChestPanel(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),
+		RotateButton(),
 		Backpack.Button(),
 		Backpack.Panel(),
 		DragGhost(), -- por último: o item arrastado fica por cima de tudo

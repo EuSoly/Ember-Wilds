@@ -1,8 +1,9 @@
 --!strict
--- Fantasma da construção: com uma peça `placeable` na mão, mostra um bloco
--- translúcido na célula-alvo (a mesma que o servidor escolhe), verde se ela
--- parece livre e vermelha se não. É só uma dica: o servidor decide de verdade
--- (inclusive água, que o cliente não checa).
+-- Fantasma da construção livre: com uma peça `placeable` na mão, mostra um bloco
+-- translúcido no ponto à frente (o mesmo que o servidor escolhe), girado como a
+-- peça sairá (o giro vem de BuildRotation), verde se parece livre e vermelho se
+-- não. Uma faixa mais escura marca a "frente" da peça. É só uma dica: o servidor
+-- decide de verdade (inclusive água, que o cliente não checa).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10,36 +11,41 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local BuildRules = require(Shared:WaitForChild("Build"):WaitForChild("BuildRules"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local BuildRotation = require(script.Parent.Parent:WaitForChild("BuildRotation"))
 
 local THICKNESS = 0.3
 local TRANSPARENCY = 0.55
 -- O teste de "livre" varre recursos e peças; refaz só a cada tanto.
 local REFRESH = 0.15
--- Recursos além disto (studs, do centro da célula) nem são considerados.
+-- Recursos além disto (studs, do centro da peça) nem são considerados.
 local RESOURCE_RANGE = 12
 local RESOURCE_MAX_RADIUS = 4
+-- Faixa da frente: comprimento (fração do raio) e espessura, em studs.
+local FRONT_LENGTH = 0.5
+local FRONT_WIDTH = 0.4
 
 local BuildGhost = {}
 
-local function makeGhost(): Part
-	local ghost = Instance.new("Part")
-	ghost.Name = "BuildGhost"
-	ghost.Anchored = true
-	ghost.CanCollide = false
-	ghost.CanQuery = false
-	ghost.CanTouch = false
-	ghost.CastShadow = false
-	ghost.Material = Enum.Material.SmoothPlastic
-	ghost.Transparency = TRANSPARENCY
-	return ghost
+local function makePart(name: string): Part
+	local part = Instance.new("Part")
+	part.Name = name
+	part.Anchored = true
+	part.CanCollide = false
+	part.CanQuery = false
+	part.CanTouch = false
+	part.CastShadow = false
+	part.Material = Enum.Material.SmoothPlastic
+	part.Transparency = TRANSPARENCY
+	return part
 end
 
--- Tamanho em células se o item é uma peça colocável; nil se não é.
-local function sizeOfItem(itemId: unknown): number?
+-- Raio da peça se o item é uma peça colocável; nil se não é.
+local function radiusOfItem(itemId: unknown): number?
 	if typeof(itemId) ~= "string" then
 		return nil
 	end
@@ -48,8 +54,7 @@ local function sizeOfItem(itemId: unknown): number?
 		return nil
 	end
 	local structure = item.structure
-	-- Fantasma ainda na grade (até a tarefa 10): toda peça ocupa 1 célula.
-	return if structure then 1 else nil
+	return if structure then BuildRules.radiusOf(structure) else nil
 end
 
 local function pivotXZ(instance: Instance): (number?, number?)
@@ -70,44 +75,28 @@ local function extentOf(instance: Instance): number
 	return 0
 end
 
--- A célula (canto cx, cz, size×size) parece livre?
-local function looksFree(cx: number, cz: number, size: number): boolean
-	local cell = BuildRules.CELL
-	local half = size * cell / 2
-	local mine = {}
-	for _, key in BuildRules.cellsOf(cx, cz, size) do
-		mine[key] = true
-	end
+-- O círculo (centro px, pz; raio radius) parece livre?
+local function looksFree(px: number, pz: number, radius: number): boolean
 	-- Peças já colocadas: o pivô fica no centro da peça.
 	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
 		local x, z = pivotXZ(instance)
 		if x and z then
-			local otherSize = sizeOfItem(instance:GetAttribute(StatNames.StructureItem)) or 1
-			local otherHalf = otherSize * cell / 2
-			local ox, oz = BuildRules.cellOf(x - otherHalf + 0.01, z - otherHalf + 0.01)
-			for _, key in BuildRules.cellsOf(ox, oz, otherSize) do
-				if mine[key] then
-					return false
-				end
+			local otherRadius = radiusOfItem(instance:GetAttribute(StatNames.StructureItem)) or BuildRules.PIECE_RADIUS
+			if BuildRules.circlesOverlap(px, pz, radius, x, z, otherRadius) then
+				return false
 			end
 		end
 	end
 	-- Recursos: o raio de colisão que o servidor publica; sem ele, aproxima
 	-- pelo tamanho do modelo.
-	local centerX, centerZ = (cx * cell) + half, (cz * cell) + half
 	for _, instance in CollectionService:GetTagged(StatNames.ResourceTag) do
 		local x, z = pivotXZ(instance)
-		if
-			x
-			and z
-			and math.abs(x - centerX) <= half + RESOURCE_RANGE
-			and math.abs(z - centerZ) <= half + RESOURCE_RANGE
-		then
+		if x and z and math.abs(x - px) <= radius + RESOURCE_RANGE and math.abs(z - pz) <= radius + RESOURCE_RANGE then
 			local published = instance:GetAttribute(StatNames.ResourceRadius)
-			local radius = if typeof(published) == "number"
+			local resourceRadius = if typeof(published) == "number"
 				then published
 				else math.min(extentOf(instance), RESOURCE_MAX_RADIUS)
-			if BuildRules.touches(x, z, cx, cz, size, radius) then
+			if BuildRules.circlesOverlap(px, pz, radius, x, z, resourceRadius) then
 				return false
 			end
 		end
@@ -116,7 +105,9 @@ local function looksFree(cx: number, cz: number, size: number): boolean
 	for _, player in Players:GetPlayers() do
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 		if root and root:IsA("BasePart") then
-			if BuildRules.touches(root.Position.X, root.Position.Z, cx, cz, size, BuildRules.PLAYER_RADIUS) then
+			if
+				BuildRules.circlesOverlap(px, pz, radius, root.Position.X, root.Position.Z, BuildRules.PLAYER_RADIUS)
+			then
 				return false
 			end
 		end
@@ -125,7 +116,9 @@ local function looksFree(cx: number, cz: number, size: number): boolean
 end
 
 function BuildGhost.start()
-	local ghost = makeGhost()
+	local ghost = makePart("BuildGhost")
+	local front = makePart("Front")
+	front.Parent = ghost
 	local lastKey = ""
 	local lastCheck = 0
 	local free = false
@@ -135,8 +128,8 @@ function BuildGhost.start()
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		-- Polling de propósito: com Server Authority o AttributeChanged não
 		-- dispara no personagem previsto local.
-		local size = if character then sizeOfItem(character:GetAttribute(StatNames.Equipped)) else nil
-		if size == nil or root == nil or not root:IsA("BasePart") then
+		local radius = if character then radiusOfItem(character:GetAttribute(StatNames.Equipped)) else nil
+		if radius == nil or root == nil or not root:IsA("BasePart") then
 			ghost.Parent = nil
 			lastKey = ""
 			return
@@ -148,25 +141,29 @@ function BuildGhost.start()
 			return
 		end
 		flat = flat.Unit
-		local cx, cz = BuildRules.targetCell(root.Position.X, root.Position.Z, flat.X, flat.Z)
+		local px, pz = BuildRules.placePoint(root.Position.X, root.Position.Z, flat.X, flat.Z)
+		local steps = vide.untrack(BuildRotation.steps)
+		local yaw = BuildRules.facingYaw(px, pz, root.Position.X, root.Position.Z, steps)
 
-		local key = `{cx},{cz},{size}`
+		local key = `{math.floor(px * 4)},{math.floor(pz * 4)},{radius}`
 		local now = os.clock()
 		if key ~= lastKey or now - lastCheck >= REFRESH then
 			lastKey = key
 			lastCheck = now
-			free = looksFree(cx, cz, size)
+			free = looksFree(px, pz, radius)
 		end
 
-		local side = size * BuildRules.CELL
-		local half = side / 2
+		local side = radius * 2
+		local color = if free then Theme.ui.success else Theme.ui.danger
+		-- O topo do chão do mapa é Y = 0.
+		local cframe = CFrame.new(px, THICKNESS / 2, pz) * CFrame.Angles(0, math.rad(yaw), 0)
 		ghost.Size = Vector3.new(side, THICKNESS, side)
-		ghost.Color = if free then Theme.ui.success else Theme.ui.danger
-		ghost.Position = Vector3.new(
-			cx * BuildRules.CELL + half,
-			THICKNESS / 2, -- o topo do chão do mapa é Y = 0
-			cz * BuildRules.CELL + half
-		)
+		ghost.Color = color
+		ghost.CFrame = cframe
+		-- A frente é o -Z da peça (LookVector); a faixa fica rente à borda.
+		front.Size = Vector3.new(radius * FRONT_LENGTH, THICKNESS + 0.04, FRONT_WIDTH)
+		front.Color = color:Lerp(Color3.new(0, 0, 0), 0.5)
+		front.CFrame = cframe * CFrame.new(0, 0, -(radius - FRONT_WIDTH / 2))
 		-- Parte local: não replica.
 		ghost.Parent = Workspace
 	end)

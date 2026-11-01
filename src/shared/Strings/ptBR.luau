@@ -26,6 +26,7 @@ return table.freeze({
 	["hud.rank"] = "#{rank}",
 	["hud.nightComing"] = "A noite está chegando",
 	["hud.backpack"] = "Mochila",
+	["hud.rotate"] = "Girar",
 
 	-- Itens
 	["item.wood"] = "Madeira",
