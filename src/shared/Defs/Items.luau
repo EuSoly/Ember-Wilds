@@ -1,6 +1,7 @@
 --!strict
 -- Itens do jogo. Para adicionar um item: uma entrada aqui + o texto
 -- "item.<id>" em Strings/ptBR.luau. Veja docs/guia/adicionar-item.md.
+local SurvivalConfig = require("../SurvivalConfig")
 local Types = require("./Types")
 
 type ItemDef = Types.ItemDef
@@ -32,6 +33,7 @@ local Items: { [string]: ItemDef } = {
 		tier = "wood",
 		maxStack = 1,
 		pickaxe = { level = 1 },
+		structureDamage = 10,
 	},
 	stone_pickaxe = {
 		id = "stone_pickaxe",
@@ -40,6 +42,7 @@ local Items: { [string]: ItemDef } = {
 		tier = "stone",
 		maxStack = 1,
 		pickaxe = { level = 2 },
+		structureDamage = 15,
 	},
 	gold_pickaxe = {
 		id = "gold_pickaxe",
@@ -48,6 +51,7 @@ local Items: { [string]: ItemDef } = {
 		tier = "gold",
 		maxStack = 1,
 		pickaxe = { level = 3 },
+		structureDamage = 20,
 	},
 	diamond_pickaxe = {
 		id = "diamond_pickaxe",
@@ -56,6 +60,7 @@ local Items: { [string]: ItemDef } = {
 		tier = "diamond",
 		maxStack = 1,
 		pickaxe = { level = 4 },
+		structureDamage = 25,
 	},
 	amethyst_pickaxe = {
 		id = "amethyst_pickaxe",
@@ -64,6 +69,7 @@ local Items: { [string]: ItemDef } = {
 		tier = "amethyst",
 		maxStack = 1,
 		pickaxe = { level = 5 },
+		structureDamage = 30,
 	},
 	reidite_pickaxe = {
 		id = "reidite_pickaxe",
@@ -72,26 +78,57 @@ local Items: { [string]: ItemDef } = {
 		tier = "reidite",
 		maxStack = 1,
 		pickaxe = { level = 6 },
+		structureDamage = 35,
 	},
 	-- Armas craftáveis (o dano entra na fase de combate).
-	wood_sword = { id = "wood_sword", nameKey = "item.wood_sword", category = "weapon", tier = "wood", maxStack = 1 },
+	wood_sword = {
+		id = "wood_sword",
+		nameKey = "item.wood_sword",
+		category = "weapon",
+		tier = "wood",
+		maxStack = 1,
+		structureDamage = 5,
+	},
 	stone_sword = {
 		id = "stone_sword",
 		nameKey = "item.stone_sword",
 		category = "weapon",
 		tier = "stone",
 		maxStack = 1,
+		structureDamage = 7.5,
 	},
-	gold_sword = { id = "gold_sword", nameKey = "item.gold_sword", category = "weapon", tier = "gold", maxStack = 1 },
-	wood_spear = { id = "wood_spear", nameKey = "item.wood_spear", category = "weapon", tier = "wood", maxStack = 1 },
+	gold_sword = {
+		id = "gold_sword",
+		nameKey = "item.gold_sword",
+		category = "weapon",
+		tier = "gold",
+		maxStack = 1,
+		structureDamage = 10,
+	},
+	wood_spear = {
+		id = "wood_spear",
+		nameKey = "item.wood_spear",
+		category = "weapon",
+		tier = "wood",
+		maxStack = 1,
+		structureDamage = 5,
+	},
 	stone_spear = {
 		id = "stone_spear",
 		nameKey = "item.stone_spear",
 		category = "weapon",
 		tier = "stone",
 		maxStack = 1,
+		structureDamage = 7.5,
 	},
-	gold_spear = { id = "gold_spear", nameKey = "item.gold_spear", category = "weapon", tier = "gold", maxStack = 1 },
+	gold_spear = {
+		id = "gold_spear",
+		nameKey = "item.gold_spear",
+		category = "weapon",
+		tier = "gold",
+		maxStack = 1,
+		structureDamage = 10,
+	},
 	-- Proteção provisória, ajustada quando o combate for implementado.
 	wood_helmet = {
 		id = "wood_helmet",
@@ -124,34 +161,89 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		armor = { coldFactor = 0.7 },
 	},
-	-- Peças de base (colocação no mundo fica para a próxima fase).
-	workbench = { id = "workbench", nameKey = "item.workbench", category = "placeable", maxStack = 255 },
-	campfire = { id = "campfire", nameKey = "item.campfire", category = "placeable", maxStack = 255 },
-	big_campfire = { id = "big_campfire", nameKey = "item.big_campfire", category = "placeable", maxStack = 255 },
-	wood_wall = { id = "wood_wall", nameKey = "item.wood_wall", category = "placeable", tier = "wood", maxStack = 255 },
+	-- Peças de base: o bloco structure define a vida e o comportamento da peça colocada.
+	workbench = {
+		id = "workbench",
+		nameKey = "item.workbench",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "station", health = 300, station = "workbench" },
+	},
+	campfire = {
+		id = "campfire",
+		nameKey = "item.campfire",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "fire",
+			health = 150,
+			lifetime = 120,
+			heatRadius = SurvivalConfig.CAMPFIRE_RADIUS,
+			station = "fire",
+		},
+	},
+	big_campfire = {
+		id = "big_campfire",
+		nameKey = "item.big_campfire",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "fire", health = 300, lifetime = 360, heatRadius = 18, station = "fire" },
+	},
+	wood_wall = {
+		id = "wood_wall",
+		nameKey = "item.wood_wall",
+		category = "placeable",
+		tier = "wood",
+		maxStack = 255,
+		structure = { kind = "wall", health = 1000 },
+	},
 	stone_wall = {
 		id = "stone_wall",
 		nameKey = "item.stone_wall",
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
+		structure = { kind = "wall", health = 1500 },
 	},
-	gold_wall = { id = "gold_wall", nameKey = "item.gold_wall", category = "placeable", tier = "gold", maxStack = 255 },
-	wood_door = { id = "wood_door", nameKey = "item.wood_door", category = "placeable", tier = "wood", maxStack = 255 },
+	gold_wall = {
+		id = "gold_wall",
+		nameKey = "item.gold_wall",
+		category = "placeable",
+		tier = "gold",
+		maxStack = 255,
+		structure = { kind = "wall", health = 2000 },
+	},
+	wood_door = {
+		id = "wood_door",
+		nameKey = "item.wood_door",
+		category = "placeable",
+		tier = "wood",
+		maxStack = 255,
+		structure = { kind = "door", health = 1000 },
+	},
 	stone_door = {
 		id = "stone_door",
 		nameKey = "item.stone_door",
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
+		structure = { kind = "door", health = 1500 },
 	},
-	gold_door = { id = "gold_door", nameKey = "item.gold_door", category = "placeable", tier = "gold", maxStack = 255 },
+	gold_door = {
+		id = "gold_door",
+		nameKey = "item.gold_door",
+		category = "placeable",
+		tier = "gold",
+		maxStack = 255,
+		structure = { kind = "door", health = 2000 },
+	},
 	wood_spike = {
 		id = "wood_spike",
 		nameKey = "item.wood_spike",
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
+		structure = { kind = "spike", health = 150, spikeDamage = 10 },
 	},
 	stone_spike = {
 		id = "stone_spike",
@@ -159,6 +251,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
+		structure = { kind = "spike", health = 300, spikeDamage = 20 },
 	},
 	gold_spike = {
 		id = "gold_spike",
@@ -166,8 +259,15 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
+		structure = { kind = "spike", health = 600, spikeDamage = 30 },
 	},
-	chest = { id = "chest", nameKey = "item.chest", category = "placeable", maxStack = 255 },
+	chest = {
+		id = "chest",
+		nameKey = "item.chest",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "chest", health = 500 },
+	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
 	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3 },
 }
@@ -181,6 +281,9 @@ for _, item in Items do
 	end
 	if item.pickaxe ~= nil then
 		table.freeze(item.pickaxe)
+	end
+	if item.structure ~= nil then
+		table.freeze(item.structure)
 	end
 	table.freeze(item)
 end

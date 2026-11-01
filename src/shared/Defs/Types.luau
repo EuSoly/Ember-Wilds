@@ -27,6 +27,17 @@ export type ArmorStats = {
 	heatFactor: number?, -- multiplica quanto o calor sobe (proteções de calor, N4)
 }
 
+export type StructureKind = "wall" | "door" | "spike" | "station" | "chest" | "fire"
+export type StructureDef = {
+	kind: StructureKind,
+	health: number, -- vida máxima (> 0)
+	size: number?, -- células por lado; padrão 1 (só 1 nesta fase)
+	spikeDamage: number?, -- só kind "spike" (obrigatório nele)
+	lifetime: number?, -- segundos até sumir; só kind "fire" (obrigatório nele)
+	heatRadius: number?, -- studs; só kind "fire" (obrigatório nele)
+	station: CraftStation?, -- estação oferecida: "workbench" (kind station) ou "fire" (kind fire)
+}
+
 export type ItemDef = {
 	id: string,
 	nameKey: string,
@@ -44,6 +55,10 @@ export type ItemDef = {
 	pickaxe: { level: number }?,
 	-- Multiplicador de velocidade de criação (só category "misc").
 	craftSpeed: number?,
+	-- Só (e obrigatório) para category "placeable": como a peça age depois de colocada.
+	structure: StructureDef?,
+	-- Dano do golpe em peça de construção (> 0). Ausente = golpe de mão.
+	structureDamage: number?,
 }
 
 export type CraftStation = "workbench" | "fire"

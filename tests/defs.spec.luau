@@ -835,6 +835,84 @@ return {
 		end
 	end,
 
+	["structures match the design"] = function()
+		local I = Defs.Items
+		local function s(id: string): any
+			local item = I[id]
+			assert(item ~= nil and item.structure ~= nil, `{id} deveria ter structure`)
+			return item.structure
+		end
+		assert(s("stone_wall").kind == "wall" and s("stone_wall").health == 1500, "parede de pedra 1500")
+		assert(s("wood_wall").health == 1000 and s("gold_wall").health == 2000, "vida das paredes")
+		assert(
+			s("wood_door").kind == "door" and s("stone_door").health == 1500 and s("gold_door").health == 2000,
+			"portas"
+		)
+		assert(s("gold_spike").health == 600 and s("gold_spike").spikeDamage == 30, "espinho de ouro 600/30")
+		assert(s("wood_spike").health == 150 and s("wood_spike").spikeDamage == 10, "espinho de madeira")
+		assert(s("stone_spike").health == 300 and s("stone_spike").spikeDamage == 20, "espinho de pedra")
+		assert(s("campfire").kind == "fire" and s("campfire").health == 150, "fogueira 150")
+		assert(s("campfire").lifetime == 120 and s("campfire").heatRadius == 12, "fogueira 120 s e raio 12")
+		assert(s("campfire").station == "fire", "estação da fogueira")
+		assert(s("big_campfire").lifetime == 360 and s("big_campfire").health == 300, "fogueira grande 360 s")
+		assert(s("big_campfire").heatRadius == 18 and s("big_campfire").station == "fire", "fogueira grande")
+		assert(s("workbench").kind == "station" and s("workbench").station == "workbench", "bancada")
+		assert(s("workbench").health == 300, "vida da bancada")
+		assert(s("chest").kind == "chest" and s("chest").health == 500, "baú 500")
+		local damages = { wood = 10, stone = 15, gold = 20, diamond = 25, amethyst = 30, reidite = 35 }
+		for tier, damage in damages do
+			assert(I[tier .. "_pickaxe"].structureDamage == damage, `picareta {tier}`)
+		end
+		assert(I.wood_sword.structureDamage == 5 and I.stone_spear.structureDamage == 7.5, "dano de madeira e pedra")
+		assert(I.gold_sword.structureDamage == 10 and I.gold_spear.structureDamage == 10, "dano de ouro")
+	end,
+
+	["every placeable has a structure"] = function()
+		for id, item in Defs.Items do
+			assert((item.category == "placeable") == (item.structure ~= nil), `{id}: structure só em placeable`)
+		end
+	end,
+
+	["structure only on placeable"] = function()
+		local item = validItem("wood")
+		item.structure = { kind = "wall", health = 100 }
+		local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(containsError(errors, "structure"), `faltou erro de structure: {table.concat(errors, "; ")}`)
+		item.category = "placeable"
+		item.structure = nil
+		errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+		assert(containsError(errors, "structure"), `placeable sem structure: {table.concat(errors, "; ")}`)
+	end,
+
+	["structure with bad numbers is an error"] = function()
+		for index, structure in
+			{
+				{ kind = "wall", health = 0 },
+				{ kind = "spike", health = 100 },
+				{ kind = "fire", health = 100, heatRadius = 12 },
+				{ kind = "fire", health = 100, lifetime = 60 },
+				{ kind = "wall", health = 100, size = 0 },
+				{ kind = "station", health = 100, station = "forge" },
+				{ kind = "tower", health = 100 },
+			}
+		do
+			local item = validItem("wall")
+			item.category = "placeable"
+			item.structure = structure
+			local errors = Validate.all({ Tiers = {}, Items = { wall = item } }, alwaysHas)
+			assert(containsError(errors, "structure"), `caso {index} sem erro: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["structure damage must be positive"] = function()
+		for index, damage in { 0, -5, 0 / 0 } do
+			local item = validItem("pick")
+			item.structureDamage = damage
+			local errors = Validate.all({ Tiers = {}, Items = { pick = item } }, alwaysHas)
+			assert(containsError(errors, "structureDamage"), `caso {index} sem erro: {table.concat(errors, "; ")}`)
+		end
+	end,
+
 	["zone with unknown resource is an error"] = function()
 		local defs = validWorldDefs()
 		defs.ResourceZones.forest_dense.densities.cactus = 3
