@@ -142,6 +142,24 @@ local function validWorldDefs(): any
 	}
 end
 
+local function validRecipeDefs(): any
+	return {
+		Tiers = {},
+		Items = { wood = validItem("wood"), paper = validItem("paper") },
+		Recipes = {
+			paper = {
+				id = "paper",
+				result = "paper",
+				count = 1,
+				ingredients = { { id = "wood", count = 20 } },
+				time = 5,
+				station = "fire",
+				order = 1,
+			},
+		},
+	}
+end
+
 local function containsError(errors: { string }, fragment: string): boolean
 	for _, message in errors do
 		if string.find(message, fragment, 1, true) then
@@ -158,6 +176,111 @@ return {
 		assert(Defs.Tiers.reidite.rarityKey == "rarity.legendary", "reidite deveria ser lendário")
 		assert(Defs.Items.gold_pickaxe.tier == "gold", "picareta de ouro sem tier gold")
 		assert(Defs.Items.wood.tier == nil, "madeira (recurso) não tem tier")
+	end,
+
+	["recipes match the design"] = function()
+		local stonePickaxe = Defs.Recipes.stone_pickaxe
+		assert(
+			stonePickaxe.result == "stone_pickaxe" and stonePickaxe.count == 1 and stonePickaxe.time == 15,
+			"picareta de pedra confere"
+		)
+		assert(
+			stonePickaxe.station == "workbench" and #stonePickaxe.ingredients == 3,
+			"picareta de pedra usa bancada e três ingredientes"
+		)
+		local spike = Defs.Recipes.gold_spike
+		assert(spike.time == 20 and spike.station == "workbench", "espinho de ouro confere")
+		local paper = Defs.Recipes.paper
+		assert(paper.station == "fire" and paper.time == 5, "papel exige fogo e leva cinco segundos")
+		local book = Defs.Recipes.book
+		assert(
+			book.time == 30 and book.station == "workbench" and Defs.Items.book.craftSpeed == 3,
+			"livro provisório confere"
+		)
+		assert(
+			#book.ingredients == 2 and book.ingredients[1].id == "paper" and book.ingredients[2].id == "gold",
+			"livro provisório usa papel e ouro"
+		)
+		local workbench = Defs.Recipes.workbench
+		assert(workbench.station == nil and workbench.time == 10, "bancada é craftada sem estação em dez segundos")
+		assert(
+			#workbench.ingredients == 2
+				and workbench.ingredients[1].id == "wood"
+				and workbench.ingredients[1].count == 30
+				and workbench.ingredients[2].id == "stone"
+				and workbench.ingredients[2].count == 10,
+			"bancada exige 30 madeiras e 10 pedras"
+		)
+		local stoneWall = Defs.Recipes.stone_wall
+		assert(
+			#stoneWall.ingredients == 1 and stoneWall.ingredients[1].id == "stone",
+			"parede de pedra exige só pedra"
+		)
+	end,
+
+	["every recipe result and ingredient exists"] = function()
+		for id, recipe in Defs.Recipes do
+			assert(Defs.Items[recipe.result] ~= nil, `{id} resultado ausente`)
+			for _, part in recipe.ingredients do
+				assert(Defs.Items[part.id] ~= nil, `{id} ingrediente {part.id} ausente`)
+			end
+		end
+	end,
+
+	["recipe with unknown item is an error"] = function()
+		local defs = validRecipeDefs()
+		defs.Recipes.paper.result = "unknown"
+		defs.Recipes.paper.ingredients[1].id = "missing"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "unknown"))
+		assert(containsError(errors, "missing"))
+	end,
+
+	["recipe with bad numbers is an error"] = function()
+		local cases = {
+			function(defs)
+				defs.Recipes.paper.count = 0
+			end,
+			function(defs)
+				defs.Recipes.paper.time = 0
+			end,
+			function(defs)
+				defs.Recipes.paper.ingredients[1].count = 1.5
+			end,
+			function(defs)
+				defs.Recipes.paper.station = "forge"
+			end,
+			function(defs)
+				defs.Recipes.other = table.clone(defs.Recipes.paper)
+				defs.Recipes.other.id = "other"
+				defs.Recipes.other.order = 1
+			end,
+		}
+		for index, spoil in cases do
+			local defs = validRecipeDefs()
+			spoil(defs)
+			local errors = Validate.all(defs, alwaysHas)
+			assert(containsError(errors, "Recipe"), `caso {index} sem erro: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["craft speed only on misc and above 1"] = function()
+		for _, setup in
+			{
+				function(item)
+					item.craftSpeed = 1
+				end,
+				function(item)
+					item.category = "resource"
+					item.craftSpeed = 3
+				end,
+			}
+		do
+			local item = validItem("wood")
+			setup(item)
+			local errors = Validate.all({ Tiers = {}, Items = { wood = item } }, alwaysHas)
+			assert(containsError(errors, "craftSpeed"))
+		end
 	end,
 
 	["valid fake defs give no errors"] = function()

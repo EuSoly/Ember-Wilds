@@ -10,10 +10,12 @@ local ScreenState = require(script.Parent.Parent:WaitForChild("ScreenState"))
 local AimStick = require(script.Parent:WaitForChild("AimStick"))
 local Backpack = require(script.Parent:WaitForChild("Backpack"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
+local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
+local RecipeBookButton = require(script.Parent:WaitForChild("RecipeBookButton"))
 local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
 local SettingsButton = require(script.Parent:WaitForChild("SettingsButton"))
 local StatusRings = require(script.Parent:WaitForChild("StatusRings"))
@@ -25,9 +27,11 @@ local function App(): ScreenGui
 	-- Componentes do HUD, na ordem em que são desenhados.
 	local children: { Instance } = {
 		ScorePill(),
+		CraftColumn(),
 		Clock(),
 		Minimap(),
 		SettingsButton(),
+		RecipeBookButton(),
 		Notifications.Component(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),

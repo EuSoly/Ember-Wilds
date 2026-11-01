@@ -80,7 +80,11 @@ local function styleVisualPart(part: BasePart)
 	part.CanTouch = false
 	part.Massless = true
 	part.CastShadow = false
-	part.Material = Enum.Material.SmoothPlastic
+	-- MeshParts importados já carregam o material do tier (madeira, pedra,
+	-- metal ou gema). Não sobrescreva esse acabamento ao equipar.
+	if not part:IsA("MeshPart") then
+		part.Material = Enum.Material.SmoothPlastic
+	end
 	part.TopSurface = Enum.SurfaceType.Smooth
 	part.BottomSurface = Enum.SurfaceType.Smooth
 end

@@ -18,6 +18,7 @@ local Screens = Client:WaitForChild("Screens")
 local DeathScreen = require(Screens:WaitForChild("DeathScreen"))
 local KitList = require(Screens:WaitForChild("KitList"))
 local MainMenu = require(Screens:WaitForChild("MainMenu"))
+local RecipeBookScreen = require(Screens:WaitForChild("RecipeBookScreen"))
 local SettingsScreen = require(Screens:WaitForChild("SettingsScreen"))
 
 local ScreenController = {}
@@ -49,6 +50,7 @@ function ScreenController.Start(_self)
 			end)
 			local death = DeathScreen.mount(playerGui)
 			local settings = SettingsScreen.mount(playerGui)
+			local recipeBook = RecipeBookScreen.mount(playerGui)
 
 			showWhen(menu, function()
 				return ScreenState.current() == "menu"
@@ -59,6 +61,9 @@ function ScreenController.Start(_self)
 			showWhen(settings, function()
 				return SettingsScreen.open() and ScreenFlow.canOpenSettings(ScreenState.current())
 			end)
+			showWhen(recipeBook, function()
+				return RecipeBookScreen.open() and ScreenState.current() == "playing"
+			end)
 
 			vide.effect(function()
 				local screen: ScreenState.Screen = ScreenState.current()
@@ -66,6 +71,9 @@ function ScreenController.Start(_self)
 				-- exemplo): a janela fecha sozinha.
 				if not ScreenFlow.canOpenSettings(screen) then
 					SettingsScreen.open(false)
+				end
+				if screen ~= "playing" then
+					RecipeBookScreen.open(false)
 				end
 				-- Nasceu: o kit escolhido já foi usado (ou recusado); a próxima
 				-- escolha começa vazia, para nada ser cobrado sem querer.

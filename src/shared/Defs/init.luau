@@ -11,6 +11,9 @@ local Validate = require("@self/Validate")
 
 export type TierDef = Types.TierDef
 export type ItemDef = Types.ItemDef
+export type RecipeDef = Types.RecipeDef
+export type RecipeIngredient = Types.RecipeIngredient
+export type CraftStation = Types.CraftStation
 export type ItemCategory = Types.ItemCategory
 export type FoodEffect = Types.FoodEffect
 export type ArmorStats = Types.ArmorStats
@@ -36,6 +39,7 @@ export type ResourceZoneDef = Types.ResourceZoneDef
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
 	Items = require("@self/Items"),
+	Recipes = require("@self/Recipes"),
 	CosmeticSlots = require("@self/CosmeticSlots"),
 	Cosmetics = require("@self/Cosmetics"),
 	Expressions = require("@self/Expressions"),

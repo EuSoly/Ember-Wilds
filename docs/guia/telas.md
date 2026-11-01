@@ -116,6 +116,10 @@ O destaque do kit escolhido usa o `UIStroke` filho direto da linha (fica laranja
 | `SettingRowBoolean` | liga/desliga | `ToggleButton` |
 | `SettingRowChoice` | escolha (qualidade) | `PrevButton`, `NextButton` |
 
+**`RecipeBook`** (livro de crafting): molde `ScreenGui` com `Root` (`CanvasGroup`), `List` (`ScrollingFrame`) e `CloseButton`. O botão do livro fica na HUD ao lado da engrenagem.
+
+**`RecipeRow`** (uma linha por receita): `Icon` (Frame para o `ItemIcon`), `NameLabel`, `IngredientsLabel` e `InfoLabel`. Os ingredientes ausentes ficam em vermelho; o texto de tempo e estação mostra quando a receita pode ser iniciada. Para editar o visual, salve os moldes em `assets/ui/RecipeBook.model.json` e `assets/ui/RecipeRow.model.json`. Veja `crafting.md`.
+
 ## O atributo `TextKey`
 
 Qualquer `TextLabel` ou `TextButton` de um molde com o atributo **`TextKey`** recebe automaticamente `Strings.get(TextKey)`. Ex.: um botão com `TextKey = "menu.play"` mostra "Jogar". No Studio: Properties → Attributes → `+`, nome `TextKey`, tipo `string`.

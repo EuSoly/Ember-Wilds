@@ -69,6 +69,9 @@ return table.freeze({
 	ZoneType = "ZoneType",
 	-- Tag (CollectionService) dos recursos montados (a fase de coleta usa).
 	ResourceTag = "Resource",
+	-- Estações de crafting: atributo Station vale workbench ou fire.
+	CraftStationTag = "CraftStation",
+	Station = "Station",
 	-- Reserva atual e máxima de um recurso coletável, atributos no modelo em
 	-- Workspace.Resources (ResourceService; o cliente mostra as frutinhas).
 	Amount = "Amount",
