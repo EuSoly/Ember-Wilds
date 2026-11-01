@@ -5,7 +5,9 @@
 -- - `placing`: há uma peça colocável na mão (o botão de girar e a tecla R só
 --   valem então).
 -- O giro volta a 0 quando o item da mão ou o personagem muda. O servidor zera o
--- dele sozinho nesses casos, então aqui NÃO se manda nada ao zerar.
+-- dele sozinho, mas a troca chega aqui ~1 RTT depois: um R apertado nesse
+-- intervalo seria aceito lá e zerado só aqui. Por isso, ao zerar com uma peça
+-- na mão, o cliente também manda 0 (a última mensagem bate com o fantasma).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -49,13 +51,19 @@ function BuildRotation.start()
 	RunService.RenderStepped:Connect(function()
 		local character = Players.LocalPlayer.Character
 		local equipped: unknown = if character then character:GetAttribute(StatNames.Equipped) else nil
+		local item = if typeof(equipped) == "string" then Defs.Items[equipped] else nil
+		local placing = item ~= nil and item.category == "placeable" and item.structure ~= nil
 		if character ~= lastCharacter or equipped ~= lastEquipped then
 			lastCharacter = character
 			lastEquipped = equipped
 			BuildRotation.steps(0)
+			-- O servidor troca o item antes de o cliente ver a troca; um R apertado
+			-- nessa janela já chegou lá. Mandar o 0 faz a última mensagem sempre
+			-- bater com o que o fantasma mostra. Sem peça na mão o servidor ignoraria.
+			if placing then
+				Net.SetBuildRotation.Fire(0)
+			end
 		end
-		local item = if typeof(equipped) == "string" then Defs.Items[equipped] else nil
-		local placing = item ~= nil and item.category == "placeable" and item.structure ~= nil
 		if placing ~= vide.untrack(BuildRotation.placing) then
 			BuildRotation.placing(placing)
 		end

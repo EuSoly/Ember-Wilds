@@ -80,7 +80,8 @@ local function looksFree(px: number, pz: number, radius: number): boolean
 	-- Peças já colocadas: o pivô fica no centro da peça.
 	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
 		local x, z = pivotXZ(instance)
-		if x and z then
+		-- Longe demais para tocar: nem lê o atributo.
+		if x and z and math.abs(x - px) <= radius + RESOURCE_RANGE and math.abs(z - pz) <= radius + RESOURCE_RANGE then
 			local otherRadius = radiusOfItem(instance:GetAttribute(StatNames.StructureItem)) or BuildRules.PIECE_RADIUS
 			if BuildRules.circlesOverlap(px, pz, radius, x, z, otherRadius) then
 				return false
@@ -119,7 +120,7 @@ function BuildGhost.start()
 	local ghost = makePart("BuildGhost")
 	local front = makePart("Front")
 	front.Parent = ghost
-	local lastKey = ""
+	local lastRadius = 0
 	local lastCheck = 0
 	local free = false
 
@@ -131,7 +132,7 @@ function BuildGhost.start()
 		local radius = if character then radiusOfItem(character:GetAttribute(StatNames.Equipped)) else nil
 		if radius == nil or root == nil or not root:IsA("BasePart") then
 			ghost.Parent = nil
-			lastKey = ""
+			lastRadius = 0
 			return
 		end
 
@@ -145,10 +146,11 @@ function BuildGhost.start()
 		local steps = vide.untrack(BuildRotation.steps)
 		local yaw = BuildRules.facingYaw(px, pz, root.Position.X, root.Position.Z, steps)
 
-		local key = `{math.floor(px * 4)},{math.floor(pz * 4)},{radius}`
+		-- Refaz o teste só a cada REFRESH (ou ao trocar de peça): a varredura
+		-- é cara para rodar todo quadro.
 		local now = os.clock()
-		if key ~= lastKey or now - lastCheck >= REFRESH then
-			lastKey = key
+		if radius ~= lastRadius or now - lastCheck >= REFRESH then
+			lastRadius = radius
 			lastCheck = now
 			free = looksFree(px, pz, radius)
 		end

@@ -9,20 +9,20 @@ As peças de base (bancada, fogueiras, paredes, portas, espinhos e baú) são co
 3. **PC:** solte o clique (botão de usar). **Celular:** solte o joystick direito. Posição inválida não gasta nada.
 4. Para parar de construir, troque de slot. Com uma peça na mão, o golpe não bate (só constrói).
 
-O servidor recusa e não gasta nada se: a peça não está na mão, a peça cairia sobre outra peça, sobre um recurso, sobre um jogador ou na água, ou o limite foi atingido.
+O servidor recusa e não gasta nada se: a peça não está na mão, a peça cairia sobre outra peça, sobre um recurso, sobre um jogador, ou o centro da peça cairia na água, ou o limite foi atingido.
 
 ## Posição livre e rotação
 
 Não existe grade. A peça nasce no ponto `BuildRules.placePoint`: a partir do centro do boneco, `PLACE_DISTANCE` studs na direção da mira. A distância é fixa, então a peça sempre aparece num círculo em volta do jogador, em qualquer direção.
 
 - **De frente para o jogador:** sem girar, a frente da peça olha para quem constrói (`BuildRules.facingYaw`).
-- **Girar:** a tecla **R** (PC) ou o botão **"Girar"** (celular, só aparece com uma peça na mão) gira o fantasma 45° por vez (`ROTATE_STEP`), em 8 passos (`ROTATE_STEPS`). O giro vale **até trocar de item** (ou renascer), quando volta a 0. A tecla R é ignorada enquanto você digita no chat.
+- **Girar:** a tecla **R** (PC) ou o botão **"Girar"** (celular, só aparece com uma peça na mão) gira o fantasma 45° por vez (`ROTATE_STEP`), em 8 passos (`ROTATE_STEPS`). O giro vale **até trocar de item** (ou renascer), quando volta a 0 (o servidor zera o dele, e o cliente também manda `SetBuildRotation(0)` ao zerar com uma peça na mão, porque a troca chega ao cliente um pouco depois; assim a última mensagem sempre bate com o fantasma). A tecla R é ignorada enquanto você digita no chat.
 - **Na rede:** o cliente manda só o número do passo (`SetBuildRotation`, 0 a 7). O servidor ignora valor fora disso, fracionário ou mandado sem uma peça na mão (`BuildRules.validSteps`), e guarda o giro por jogador.
 - **O fantasma e a peça são iguais:** o cliente usa o mesmo ponto, o mesmo giro e os mesmos raios (constantes em `BuildRules`), por isso a peça construída cai onde o fantasma estava.
 
 ## Peças são círculos
 
-Cada peça ocupa um círculo no chão (centro x, z e raio). Duas peças **encostadas** (círculos que só se tocam) são aceitas; **sobrepostas**, recusadas (`BuildRules.circlesOverlap`), inclusive com peças giradas. O mesmo círculo vale para recurso (atributo `ResourceRadius`), jogador (`PLAYER_RADIUS`), golpe, espinho e porta. As peças ficam num índice espacial (`SpatialGrid`) no servidor, então conferir vizinhos é barato; a peça removida (vida 0, fogo, dono, apagada por fora) sai dele.
+Cada peça ocupa um círculo no chão (centro x, z e raio). Duas peças **encostadas** (círculos que só se tocam) são aceitas; **sobrepostas**, recusadas (`BuildRules.circlesOverlap`), inclusive com peças giradas. O mesmo círculo vale para recurso (atributo `ResourceRadius`), jogador (`PLAYER_RADIUS`), golpe, espinho e porta. As peças ficam num índice espacial (`SpatialGrid`) no servidor; ele é só um índice interno de busca e não tem relação com onde as peças podem ser colocadas (isso continua livre, sem grade). Assim conferir vizinhos é barato; a peça removida (vida 0, fogo, dono, apagada por fora) sai dele.
 
 | Número | Valor | Onde |
 |---|---:|---|
@@ -36,7 +36,7 @@ Cada peça ocupa um círculo no chão (centro x, z e raio). Duas peças **encost
 
 A distância é meia peça + o raio do corpo (1,5) + meia peça: a peça nasce sempre à frente do corpo, e o próprio construtor nunca a bloqueia. As regras puras estão em `src/shared/Build/BuildRules.luau` (testadas no Lune).
 
-**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; com um raio bem maior, confira se o corpo ainda não fica por baixo da peça.
+**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; o raio máximo aceito é `PLACE_DISTANCE - PLAYER_RADIUS` (4 studs); acima disso a peça sempre cobriria o corpo e o boot recusa o item.
 
 ## Vida e dano em construção
 

@@ -6,6 +6,7 @@ local InventoryConfig = require("../InventoryConfig")
 local StatNames = require("../StatNames")
 local SurvivalConfig = require("../SurvivalConfig")
 local Types = require("./Types")
+local BuildRules = require("../Build/BuildRules")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
 local HEX_PATTERN = "^#%x%x%x%x%x%x$"
@@ -17,6 +18,10 @@ local MAX_COSMETIC_ID_LENGTH = 50
 local MAX_DATA_ID_LENGTH = 32
 -- Opções de configuração "choice" viajam no SetSetting (Choice string(1..16)).
 local MAX_SETTING_OPTION_LENGTH = 16
+
+-- Maior raio de peça que ainda cabe: a peça fica a PLACE_DISTANCE do centro do
+-- corpo e não pode tocá-lo (BuildRules só requer Defs/Types, sem ciclo).
+local MAX_STRUCTURE_RADIUS = BuildRules.PLACE_DISTANCE - BuildRules.PLAYER_RADIUS
 
 local Validate = {}
 
@@ -626,6 +631,12 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 		end
 		if structure.radius ~= nil and (not isFiniteNumber(structure.radius) or structure.radius <= 0) then
 			table.insert(errors, `Item "{key}": structure.radius deve ser maior que 0`)
+		elseif structure.radius ~= nil and structure.radius > MAX_STRUCTURE_RADIUS then
+			-- A distância de colocação é fixa: acima disto a peça sempre cobre o corpo.
+			table.insert(
+				errors,
+				`Item "{key}": structure.radius deve ser no máximo {MAX_STRUCTURE_RADIUS} (PLACE_DISTANCE - PLAYER_RADIUS)`
+			)
 		end
 		local station = structure.station
 		if station ~= nil and STRUCTURE_STATIONS[station] ~= true then

@@ -1,4 +1,5 @@
 --!strict
+local BuildRules = require("../src/shared/Build/BuildRules")
 local Defs = require("../src/shared/Defs")
 local Validate = require("../src/shared/Defs/Validate")
 
@@ -903,6 +904,20 @@ return {
 			item.structure = structure
 			local errors = Validate.all({ Tiers = {}, Items = { wall = item } }, alwaysHas)
 			assert(containsError(errors, "structure"), `caso {index} sem erro: {table.concat(errors, "; ")}`)
+		end
+	end,
+
+	["structure radius above what fits next to the builder is an error"] = function()
+		local limit = BuildRules.PLACE_DISTANCE - BuildRules.PLAYER_RADIUS
+		for _, case in { { limit, false }, { limit + 0.01, true } } do
+			local item = validItem("wall")
+			item.category = "placeable"
+			item.structure = { kind = "wall", health = 100, radius = case[1] }
+			local errors = Validate.all({ Tiers = {}, Items = { wall = item } }, alwaysHas)
+			assert(
+				containsError(errors, "structure.radius") == case[2],
+				`radius {case[1]} (limite {limit}): {table.concat(errors, "; ")}`
+			)
 		end
 	end,
 
