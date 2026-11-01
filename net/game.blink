@@ -150,6 +150,20 @@ event CancelCraft {
 	Call: SingleAsync
 }
 
+-- Estado do craft, mandado SÓ para o dono: os outros jogadores não podem saber
+-- que alguém está craftando (seria informação de combate). Recipe nil = parado;
+-- Start/Finish em Workspace:GetServerTimeNow().
+event CraftProgress {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Recipe: string(1..32)?,
+		Start: f64,
+		Finish: f64
+	}
+}
+
 event CraftNotice {
 	From: Server,
 	Type: Reliable,

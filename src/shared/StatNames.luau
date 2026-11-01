@@ -42,10 +42,6 @@ return table.freeze({
 	-- Estado do boneco, atributos no personagem (o visual de cada cliente lê daqui).
 	-- true enquanto o jogador segura o botão de bater (escrito pelo UseSim).
 	Using = "Using",
-	-- Estado do crafting no personagem (servidor; tempos usam GetServerTimeNow).
-	CraftRecipe = "CraftRecipe",
-	CraftStart = "CraftStart",
-	CraftEnd = "CraftEnd",
 	-- Id do item na mão (slot selecionado da hotbar), ou nil (escrito pelo EquipService).
 	Equipped = "Equipped",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).

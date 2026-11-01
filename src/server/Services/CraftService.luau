@@ -1,5 +1,7 @@
 --!strict
 -- O servidor valida e executa um craft por personagem; materiais saem no início.
+-- O estado do craft NÃO vai em atributos (replicam para todos): só o dono fica
+-- sabendo, pelo evento CraftProgress. Os outros serviços perguntam isCrafting.
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -46,10 +48,10 @@ local function notify(player: Player, key: string)
 	Net.CraftNotice.Fire(player, key)
 end
 
-local function clear(character: Model)
-	character:SetAttribute(StatNames.CraftRecipe, nil)
-	character:SetAttribute(StatNames.CraftStart, nil)
-	character:SetAttribute(StatNames.CraftEnd, nil)
+local function clear(player: Player)
+	if player.Parent == Players then
+		Net.CraftProgress.Fire(player, { Recipe = nil, Start = 0, Finish = 0 })
+	end
 end
 
 local function stop(player: Player, refund: boolean)
@@ -63,7 +65,7 @@ local function stop(player: Player, refund: boolean)
 			InventoryService.give(player, part.id, part.count)
 		end
 	end
-	clear(state.character)
+	clear(player)
 end
 
 local function countsOf(inv: Inventory.Inventory): { [string]: number }
@@ -117,9 +119,7 @@ local function start(player: Player, recipeId: string)
 	local duration = CraftRules.duration(recipe, held)
 	local token = {}
 	active[player] = { token = token, character = character, ingredients = removed }
-	character:SetAttribute(StatNames.CraftRecipe, recipe.id)
-	character:SetAttribute(StatNames.CraftStart, now)
-	character:SetAttribute(StatNames.CraftEnd, now + duration)
+	Net.CraftProgress.Fire(player, { Recipe = recipe.id, Start = now, Finish = now + duration })
 	task.delay(duration, function()
 		local state = active[player]
 		if state == nil or state.token ~= token then
@@ -130,7 +130,7 @@ local function start(player: Player, recipeId: string)
 			and character:FindFirstChildOfClass("Humanoid") ~= nil
 			and (character:FindFirstChildOfClass("Humanoid") :: Humanoid).Health > 0
 		active[player] = nil
-		clear(character)
+		clear(player)
 		if not alive then
 			return
 		end
@@ -161,8 +161,8 @@ local function setupPlayer(player: Player)
 	end)
 end
 
-function CraftService.isCrafting(character: Model): boolean
-	return character:GetAttribute(StatNames.CraftRecipe) ~= nil
+function CraftService.isCrafting(player: Player): boolean
+	return active[player] ~= nil
 end
 
 function CraftService.Start(_self)

@@ -33,7 +33,7 @@ create("TextLabel")({
 | `src/client/UI/SettingsButton.luau` | Engrenagem (canto superior direito, abaixo do minimapa): abre e fecha as configurações |
 | `src/client/UI/CraftColumn.luau`, `src/client/CraftState.luau` | Receitas disponíveis, tooltip e progresso; clique na receita ativa cancela |
 | `src/client/UI/RecipeBookButton.luau` | Abre o livro completo de receitas |
-| `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima dos bonecos craftando |
+| `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima do **próprio** boneco enquanto crafta (os outros jogadores não veem) |
 
 ## Quando o HUD aparece
 

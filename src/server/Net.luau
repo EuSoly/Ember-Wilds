@@ -345,10 +345,27 @@ function SerdesFunctions.ReadEVENT_CancelCraft(): (nil)
 	return nil
 end
 
+function SerdesFunctions.WriteEVENT_CraftProgress(Value: { Recipe: string?, Start: number, Finish: number }): ()
+	-- Allocate BLOCK: 18 bytes
+	local BLOCK_START = Allocate(18)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 12)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Recipe ~= nil and 1 or 0)
+	if Value.Recipe ~= nil then
+		-- Allocate BLOCK: 1 bytes
+		local BLOCK_START = Allocate(1)
+		local Length = #Value.Recipe
+		buffer.writeu8(SendBuffer, BLOCK_START + 0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Value.Recipe, Length)
+	end
+	buffer.writef64(SendBuffer, BLOCK_START + 2, Value.Start)
+	buffer.writef64(SendBuffer, BLOCK_START + 10, Value.Finish)
+end
+
 function SerdesFunctions.WriteEVENT_CraftNotice(Value: string): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 12)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 13)
 	local Length = #Value
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
 	Allocate(Length)
@@ -414,6 +431,12 @@ if not RunService:IsRunning() then
 	},
 	CancelCraft = {
 		On = NOOP
+	},
+	CraftProgress = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
 	},
 	CraftNotice = {
 		Fire = NOOP,
@@ -942,6 +965,52 @@ local Returns = table.freeze({
 				end
 			end
 		end
+	},
+	CraftProgress = {
+		Fire = function(Player: Player, Value: { Recipe: string?, Start: number, Finish: number }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_CraftProgress(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Recipe: string?, Start: number, Finish: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftProgress(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Recipe: string?, Start: number, Finish: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftProgress(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Recipe: string?, Start: number, Finish: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftProgress(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
 	},
 	CraftNotice = {
 		Fire = function(Player: Player, Value: string): ()

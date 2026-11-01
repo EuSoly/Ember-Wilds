@@ -12,6 +12,7 @@ O crafting transforma os recursos coletados em ferramentas, armas, armaduras e p
 - Segurar o Livro ao iniciar deixa o craft três vezes mais rápido. O livro não é consumido.
 - Bancada e fogo são conferidos ao começar, em um raio horizontal de 10 studs. Andar para longe não cancela o craft.
 - O servidor valida a receita, a estação, os materiais e o espaço no inventário antes de cobrar qualquer coisa.
+- **Craft é segredo:** só quem crafta vê a engrenagem e a barra. Saber que o outro está craftando seria vantagem de combate, então o estado não fica em atributos (que replicam para todos): o servidor guarda em `CraftService` e manda só para o dono pelo evento `Net.CraftProgress`. No servidor, pergunte `CraftService.isCrafting(player)`.
 
 ## Receitas
 

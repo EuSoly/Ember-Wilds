@@ -15,6 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
@@ -120,7 +121,7 @@ local function step()
 		if character == nil or character:GetAttribute(StatNames.Using) ~= true then
 			continue
 		end
-		if character:GetAttribute(StatNames.CraftRecipe) ~= nil then
+		if CraftService.isCrafting(player) then
 			continue
 		end
 		if (nextHit[player] or 0) > now then

@@ -7,6 +7,7 @@ local Defs = require(ReplicatedStorage.Shared.Defs)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local ArmorService = require(script.Parent.ArmorService)
+local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
 
 local WearService = {}
@@ -34,7 +35,7 @@ local function canReturnArmor(player: Player, heldId: string, oldId: string?): b
 end
 
 local function wear(player: Player, character: Model)
-	if character:GetAttribute(StatNames.CraftRecipe) ~= nil then
+	if CraftService.isCrafting(player) then
 		return
 	end
 	local heldId = character:GetAttribute(StatNames.Equipped)

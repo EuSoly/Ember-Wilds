@@ -71,20 +71,6 @@ local function updateNear()
 	return false
 end
 
-local function readCurrent(): Current?
-	local character = Players.LocalPlayer.Character
-	if character == nil then
-		return nil
-	end
-	local id = character:GetAttribute(StatNames.CraftRecipe)
-	local start = character:GetAttribute(StatNames.CraftStart)
-	local finish = character:GetAttribute(StatNames.CraftEnd)
-	if type(id) == "string" and type(start) == "number" and type(finish) == "number" then
-		return { id = id, start = start, finish = finish }
-	end
-	return nil
-end
-
 local function sameRows(a: { Row }, b: { Row }): boolean
 	if #a ~= #b then
 		return false
@@ -95,10 +81,6 @@ local function sameRows(a: { Row }, b: { Row }): boolean
 		end
 	end
 	return true
-end
-
-local function sameCurrent(a: Current?, b: Current?): boolean
-	return if a == nil then b == nil else b ~= nil and a.id == b.id and a.start == b.start and a.finish == b.finish
 end
 
 local function updateRows()
@@ -161,6 +143,13 @@ function CraftState.Start(_self)
 	Net.CraftNotice.On(function(key: string)
 		Notifications.push(key)
 	end)
+	-- Só o dono recebe o estado do craft (os outros não podem saber).
+	local currentChanged = false
+	Net.CraftProgress.On(function(data)
+		local recipe = data.Recipe
+		CraftState.current(if recipe then { id = recipe, start = data.Start, finish = data.Finish } else nil)
+		currentChanged = true
+	end)
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if not processed and input.UserInputType == Enum.UserInputType.MouseButton2 then
 			CraftState.cancel()
@@ -171,11 +160,6 @@ function CraftState.Start(_self)
 		local initialized = false
 		while true do
 			local nearChanged = updateNear()
-			local current = readCurrent()
-			local currentChanged = not sameCurrent(CraftState.current(), current)
-			if currentChanged then
-				CraftState.current(current)
-			end
 			local character = Players.LocalPlayer.Character
 			local equipped = character and character:GetAttribute(StatNames.Equipped)
 			local equippedId = if type(equipped) == "string" then equipped else nil
@@ -188,6 +172,7 @@ function CraftState.Start(_self)
 				updateRows()
 				initialized = true
 				previousSlots = slots
+				currentChanged = false
 			end
 			task.wait(0.1)
 		end

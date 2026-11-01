@@ -22,6 +22,7 @@ local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
+local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 
 local ROOT_TIMEOUT = 10
 local BODY_SLOT = "body"
@@ -250,8 +251,9 @@ local function animate(entry: Entry, dt: number, speed: number, now: number)
 	local character = entry.character
 	local pose = BonecoAnim.step(entry.anim, dt, {
 		speed = speed,
+		-- Craftando, o próprio braço não bate (só o dono sabe do craft).
 		using = character:GetAttribute(StatNames.Using) == true
-			and character:GetAttribute(StatNames.CraftRecipe) == nil,
+			and not (character == Players.LocalPlayer.Character and CraftState.isCrafting()),
 		hasTool = entry.hasTool,
 	})
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
