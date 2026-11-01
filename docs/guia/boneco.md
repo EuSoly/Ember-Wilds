@@ -39,6 +39,7 @@ Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService
 | `src/shared/Defs/CosmeticSlots.luau`, `Cosmetics.luau`, `Expressions.luau` | Skins e expressões como dados |
 | `src/shared/Models/CharacterBody.luau` | O corpo simulado |
 | `src/client/Boneco/BonecoModel.luau` | Monta o boneco visual (peças, cores, olhos, ferramenta, nome) |
+| `src/shared/Models/ToolModel.luau` | Clona a picareta pelo id do item em `ReplicatedStorage.Assets.Tools` |
 | `src/client/Boneco/BonecoRenderer.luau` | O loop que segue, anima e troca expressões de todos os bonecos |
 | `src/server/Services/CharacterService.luau` | `StarterCharacter`, tag, `hurt` (a função única de dano) |
 | `src/server/Services/CosmeticService.luau` | Posse e skin equipada de cada jogador (salvas no perfil) |
@@ -105,6 +106,14 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `MAX_DT` | Limite do passo de tempo: um quadro travado não faz a animação pular |
 
 Depois de mexer em animação, rode `bash scripts/check.sh`: os testes de `BonecoAnim` conferem que as curvas continuam certas.
+
+### Modelos das picaretas
+
+Cada picareta em `ReplicatedStorage.Assets.Tools` é um **Model** com o mesmo nome do id em `Defs/Items.luau` (por exemplo, `wood_pickaxe`) e `PrimaryPart = Handle`. O `Handle` deve conter o attachment `Grip`, posicionado na parte baixa do cabo: eixo local **Y ao longo do cabo, em direção à cabeça**, X atravessando a largura da cabeça e Z na espessura da ferramenta. Esses eixos são os do attachment, não necessariamente os da MeshPart importada.
+
+O boneco alinha o Y do Grip com a direção para a frente da mão (`LookVector`) e o X com a lateral (`RightVector`), aplicando o ângulo de repouso para fora. Assim a picareta fica deitada no plano do chão, com a cabeça afastada da mão e visível de cima. O golpe existente gira mão e ferramenta juntas no plano horizontal. Solde as outras peças ao `Handle`; o renderer desliga ancoragem, massa e colisões dos clones e preserva os materiais dos MeshParts. `ToolModel` clona o Model como `HeldItem`. Não use `StarterPack` nem uma Tool padrão: o jogo tem inventário e hotbar próprios.
+
+Os modelos importados ficam salvos no place, fora do Rojo. Para reaplicar o encaixe aprovado às seis picaretas atuais após uma reimportação, execute `scripts/studio/align-pickaxe-grips.luau` na Command Bar, em **Edit**, e salve o place. O script posiciona Grip e RightGripAttachment em `(0, -1.25, 0.02437)` nas coordenadas do pivô de cada modelo, preserva as malhas e permite desfazer. Essa posição corresponde aos assets atuais; modelos com outro tamanho ou pivô precisam de um Grip ajustado ao próprio cabo.
 
 ## Adicionar uma skin de corpo
 

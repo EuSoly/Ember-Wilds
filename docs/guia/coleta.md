@@ -14,6 +14,9 @@ Cada picareta tem um **nível** e cada recurso uma **dureza**. Rendimento por go
 | Picareta de madeira (nível 1) | 2 | 1 | — | 1 |
 | Picareta de pedra (nível 2) | 3 | 2 | 1 | 1 |
 | Picareta de ouro (nível 3) | 4 | 3 | 2 | 1 |
+| Picareta de diamante (nível 4) | 5 | 4 | 3 | 1 |
+| Picareta de ametista (nível 5) | 6 | 5 | 4 | 1 |
+| Picareta de reidite (nível 6) | 7 | 6 | 5 | 1 |
 
 A frutinha rende sempre 1 por golpe (`fixedYield`), com qualquer coisa na mão.
 
@@ -48,7 +51,7 @@ gather = gather({
 }),
 ```
 
-Picareta nova: em `Defs/Items.luau`, `category = "tool"` e `pickaxe = { level = 4 }`.
+Picareta nova: em `Defs/Items.luau`, `category = "tool"`, `tier` e `pickaxe = { level = n }`. O nível também precisa ser compatível com as durezas dos recursos.
 
 ## Frutinhas que aparecem e somem
 

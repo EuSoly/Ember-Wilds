@@ -31,6 +31,9 @@ create("TextLabel")({
 | `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com slots além da hotbar), com a grade que cresce com a capacidade |
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 | `src/client/UI/SettingsButton.luau` | Engrenagem (canto superior direito, abaixo do minimapa): abre e fecha as configurações |
+| `src/client/UI/CraftColumn.luau`, `src/client/CraftState.luau` | Receitas disponíveis, tooltip e progresso; clique na receita ativa cancela |
+| `src/client/UI/RecipeBookButton.luau` | Abre o livro completo de receitas |
+| `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima dos bonecos craftando |
 
 ## Quando o HUD aparece
 
@@ -62,6 +65,8 @@ O HUD **não lê o Workspace** (com streaming, partes do mapa podem nem estar ca
 - Exceção: o minimapa lê a posição do próprio personagem.
 
 As barras (`Health`, `Hunger`, `Cold`, `Thirst`) são do `SurvivalService` desde a G1 (veja `sobrevivencia.md`). Pontos e ranking são de verdade desde a G2 (`ScoreService`: a coleta dá pontos; o ranking é a posição entre os jogadores vivos; veja `coleta.md`). Os itens iniciais de teste ainda vêm do `DevItemsService` (só no Studio).
+
+A coluna de crafting lista receitas cujos ingredientes estão no inventário e cuja estação necessária está a até 10 studs. O botão de livro abre a tela completa e destaca os ingredientes faltantes. Botão direito cancela no PC; no celular, toque de novo na receita ativa. Veja `crafting.md`.
 
 ## Controles por dispositivo
 

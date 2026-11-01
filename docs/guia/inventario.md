@@ -16,7 +16,7 @@ O inventário de cada jogador existe **só no servidor**. O cliente recebe uma c
 | `net/game.blink` | Contrato de rede (Blink). Gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server/Services/InventoryService.luau` | Inventário de cada jogador, valida os pedidos, manda as mudanças (deltas), veste mochilas (`equipBag`) e soma o gamepass |
 | `src/server/Services/EquipService.luau` | Item selecionado na mão (só o atributo `Equipped` no personagem) |
-| `src/shared/Models/ToolModel.luau` | Modelo provisório de ferramenta (cabo + cabeça na cor do tier), desenhado pelo cliente |
+| `src/shared/Models/ToolModel.luau` | Modelo da ferramenta na mão: clone de `ReplicatedStorage.Assets.Tools.<id>` (só no place), desenhado pelo cliente |
 | `src/server/Services/DevItemsService.luau` | Só no Studio: dá um kit, veste a Mochila de Couro e cria `ServerStorage.DevGive` e `DevEquipBag` |
 | `src/client/InventoryState.luau` | Cópia do inventário no cliente (fontes do Vide) |
 | `src/client/DragState.luau` | Arrastar itens entre slots (toque × arrasto, slot debaixo do dedo, `MoveSlot`) |

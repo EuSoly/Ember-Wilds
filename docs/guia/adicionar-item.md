@@ -39,6 +39,12 @@ Veja `sobrevivencia.md`.
 
 Picareta (`category = "tool"`) ganha `pickaxe = { level = n }`: quanto maior o nível, mais pega por golpe e mais duros os recursos que ela coleta. Veja `coleta.md`.
 
+### Receita e velocidade de crafting
+
+Para craftar o item, acrescente uma entrada com o mesmo id em `src/shared/Defs/Recipes.luau` e escolha materiais, tempo, estação e ordem no livro. Veja `crafting.md` para o formato e as receitas existentes.
+
+Itens `category = "misc"` podem ter `craftSpeed` maior que 1. Esse valor divide o tempo da receita quando o item está na mão; o Livro usa `craftSpeed = 3`.
+
 O `id` vai para o save do jogador, então **nunca renomeie um id já publicado**. Se precisar, crie um novo e faça uma migração.
 
 ## 2. O texto — `src/shared/Strings/ptBR.luau`
