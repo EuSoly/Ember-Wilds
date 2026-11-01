@@ -84,6 +84,8 @@ function CampfireModel.build(): Model
 	-- Pivô no chão, no centro (com PrimaryPart, o pivô do modelo é o dela).
 	flame.PivotOffset = flame.CFrame:Inverse()
 	model:AddTag(StatNames.HeatSourceTag)
+	model:AddTag(StatNames.CraftStationTag)
+	model:SetAttribute(StatNames.Station, "fire")
 	model:SetAttribute(StatNames.HeatRadius, SurvivalConfig.CAMPFIRE_RADIUS)
 	model:SetAttribute(StatNames.BurnRadius, SurvivalConfig.BURN_RADIUS)
 	return model

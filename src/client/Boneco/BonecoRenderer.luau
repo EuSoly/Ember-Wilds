@@ -250,7 +250,8 @@ local function animate(entry: Entry, dt: number, speed: number, now: number)
 	local character = entry.character
 	local pose = BonecoAnim.step(entry.anim, dt, {
 		speed = speed,
-		using = character:GetAttribute(StatNames.Using) == true,
+		using = character:GetAttribute(StatNames.Using) == true
+			and character:GetAttribute(StatNames.CraftRecipe) == nil,
 		hasTool = entry.hasTool,
 	})
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)

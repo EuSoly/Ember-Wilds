@@ -503,6 +503,49 @@ local function validateResources(errors: { string }, defs: Types.DefsTables, has
 	end
 end
 
+local function validateRecipes(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local recipes: { [string]: Types.RecipeDef } = (defs :: any).Recipes or {}
+	local items = defs.Items
+	local orders: { [number]: string } = {}
+	for key, recipe in recipes do
+		checkDataId(errors, "Recipe", key, recipe.id)
+		if recipe.result ~= key then
+			table.insert(errors, `Recipe "{key}": id deve ser igual ao resultado "{recipe.result}"`)
+		end
+		if recipe.nameKey ~= nil then
+			checkString(errors, "Recipe", key, "nameKey", recipe.nameKey, hasString)
+		end
+		if not isWholeNumber(recipe.count, 1) then
+			table.insert(errors, `Recipe "{key}": count deve ser inteiro maior ou igual a 1`)
+		end
+		if not isFiniteNumber(recipe.time) or recipe.time <= 0 then
+			table.insert(errors, `Recipe "{key}": time deve ser maior que 0`)
+		end
+		checkOrder(errors, "Recipe", key, recipe.order, orders)
+		if recipe.station ~= nil and recipe.station ~= "workbench" and recipe.station ~= "fire" then
+			table.insert(errors, `Recipe "{key}": station "{recipe.station}" não existe`)
+		end
+		if items[recipe.result] == nil then
+			table.insert(errors, `Recipe "{key}": resultado "{recipe.result}" não existe em Items`)
+		end
+		if type(recipe.ingredients) ~= "table" or #recipe.ingredients == 0 then
+			table.insert(errors, `Recipe "{key}": ingredients não pode ser vazio`)
+		else
+			for index, part in recipe.ingredients do
+				if items[part.id] == nil then
+					table.insert(errors, `Recipe "{key}": ingrediente "{part.id}" não existe em Items`)
+				end
+				if not isWholeNumber(part.count, 1) then
+					table.insert(
+						errors,
+						`Recipe "{key}": ingredients[{index}].count deve ser inteiro maior ou igual a 1`
+					)
+				end
+			end
+		end
+	end
+end
+
 -- Comida: precisa do bloco food (e só ela pode ter), com pelo menos um campo,
 -- cada um em (0, StatusMax].
 local FOOD_FIELDS = { "hunger", "thirst", "health" }
@@ -612,6 +655,10 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 				table.insert(errors, `Item "{key}": pickaxe.level deve ser inteiro maior ou igual a 1`)
 			end
 		end
+		local craftSpeed = item.craftSpeed
+		if craftSpeed ~= nil and (item.category ~= "misc" or not isFiniteNumber(craftSpeed) or craftSpeed <= 1) then
+			table.insert(errors, `Item "{key}": craftSpeed só vale para misc e deve ser maior que 1`)
+		end
 	end
 
 	validateCosmetics(errors, defs, hasString)
@@ -620,6 +667,7 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 	validateSettings(errors, defs, hasString)
 	validateKits(errors, defs, hasString)
 	validateResources(errors, defs, hasString)
+	validateRecipes(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors

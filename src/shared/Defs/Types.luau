@@ -42,6 +42,21 @@ export type ItemDef = {
 	-- Só para category "tool": picareta de nível `level` (madeira 1, pedra 2,
 	-- ouro 3...). Rende `level - dureza + 1` por golpe (ver Gather/GatherRules).
 	pickaxe: { level: number }?,
+	-- Multiplicador de velocidade de criação (só category "misc").
+	craftSpeed: number?,
+}
+
+export type CraftStation = "workbench" | "fire"
+export type RecipeIngredient = { id: string, count: number }
+export type RecipeDef = {
+	id: string,
+	nameKey: string?,
+	result: string,
+	count: number,
+	ingredients: { RecipeIngredient },
+	time: number,
+	station: CraftStation?,
+	order: number,
 }
 
 -- Estilos de olho do boneco (a lista para validar fica em Validate.EYE_STYLES).
@@ -168,6 +183,7 @@ export type ResourceZoneDef = {
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
+	Recipes: { [string]: RecipeDef },
 	CosmeticSlots: { [string]: CosmeticSlotDef },
 	Cosmetics: { [string]: CosmeticDef },
 	Expressions: { [string]: ExpressionDef },

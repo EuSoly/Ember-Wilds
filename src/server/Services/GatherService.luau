@@ -120,6 +120,9 @@ local function step()
 		if character == nil or character:GetAttribute(StatNames.Using) ~= true then
 			continue
 		end
+		if character:GetAttribute(StatNames.CraftRecipe) ~= nil then
+			continue
+		end
 		if (nextHit[player] or 0) > now then
 			continue
 		end
@@ -131,6 +134,9 @@ local function step()
 		local equipped = character:GetAttribute(StatNames.Equipped)
 		local def = if type(equipped) == "string" then Defs.Items[equipped] else nil
 		if def and def.food then
+			continue
+		end
+		if def and (def.category == "armor" or def.category == "bag") then
 			continue
 		end
 		nextHit[player] = GatherRules.nextHit(nextHit[player], now)

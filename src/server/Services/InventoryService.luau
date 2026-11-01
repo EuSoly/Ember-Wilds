@@ -165,6 +165,36 @@ function InventoryService.equipBag(player: Player, bagId: string?): boolean
 	return true
 end
 
+-- Confere uma troca completa de mochila sem alterar o inventário: tira uma
+-- mochila nova do slot selecionado, aplica a nova capacidade e testa devolver
+-- a antiga. O WearService usa isto antes de fazer qualquer mudança real.
+function InventoryService.canSwapBag(player: Player, newBagId: string, selectedItemId: string): boolean
+	local newDef = Defs.Items[newBagId]
+	local inv = inventories[player]
+	if newDef == nil or newDef.category ~= "bag" or inv == nil then
+		return false
+	end
+	local copy: Inventory.Inventory = { capacity = inv.capacity, slots = {} }
+	for index, slot in inv.slots do
+		copy.slots[index] = { id = slot.id, count = slot.count }
+	end
+	if not Inventory.remove(copy, selectedItemId, 1) then
+		return false
+	end
+	local capacity = Inventory.capacityFor(bagSlotsOf(newBagId), passBonus[player] or 0)
+	if not Inventory.setCapacity(copy, capacity) then
+		return false
+	end
+	local previous = bags[player]
+	if previous ~= nil then
+		local rest = Inventory.add(copy, previous, 1, maxStackOf(previous))
+		if rest > 0 then
+			return false
+		end
+	end
+	return true
+end
+
 -- Zera o inventário (a morte perde tudo): inventário novo vazio, sem mochila,
 -- slot 1 selecionado. Manda o snapshot inteiro e avisa os ouvintes de seleção
 -- (o EquipService limpa a mão). Sem a regra de "slots vazios" do equipBag,

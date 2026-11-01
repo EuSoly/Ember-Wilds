@@ -17,6 +17,7 @@ local BorderWarning = require(World:WaitForChild("BorderWarning"))
 local CanopyFade = require(World:WaitForChild("CanopyFade"))
 local GatherFx = require(World:WaitForChild("GatherFx"))
 local OxygenBubble = require(World:WaitForChild("OxygenBubble"))
+local CraftBubble = require(World:WaitForChild("CraftBubble"))
 
 local WorldFxController = {}
 
@@ -26,6 +27,7 @@ function WorldFxController.Start(_self)
 	BorderWarning.start()
 	GatherFx.start()
 	BerryDisplay.start()
+	CraftBubble.start()
 
 	-- Fogueiras chegam aos poucos (streaming): liga cada uma quando aparece.
 	local function flicker(instance: Instance)

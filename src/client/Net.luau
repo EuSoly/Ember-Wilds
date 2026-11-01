@@ -166,6 +166,7 @@ Queue.Reliable[2] = table.create(256)
 Queue.Reliable[8] = table.create(256)
 Queue.Unreliable[0] = table.create(256)
 Queue.Reliable[9] = table.create(256)
+Queue.Reliable[12] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
@@ -350,6 +351,32 @@ function SerdesFunctions.ReadEVENT_GatherNotice(): ({ Key: string, ItemId: strin
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_RequestCraft(Value: string): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 10)
+	local Length = #Value
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value, Length)
+end
+
+function SerdesFunctions.WriteEVENT_CancelCraft(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 11)
+end
+
+function SerdesFunctions.ReadEVENT_CraftNotice(): (string)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	local Value = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value < 1 then error(`Expected length of "Value" to be larger than or equal to 1, got {#Value} instead.`) end
+	if #Value > 48 then error(`Expected length of "Value" to be smaller than or equal to  48, got {#Value} instead.`) end
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -384,6 +411,15 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	GatherNotice = {
+		On = NOOP
+	},
+	RequestCraft = {
+		Fire = NOOP
+	},
+	CancelCraft = {
+		Fire = NOOP
+	},
+	CraftNotice = {
 		On = NOOP
 	},
 	})
@@ -477,6 +513,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"GatherNotice\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[9], {Value} :: {any})
+			end
+		elseif Index == 12 then
+			local Value: string = SerdesFunctions.ReadEVENT_CraftNotice()
+			if Events.Reliable[12] ~= nil then
+				task.spawn(Events.Reliable[12], Value)
+			else
+				if #Queue.Reliable[12] > 256 then
+					warn("[Blink]: Event queue of \"CraftNotice\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[12], {Value} :: {any})
 			end
 		end
 	end
@@ -610,6 +656,30 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[9] == Listener then
 					Events.Reliable[9] = nil
+				end
+			end
+		end
+	},
+	RequestCraft = {
+		Fire = function(Value: string): ()
+			SerdesFunctions.WriteEVENT_RequestCraft(Value)
+		end
+	},
+	CancelCraft = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_CancelCraft(Value)
+		end
+	},
+	CraftNotice = {
+		On = function(Listener: (Value: string) -> ()): () -> ()
+			Events.Reliable[12] = Listener
+			for Index, Arguments in Queue.Reliable[12] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[12] = {}
+			return function (): ()
+				if Events.Reliable[12] == Listener then
+					Events.Reliable[12] = nil
 				end
 			end
 		end

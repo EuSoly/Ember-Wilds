@@ -134,3 +134,25 @@ event GatherNotice {
 		ItemId: string(1..32)?
 	}
 }
+
+-- Crafting (G3). O cliente só pede uma receita/cancelamento; o servidor confere
+-- ingredientes, estação, espaço no inventário e duração.
+event RequestCraft {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: string(1..32)
+}
+
+event CancelCraft {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+event CraftNotice {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: string(1..48)
+}

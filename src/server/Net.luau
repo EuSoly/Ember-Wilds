@@ -166,6 +166,8 @@ Queue.Reliable[4] = table.create(256)
 Queue.Reliable[5] = table.create(256)
 Queue.Reliable[6] = table.create(256)
 Queue.Reliable[7] = table.create(256)
+Queue.Reliable[10] = table.create(256)
+Queue.Reliable[11] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -329,6 +331,30 @@ function SerdesFunctions.WriteEVENT_GatherNotice(Value: { Key: string, ItemId: s
 	end
 end
 
+function SerdesFunctions.ReadEVENT_RequestCraft(): (string)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	local Value = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value < 1 then error(`Expected length of "Value" to be larger than or equal to 1, got {#Value} instead.`) end
+	if #Value > 32 then error(`Expected length of "Value" to be smaller than or equal to  32, got {#Value} instead.`) end
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_CancelCraft(): (nil)
+	return nil
+end
+
+function SerdesFunctions.WriteEVENT_CraftNotice(Value: string): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 12)
+	local Length = #Value
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value, Length)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -378,6 +404,18 @@ if not RunService:IsRunning() then
 		FireExcept = NOOP
 	},
 	GatherNotice = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	RequestCraft = {
+		On = NOOP
+	},
+	CancelCraft = {
+		On = NOOP
+	},
+	CraftNotice = {
 		Fire = NOOP,
 		FireAll = NOOP,
 		FireList = NOOP,
@@ -494,6 +532,26 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"RequestSpawn\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[7], {Player, Value} :: {any})
+			end
+		elseif Index == 10 then
+			local Value: string = SerdesFunctions.ReadEVENT_RequestCraft()
+			if Events.Reliable[10] ~= nil then
+				task.spawn(Events.Reliable[10], Player, Value)
+			else
+				if #Queue.Reliable[10] > 256 then
+					warn("[Blink]: Event queue of \"RequestCraft\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[10], {Player, Value} :: {any})
+			end
+		elseif Index == 11 then
+			local Value: nil = SerdesFunctions.ReadEVENT_CancelCraft()
+			if Events.Reliable[11] ~= nil then
+				task.spawn(Events.Reliable[11], Player, Value)
+			else
+				if #Queue.Reliable[11] > 256 then
+					warn("[Blink]: Event queue of \"CancelCraft\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[11], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -844,6 +902,80 @@ local Returns = table.freeze({
 		FireExcept = function(Except: Player, Value: { Key: string, ItemId: string? }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_GatherNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	RequestCraft = {
+		On = function(Listener: (Player: Player, Value: string) -> ()): () -> ()
+			Events.Reliable[10] = Listener
+			for Index, Arguments in Queue.Reliable[10] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[10] = {}
+			return function (): ()
+				if Events.Reliable[10] == Listener then
+					Events.Reliable[10] = nil
+				end
+			end
+		end
+	},
+	CancelCraft = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[11] = Listener
+			for Index, Arguments in Queue.Reliable[11] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[11] = {}
+			return function (): ()
+				if Events.Reliable[11] == Listener then
+					Events.Reliable[11] = nil
+				end
+			end
+		end
+	},
+	CraftNotice = {
+		Fire = function(Player: Player, Value: string): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_CraftNotice(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: string): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CraftNotice(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
 			for _, Player in Players:GetPlayers() do
 				if Player == Except then

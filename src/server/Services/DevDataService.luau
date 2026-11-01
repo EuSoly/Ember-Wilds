@@ -14,6 +14,8 @@
 --   dev (store Dev_) e expulsa o jogador.
 -- - ServerStorage.DevCampfire:Invoke(player): fogueira de teste 6 studs à frente
 --   do personagem (luz do fogo de noite; também esquenta: tag HeatSource).
+-- - ServerStorage.DevWorkbench:Invoke(player): bancada de teste 6 studs à frente
+--   do personagem (estação workbench para o crafting).
 -- - ServerStorage.DevBar:Invoke(player, "Hunger", 0): grava uma barra (Health,
 --   Hunger, Cold, Thirst ou Heat), de 0 a 100, para testar a sobrevivência.
 -- - ServerStorage.DevArmor:Invoke(player, "helmet") -> boolean: veste uma
@@ -32,6 +34,7 @@ local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
 local StatsService = require(script.Parent.StatsService)
 local CampfireModel = require(ReplicatedStorage.Shared.Models.CampfireModel)
+local WorkbenchModel = require(ReplicatedStorage.Shared.Models.WorkbenchModel)
 
 local DevDataService = {}
 
@@ -103,6 +106,18 @@ function DevDataService.Start(_self)
 		local campfire = CampfireModel.build()
 		campfire:PivotTo(CFrame.new(spot.X, 0, spot.Z))
 		campfire.Parent = Workspace
+	end)
+
+	newCommand("DevWorkbench", function(player: Player)
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		if root == nil or not root:IsA("BasePart") then
+			return
+		end
+		local spot = root.Position + root.CFrame.LookVector * 6
+		local workbench = WorkbenchModel.build()
+		workbench:PivotTo(CFrame.new(spot.X, 0, spot.Z))
+		workbench.Parent = Workspace
 	end)
 end
 
