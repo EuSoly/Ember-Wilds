@@ -8,7 +8,7 @@
 -- ficam num cache que se atualiza quando elas entram e saem: no cliente elas
 -- chegam aos poucos pelo streaming.
 -- WaterSim.isInWater(player) diz o último resultado (o WaterService usa para
--- o fôlego e o atributo InWater).
+-- o fôlego e o atributo InWater); WaterSim.isWet(x, z) confere um ponto qualquer.
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -64,6 +64,14 @@ local function isWet(x: number, z: number): boolean
 		end
 	end
 	return false
+end
+
+-- true se o ponto (x, z) está dentro de alguma peça de água (visto de cima).
+-- Serve fora do passo da simulação (ex.: o StructureService recusa construir
+-- na água); liga o acompanhamento das peças se ninguém ligou ainda.
+function WaterSim.isWet(x: number, z: number): boolean
+	startWatching()
+	return isWet(x, z)
 end
 
 -- Último resultado da simulação para o jogador (false sem personagem).

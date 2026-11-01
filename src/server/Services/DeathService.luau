@@ -7,7 +7,8 @@
 --
 -- A morte: fim de vida da F4 (pontos → Golden Ember, estatísticas), guarda os
 -- pontos para comprar kit (KitPoints), zera o inventário e tira a mochila e a
--- armadura (no Starve a morte perde tudo), remove o personagem e manda ao jogador o resumo
+-- armadura (no Starve a morte perde tudo), some com as peças construídas por
+-- ele (StructureService.removeOwned), remove o personagem e manda ao jogador o resumo
 -- (Net.LifeEnded) para a tela de morte. Quem renasce é o SpawnService, a pedido.
 --
 -- Queda do mapa: ao passar de Workspace.FallenPartsDestroyHeight, o Roblox
@@ -20,6 +21,7 @@
 -- Futuro (spec F5, não-objetivos): revive por Robux — pagar para voltar com os
 -- mesmos itens. Para caber, a morte poderia guardar o inventário da morte por
 -- alguns segundos antes do reset; os pontos zeram e viram moeda normalmente.
+-- As peças construídas ficam se o revive não chamar StructureService.removeOwned.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -28,6 +30,7 @@ local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
+local StructureService = require(script.Parent.StructureService)
 local Net = require(script.Parent.Parent.Net)
 
 local UNKNOWN_CAUSE = "death.cause.unknown"
@@ -65,6 +68,7 @@ function DeathService.kill(player: Player, causeKey: string)
 	player:SetAttribute(StatNames.KitPoints, summary.points)
 	InventoryService.reset(player)
 	ArmorService.wear(player, nil)
+	StructureService.removeOwned(player)
 
 	-- Remove o personagem antes de avisar: o Humanoid.Died de um personagem
 	-- que já não é o atual é ignorado abaixo, então não conta duas vezes.
