@@ -5,9 +5,9 @@
 --
 -- Colocar: na descida do atributo Using (soltou o clique no PC, soltou o
 -- joystick no celular) com uma peça placeable na mão. A célula é a da frente
--- (BuildRules.targetCell da raiz + direção do olhar, tudo do servidor). Recusa
--- calado (nada gasto): célula ocupada, acima do limite, água no centro de uma
--- célula, recurso ou jogador encostando. Só depois de tudo conferido tira o
+-- (BuildRules.targetCell da raiz + direção do olhar, a BuildRules.REACH studs,
+-- tudo do servidor). Recusa calado (nada gasto): célula ocupada, acima do
+-- limite, água no centro de uma célula, recurso ou jogador encostando. Só depois de tudo conferido tira o
 -- item do inventário (InventoryService.take, tudo ou nada) e cria a peça, sem
 -- pausa (yield) no meio: o inventário não muda entre conferir e gastar.
 --
@@ -277,6 +277,17 @@ local function create(player: Player, itemId: string, def: Defs.StructureDef, cx
 	mine[entry] = true
 	counts[player] = (counts[player] or 0) + 1
 	model.Parent = getFolder()
+	-- Peça apagada por fora (comando, outro script, pasta destruída): libera a
+	-- grade igual. remove é idempotente, então o Destroy do próprio remove
+	-- volta aqui e não faz nada.
+	model.Destroying:Connect(function()
+		remove(entry)
+	end)
+	model.AncestryChanged:Connect(function()
+		if not model:IsDescendantOf(Workspace) then
+			remove(entry)
+		end
+	end)
 
 	-- Fogo: apaga e some sozinho. Se já saiu antes (vida 0, dono morto),
 	-- remove ignora (a entrada é a "ficha" desta peça; nunca é reaproveitada).

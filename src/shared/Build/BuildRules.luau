@@ -12,6 +12,11 @@ BuildRules.CELL = 4 -- studs
 BuildRules.HAND_DAMAGE = 5
 BuildRules.SPIKE_INTERVAL = 1 -- s por par espinho/vítima
 BuildRules.MAX_PER_PLAYER = MAX_PER_PLAYER
+-- Studs da raiz até o ponto que escolhe a célula-alvo: meia célula + raio do
+-- corpo (1,5) + meia célula. Olhando ao longo de um eixo, a célula-alvo nunca
+-- fica encostada no corpo de quem constrói (sem isso, ~40% das posições eram
+-- recusadas pelo próprio jogador).
+BuildRules.REACH = BuildRules.CELL / 2 + 1.5 + BuildRules.CELL / 2
 
 -- Célula inteira que contém o ponto (floor: funciona com coordenadas negativas).
 function BuildRules.cellOf(x: number, z: number): (number, number)
@@ -22,9 +27,10 @@ function BuildRules.cellCenter(cx: number, cz: number): (number, number)
 	return (cx + 0.5) * BuildRules.CELL, (cz + 0.5) * BuildRules.CELL
 end
 
--- Uma célula à frente; dir é vetor unitário no plano do chão.
+-- A célula à frente: a que contém o ponto a REACH studs na direção dir (vetor
+-- unitário no plano do chão).
 function BuildRules.targetCell(x: number, z: number, dirX: number, dirZ: number): (number, number)
-	return BuildRules.cellOf(x + dirX * BuildRules.CELL, z + dirZ * BuildRules.CELL)
+	return BuildRules.cellOf(x + dirX * BuildRules.REACH, z + dirZ * BuildRules.REACH)
 end
 
 function BuildRules.key(cx: number, cz: number): string

@@ -18,10 +18,12 @@ local CharacterService = require(script.Parent.CharacterService)
 local StructureService = require(script.Parent.StructureService)
 
 local SPIKE_CHECK_EVERY = 0.2 -- segundos (5 Hz)
--- Studs: a raiz do jogador a até isso do quadrado do espinho = encostou. O
--- miolo que colide do espinho é menor que a célula (StructureModel), para o
--- corpo (3 de largura) chegar a essa distância.
-local SPIKE_MARGIN = 1
+-- Studs: a raiz do jogador a até isso do quadrado da célula do espinho =
+-- encostou. A caixa do modelo do espinho tem ~3,43 de lado; quem encosta de
+-- frente fica com o centro a 3,43/2 + 1,5 (raio do corpo) ≈ 3,215 do centro
+-- dele, ou seja, ~1,215 fora da célula (meia célula = 2). Margem = raio do
+-- corpo 1,5 + 0,3 de folga = 1,8 (com 1, quem encosta de frente nunca era ferido).
+local SPIKE_MARGIN = 1.8
 local SPIKE_CAUSE = "death.cause.spike"
 
 local SpikeService = {}

@@ -22,9 +22,9 @@ local StructureModel = {}
 -- Transparência das peças da porta aberta (fechada = opaca).
 local OPEN_TRANSPARENCY = 0.7
 local WALL_HEIGHT = 4
--- Lado do miolo que colide do espinho: menor que a célula para quem encosta
--- nele ficar a menos de 1 stud da borda da célula (a varredura usa margem 1;
--- o corpo tem 3 de largura).
+-- Lado do miolo que colide do espinho (menor que a célula). A margem da
+-- varredura do SpikeService conta com o espinho inteiro (~3,43 de lado com as
+-- pontas): se mudar o tamanho aqui, confira SPIKE_MARGIN lá.
 local SPIKE_CORE = 1.6
 
 local function newPart(name: string, size: Vector3, cframe: CFrame, color: Color3, parent: Model): Part

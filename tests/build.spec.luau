@@ -31,6 +31,42 @@ function spec.targetCell_quatro_direcoes()
 	eq2(cx, cz, 0, -1, "norte")
 end
 
+function spec.targetCell_perto_da_borda_e_negativo()
+	-- Na borda da própria célula (0 a 4), olhando para fora: pula a vizinha
+	-- encostada e cai na seguinte.
+	local cx, cz = BuildRules.targetCell(3.9, 2, 1, 0)
+	eq2(cx, cz, 2, 0, "x = 3.9 para o leste")
+	cx, cz = BuildRules.targetCell(0.1, 2, -1, 0)
+	eq2(cx, cz, -2, 0, "x = 0.1 para o oeste")
+	-- Coordenadas negativas.
+	cx, cz = BuildRules.targetCell(-6, -0.1, 0, -1)
+	eq2(cx, cz, -2, -2, "(-6, -0.1) para o norte")
+	cx, cz = BuildRules.targetCell(-6, -3.9, 0, 1)
+	eq2(cx, cz, -2, 0, "(-6, -3.9) para o sul")
+end
+
+-- Ao longo de um eixo, em qualquer posição, a célula-alvo nunca encosta no
+-- corpo de quem constrói (raio 1,5: a mesma margem que o servidor usa).
+function spec.targetCell_nunca_encosta_no_corpo()
+	local dirs = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } }
+	for i = 0, 160 do
+		local p = -10.13 + i * 0.13
+		for _, d in dirs do
+			for _, q in { -5.3, -0.7, 0.2, 3.9 } do
+				local x, z = p, q
+				if d[1] == 0 then
+					x, z = q, p
+				end
+				local cx, cz = BuildRules.targetCell(x, z, d[1], d[2])
+				assert(
+					not BuildRules.touches(x, z, cx, cz, 1, 1.5),
+					`({x}, {z}) olhando ({d[1]}, {d[2]}): célula ({cx}, {cz}) encosta no corpo`
+				)
+			end
+		end
+	end
+end
+
 function spec.key_formata_a_celula()
 	assert(BuildRules.key(3, -2) == "3,-2", "key deveria ser 'cx,cz'")
 end
