@@ -7,6 +7,7 @@
 | `src/shared` | `ReplicatedStorage.Shared` | Código e dados usados pelos dois lados |
 | `src/shared/Defs` | `Shared.Defs` | Conteúdo do jogo como **dados**: tiers, itens (depois receitas, mobs, biomas…) |
 | `src/shared/Craft` | `Shared.Craft` | Regras puras de craft: materiais, estação, espaço, duração e progresso |
+| `src/shared/Build` | `Shared.Build` | Regras puras da construção (`BuildRules`: grade, alcance, dano, aliados) e do baú (`ChestRules`) |
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |
@@ -137,6 +138,10 @@ O mapa é desenhado à mão no Studio (`Workspace.Map`, fora do Rojo) e o `MapSe
 **Coleta (G2):** o `MapService` registra cada recurso montado no `ResourceService` (reserva nos atributos `Amount`/`AmountMax`, grade espacial, regeneração); o `GatherService` faz o golpe; o `ScoreService` é o dono de `Score` e `Rank`. O cliente só mostra: tranco, lasquinhas e som via `Net.ResourceHit`, avisos via `Net.GatherNotice`, frutinhas pelo atributo `Amount`. Veja `coleta.md`.
 
 **Crafting (G3):** `Defs/Recipes` contém as receitas e `Shared/Craft/CraftRules` concentra as regras puras. No servidor, `CraftService` valida e cobra materiais, acompanha o tempo e entrega ou devolve o resultado; `WearService` equipa armaduras e mochilas. Estações usam a tag `CraftStation` e o atributo `Station`. O cliente só pede ações pela rede e mostra a coluna, o livro e o progresso (`CraftBubble`). Veja `crafting.md`.
+
+**Construção (G4):** `Shared/Build` guarda as regras puras (`BuildRules`, `ChestRules`); o bloco `structure` dos itens `placeable` define vida e comportamento. No servidor, `StructureService` é dono da grade, coloca a peça na soltura do botão de usar, cuida de vida, porta, fogo que some, dono e `removeOwned` (chamado pela morte e pela saída); `SpikeService` fere quem encosta nos espinhos (5 Hz); `ChestService` valida `ChestPut`/`ChestTake`; `StructureModel` faz os blocos provisórios. O golpe do `GatherService` acerta recurso ou peça. O cliente mostra o fantasma (`BuildGhost`), a barrinha de vida (`StructureHealth`) e o painel do baú. Veja `construcao.md`.
+
+> A linha `build/` do `.gitignore` também casa com pastas `Build` no Windows; por isso há uma exceção para `src/shared/Build/`. Não a remova.
 
 **Regra:** o `WaterSim` é o dono de `Humanoid.WalkSpeed` (escreve a cada passo da simulação). Qualquer outro modificador de velocidade no futuro (armas na mão, frio, montaria) tem de entrar **na simulação**, junto dele, senão é sobrescrito.
 

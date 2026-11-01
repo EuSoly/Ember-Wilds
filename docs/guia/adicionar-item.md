@@ -39,6 +39,19 @@ Veja `sobrevivencia.md`.
 
 Picareta (`category = "tool"`) ganha `pickaxe = { level = n }`: quanto maior o nível, mais pega por golpe e mais duros os recursos que ela coleta. Veja `coleta.md`.
 
+### Peça de construção e dano em construção
+
+Peça colocada no chão (`category = "placeable"`) precisa do bloco `structure`. Só o `kind` decide o comportamento (`wall`, `door`, `spike`, `station`, `chest`, `fire`):
+
+```lua
+wood_spike = {
+	id = "wood_spike", nameKey = "item.wood_spike", category = "placeable", tier = "wood", maxStack = 255,
+	structure = { kind = "spike", health = 150, spikeDamage = 10 },
+},
+```
+
+Campos: `health` (vida máxima, obrigatório), `size` (células por lado, padrão 1), `spikeDamage` (obrigatório no `spike`), `lifetime` e `heatRadius` (obrigatórios no `fire`), `station` (`"workbench"` ou `"fire"`, a estação que a peça oferece). Qualquer item pode ter `structureDamage` (maior que 0): o dano do golpe em peça de construção; sem ele vale o golpe de mão (5). Veja `construcao.md`.
+
 ### Receita e velocidade de crafting
 
 Para craftar o item, acrescente uma entrada com o mesmo id em `src/shared/Defs/Recipes.luau` e escolha materiais, tempo, estação e ordem no livro. Veja `crafting.md` para o formato e as receitas existentes.

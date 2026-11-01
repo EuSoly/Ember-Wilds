@@ -72,14 +72,14 @@ Para dar velocidade ao craft de um item segurado, use `category = "misc"` e `cra
 
 ## Estações e comandos de teste
 
-Uma estação é um `Model` ou `BasePart` com a tag `CraftStation` e o atributo `Station` igual a `"workbench"` ou `"fire"`. A fogueira gerada por `CampfireModel` já serve como estação de fogo. A bancada temporária é criada por `WorkbenchModel`.
+Uma estação é uma **peça colocada** (veja `construcao.md`): a bancada e as fogueiras, depois de colocadas, ganham a tag `CraftStation` e o atributo `Station` igual a `"workbench"` ou `"fire"`, vindos do bloco `structure` do item. A fogueira some sozinha, então a estação de fogo some junto.
 
-No Studio, usando o Command Bar no servidor:
+Para testar no Studio, use o Command Bar no servidor: dê a peça e coloque no chão (selecione o slot e solte o clique).
 
 ```lua
-game.ServerStorage.DevWorkbench:Invoke(player)
-game.ServerStorage.DevCampfire:Invoke(player)
+game.ServerStorage.DevGive:Invoke(player, "workbench", 1)
+game.ServerStorage.DevGive:Invoke(player, "campfire", 1)
 game.ServerStorage.DevGive:Invoke(player, "wood", 100)
 ```
 
-Os dois primeiros comandos colocam uma estação seis studs à frente do personagem. Bancada, fogueira, paredes, portas, espinhos e baú ainda não podem ser colocados pelo jogador; isso pertence à fase de construção.
+Os antigos `DevWorkbench` e `DevCampfire` foram removidos.

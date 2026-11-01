@@ -23,7 +23,7 @@ O inventário de cada jogador existe **só no servidor**. O cliente recebe uma c
 | `src/client/UI/DragGhost.luau` | O item que segue o dedo durante o arrasto |
 | `src/client/HotbarState.luau` | Slot selecionado; selecionar avisa o servidor |
 | `src/client/BackpackState.luau` | Se há slots além da hotbar (`hasBag`, vem da capacidade) e painel aberto/fechado |
-| `src/client/UI/SlotButton.luau` | Um slot (usado pela hotbar e pela grade) |
+| `src/client/UI/SlotButton.luau` | Um slot (usado pela hotbar e pela grade); com um baú por perto ganha o botão **"+"** que põe o item no baú (veja `construcao.md`) |
 | `src/client/UI/InventoryGrid.luau` | Os slots além da hotbar (11 até a capacidade), 3 por linha, rolando acima de 3 linhas |
 
 ## Fluxo de rede
