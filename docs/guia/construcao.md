@@ -60,7 +60,7 @@ Fere quem encosta, menos o dono e os aliados. O `SpikeService` varre a 5 Hz as c
 
 ## Fogo
 
-A fogueira colocada esquenta, queima quem pisa no centro e serve de estação `"fire"` do crafting. Ela **some sozinha**: fogueira em 2 min (`lifetime = 120`), fogueira grande em 6 min (`lifetime = 360`, calor de raio 18).
+A fogueira colocada esquenta, queima quem pisa no centro e serve de estação `"fire"` do crafting. Ela **some sozinha**: fogueira em 2 min (`lifetime = 120`), fogueira grande em 6 min (`lifetime = 360`); o calor tem raio 12 na fogueira pequena e 18 na grande.
 
 ## Baú
 
@@ -73,7 +73,7 @@ A fogueira colocada esquenta, queima quem pisa no centro e serve de estação `"
 
 ## Dono e revive
 
-Toda peça guarda o dono e a vida dele. Quando o dono **morre ou sai do jogo**, o `StructureService.removeOwned` apaga todas as peças dele e libera as células (a morte chama pelo `DeathService`, a saída também). Um revive futuro só não chama `removeOwned`, e as peças ficam. Uma peça apagada por fora (pelo Studio, por exemplo) também libera a célula.
+Toda peça guarda o dono (não há id de vida). Quando o dono **morre ou sai do jogo**, o `StructureService.removeOwned` apaga todas as peças dele e libera as células (a morte chama pelo `DeathService`, a saída também). A morte/saída chama `removeOwned(player)` uma única vez; um revive futuro simplesmente não chama, e as peças ficam. Uma peça apagada por fora (pelo Studio, por exemplo) também libera a célula.
 
 "Aliado" é uma função única, `BuildRules.areAllies(userIdA, userIdB)`, que hoje só responde "é o mesmo jogador". Porta e espinho usam ela: quando os times existirem, muda só essa função.
 
@@ -90,7 +90,7 @@ Peça nova é dado, sem código. Veja `adicionar-item.md`:
 3. Receita em `src/shared/Defs/Recipes.luau`.
 4. `bash scripts/check.sh` valida o bloco.
 
-Nenhum sistema testa o id da peça; só o `kind` (`wall`, `door`, `spike`, `station`, `chest`, `fire`) decide o comportamento. O visual é um bloco provisório em `src/server/Services/StructureModel.luau`: trocar o modelo é trocar só esse arquivo.
+Nenhum sistema testa o id da peça; só o `kind` (`wall`, `door`, `spike`, `station`, `chest`, `fire`) decide o comportamento. O visual é um bloco provisório em `src/shared/Models/StructureModel.luau`: trocar o modelo é trocar só esse arquivo.
 
 ## Comandos de teste
 

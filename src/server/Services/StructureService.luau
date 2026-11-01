@@ -30,8 +30,6 @@ local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
 local ResourceService = require(script.Parent.ResourceService)
 
--- Studs: jogador cuja raiz está a até isso do quadrado da peça impede construir.
-local PLAYER_MARGIN = 1.5
 -- Studs: jogador a até isso da célula da porta impede fechar (o corpo tem 3
 -- de largura: 1,5 do centro à borda).
 local DOOR_MARGIN = 1.5
@@ -229,7 +227,7 @@ local function canPlace(player: Player, cx: number, cz: number, size: number): b
 			return false
 		end
 	end
-	if playerTouching(cx, cz, size, PLAYER_MARGIN) then
+	if playerTouching(cx, cz, size, BuildRules.PLAYER_RADIUS) then
 		return false
 	end
 	return true

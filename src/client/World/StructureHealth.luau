@@ -38,7 +38,7 @@ local function heightOf(piece: Instance): number
 	return 4
 end
 
-local function makeGui(piece: Instance, adornee: BasePart): (BillboardGui, Frame)
+local function makeGui(piece: Instance, adornee: BasePart, parent: Instance): (BillboardGui, Frame)
 	local gui = Instance.new("BillboardGui")
 	gui.Name = "StructureHealth"
 	gui.Size = BAR_SIZE
@@ -47,6 +47,8 @@ local function makeGui(piece: Instance, adornee: BasePart): (BillboardGui, Frame
 	gui.LightInfluence = 0
 	gui.Adornee = adornee
 	gui.Enabled = false
+	-- Sem isto o Roblox destrói a barra quando o personagem renasce.
+	gui.ResetOnSpawn = false
 	local back = Instance.new("Frame")
 	back.Name = "Back"
 	back.Size = UDim2.fromScale(1, 1)
@@ -63,11 +65,13 @@ local function makeGui(piece: Instance, adornee: BasePart): (BillboardGui, Frame
 	fill.BorderSizePixel = 0
 	fill.Parent = back
 	-- No PlayerGui: local, não replica.
-	gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+	gui.Parent = parent
 	return gui, fill
 end
 
 function StructureHealth.start()
+	-- Resolvido uma vez, fora do Heartbeat.
+	local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 	local tracked: { [Instance]: Tracked } = {}
 
 	local function untrack(piece: Instance)
@@ -112,10 +116,11 @@ function StructureHealth.start()
 				entry.hideAt = now + SHOW_SECONDS
 				local max = piece:GetAttribute(StatNames.StructureHealthMax)
 				local fraction = if typeof(max) == "number" and max > 0 then math.clamp(health / max, 0, 1) else 0
-				if entry.gui == nil then
+				-- Cria sob demanda (e de novo se algo destruiu a barra).
+				if entry.gui == nil or entry.gui.Parent == nil then
 					local adornee = adorneeOf(piece)
 					if adornee then
-						entry.gui, entry.fill = makeGui(piece, adornee)
+						entry.gui, entry.fill = makeGui(piece, adornee, playerGui)
 					end
 				end
 				local fill = entry.fill
@@ -127,8 +132,11 @@ function StructureHealth.start()
 					entry.gui.Enabled = true
 				end
 			end
-			if entry.gui and entry.gui.Enabled and now >= entry.hideAt then
-				entry.gui.Enabled = false
+			-- Some a barra de vez (e não só desliga) para não acumular guis.
+			if entry.gui and now >= entry.hideAt then
+				entry.gui:Destroy()
+				entry.gui = nil
+				entry.fill = nil
 			end
 		end
 	end)

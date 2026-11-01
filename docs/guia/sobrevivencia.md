@@ -35,7 +35,7 @@ A barra de temperatura tem duas partes, uma por cima da outra:
 
 ## Fogo
 
-Qualquer modelo com a tag **`HeatSource`** e o atributo **`HeatRadius`** (em studs) esquenta quem está dentro do raio (medido vista de cima). Com o atributo **`BurnRadius`**, quem está dentro desse raio menor está "em cima do fogo" e enche o calor. A fogueira (`src/shared/Models/CampfireModel.luau`) já sai assim: raio 12 e queima a 3. Quando a fogueira construível existir, ela só precisa usar esse modelo.
+Qualquer modelo com a tag **`HeatSource`** e o atributo **`HeatRadius`** (em studs) esquenta quem está dentro do raio (medido vista de cima). Com o atributo **`BurnRadius`**, quem está dentro desse raio menor está "em cima do fogo" e enche o calor. A fogueira (`src/shared/Models/CampfireModel.luau`) já sai assim: raio 12 e queima a 3. A fogueira construível (ver `construcao.md`) usa esse mesmo modelo (`CampfireModel`, via `StructureModel`), com o raio de calor vindo dos dados da peça: 12 na pequena e 18 na grande.
 
 ## Comida
 

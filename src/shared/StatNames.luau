@@ -76,6 +76,9 @@ return table.freeze({
 	-- Workspace.Resources (ResourceService; o cliente mostra as frutinhas).
 	Amount = "Amount",
 	AmountMax = "AmountMax",
+	-- Raio de colisão do recurso (studs, já com a escala), atributo no modelo
+	-- (ResourceService): o fantasma da construção usa o mesmo raio do servidor.
+	ResourceRadius = "ResourceRadius",
 	-- Tag das peças que ficam semitransparentes entre a câmera e o boneco (copas).
 	OccluderTag = "Occluder",
 	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a

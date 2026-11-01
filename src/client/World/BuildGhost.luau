@@ -15,8 +15,6 @@ local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 
--- Mesma folga do servidor entre o corpo e a peça.
-local PLAYER_MARGIN = 1.5
 local THICKNESS = 0.3
 local TRANSPARENCY = 0.55
 -- O teste de "livre" varre recursos e peças; refaz só a cada tanto.
@@ -93,7 +91,8 @@ local function looksFree(cx: number, cz: number, size: number): boolean
 			end
 		end
 	end
-	-- Recursos: aproximado pelo tamanho do modelo (o servidor usa o raio de colisão).
+	-- Recursos: o raio de colisão que o servidor publica; sem ele, aproxima
+	-- pelo tamanho do modelo.
 	local centerX, centerZ = (cx * cell) + half, (cz * cell) + half
 	for _, instance in CollectionService:GetTagged(StatNames.ResourceTag) do
 		local x, z = pivotXZ(instance)
@@ -103,7 +102,11 @@ local function looksFree(cx: number, cz: number, size: number): boolean
 			and math.abs(x - centerX) <= half + RESOURCE_RANGE
 			and math.abs(z - centerZ) <= half + RESOURCE_RANGE
 		then
-			if BuildRules.touches(x, z, cx, cz, size, math.min(extentOf(instance), RESOURCE_MAX_RADIUS)) then
+			local published = instance:GetAttribute(StatNames.ResourceRadius)
+			local radius = if typeof(published) == "number"
+				then published
+				else math.min(extentOf(instance), RESOURCE_MAX_RADIUS)
+			if BuildRules.touches(x, z, cx, cz, size, radius) then
 				return false
 			end
 		end
@@ -112,7 +115,7 @@ local function looksFree(cx: number, cz: number, size: number): boolean
 	for _, player in Players:GetPlayers() do
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 		if root and root:IsA("BasePart") then
-			if BuildRules.touches(root.Position.X, root.Position.Z, cx, cz, size, PLAYER_MARGIN) then
+			if BuildRules.touches(root.Position.X, root.Position.Z, cx, cz, size, BuildRules.PLAYER_RADIUS) then
 				return false
 			end
 		end

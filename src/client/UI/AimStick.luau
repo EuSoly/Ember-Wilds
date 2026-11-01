@@ -8,6 +8,7 @@
 -- movimento, por exemplo) são ignorados.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -43,14 +44,20 @@ local function AimStick(): Frame
 	local function release()
 		trackedTouch = nil
 		knobOffset(Vector2.zero)
-		local aimBinding, useBinding = findBindings()
+		local _, useBinding = findBindings()
 		if useBinding and using then
 			useBinding:Fire(false)
 		end
-		if aimBinding then
-			aimBinding:Fire(Vector2.zero)
-		end
 		using = false
+		-- A mira só zera no quadro seguinte: se zerasse junto, o personagem
+		-- giraria para a direção de andar antes de o servidor ler o "soltou"
+		-- e a peça cairia numa célula diferente da do fantasma.
+		RunService.RenderStepped:Once(function()
+			local aimBinding = findBindings()
+			if aimBinding and trackedTouch == nil then
+				aimBinding:Fire(Vector2.zero)
+			end
+		end)
 	end
 
 	local function update(position: Vector3)
