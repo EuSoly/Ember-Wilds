@@ -395,7 +395,7 @@ function SerdesFunctions.ReadEVENT_CraftNotice(): (string)
 	return Value
 end
 
-function SerdesFunctions.WriteEVENT_ChestPut(Value: { Chest: Instance, Slot: number, Count: number }): ()
+function SerdesFunctions.WriteEVENT_ChestPut(Value: { Chest: Instance?, Slot: number, Count: number }): ()
 	-- Allocate BLOCK: 3 bytes
 	local BLOCK_START = Allocate(3)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 14)
@@ -404,7 +404,7 @@ function SerdesFunctions.WriteEVENT_ChestPut(Value: { Chest: Instance, Slot: num
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Count)
 end
 
-function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance): ()
+function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance?): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 15)
@@ -752,12 +752,12 @@ local Returns = table.freeze({
 		end
 	},
 	ChestPut = {
-		Fire = function(Value: { Chest: Instance, Slot: number, Count: number }): ()
+		Fire = function(Value: { Chest: Instance?, Slot: number, Count: number }): ()
 			SerdesFunctions.WriteEVENT_ChestPut(Value)
 		end
 	},
 	ChestTake = {
-		Fire = function(Value: Instance): ()
+		Fire = function(Value: Instance?): ()
 			SerdesFunctions.WriteEVENT_ChestTake(Value)
 		end
 	},

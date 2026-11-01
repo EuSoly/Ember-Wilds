@@ -9,6 +9,7 @@ local ScreenFlow = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild
 local ScreenState = require(script.Parent.Parent:WaitForChild("ScreenState"))
 local AimStick = require(script.Parent:WaitForChild("AimStick"))
 local Backpack = require(script.Parent:WaitForChild("Backpack"))
+local ChestPanel = require(script.Parent:WaitForChild("ChestPanel"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
 local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
@@ -33,6 +34,7 @@ local function App(): ScreenGui
 		SettingsButton(),
 		RecipeBookButton(),
 		Notifications.Component(),
+		ChestPanel(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),
 		Backpack.Button(),

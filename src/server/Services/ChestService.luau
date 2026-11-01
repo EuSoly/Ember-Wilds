@@ -102,7 +102,10 @@ local function publish(entry: Entry, c: ChestRules.Contents)
 end
 
 -- Pôr `Count` (1 ou 10) do slot `Slot` no baú. Sem pausa até o fim.
-local function onPut(player: Player, data: { Chest: Instance, Slot: number, Count: number })
+local function onPut(player: Player, data: { Chest: Instance?, Slot: number, Count: number })
+	if data.Chest == nil then
+		return
+	end
 	local entry = validChest(player, data.Chest)
 	if entry == nil then
 		return
@@ -138,7 +141,10 @@ local function onPut(player: Player, data: { Chest: Instance, Slot: number, Coun
 end
 
 -- Tirar do baú o quanto couber no inventário. Sem pausa até o fim.
-local function onTake(player: Player, chest: Instance)
+local function onTake(player: Player, chest: Instance?)
+	if chest == nil then
+		return
+	end
 	local entry = validChest(player, chest)
 	if entry == nil then
 		return

@@ -172,14 +172,15 @@ event CraftNotice {
 }
 
 -- Baú (G4). O cliente só pede; o servidor (ChestService) confere baú, distância,
--- slot, quantidade e tipo, e ignora o inválido. Chest pode chegar nil.
+-- slot, quantidade e tipo, e ignora o inválido. O baú pode chegar nil (peça
+-- apagada entre o clique e o pedido).
 -- Pôr `Count` (1 ou 10) do slot `Slot` do inventário no baú.
 event ChestPut {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
 	Data: struct {
-		Chest: Instance,
+		Chest: Instance?,
 		Slot: u8,
 		Count: u8
 	}
@@ -190,5 +191,5 @@ event ChestTake {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
-	Data: Instance
+	Data: Instance?
 }
