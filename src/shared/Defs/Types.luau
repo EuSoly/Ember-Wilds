@@ -32,6 +32,7 @@ export type StructureDef = {
 	kind: StructureKind,
 	health: number, -- vida máxima (> 0)
 	size: number?, -- células por lado; padrão 1 (só 1 nesta fase)
+	radius: number?, -- studs: raio do círculo da peça no chão; padrão BuildRules.PIECE_RADIUS
 	spikeDamage: number?, -- só kind "spike" (obrigatório nele)
 	lifetime: number?, -- segundos até sumir; só kind "fire" (obrigatório nele)
 	heatRadius: number?, -- studs; só kind "fire" (obrigatório nele)
