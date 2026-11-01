@@ -35,7 +35,7 @@ A barra de temperatura tem duas partes, uma por cima da outra:
 
 ## Fogo
 
-Qualquer modelo com a tag **`HeatSource`** e o atributo **`HeatRadius`** (em studs) esquenta quem está dentro do raio (medido vista de cima). Com o atributo **`BurnRadius`**, quem está dentro desse raio menor está "em cima do fogo" e enche o calor. A fogueira (`src/shared/Models/CampfireModel.luau`) já sai assim: raio 12 e queima a 3. Quando a fogueira construível existir, ela só precisa usar esse modelo.
+Qualquer modelo com a tag **`HeatSource`** e o atributo **`HeatRadius`** (em studs) esquenta quem está dentro do raio (medido vista de cima). Com o atributo **`BurnRadius`**, quem está dentro desse raio menor está "em cima do fogo" e enche o calor. A fogueira (`src/shared/Models/CampfireModel.luau`) já sai assim: raio 12 e queima a 3. A fogueira construível (ver `construcao.md`) usa esse mesmo modelo (`CampfireModel`, via `StructureModel`), com o raio de calor vindo dos dados da peça: 12 na pequena e 18 na grande.
 
 ## Comida
 
@@ -65,7 +65,7 @@ local p = game.Players:GetPlayers()[1]
 game.ServerStorage.DevBar:Invoke(p, "Hunger", 0)      -- zera a fome (morre em ~67 s)
 game.ServerStorage.DevBar:Invoke(p, "Cold", 20)       -- quase congelando
 game.ServerStorage.DevBar:Invoke(p, "Heat", 90)       -- quase queimando (anel laranja)
-game.ServerStorage.DevCampfire:Invoke(p)              -- fogueira 6 studs à frente (esquenta)
+game.ServerStorage.DevGive:Invoke(p, "campfire", 1)    -- dá a fogueira; coloque no chão (esquenta)
 workspace:SetAttribute("CycleStart", workspace:GetServerTimeNow() - 238) -- anoitece em 2 s
 game.ServerStorage.DevArmor:Invoke(p, "algum_item_armor") -- quando existir uma armadura
 ```

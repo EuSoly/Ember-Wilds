@@ -94,6 +94,39 @@ function Inventory.remove(inv: Inventory, id: string, count: number): (boolean, 
 	return true, changed
 end
 
+-- Remove `count` do slot `index` (só dele, não de outra pilha do mesmo item),
+-- tudo ou nada. Índice fora da capacidade, slot vazio, quantidade inválida
+-- (0, negativa, fração, NaN, inf) ou maior que a pilha: nada muda.
+function Inventory.removeAt(inv: Inventory, index: number, count: number): (boolean, { number })
+	if not isValidIndex(inv, index) or not (count >= 1 and count < math.huge and count % 1 == 0) then
+		return false, {}
+	end
+	local slot = inv.slots[index]
+	if slot == nil or slot.count < count then
+		return false, {}
+	end
+	slot.count -= count
+	if slot.count == 0 then
+		inv.slots[index] = nil
+	end
+	return true, { index }
+end
+
+-- Quanto de `id` caberia agora (o que Inventory.add aceitaria), sem mudar nada:
+-- o que falta nas pilhas do mesmo item + uma pilha cheia por slot vazio.
+function Inventory.spaceFor(inv: Inventory, id: string, maxStack: number): number
+	local space = 0
+	for index = 1, inv.capacity do
+		local slot = inv.slots[index]
+		if slot == nil then
+			space += maxStack
+		elseif slot.id == id and slot.count < maxStack then
+			space += maxStack - slot.count
+		end
+	end
+	return space
+end
+
 -- Move o conteúdo do slot `from` para `to`:
 -- - destino vazio: move;
 -- - mesmo item: junta até o máximo da pilha (o resto fica na origem);

@@ -18,6 +18,9 @@ local CanopyFade = require(World:WaitForChild("CanopyFade"))
 local GatherFx = require(World:WaitForChild("GatherFx"))
 local OxygenBubble = require(World:WaitForChild("OxygenBubble"))
 local CraftBubble = require(World:WaitForChild("CraftBubble"))
+local BuildGhost = require(World:WaitForChild("BuildGhost"))
+local BuildRotation = require(Client:WaitForChild("BuildRotation"))
+local StructureHealth = require(World:WaitForChild("StructureHealth"))
 
 local WorldFxController = {}
 
@@ -28,6 +31,9 @@ function WorldFxController.Start(_self)
 	GatherFx.start()
 	BerryDisplay.start()
 	CraftBubble.start()
+	BuildRotation.start()
+	BuildGhost.start()
+	StructureHealth.start()
 
 	-- Fogueiras chegam aos poucos (streaming): liga cada uma quando aparece.
 	local function flicker(instance: Instance)

@@ -395,6 +395,29 @@ function SerdesFunctions.ReadEVENT_CraftNotice(): (string)
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_ChestPut(Value: { Chest: Instance?, Slot: number, Count: number }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 14)
+	table.insert(SendInstances, Value.Chest or Null)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Slot)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Count)
+end
+
+function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance?): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 15)
+	table.insert(SendInstances, Value or Null)
+end
+
+function SerdesFunctions.WriteEVENT_SetBuildRotation(Value: number): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 16)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -442,6 +465,15 @@ if not RunService:IsRunning() then
 	},
 	CraftNotice = {
 		On = NOOP
+	},
+	ChestPut = {
+		Fire = NOOP
+	},
+	ChestTake = {
+		Fire = NOOP
+	},
+	SetBuildRotation = {
+		Fire = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -727,6 +759,21 @@ local Returns = table.freeze({
 					Events.Reliable[13] = nil
 				end
 			end
+		end
+	},
+	ChestPut = {
+		Fire = function(Value: { Chest: Instance?, Slot: number, Count: number }): ()
+			SerdesFunctions.WriteEVENT_ChestPut(Value)
+		end
+	},
+	ChestTake = {
+		Fire = function(Value: Instance?): ()
+			SerdesFunctions.WriteEVENT_ChestTake(Value)
+		end
+	},
+	SetBuildRotation = {
+		Fire = function(Value: number): ()
+			SerdesFunctions.WriteEVENT_SetBuildRotation(Value)
 		end
 	},
 })

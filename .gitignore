@@ -16,6 +16,8 @@ ServerPackages/
 
 # Saídas de build e cache de ferramentas
 build/
+# src/shared/Build (código-fonte) casa com build/ quando maiúsculas não diferem
+!src/shared/Build/
 .luau-lsp/
 *.rbxlx
 

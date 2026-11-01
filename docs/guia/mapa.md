@@ -121,7 +121,7 @@ Para testar a noite com fogo no Studio:
 ```lua
 -- Barra de comandos, lado servidor:
 local p = game.Players:GetPlayers()[1]
-game.ServerStorage.DevCampfire:Invoke(p)                          -- fogueira 6 studs à frente
+game.ServerStorage.DevGive:Invoke(p, "campfire", 1)                -- dá a fogueira; selecione e solte o clique para colocar
 workspace:SetAttribute("CycleStart", workspace:GetServerTimeNow() - 238) -- anoitece em 2 s
 ```
 

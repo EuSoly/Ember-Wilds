@@ -6,6 +6,7 @@ local InventoryConfig = require("../InventoryConfig")
 local StatNames = require("../StatNames")
 local SurvivalConfig = require("../SurvivalConfig")
 local Types = require("./Types")
+local BuildRules = require("../Build/BuildRules")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
 local HEX_PATTERN = "^#%x%x%x%x%x%x$"
@@ -17,6 +18,10 @@ local MAX_COSMETIC_ID_LENGTH = 50
 local MAX_DATA_ID_LENGTH = 32
 -- Opções de configuração "choice" viajam no SetSetting (Choice string(1..16)).
 local MAX_SETTING_OPTION_LENGTH = 16
+
+-- Maior raio de peça que ainda cabe: a peça fica a PLACE_DISTANCE do centro do
+-- corpo e não pode tocá-lo (BuildRules só requer Defs/Types, sem ciclo).
+local MAX_STRUCTURE_RADIUS = BuildRules.PLACE_DISTANCE - BuildRules.PLAYER_RADIUS
 
 local Validate = {}
 
@@ -605,6 +610,62 @@ local function validateArmor(errors: { string }, key: string, item: Types.ItemDe
 	end
 end
 
+local STRUCTURE_KINDS: { [string]: boolean } =
+	{ wall = true, door = true, spike = true, station = true, chest = true, fire = true }
+local STRUCTURE_STATIONS: { [string]: boolean } = { workbench = true, fire = true }
+
+local function validateStructure(errors: { string }, key: string, item: Types.ItemDef)
+	local structure = item.structure
+	if item.category ~= "placeable" then
+		if structure ~= nil then
+			table.insert(errors, `Item "{key}": structure só vale para category "placeable"`)
+		end
+	elseif type(structure) ~= "table" then
+		table.insert(errors, `Item "{key}": peça colocável precisa do bloco structure`)
+	else
+		if STRUCTURE_KINDS[structure.kind] ~= true then
+			table.insert(errors, `Item "{key}": structure.kind inválido`)
+		end
+		if not isPositive(structure.health) then
+			table.insert(errors, `Item "{key}": structure.health deve ser maior que 0`)
+		end
+		if structure.radius ~= nil and (not isFiniteNumber(structure.radius) or structure.radius <= 0) then
+			table.insert(errors, `Item "{key}": structure.radius deve ser maior que 0`)
+		elseif structure.radius ~= nil and structure.radius > MAX_STRUCTURE_RADIUS then
+			-- A distância de colocação é fixa: acima disto a peça sempre cobre o corpo.
+			table.insert(
+				errors,
+				`Item "{key}": structure.radius deve ser no máximo {MAX_STRUCTURE_RADIUS} (PLACE_DISTANCE - PLAYER_RADIUS)`
+			)
+		end
+		local station = structure.station
+		if station ~= nil and STRUCTURE_STATIONS[station] ~= true then
+			table.insert(errors, `Item "{key}": structure.station inválida`)
+		end
+		if structure.kind == "spike" then
+			if not isPositive(structure.spikeDamage) then
+				table.insert(errors, `Item "{key}": espinho precisa de structure.spikeDamage maior que 0`)
+			end
+		elseif structure.spikeDamage ~= nil then
+			table.insert(errors, `Item "{key}": structure.spikeDamage só vale para kind "spike"`)
+		end
+		if structure.kind == "fire" then
+			if not isPositive(structure.lifetime) then
+				table.insert(errors, `Item "{key}": fogueira precisa de structure.lifetime maior que 0`)
+			end
+			if not isPositive(structure.heatRadius) then
+				table.insert(errors, `Item "{key}": fogueira precisa de structure.heatRadius maior que 0`)
+			end
+		elseif structure.lifetime ~= nil or structure.heatRadius ~= nil then
+			table.insert(errors, `Item "{key}": lifetime e heatRadius só valem para kind "fire"`)
+		end
+	end
+	local damage = item.structureDamage
+	if damage ~= nil and not isPositive(damage) then
+		table.insert(errors, `Item "{key}": structureDamage deve ser maior que 0`)
+	end
+end
+
 -- Devolve a lista de erros encontrados (vazia = tudo certo).
 function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): { string }
 	local errors: { string } = {}
@@ -647,6 +708,7 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		end
 		validateFood(errors, key, item)
 		validateArmor(errors, key, item)
+		validateStructure(errors, key, item)
 		local pickaxe = item.pickaxe
 		if pickaxe ~= nil then
 			if item.category ~= "tool" then

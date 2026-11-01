@@ -168,6 +168,9 @@ Queue.Reliable[6] = table.create(256)
 Queue.Reliable[7] = table.create(256)
 Queue.Reliable[10] = table.create(256)
 Queue.Reliable[11] = table.create(256)
+Queue.Reliable[14] = table.create(256)
+Queue.Reliable[15] = table.create(256)
+Queue.Reliable[16] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -372,6 +375,41 @@ function SerdesFunctions.WriteEVENT_CraftNotice(Value: string): ()
 	buffer.writestring(SendBuffer, SendOffset, Value, Length)
 end
 
+function SerdesFunctions.ReadEVENT_ChestPut(): ({ Chest: Instance?, Slot: number, Count: number })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value.Chest = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Chest) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Chest)} instead.`) end
+	end
+	Value.Slot = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Count = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_ChestTake(): (Instance?)
+	local Value
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value) ~= "Instance" then error(`Expected an Instance, got {typeof(Value)} instead.`) end
+	end
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_SetBuildRotation(): (number)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -443,6 +481,15 @@ if not RunService:IsRunning() then
 		FireAll = NOOP,
 		FireList = NOOP,
 		FireExcept = NOOP
+	},
+	ChestPut = {
+		On = NOOP
+	},
+	ChestTake = {
+		On = NOOP
+	},
+	SetBuildRotation = {
+		On = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -575,6 +622,36 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"CancelCraft\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[11], {Player, Value} :: {any})
+			end
+		elseif Index == 14 then
+			local Value: { Chest: Instance?, Slot: number, Count: number } = SerdesFunctions.ReadEVENT_ChestPut()
+			if Events.Reliable[14] ~= nil then
+				task.spawn(Events.Reliable[14], Player, Value)
+			else
+				if #Queue.Reliable[14] > 256 then
+					warn("[Blink]: Event queue of \"ChestPut\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[14], {Player, Value} :: {any})
+			end
+		elseif Index == 15 then
+			local Value: Instance? = SerdesFunctions.ReadEVENT_ChestTake()
+			if Events.Reliable[15] ~= nil then
+				task.spawn(Events.Reliable[15], Player, Value)
+			else
+				if #Queue.Reliable[15] > 256 then
+					warn("[Blink]: Event queue of \"ChestTake\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[15], {Player, Value} :: {any})
+			end
+		elseif Index == 16 then
+			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			if Events.Reliable[16] ~= nil then
+				task.spawn(Events.Reliable[16], Player, Value)
+			else
+				if #Queue.Reliable[16] > 256 then
+					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[16], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1057,6 +1134,48 @@ local Returns = table.freeze({
 				PlayersMap[Player] = Save()
 			end
 		end,
+	},
+	ChestPut = {
+		On = function(Listener: (Player: Player, Value: { Chest: Instance?, Slot: number, Count: number }) -> ()): () -> ()
+			Events.Reliable[14] = Listener
+			for Index, Arguments in Queue.Reliable[14] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[14] = {}
+			return function (): ()
+				if Events.Reliable[14] == Listener then
+					Events.Reliable[14] = nil
+				end
+			end
+		end
+	},
+	ChestTake = {
+		On = function(Listener: (Player: Player, Value: Instance?) -> ()): () -> ()
+			Events.Reliable[15] = Listener
+			for Index, Arguments in Queue.Reliable[15] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[15] = {}
+			return function (): ()
+				if Events.Reliable[15] == Listener then
+					Events.Reliable[15] = nil
+				end
+			end
+		end
+	},
+	SetBuildRotation = {
+		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+			Events.Reliable[16] = Listener
+			for Index, Arguments in Queue.Reliable[16] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[16] = {}
+			return function (): ()
+				if Events.Reliable[16] == Listener then
+					Events.Reliable[16] = nil
+				end
+			end
+		end
 	},
 })
 type BLINK_EVENTS_SYMBOL = typeof(Returns)

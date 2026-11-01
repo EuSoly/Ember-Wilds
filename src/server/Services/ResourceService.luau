@@ -57,6 +57,7 @@ function ResourceService.register(model: Model, def: Defs.ResourceDef, x: number
 		nextRegen = 0,
 	}
 	model:SetAttribute(StatNames.AmountMax, max)
+	model:SetAttribute(StatNames.ResourceRadius, entry.radius)
 	publish(entry)
 	grid:insert(entry, x, z)
 end

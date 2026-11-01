@@ -3,10 +3,13 @@
 -- vivo e não tem comida na mão (comida o FoodService come) bate no recurso à
 -- frente, no máximo um golpe a cada GatherRules.HIT_INTERVAL (o primeiro sai
 -- na hora do aperto, se o último foi há mais que isso).
--- O golpe: acha o alvo (ResourceService + GatherRules.pickTarget), confere a
+-- O golpe: acha o alvo mais perto à frente entre recursos (ResourceService) e
+-- peças de construção (StructureService), com GatherRules.pickTarget. Peça:
+-- StructureService.hit (tira vida ou abre a porta do dono). Recurso: confere a
 -- ferramenta e a reserva, dá o que couber no inventário, desconta da reserva
 -- só o que entrou, soma pontos (ScoreService) e a estatística, e avisa os
 -- jogadores perto para mostrarem o tranco/lasquinhas/som (Net.ResourceHit).
+-- Com uma peça placeable na mão não bate: soltar o botão constrói (StructureService).
 -- Avisos (picareta que falta, recurso vazio, inventário cheio) vão só para
 -- quem bateu, no máximo um da mesma chave a cada NOTICE_EVERY.
 local Players = game:GetService("Players")
@@ -20,6 +23,7 @@ local InventoryService = require(script.Parent.InventoryService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
 local StatsService = require(script.Parent.StatsService)
+local StructureService = require(script.Parent.StructureService)
 local Net = require(script.Parent.Parent.Net)
 
 local CHECK_EVERY = 0.05 -- segundos entre conferências de quem está batendo
@@ -27,6 +31,15 @@ local NOTICE_EVERY = 2 -- segundos mínimos entre avisos iguais
 local FX_RANGE = 100 -- studs: quem está a até isso do golpe vê o efeito
 -- Folga da busca na grade: maior raio de colisão de um recurso (com variação).
 local SEARCH_MARGIN = 5
+
+-- Alvo possível do golpe: um recurso ou uma peça (x, z, radius para o pickTarget).
+type Candidate = {
+	x: number,
+	z: number,
+	radius: number,
+	resource: ResourceService.Entry?,
+	structure: StructureService.Entry?,
+}
 
 local GatherService = {}
 
@@ -80,8 +93,27 @@ local function hit(player: Player, character: Model, root: BasePart)
 	local dir = flat.Unit
 	local px = root.Position.X + dir.X * GatherRules.HIT_REACH
 	local pz = root.Position.Z + dir.Z * GatherRules.HIT_REACH
-	local candidates = ResourceService.near(px, pz, GatherRules.HIT_RADIUS + SEARCH_MARGIN)
-	local entry = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
+	local equipped = character:GetAttribute(StatNames.Equipped)
+	local tool = if type(equipped) == "string" then Defs.Items[equipped] else nil
+
+	-- Recursos e peças concorrem: o de borda mais perto do centro do golpe leva.
+	local candidates: { Candidate } = {}
+	for _, resource in ResourceService.near(px, pz, GatherRules.HIT_RADIUS + SEARCH_MARGIN) do
+		table.insert(candidates, { x = resource.x, z = resource.z, radius = resource.radius, resource = resource })
+	end
+	-- near já conta o raio de cada peça: traz as que encostam no círculo do golpe.
+	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS) do
+		table.insert(candidates, { x = structure.x, z = structure.z, radius = structure.radius, structure = structure })
+	end
+	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
+	if target == nil then
+		return
+	end
+	if target.structure then
+		StructureService.hit(target.structure, player, tool)
+		return
+	end
+	local entry = target.resource
 	if entry == nil then
 		return
 	end
@@ -92,8 +124,6 @@ local function hit(player: Player, character: Model, root: BasePart)
 	sendFx(entry, entry.x + side.X * entry.radius, entry.z + side.Z * entry.radius, dir.X, dir.Z)
 
 	local gather = entry.gather
-	local equipped = character:GetAttribute(StatNames.Equipped)
-	local tool = if type(equipped) == "string" then Defs.Items[equipped] else nil
 	local yield = GatherRules.yield(tool, gather)
 	if yield == nil then
 		notify(player, "gather.needTool", GatherRules.requiredPickaxe(Defs.Items, gather.hardness or 0))
@@ -137,7 +167,8 @@ local function step()
 		if def and def.food then
 			continue
 		end
-		if def and (def.category == "armor" or def.category == "bag") then
+		-- Armadura/mochila: o botão veste (WearService). Peça: soltar constrói.
+		if def and (def.category == "armor" or def.category == "bag" or def.category == "placeable") then
 			continue
 		end
 		nextHit[player] = GatherRules.nextHit(nextHit[player], now)

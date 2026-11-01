@@ -26,6 +26,7 @@ return table.freeze({
 	["hud.rank"] = "#{rank}",
 	["hud.nightComing"] = "A noite está chegando",
 	["hud.backpack"] = "Mochila",
+	["hud.rotate"] = "Girar",
 
 	-- Itens
 	["item.wood"] = "Madeira",
@@ -133,6 +134,7 @@ return table.freeze({
 	["death.cause.thirst"] = "Sede",
 	["death.cause.drown"] = "Afogado",
 	["death.cause.heat"] = "Calor",
+	["death.cause.spike"] = "Espinho",
 
 	-- Coleta
 	["gather.empty"] = "Este recurso acabou",

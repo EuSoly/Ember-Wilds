@@ -5,12 +5,16 @@
 -- - Borda laranja: slot selecionado da hotbar. Borda amarela: slot debaixo do
 --   item que está sendo arrastado (onde ele vai cair).
 -- - Trancado (slots da mochila sem mochila): escuro e sem toque.
+-- - Botão "+" (canto do slot com item, só com baú perto): põe 1 no baú; Shift+clique
+--   põe 10; no celular, segurar 0,5 s põe 10. É um botão à parte e não inicia arrasto.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
+local ChestState = require(Client:WaitForChild("ChestState"))
 local DragState = require(Client:WaitForChild("DragState"))
 local HotbarState = require(Client:WaitForChild("HotbarState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
@@ -23,11 +27,25 @@ local LOCKED_TRANSPARENCY = 0.6
 -- O slot de onde o item está saindo fica apagado durante o arrasto.
 local DRAG_ORIGIN_TRANSPARENCY = 0.7
 
+-- Quanto o "+" põe: clique = 1; Shift+clique ou segurar no celular = 10.
+local PUT_ONE = 1
+local PUT_MANY = 10
+local HOLD_SECONDS = 0.5
+local PLUS_SIZE = 0.4 -- fração do slot
+
 export type Props = {
 	index: number,
 	Size: UDim2?,
 	LayoutOrder: number?,
 }
+
+-- O toque/clique caiu em cima do botão `target`? (O InputBegan do slot também
+-- dispara por um botão filho, então a posição decide.)
+local function pressedOn(target: GuiObject, input: InputObject): boolean
+	local at = Vector2.new(input.Position.X, input.Position.Y)
+	local from, to = target.AbsolutePosition, target.AbsolutePosition + target.AbsoluteSize
+	return at.X >= from.X and at.X <= to.X and at.Y >= from.Y and at.Y <= to.Y
+end
 
 local function SlotButton(props: Props): TextButton
 	local index = props.index
@@ -48,6 +66,51 @@ local function SlotButton(props: Props): TextButton
 		local drag = DragState.current()
 		return drag ~= nil and drag.from == index
 	end)
+
+	-- O "+" só existe com baú perto e item no slot.
+	local plusVisible = vide.derive(function()
+		return ChestState.near() ~= nil and item() ~= nil and not locked()
+	end)
+	-- Segurou até virar "põe 10": o Activated que vem ao soltar não põe mais 1.
+	local heldDone = false
+
+	local plus = create("TextButton")({
+		Name = "ChestPlus",
+		AnchorPoint = Vector2.new(0, 0),
+		Position = UDim2.fromScale(0, 0),
+		Size = UDim2.fromScale(PLUS_SIZE, PLUS_SIZE),
+		ZIndex = 3,
+		Visible = plusVisible,
+		Text = "+",
+		TextScaled = true,
+		FontFace = Theme.font.number,
+		TextColor3 = Theme.ui.text,
+		AutoButtonColor = false,
+		BackgroundColor3 = Theme.ui.action,
+		BorderSizePixel = 0,
+		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		InputBegan = function(input: InputObject)
+			if input.UserInputType ~= Enum.UserInputType.Touch then
+				return
+			end
+			heldDone = false
+			task.delay(HOLD_SECONDS, function()
+				if input.UserInputState ~= Enum.UserInputState.End and vide.untrack(plusVisible) then
+					heldDone = true
+					ChestState.put(index, PUT_MANY)
+				end
+			end)
+		end,
+		Activated = function()
+			if heldDone then
+				heldDone = false
+				return
+			end
+			local shift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift)
+				or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
+			ChestState.put(index, if shift then PUT_MANY else PUT_ONE)
+		end,
+	}) :: TextButton
 
 	local button = create("TextButton")({
 		Name = `Slot{index}`,
@@ -86,6 +149,10 @@ local function SlotButton(props: Props): TextButton
 		}),
 		InputBegan = function(input: InputObject)
 			local kind = input.UserInputType
+			-- Apertou o "+": é do baú, não começa arrasto.
+			if vide.untrack(plusVisible) and pressedOn(plus, input) then
+				return
+			end
 			if
 				not vide.untrack(locked)
 				and (kind == Enum.UserInputType.MouseButton1 or kind == Enum.UserInputType.Touch)
@@ -109,6 +176,7 @@ local function SlotButton(props: Props): TextButton
 				return ItemIcon({ item = current })
 			end
 		),
+		plus,
 	}) :: TextButton
 	-- O DragState reconhece os slots por este atributo.
 	button:SetAttribute("SlotIndex", index)

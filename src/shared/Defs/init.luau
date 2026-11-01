@@ -35,6 +35,8 @@ export type ResourceDef = Types.ResourceDef
 export type GatherDef = Types.GatherDef
 export type GatherMaterial = Types.GatherMaterial
 export type ResourceZoneDef = Types.ResourceZoneDef
+export type StructureKind = Types.StructureKind
+export type StructureDef = Types.StructureDef
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),

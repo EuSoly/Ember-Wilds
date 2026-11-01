@@ -76,6 +76,9 @@ return table.freeze({
 	-- Workspace.Resources (ResourceService; o cliente mostra as frutinhas).
 	Amount = "Amount",
 	AmountMax = "AmountMax",
+	-- Raio de colisão do recurso (studs, já com a escala), atributo no modelo
+	-- (ResourceService): o fantasma da construção usa o mesmo raio do servidor.
+	ResourceRadius = "ResourceRadius",
 	-- Tag das peças que ficam semitransparentes entre a câmera e o boneco (copas).
 	OccluderTag = "Occluder",
 	-- Tag das peças com a luz de fogueira (FireLight.attach): o cliente liga a
@@ -94,6 +97,25 @@ return table.freeze({
 	-- Raio (studs) em que a fonte de calor queima ("em cima do fogo"): passa
 	-- do frio cheio e enche o calor. Atributo no modelo com a tag HeatSource.
 	BurnRadius = "BurnRadius",
+
+	-- Construção (G4). Peças colocadas em Workspace.Structures (StructureService).
+	-- Tag (CollectionService) de toda peça colocada.
+	StructureTag = "Structure",
+	-- Id do item que virou a peça (ex.: "wood_wall"), atributo no modelo da peça:
+	-- o cliente acha o tipo da peça nos Defs (ex.: o painel do baú).
+	StructureItem = "StructureItem",
+	-- UserId do dono da peça, atributo no modelo.
+	Owner = "Owner",
+	-- Vida atual e máxima da peça, atributos no modelo (a barrinha de vida lê).
+	StructureHealth = "StructureHealth",
+	StructureHealthMax = "StructureHealthMax",
+	-- true com a porta aberta (as peças dela não colidem), atributo no modelo da porta.
+	DoorOpen = "DoorOpen",
+	-- Conteúdo do baú, atributos no modelo do baú (ChestService; todos veem):
+	-- id do item guardado (nil = vazio) e quantidade. Baú que ninguém mexeu
+	-- ainda não tem os atributos: sem atributo = vazio.
+	ChestItem = "ChestItem",
+	ChestCount = "ChestCount",
 
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)

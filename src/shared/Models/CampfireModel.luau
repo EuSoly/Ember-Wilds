@@ -2,9 +2,9 @@
 -- Modelo provisório de fogueira (só peças): círculo de pedras, duas toras
 -- cruzadas e uma chama laranja com a luz de fogo (FireLight). Sem colisão.
 -- Esquenta: sai com a tag HeatSource e o atributo HeatRadius (o
--- SurvivalService sobe o frio de quem está perto). Por enquanto só o comando
--- de dev DevCampfire usa; a fogueira construível chega na fase de construção
--- e só precisa deste mesmo modelo (ou da mesma tag e atributo).
+-- SurvivalService sobe o frio de quem está perto) e é estação "fire" do
+-- crafting. As fogueiras colocadas (G4) usam este modelo pelo StructureModel,
+-- que troca o HeatRadius pelo raio dos dados.
 -- Pivô no centro, no chão (Y = 0). (Só roda no Roblox: cria instâncias.)
 local FireLight = require("./FireLight")
 local Palette = require("../Palette")
