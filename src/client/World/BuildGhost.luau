@@ -18,8 +18,6 @@ local Theme = require(Shared:WaitForChild("Theme"))
 -- Mesma folga do servidor entre o corpo e a peça.
 local PLAYER_MARGIN = 1.5
 local THICKNESS = 0.3
--- Quantos studs o chão fica abaixo da raiz do boneco (aproximado).
-local GROUND_BELOW_ROOT = 2.9
 local TRANSPARENCY = 0.55
 -- O teste de "livre" varre recursos e peças; refaz só a cada tanto.
 local REFRESH = 0.15
@@ -162,7 +160,7 @@ function BuildGhost.start()
 		ghost.Color = if free then Theme.ui.success else Theme.ui.danger
 		ghost.Position = Vector3.new(
 			cx * BuildRules.CELL + half,
-			root.Position.Y - GROUND_BELOW_ROOT + THICKNESS / 2,
+			THICKNESS / 2, -- o topo do chão do mapa é Y = 0
 			cz * BuildRules.CELL + half
 		)
 		-- Parte local: não replica.
