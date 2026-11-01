@@ -163,6 +163,48 @@ return {
 		assert(Inventory.capacityFor(6, 3) == 19, "mochila + bônus")
 	end,
 
+	["removeAt takes only from that slot"] = function()
+		local inv = Inventory.new(10)
+		Inventory.add(inv, "wood", 25, 10) -- slots 1, 2 (10 cada) e 3 (5)
+		local ok, changed = Inventory.removeAt(inv, 1, 4)
+		assert(ok == true, "deveria tirar 4 do slot 1")
+		slotIs(inv, 1, "wood", 6)
+		slotIs(inv, 2, "wood", 10)
+		slotIs(inv, 3, "wood", 5)
+		assert(sameSet(changed, { 1 }), "alterados deveria ser {1}")
+		ok = Inventory.removeAt(inv, 3, 5)
+		assert(ok == true, "deveria esvaziar o slot 3")
+		slotIs(inv, 3, nil)
+	end,
+
+	["removeAt refuses bad requests without changing"] = function()
+		local nan = 0 / 0
+		local inv = Inventory.new(10)
+		Inventory.add(inv, "wood", 5, 10)
+		for _, bad in { 0, -1, 1.5, nan, math.huge, 6 } do
+			local ok, changed = Inventory.removeAt(inv, 1, bad)
+			assert(ok == false and #changed == 0, `quantidade {bad} não pode tirar`)
+		end
+		for _, index in { 0, 11, 1.5, nan, 2 } do
+			local ok = Inventory.removeAt(inv, index, 1)
+			assert(ok == false, `índice {index} não pode tirar`)
+		end
+		slotIs(inv, 1, "wood", 5)
+	end,
+
+	["spaceFor matches what add accepts"] = function()
+		local inv = Inventory.new(3)
+		Inventory.add(inv, "wood", 7, 10)
+		Inventory.add(inv, "stone", 10, 10)
+		local space = Inventory.spaceFor(inv, "wood", 10)
+		assert(space == 13, `cabem 3 na pilha + 10 no slot vazio, veio {space}`)
+		assert(Inventory.spaceFor(inv, "stone", 10) == 10, "pilha de pedra cheia: só o slot vazio")
+		assert(inv.slots[1].count == 7 and inv.slots[3] == nil, "spaceFor não pode mudar nada")
+		local rest = Inventory.add(inv, "wood", space + 4, 10)
+		assert(rest == 4, `add deveria sobrar 4, sobrou {rest}`)
+		assert(Inventory.spaceFor(inv, "wood", 10) == 0, "cheio")
+	end,
+
 	["capacity formula is capped"] = function()
 		assert(Inventory.capacityFor(100, 100) == 40, "limite de 40 slots")
 		assert(Inventory.capacityFor(-5, 0) == 10, "nunca abaixo da base")

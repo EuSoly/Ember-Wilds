@@ -52,4 +52,16 @@ function spec.contagens_invalidas_nao_movem_nada()
 	end
 end
 
+-- Dois pedidos de pôr seguidos (dois jogadores no mesmo baú) perto do teto:
+-- o segundo só leva o que sobrou, e o total nunca passa de MAX.
+spec["two puts never exceed max"] = function()
+	local c: ChestRules.Contents = { id = "wood", count = ChestRules.MAX - 15 }
+	local first = ChestRules.put(c, "wood", 10)
+	local second = ChestRules.put(c, "wood", 10)
+	assert(first == 10, `primeiro põe 10, pôs {first}`)
+	assert(second == 5, `segundo só cabe 5, pôs {second}`)
+	assert(c.count == ChestRules.MAX, `baú deveria estar no teto, tem {c.count}`)
+	assert(ChestRules.put(c, "wood", 1) == 0 and c.count == ChestRules.MAX, "cheio não passa do teto")
+end
+
 return spec

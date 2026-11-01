@@ -170,3 +170,25 @@ event CraftNotice {
 	Call: SingleAsync,
 	Data: string(1..48)
 }
+
+-- Baú (G4). O cliente só pede; o servidor (ChestService) confere baú, distância,
+-- slot, quantidade e tipo, e ignora o inválido. Chest pode chegar nil.
+-- Pôr `Count` (1 ou 10) do slot `Slot` do inventário no baú.
+event ChestPut {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Chest: Instance,
+		Slot: u8,
+		Count: u8
+	}
+}
+
+-- Tirar do baú o quanto couber no inventário.
+event ChestTake {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: Instance
+}

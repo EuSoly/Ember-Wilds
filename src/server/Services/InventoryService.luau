@@ -130,6 +130,26 @@ function InventoryService.take(player: Player, id: string, count: number): boole
 	return ok
 end
 
+-- Tira `count` do slot `index` (não de outra pilha do mesmo item), tudo ou nada.
+function InventoryService.takeAt(player: Player, index: number, count: number): boolean
+	local inv = inventories[player]
+	if inv == nil then
+		return false
+	end
+	local ok, changed = Inventory.removeAt(inv, index, count)
+	sendChanges(player, inv, changed)
+	return ok
+end
+
+-- Quanto de `id` caberia agora no inventário (0 sem inventário), sem mudar nada.
+function InventoryService.spaceFor(player: Player, id: string): number
+	local inv = inventories[player]
+	if inv == nil or Defs.Items[id] == nil then
+		return 0
+	end
+	return Inventory.spaceFor(inv, id, maxStackOf(id))
+end
+
 -- Recalcula a capacidade (mochila + gamepass) e avisa o cliente se mudou.
 -- Devolve false se não deu para diminuir (slots que sumiriam não estão vazios).
 local function refreshCapacity(player: Player): boolean

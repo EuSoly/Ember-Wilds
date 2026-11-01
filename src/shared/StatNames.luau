@@ -108,6 +108,11 @@ return table.freeze({
 	StructureHealthMax = "StructureHealthMax",
 	-- true com a porta aberta (as peças dela não colidem), atributo no modelo da porta.
 	DoorOpen = "DoorOpen",
+	-- Conteúdo do baú, atributos no modelo do baú (ChestService; todos veem):
+	-- id do item guardado (nil = vazio) e quantidade. Baú que ninguém mexeu
+	-- ainda não tem os atributos: sem atributo = vazio.
+	ChestItem = "ChestItem",
+	ChestCount = "ChestCount",
 
 	StatusMax = 100,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
