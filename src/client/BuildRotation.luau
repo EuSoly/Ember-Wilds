@@ -61,8 +61,11 @@ function BuildRotation.start()
 		end
 	end)
 
-	UserInputService.InputBegan:Connect(function(input: InputObject, _gameProcessed: boolean)
-		-- gameProcessed ignorado de propósito (o R não é tecla do jogo base).
+	UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean)
+		-- Evento já processado pelo jogo (chat, TextBox...): não gira.
+		if gameProcessed then
+			return
+		end
 		if input.KeyCode == Enum.KeyCode.R then
 			BuildRotation.rotate()
 		end
