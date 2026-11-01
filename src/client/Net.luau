@@ -411,6 +411,13 @@ function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance?): ()
 	table.insert(SendInstances, Value or Null)
 end
 
+function SerdesFunctions.WriteEVENT_SetBuildRotation(Value: number): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 16)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -463,6 +470,9 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	ChestTake = {
+		Fire = NOOP
+	},
+	SetBuildRotation = {
 		Fire = NOOP
 	},
 	})
@@ -759,6 +769,11 @@ local Returns = table.freeze({
 	ChestTake = {
 		Fire = function(Value: Instance?): ()
 			SerdesFunctions.WriteEVENT_ChestTake(Value)
+		end
+	},
+	SetBuildRotation = {
+		Fire = function(Value: number): ()
+			SerdesFunctions.WriteEVENT_SetBuildRotation(Value)
 		end
 	},
 })

@@ -3,7 +3,8 @@
 -- cor do tier do item (sem tier = madeira), um formato por tipo (kind) da
 -- peça; a fogueira usa o CampfireModel. Quando os modelos do Elizeu chegarem,
 -- trocar o visual = mexer só neste arquivo.
--- Pivô no centro do quadrado da peça, no chão (Y = 0). Tudo ancorado e com
+-- Pivô no centro do quadrado da peça, no chão (Y = 0); o StructureService gira
+-- só o pivô (yaw da peça). Tudo ancorado e com
 -- CanTouch = false (o espinho é conferido por varredura, não por Touched).
 -- Sai com o que o tipo oferece: estação (CraftStation + Station) e calor
 -- (HeatSource + HeatRadius/BurnRadius). Dono, vida e a tag de construção quem
@@ -22,9 +23,9 @@ local StructureModel = {}
 -- Transparência das peças da porta aberta (fechada = opaca).
 local OPEN_TRANSPARENCY = 0.7
 local WALL_HEIGHT = 4
--- Lado do miolo que colide do espinho (menor que a célula). A margem da
--- varredura do SpikeService conta com o espinho inteiro (~3,43 de lado com as
--- pontas): se mudar o tamanho aqui, confira SPIKE_MARGIN lá.
+-- Lado do miolo que colide do espinho (menor que o círculo da peça). A
+-- varredura do SpikeService usa o círculo da peça (raio 2), que cobre o
+-- espinho inteiro (~1,7 do centro às pontas): se crescer aqui, confira SPIKE_MARGIN lá.
 local SPIKE_CORE = 1.6
 
 local function newPart(name: string, size: Vector3, cframe: CFrame, color: Color3, parent: Model): Part
@@ -149,7 +150,8 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 	else
 		model = Instance.new("Model")
 		model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
-		local side = (def.size or 1) * BuildRules.CELL
+		-- Bloco provisório quadrado com o lado do diâmetro do círculo da peça.
+		local side = BuildRules.radiusOf(def) * 2
 		local main = builders[def.kind](model, side, colorOf(itemId))
 		model.PrimaryPart = main
 		-- Pivô no chão, no centro (com PrimaryPart, o pivô do modelo é o dela).

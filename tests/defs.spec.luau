@@ -891,7 +891,6 @@ return {
 				{ kind = "spike", health = 100 },
 				{ kind = "fire", health = 100, heatRadius = 12 },
 				{ kind = "fire", health = 100, lifetime = 60 },
-				{ kind = "wall", health = 100, size = 0 },
 				{ kind = "wall", health = 100, radius = 0 },
 				{ kind = "wall", health = 100, radius = -1 },
 				{ kind = "wall", health = 100, radius = 0 / 0 },

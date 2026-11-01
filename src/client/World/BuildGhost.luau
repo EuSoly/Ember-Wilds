@@ -48,7 +48,8 @@ local function sizeOfItem(itemId: unknown): number?
 		return nil
 	end
 	local structure = item.structure
-	return if structure and structure.size then structure.size else 1
+	-- Fantasma ainda na grade (até a tarefa 10): toda peça ocupa 1 célula.
+	return if structure then 1 else nil
 end
 
 local function pivotXZ(instance: Instance): (number?, number?)

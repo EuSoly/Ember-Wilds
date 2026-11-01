@@ -193,3 +193,14 @@ event ChestTake {
 	Call: SingleAsync,
 	Data: Instance?
 }
+
+-- Construção livre (G4). Giro escolhido para a próxima peça, em passos de 45°
+-- (0..7; BuildRules.ROTATE_STEPS). O servidor (StructureService) só aceita
+-- inteiro de 0 a 7 com uma peça na mão, volta a 0 ao trocar de item e calcula
+-- ponto e ângulo da peça sozinho.
+event SetBuildRotation {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: u8
+}

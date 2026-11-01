@@ -15,7 +15,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -102,7 +101,8 @@ local function hit(player: Player, character: Model, root: BasePart)
 	for _, resource in ResourceService.near(px, pz, GatherRules.HIT_RADIUS + SEARCH_MARGIN) do
 		table.insert(candidates, { x = resource.x, z = resource.z, radius = resource.radius, resource = resource })
 	end
-	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS + BuildRules.CELL) do
+	-- near já conta o raio de cada peça: traz as que encostam no círculo do golpe.
+	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS) do
 		table.insert(candidates, { x = structure.x, z = structure.z, radius = structure.radius, structure = structure })
 	end
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)

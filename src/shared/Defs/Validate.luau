@@ -624,9 +624,6 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 		if not isPositive(structure.health) then
 			table.insert(errors, `Item "{key}": structure.health deve ser maior que 0`)
 		end
-		if structure.size ~= nil and structure.size ~= 1 then
-			table.insert(errors, `Item "{key}": structure.size só pode ser 1 nesta fase`)
-		end
 		if structure.radius ~= nil and (not isFiniteNumber(structure.radius) or structure.radius <= 0) then
 			table.insert(errors, `Item "{key}": structure.radius deve ser maior que 0`)
 		end

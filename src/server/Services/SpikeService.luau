@@ -1,9 +1,9 @@
 --!strict
 -- O dano dos espinhos colocados (G4). Uma varredura só, a SPIKE_CHECK_EVERY
--- (5 Hz), em vez de Touched: para cada jogador vivo, os espinhos das células
--- em volta (StructureService.near); quem encosta (BuildRules.touches com
--- SPIKE_MARGIN) num espinho de quem não é seu aliado toma def.spikeDamage como
--- dano de combate (o capacete protege), causa "death.cause.spike". Cada
+-- (5 Hz), em vez de Touched: para cada jogador vivo, os espinhos por perto
+-- (StructureService.near); quem encosta (BuildRules.touchesCircle no círculo
+-- da peça, com SPIKE_MARGIN) num espinho de quem não é seu aliado toma
+-- def.spikeDamage como dano de combate (o capacete protege), causa "death.cause.spike". Cada
 -- espinho fere cada vítima no máximo uma vez a cada BuildRules.SPIKE_INTERVAL,
 -- por conta própria: entre três espinhos, toma dos três.
 --
@@ -18,12 +18,13 @@ local CharacterService = require(script.Parent.CharacterService)
 local StructureService = require(script.Parent.StructureService)
 
 local SPIKE_CHECK_EVERY = 0.2 -- segundos (5 Hz)
--- Studs: a raiz do jogador a até isso do quadrado da célula do espinho =
--- encostou. A caixa do modelo do espinho tem ~3,43 de lado; quem encosta de
--- frente fica com o centro a 3,43/2 + 1,5 (raio do corpo) ≈ 3,215 do centro
--- dele, ou seja, ~1,215 fora da célula (meia célula = 2). Margem = raio do
--- corpo 1,5 + 0,3 de folga = 1,8 (com 1, quem encosta de frente nunca era ferido).
-local SPIKE_MARGIN = 1.8
+-- Studs: a raiz do jogador a até isso da borda do círculo do espinho (raio
+-- BuildRules.radiusOf, 2 no padrão) = encostou. O corpo encosta no círculo
+-- quando a distância dos centros chega a raio + BuildRules.PLAYER_RADIUS
+-- (2 + 1,5 = 3,5); mais 0,3 de folga para quem encosta de frente (a raiz
+-- oscila e a varredura é a 5 Hz) = 1,8, ou seja, fere a até 3,8 do centro.
+-- (As pontas do modelo vão a ~1,7 do centro: o círculo cobre o espinho todo.)
+local SPIKE_MARGIN = BuildRules.PLAYER_RADIUS + 0.3
 local SPIKE_CAUSE = "death.cause.spike"
 
 local SpikeService = {}
@@ -51,7 +52,7 @@ local function step()
 			if BuildRules.areAllies(entry.owner.UserId, victim.UserId) then
 				continue
 			end
-			if not BuildRules.touches(px, pz, entry.cx, entry.cz, entry.def.size or 1, SPIKE_MARGIN) then
+			if not BuildRules.touchesCircle(px, pz, entry.x, entry.z, entry.radius, SPIKE_MARGIN) then
 				continue
 			end
 			local hits = lastHit[entry]

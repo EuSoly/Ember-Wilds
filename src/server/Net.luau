@@ -170,6 +170,7 @@ Queue.Reliable[10] = table.create(256)
 Queue.Reliable[11] = table.create(256)
 Queue.Reliable[14] = table.create(256)
 Queue.Reliable[15] = table.create(256)
+Queue.Reliable[16] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -402,6 +403,13 @@ function SerdesFunctions.ReadEVENT_ChestTake(): (Instance?)
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_SetBuildRotation(): (number)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -478,6 +486,9 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	ChestTake = {
+		On = NOOP
+	},
+	SetBuildRotation = {
 		On = NOOP
 	},
 	})
@@ -631,6 +642,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"ChestTake\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[15], {Player, Value} :: {any})
+			end
+		elseif Index == 16 then
+			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			if Events.Reliable[16] ~= nil then
+				task.spawn(Events.Reliable[16], Player, Value)
+			else
+				if #Queue.Reliable[16] > 256 then
+					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[16], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1138,6 +1159,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[15] == Listener then
 					Events.Reliable[15] = nil
+				end
+			end
+		end
+	},
+	SetBuildRotation = {
+		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+			Events.Reliable[16] = Listener
+			for Index, Arguments in Queue.Reliable[16] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[16] = {}
+			return function (): ()
+				if Events.Reliable[16] == Listener then
+					Events.Reliable[16] = nil
 				end
 			end
 		end
