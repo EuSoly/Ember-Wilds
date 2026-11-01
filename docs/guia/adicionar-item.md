@@ -50,7 +50,7 @@ wood_spike = {
 },
 ```
 
-Campos: `health` (vida máxima, obrigatório), `size` (células por lado, padrão 1), `spikeDamage` (obrigatório no `spike`), `lifetime` e `heatRadius` (obrigatórios no `fire`), `station` (`"workbench"` ou `"fire"`, a estação que a peça oferece). Qualquer item pode ter `structureDamage` (maior que 0): o dano do golpe em peça de construção; sem ele vale o golpe de mão (5). Veja `construcao.md`.
+Campos: `health` (vida máxima, obrigatório), `radius` (raio do círculo da peça em studs, opcional; padrão `BuildRules.PIECE_RADIUS` = 2), `spikeDamage` (obrigatório no `spike`), `lifetime` e `heatRadius` (obrigatórios no `fire`), `station` (`"workbench"` ou `"fire"`, a estação que a peça oferece). Qualquer item pode ter `structureDamage` (maior que 0): o dano do golpe em peça de construção; sem ele vale o golpe de mão (5). Veja `construcao.md`.
 
 ### Receita e velocidade de crafting
 
