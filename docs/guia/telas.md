@@ -242,5 +242,5 @@ Quando um painel ficar real, apague o que ele usava do `MockStore` (e as chaves 
 3. Apague a pasta `src/client/Menu/`.
 4. Em `src/client/Controllers/ScreenController.luau`, tire os `require` de `MenuShell` e `MenuState`, a chamada `MenuShell.mount(...)` e o bloco inteiro `if screen ~= "menu" then MenuState.open("play") end` (com o comentário dele), sem deixar um `if` vazio.
 5. Em `src/client/Screens/MainMenu.luau`, tire o `require` do `MenuState`, o `if balance then balance.Visible = false end` (com o comentário; sem ele o `BalanceLabel` do molde volta a aparecer, e o texto dele já é escrito pelo `vide.effect` logo abaixo, então nada precisa ser reescrito) e o trecho inteiro que esconde o `Root` conforme o painel (o `if root ... else warn(...) end`).
-6. Apague esta seção do guia (e o item "Mockups" do índice, se houver).
+6. Apague esta seção do guia (e o item "Mockups" do índice, se houver) e a seção "Mockups do menu (G7a)" de `docs/pendencias.md`.
 7. Rode `bash scripts/check.sh`.
