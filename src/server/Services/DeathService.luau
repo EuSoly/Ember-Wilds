@@ -11,6 +11,14 @@
 -- ele (StructureService.removeOwned), remove o personagem e manda ao jogador o resumo
 -- (Net.LifeEnded) para a tela de morte. Quem renasce é o SpawnService, a pedido.
 --
+-- Morte por jogador (G6): `killer` = quem deu o golpe final
+-- (CharacterService.hurt com attacker). Válido (no jogo e não é o próprio
+-- morto): o nome dele vai na tela (KillerName) e, se ainda está vivo, ganha
+-- CrateRules.killBonus dos pontos que o morto tinha (lidos antes do fim de vida,
+-- que os zera). É bônus: o morto não perde nada a mais.
+-- Ouvintes de onDeath (caixa de itens) rodam antes de zerar o inventário,
+-- protegidos: um erro num ouvinte não impede a morte.
+--
 -- Queda do mapa: ao passar de Workspace.FallenPartsDestroyHeight, o Roblox
 -- apaga o HumanoidRootPart SEM matar o Humanoid e sem disparar Died (visto no
 -- Studio: vida 100, estado Freefall, sem raiz). O Died sozinho deixaria o
@@ -25,11 +33,13 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
+local ScoreService = require(script.Parent.ScoreService)
 local StructureService = require(script.Parent.StructureService)
 local Net = require(script.Parent.Parent.Net)
 
@@ -39,8 +49,14 @@ local FALL_CHECK_INTERVAL = 0.25 -- segundos
 -- Limites do contrato LifeEnded (net/game.blink): Days u16, Points u32, Currency u16.
 local MAX_U16 = 65535
 local MAX_U32 = 4294967295
+local MAX_KILLER_NAME = 64 -- bytes (KillerName: string(1..64))
 
 local DeathService = {}
+
+local deathListeners: { (Player, Model, Player?) -> () } = {}
+-- Mortes em andamento: um ouvinte de onDeath que pausa não abre espaço para
+-- uma segunda morte do mesmo personagem (caixa duplicada).
+local dying: { [Player]: boolean } = {}
 
 -- Inteiro dentro de [0, max] (o Blink não aceita fora da faixa do tipo).
 local function clampInt(value: number, max: number): number
@@ -50,7 +66,26 @@ local function clampInt(value: number, max: number): number
 	return math.clamp(math.floor(value), 0, max)
 end
 
-function DeathService.kill(player: Player, causeKey: string)
+-- Pontos da vida atual (finito e não negativo, senão 0).
+local function scoreOf(player: Player): number
+	local score = player:GetAttribute(StatNames.Score)
+	if type(score) ~= "number" or score ~= score or score < 0 or score == math.huge then
+		return 0
+	end
+	return score
+end
+
+-- Nome mostrado na tela de morte: o DisplayName (o mesmo da etiqueta do
+-- boneco); se passar do limite do contrato, o Name (curto, só ASCII).
+local function killerNameOf(killer: Player): string
+	local name = killer.DisplayName
+	if name == "" or #name > MAX_KILLER_NAME then
+		return killer.Name
+	end
+	return name
+end
+
+function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	if player.Parent ~= Players then
 		return
 	end
@@ -58,8 +93,34 @@ function DeathService.kill(player: Player, causeKey: string)
 	-- chamada (ex. queda + Died no mesmo instante) não pode zerar os KitPoints
 	-- nem mandar outra tela de morte.
 	local character = player.Character
-	if character == nil then
+	if character == nil or dying[player] then
 		return
+	end
+	-- Quem matou só vale se ainda está no jogo e não é o próprio morto.
+	local validKiller = if killer ~= nil and killer ~= player and killer.Parent == Players then killer else nil
+
+	-- Ouvintes com o inventário, a mochila e a armadura ainda intactos.
+	dying[player] = true
+	for _, listener in deathListeners do
+		local ok, err = pcall(listener :: any, player, character, validKiller)
+		if not ok then
+			warn(`[DeathService] onDeath: {err}`)
+		end
+	end
+	dying[player] = nil
+	-- Um ouvinte pode ter pausado: confere de novo quem continua no jogo.
+	if player.Parent ~= Players or player.Character ~= character then
+		return
+	end
+	if validKiller and validKiller.Parent ~= Players then
+		validKiller = nil
+	end
+
+	-- Bônus de quem matou: sobre os pontos do morto antes do fim de vida (que
+	-- os zera). Só para quem está vivo: os pontos são da vida atual, e um morto
+	-- no menu os levaria para a próxima vida.
+	if validKiller and validKiller.Character ~= nil then
+		ScoreService.add(validKiller, CrateRules.killBonus(scoreOf(player)))
 	end
 	-- nil = sem vida ativa ou sem perfil: a tela de morte mostra zeros.
 	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0 }
@@ -80,7 +141,15 @@ function DeathService.kill(player: Player, causeKey: string)
 		Days = clampInt(summary.days, MAX_U16),
 		Points = clampInt(summary.points, MAX_U32),
 		Currency = clampInt(summary.currency, MAX_U16),
+		KillerName = if validKiller then killerNameOf(validKiller) else nil,
 	})
+end
+
+-- Chamado (sem pausa, protegido) em toda morte de jogador, antes de zerar o
+-- inventário, com o personagem e quem deu o golpe final (nil se não foi outro
+-- jogador ou se ele já saiu).
+function DeathService.onDeath(listener: (player: Player, character: Model, killer: Player?) -> ())
+	table.insert(deathListeners, listener)
 end
 
 local function setupCharacter(player: Player, character: Model)

@@ -144,6 +144,7 @@ return table.freeze({
 	["death.cause.drown"] = "Afogado",
 	["death.cause.heat"] = "Calor",
 	["death.cause.spike"] = "Espinho",
+	["death.cause.player"] = "Jogador",
 
 	-- Coleta
 	["gather.empty"] = "Este recurso acabou",

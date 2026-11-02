@@ -4,8 +4,12 @@
 -- frente, no máximo um golpe a cada GatherRules.HIT_INTERVAL (o primeiro sai
 -- na hora do aperto, se o último foi há mais que isso).
 -- O golpe: acha o alvo mais perto à frente entre recursos (ResourceService) e
--- peças de construção (StructureService) e mobs no chão (MobService), com GatherRules.pickTarget. Peça:
--- StructureService.hit (tira vida ou abre a porta do dono). Mob: MobService.hit.
+-- peças de construção (StructureService), mobs no chão (MobService) e os outros
+-- jogadores vivos (G6), com GatherRules.pickTarget. Peça: StructureService.hit
+-- (tira vida ou abre a porta do dono). Mob: MobService.hit. Jogador:
+-- CharacterService.hurt com o dano do golpe em mob (MobRules.damageOf), tipo
+-- combate (o capacete corta) e quem bateu como attacker; sem empurrão (a lança
+-- nunca empurra jogador). Quem bate nunca é alvo de si mesmo.
 -- Recurso: confere a
 -- ferramenta e a reserva, dá o que couber no inventário, desconta da reserva
 -- só o que entrou, soma pontos (ScoreService) e a estatística, e avisa os
@@ -16,10 +20,13 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
 local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
+local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
 local MobService = require(script.Parent.MobService)
@@ -34,8 +41,10 @@ local NOTICE_EVERY = 2 -- segundos mínimos entre avisos iguais
 local FX_RANGE = 100 -- studs: quem está a até isso do golpe vê o efeito
 -- Folga da busca na grade: maior raio de colisão de um recurso (com variação).
 local SEARCH_MARGIN = 5
+local PLAYER_CAUSE = "death.cause.player" -- causa da morte por golpe de jogador
 
--- Alvo possível do golpe: um recurso ou uma peça (x, z, radius para o pickTarget).
+-- Alvo possível do golpe: recurso, peça, mob ou personagem de outro jogador
+-- (x, z, radius para o pickTarget).
 type Candidate = {
 	x: number,
 	z: number,
@@ -43,6 +52,7 @@ type Candidate = {
 	resource: ResourceService.Entry?,
 	structure: StructureService.Entry?,
 	mob: MobService.Mob?,
+	character: Model?,
 }
 
 local GatherService = {}
@@ -117,6 +127,21 @@ local function hit(player: Player, character: Model, root: BasePart)
 			table.insert(candidates, { x = mob.x, z = mob.z, radius = mob.radius, mob = mob })
 		end
 	end
+	-- Outros jogadores vivos (quem bate fica de fora); o pickTarget filtra a distância.
+	for _, other in Players:GetPlayers() do
+		local otherCharacter = other.Character
+		if other == player or otherCharacter == nil or otherCharacter:FindFirstChildOfClass("Humanoid") == nil then
+			continue
+		end
+		local otherRoot = otherCharacter:FindFirstChild("HumanoidRootPart")
+		if otherRoot and otherRoot:IsA("BasePart") then
+			local pos = otherRoot.Position
+			table.insert(
+				candidates,
+				{ x = pos.X, z = pos.Z, radius = BuildRules.PLAYER_RADIUS, character = otherCharacter }
+			)
+		end
+	end
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
 		return
@@ -127,6 +152,10 @@ local function hit(player: Player, character: Model, root: BasePart)
 	end
 	if target.mob then
 		MobService.hit(target.mob, player, tool)
+		return
+	end
+	if target.character then
+		CharacterService.hurt(target.character, MobRules.damageOf(tool), PLAYER_CAUSE, "combat", player)
 		return
 	end
 	local entry = target.resource

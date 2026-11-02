@@ -90,11 +90,14 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 		local screen = ScreenState.current()
 		if screen == "dead" then
 			local summary = vide.untrack(ScreenState.lastSummary)
-			local cause = if summary then summary.CauseKey else "death.cause.unknown"
+			local causeKey = if summary then summary.CauseKey else "death.cause.unknown"
 			local days = if summary then summary.Days else 0
 			local points = if summary then summary.Points else 0
 			local currency = if summary then summary.Currency else 0
-			Template.setText(causeLabel, Strings.format("death.cause", { cause = Strings.get(cause) }))
+			-- Morte por jogador: o nome de quem matou no lugar da causa.
+			local killerName = if summary then summary.KillerName else nil
+			local cause = if killerName then killerName else Strings.get(causeKey)
+			Template.setText(causeLabel, Strings.format("death.cause", { cause = cause }))
 			Template.setText(daysLabel, Strings.format("death.days", { days = days }))
 			TweenService:Create(effect, DESATURATE_INFO, { Saturation = -1 }):Play()
 
