@@ -1020,4 +1020,77 @@ return {
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "behavior"), `faltou erro de behavior: {table.concat(errors, "; ")}`)
 	end,
+	["forest mobs have stats and population, the others do not"] = function()
+		local forest = { rabbit = true, wolf = true, spider = true, boar = true, hawk = true }
+		for id, mob in Defs.Mobs do
+			if forest[id] then
+				assert(mob.stats ~= nil, `{id} deveria ter stats`)
+				assert(mob.population ~= nil and mob.population.forest ~= nil, `{id} deveria ter população forest`)
+			else
+				assert(mob.stats == nil and mob.population == nil, `{id} não deveria ter stats nem população`)
+			end
+		end
+		assert(Defs.Mobs.spider.stats.web.duration == 2, "teia da aranha")
+		assert(Defs.Mobs.hawk.stats.flies == true, "falcão voa")
+		for _, id in { "hawk", "boar", "baby_dragon", "baby_lava_dragon" } do
+			assert(Defs.Mobs[id].mountFlies == true, `{id} deveria ter mountFlies`)
+		end
+	end,
+
+	["invalid mob stats and population are errors"] = function()
+		local function stats(change: (any) -> ()): any
+			local s: any =
+				{ health = 10, bite = 1, speed = 1, radius = 1, points = 0, web = { duration = 1, cooldown = 1 } }
+			change(s)
+			return s
+		end
+		local function check(label: string, mob: any, needle: string)
+			mob.id, mob.nameKey, mob.behavior = "wolf", "mob.wolf", "aggressive"
+			local defs: any = { Tiers = {}, Items = {}, Mobs = { wolf = mob } }
+			local errors = Validate.all(defs, alwaysHas)
+			assert(containsError(errors, needle), `{label}: faltou erro "{needle}": {table.concat(errors, "; ")}`)
+		end
+		local pop = { forest = { day = 1, night = 1 } }
+		check("health", { stats = stats(function(s)
+			s.health = 0
+		end) }, "stats")
+		check("speed", { stats = stats(function(s)
+			s.speed = -1
+		end) }, "stats")
+		check("radius", { stats = stats(function(s)
+			s.radius = 0
+		end) }, "stats")
+		check("bite", { stats = stats(function(s)
+			s.bite = -1
+		end) }, "bite")
+		check("points", { stats = stats(function(s)
+			s.points = -1
+		end) }, "points")
+		check("web duration", { stats = stats(function(s)
+			s.web.duration = 0
+		end) }, "web")
+		check("web cooldown", { stats = stats(function(s)
+			s.web.cooldown = 0
+		end) }, "web")
+		check("population sem stats", { population = pop }, "stats")
+		check("bioma", { stats = stats(function() end), population = { moon = { day = 1, night = 1 } } }, "bioma")
+		check(
+			"negativa",
+			{ stats = stats(function() end), population = { forest = { day = -1, night = 1 } } },
+			"population"
+		)
+		check(
+			"fracionária",
+			{ stats = stats(function() end), population = { forest = { day = 1, night = 1.5 } } },
+			"population"
+		)
+	end,
+
+	["non-positive mobDamage is an error"] = function()
+		local item = validItem("stick")
+		item.mobDamage = 0
+		local defs: any = { Tiers = {}, Items = { stick = item } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "mobDamage"), `faltou erro de mobDamage: {table.concat(errors, "; ")}`)
+	end,
 }
