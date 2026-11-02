@@ -133,6 +133,17 @@ return table.freeze({
 	BLINK_PERIOD = 3.5,
 	BLINK_DURATION = 0.16,
 	BLINK_SQUASH = 0.85,
+	-- Cara de brava no ataque: os olhos semicerram e ganham sobrancelhas
+	-- "\ /" (peças criadas pelo cliente). Dura ANGRY_DURATION s desde o
+	-- início do ataque; o dano tem prioridade (olhos fechados).
+	ANGRY_DURATION = 0.8,
+	ANGRY_SQUINT = 0.35, -- quanto o olho achata (0–1)
+	BROW_ANGLE = math.rad(25), -- inclinação, ponta de dentro para trás
+	BROW_LENGTH = 1.1, -- × largura do olho
+	BROW_THICKNESS = 0.28, -- × profundidade do olho
+	BROW_OFFSET = 0.38, -- × profundidade do olho, para a frente do centro
+	BROW_LIFT = 0.06, -- studs acima do olho
+	BROW_COLOR = { 0x17 / 255, 0x18 / 255, 0x22 / 255 },
 	EYE_PATTERN = "eye", -- peças com isto no nome são olhos
 	SPARKLE_PATTERN = "sparkle", -- brilho do olho: some com o olho fechado
 	-- Borda: a cor do modelo quando calmo; esta quando MobHostile (quer atacar).

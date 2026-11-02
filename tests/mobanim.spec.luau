@@ -258,6 +258,20 @@ return {
 		near(A.step(A.newState(0, 0, 0, true), 0, inp).outline, 1)
 	end,
 
+	["attack makes an angry face for ANGRY_DURATION and hurt wins"] = function()
+		local inp = input("wolf")
+		local state = A.newState()
+		assert(A.step(state, 1 / 60, inp).angry == 0, "calmo não fica bravo")
+		inp.attack = 1
+		assert(advance(state, C.ATTACK_DURATION, inp).angry == 1, "bravo durante o ataque")
+		assert(advance(state, C.ANGRY_DURATION - C.ATTACK_DURATION - 0.05, inp).angry == 1, "segue bravo um pouco")
+		assert(advance(state, 0.1, inp).angry == 0, "passa depois de ANGRY_DURATION")
+		-- Ataque e dano juntos: o dano manda (olhos fechados, sem cara de brava).
+		inp.attack, inp.hurt = 2, 1
+		local p = advance(state, C.HURT_DURATION / 2, inp)
+		assert(p.angry == 0 and p.blink == 1, "o dano tem prioridade")
+	end,
+
 	["spider attack closes the two front legs"] = function()
 		local inp = input("spider")
 		inp.attack = 1

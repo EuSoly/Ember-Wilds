@@ -3,7 +3,8 @@
 local C = require("./MobAnimConfig")
 export type GroupPose = { x: number, y: number, z: number, yaw: number, scale: number }
 -- blink: 0 = olhos abertos, 1 = fechados. outline: 0 = borda do modelo, 1 = vermelha.
-export type Pose = { groups: { [string]: GroupPose }, flash: number, blink: number, outline: number }
+-- angry: 0 ou 1, cara de brava (olhos semicerrados e sobrancelhas).
+export type Pose = { groups: { [string]: GroupPose }, flash: number, blink: number, outline: number, angry: number }
 -- hostile: o mob quer atacar agora (atributo MobHostile da raiz).
 export type Input = { config: C.Mob, speed: number, attack: number, hurt: number, dead: boolean, hostile: boolean }
 export type State = {
@@ -19,6 +20,7 @@ export type State = {
 	deathScale: number,
 	blinkClock: number,
 	outline: number,
+	angryTime: number,
 }
 
 local A = {}
@@ -42,6 +44,7 @@ function A.newState(attack: number?, hurt: number?, seed: number?, hostile: bool
 		deathScale = 1,
 		blinkClock = ((seed or 0) % 1) * C.BLINK_PERIOD,
 		outline = if hostile then 1 else 0,
+		angryTime = C.ANGRY_DURATION,
 	}
 end
 
@@ -54,7 +57,7 @@ function A.restPose(config: C.Mob): Pose
 	for name in config.groups do
 		groups[name] = groupPose()
 	end
-	return { groups = groups, flash = 0, blink = 0, outline = 0 }
+	return { groups = groups, flash = 0, blink = 0, outline = 0, angry = 0 }
 end
 
 local function pulse(time: number, duration: number): number
@@ -102,6 +105,7 @@ function A.step(state: State, dt: number, input: Input): Pose
 	state.phase = (state.phase + TWO_PI * target * dt / C.WALK_PERIOD) % TWO_PI
 	if input.attack > state.attack then
 		state.attackTime = 0
+		state.angryTime = 0
 	end
 	if input.hurt > state.hurt then
 		state.hurtTime = 0
@@ -109,6 +113,7 @@ function A.step(state: State, dt: number, input: Input): Pose
 	state.attack, state.hurt = input.attack, input.hurt
 	state.attackTime = math.min(state.attackTime + dt, C.ATTACK_DURATION)
 	state.hurtTime = math.min(state.hurtTime + dt, C.HURT_DURATION)
+	state.angryTime = math.min(state.angryTime + dt, C.ANGRY_DURATION)
 	local attack = pulse(state.attackTime, C.ATTACK_DURATION)
 	local hurt = pulse(state.hurtTime, C.HURT_DURATION)
 	local hurting = state.hurtTime < C.HURT_DURATION - EPS
@@ -122,6 +127,7 @@ function A.step(state: State, dt: number, input: Input): Pose
 	body.z = -C.ATTACK_DISTANCE * attack + C.HURT_DISTANCE * hurt
 	pose.flash = hurt
 	pose.blink = if hurting then 1 else pulse(state.blinkClock, C.BLINK_DURATION)
+	pose.angry = if not hurting and state.angryTime < C.ANGRY_DURATION - EPS then 1 else 0
 	for name, def in input.config.groups do
 		assert(A.MOTIONS[def.motion], "Movimento desconhecido: " .. def.motion)
 		local g = pose.groups[name]

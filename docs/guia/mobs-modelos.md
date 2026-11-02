@@ -173,7 +173,7 @@ A câmera olha de cima, então quase tudo que aparece é **giro em volta do Y, d
 
 - **Parado**: respiração (escala leve) e um balanço pequeno de orelha, cauda e antena.
 - **Andando** (pela velocidade da raiz): quique e ginga do corpo; pernas e patas alternando; asas batendo; braços do kraken em onda, com fase diferente em cada um; mandíbulas do verme abrindo e fechando em sequência (o modelo é uma boca com 4 mandíbulas, não tem segmentos). Cauda dos dragões com balanço pequeno: a faixa dorsal fica no corpo e não acompanha a cauda.
-- **Ataque** (`MobAttack` subiu): bote para a frente, com o corpo crescendo um pouco, e volta; mandíbula, garra ou boca fechando. A aranha fecha as duas patas da frente.
+- **Ataque** (`MobAttack` subiu): bote para a frente, com o corpo crescendo um pouco, e volta; mandíbula, garra ou boca fechando. A aranha fecha as duas patas da frente. **Cara de brava** por `ANGRY_DURATION` s: os olhos semicerram e ganham sobrancelhas `\ /` escuras (peças `AngryBrow` criadas pelo cliente na frente de cada olho; o dano tem prioridade e fecha os olhos).
 - **Dano** (`MobHurt` subiu): fecha os olhos, recua, encolhe, treme de lado e pisca em vermelho.
 - **Morte** (`MobDead`): fecha os olhos, encolhe e some em ~0,5 s.
 - **Sempre**: pisca os olhos a cada ~3,5 s, cada mob no seu tempo. Olhos são as peças com `eye` no nome (achatam na frente-trás); o brilho (`sparkle`) some com o olho fechado.
@@ -224,6 +224,7 @@ Tudo fica em `src/shared/Mobs/MobAnimConfig.luau`. Depois de mexer, rode `bash s
 | `DEATH_DURATION` | Tempo para encolher e sumir |
 | `BLINK_PERIOD`, `BLINK_DURATION`, `BLINK_SQUASH`, `EYE_PATTERN`, `SPARKLE_PATTERN` | Piscar dos olhos: de quanto em quanto tempo, quanto dura, quanto o olho achata e como achar olhos e brilhos pelo nome |
 | `OUTLINE_HOSTILE`, `OUTLINE_FADE` | Cor da borda querendo atacar e o tempo da troca |
+| `ANGRY_DURATION`, `ANGRY_SQUINT`, `BROW_*` | Cara de brava: quanto dura, quanto o olho semicerra e a sobrancelha (inclinação, tamanho em relação ao olho, posição e cor) |
 | `ANIM_RANGE`, `MAX_DT`, `SIZE_STEP` | Desempenho (veja acima) |
 
 **Por mob**: `scale` (tamanho em jogo sobre o modelo do place; **0,4 em todos é provisório**, o tamanho final é decisão do Elizeu) e `groups`, um jeito de mexer por grupo:
