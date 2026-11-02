@@ -181,3 +181,43 @@ A câmera olha de cima, então quase tudo que aparece é **giro em volta do Y, d
 - Um `Workspace:BulkMoveTo` por quadro com todas as peças, não `PivotTo` por grupo (são até 72 peças por mob).
 - Mobs além de `ANIM_RANGE` da câmera só seguem a raiz, sem animar.
 - `dt` limitado por `MAX_DT`, como no boneco.
+- O tamanho (`Size`) das peças só é reescrito quando a escala do grupo anda `SIZE_STEP` (0,2%): a respiração não troca o tamanho de todas as peças a cada quadro.
+
+### Ver no Studio
+
+Play, entre no jogo e, na barra de comandos do **servidor**:
+
+```lua
+print(game.ServerStorage.DevMobs:Invoke(true)) -- 23: galeria ao sul do jogador
+print(game.ServerStorage.DevMobs:Invoke(false)) -- 0: apaga
+```
+
+Cada mob repete um ciclo de 12 s: parado (3 s) → andando em círculo (5 s, ~5 studs/s) → ataque → dano → morte → renasce. Os tempos são só da galeria (`DevMobService`), não de gameplay. Testado em 01/11 com os 23 a 60 fps.
+
+## Ajustar as animações
+
+Tudo fica em `src/shared/Mobs/MobAnimConfig.luau`. Depois de mexer, rode `bash scripts/check.sh`: os testes de `tests/mobanim.spec.luau` conferem que a config bate com as juntas (`scripts/studio/mob-joints-plan.json`) e que as curvas continuam certas.
+
+**Números gerais**
+
+| Nome | O que faz |
+|---|---|
+| `IDLE_PERIOD`, `BREATHE_SCALE` | Ciclo (s) e tamanho da respiração parado |
+| `WALK_PERIOD`, `WALK_SPEED_REF` | Duração de um passo e a velocidade (studs/s) em que a animação de andar chega ao máximo |
+| `BODY_SWAY`, `BODY_SHIFT`, `BOB_HEIGHT` | Ginga, balanço lateral e quique do corpo andando |
+| `ATTACK_DURATION`, `ATTACK_DISTANCE` | Duração e investida (studs, antes da escala) do ataque |
+| `HURT_DURATION`, `HURT_DISTANCE`, `FLASH_COLOR` | Duração, recuo e cor do piscar no dano |
+| `DEATH_DURATION` | Tempo para encolher e sumir |
+| `ANIM_RANGE`, `MAX_DT`, `SIZE_STEP` | Desempenho (veja acima) |
+
+**Por mob**: `scale` (tamanho em jogo sobre o modelo do place; **0,4 em todos é provisório**, o tamanho final é decisão do Elizeu) e `groups`, um jeito de mexer por grupo:
+
+```lua
+Ear_L = group("sway", idle, walk, attack, phase)
+```
+
+- `idle`, `walk`, `attack`: graus de giro em volta da junta parado, andando e no ataque.
+- `phase`: atraso (radianos). Os lados são espelhados: o mesmo giro abre as duas orelhas, mas leva a pata esquerda para a frente e a direita para trás. Por isso pares simétricos (orelhas, asas) usam `math.pi` no lado R, e as pernas do mesmo par usam a mesma fase.
+- Jeitos (`motion`): `sway` (balança), `stride` (perna), `flap` (asa, nadadeira), `wave` (braço do kraken, fase por braço), `radial` (mandíbula do verme: também se afasta do centro, `travel` studs na direção `x`/`z`) e `mouth` (encolhe `close` no ataque).
+
+Mob novo: importar e montar as juntas como acima, depois uma entrada em `Mobs` com os grupos dele. O código não muda.
