@@ -181,3 +181,64 @@ As linhas saem de `src/shared/Defs/Settings.luau`, na ordem do campo `order` (in
 ## Câmera do menu
 
 Sem personagem (menu e tela de morte), o servidor (`SpectateService`) escolhe um jogador vivo aleatório a cada 8 s e grava o UserId no atributo `SpectateTarget` (0 = ninguém). Também aponta o foco de streaming (`ReplicationFocus`) para ele, para o mapa em volta chegar ao cliente. O `CameraController` segue esse jogador um pouco mais alto; sem ninguém vivo, gira devagar sobre o centro do mapa. Bonecos de teste não contam (não são jogadores).
+
+## Mockups do menu e da loja (G7a)
+
+O menu ganhou uma **casca** com painéis de mentirinha: Perfil, Cosméticos, Loja, Comprar Golden Ember, Tutorial e Ranking. É só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez: primeiro comprar Golden Ember com Robux (e o menu), depois cosméticos (ter e equipar), depois giros e kit, depois ranking e nível.
+
+### A casca e os painéis
+
+| Arquivo (`src/client/Menu/`) | O que é |
+|---|---|
+| `MenuState.luau` | Qual painel está aberto (`panel`: "play", "profile", "cosmetics", "shop", "buy", "tutorial" ou "ranking"; abrir com `open(painel)`) e o aviso de "compra simulada" (`notice`, `notify(texto)`) |
+| `MenuShell.luau` | A casca: um `ScreenGui` do Vide (`DisplayOrder` 1) que só liga no estado `menu`. Coluna de 6 botões à esquerda; dois cantinhos em cima (esquerda: nível e XP falsos e a etiqueta MOCKUP; direita: o **saldo de verdade** e um "+" que abre "buy"); a área do painel; o aviso no título |
+| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco (`ViewportFrame` criado ao abrir e destruído ao fechar). A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
+| `ShopPanel.luau` | Loja: giros (skin e personalizado) e kit. O detalhe do giro mostra a **tabela de chances antes de girar** (as regras do Roblox exigem isso para item aleatório pago). A animação do giro é cancelada ao sair do painel |
+| `BuyPanel.luau` | Pacotes de Golden Ember (5) |
+| `RankingPanel.luau`, `ProfilePanel.luau`, `TutorialPanel.luau` | Ranking, perfil e tutorial |
+
+O painel "Jogar" é o molde `MainMenu` de sempre (`src/client/Screens/MainMenu.luau`). O `Root` dele se esconde quando outro painel está aberto, e o `BalanceLabel` dele fica escondido, porque agora quem mostra o saldo é a casca.
+
+O `MenuShell` tem uma tabela `CONTENT` (painel → função que monta o conteúdo). É nela que cada painel é ligado.
+
+### O que é falso e o que é de verdade
+
+- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo) e a lista de skins de corpo (vem dos `Defs`).
+- **Falso:** todo o resto. Nenhum evento de rede, nenhuma escrita em atributo e nenhuma chamada a `MarketplaceService` em lugar nenhum dos mockups. Comprar só mostra o aviso "compra simulada" e **nunca** muda o saldo.
+
+### Onde ficam os números e nomes falsos
+
+Tudo em `src/shared/UIFlow/MockStore.luau`:
+
+- `PACKS`: os 5 pacotes de Golden Ember;
+- `SPINS`: os giros (skin/personalizado), preços e chances (60/25/12/3%);
+- `KIT`: livro + mochila (1 h por 300, 24 h por 600);
+- `CATEGORIES`: as abas de cosméticos (skins usa as skins de corpo de verdade; acessórios, mochila, livro e caixa são inventados);
+- `RANKING`, `PROFILE`, `TUTORIAL`;
+- `roll(odds, r)`: sorteia um resultado a partir das chances.
+
+Teste: `tests/mockstore.spec.luau`. Os textos ficam no bloco `mock.*` de `src/shared/Strings/ptBR.luau`.
+
+### Como mexer nos valores
+
+- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. Se mexer nas chances de um giro, elas têm de continuar somando 100 (o teste confere).
+- **Texto:** edite a chave `mock.*` correspondente em `ptBR.luau`.
+- Rode `bash scripts/check.sh` depois.
+
+### Como trocar um mockup por algo real (ou por um molde)
+
+Dois caminhos, por painel:
+
+1. **Trocar a função do painel.** Em `CONTENT` (no `MenuShell`), aponte o painel para uma função nova (a versão real). O resto da casca não muda.
+2. **Virar molde do Studio**, como as outras telas: crie o molde em `assets/ui/` com nomes combinados, ligue pelo nome (`Template.find` / `Template.bind`, veja acima) e, na `CONTENT`, devolva o molde ligado no lugar da função do Vide. Documente os nomes combinados na tabela da seção "Nomes combinados de cada molde".
+
+Quando um painel ficar real, apague o que ele usava do `MockStore` (e as chaves `mock.*` dele).
+
+### Como apagar tudo
+
+1. Apague `src/shared/UIFlow/MockStore.luau` e `tests/mockstore.spec.luau`.
+2. Apague o bloco `mock.*` de `src/shared/Strings/ptBR.luau`.
+3. Apague a pasta `src/client/Menu/`.
+4. Em `src/client/Controllers/ScreenController.luau`, tire os `require` de `MenuShell` e `MenuState`, a chamada `MenuShell.mount(...)` e o `MenuState.open("play")`.
+5. Em `src/client/Screens/MainMenu.luau`, tire o `require` do `MenuState`, o trecho que esconde o `BalanceLabel` (e volte a escrever o saldo nele) e o trecho que esconde o `Root` conforme o painel.
+6. Rode `bash scripts/check.sh`.
