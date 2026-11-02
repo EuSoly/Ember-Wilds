@@ -22,4 +22,22 @@ function MenuState.open(target: Panel)
 	panel(target)
 end
 
+-- Aviso curto de "compra simulada" (G7a): aparece sobre os painéis e some
+-- sozinho. A geração evita que um timer velho apague um aviso mais novo.
+local NOTICE_SECONDS = 2.5
+local notice: Source<string?> = vide.source(nil :: string?) :: any
+MenuState.notice = notice
+local noticeGeneration = 0
+
+function MenuState.notify(text: string)
+	noticeGeneration += 1
+	local mine = noticeGeneration
+	notice(text)
+	task.delay(NOTICE_SECONDS, function()
+		if mine == noticeGeneration then
+			notice(nil)
+		end
+	end)
+end
+
 return MenuState

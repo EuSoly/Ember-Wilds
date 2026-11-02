@@ -19,6 +19,11 @@ local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
+local ShopPanel = require(script.Parent:WaitForChild("ShopPanel"))
+local BuyPanel = require(script.Parent:WaitForChild("BuyPanel"))
+local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
+local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
+local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
 
 local create = vide.create
 
@@ -191,6 +196,11 @@ end
 -- título e botão de fechar. Os builders rodam uma vez, dentro do root Vide.
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
+	shop = ShopPanel.build,
+	buy = BuyPanel.build,
+	ranking = RankingPanel.build,
+	profile = ProfilePanel.build,
+	tutorial = TutorialPanel.build,
 }
 
 -- Painel: título, botão de fechar (volta a "play") e o conteúdo do CONTENT.
@@ -239,6 +249,25 @@ local function panelFrame(panel: MenuState.Panel): Frame
 	})
 end
 
+-- Aviso de compra simulada: faixa embaixo, sobre os painéis, só enquanto há texto.
+local function noticeBanner(): Frame
+	return Kit.pill({
+		Name = "Notice",
+		Visible = function()
+			return MenuState.notice() ~= nil
+		end,
+		ZIndex = 10,
+		Position = UDim2.fromScale(0.58, 0.93),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromScale(0.55, 0.08),
+		BackgroundColor3 = Theme.ui.warning,
+		BackgroundTransparency = 0,
+		text = function()
+			return MenuState.notice() or ""
+		end,
+	})
+end
+
 local MenuShell = {}
 
 -- Monta a casca (dentro do root Vide do ScreenController); só aparece no menu.
@@ -248,6 +277,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	for i = 1, #PANELS do
 		table.insert(children, panelFrame(PANELS[i]))
 	end
+	table.insert(children, noticeBanner())
 
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",

@@ -126,7 +126,7 @@ MockStore.TUTORIAL = {
 
 -- Índice sorteado para r em [0, 1). Se a soma das chances ficar um pouco
 -- abaixo de 1, r nas pontas cai no último índice (nunca devolve fora da lista).
-function MockStore.roll(oddsList: { { chance: number } }, r: number): number
+function MockStore.roll(oddsList: { Odd }, r: number): number
 	local acc = 0
 	for i, odd in oddsList do
 		acc += odd.chance
