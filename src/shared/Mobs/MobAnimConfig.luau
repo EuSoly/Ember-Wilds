@@ -99,11 +99,14 @@ for i = 1, 4 do
 	sandworm["Jaw_" .. i] = def
 end
 
-local function mob(groups: { [string]: Group }): Mob
+-- scale: tamanho em jogo sobre o modelo do place (escolhido pelo Elizeu no
+-- ajuste ao vivo do Studio, 02/11). Mudou aqui, mude também o radius do mob
+-- em Defs/Mobs (o corpo no jogo) na mesma proporção.
+local function mob(scale: number, groups: { [string]: Group }): Mob
 	for _, def in groups do
 		table.freeze(def)
 	end
-	return table.freeze({ scale = 0.4, groups = table.freeze(groups) })
+	return table.freeze({ scale = scale, groups = table.freeze(groups) })
 end
 
 return table.freeze({
@@ -157,34 +160,34 @@ return table.freeze({
 
 	FLASH_COLOR = { 1, 0.35, 0.3 },
 	Mobs = table.freeze({
-		rabbit = mob(ears()),
-		wolf = mob({}),
-		spider = mob(spider),
-		boar = mob(boar),
-		hawk = mob(bird()),
-		penguin = mob({ Wing_L = group("flap", 1, 16), Wing_R = group("flap", 1, 16, 0, math.pi) }),
-		arctic_fox = mob({}),
-		polar_bear = mob(ears()),
-		baby_mammoth = mob(mammoth()),
-		mammoth = mob(mammoth()),
-		baby_dragon = mob(dragon(false)),
-		dragon = mob(dragon(true)),
-		crab = mob(crab()),
-		king_crab = mob(crab()),
-		gmo_piranha = mob({
+		rabbit = mob(0.4, ears()),
+		wolf = mob(0.9, {}),
+		spider = mob(0.8, spider),
+		boar = mob(0.6, boar),
+		hawk = mob(0.5, bird()),
+		penguin = mob(0.4, { Wing_L = group("flap", 1, 16), Wing_R = group("flap", 1, 16, 0, math.pi) }),
+		arctic_fox = mob(0.6, {}),
+		polar_bear = mob(0.6, ears()),
+		baby_mammoth = mob(0.8, mammoth()),
+		mammoth = mob(0.6, mammoth()),
+		baby_dragon = mob(0.6, dragon(false)),
+		dragon = mob(0.7, dragon(true)),
+		crab = mob(0.4, crab()),
+		king_crab = mob(0.8, crab()),
+		gmo_piranha = mob(0.4, {
 			Fin_L = group("flap", 1, 16),
 			Fin_R = group("flap", 1, 16, 0, math.pi),
 			DorsalFin = group("sway", 1, 5),
 			Tail = group("sway", 2, 16),
 			Jaw = mouth(),
 		}),
-		kraken = mob(kraken),
-		lava_monster = mob({}),
-		baby_lava_dragon = mob(dragon(false)),
-		lava_dragon = mob(dragon(true)),
-		vulture = mob(bird()),
-		sandworm = mob(sandworm),
-		golden_hen = mob(bird()),
-		golden_chick = mob(bird()),
+		kraken = mob(0.8, kraken),
+		lava_monster = mob(0.4, {}),
+		baby_lava_dragon = mob(0.6, dragon(false)),
+		lava_dragon = mob(0.7, dragon(true)),
+		vulture = mob(0.6, bird()),
+		sandworm = mob(1, sandworm),
+		golden_hen = mob(0.5, bird()),
+		golden_chick = mob(0.5, bird()),
 	}),
 })

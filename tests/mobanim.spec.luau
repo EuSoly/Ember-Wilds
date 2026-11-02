@@ -40,7 +40,7 @@ return {
 		local count = 0
 		for id, config in C.Mobs do
 			count += 1
-			assert(config.scale > 0 and config.scale == 0.4, "escala inicial deve ser 0,4")
+			assert(config.scale > 0, "escala deve ser maior que 0")
 			local groups = { Body = true }
 			for name, def in config.groups do
 				assert(A.MOTIONS[def.motion], `movimento desconhecido: {def.motion}`)

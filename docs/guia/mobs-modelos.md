@@ -232,7 +232,7 @@ Tudo fica em `src/shared/Mobs/MobAnimConfig.luau`. Depois de mexer, rode `bash s
 | `ANGRY_DURATION`, `ANGRY_CUT_ANGLE`, `ANGRY_CUT`, `PUPIL_SHIFT` | Cara de brava: quanto dura, a inclinação do corte do olho, onde ele passa (fração da profundidade do olho, atrás do centro) e quanto o brilho vai para o lado do focinho |
 | `ANIM_RANGE`, `MAX_DT`, `SIZE_STEP` | Desempenho (veja acima) |
 
-**Por mob**: `scale` (tamanho em jogo sobre o modelo do place; **0,4 em todos é provisório**, o tamanho final é decisão do Elizeu) e `groups`, um jeito de mexer por grupo:
+**Por mob**: `scale` (tamanho em jogo sobre o modelo do place, escolhido pelo Elizeu em 02/11 no ajuste ao vivo; veja "Ajustar o tamanho dos mobs" em `mobs.md`) e `groups`, um jeito de mexer por grupo:
 
 ```lua
 Ear_L = group("sway", idle, walk, attack, phase)

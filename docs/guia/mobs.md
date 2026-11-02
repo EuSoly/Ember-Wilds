@@ -15,10 +15,10 @@ Tudo em `src/shared/Defs/Mobs.luau`, no bloco `stats` de cada mob. O jogador and
 | Mob | Comportamento | Vida | Mordida | Velocidade | Raio do corpo | Pontos |
 |---|---|---:|---:|---:|---:|---:|
 | Coelho (`rabbit`) | passivo | 60 | não morde | 14 | 1,8 | 20 |
-| Lobo (`wolf`) | agressivo | 300 | 24 | 13 | 2 | 60 |
-| Aranha (`spider`) | agressivo | 120 | 16 + teia | 14 | 2,2 | 40 |
-| Javali (`boar`) | neutro | 400 | 25 | 15 | 2,2 | 80 |
-| Falcão (`hawk`) | neutro, voa | 300 | 24 | 18 | 2,2 | 60 |
+| Lobo (`wolf`) | agressivo | 300 | 24 | 13 | 4,5 | 60 |
+| Aranha (`spider`) | agressivo | 120 | 16 + teia | 14 | 4,4 | 40 |
+| Javali (`boar`) | neutro | 400 | 25 | 15 | 3,3 | 80 |
+| Falcão (`hawk`) | neutro, voa | 300 | 24 | 18 | 2,75 | 60 |
 
 - Uma mordida por segundo (`BITE_INTERVAL`): o lobo tira 24 por segundo e mata um jogador parado em uns 5 s.
 - O raio do corpo é o círculo no chão (como as peças da construção, veja `construcao.md`).
@@ -130,10 +130,10 @@ print(game.ServerStorage.DevMobCount:Invoke())          -- vivos, vagas esfriand
 
 ## Ajustar o tamanho dos mobs (ao vivo, no Studio)
 
-Cada mob tem dois tamanhos que andam juntos: o **visual** (`scale` em `Mobs/MobAnimConfig.luau`, provisório 0,4) e o **corpo no jogo** (`radius` em `stats`, `Defs/Mobs.luau`): o círculo usado para colidir, levar golpe, morder e encostar no espinho. Para acertar os dois olhando, com o jogo rodando:
+Cada mob tem dois tamanhos que andam juntos: o **visual** (`scale` em `Mobs/MobAnimConfig.luau`, escolhido pelo Elizeu em 02/11: de 0,4 a 1 conforme o mob) e o **corpo no jogo** (`radius` em `stats`, `Defs/Mobs.luau`): o círculo usado para colidir, levar golpe, morder e encostar no espinho. Para acertar os dois olhando, com o jogo rodando:
 
 1. Dê Play e entre no jogo.
-2. Na aba **Testar**, troque a vista para **Servidor** (botão "Atual: Cliente/Servidor"). Mudando na vista do cliente só o visual muda; o corpo é do servidor.
+2. Na aba **Testar**, troque a vista para **Servidor** (botão "Atual: Cliente/Servidor"; no topo do Explorer aparece "Explorador/Servidor"). Na vista do **Cliente** o `Tamanho` também muda o desenho, mas o `RaioCorpo` não chega ao jogo e o `DevMobSizes` não enxerga as mudanças.
 3. No Explorer, selecione `ReplicatedStorage.Assets.Mobs` e marque nas Propriedades:
    - **`Pacifico`**: os mobs ignoram os jogadores (ninguém te ataca enquanto você ajusta);
    - **`MostrarCorpo`**: um disco verde translúcido aparece por cima de cada mob, do tamanho do corpo dele no jogo.

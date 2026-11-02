@@ -9,6 +9,8 @@
 -- coelho (14) foge de quem está armado e é alcançado por quem está de mão ou
 -- picareta; lobo (13) e aranha (14) alcançam quem está armado, e quem está de
 -- mão ou picareta foge deles (como no Starve, explicado pelo Elizeu em 02/11).
+-- radius: corpo no jogo, na proporção do tamanho visual (scale em
+-- Mobs/MobAnimConfig, escolhido pelo Elizeu em 02/11).
 local Types = require("./Types")
 
 type MobDef = Types.MobDef
@@ -33,12 +35,12 @@ return table.freeze({
 	golden_hen = mob("golden_hen", "passive"),
 	golden_chick = mob("golden_chick", "passive"),
 	hawk = mob("hawk", "neutral", {
-		stats = { health = 300, bite = 24, speed = 18, radius = 2.2, points = 60, flies = true },
+		stats = { health = 300, bite = 24, speed = 18, radius = 2.75, points = 60, flies = true },
 		population = { forest = { day = 6, night = 6 } },
 		mountFlies = true,
 	}),
 	boar = mob("boar", "neutral", {
-		stats = { health = 400, bite = 25, speed = 15, radius = 2.2, points = 80 },
+		stats = { health = 400, bite = 25, speed = 15, radius = 3.3, points = 80 },
 		population = { forest = { day = 8, night = 8 } },
 		mountFlies = true,
 	}),
@@ -48,7 +50,7 @@ return table.freeze({
 	baby_dragon = mob("baby_dragon", "neutral", { mountFlies = true }),
 	baby_lava_dragon = mob("baby_lava_dragon", "neutral", { mountFlies = true }),
 	wolf = mob("wolf", "aggressive", {
-		stats = { health = 300, bite = 24, speed = 13, radius = 2, points = 60 },
+		stats = { health = 300, bite = 24, speed = 13, radius = 4.5, points = 60 },
 		population = { forest = { day = 10, night = 20 } },
 	}),
 	spider = mob("spider", "aggressive", {
@@ -56,7 +58,7 @@ return table.freeze({
 			health = 120,
 			bite = 16,
 			speed = 14,
-			radius = 2.2,
+			radius = 4.4,
 			points = 40,
 			web = { duration = 2, cooldown = 6 },
 		},
