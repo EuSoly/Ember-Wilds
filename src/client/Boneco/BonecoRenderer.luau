@@ -41,6 +41,7 @@ type Entry = {
 	anim: BonecoAnim.State,
 	expression: ExpressionState.State,
 	hasTool: boolean,
+	thrust: boolean, -- o item na mão golpeia com estocada (attackAnim "thrust")
 	lastPosition: Vector3,
 	eyes: Defs.EyeStyle,
 	flash: string?,
@@ -125,6 +126,8 @@ end
 local function applyEquipped(entry: Entry, id: string?)
 	entry.equippedId = id
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id)
+	local def = if id then Defs.Items[id] else nil
+	entry.thrust = def ~= nil and def.attackAnim == "thrust"
 end
 
 -- Só mostra a careta se o dano for recente: um HurtAt antigo chega quando o
@@ -179,6 +182,7 @@ local function build(character: Model, hrp: BasePart)
 		anim = BonecoAnim.newState(),
 		expression = ExpressionState.new(),
 		hasTool = false,
+		thrust = false,
 		lastPosition = hrp.Position,
 		eyes = "open",
 		flash = nil,
@@ -255,6 +259,7 @@ local function animate(entry: Entry, dt: number, speed: number, now: number)
 		using = character:GetAttribute(StatNames.Using) == true
 			and not (character == Players.LocalPlayer.Character and CraftState.isCrafting()),
 		hasTool = entry.hasTool,
+		thrust = entry.thrust,
 	})
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
@@ -360,6 +365,27 @@ function BonecoRenderer.start()
 	end)
 	for _, character in CollectionService:GetTagged(StatNames.BonecoTag) do
 		add(character)
+	end
+
+	-- Studio: mudou o Tamanho de um modelo de Assets.Tools (ajuste ao vivo,
+	-- como o dos mobs): refaz esse item na mão de quem o segura.
+	if RunService:IsStudio() then
+		task.spawn(function()
+			local assets = ReplicatedStorage:WaitForChild("Assets", 10)
+			local tools = assets and assets:WaitForChild("Tools", 10)
+			if tools == nil then
+				return
+			end
+			for _, template in tools:GetChildren() do
+				template:GetAttributeChangedSignal(StatNames.ToolScale):Connect(function()
+					for _, entry in entries do
+						if entry.equippedId == template.Name then
+							applyEquipped(entry, entry.equippedId)
+						end
+					end
+				end)
+			end
+		end)
 	end
 
 	-- Prioridade Character: depois da câmera e do input, antes do desenho do

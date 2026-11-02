@@ -39,7 +39,7 @@ Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService
 | `src/shared/Defs/CosmeticSlots.luau`, `Cosmetics.luau`, `Expressions.luau` | Skins e expressões como dados |
 | `src/shared/Models/CharacterBody.luau` | O corpo simulado |
 | `src/client/Boneco/BonecoModel.luau` | Monta o boneco visual (peças, cores, olhos, ferramenta, nome) |
-| `src/shared/Models/ToolModel.luau` | Clona a picareta pelo id do item em `ReplicatedStorage.Assets.Tools` |
+| `src/shared/Models/ToolModel.luau` | Clona a ferramenta ou arma pelo id do item em `ReplicatedStorage.Assets.Tools` (no `Tamanho` escolhido) |
 | `src/client/Boneco/BonecoRenderer.luau` | O loop que segue, anima e troca expressões de todos os bonecos |
 | `src/server/Services/CharacterService.luau` | `StarterCharacter`, tag, `hurt` (a função única de dano) |
 | `src/server/Services/CosmeticService.luau` | Posse e skin equipada de cada jogador (salvas no perfil) |
@@ -96,6 +96,8 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `SWING_ARC` | Quanto (graus) a mão da ferramenta gira no golpe |
 | `OTHER_HAND_RECOIL` | Quanto a outra mão recua durante o golpe |
 | `PUNCH_DISTANCE` | Alcance do soco de mão vazia |
+| `THRUST_DISTANCE` | Quanto a mão avança na estocada (espadas e lanças) |
+| `THRUST_REST_ANGLE` | Ângulo (graus) da arma de estocada em repouso (0 = reto para a frente) |
 
 **Desempenho e expressões**
 
@@ -105,7 +107,27 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `HURT_RECENT` | Um `HurtAt` mais velho que isso (s) não mostra a careta (ex.: chegou pelo streaming) |
 | `MAX_DT` | Limite do passo de tempo: um quadro travado não faz a animação pular |
 
+**Arco ou estocada.** O jeito do golpe é do item, em `Defs/Items.luau`: sem nada (ou `attackAnim = "swing"`), a mão gira de lado como a picareta; com `attackAnim = "thrust"` (todas as espadas e lanças), a arma fica apontada para a frente e a mão avança e volta, uma estocada. Uma arma nova ganha a estocada só com essa linha.
+
 Depois de mexer em animação, rode `bash scripts/check.sh`: os testes de `BonecoAnim` conferem que as curvas continuam certas.
+
+### Tamanho de cada ferramenta e arma
+
+Cada modelo em `ReplicatedStorage.Assets.Tools` tem o atributo **`Tamanho`** (1 = como foi importado). O item na mão é escalado por ele, com o encaixe na mão junto. Mesmo esquema dos mobs:
+
+- **No Play** (vista do **servidor**: botão Current: Server/Client no topo do Studio), mude o `Tamanho` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: anote os que gostou (ou me peça para ler e gravar no place).
+- **No Edit**, mude o `Tamanho` e salve o place: fica valendo para sempre.
+
+### Modelos das espadas e lanças
+
+As 18 armas do Blender (`assets/weapons/`, 9 espadas e 9 lanças) foram importadas para o place em `Workspace["espadas-e-lancas"]` (MeshParts deitados) e convertidas por `scripts/studio/import-weapons.luau` (rodar em **Edit** e salvar o place). O script lê a geometria de cada malha e:
+
+- acha o eixo da arma (o da de madeira de cada tipo: no Blender todas do tipo estão no mesmo ângulo) e a ponta;
+- põe o `Grip` no meio do cabo da espada (entre o fim do cabo e a guarda) ou a 28% da haste da lança, a partir do fim;
+- escala cada tipo para a de madeira ter 3,6 studs (espada) e 5,6 (lança), mantendo a proporção entre as outras;
+- substitui o modelo de mesmo nome em `Assets.Tools` (os provisórios), mantendo o `Tamanho` já escolhido.
+
+Hoje só madeira, pedra e ouro são itens do jogo; as outras 12 (diamante, ametista, reidite, dragão, lava, pirata, caranguejo) já estão em `Assets.Tools` esperando virar itens em `Defs/Items.luau`.
 
 ### Modelos das picaretas
 

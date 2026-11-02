@@ -22,6 +22,13 @@ return {
 		assert(HeldItem.knockback(Defs.Items.wood_spear) == 4, "lança")
 	end,
 
+	["swords and spears thrust, the pickaxe swings"] = function()
+		for _, id in { "wood_sword", "stone_sword", "gold_sword", "wood_spear", "stone_spear", "gold_spear" } do
+			assert(Defs.Items[id].attackAnim == "thrust", `{id} deveria estocar`)
+		end
+		assert(Defs.Items.wood_pickaxe.attackAnim == nil, "picareta no arco")
+	end,
+
 	["kiting with a spear keeps every forest mob out of bite range"] = function()
 		-- Fugindo de lança (12) e batendo a cada 0,5 s: o mob chega no máximo
 		-- (velocidade - 12) * 0,5 por golpe; o empurrão tem que ser maior.

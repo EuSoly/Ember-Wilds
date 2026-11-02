@@ -117,6 +117,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 12,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 	},
 	stone_sword = {
 		id = "stone_sword",
@@ -128,6 +129,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 19,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 	},
 	gold_sword = {
 		id = "gold_sword",
@@ -139,6 +141,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 22,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 	},
 	wood_spear = {
 		id = "wood_spear",
@@ -150,6 +153,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 10,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 		reach = 3,
 		knockback = 4,
 	},
@@ -163,6 +167,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 14,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 		reach = 3,
 		knockback = 4,
 	},
@@ -176,6 +181,7 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 15,
 		moveSpeed = 0.75,
 		equipLock = 4,
+		attackAnim = "thrust",
 		reach = 3,
 		knockback = 4,
 	},

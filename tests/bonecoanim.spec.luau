@@ -90,6 +90,17 @@ return {
 		assert(near(pose.left.z, C.OTHER_HAND_RECOIL, 1e-3), `recuo da outra mão: {pose.left.z}`)
 	end,
 
+	["thrust stabs forward without turning"] = function()
+		local state = BonecoAnim.newState()
+		local thrust = { speed = 0, using = true, hasTool = true, thrust = true }
+		local pose = run(state, PEAK_STEPS, SWING_DT, thrust)
+		assert(near(pose.right.z, -C.THRUST_DISTANCE, 1e-3), `mão avança no pico: {pose.right.z}`)
+		assert(pose.right.yaw == 0, `estocada não gira: {pose.right.yaw}`)
+		assert(near(pose.left.z, C.OTHER_HAND_RECOIL, 1e-3), `recuo da outra mão: {pose.left.z}`)
+		local back = run(state, 40 - PEAK_STEPS, SWING_DT, { speed = 0, using = false, hasTool = true, thrust = true })
+		assert(near(back.right.z, 0, 1e-3), `mão volta no fim: {back.right.z}`)
+	end,
+
 	["releasing mid-swing finishes the cycle and stops"] = function()
 		local state = BonecoAnim.newState()
 		local pressed = math.round(0.1 / DT)

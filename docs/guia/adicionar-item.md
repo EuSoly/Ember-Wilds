@@ -63,7 +63,7 @@ Armas (e qualquer item) também podem ter, todos opcionais e conferidos pelo `Va
 - `reach` (studs): alcance a mais do golpe. Lanças: 3.
 - `knockback` (studs): quanto o golpe empurra o **mob** para longe de quem bateu, sem atravessar parede, recurso ou água. Lanças: 4. **Nunca empurra jogador**, nem quando o PvP entrar (decisão do Elizeu: seria forte demais).
 
-As regras ficam em `src/shared/HeldItem.luau` (testado em `tests/helditem.spec.luau`). O modelo na mão é o `Tool` com o mesmo id em `ReplicatedStorage.Assets.Tools`; espadas e lanças têm modelos provisórios feitos por `scripts/studio/make-weapon-placeholders.luau`, que não substitui um modelo seu já existente.
+As regras ficam em `src/shared/HeldItem.luau` (testado em `tests/helditem.spec.luau`). O modelo na mão é o `Tool` com o mesmo id em `ReplicatedStorage.Assets.Tools` (tamanho no atributo `Tamanho`); as espadas e lanças vêm do Blender por `scripts/studio/import-weapons.luau`. Para a arma golpear com estocada em vez do arco da picareta, ponha `attackAnim = "thrust"` no item (veja `docs/guia/boneco.md`).
 
 Qualquer item pode ter `mobDamage` (número maior que 0, o `Validate` confere): o dano do golpe em mob (lobo, aranha etc.). Sem o campo, vale o golpe de mão (`MobRules.HAND_DAMAGE` = 5). Hoje: espada 12 / 19 / 22, lança 10 / 14 / 15 e picareta 4 a 14. É o mesmo golpe da coleta e da construção, um a cada 0,5 s. Veja `mobs.md`.
 

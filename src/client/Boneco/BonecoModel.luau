@@ -374,10 +374,13 @@ function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?): boolean
 
 	-- Orientação da raiz (igual à da mão em repouso): cabo para a frente e
 	-- cabeça deitada (Grip: Y = cabo, X = lado da cabeça), girada
-	-- SWING_REST_ANGLE para fora (para a direita = ângulo negativo em Y).
+	-- SWING_REST_ANGLE para fora (para a direita = ângulo negativo em Y). Armas
+	-- de estocada (espada, lança) apontam THRUST_REST_ANGLE: reto para a frente.
 	-- Weld com C0/C1 em vez de WeldConstraint: o encaixe não depende de onde a
 	-- mão está neste quadro (pode estar no meio de um golpe).
-	local rest = CFrame.Angles(0, -math.rad(C.SWING_REST_ANGLE), 0)
+	local def = Defs.Items[itemId]
+	local restAngle = if def and def.attackAnim == "thrust" then C.THRUST_REST_ANGLE else C.SWING_REST_ANGLE
+	local rest = CFrame.Angles(0, -math.rad(restAngle), 0)
 	local joint = Instance.new("Weld")
 	joint.Name = "GripWeld"
 	joint.Part0 = boneco.rightHand

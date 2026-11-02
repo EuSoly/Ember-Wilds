@@ -930,6 +930,16 @@ return {
 		end
 	end,
 
+	["attack animation must be swing or thrust"] = function()
+		local item: any = validItem("pick")
+		item.attackAnim = "spin"
+		local errors = Validate.all({ Tiers = {}, Items = { pick = item } }, alwaysHas)
+		assert(containsError(errors, "attackAnim"), `sem erro: {table.concat(errors, "; ")}`)
+		item.attackAnim = "thrust"
+		errors = Validate.all({ Tiers = {}, Items = { pick = item } }, alwaysHas)
+		assert(not containsError(errors, "attackAnim"), `thrust é válido: {table.concat(errors, "; ")}`)
+	end,
+
 	["zone with unknown resource is an error"] = function()
 		local defs = validWorldDefs()
 		defs.ResourceZones.forest_dense.densities.cactus = 3
