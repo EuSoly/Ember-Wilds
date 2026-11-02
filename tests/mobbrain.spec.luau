@@ -4,11 +4,13 @@ local MobBrain = require("../src/shared/Mobs/MobBrain")
 local MobRules = require("../src/shared/Mobs/MobRules")
 local Rng = require("../src/shared/World/Rng")
 
-local wolf = Defs.Mobs.wolf -- agressivo, raio 2, velocidade 14
+local wolf = Defs.Mobs.wolf -- agressivo, raio 2
+local WOLF_SPEED = (wolf.stats :: any).speed
 local spider = Defs.Mobs.spider -- agressivo com teia (2 s, recarga 6 s)
 local boar = Defs.Mobs.boar -- neutro
 local hawk = Defs.Mobs.hawk -- neutro, voador
-local rabbit = Defs.Mobs.rabbit -- passivo, velocidade 15
+local rabbit = Defs.Mobs.rabbit -- passivo
+local RABBIT_SPEED = (rabbit.stats :: any).speed
 
 local P1 = { name = "p1" }
 local P2 = { name = "p2" }
@@ -64,14 +66,14 @@ return {
 		local intent = MobBrain.think(close, wolf, 0, 0, 0, seen(P1, 18, 0), nil, true, rng)
 		assert(close.mode == "chase" and close.target == P1, "a 18 deveria perseguir")
 		assert(near(intent.dirX, 1) and near(intent.dirZ, 0), "deveria ir na direção do jogador")
-		assert(intent.speed == 14, "perseguindo vai na velocidade cheia")
+		assert(intent.speed == WOLF_SPEED, "perseguindo vai na velocidade cheia")
 	end,
 
 	["persegue sem desistir por distância"] = function()
 		local brain, rng = chasing(wolf, 0)
 		local intent = MobBrain.think(brain, wolf, 5, 0, 0, nil, seen(P1, 500, 0), true, rng)
 		assert(brain.mode == "chase" and brain.target == P1, "alvo a 500 studs continua")
-		assert(near(intent.dirX, 1) and intent.speed == 14, "continua indo atrás")
+		assert(near(intent.dirX, 1) and intent.speed == WOLF_SPEED, "continua indo atrás")
 	end,
 
 	["desiste aos 10 s sem golpe; golpe aos 9 s empurra"] = function()
@@ -167,7 +169,7 @@ return {
 		local intent = MobBrain.think(brain, rabbit, 0, 0, 0, seen(P1, 10, 0), nil, true, rng)
 		assert(brain.mode == "flee", "a 10 studs foge")
 		assert(near(intent.dirX, -1) and near(intent.dirZ, 0), "foge para o lado oposto")
-		assert(intent.speed == 15, "foge na velocidade cheia")
+		assert(intent.speed == RABBIT_SPEED, "foge na velocidade cheia")
 		assert(intent.bite == nil and not intent.hostile, "passivo não morde nem fica hostil")
 
 		MobBrain.think(brain, rabbit, 1, 0, 0, seen(P1, 15, 0), nil, true, rng)
@@ -188,7 +190,7 @@ return {
 		assert(brain.mode == "wander", "sem ninguém passeia")
 		local wx, wz = brain.wanderX :: number, brain.wanderZ :: number
 		assert(math.sqrt((wx - 100) ^ 2 + (wz - 50) ^ 2) <= MobRules.WANDER_RADIUS, "ponto perto de casa")
-		assert(near(intent.speed, 14 * MobRules.WANDER_SPEED), "anda devagar")
+		assert(near(intent.speed, WOLF_SPEED * MobRules.WANDER_SPEED), "anda devagar")
 		assert(near(intent.dirX ^ 2 + intent.dirZ ^ 2, 1), "direção unitária")
 
 		intent = MobBrain.think(brain, wolf, 1, wx, wz, nil, nil, true, rng)
@@ -203,7 +205,7 @@ return {
 		local brain = MobBrain.new(wolf, 100, 50, 0, rng)
 		MobBrain.think(brain, wolf, 0, 100, 50, nil, nil, true, rng)
 		local wx, wz = brain.wanderX :: number, brain.wanderZ :: number
-		local travel = math.sqrt((wx - 100) ^ 2 + (wz - 50) ^ 2) / (14 * MobRules.WANDER_SPEED)
+		local travel = math.sqrt((wx - 100) ^ 2 + (wz - 50) ^ 2) / (WOLF_SPEED * MobRules.WANDER_SPEED)
 		-- O mob nunca sai do lugar (preso numa árvore, na água...): antes do prazo continua tentando.
 		local beforeDeadline = travel + MobRules.WANDER_SLACK - 0.1
 		local intent = MobBrain.think(brain, wolf, beforeDeadline, 100, 50, nil, nil, true, rng)

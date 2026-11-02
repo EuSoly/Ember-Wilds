@@ -44,6 +44,9 @@ return table.freeze({
 	Using = "Using",
 	-- Id do item na mão (slot selecionado da hotbar), ou nil (escrito pelo EquipService).
 	Equipped = "Equipped",
+	-- Instante (GetServerTimeNow) até quando a arma recém-equipada fica presa na
+	-- mão (item com equipLock); nil = solta. Escrito pelo EquipService.
+	EquipLockUntil = "EquipLockUntil",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
 	HurtAt = "HurtAt",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.

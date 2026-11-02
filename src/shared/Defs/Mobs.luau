@@ -5,6 +5,10 @@
 -- behavior: wiki de fãs do Starve.io (starveiopro.fandom.com/wiki/Mobs),
 -- pesquisado em 01/11. As aves douradas não estão lá: passivas (decisão do
 -- Elizeu).
+-- Velocidades em relação ao jogador (16; com espada ou lança na mão, 12): o
+-- coelho (14) foge de quem está armado e é alcançado por quem está de mão ou
+-- picareta; lobo (13) e aranha (14) alcançam quem está armado, e quem está de
+-- mão ou picareta foge deles (como no Starve, explicado pelo Elizeu em 02/11).
 local Types = require("./Types")
 
 type MobDef = Types.MobDef
@@ -22,7 +26,7 @@ end
 
 return table.freeze({
 	rabbit = mob("rabbit", "passive", {
-		stats = { health = 60, speed = 15, radius = 1.8, points = 20 },
+		stats = { health = 60, speed = 14, radius = 1.8, points = 20 },
 		population = { forest = { day = 40, night = 15 } },
 	}),
 	penguin = mob("penguin", "passive"),
@@ -44,14 +48,14 @@ return table.freeze({
 	baby_dragon = mob("baby_dragon", "neutral", { mountFlies = true }),
 	baby_lava_dragon = mob("baby_lava_dragon", "neutral", { mountFlies = true }),
 	wolf = mob("wolf", "aggressive", {
-		stats = { health = 300, bite = 24, speed = 14, radius = 2, points = 60 },
+		stats = { health = 300, bite = 24, speed = 13, radius = 2, points = 60 },
 		population = { forest = { day = 10, night = 20 } },
 	}),
 	spider = mob("spider", "aggressive", {
 		stats = {
 			health = 120,
 			bite = 16,
-			speed = 20,
+			speed = 14,
 			radius = 2.2,
 			points = 40,
 			web = { duration = 2, cooldown = 6 },

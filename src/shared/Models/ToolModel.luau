@@ -1,6 +1,8 @@
 --!strict
--- Modelos importados das ferramentas em ReplicatedStorage.Assets.Tools.
--- Cada modelo tem PrimaryPart = Handle e Attachment "Grip".
+-- Modelos importados das ferramentas e armas em ReplicatedStorage.Assets.Tools.
+-- Cada modelo tem PrimaryPart = Handle e Attachment "Grip" (Y = cabo/lâmina
+-- para a frente, X = lado). Espadas e lanças têm modelos provisórios simples
+-- até os modelos do Elizeu (scripts/studio/make-weapon-placeholders.luau).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require("../Defs")
@@ -9,7 +11,7 @@ local ToolModel = {}
 
 function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
-	if def == nil or def.category ~= "tool" then
+	if def == nil or (def.category ~= "tool" and def.category ~= "weapon") then
 		return nil
 	end
 

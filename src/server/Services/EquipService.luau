@@ -5,7 +5,9 @@
 -- na mão do boneco visual a partir deste atributo (BonecoModel.setHeldItem).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local Defs = require(ReplicatedStorage.Shared.Defs)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
@@ -18,11 +20,16 @@ local function selectedItem(player: Player): Inventory.Slot?
 	return inv and inv.slots[InventoryService.selectedSlot(player)]
 end
 
--- Grava o item na mão. Se não mudou, não escreve (não replica à toa).
+-- Grava o item na mão. Se não mudou, não escreve (não replica à toa). Arma
+-- (item com equipLock) que acabou de entrar na mão fica presa por equipLock s:
+-- o InventoryService recusa trocar de slot até lá.
 local function apply(character: Model, item: Inventory.Slot?)
 	local itemId = if item then item.id else nil
 	if character:GetAttribute(StatNames.Equipped) ~= itemId then
 		character:SetAttribute(StatNames.Equipped, itemId)
+		local def = if itemId then Defs.Items[itemId] else nil
+		local lock = def and def.equipLock
+		character:SetAttribute(StatNames.EquipLockUntil, if lock then Workspace:GetServerTimeNow() + lock else nil)
 	end
 end
 

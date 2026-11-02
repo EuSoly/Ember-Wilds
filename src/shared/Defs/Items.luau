@@ -86,7 +86,9 @@ local Items: { [string]: ItemDef } = {
 		structureDamage = 35,
 		mobDamage = 14,
 	},
-	-- Armas craftáveis (o dano entra na fase de combate).
+	-- Armas craftáveis. Na mão deixam o jogador mais lento (moveSpeed) e ficam
+	-- presas por equipLock s; a lança alcança mais longe (reach). Números do Starve
+	-- sem valor na wiki ("bem mais lento", "alguns segundos"): escolha provisória.
 	wood_sword = {
 		id = "wood_sword",
 		nameKey = "item.wood_sword",
@@ -95,6 +97,8 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 5,
 		mobDamage = 12,
+		moveSpeed = 0.75,
+		equipLock = 4,
 	},
 	stone_sword = {
 		id = "stone_sword",
@@ -104,6 +108,8 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 7.5,
 		mobDamage = 19,
+		moveSpeed = 0.75,
+		equipLock = 4,
 	},
 	gold_sword = {
 		id = "gold_sword",
@@ -113,6 +119,8 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 10,
 		mobDamage = 22,
+		moveSpeed = 0.75,
+		equipLock = 4,
 	},
 	wood_spear = {
 		id = "wood_spear",
@@ -122,6 +130,9 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 5,
 		mobDamage = 10,
+		moveSpeed = 0.75,
+		equipLock = 4,
+		reach = 3,
 	},
 	stone_spear = {
 		id = "stone_spear",
@@ -131,6 +142,9 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 7.5,
 		mobDamage = 14,
+		moveSpeed = 0.75,
+		equipLock = 4,
+		reach = 3,
 	},
 	gold_spear = {
 		id = "gold_spear",
@@ -140,6 +154,9 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		structureDamage = 10,
 		mobDamage = 15,
+		moveSpeed = 0.75,
+		equipLock = 4,
+		reach = 3,
 	},
 	-- Proteção provisória, ajustada quando o combate for implementado.
 	wood_helmet = {

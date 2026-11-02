@@ -734,6 +734,15 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 	if damage ~= nil and not isPositive(damage) then
 		table.insert(errors, `Item "{key}": structureDamage deve ser maior que 0`)
 	end
+	if item.moveSpeed ~= nil and (not isPositive(item.moveSpeed) or item.moveSpeed > 1) then
+		table.insert(errors, `Item "{key}": moveSpeed deve ser maior que 0 e no máximo 1`)
+	end
+	if item.equipLock ~= nil and not isPositive(item.equipLock) then
+		table.insert(errors, `Item "{key}": equipLock deve ser maior que 0`)
+	end
+	if item.reach ~= nil and not isPositive(item.reach) then
+		table.insert(errors, `Item "{key}": reach deve ser maior que 0`)
+	end
 	if item.mobDamage ~= nil and not isPositive(item.mobDamage) then
 		table.insert(errors, `Item "{key}": mobDamage deve ser maior que 0`)
 	end

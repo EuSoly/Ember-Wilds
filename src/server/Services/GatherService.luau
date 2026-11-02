@@ -18,6 +18,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
+local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
@@ -94,10 +95,12 @@ local function hit(player: Player, character: Model, root: BasePart)
 		return
 	end
 	local dir = flat.Unit
-	local px = root.Position.X + dir.X * GatherRules.HIT_REACH
-	local pz = root.Position.Z + dir.Z * GatherRules.HIT_REACH
 	local equipped = character:GetAttribute(StatNames.Equipped)
 	local tool = if type(equipped) == "string" then Defs.Items[equipped] else nil
+	-- A lança alcança mais longe (reach do item).
+	local reach = GatherRules.HIT_REACH + HeldItem.reach(tool)
+	local px = root.Position.X + dir.X * reach
+	local pz = root.Position.Z + dir.Z * reach
 
 	-- Recursos e peças concorrem: o de borda mais perto do centro do golpe leva.
 	local candidates: { Candidate } = {}

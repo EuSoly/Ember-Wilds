@@ -20,6 +20,9 @@ local KIT: { { id: string, count: number } } = {
 	{ id = "wood_pickaxe", count = 1 },
 	{ id = "stone_pickaxe", count = 1 },
 	{ id = "gold_pickaxe", count = 1 },
+	-- Para testar a lentidão, a trava e o alcance das armas contra os mobs.
+	{ id = "gold_sword", count = 1 },
+	{ id = "gold_spear", count = 1 },
 }
 
 local DevItemsService = {}

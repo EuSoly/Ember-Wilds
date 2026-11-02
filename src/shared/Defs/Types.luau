@@ -61,6 +61,14 @@ export type ItemDef = {
 	structureDamage: number?,
 	-- Dano do golpe em mob (> 0). Ausente = golpe de mão (MobRules.HAND_DAMAGE).
 	mobDamage: number?,
+	-- Fração da velocidade de andar com o item na mão (0–1; ausente = 1). No
+	-- Starve, espada e lança deixam o jogador bem mais lento.
+	moveSpeed: number?,
+	-- Segundos que o item fica preso na mão depois de equipado (ausente = 0):
+	-- não dá para trocar de slot antes (arma do Starve).
+	equipLock: number?,
+	-- Studs a mais de alcance do golpe (ausente = 0). A lança alcança mais longe.
+	reach: number?,
 }
 
 export type CraftStation = "workbench" | "fire"
