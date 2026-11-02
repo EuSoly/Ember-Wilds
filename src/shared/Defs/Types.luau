@@ -192,6 +192,16 @@ export type ResourceZoneDef = {
 	densities: { [string]: number },
 }
 
+-- Comportamento do mob com os jogadores (Starve.io): passive nunca ataca,
+-- neutral só ataca depois de apanhar, aggressive ataca quem vê.
+export type MobBehavior = "passive" | "neutral" | "aggressive"
+
+export type MobDef = {
+	id: string,
+	nameKey: string,
+	behavior: MobBehavior,
+}
+
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
 -- CosmeticSlots/Cosmetics/Expressions/Stats/Settings/Kits/Resources/ResourceZones
 -- para os testes poderem validar só Tiers/Items.
@@ -207,6 +217,7 @@ export type DefsTables = {
 	Kits: { [string]: KitDef },
 	Resources: { [string]: ResourceDef },
 	ResourceZones: { [string]: ResourceZoneDef },
+	Mobs: { [string]: MobDef },
 }
 
 return nil

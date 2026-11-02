@@ -987,4 +987,37 @@ return {
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "default"), `faltou erro de default: {table.concat(errors, "; ")}`)
 	end,
+
+	["mobs follow the wiki behaviors"] = function()
+		-- Wiki de fãs do Starve.io (01/11): 2 passivos e 7 neutros; o resto ataca.
+		local expected = {
+			rabbit = "passive",
+			penguin = "passive",
+			hawk = "neutral",
+			boar = "neutral",
+			crab = "neutral",
+			king_crab = "neutral",
+			baby_mammoth = "neutral",
+			baby_dragon = "neutral",
+			baby_lava_dragon = "neutral",
+			wolf = "aggressive",
+			spider = "aggressive",
+			mammoth = "aggressive",
+			kraken = "aggressive",
+			sandworm = "aggressive",
+		}
+		for id, behavior in expected do
+			assert(Defs.Mobs[id].behavior == behavior, `{id} deveria ser {behavior}`)
+		end
+	end,
+
+	["unknown mob behavior is an error"] = function()
+		local defs: any = {
+			Tiers = {},
+			Items = {},
+			Mobs = { wolf = { id = "wolf", nameKey = "mob.wolf", behavior = "angry" } },
+		}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "behavior"), `faltou erro de behavior: {table.concat(errors, "; ")}`)
+	end,
 }

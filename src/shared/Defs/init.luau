@@ -37,6 +37,8 @@ export type GatherMaterial = Types.GatherMaterial
 export type ResourceZoneDef = Types.ResourceZoneDef
 export type StructureKind = Types.StructureKind
 export type StructureDef = Types.StructureDef
+export type MobBehavior = Types.MobBehavior
+export type MobDef = Types.MobDef
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
@@ -50,6 +52,7 @@ local Defs: Types.DefsTables = table.freeze({
 	Kits = require("@self/Kits"),
 	Resources = require("@self/Resources"),
 	ResourceZones = require("@self/ResourceZones"),
+	Mobs = require("@self/Mobs"),
 })
 
 local errors = Validate.all(Defs, Strings.has)
