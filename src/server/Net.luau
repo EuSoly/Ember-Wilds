@@ -426,9 +426,9 @@ function SerdesFunctions.ReadEVENT_CrateWatch(): (Instance?)
 	return Value
 end
 
-function SerdesFunctions.ReadEVENT_CrateTake(): ({ Crate: Instance?, Slot: number })
-	-- Read BLOCK: 1 bytes
-	local BLOCK_START = Read(1)
+function SerdesFunctions.ReadEVENT_CrateTake(): ({ Crate: Instance?, Slot: number, ItemId: string })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
 	local Value = {} :: any
 	RecieveInstanceCursor += 1
 	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
@@ -438,6 +438,10 @@ function SerdesFunctions.ReadEVENT_CrateTake(): ({ Crate: Instance?, Slot: numbe
 		if typeof(Value.Crate) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Crate)} instead.`) end
 	end
 	Value.Slot = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	Value.ItemId = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.ItemId < 1 then error(`Expected length of "Value.ItemId" to be larger than or equal to 1, got {#Value.ItemId} instead.`) end
+	if #Value.ItemId > 32 then error(`Expected length of "Value.ItemId" to be smaller than or equal to  32, got {#Value.ItemId} instead.`) end
 	return Value
 end
 
@@ -730,7 +734,7 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 				table.insert(Queue.Reliable[16], {Player, Value} :: {any})
 			end
 		elseif Index == 17 then
-			local Value: { Crate: Instance?, Slot: number } = SerdesFunctions.ReadEVENT_CrateTake()
+			local Value: { Crate: Instance?, Slot: number, ItemId: string } = SerdesFunctions.ReadEVENT_CrateTake()
 			if Events.Reliable[17] ~= nil then
 				task.spawn(Events.Reliable[17], Player, Value)
 			else
@@ -1274,7 +1278,7 @@ local Returns = table.freeze({
 		end
 	},
 	CrateTake = {
-		On = function(Listener: (Player: Player, Value: { Crate: Instance?, Slot: number }) -> ()): () -> ()
+		On = function(Listener: (Player: Player, Value: { Crate: Instance?, Slot: number, ItemId: string }) -> ()): () -> ()
 			Events.Reliable[17] = Listener
 			for Index, Arguments in Queue.Reliable[17] do
 				task.spawn(Listener, table.unpack(Arguments))

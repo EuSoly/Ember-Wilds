@@ -14,8 +14,10 @@
 -- - Olhar (CrateWatch): o cliente diz qual caixa está olhando; o servidor
 --   confere a distância (com folga) e manda o conteúdo agora e a cada mudança.
 -- - Pegar (CrateTake): confere taxa, jogador vivo, caixa viva, distância XZ até
---   OPEN_RANGE e o slot; dá o que couber (InventoryService.give devolve a
---   sobra) e deixa o resto. Entre conferir e mudar não há pausa (yield): dois
+--   OPEN_RANGE e o slot, que ainda tem de guardar o item que o cliente mostra
+--   (ItemId; os slots sobem quando um esvazia, e um índice velho cairia noutro
+--   item): diferente → não entrega e reenvia o conteúdo a quem pediu. Dá o
+--   que couber (InventoryService.give devolve a sobra) e deixa o resto. Entre conferir e mudar não há pausa (yield): dois
 --   jogadores no mesmo slot são atendidos um depois do outro, e o segundo leva
 --   o que sobrou (ou nada). Vazia → some.
 -- - Golpe (GatherService): tira vida (BuildRules.damageOf, como as peças); vida
@@ -332,7 +334,7 @@ local function onWatch(player: Player, crate: Instance?)
 end
 
 -- Pegar um slot: leva o que couber, o resto fica. Sem pausa até o fim.
-local function onTake(player: Player, data: { Crate: Instance?, Slot: number })
+local function onTake(player: Player, data: { Crate: Instance?, Slot: number, ItemId: string })
 	if player.Parent ~= Players or not allow(takeRates, player, TAKE_RATE_MAX) then
 		return
 	end
@@ -342,7 +344,9 @@ local function onTake(player: Player, data: { Crate: Instance?, Slot: number })
 	end
 	local index = data.Slot
 	local slot = entry.slots[index]
-	if slot == nil then
+	if slot == nil or slot.id ~= data.ItemId then
+		-- O cliente viu uma lista velha: manda a atual para o painel acertar.
+		Net.CrateContents.Fire(player, { Crate = entry.model, Slots = toNet(entry) })
 		return
 	end
 	local given = slot.count - InventoryService.give(player, slot.id, slot.count)

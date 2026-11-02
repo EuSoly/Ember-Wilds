@@ -212,14 +212,17 @@ event CrateWatch {
 }
 
 -- Pegar o slot `Slot` (1 = primeiro de CrateContents.Slots): leva o que couber
--- no inventário, o resto fica na caixa.
+-- no inventário, o resto fica na caixa. `ItemId` = o item que o cliente mostra
+-- nesse slot: os slots sobem quando um esvazia, então se o slot já não tem esse
+-- item o servidor não entrega e reenvia CrateContents a quem pediu.
 event CrateTake {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
 	Data: struct {
 		Crate: Instance?,
-		Slot: u8
+		Slot: u8,
+		ItemId: string(1..32)
 	}
 }
 

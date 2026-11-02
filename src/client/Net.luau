@@ -427,12 +427,16 @@ function SerdesFunctions.WriteEVENT_CrateWatch(Value: Instance?): ()
 	table.insert(SendInstances, Value or Null)
 end
 
-function SerdesFunctions.WriteEVENT_CrateTake(Value: { Crate: Instance?, Slot: number }): ()
-	-- Allocate BLOCK: 2 bytes
-	local BLOCK_START = Allocate(2)
+function SerdesFunctions.WriteEVENT_CrateTake(Value: { Crate: Instance?, Slot: number, ItemId: string }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 17)
 	table.insert(SendInstances, Value.Crate or Null)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Slot)
+	local Length = #Value.ItemId
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.ItemId, Length)
 end
 
 function SerdesFunctions.ReadEVENT_CrateContents(): ({ Crate: Instance?, Slots: { { Id: string, Count: number } } })
@@ -859,7 +863,7 @@ local Returns = table.freeze({
 		end
 	},
 	CrateTake = {
-		Fire = function(Value: { Crate: Instance?, Slot: number }): ()
+		Fire = function(Value: { Crate: Instance?, Slot: number, ItemId: string }): ()
 			SerdesFunctions.WriteEVENT_CrateTake(Value)
 		end
 	},
