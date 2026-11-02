@@ -73,13 +73,14 @@ return table.freeze({
 	-- Nas MeshParts de Assets.Mobs: versão brava (cortada) de um olho.
 	MobAngryEye = "MobAngryEye",
 	-- Ajuste de tamanho ao vivo, só no Studio: atributos nos modelos de
-	-- Assets.Mobs (Scale = tamanho visual, Radius = corpo no jogo) e na pasta
-	-- Assets.Mobs (ShowBody = mostra o círculo do corpo). Veja docs/guia/mobs.md.
-	MobDevScale = "Scale",
-	MobDevRadius = "Radius",
-	MobDevShowBody = "ShowBody",
-	-- Só no Studio: na pasta Assets.Mobs, os mobs ignoram os jogadores.
-	MobDevPeaceful = "Peaceful",
+	-- Assets.Mobs (Tamanho = visual, todos os mobs; RaioCorpo = corpo no jogo,
+	-- só mobs com IA) e na pasta Assets.Mobs (MostrarCorpo = disco do corpo;
+	-- Pacifico = mobs ignoram os jogadores). Em português para não confundir
+	-- com a propriedade Scale do Model. Veja docs/guia/mobs.md.
+	MobDevScale = "Tamanho",
+	MobDevRadius = "RaioCorpo",
+	MobDevShowBody = "MostrarCorpo",
+	MobDevPeaceful = "Pacifico",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",

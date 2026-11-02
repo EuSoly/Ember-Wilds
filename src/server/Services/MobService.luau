@@ -817,11 +817,16 @@ local function setupSizeTuning()
 	for id, def in Defs.Mobs do
 		local template = mobs:FindFirstChild(id)
 		local anim = MobAnimConfig.Mobs[id]
-		if template == nil or def.stats == nil or anim == nil then
+		if template == nil or anim == nil then
 			continue
 		end
+		-- Tamanho visual: todos os mobs (os sem IA aparecem na galeria DevMobs).
 		if template:GetAttribute(StatNames.MobDevScale) == nil then
 			template:SetAttribute(StatNames.MobDevScale, anim.scale)
+		end
+		-- Corpo no jogo: só quem tem IA (stats).
+		if def.stats == nil then
+			continue
 		end
 		if template:GetAttribute(StatNames.MobDevRadius) == nil then
 			template:SetAttribute(StatNames.MobDevRadius, def.stats.radius)
@@ -842,16 +847,19 @@ end
 local function devSizes(): string
 	local lines = { "-- scale vai em Mobs/MobAnimConfig, radius em Defs/Mobs (stats)" }
 	local ids: { string } = {}
-	for id, def in Defs.Mobs do
-		if def.stats then
-			table.insert(ids, id)
-		end
+	for id in Defs.Mobs do
+		table.insert(ids, id)
 	end
 	table.sort(ids)
 	for _, id in ids do
 		local template = templateOf(id)
 		local scale = template and template:GetAttribute(StatNames.MobDevScale)
-		table.insert(lines, `{id} = \{ scale = {scale}, radius = {radiusFor(Defs.Mobs[id])} \},`)
+		local def = Defs.Mobs[id]
+		if def.stats then
+			table.insert(lines, `{id} = \{ scale = {scale}, radius = {radiusFor(def)} \},`)
+		else
+			table.insert(lines, `{id} = \{ scale = {scale} \}, -- sem IA ainda`)
+		end
 	end
 	return table.concat(lines, "\n")
 end

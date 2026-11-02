@@ -135,11 +135,11 @@ Cada mob tem dois tamanhos que andam juntos: o **visual** (`scale` em `Mobs/MobA
 1. Dê Play e entre no jogo.
 2. Na aba **Testar**, troque a vista para **Servidor** (botão "Atual: Cliente/Servidor"). Mudando na vista do cliente só o visual muda; o corpo é do servidor.
 3. No Explorer, selecione `ReplicatedStorage.Assets.Mobs` e marque nas Propriedades:
-   - **`Peaceful`**: os mobs ignoram os jogadores (ninguém te ataca enquanto você ajusta);
-   - **`ShowBody`**: um disco verde translúcido aparece por cima de cada mob, do tamanho do corpo dele no jogo.
-4. Selecione um mob (ex.: `Assets.Mobs.wolf`) e mude os atributos **`Scale`** (tamanho visual) e **`Radius`** (corpo). Os mobs desse tipo são refeitos na hora com o tamanho novo. Acerte o `Radius` para o disco cobrir o corpo (sem as pontas de orelha, cauda ou perna).
+   - **`Pacifico`**: os mobs ignoram os jogadores (ninguém te ataca enquanto você ajusta);
+   - **`MostrarCorpo`**: um disco verde translúcido aparece por cima de cada mob, do tamanho do corpo dele no jogo.
+4. Selecione um mob (ex.: `Assets.Mobs.wolf`) e, em **Atributos** (no fim das Propriedades), mude **`Tamanho`** (visual) e **`RaioCorpo`** (corpo). Os mobs desse tipo são refeitos na hora. Acerte o `RaioCorpo` para o disco cobrir o corpo (sem as pontas de orelha, cauda ou perna). Cuidado: o **Scale** que aparece em "Pivô" é uma propriedade do Roblox, não mexa nele. Todos os 23 mobs têm `Tamanho` (os sem IA aparecem na galeria); só os 5 da floresta têm `RaioCorpo`.
 5. Para comparar com o jogador e entre eles: `game.ServerStorage.DevMobs:Invoke(true)` (galeria) ou `DevSpawnMob:Invoke(player, "wolf")`.
-6. Quando gostar, na barra de comandos do servidor: `print(game.ServerStorage.DevMobSizes:Invoke())`. Ele imprime os números prontos (`wolf = { scale = …, radius = … }`) para pôr em `MobAnimConfig` (scale) e `Defs/Mobs` (radius) — ou mande para o Claude atualizar.
+6. Quando gostar, na barra de comandos do servidor: `print(game.ServerStorage.DevMobSizes:Invoke())`. Ele imprime os números de todos os 23 (`wolf = { scale = …, radius = … }`) para pôr em `MobAnimConfig` (scale) e `Defs/Mobs` (radius) — ou mande para o Claude atualizar.
 
 Os atributos só existem no Play do Studio (somem ao parar) e não mudam nada no jogo publicado. Depois de mexer em `radius` nos dados, rode `bash scripts/check.sh`: o teste da lança confere que nenhum mob da floresta ficou rápido demais para o empurrão, e o raio entra nas contas de mordida e espinho.
 
