@@ -3,8 +3,8 @@
 -- em Strings/ptBR.luau + o modelo com juntas em ReplicatedStorage.Assets.Mobs
 -- + a animação em Mobs/MobAnimConfig (veja docs/guia/mobs-modelos.md).
 -- behavior: wiki de fãs do Starve.io (starveiopro.fandom.com/wiki/Mobs),
--- pesquisado em 01/11. As aves douradas não estão lá: passivas por escolha
--- provisória.
+-- pesquisado em 01/11. As aves douradas não estão lá: passivas (decisão do
+-- Elizeu).
 local Types = require("./Types")
 
 type MobDef = Types.MobDef

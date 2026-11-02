@@ -185,7 +185,7 @@ A câmera olha de cima, então quase tudo que aparece é **giro em volta do Y, d
 
 | Comportamento | Mobs | Borda |
 |---|---|---|
-| Passivo (nunca ataca) | coelho, pinguim; galinha e pintinho dourados (provisório: a wiki não diz) | sempre a do modelo (branca; a do coelho é rosada) |
+| Passivo (nunca ataca) | coelho, pinguim; galinha e pintinho dourados (a wiki não diz; decisão do Elizeu) | sempre a do modelo (branca; a do coelho fica rosada, decisão do Elizeu) |
 | Neutro (ataca depois de apanhar) | falcão, javali, caranguejo, caranguejo-rei, filhote de mamute, filhote de dragão, filhote de dragão de lava | branca; vermelha enquanto quer atacar |
 | Agressivo (ataca quem vê) | lobo, aranha, raposa-do-ártico, urso-polar, mamute, dragão, piranha, kraken, monstro de lava, dragão de lava, abutre, verme da areia | sempre vermelha |
 
