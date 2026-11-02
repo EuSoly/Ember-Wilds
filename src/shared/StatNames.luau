@@ -58,6 +58,13 @@ return table.freeze({
 	MobDead = "MobDead",
 	-- Quer atacar agora (agressivo sempre; neutro depois de apanhar): borda vermelha.
 	MobHostile = "MobHostile",
+	-- Voando agora (booleano), na raiz do mob (MobService): o cliente sobe o
+	-- visual e deixa translúcido.
+	MobFlying = "MobFlying",
+	-- Instante (GetServerTimeNow) em que a teia da aranha solta, atributo no
+	-- personagem (MobService). Preso enquanto MobRules.isWebbed; no personagem
+	-- local previsto, ler por polling.
+	WebbedUntil = "WebbedUntil",
 	-- Nas MeshParts de Assets.Mobs: esta camada é a borda que muda de cor.
 	MobOutline = "MobOutline",
 	-- Nas MeshParts de Assets.Mobs: versão brava (cortada) de um olho.
