@@ -1,6 +1,7 @@
 --!strict
 local A = require("../src/shared/Mobs/MobAnim")
 local C = require("../src/shared/Mobs/MobAnimConfig")
+local Defs = require("../src/shared/Defs")
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
@@ -9,11 +10,13 @@ local function near(a: number, b: number)
 end
 
 local function input(id: string): A.Input
-	return { config = C.Mobs[id], speed = 0, attack = 0, hurt = 0, dead = false }
+	return { config = C.Mobs[id], speed = 0, attack = 0, hurt = 0, dead = false, hostile = false }
 end
 
+-- O piscar fica de fora: tem ciclo próprio e é testado à parte.
 local function equal(a: A.Pose, b: A.Pose)
 	near(a.flash, b.flash)
+	near(a.outline, b.outline)
 	for name, group in a.groups do
 		local other = b.groups[name]
 		for _, field in { "x", "y", "z", "yaw", "scale" } do
@@ -185,5 +188,83 @@ return {
 				)
 			end
 		end
+	end,
+
+	["every mob in Defs has an animation and vice versa"] = function()
+		for id in Defs.Mobs do
+			assert(C.Mobs[id], `{id} sem animação`)
+		end
+		for id in C.Mobs do
+			assert(Defs.Mobs[id], `{id} sem entrada em Defs.Mobs`)
+		end
+	end,
+
+	["eyes blink once per period and the seed spreads the mobs"] = function()
+		local inp = input("wolf")
+		local state = A.newState()
+		local closed, open = 0, 0
+		local steps = 700
+		for _ = 1, steps do
+			local p = A.step(state, C.BLINK_PERIOD / steps, inp)
+			if p.blink > 0.9 then
+				closed += 1
+			elseif p.blink == 0 then
+				open += 1
+			end
+		end
+		assert(closed > 0, "deve piscar")
+		assert(open > steps * 0.8, "fica de olho aberto quase sempre")
+		-- Mesmo instante, atrasos diferentes: um pisca e o outro não.
+		local a = advance(A.newState(0, 0, 0), C.BLINK_DURATION / 2, inp)
+		local b = advance(A.newState(0, 0, 0.5), C.BLINK_DURATION / 2, inp)
+		assert(a.blink > 0.9 and b.blink == 0, "o atraso deve espalhar o piscar")
+	end,
+
+	["hurt closes the eyes, squashes and shakes the body"] = function()
+		local inp = input("rabbit")
+		local state = A.newState(0, 0, 0.5)
+		inp.hurt = 1
+		local squashed, shook = false, false
+		local count = 40
+		for _ = 1, count - 1 do
+			local p = A.step(state, C.HURT_DURATION / count, inp)
+			assert(p.blink == 1, "olhos fechados no dano")
+			squashed = squashed or p.groups.Body.scale < 1 - C.HURT_SQUASH / 2
+			shook = shook or math.abs(p.groups.Body.x) > C.HURT_SHAKE / 4
+		end
+		assert(squashed and shook, "o dano deve encolher e tremer o corpo")
+		local after = advance(state, C.HURT_DURATION, inp)
+		assert(after.blink < 1 and after.flash == 0, "depois do dano volta ao normal")
+	end,
+
+	["dead mobs keep the eyes closed"] = function()
+		local inp = input("wolf")
+		local state = A.newState()
+		inp.dead = true
+		assert(A.step(state, 1 / 60, inp).blink == 1, "morto de olho fechado")
+	end,
+
+	["outline fades to red while hostile and back when calm"] = function()
+		local inp = input("boar")
+		local state = A.newState()
+		inp.hostile = true
+		local half = advance(state, C.OUTLINE_FADE / 2, inp)
+		assert(half.outline > 0.3 and half.outline < 0.7, "a borda troca aos poucos")
+		near(advance(state, C.OUTLINE_FADE, inp).outline, 1)
+		inp.hostile = false
+		near(advance(state, C.OUTLINE_FADE * 2, inp).outline, 0)
+		-- Mob que já nasce agressivo começa vermelho, sem transição.
+		inp.hostile = true
+		near(A.step(A.newState(0, 0, 0, true), 0, inp).outline, 1)
+	end,
+
+	["spider attack closes the two front legs"] = function()
+		local inp = input("spider")
+		inp.attack = 1
+		local p = advance(A.newState(), C.ATTACK_DURATION / 2, inp)
+		-- Lados espelhados: para fechar para a frente a esquerda gira negativo.
+		assert(p.groups.Leg_L1.yaw < math.rad(-20) and p.groups.Leg_R1.yaw > math.rad(20), "patas da frente fecham")
+		near(p.groups.Leg_L2.yaw, 0)
+		near(p.groups.Leg_R4.yaw, 0)
 	end,
 }

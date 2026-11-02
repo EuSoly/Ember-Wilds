@@ -82,6 +82,9 @@ end
 
 local spider = legs(4)
 spider.Head = group("sway", 1, 3, 8)
+-- No ataque as duas patas da frente fecham para a frente, como um bote.
+spider.Leg_L1 = group("stride", 0, 19, -25)
+spider.Leg_R1 = group("stride", 0, 19, 25)
 local boar = ears()
 boar.Head = group("sway", 1, 5, 8)
 local kraken = { Mouth = mouth() }
@@ -116,10 +119,25 @@ return table.freeze({
 	BODY_SHIFT = 0.08,
 	BOB_HEIGHT = 0.08,
 	ATTACK_DURATION = 0.45,
-	ATTACK_DISTANCE = 0.8,
-	HURT_DURATION = 0.3,
-	HURT_DISTANCE = 0.35,
+	ATTACK_DISTANCE = 1.6, -- studs antes da escala do mob
+	ATTACK_PUFF = 0.08, -- o corpo cresce 8% no bote
+	HURT_DURATION = 0.35,
+	HURT_DISTANCE = 0.9, -- recuo (studs antes da escala)
+	HURT_SQUASH = 0.1, -- o corpo encolhe 10% com o golpe
+	HURT_SHAKE = 0.3, -- tremida de lado (studs antes da escala)
+	HURT_SHAKES = 3, -- vai e volta 3 vezes durante o dano
 	DEATH_DURATION = 0.5,
+	-- Piscar: cada mob pisca a cada BLINK_PERIOD s (com atraso próprio, para
+	-- não piscarem todos juntos); no dano e na morte os olhos ficam fechados.
+	-- O olho fechado encolhe BLINK_SQUASH na frente-trás (visto de cima, achata).
+	BLINK_PERIOD = 3.5,
+	BLINK_DURATION = 0.16,
+	BLINK_SQUASH = 0.85,
+	EYE_PATTERN = "eye", -- peças com isto no nome são olhos
+	SPARKLE_PATTERN = "sparkle", -- brilho do olho: some com o olho fechado
+	-- Borda: a cor do modelo quando calmo; esta quando MobHostile (quer atacar).
+	OUTLINE_HOSTILE = { 0xb6 / 255, 0x3b / 255, 0x58 / 255 },
+	OUTLINE_FADE = 0.25, -- segundos para a borda trocar de cor
 	SIZE_STEP = 0.002, -- o cliente só troca o Size das peças quando a escala anda isso
 
 	FLASH_COLOR = { 1, 0.35, 0.3 },

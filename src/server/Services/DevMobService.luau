@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
+local Defs = require(ReplicatedStorage.Shared.Defs)
 local C = require(ReplicatedStorage.Shared.Mobs.MobAnimConfig)
 local Names = require(ReplicatedStorage.Shared.StatNames)
 local Service = {}
@@ -42,6 +43,8 @@ local function newRoot(member: Member): Part
 	root:SetAttribute(Names.MobAttack, 0)
 	root:SetAttribute(Names.MobHurt, 0)
 	root:SetAttribute(Names.MobDead, false)
+	-- Agressivo quer atacar sempre; neutro só depois de apanhar (fase "hurt").
+	root:SetAttribute(Names.MobHostile, Defs.Mobs[member.id].behavior == "aggressive")
 	root.Parent = gallery
 	CollectionService:AddTag(root, Names.MobTag)
 	member.root, member.phase = root, "idle"
@@ -111,6 +114,9 @@ local function enable(on: boolean): number
 					root:SetAttribute(Names.MobAttack, (root:GetAttribute(Names.MobAttack) :: number) + 1)
 				elseif phase == "hurt" then
 					root:SetAttribute(Names.MobHurt, (root:GetAttribute(Names.MobHurt) :: number) + 1)
+					if Defs.Mobs[member.id].behavior == "neutral" then
+						root:SetAttribute(Names.MobHostile, true)
+					end
 				elseif phase == "dead" then
 					root:SetAttribute(Names.MobDead, true)
 				end

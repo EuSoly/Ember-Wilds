@@ -445,6 +445,20 @@ local function validateGather(
 	end
 end
 
+local MOB_BEHAVIORS = { passive = true, neutral = true, aggressive = true }
+
+local function validateMobs(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	-- Tabela ausente (testes antigos) conta como vazia.
+	local mobs: { [string]: Types.MobDef } = (defs :: any).Mobs or {}
+	for key, mob in mobs do
+		checkId(errors, "Mob", key, mob.id)
+		checkString(errors, "Mob", key, "nameKey", mob.nameKey, hasString)
+		if not MOB_BEHAVIORS[mob.behavior] then
+			table.insert(errors, `Mob "{key}": behavior deve ser passive, neutral ou aggressive`)
+		end
+	end
+end
+
 local function validateResources(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	-- Tabelas ausentes (testes antigos) contam como vazias.
 	local resources: { [string]: Types.ResourceDef } = (defs :: any).Resources or {}
@@ -730,6 +744,7 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 	validateKits(errors, defs, hasString)
 	validateResources(errors, defs, hasString)
 	validateRecipes(errors, defs, hasString)
+	validateMobs(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors

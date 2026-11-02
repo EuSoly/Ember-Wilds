@@ -56,6 +56,10 @@ return table.freeze({
 	MobAttack = "MobAttack",
 	MobHurt = "MobHurt",
 	MobDead = "MobDead",
+	-- Quer atacar agora (agressivo sempre; neutro depois de apanhar): borda vermelha.
+	MobHostile = "MobHostile",
+	-- Nas MeshParts de Assets.Mobs: esta camada é a borda que muda de cor.
+	MobOutline = "MobOutline",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",

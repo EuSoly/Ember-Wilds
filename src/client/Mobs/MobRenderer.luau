@@ -16,11 +16,13 @@ type Entry = {
 	state: A.State,
 	lastPosition: Vector3,
 	resting: A.Pose,
+	seed: number, -- atraso do piscar deste mob (0–1)
 }
 local Renderer = {}
 local entries: { [BasePart]: Entry } = {}
 local folder: Folder? = nil
 local started = false
+local random = Random.new()
 
 local function counter(root: BasePart, name: string): number
 	local value = root:GetAttribute(name)
@@ -44,13 +46,20 @@ local function add(root: BasePart, id: string): Entry?
 		return nil -- tenta de novo se o template/atributo ainda estiver chegando.
 	end
 	local visual = V.create(template, config, folder :: Folder)
+	local seed = random:NextNumber()
 	local entry: Entry = {
 		id = id,
 		config = config,
 		visual = visual,
-		state = A.newState(counter(root, Names.MobAttack), counter(root, Names.MobHurt)),
+		state = A.newState(
+			counter(root, Names.MobAttack),
+			counter(root, Names.MobHurt),
+			seed,
+			root:GetAttribute(Names.MobHostile) == true
+		),
 		lastPosition = root.Position,
 		resting = A.restPose(config),
+		seed = seed,
 	}
 	entries[root] = entry
 	return entry
@@ -92,21 +101,23 @@ local function update(dt: number)
 		local speed = if dt > 0 then Vector2.new(delta.X, delta.Z).Magnitude / dt else 0
 		local attack, hurt = counter(root, Names.MobAttack), counter(root, Names.MobHurt)
 		local dead = root:GetAttribute(Names.MobDead) == true
+		local hostile = root:GetAttribute(Names.MobHostile) == true
 		local pose: A.Pose
 		if camera == nil or (target.Position - camera.CFrame.Position).Magnitude <= C.ANIM_RANGE then
 			pose = A.step(
 				entry.state,
 				dt,
-				{ config = entry.config, speed = speed, attack = attack, hurt = hurt, dead = dead }
+				{ config = entry.config, speed = speed, attack = attack, hurt = hurt, dead = dead, hostile = hostile }
 			)
 		else
 			-- Não guarda eventos fora do alcance para dispará-los ao voltar.
 			local latchedDead = dead or entry.state.dead
-			entry.state = A.newState(attack, hurt)
+			entry.state = A.newState(attack, hurt, entry.seed, hostile)
 			entry.state.dead = latchedDead
 			entry.state.deathTime = if latchedDead then C.DEATH_DURATION else 0
 			pose = entry.resting
 			pose.groups.Body.scale = if latchedDead then 0 else 1
+			pose.outline = if hostile then 1 else 0
 		end
 		V.append(entry.visual, target, pose, parts, frames)
 	end
