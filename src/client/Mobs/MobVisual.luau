@@ -2,6 +2,7 @@
 -- Captura as juntas uma vez. A cada quadro compõe pais antes dos filhos e
 -- acrescenta todas as peças ao mesmo lote do renderer, sem PivotTo por junta.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local A = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnim"))
 local C = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnimConfig"))
@@ -40,6 +41,9 @@ export type Visual = {
 	scale: number,
 	lastFlash: number,
 	lastOutline: number,
+	body: BasePart?, -- disco do corpo (só no Studio, ajuste de tamanho)
+	bodyShown: boolean,
+	bodyHeight: number, -- altura do disco: logo acima do topo do mob
 }
 local V = {}
 local FLASH = Color3.new(C.FLASH_COLOR[1], C.FLASH_COLOR[2], C.FLASH_COLOR[3])
@@ -64,7 +68,26 @@ local function kindOf(part: MeshPart): Kind
 	return "plain"
 end
 
-function V.create(template: Model, config: C.Mob, folder: Folder): Visual
+-- Disco verde translúcido com o tamanho do corpo do mob no jogo (raio), logo
+-- acima do topo do mob (no chão o corpo dele o cobriria). Só no Studio, para
+-- acertar o Radius olhando; aparece com ShowBody em Assets.Mobs.
+local function newBody(model: Model, radius: number): BasePart
+	local disc = Instance.new("Part")
+	disc.Name = "BodyCircle"
+	disc.Shape = Enum.PartType.Cylinder
+	disc.Size = Vector3.new(0.05, radius * 2, radius * 2)
+	disc.Color = Color3.fromRGB(80, 255, 140)
+	disc.Material = Enum.Material.Neon
+	disc.Transparency = 1
+	disc.CastShadow = false
+	disc.Anchored = true
+	disc.CanCollide, disc.CanQuery, disc.CanTouch = false, false, false
+	disc.Parent = model
+	return disc
+end
+
+-- `radius`: corpo do mob no jogo (só desenhado no Studio, com ShowBody).
+function V.create(template: Model, config: C.Mob, folder: Folder, radius: number): Visual
 	local model = template:Clone()
 	-- Olhos bravos (se o corte deste mob já está pronto): ao lado de cada
 	-- olho, antes do ScaleTo para escalarem juntos.
@@ -84,7 +107,10 @@ function V.create(template: Model, config: C.Mob, folder: Folder): Visual
 	end
 	-- Importados já têm escala canônica diferente de 1. A config é um fator
 	-- sobre o tamanho aprovado no place, não a escala canônica absoluta.
-	model:ScaleTo(model:GetScale() * config.scale)
+	-- No Studio o atributo Scale do modelo (ajuste ao vivo) vale mais que a config.
+	local devScale = template:GetAttribute(Names.MobDevScale)
+	local scale = if type(devScale) == "number" and devScale > 0 then devScale else config.scale
+	model:ScaleTo(model:GetScale() * scale)
 	local groups: { Group } = {}
 	local center = model:GetPivot()
 	-- `visible`: transparência quando a peça aparece (o olho bravo nasce escondido).
@@ -158,11 +184,31 @@ function V.create(template: Model, config: C.Mob, folder: Folder): Visual
 			end
 		end
 	end
+	-- Medir antes de criar o disco (ele ainda está na origem e inflaria a caixa).
+	local _, extents = model:GetBoundingBox()
+	local body = if RunService:IsStudio() and radius > 0 then newBody(model, radius) else nil
 	model.Parent = folder
-	return { model = model, groups = groups, scale = config.scale, lastFlash = -1, lastOutline = -1 }
+	return {
+		model = model,
+		groups = groups,
+		scale = scale,
+		lastFlash = -1,
+		lastOutline = -1,
+		body = body,
+		bodyShown = false,
+		bodyHeight = extents.Y + 0.3,
+	}
 end
 
-function V.append(visual: Visual, root: CFrame, pose: A.Pose, parts: { BasePart }, frames: { CFrame })
+function V.append(
+	visual: Visual,
+	root: CFrame,
+	pose: A.Pose,
+	parts: { BasePart },
+	frames: { CFrame },
+	showBody: boolean?
+)
+	local ground = root
 	local hidden = pose.groups.Body.scale <= 0
 	local recolor = pose.flash ~= visual.lastFlash or pose.outline ~= visual.lastOutline
 	local angry = pose.angry > 0.5
@@ -215,6 +261,16 @@ function V.append(visual: Visual, root: CFrame, pose: A.Pose, parts: { BasePart 
 		end
 	end
 	visual.lastFlash, visual.lastOutline = pose.flash, pose.outline
+	local body = visual.body
+	if body then
+		local shown = showBody == true and not hidden
+		if shown ~= visual.bodyShown then
+			visual.bodyShown = shown
+			body.Transparency = if shown then 0.7 else 1
+		end
+		table.insert(parts, body)
+		table.insert(frames, ground * CFrame.new(0, visual.bodyHeight, 0) * CFrame.Angles(0, 0, math.rad(90)))
+	end
 end
 
 function V.destroy(visual: Visual)

@@ -6,6 +6,7 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local A = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnim"))
 local C = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnimConfig"))
+local Defs = require(Shared:WaitForChild("Defs"))
 local Names = require(Shared:WaitForChild("StatNames"))
 local V = require(script.Parent:WaitForChild("MobVisual"))
 local AngryEyes = require(script.Parent:WaitForChild("AngryEyes"))
@@ -48,7 +49,11 @@ local function add(root: BasePart, id: string): Entry?
 	if not config or not template or not template:IsA("Model") or not template:FindFirstChild("Body") then
 		return nil -- tenta de novo se o template/atributo ainda estiver chegando.
 	end
-	local visual = V.create(template, config, folder :: Folder)
+	-- Corpo no jogo: no Studio o atributo Radius do modelo (ajuste ao vivo).
+	local stats = Defs.Mobs[id] and Defs.Mobs[id].stats
+	local devRadius = template:GetAttribute(Names.MobDevRadius)
+	local radius = if type(devRadius) == "number" and devRadius > 0 then devRadius elseif stats then stats.radius else 0
+	local visual = V.create(template, config, folder :: Folder, radius)
 	local seed = random:NextNumber()
 	local entry: Entry = {
 		id = id,
@@ -70,7 +75,20 @@ local function add(root: BasePart, id: string): Entry?
 	return entry
 end
 
+local isStudio = RunService:IsStudio()
+
+-- Studio: ShowBody na pasta Assets.Mobs mostra o círculo do corpo dos mobs.
+local function bodyShown(): boolean
+	if not isStudio then
+		return false
+	end
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local templates = assets and assets:FindFirstChild("Mobs")
+	return templates ~= nil and templates:GetAttribute(Names.MobDevShowBody) == true
+end
+
 local function update(dt: number)
+	local showBody = bodyShown()
 	local parts: { BasePart } = {}
 	local frames: { CFrame } = {}
 	local camera = Workspace.CurrentCamera
@@ -137,10 +155,19 @@ local function update(dt: number)
 			pose.outline = if hostile then 1 else 0
 			pose.fly = if flying and not latchedDead then 1 else 0
 		end
-		V.append(entry.visual, target, pose, parts, frames)
+		V.append(entry.visual, target, pose, parts, frames, showBody)
 	end
 	if #parts > 0 then
 		Workspace:BulkMoveTo(parts, frames, Enum.BulkMoveMode.FireCFrameChanged)
+	end
+end
+
+-- Refaz os mobs de um tipo: somem agora e voltam no próximo quadro.
+local function rebuild(id: string)
+	for root, entry in entries do
+		if entry.id == id then
+			remove(root)
+		end
 	end
 end
 
@@ -155,13 +182,24 @@ function Renderer.start()
 	folder = visuals
 	-- Corte dos olhos bravos ficou pronto: refaz os mobs desse tipo (voltam no
 	-- próximo quadro, já com os olhos cortados).
-	AngryEyes.onReady(function(id)
-		for root, entry in entries do
-			if entry.id == id then
-				remove(root)
+	AngryEyes.onReady(rebuild)
+	-- Studio: mudou Scale ou Radius de um modelo (ajuste de tamanho ao vivo).
+	if RunService:IsStudio() then
+		task.spawn(function()
+			local assets = ReplicatedStorage:WaitForChild("Assets", 10)
+			local templates = assets and assets:WaitForChild("Mobs", 10)
+			if templates == nil then
+				return
 			end
-		end
-	end)
+			for _, template in templates:GetChildren() do
+				for _, name in { Names.MobDevScale, Names.MobDevRadius } do
+					template:GetAttributeChangedSignal(name):Connect(function()
+						rebuild(template.Name)
+					end)
+				end
+			end
+		end)
+	end
 	CollectionService:GetInstanceRemovedSignal(Names.MobTag):Connect(function(instance)
 		if instance:IsA("BasePart") then
 			remove(instance)

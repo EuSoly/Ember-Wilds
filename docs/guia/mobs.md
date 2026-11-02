@@ -128,6 +128,21 @@ print(game.ServerStorage.DevMobCount:Invoke())          -- vivos, vagas esfriand
 - `DevMobCount:Invoke()`: devolve `dia` ou `noite` e, por bioma e tipo, `N vivos + M esfriando, meta K`.
 - `ServerStorage.DevMobs:Invoke(true / false)` continua sendo a galeria de teste do visual dos 23 mobs (`mobs-modelos.md`); não tem IA.
 
+## Ajustar o tamanho dos mobs (ao vivo, no Studio)
+
+Cada mob tem dois tamanhos que andam juntos: o **visual** (`scale` em `Mobs/MobAnimConfig.luau`, provisório 0,4) e o **corpo no jogo** (`radius` em `stats`, `Defs/Mobs.luau`): o círculo usado para colidir, levar golpe, morder e encostar no espinho. Para acertar os dois olhando, com o jogo rodando:
+
+1. Dê Play e entre no jogo.
+2. Na aba **Testar**, troque a vista para **Servidor** (botão "Atual: Cliente/Servidor"). Mudando na vista do cliente só o visual muda; o corpo é do servidor.
+3. No Explorer, selecione `ReplicatedStorage.Assets.Mobs` e marque nas Propriedades:
+   - **`Peaceful`**: os mobs ignoram os jogadores (ninguém te ataca enquanto você ajusta);
+   - **`ShowBody`**: um disco verde translúcido aparece por cima de cada mob, do tamanho do corpo dele no jogo.
+4. Selecione um mob (ex.: `Assets.Mobs.wolf`) e mude os atributos **`Scale`** (tamanho visual) e **`Radius`** (corpo). Os mobs desse tipo são refeitos na hora com o tamanho novo. Acerte o `Radius` para o disco cobrir o corpo (sem as pontas de orelha, cauda ou perna).
+5. Para comparar com o jogador e entre eles: `game.ServerStorage.DevMobs:Invoke(true)` (galeria) ou `DevSpawnMob:Invoke(player, "wolf")`.
+6. Quando gostar, na barra de comandos do servidor: `print(game.ServerStorage.DevMobSizes:Invoke())`. Ele imprime os números prontos (`wolf = { scale = …, radius = … }`) para pôr em `MobAnimConfig` (scale) e `Defs/Mobs` (radius) — ou mande para o Claude atualizar.
+
+Os atributos só existem no Play do Studio (somem ao parar) e não mudam nada no jogo publicado. Depois de mexer em `radius` nos dados, rode `bash scripts/check.sh`: o teste da lança confere que nenhum mob da floresta ficou rápido demais para o empurrão, e o raio entra nas contas de mordida e espinho.
+
 ## Onde mudar cada coisa
 
 | Quero mudar... | Onde |

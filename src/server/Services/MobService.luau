@@ -37,6 +37,7 @@ local Workspace = game:GetService("Workspace")
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local DayCycle = require(ReplicatedStorage.Shared.DayCycle)
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local MobAnimConfig = require(ReplicatedStorage.Shared.Mobs.MobAnimConfig)
 local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local MobBrain = require(ReplicatedStorage.Shared.Mobs.MobBrain)
 local MobMove = require(ReplicatedStorage.Shared.Mobs.MobMove)
@@ -120,6 +121,28 @@ for _, def in Defs.Mobs do
 	end
 end
 
+-- Só no Studio: o raio pode vir do atributo Radius do modelo em Assets.Mobs
+-- (ajuste de tamanho ao vivo); fora dele, sempre o dos dados.
+local tuning = RunService:IsStudio()
+
+local function templateOf(id: string): Instance?
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local mobs = assets and assets:FindFirstChild("Mobs")
+	return mobs and mobs:FindFirstChild(id)
+end
+
+local function radiusFor(def: MobDef): number
+	local stats = def.stats :: Types.MobStats
+	if tuning then
+		local template = templateOf(def.id)
+		local value = template and template:GetAttribute(StatNames.MobDevRadius)
+		if type(value) == "number" and value > 0 then
+			return value
+		end
+	end
+	return stats.radius
+end
+
 local function getFolder(): Folder
 	local current = folder
 	if current == nil or current.Parent == nil then
@@ -178,8 +201,22 @@ local function livingBodies(): { MobBrain.Seen }
 	return bodies
 end
 
+-- Studio: Peaceful na pasta Assets.Mobs faz os mobs não verem ninguém (para
+-- ajustar tamanhos sem ser atacado). Jogadores continuam sendo obstáculo.
+local function peaceful(): boolean
+	if not RunService:IsStudio() then
+		return false
+	end
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local mobs = assets and assets:FindFirstChild("Mobs")
+	return mobs ~= nil and mobs:GetAttribute(StatNames.MobDevPeaceful) == true
+end
+
 local function viewOf(rect: WorldConfig.Rect, bodies: { MobBrain.Seen }): View
 	local view: View = { list = {}, byWho = {} }
+	if peaceful() then
+		return view
+	end
 	for _, body in bodies do
 		if inRect(rect, body.x, body.z) then
 			table.insert(view.list, body)
@@ -350,7 +387,7 @@ local function spawnMob(def: MobDef, biome: string, rect: WorldConfig.Rect, x: n
 		x = x,
 		z = z,
 		y = y,
-		radius = stats.radius,
+		radius = radiusFor(def),
 		health = stats.health,
 		flying = false,
 		dead = false,
@@ -588,7 +625,7 @@ local function population()
 				continue
 			end
 			local function isFree(x: number, z: number): boolean
-				return spawnFree(stats.radius, x, z, bodies)
+				return spawnFree(radiusFor(def), x, z, bodies)
 			end
 			for _ = 1, math.min(delta, SPAWN_PER_TYPE) do
 				local x, z = MobSpawn.pick(rng, rect, isFree, SPAWN_TRIES)
@@ -761,6 +798,64 @@ function MobService.onDeath(listener: (mob: Mob, killer: Player?) -> ())
 	table.insert(deathListeners, listener)
 end
 
+-- Ajuste de tamanho ao vivo (Studio): põe Scale e Radius em cada modelo de
+-- Assets.Mobs (com os valores atuais dos dados) e ShowBody na pasta. Mudar o
+-- Radius no Play (vista do servidor) muda na hora o corpo dos mobs desse tipo;
+-- o Scale o cliente aplica sozinho.
+local function setupSizeTuning()
+	local assets = ReplicatedStorage:WaitForChild("Assets", 10)
+	local mobs = assets and assets:WaitForChild("Mobs", 10)
+	if mobs == nil then
+		return
+	end
+	if mobs:GetAttribute(StatNames.MobDevShowBody) == nil then
+		mobs:SetAttribute(StatNames.MobDevShowBody, false)
+	end
+	if mobs:GetAttribute(StatNames.MobDevPeaceful) == nil then
+		mobs:SetAttribute(StatNames.MobDevPeaceful, false)
+	end
+	for id, def in Defs.Mobs do
+		local template = mobs:FindFirstChild(id)
+		local anim = MobAnimConfig.Mobs[id]
+		if template == nil or def.stats == nil or anim == nil then
+			continue
+		end
+		if template:GetAttribute(StatNames.MobDevScale) == nil then
+			template:SetAttribute(StatNames.MobDevScale, anim.scale)
+		end
+		if template:GetAttribute(StatNames.MobDevRadius) == nil then
+			template:SetAttribute(StatNames.MobDevRadius, def.stats.radius)
+		end
+		template:GetAttributeChangedSignal(StatNames.MobDevRadius):Connect(function()
+			local radius = radiusFor(def)
+			maxRadius = math.max(maxRadius, radius)
+			for mob in alive do
+				if mob.id == id then
+					mob.radius = radius
+				end
+			end
+		end)
+	end
+end
+
+-- Os tamanhos ajustados no Studio, prontos para colar nos dados.
+local function devSizes(): string
+	local lines = { "-- scale vai em Mobs/MobAnimConfig, radius em Defs/Mobs (stats)" }
+	local ids: { string } = {}
+	for id, def in Defs.Mobs do
+		if def.stats then
+			table.insert(ids, id)
+		end
+	end
+	table.sort(ids)
+	for _, id in ids do
+		local template = templateOf(id)
+		local scale = template and template:GetAttribute(StatNames.MobDevScale)
+		table.insert(lines, `{id} = \{ scale = {scale}, radius = {radiusFor(Defs.Mobs[id])} \},`)
+	end
+	return table.concat(lines, "\n")
+end
+
 function MobService.Start(_self)
 	loop(MobRules.TICK, step)
 	loop(POPULATION_EVERY, population)
@@ -768,6 +863,8 @@ function MobService.Start(_self)
 	if RunService:IsStudio() then
 		newCommand("DevSpawnMob", devSpawn)
 		newCommand("DevMobCount", devCount)
+		newCommand("DevMobSizes", devSizes)
+		task.spawn(setupSizeTuning)
 	end
 end
 
