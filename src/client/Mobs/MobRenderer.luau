@@ -8,6 +8,7 @@ local A = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnim"))
 local C = require(Shared:WaitForChild("Mobs"):WaitForChild("MobAnimConfig"))
 local Names = require(Shared:WaitForChild("StatNames"))
 local V = require(script.Parent:WaitForChild("MobVisual"))
+local AngryEyes = require(script.Parent:WaitForChild("AngryEyes"))
 
 type Entry = {
 	id: string,
@@ -135,6 +136,15 @@ function Renderer.start()
 	visuals.Name = "MobVisuals"
 	visuals.Parent = Workspace
 	folder = visuals
+	-- Corte dos olhos bravos ficou pronto: refaz os mobs desse tipo (voltam no
+	-- próximo quadro, já com os olhos cortados).
+	AngryEyes.onReady(function(id)
+		for root, entry in entries do
+			if entry.id == id then
+				remove(root)
+			end
+		end
+	end)
 	CollectionService:GetInstanceRemovedSignal(Names.MobTag):Connect(function(instance)
 		if instance:IsA("BasePart") then
 			remove(instance)

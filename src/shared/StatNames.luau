@@ -60,6 +60,8 @@ return table.freeze({
 	MobHostile = "MobHostile",
 	-- Nas MeshParts de Assets.Mobs: esta camada é a borda que muda de cor.
 	MobOutline = "MobOutline",
+	-- Nas MeshParts de Assets.Mobs: versão brava (cortada) de um olho.
+	MobAngryEye = "MobAngryEye",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",
