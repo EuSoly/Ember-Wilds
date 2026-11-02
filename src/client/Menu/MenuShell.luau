@@ -1,13 +1,16 @@
 --!strict
--- Casca do menu (G7a): coluna de botões à esquerda, barra no topo (nível, XP,
--- saldo real e selo MOCKUP) e a área dos painéis. Fica por cima do molde
--- MainMenu, só no estado "menu". Os painéis são placeholders com título e
--- botão de fechar; as próximas tarefas os preenchem.
+-- Casca do menu (G7a): coluna de botões à esquerda, dois pods nos cantos do
+-- topo (nível, XP e selo MOCKUP; saldo real e "+") e a área dos painéis, cada
+-- um com título, botão de fechar e o conteúdo do mockup (Cosméticos, Loja,
+-- Comprar, Ranking, Perfil, Tutorial). Fica junto do molde MainMenu, só no
+-- estado "menu" e sem Configurações aberta. As medidas vêm de
+-- Shared/UIFlow/MenuLayout (offsets em pixels, testados em tela pequena).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -15,6 +18,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local ScreenState = require(Client:WaitForChild("ScreenState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
+local SettingsScreen = require(Client:WaitForChild("Screens"):WaitForChild("SettingsScreen"))
 local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
@@ -28,22 +32,22 @@ local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
 local create = vide.create
 
 -- Botões da coluna, de cima para baixo.
-local NAV = { "play", "profile", "cosmetics", "shop", "tutorial", "ranking" } :: { MenuState.Panel }
+local NAV = { "profile", "play", "cosmetics", "shop", "tutorial", "ranking" } :: { MenuState.Panel }
 -- Painéis com conteúdo próprio (o "play" é o molde MainMenu).
 local PANELS = { "profile", "cosmetics", "shop", "buy", "tutorial", "ranking" } :: { MenuState.Panel }
 
-local BAR_TOP = 0.02
-local BAR_HEIGHT = 0.11
-local BODY_TOP = 0.15 -- coluna e painéis começam abaixo da barra
-local COLUMN_WIDTH = 0.16
-local BUTTON_HEIGHT = 0.15 -- 6 botões de 0.15 + 5 vãos de 0.02 = 1
+local MARGIN = MenuLayout.MARGIN
+local BODY_TOP = MenuLayout.BODY_TOP -- coluna e painéis começam abaixo dos pods
+local PANEL_X = MARGIN + MenuLayout.COLUMN_WIDTH + MARGIN
+local TITLE_ROW = MenuLayout.TITLE_ROW
+local TOUCH = Theme.touchMinSize.Y
 
 local function navButton(panel: MenuState.Panel): TextButton
 	return create("TextButton")({
 		Name = "Nav_" .. panel,
 		Text = "",
 		AutoButtonColor = true,
-		Size = UDim2.fromScale(1, BUTTON_HEIGHT),
+		Size = UDim2.new(1, -6, 0, MenuLayout.BUTTON_HEIGHT),
 		BackgroundColor3 = function()
 			return if MenuState.panel() == panel then Theme.ui.action else Theme.ui.panelRaised
 		end,
@@ -69,27 +73,30 @@ local function navButton(panel: MenuState.Panel): TextButton
 	}) :: TextButton
 end
 
-local function column(): Frame
+-- Coluna rolável: os 6 botões mantêm o mínimo de toque e, se a tela for tão
+-- baixa que não cabem, a coluna rola em vez de sair da tela.
+local function column(): ScrollingFrame
 	local children: { Instance } = {
 		create("UIListLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
-			Padding = UDim.new(0.02, 0),
+			Padding = UDim.new(0, MenuLayout.BUTTON_GAP),
 		}) :: Instance,
 	}
 	for i = 1, #NAV do
 		table.insert(children, navButton(NAV[i]))
 	end
-	return create("Frame")({
+	return create("ScrollingFrame")({
 		Name = "Column",
 		BackgroundTransparency = 1,
-		Position = UDim2.fromScale(0.01, BODY_TOP),
-		Size = UDim2.fromScale(COLUMN_WIDTH, 1 - BODY_TOP - BAR_TOP),
-		-- Em tela baixa os botões mantêm o mínimo de toque.
-		create("UISizeConstraint")({
-			MinSize = Vector2.new(2 * Theme.touchMinSize.X, 6 * Theme.touchMinSize.Y + 5 * 4),
-		}),
+		BorderSizePixel = 0,
+		Position = UDim2.fromOffset(MARGIN, BODY_TOP),
+		Size = UDim2.new(0, MenuLayout.COLUMN_WIDTH, 1, -(BODY_TOP + MARGIN)),
+		CanvasSize = UDim2.fromScale(0, 0),
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
+		ScrollingDirection = Enum.ScrollingDirection.Y,
+		ScrollBarThickness = 4,
 		children,
-	}) :: Frame
+	}) :: ScrollingFrame
 end
 
 local function topBar(): { Frame }
@@ -99,9 +106,8 @@ local function topBar(): { Frame }
 	-- Dois "pods" nos cantos: o centro fica livre para o logo do molde MainMenu.
 	local left = Kit.panel({
 		Name = "TopLeft",
-		Position = UDim2.fromScale(0.01, BAR_TOP),
-		Size = UDim2.fromScale(0.24, BAR_HEIGHT),
-		create("UISizeConstraint")({ MinSize = Vector2.new(0, 2 * Theme.touchMinSize.Y) }),
+		Position = UDim2.new(0.01, 0, 0, MARGIN),
+		Size = UDim2.new(MenuLayout.POD_WIDTH, 0, 0, MenuLayout.POD_HEIGHT),
 		Kit.text({
 			Name = "Level",
 			Position = UDim2.fromScale(0.04, 0.05),
@@ -148,16 +154,15 @@ local function topBar(): { Frame }
 
 	local right = Kit.panel({
 		Name = "TopRight",
-		Position = UDim2.fromScale(0.99, BAR_TOP),
+		Position = UDim2.new(0.99, 0, 0, MARGIN),
 		AnchorPoint = Vector2.new(1, 0),
-		Size = UDim2.fromScale(0.24, BAR_HEIGHT),
-		create("UISizeConstraint")({ MinSize = Vector2.new(0, 2 * Theme.touchMinSize.Y) }),
+		Size = UDim2.new(MenuLayout.POD_WIDTH, 0, 0, MenuLayout.POD_HEIGHT),
 		-- Saldo real (atributo Currency); o mockup nunca o altera.
 		Kit.text({
 			Name = "Balance",
 			Position = UDim2.fromScale(0.04, 0.5),
 			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromScale(0.68, 0.6),
+			Size = UDim2.new(1, -(TOUCH + 20), 0.6, 0),
 			FontFace = Theme.font.number,
 			Text = function()
 				return Strings.format("menu.balance", { amount = currency() })
@@ -169,12 +174,11 @@ local function topBar(): { Frame }
 			Name = "BuyButton",
 			Text = "",
 			AutoButtonColor = true,
-			Position = UDim2.fromScale(0.96, 0.5),
+			Position = UDim2.new(1, -6, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.fromScale(0.2, 0.7),
+			Size = UDim2.fromOffset(TOUCH, TOUCH),
 			BackgroundColor3 = Theme.ui.action,
 			BorderSizePixel = 0,
-			create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			Activated = function()
 				MenuState.open("buy")
@@ -205,18 +209,24 @@ local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 
 -- Painel: título, botão de fechar (volta a "play") e o conteúdo do CONTENT.
 local function panelFrame(panel: MenuState.Panel): Frame
-	local content = CONTENT[panel]
+	local builder = CONTENT[panel]
+	local content = if builder then builder() :: GuiObject else nil
+	if content then
+		-- O conteúdo começa abaixo da linha do título (título + Fechar).
+		content.Position = UDim2.new(0.02, 0, 0, TITLE_ROW)
+		content.Size = UDim2.new(0.96, 0, 1, -(TITLE_ROW + MARGIN))
+	end
 	return Kit.panel({
 		Name = "Panel_" .. panel,
 		Visible = function()
 			return MenuState.panel() == panel
 		end,
-		Position = UDim2.fromScale(COLUMN_WIDTH + 0.02, BODY_TOP),
-		Size = UDim2.fromScale(0.98 - COLUMN_WIDTH - 0.01, 1 - BODY_TOP - BAR_TOP),
+		Position = UDim2.fromOffset(PANEL_X, BODY_TOP),
+		Size = UDim2.new(1, -(PANEL_X + MARGIN), 1, -(BODY_TOP + MARGIN)),
 		Kit.text({
 			Name = "Title",
-			Position = UDim2.fromScale(0.03, 0.03),
-			Size = UDim2.fromScale(0.6, 0.1),
+			Position = UDim2.fromOffset(12, 4),
+			Size = UDim2.new(0.6, 0, 0, TOUCH),
 			FontFace = Theme.font.title,
 			Text = Strings.get("menu.panel." .. panel),
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -226,9 +236,9 @@ local function panelFrame(panel: MenuState.Panel): Frame
 			Name = "CloseButton",
 			Text = "",
 			AutoButtonColor = true,
-			Position = UDim2.fromScale(0.97, 0.03),
+			Position = UDim2.new(1, -8, 0, 4),
 			AnchorPoint = Vector2.new(1, 0),
-			Size = UDim2.fromScale(0.15, 0.1),
+			Size = UDim2.new(0.15, 0, 0, TOUCH),
 			BackgroundColor3 = Theme.ui.panelRaised,
 			BorderSizePixel = 0,
 			create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
@@ -245,7 +255,7 @@ local function panelFrame(panel: MenuState.Panel): Frame
 				maxSize = 22,
 			}),
 		}),
-		if content then content() else nil,
+		content,
 	})
 end
 
@@ -258,9 +268,9 @@ local function noticeBanner(): Frame
 			return MenuState.notice() ~= nil
 		end,
 		ZIndex = 10,
-		Position = UDim2.fromScale(0.585, BODY_TOP + 0.07),
+		Position = UDim2.new(0.585, 0, 0, BODY_TOP + 4 + TOUCH // 2),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromScale(0.36, 0.08),
+		Size = UDim2.new(0.36, 0, 0, 36),
 		BackgroundColor3 = Theme.ui.warning,
 		BackgroundTransparency = 0,
 		text = function()
@@ -283,10 +293,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
 		ResetOnSpawn = false,
-		-- Acima do molde MainMenu, para a coluna e os painéis receberem o toque.
+		-- O molde MainMenu tem DisplayOrder 10, então este fica abaixo dele; o
+		-- toque funciona porque a área do Root do molde e os controles da casca
+		-- (pods, coluna, painéis) não se sobrepõem. Não subir a ordem: a
+		-- janela de Configurações precisa ficar por cima.
 		DisplayOrder = 1,
 		Enabled = function()
-			return ScreenState.current() == "menu"
+			-- Configurações aberta: a coluna e os painéis param de receber toque.
+			return ScreenState.current() == "menu" and not SettingsScreen.open()
 		end,
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,

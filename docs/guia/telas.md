@@ -191,8 +191,9 @@ O menu ganhou uma **casca** com painéis de mentirinha: Perfil, Cosméticos, Loj
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
 | `MenuState.luau` | Qual painel está aberto (`panel`: "play", "profile", "cosmetics", "shop", "buy", "tutorial" ou "ranking"; abrir com `open(painel)`) e o aviso de "compra simulada" (`notice`, `notify(texto)`) |
-| `MenuShell.luau` | A casca: um `ScreenGui` do Vide (`DisplayOrder` 1) que só liga no estado `menu`. Coluna de 6 botões à esquerda; dois cantinhos em cima (esquerda: nível e XP falsos e a etiqueta MOCKUP; direita: o **saldo de verdade** e um "+" que abre "buy"); a área do painel; o aviso no título |
-| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco (`ViewportFrame` criado ao abrir e destruído ao fechar). A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
+| `MenuShell.luau` | A casca: um `ScreenGui` do Vide (`DisplayOrder` 1) que só liga no estado `menu` e desliga com Configurações aberta. Coluna rolável de 6 botões à esquerda (Perfil, Jogar, Cosméticos, Loja, Tutorial, Ranking); dois cantinhos em cima (esquerda: nível e XP falsos e a etiqueta MOCKUP; direita: o **saldo de verdade** e um "+" que abre "buy"); a área do painel; o aviso no título |
+| `src/shared/UIFlow/MenuLayout.luau` | As medidas da casca em pixels (margens, pods de 56 px, coluna de 120 px, botões de 44 px, linha do título de 52 px). A casca usa offsets, então cabe de ~800x400 a 1920x1080 (a coluna rola se faltar altura). Teste: `tests/menulayout.spec.luau` |
+| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco (o `ViewportFrame` fica; só o boneco é criado ao abrir e destruído ao fechar). A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
 | `ShopPanel.luau` | Loja: giros (skin e personalizado) e kit. O detalhe do giro mostra a **tabela de chances antes de girar** (as regras do Roblox exigem isso para item aleatório pago). A animação do giro é cancelada ao sair do painel |
 | `BuyPanel.luau` | Pacotes de Golden Ember (5) |
 | `RankingPanel.luau`, `ProfilePanel.luau`, `TutorialPanel.luau` | Ranking, perfil e tutorial |
@@ -221,7 +222,7 @@ Teste: `tests/mockstore.spec.luau`. Os textos ficam no bloco `mock.*` de `src/sh
 
 ### Como mexer nos valores
 
-- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. Se mexer nas chances de um giro, elas têm de continuar somando 100 (o teste confere).
+- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. Se mexer nas chances de um giro, elas têm de continuar somando 1 (aparecem como %; o teste confere).
 - **Texto:** edite a chave `mock.*` correspondente em `ptBR.luau`.
 - Rode `bash scripts/check.sh` depois.
 
@@ -236,9 +237,10 @@ Quando um painel ficar real, apague o que ele usava do `MockStore` (e as chaves 
 
 ### Como apagar tudo
 
-1. Apague `src/shared/UIFlow/MockStore.luau` e `tests/mockstore.spec.luau`.
-2. Apague o bloco `mock.*` de `src/shared/Strings/ptBR.luau`.
+1. Apague `src/shared/UIFlow/MockStore.luau`, `src/shared/UIFlow/MenuLayout.luau`, `tests/mockstore.spec.luau` e `tests/menulayout.spec.luau`.
+2. Em `src/shared/Strings/ptBR.luau`, apague o bloco `mock.*` e as chaves do menu novo: `menu.nav.*`, `menu.panel.*`, `menu.close`, `menu.level`, `menu.xp` e `menu.mockup`. Mantenha `menu.play`, `menu.settings`, `menu.balance` e `menu.kits` (o molde usa).
 3. Apague a pasta `src/client/Menu/`.
-4. Em `src/client/Controllers/ScreenController.luau`, tire os `require` de `MenuShell` e `MenuState`, a chamada `MenuShell.mount(...)` e o `MenuState.open("play")`.
-5. Em `src/client/Screens/MainMenu.luau`, tire o `require` do `MenuState`, o trecho que esconde o `BalanceLabel` (e volte a escrever o saldo nele) e o trecho que esconde o `Root` conforme o painel.
-6. Rode `bash scripts/check.sh`.
+4. Em `src/client/Controllers/ScreenController.luau`, tire os `require` de `MenuShell` e `MenuState`, a chamada `MenuShell.mount(...)` e o bloco inteiro `if screen ~= "menu" then MenuState.open("play") end` (com o comentário dele), sem deixar um `if` vazio.
+5. Em `src/client/Screens/MainMenu.luau`, tire o `require` do `MenuState`, o `if balance then balance.Visible = false end` (com o comentário; sem ele o `BalanceLabel` do molde volta a aparecer, e o texto dele já é escrito pelo `vide.effect` logo abaixo, então nada precisa ser reescrito) e o trecho inteiro que esconde o `Root` conforme o painel (o `if root ... else warn(...) end`).
+6. Apague esta seção do guia (e o item "Mockups" do índice, se houver).
+7. Rode `bash scripts/check.sh`.

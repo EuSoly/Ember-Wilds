@@ -23,6 +23,7 @@ local create = vide.create
 local SKINS = "skins"
 local TAB_WIDTH = 0.19
 local PREVIEW_WIDTH = 0.4
+local TABS_ROW = Theme.touchMinSize.Y + 4 -- linha das abas + respiro; preview e grade começam abaixo
 -- Câmera da prévia: de cima e de frente (a frente do boneco é -Z).
 local CAMERA_DIRECTION = Vector3.new(0, 1, -1.1).Unit
 local CAMERA_FOV = 30
@@ -217,8 +218,8 @@ function CosmeticsPanel.build(): Frame
 			Visible = function()
 				return tab() == categoryId
 			end,
-			Position = UDim2.fromScale(PREVIEW_WIDTH + 0.02, 0.15),
-			Size = UDim2.fromScale(1 - PREVIEW_WIDTH - 0.02, 0.85),
+			Position = UDim2.new(PREVIEW_WIDTH + 0.02, 0, 0, TABS_ROW),
+			Size = UDim2.new(1 - PREVIEW_WIDTH - 0.02, 0, 1, -TABS_ROW),
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			ScrollBarThickness = 6,
@@ -257,14 +258,13 @@ function CosmeticsPanel.build(): Frame
 		create("Frame")({
 			Name = "Tabs",
 			BackgroundTransparency = 1,
-			Size = UDim2.fromScale(1, 0.11),
-			create("UISizeConstraint")({ MinSize = Vector2.new(0, Theme.touchMinSize.Y) }),
+			Size = UDim2.new(1, 0, 0, Theme.touchMinSize.Y),
 			tabs,
 		}),
 		create("Frame")({
 			Name = "PreviewBox",
-			Position = UDim2.fromScale(0, 0.15),
-			Size = UDim2.fromScale(PREVIEW_WIDTH, 0.85),
+			Position = UDim2.fromOffset(0, TABS_ROW),
+			Size = UDim2.new(PREVIEW_WIDTH, 0, 1, -TABS_ROW),
 			BackgroundColor3 = Theme.ui.panelRaised,
 			BorderSizePixel = 0,
 			create("UICorner")({ CornerRadius = Theme.corner }),
