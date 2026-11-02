@@ -8,7 +8,8 @@
 --     segurar onde você quer. A mão do boneco não muda.
 --   "captar": lê cada Item e grava no modelo de Assets.Tools: o Grip passa a ser
 --     o ponto e o giro em que a mão segura agora (já com a Pegada embutida, que
---     volta a 0) e o Tamanho vira a escala do Item. Só mexe nos que mudaram.
+--     volta a 0); modelo de uma peça guarda o tamanho exato do Handle (Tamanho 1),
+--     o de várias peças guarda a escala no Tamanho. Só mexe nos que mudaram.
 --     Depois salve o place.
 --   "apagar": tira a bancada.
 local MODE = "montar"
@@ -22,7 +23,9 @@ local BonecoModel = require(game:GetService("StarterPlayer").StarterPlayerScript
 local BENCH = "BancadaArmas"
 local ORIGIN = Vector3.new(-630, 1, 590) -- perto do nascimento; y = centro do corpo
 local SPACING_X, SPACING_Z = 7, 9
-local KINDS = { "pickaxe", "sword", "spear" } -- uma fileira por tipo
+-- Uma fileira por tipo (o fim do id: wood_pickaxe = pickaxe); o resto vai
+-- para a fileira "outros", em ordem alfabética.
+local KINDS = { "pickaxe", "hammer", "shovel", "sword", "spear", "pitchfork", "shield", "outros" }
 local TIERS = { "wood", "stone", "gold", "diamond", "amethyst", "reidite", "dragon", "lava", "pirate", "crab" }
 local TOLERANCE = 1e-3
 
@@ -59,6 +62,35 @@ local function anchorAll(model: Instance)
 	end
 end
 
+-- Tipo e posição na fileira de cada modelo de Assets.Tools.
+local function layout(): { [string]: { string } }
+	local rows: { [string]: { string } } = {}
+	for _, kind in KINDS do
+		rows[kind] = {}
+	end
+	local tierIndex = {}
+	for i, tier in TIERS do
+		tierIndex[tier] = i
+	end
+	for _, template in tools:GetChildren() do
+		local id = template.Name
+		local tier, kind = id:match("^(%a+)_(%a+)$")
+		local row = if tier and tierIndex[tier] and rows[kind] then kind else "outros"
+		table.insert(rows[row], id)
+	end
+	for kind, ids in rows do
+		table.sort(ids, function(a, b)
+			local ta = tierIndex[a:match("^(%a+)_") or ""] or 99
+			local tb = tierIndex[b:match("^(%a+)_") or ""] or 99
+			if ta ~= tb and kind ~= "outros" then
+				return ta < tb
+			end
+			return a < b
+		end)
+	end
+	return rows
+end
+
 local function montar()
 	local old = workspace:FindFirstChild(BENCH)
 	if old then
@@ -67,15 +99,15 @@ local function montar()
 	local bench = Instance.new("Model")
 	bench.Name = BENCH
 
-	for row, kind in KINDS do
-		local column = 0
-		for _, tier in TIERS do
-			local id = `{tier}_{kind}`
-			local template = tools:FindFirstChild(id)
-			if template == nil then
-				continue
-			end
-			column += 1
+	local rows = layout()
+	local row = 0
+	for _, kind in KINDS do
+		if #rows[kind] == 0 then
+			continue
+		end
+		row += 1
+		for column, id in rows[kind] do
+			local template = tools:FindFirstChild(id) :: Instance
 			local station = Instance.new("Model")
 			station.Name = id
 
@@ -118,7 +150,7 @@ local function montar()
 			item.Parent = station
 
 			-- Fileira por tipo; todos olhando para +Z (para quem chega pelo nascimento).
-			local position = ORIGIN + Vector3.new((column - 5) * SPACING_X, 0, (row - 2) * SPACING_Z)
+			local position = ORIGIN + Vector3.new((column - 5) * SPACING_X, 0, (row - 4) * SPACING_Z)
 			station:PivotTo(CFrame.lookAt(position, position + Vector3.zAxis))
 			station.Parent = bench
 		end
@@ -153,29 +185,39 @@ local function captar()
 			continue
 		end
 		local grip = base:FindFirstChild("Grip") :: Attachment
-
-		-- Escala = tamanho do Handle agora / do modelo importado (Scale no
-		-- Model ou no próprio MeshPart dão no mesmo).
-		local ratio = handle.Size / base.Size
-		local scale = (ratio.X + ratio.Y + ratio.Z) / 3
-		if math.abs(ratio.X - ratio.Y) > 0.01 or math.abs(ratio.Y - ratio.Z) > 0.01 then
-			warn(`[bancada] {id}: redimensionado sem manter a proporção; usando a média {scale}`)
+		local parts = 0
+		for _, part in item:GetDescendants() do
+			if part:IsA("BasePart") then
+				parts += 1
+			end
 		end
-		-- Onde a mão está, no espaço do Handle de agora, de volta à escala 1.
-		local local_ = handle.CFrame:ToObjectSpace(hand.CFrame * gripC0(id))
-		local newGrip = CFrame.new(local_.Position / scale) * local_.Rotation
+
+		-- Onde a mão está, no espaço do Handle de agora.
+		local here = handle.CFrame:ToObjectSpace(hand.CFrame * gripC0(id))
+		local newGrip, newSize, scale
+		if parts == 1 then
+			-- Uma peça só: grava o tamanho exato (pode ser diferente por eixo,
+			-- ex. esticar uma arma achatada sem engrossar).
+			newGrip, newSize, scale = here, handle.Size, 1
+		else
+			-- Várias peças: só escala por igual (Scale no Model).
+			local ratio = handle.Size / base.Size
+			scale = math.round((ratio.X + ratio.Y + ratio.Z) / 3 * 1000) / 1000
+			newGrip, newSize = CFrame.new(here.Position / scale) * here.Rotation, base.Size
+		end
 
 		local oldScale = numberAttr(template, "Tamanho", 1)
 		local oldPegada = numberAttr(template, "Pegada", 0)
 		local oldGrip = grip.CFrame * CFrame.new(0, oldPegada, 0)
 		local _, turned = oldGrip.Rotation:ToObjectSpace(newGrip.Rotation):ToAxisAngle()
 		local moved = (oldGrip.Position - newGrip.Position).Magnitude > TOLERANCE or math.abs(turned) > TOLERANCE
-		local resized = math.abs(scale - oldScale) > TOLERANCE
+		local resized = (newSize - base.Size).Magnitude > TOLERANCE or math.abs(scale - oldScale) > TOLERANCE
 		if moved or resized or oldPegada ~= 0 then
+			base.Size = newSize
 			grip.CFrame = newGrip
 			template:SetAttribute("Pegada", 0)
-			template:SetAttribute("Tamanho", math.round(scale * 1000) / 1000)
-			table.insert(changed, `{id} (Tamanho {template:GetAttribute("Tamanho")})`)
+			template:SetAttribute("Tamanho", scale)
+			table.insert(changed, id)
 		end
 	end
 	table.sort(changed)
