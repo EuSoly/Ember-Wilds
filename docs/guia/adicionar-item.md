@@ -59,7 +59,7 @@ Armas (e qualquer item) também podem ter, todos opcionais e conferidos pelo `Va
 - `moveSpeed` (0–1): fração da velocidade de andar com o item na mão. Espadas e lanças: 0,75 (16 → 12).
 - `equipLock` (s): quanto tempo o item fica preso na mão depois de equipado (não dá para trocar de slot antes; um relógio aparece ao lado da hotbar). Espadas e lanças: 4.
 - `reach` (studs): alcance a mais do golpe. Lanças: 3.
-- `knockback` (studs): quanto o golpe empurra o mob para longe de quem bateu, sem atravessar parede, recurso ou água. Lanças: 4.
+- `knockback` (studs): quanto o golpe empurra o **mob** para longe de quem bateu, sem atravessar parede, recurso ou água. Lanças: 4. **Nunca empurra jogador**, nem quando o PvP entrar (decisão do Elizeu: seria forte demais).
 
 As regras ficam em `src/shared/HeldItem.luau` (testado em `tests/helditem.spec.luau`). O modelo na mão é o `Tool` com o mesmo id em `ReplicatedStorage.Assets.Tools`; espadas e lanças têm modelos provisórios feitos por `scripts/studio/make-weapon-placeholders.luau`, que não substitui um modelo seu já existente.
 

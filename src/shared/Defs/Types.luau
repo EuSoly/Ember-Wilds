@@ -71,6 +71,7 @@ export type ItemDef = {
 	reach: number?,
 	-- Studs que o golpe empurra o mob para longe de quem bateu (ausente = 0).
 	-- A lança empurra: fugindo e batendo para trás, o mob da floresta não alcança.
+	-- Só mob: nunca empurra jogador (no PvP seria forte demais; decisão do Elizeu).
 	knockback: number?,
 }
 

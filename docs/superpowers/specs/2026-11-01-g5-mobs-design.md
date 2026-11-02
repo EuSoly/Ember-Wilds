@@ -96,6 +96,7 @@ Depois de testar, o Elizeu explicou como se mata cada mob no Starve: de mão ou 
 
 - Espada e lança na mão: velocidade × 0,75 (16 → 12); presas na mão por 4 s depois de equipadas, com relógio no HUD; lança alcança 3 studs mais longe (números meus, a wiki não traz).
 - Velocidades: coelho 14, lobo 13, aranha 14 (substituem 15, 14 e 20 da tabela acima).
+- Depois do teste: com lança o mob da floresta não pode morder quem foge batendo para trás. O golpe de lança empurra o mob 4 studs (`knockback`). **Só mob**: a lança nunca empurra jogador, nem quando o PvP entrar (seria forte demais).
 
 ## Como funciona (decisões)
 
