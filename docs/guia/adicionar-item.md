@@ -52,6 +52,17 @@ wood_spike = {
 
 Campos: `health` (vida máxima, obrigatório), `radius` (raio do círculo da peça em studs, opcional; padrão `BuildRules.PIECE_RADIUS` = 2), `spikeDamage` (obrigatório no `spike`), `lifetime` e `heatRadius` (obrigatórios no `fire`), `station` (`"workbench"` ou `"fire"`, a estação que a peça oferece). Qualquer item pode ter `structureDamage` (maior que 0): o dano do golpe em peça de construção; sem ele vale o golpe de mão (5). Veja `construcao.md`.
 
+### Dano em mob
+
+Qualquer item pode ter `mobDamage` (número maior que 0, o `Validate` confere): o dano do golpe em mob (lobo, aranha etc.). Sem o campo, vale o golpe de mão (`MobRules.HAND_DAMAGE` = 5). Hoje: espada 12 / 19 / 22, lança 10 / 14 / 15 e picareta 4 a 14. É o mesmo golpe da coleta e da construção, um a cada 0,5 s. Veja `mobs.md`.
+
+```lua
+stone_sword = {
+	id = "stone_sword", nameKey = "item.stone_sword", category = "tool", maxStack = 1,
+	mobDamage = 19,
+},
+```
+
 ### Receita e velocidade de crafting
 
 Para craftar o item, acrescente uma entrada com o mesmo id em `src/shared/Defs/Recipes.luau` e escolha materiais, tempo, estação e ordem no livro. Veja `crafting.md` para o formato e as receitas existentes.

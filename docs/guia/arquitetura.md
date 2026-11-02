@@ -8,6 +8,7 @@
 | `src/shared/Defs` | `Shared.Defs` | Conteúdo do jogo como **dados**: tiers, itens (depois receitas, mobs, biomas…) |
 | `src/shared/Craft` | `Shared.Craft` | Regras puras de craft: materiais, estação, espaço, duração e progresso |
 | `src/shared/Build` | `Shared.Build` | Regras puras da construção (`BuildRules`: posição livre, giro, círculos, dano, aliados) e do baú (`ChestRules`) |
+| `src/shared/Mobs` | `Shared.Mobs` | Regras puras dos mobs: `MobRules` (números), `MobBrain` (cérebro), `MobMove`, `MobSpawn`; e a matemática e a config das animações (`MobAnim`, `MobAnimConfig`) |
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |
@@ -23,6 +24,7 @@
 | `src/client/Boneco` | `Client.Boneco` | Boneco visual (montagem e renderer); quem liga é o `BonecoController` |
 | `src/client/Screens` | `Client.Screens` | Telas de molde (menu, morte, configurações, lista de kits); quem liga é o `ScreenController` |
 | `src/client/World` | `Client.World` | Efeitos do mundo no cliente: bolha de ar, copas transparentes, aviso de borda; quem liga é o `WorldFxController` |
+| `src/client/Mobs` | `Client.Mobs` | Visual dos mobs (`MobRenderer`, `MobVisual`, `AngryEyes`); quem liga é o `BonecoController` |
 | `src/client/UITemplates` | `Client.UITemplates` | `Template.luau`: liga os moldes ao código pelos nomes |
 | `src/character` | `StarterPlayer.StarterCharacterScripts` | `Animate` e `Health` vazios (para o Roblox não pôr os padrões) |
 | `src/first` | `ReplicatedFirst.First` | Tela de carregamento (script + molde; roda antes de tudo) |
@@ -140,6 +142,8 @@ O mapa é desenhado à mão no Studio (`Workspace.Map`, fora do Rojo) e o `MapSe
 **Crafting (G3):** `Defs/Recipes` contém as receitas e `Shared/Craft/CraftRules` concentra as regras puras. No servidor, `CraftService` valida e cobra materiais, acompanha o tempo e entrega ou devolve o resultado; `WearService` equipa armaduras e mochilas. Estações usam a tag `CraftStation` e o atributo `Station`. O cliente só pede ações pela rede e mostra a coluna, o livro e o progresso (`CraftBubble`). Veja `crafting.md`.
 
 **Construção (G4):** `Shared/Build` guarda as regras puras (`BuildRules`, `ChestRules`); o bloco `structure` dos itens `placeable` define vida e comportamento. No servidor, `StructureService` é dono do índice espacial das peças (círculos, sem grade), coloca a peça na soltura do botão de usar, cuida de vida, porta, fogo que some, dono e `removeOwned` (chamado pela morte e pela saída); `SpikeService` fere quem encosta nos espinhos (5 Hz); `ChestService` valida `ChestPut`/`ChestTake`; `StructureModel` faz os blocos provisórios. O golpe do `GatherService` acerta recurso ou peça. O cliente mostra o fantasma (`BuildGhost`), a barrinha de vida (`StructureHealth`) e o painel do baú. Veja `construcao.md`.
+
+**Mobs (G5):** `Shared/Mobs` guarda as regras puras e testadas (`MobRules`, `MobBrain`, `MobMove`, `MobSpawn`); vida, mordida, velocidade e população de cada mob ficam em `Defs/Mobs`. O `MobService` é dono dos mobs no servidor: cada um é uma raiz invisível com a tag `Mob`, num índice espacial próprio; roda a IA a 10 Hz, aplica mordida, dano e morte (`onDeath` é o gancho da caixa de drop) e mantém a população do dia e da noite, e só ele sabe onde cada mob está. O `GatherService` e o `SpikeService` falam com ele (`near`, `list`, `hit`, `damage`). A teia da aranha é o atributo `WebbedUntil` (instante absoluto) lido pelo `WaterSim`, que zera a velocidade. O cliente só desenha: `MobRenderer` suaviza a raiz e `MobVisual` anima (voo = mais alto e translúcido, por `MobFlying`); `WebVisual` desenha a teia. Veja `mobs.md` e `mobs-modelos.md`.
 
 > A linha `build/` do `.gitignore` também casa com pastas `Build` no Windows; por isso há uma exceção para `src/shared/Build/`. Não a remova.
 
