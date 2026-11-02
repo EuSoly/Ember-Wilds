@@ -54,6 +54,14 @@ Campos: `health` (vida máxima, obrigatório), `radius` (raio do círculo da pe�
 
 ### Dano em mob
 
+Armas (e qualquer item) também podem ter, todos opcionais e conferidos pelo `Validate`:
+
+- `moveSpeed` (0–1): fração da velocidade de andar com o item na mão. Espadas e lanças: 0,75 (16 → 12).
+- `equipLock` (s): quanto tempo o item fica preso na mão depois de equipado (não dá para trocar de slot antes; um relógio aparece ao lado da hotbar). Espadas e lanças: 4.
+- `reach` (studs): alcance a mais do golpe. Lanças: 3.
+
+As regras ficam em `src/shared/HeldItem.luau` (testado em `tests/helditem.spec.luau`). O modelo na mão é o `Tool` com o mesmo id em `ReplicatedStorage.Assets.Tools`; espadas e lanças têm modelos provisórios feitos por `scripts/studio/make-weapon-placeholders.luau`, que não substitui um modelo seu já existente.
+
 Qualquer item pode ter `mobDamage` (número maior que 0, o `Validate` confere): o dano do golpe em mob (lobo, aranha etc.). Sem o campo, vale o golpe de mão (`MobRules.HAND_DAMAGE` = 5). Hoje: espada 12 / 19 / 22, lança 10 / 14 / 15 e picareta 4 a 14. É o mesmo golpe da coleta e da construção, um a cada 0,5 s. Veja `mobs.md`.
 
 ```lua

@@ -6,13 +6,17 @@ Todo número aqui é **provisório** e fica em dados ou em constantes, nunca esp
 
 ## Os 5 mobs da floresta
 
-Tudo em `src/shared/Defs/Mobs.luau`, no bloco `stats` de cada mob. A velocidade do jogador é 16 studs/s.
+Tudo em `src/shared/Defs/Mobs.luau`, no bloco `stats` de cada mob. O jogador anda a 16 studs/s de mão vazia, picareta ou qualquer item comum, e a **12 com espada ou lança na mão** (`moveSpeed` = 0,75 nos itens). As velocidades dos mobs encaixam nisso, como no Starve (explicado pelo Elizeu em 02/11):
+
+- **Coelho (14)**: de mão ou picareta você alcança e mata; armado, ele foge.
+- **Lobo (13) e aranha (14)**: de mão ou picareta você foge deles; armado, eles te alcançam. De **lança** (alcança 3 studs mais longe) dá para matar recuando e batendo para trás; de **espada** você mata, mas toma dano.
+- A arma recém-equipada fica **presa na mão por 4 s** (`equipLock`), com um relógio no canto da hotbar: não dá para bater de espada e trocar na hora para a picareta para fugir.
 
 | Mob | Comportamento | Vida | Mordida | Velocidade | Raio do corpo | Pontos |
 |---|---|---:|---:|---:|---:|---:|
-| Coelho (`rabbit`) | passivo | 60 | não morde | 15 | 1,8 | 20 |
-| Lobo (`wolf`) | agressivo | 300 | 24 | 14 | 2 | 60 |
-| Aranha (`spider`) | agressivo | 120 | 16 + teia | 20 | 2,2 | 40 |
+| Coelho (`rabbit`) | passivo | 60 | não morde | 14 | 1,8 | 20 |
+| Lobo (`wolf`) | agressivo | 300 | 24 | 13 | 2 | 60 |
+| Aranha (`spider`) | agressivo | 120 | 16 + teia | 14 | 2,2 | 40 |
 | Javali (`boar`) | neutro | 400 | 25 | 15 | 2,2 | 80 |
 | Falcão (`hawk`) | neutro, voa | 300 | 24 | 18 | 2,2 | 60 |
 
