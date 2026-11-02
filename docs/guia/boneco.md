@@ -96,8 +96,9 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `SWING_ARC` | Quanto (graus) a mão da ferramenta gira no golpe |
 | `OTHER_HAND_RECOIL` | Quanto a outra mão recua durante o golpe |
 | `PUNCH_DISTANCE` | Alcance do soco de mão vazia |
-| `THRUST_DISTANCE` | Quanto a mão avança na estocada (espadas e lanças) |
-| `THRUST_REST_ANGLE` | Ângulo (graus) da arma de estocada em repouso (0 = reto para a frente) |
+| `THRUST_HOLD_BACK` | Segurando a lança, quanto as mãos recuam para o lado do corpo |
+| `THRUST_DISTANCE` | Quanto a mão da lança avança na estocada (do lado para a frente do corpo) |
+| `THRUST_REST_ANGLE` | Ângulo (graus) da lança em repouso (0 = reto; negativo = ponta para dentro) |
 
 **Desempenho e expressões**
 
@@ -107,7 +108,7 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `HURT_RECENT` | Um `HurtAt` mais velho que isso (s) não mostra a careta (ex.: chegou pelo streaming) |
 | `MAX_DT` | Limite do passo de tempo: um quadro travado não faz a animação pular |
 
-**Arco ou estocada.** O jeito do golpe é do item, em `Defs/Items.luau`: sem nada (ou `attackAnim = "swing"`), a mão gira de lado como a picareta; com `attackAnim = "thrust"` (todas as espadas e lanças), a arma fica apontada para a frente e a mão avança e volta, uma estocada. Uma arma nova ganha a estocada só com essa linha.
+**Arco ou estocada.** O jeito do golpe é do item, em `Defs/Items.luau`: sem nada (ou `attackAnim = "swing"`), a mão gira de lado como a picareta; com `attackAnim = "thrust"` (as lanças, como no Starve), as mãos ficam do lado do corpo, a lança aponta para a frente (um pouco para dentro) e na estocada a mão vai do lado para a frente do corpo e volta. As espadas batem no arco, como a picareta. Uma arma nova ganha a estocada só com essa linha.
 
 Depois de mexer em animação, rode `bash scripts/check.sh`: os testes de `BonecoAnim` conferem que as curvas continuam certas.
 

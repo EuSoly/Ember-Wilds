@@ -47,9 +47,12 @@ return table.freeze({
 	SWING_ARC = 90, -- graus; quanto a mão da ferramenta gira no golpe
 	OTHER_HAND_RECOIL = 0.3, -- studs; a outra mão recua durante o golpe
 	PUNCH_DISTANCE = 1.2, -- studs; alcance do soco de mão vazia
-	-- Estocada (itens com attackAnim "thrust": espadas e lanças).
-	THRUST_DISTANCE = 1.6, -- studs; quanto a mão avança na estocada
-	THRUST_REST_ANGLE = 0, -- graus; a arma em repouso aponta reto para a frente
+	-- Estocada (itens com attackAnim "thrust": as lanças). Segurando, as mãos
+	-- ficam do lado do corpo (recuadas THRUST_HOLD_BACK); na estocada a mão da
+	-- arma avança THRUST_DISTANCE, para a frente do corpo (como no Starve).
+	THRUST_HOLD_BACK = 1.45, -- studs; mãos recuadas para o lado do corpo
+	THRUST_DISTANCE = 1.9, -- studs; quanto a mão avança na estocada
+	THRUST_REST_ANGLE = -8, -- graus; negativo = a ponta um pouco para dentro
 
 	-- Desempenho e expressões.
 	ANIM_RANGE = 120, -- studs da câmera; mais longe só segue a posição, sem animar

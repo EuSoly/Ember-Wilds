@@ -74,7 +74,7 @@ export type ItemDef = {
 	-- Só mob: nunca empurra jogador (no PvP seria forte demais; decisão do Elizeu).
 	knockback: number?,
 	-- Animação do golpe com o item na mão: "swing" (padrão, arco de lado, como a
-	-- picareta) ou "thrust" (estocada para a frente: espadas e lanças). Só visual.
+	-- picareta e a espada) ou "thrust" (estocada para a frente: as lanças). Só visual.
 	attackAnim: AttackAnim?,
 }
 

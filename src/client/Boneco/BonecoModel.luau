@@ -375,7 +375,7 @@ function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?): boolean
 	-- Orientação da raiz (igual à da mão em repouso): cabo para a frente e
 	-- cabeça deitada (Grip: Y = cabo, X = lado da cabeça), girada
 	-- SWING_REST_ANGLE para fora (para a direita = ângulo negativo em Y). Armas
-	-- de estocada (espada, lança) apontam THRUST_REST_ANGLE: reto para a frente.
+	-- de estocada (lança) apontam THRUST_REST_ANGLE: para a frente, um pouco para dentro.
 	-- Weld com C0/C1 em vez de WeldConstraint: o encaixe não depende de onde a
 	-- mão está neste quadro (pode estar no meio de um golpe).
 	local def = Defs.Items[itemId]
