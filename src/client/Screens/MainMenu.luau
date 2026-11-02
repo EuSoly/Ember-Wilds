@@ -17,6 +17,7 @@ local Net = require(Client:WaitForChild("Net"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local KitList = require(script.Parent:WaitForChild("KitList"))
+local MenuState = require(Client:WaitForChild("Menu"):WaitForChild("MenuState"))
 
 local MainMenu = {}
 
@@ -47,6 +48,14 @@ function MainMenu.mount(playerGui: Instance, openSettings: () -> ()): ScreenGui?
 	local settings = Template.find(gui, "SettingsButton", "GuiButton") :: GuiButton?
 	if settings then
 		settings.Activated:Connect(openSettings)
+	end
+
+	-- Painel do mockup aberto: o molde some para não aparecer atrás dele.
+	local root = gui:FindFirstChild("Root")
+	if root ~= nil and root:IsA("GuiObject") then
+		vide.effect(function()
+			root.Visible = MenuState.panel() == "play"
+		end)
 	end
 
 	KitList.mount(gui)
