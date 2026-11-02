@@ -7,11 +7,16 @@
 -- - ServerStorage.DevCrowd:Invoke(30) -> number: cria 30 bonecos de teste andando
 --   em círculo, batendo, trocando o item na mão e levando dano (0 = só apaga).
 --   São criados no servidor para testar o caminho real de replicação.
+-- - ServerStorage.DevWeapons:Invoke(true) -> number: galeria das ferramentas e
+--   armas: uma fila de bonecos parados ao lado do jogador, cada um com um item
+--   (nome do boneco = id do item), golpeando de tempos em tempos. Para ajustar o
+--   Tamanho de cada modelo ao vivo (Assets.Tools, vista do servidor). false apaga.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
+local Defs = require(ReplicatedStorage.Shared.Defs)
 local BonecoConfig = require(ReplicatedStorage.Shared.BonecoConfig)
 local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -19,6 +24,10 @@ local CharacterService = require(script.Parent.CharacterService)
 local CosmeticService = require(script.Parent.CosmeticService)
 
 local CROWD_FOLDER = "DevCrowd"
+local GALLERY_FOLDER = "DevWeapons"
+local GALLERY_SPACING = 7 -- studs entre os bonecos da galeria
+local GALLERY_COLUMNS = 6 -- bonecos por fileira (cabe na tela)
+local GALLERY_ROWS_Z = { -8, 7 } -- studs: fileira acima e abaixo do jogador (na tela)
 local CROWD_CENTER = Vector3.new(0, 0, 40)
 local CROWD_RADIUS = 24
 local CROWD_SKINS = { "body_default", "body_ember" }
@@ -123,6 +132,104 @@ local function spawnCrowd(count: number): number
 	return #crowd
 end
 
+-- Galeria de ferramentas e armas: ids com modelo em Assets.Tools, em ordem.
+local galleryThread: thread? = nil
+
+local function clearGallery()
+	if galleryThread then
+		task.cancel(galleryThread)
+		galleryThread = nil
+	end
+	local folder = Workspace:FindFirstChild(GALLERY_FOLDER)
+	if folder then
+		folder:Destroy()
+	end
+end
+
+local function galleryItems(): { string }
+	local tools = ReplicatedStorage:FindFirstChild("Assets")
+	tools = tools and tools:FindFirstChild("Tools")
+	local ids = {}
+	for id, def in Defs.Items do
+		if (def.category == "tool" or def.category == "weapon") and tools and tools:FindFirstChild(id) then
+			table.insert(ids, id)
+		end
+	end
+	-- Ferramentas antes das armas; dentro de cada uma, pela escada de tiers.
+	local function key(id: string): (number, number)
+		local def = Defs.Items[id]
+		local tier = def.tier and Defs.Tiers[def.tier]
+		return if def.category == "tool" then 0 else 1, if tier then tier.order else 0
+	end
+	table.sort(ids, function(a, b)
+		local ca, ta = key(a)
+		local cb, tb = key(b)
+		if ca ~= cb then
+			return ca < cb
+		elseif ta ~= tb then
+			return ta < tb
+		end
+		return a < b
+	end)
+	return ids
+end
+
+local function spawnGallery(show: boolean): number
+	clearGallery()
+	if not show then
+		return 0
+	end
+	local players = game:GetService("Players"):GetPlayers()
+	local character = players[1] and players[1].Character
+	local origin = character and character.PrimaryPart
+	if origin == nil then
+		warn("[DevWeapons] entre no jogo antes (precisa do personagem)")
+		return 0
+	end
+
+	local folder = Instance.new("Folder")
+	folder.Name = GALLERY_FOLDER
+	folder.Parent = Workspace
+
+	-- Fileiras alinhadas com o mundo (a câmera de cima não gira): ao longo de X,
+	-- uma acima e outra abaixo do jogador; todos olham para cima na tela (-Z),
+	-- com o item à mostra (ferramentas numa fileira, armas na outra).
+	local forward = Vector3.zAxis
+	local side = Vector3.xAxis
+	local facing = -Vector3.zAxis
+	local ids = galleryItems()
+	local members: { Model } = {}
+	for i, id in ids do
+		local model = CharacterBody.build()
+		model.Name = id
+		local humanoid = model:FindFirstChildOfClass("Humanoid") :: Humanoid
+		humanoid.AutoRotate = false
+		local column = (i - 1) % GALLERY_COLUMNS
+		local row = (i - 1) // GALLERY_COLUMNS
+		local offset = (column - (GALLERY_COLUMNS - 1) / 2) * GALLERY_SPACING
+		local ahead = GALLERY_ROWS_Z[row + 1] or (GALLERY_ROWS_Z[#GALLERY_ROWS_Z] + row * GALLERY_SPACING)
+		local position = origin.Position + forward * ahead + side * offset
+		model:PivotTo(CFrame.lookAt(position, position + facing))
+		model:SetAttribute(StatNames.Equipped, id)
+		CharacterService.prepare(model)
+		model.Parent = folder
+		table.insert(members, model)
+	end
+
+	-- Golpeiam 1,5 s a cada 3 s (mostra a animação de cada item).
+	galleryThread = task.spawn(function()
+		local start = os.clock()
+		while true do
+			local using = (os.clock() - start) % USE_PERIOD < USE_PERIOD / 2
+			for _, model in members do
+				setIfChanged(model, StatNames.Using, using)
+			end
+			task.wait(TICK)
+		end
+	end)
+	return #members
+end
+
 local function newCommand(name: string, onInvoke: (...any) -> ...any)
 	local command = Instance.new("BindableFunction")
 	command.Name = name
@@ -147,6 +254,10 @@ function DevBonecoService.Start(_self)
 
 	newCommand("DevCrowd", function(count: number): number
 		return spawnCrowd(math.floor(count or 0))
+	end)
+
+	newCommand("DevWeapons", function(show: boolean?): number
+		return spawnGallery(show ~= false)
 	end)
 end
 
