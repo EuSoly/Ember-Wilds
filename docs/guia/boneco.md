@@ -121,9 +121,9 @@ Cada modelo em `ReplicatedStorage.Assets.Tools` tem dois atributos:
 
 Mesmo esquema dos mobs:
 
-- **No Play** (vista do **servidor**: botão Current: Server/Client no topo do Studio), mude o `Tamanho` ou a `Pegada` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: anote os que gostou (ou me peça para ler e gravar no place).
+- **No Play**, na vista do **Client** (a padrão, onde você vê o jogo; na vista do Server os bonecos não aparecem, porque o visual é só do cliente), mude o `Tamanho` ou a `Pegada` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: antes de parar, me peça para ler os valores (do cliente) e gravar no place, ou anote os que gostou.
 - **No Edit**, mude os atributos e salve o place: fica valendo para sempre.
-- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item, parados; o nome do boneco é o id do item. Para vê-los golpeando, marque o atributo `Golpear` da pasta `Workspace.DevWeapons` (vista do servidor). `Invoke(false)` apaga.
+- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item, parados; o nome do boneco é o id do item. Para vê-los golpeando, marque o atributo `Golpear` da pasta `Workspace.DevWeapons` na vista do **Server** (quem manda os bonecos golpearem é o servidor) e volte para a do Client para ver. `Invoke(false)` apaga.
 
 ### Modelos das espadas e lanças
 

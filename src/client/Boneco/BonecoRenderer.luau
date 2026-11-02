@@ -367,8 +367,8 @@ function BonecoRenderer.start()
 		add(character)
 	end
 
-	-- Studio: mudou o Tamanho ou a Pegada de um modelo de Assets.Tools (ajuste
-	-- ao vivo, como o dos mobs): refaz esse item na mão de quem o segura.
+	-- Studio: mudou o Tamanho ou a Pegada de um modelo de Assets.Tools (ajuste ao
+	-- vivo, na vista do Client ou do Server): refaz esse item na mão de quem o segura.
 	if RunService:IsStudio() then
 		task.spawn(function()
 			local assets = ReplicatedStorage:WaitForChild("Assets", 10)
