@@ -17,6 +17,7 @@ local Net = require(Client:WaitForChild("Net"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local KitList = require(script.Parent:WaitForChild("KitList"))
+local MenuState = require(Client:WaitForChild("Menu"):WaitForChild("MenuState"))
 
 local MainMenu = {}
 
@@ -32,7 +33,11 @@ function MainMenu.mount(playerGui: Instance, openSettings: () -> ()): ScreenGui?
 	Template.bind(gui)
 
 	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
-	local balance = Template.find(gui, "BalanceLabel", "TextLabel")
+	local balance = Template.find(gui, "BalanceLabel", "TextLabel") :: TextLabel?
+	-- O saldo agora é mostrado pela casca do menu (MenuShell); aqui só esconde.
+	if balance then
+		balance.Visible = false
+	end
 	vide.effect(function()
 		Template.setText(balance, Strings.format("menu.balance", { amount = currency() }))
 	end)
@@ -47,6 +52,16 @@ function MainMenu.mount(playerGui: Instance, openSettings: () -> ()): ScreenGui?
 	local settings = Template.find(gui, "SettingsButton", "GuiButton") :: GuiButton?
 	if settings then
 		settings.Activated:Connect(openSettings)
+	end
+
+	-- Painel do mockup aberto: o molde some para não aparecer atrás dele.
+	local root = gui:FindFirstChild("Root")
+	if root ~= nil and root:IsA("GuiObject") then
+		vide.effect(function()
+			root.Visible = MenuState.panel() == "play"
+		end)
+	else
+		warn("MainMenu: Root não encontrado; o molde não esconde com painéis abertos")
 	end
 
 	KitList.mount(gui)

@@ -14,6 +14,8 @@ local Client = script.Parent.Parent
 local AudioSettings = require(Client:WaitForChild("AudioSettings"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
+local MenuShell = require(Client:WaitForChild("Menu"):WaitForChild("MenuShell"))
+local MenuState = require(Client:WaitForChild("Menu"):WaitForChild("MenuState"))
 local Screens = Client:WaitForChild("Screens")
 local DeathScreen = require(Screens:WaitForChild("DeathScreen"))
 local KitList = require(Screens:WaitForChild("KitList"))
@@ -48,6 +50,8 @@ function ScreenController.Start(_self)
 			local menu = MainMenu.mount(playerGui, function()
 				SettingsScreen.open(true)
 			end)
+			-- Casca do mockup (coluna, barra, painéis): liga e desliga sozinha.
+			MenuShell.mount(playerGui)
 			local death = DeathScreen.mount(playerGui)
 			local settings = SettingsScreen.mount(playerGui)
 			local recipeBook = RecipeBookScreen.mount(playerGui)
@@ -71,6 +75,10 @@ function ScreenController.Start(_self)
 				-- exemplo): a janela fecha sozinha.
 				if not ScreenFlow.canOpenSettings(screen) then
 					SettingsScreen.open(false)
+				end
+				-- O menu sempre abre no "play", sem painel do mockup aberto.
+				if screen ~= "menu" then
+					MenuState.open("play")
 				end
 				if screen ~= "playing" then
 					RecipeBookScreen.open(false)
