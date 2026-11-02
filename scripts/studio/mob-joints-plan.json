@@ -1,0 +1,1865 @@
+{
+  "baby_lava_dragon": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim",
+        "spine",
+        "spine.001",
+        "spine.002",
+        "spine.003",
+        "spine.004",
+        "spine_stripe"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.327500343322754,
+        -2.90509033203125
+      ],
+      "name": "Head",
+      "parts": [
+        "extra_sparkle",
+        "extra_sparkle.001",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "nostril",
+        "nostril.001",
+        "snout_color",
+        "snout_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.9149999618530273,
+        2.459991455078125
+      ],
+      "name": "Tail",
+      "parts": [
+        "tail_color",
+        "tail_rim"
+      ]
+    }
+  ],
+  "baby_mammoth": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "fringe",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001",
+        "tusk",
+        "tusk.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -1.2860107421875,
+        1.1820001602172852,
+        1.39801025390625
+      ],
+      "name": "Ear_L",
+      "parts": [
+        "ear_color.001",
+        "ear_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        1.2860107421875,
+        1.1820001602172852,
+        1.39801025390625
+      ],
+      "name": "Ear_R",
+      "parts": [
+        "ear_color",
+        "ear_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.2919998168945312,
+        -0.36798095703125
+      ],
+      "name": "Trunk",
+      "parts": [
+        "trunk_color",
+        "trunk_crease",
+        "trunk_crease.001",
+        "trunk_crease.002",
+        "trunk_rim"
+      ]
+    }
+  ],
+  "gmo_piranha": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim",
+        "eye",
+        "eye.001",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.823974609375,
+        0.8325004577636719,
+        -1.897003173828125
+      ],
+      "name": "Fin_L",
+      "parts": [
+        "fin_color.001",
+        "fin_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.823974609375,
+        0.8325004577636719,
+        -1.897003173828125
+      ],
+      "name": "Fin_R",
+      "parts": [
+        "fin_color",
+        "fin_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.8120002746582031,
+        1.614990234375
+      ],
+      "name": "Tail",
+      "parts": [
+        "tail_color",
+        "tail_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        3.392000198364258,
+        -0.5469970703125
+      ],
+      "name": "DorsalFin",
+      "parts": [
+        "dorsal_fin"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        3.0734996795654297,
+        -3.282012939453125
+      ],
+      "name": "Jaw",
+      "parts": [
+        "mouth",
+        "tooth",
+        "tooth.001",
+        "tooth.002",
+        "tooth.003",
+        "tooth.004",
+        "tooth.005",
+        "tooth.006"
+      ]
+    }
+  ],
+  "king_crab": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "shell_color",
+        "shell_crest",
+        "shell_rim",
+        "shell_spike",
+        "shell_spike.001",
+        "shell_spike.002",
+        "shell_spike.003",
+        "shell_spike.004",
+        "shell_spike.005",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -3.29296875,
+        0.7395000457763672,
+        0.33428955078125
+      ],
+      "name": "Leg_L1",
+      "parts": [
+        "leg.005",
+        "leg_rim.005"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -3.0989990234375,
+        0.7395000457763672,
+        1.86492919921875
+      ],
+      "name": "Leg_L2",
+      "parts": [
+        "leg.004",
+        "leg_rim.004"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.93798828125,
+        0.7395000457763672,
+        3.39556884765625
+      ],
+      "name": "Leg_L3",
+      "parts": [
+        "leg.003",
+        "leg_rim.003"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -3.9344482421875,
+        1.3385000228881836,
+        -2.196502685546875
+      ],
+      "name": "Claw_L",
+      "parts": [
+        "claw_color.001",
+        "claw_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        3.29296875,
+        0.7395000457763672,
+        0.33428955078125
+      ],
+      "name": "Leg_R1",
+      "parts": [
+        "leg.002",
+        "leg_rim.002"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        3.0970458984375,
+        0.7395000457763672,
+        1.86492919921875
+      ],
+      "name": "Leg_R2",
+      "parts": [
+        "leg.001",
+        "leg_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.93798828125,
+        0.7395000457763672,
+        3.39556884765625
+      ],
+      "name": "Leg_R3",
+      "parts": [
+        "leg",
+        "leg_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        3.9344482421875,
+        1.3385000228881836,
+        -2.196502685546875
+      ],
+      "name": "Claw_R",
+      "parts": [
+        "claw_color",
+        "claw_rim"
+      ]
+    }
+  ],
+  "dragon": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim",
+        "spine",
+        "spine.001",
+        "spine.002",
+        "spine.003",
+        "spine.004",
+        "spine_stripe"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.4670000076293945,
+        -4.279144287109375
+      ],
+      "name": "Head",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "horn",
+        "horn.001",
+        "nostril",
+        "nostril.001",
+        "snout_color",
+        "snout_rim",
+        "sparkle",
+        "sparkle.001",
+        "tooth",
+        "tooth.001",
+        "tooth.002",
+        "tooth.003"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -4.5,
+        1.7989997863769531,
+        -1.498992919921875
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "wing_color.001",
+        "wing_membrane.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        4.5,
+        1.7989997863769531,
+        -1.498992919921875
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "wing_color",
+        "wing_membrane",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.9149999618530273,
+        3.5050048828125
+      ],
+      "name": "Tail",
+      "parts": [
+        "tail_color",
+        "tail_rim"
+      ]
+    }
+  ],
+  "penguin": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "beak",
+        "body_color",
+        "body_rim",
+        "eye",
+        "eye.001",
+        "face_patch",
+        "face_patch.001",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.449951171875,
+        1.0179996490478516,
+        -0.45001220703125
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "flipper_color.001",
+        "flipper_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.449951171875,
+        1.0179996490478516,
+        -0.45001220703125
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "flipper_color",
+        "flipper_rim"
+      ]
+    }
+  ],
+  "kraken": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "mantle_color",
+        "mantle_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.945500373840332,
+        -3.899993896484375
+      ],
+      "name": "Arm_1",
+      "parts": [
+        "arm.006",
+        "arm_rim.006",
+        "sucker.018",
+        "sucker.019",
+        "sucker.020"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.7576904296875,
+        0.945500373840332,
+        -2.757720947265625
+      ],
+      "name": "Arm_2",
+      "parts": [
+        "arm.005",
+        "arm_rim.005",
+        "sucker.015",
+        "sucker.016",
+        "sucker.017"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        3.9000244140625,
+        0.945500373840332,
+        0
+      ],
+      "name": "Arm_3",
+      "parts": [
+        "arm.004",
+        "arm_rim.004",
+        "sucker.012",
+        "sucker.013",
+        "sucker.014"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.7576904296875,
+        0.945500373840332,
+        2.757720947265625
+      ],
+      "name": "Arm_4",
+      "parts": [
+        "arm.003",
+        "arm_rim.003",
+        "sucker.009",
+        "sucker.010",
+        "sucker.011"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.945500373840332,
+        3.899993896484375
+      ],
+      "name": "Arm_5",
+      "parts": [
+        "arm.002",
+        "arm_rim.002",
+        "sucker.006",
+        "sucker.007",
+        "sucker.008"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.7576904296875,
+        0.945500373840332,
+        2.757720947265625
+      ],
+      "name": "Arm_6",
+      "parts": [
+        "arm.001",
+        "arm_rim.001",
+        "sucker.003",
+        "sucker.004",
+        "sucker.005"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -3.9000244140625,
+        0.945500373840332,
+        0
+      ],
+      "name": "Arm_7",
+      "parts": [
+        "arm",
+        "arm_rim",
+        "sucker",
+        "sucker.001",
+        "sucker.002"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.7576904296875,
+        0.945500373840332,
+        -2.757720947265625
+      ],
+      "name": "Arm_8",
+      "parts": [
+        "arm.007",
+        "arm_rim.007",
+        "sucker.021",
+        "sucker.022",
+        "sucker.023"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        3.2174997329711914,
+        -1.37799072265625
+      ],
+      "name": "Mouth",
+      "parts": [
+        "mouth",
+        "mouth_rim",
+        "tooth",
+        "tooth.001",
+        "tooth.002",
+        "tooth.003",
+        "tooth.004",
+        "tooth.005",
+        "tooth.006",
+        "tooth.007",
+        "tooth.008",
+        "tooth.009"
+      ]
+    }
+  ],
+  "wolf": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "inner_ear",
+        "inner_ear.001",
+        "muzzle",
+        "nose",
+        "sparkle",
+        "sparkle.001"
+      ]
+    }
+  ],
+  "sandworm": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "inner_tooth",
+        "inner_tooth.001",
+        "inner_tooth.002",
+        "inner_tooth.003",
+        "inner_tooth.004",
+        "inner_tooth.005",
+        "inner_tooth.006",
+        "inner_tooth.007",
+        "inner_tooth.008",
+        "inner_tooth.009",
+        "inner_tooth.010",
+        "inner_tooth.011",
+        "inner_tooth.012",
+        "inner_tooth.013",
+        "maw",
+        "maw_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.6649999618530273,
+        -2.850006103515625
+      ],
+      "name": "Jaw_1",
+      "parts": [
+        "jaw.002",
+        "jaw_tooth.016",
+        "jaw_tooth.017",
+        "jaw_tooth.018",
+        "jaw_tooth.019",
+        "jaw_tooth.020",
+        "jaw_tooth.021",
+        "jaw_tooth.022",
+        "jaw_tooth.023",
+        "outer_jaw_color.002",
+        "outer_jaw_rim.002",
+        "scale.006",
+        "scale.007",
+        "scale.008"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.8499755859375,
+        1.6649999618530273,
+        0
+      ],
+      "name": "Jaw_2",
+      "parts": [
+        "jaw.001",
+        "jaw_tooth.008",
+        "jaw_tooth.009",
+        "jaw_tooth.010",
+        "jaw_tooth.011",
+        "jaw_tooth.012",
+        "jaw_tooth.013",
+        "jaw_tooth.014",
+        "jaw_tooth.015",
+        "outer_jaw_color.001",
+        "outer_jaw_rim.001",
+        "scale.003",
+        "scale.004",
+        "scale.005"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.6649999618530273,
+        2.850006103515625
+      ],
+      "name": "Jaw_3",
+      "parts": [
+        "jaw",
+        "jaw_tooth",
+        "jaw_tooth.001",
+        "jaw_tooth.002",
+        "jaw_tooth.003",
+        "jaw_tooth.004",
+        "jaw_tooth.005",
+        "jaw_tooth.006",
+        "jaw_tooth.007",
+        "outer_jaw_color",
+        "outer_jaw_rim",
+        "scale",
+        "scale.001",
+        "scale.002"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.8499755859375,
+        1.6649999618530273,
+        0
+      ],
+      "name": "Jaw_4",
+      "parts": [
+        "jaw.003",
+        "jaw_tooth.024",
+        "jaw_tooth.025",
+        "jaw_tooth.026",
+        "jaw_tooth.027",
+        "jaw_tooth.028",
+        "jaw_tooth.029",
+        "jaw_tooth.030",
+        "jaw_tooth.031",
+        "outer_jaw_color.003",
+        "outer_jaw_rim.003",
+        "scale.009",
+        "scale.010",
+        "scale.011"
+      ]
+    }
+  ],
+  "baby_dragon": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim",
+        "spine",
+        "spine.001",
+        "spine.002",
+        "spine.003",
+        "spine.004",
+        "spine_stripe"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.327500343322754,
+        -2.904266357421875
+      ],
+      "name": "Head",
+      "parts": [
+        "extra_sparkle",
+        "extra_sparkle.001",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "nostril",
+        "nostril.001",
+        "snout_color",
+        "snout_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.9149999618530273,
+        2.459991455078125
+      ],
+      "name": "Tail",
+      "parts": [
+        "tail_color",
+        "tail_rim"
+      ]
+    }
+  ],
+  "golden_chick": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.3447380065917969,
+        -1.802734375
+      ],
+      "name": "Head",
+      "parts": [
+        "beak",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -1.067626953125,
+        1.335062026977539,
+        -0.78790283203125
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "shoulder_feather.003",
+        "shoulder_feather.004",
+        "shoulder_feather.005",
+        "upper_wing_feather.003",
+        "upper_wing_feather.004",
+        "upper_wing_feather.005",
+        "wing_color.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        1.067626953125,
+        1.335062026977539,
+        -0.78790283203125
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "shoulder_feather",
+        "shoulder_feather.001",
+        "shoulder_feather.002",
+        "upper_wing_feather",
+        "upper_wing_feather.001",
+        "upper_wing_feather.002",
+        "wing_color",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.5661487579345703,
+        1.25079345703125
+      ],
+      "name": "Tail",
+      "parts": [
+        "feather_color",
+        "feather_color.001",
+        "feather_color.002",
+        "feather_color.003",
+        "feather_color.004",
+        "feather_color.005",
+        "feather_color.006",
+        "feather_color.007",
+        "feather_rim",
+        "feather_rim.001",
+        "feather_rim.002",
+        "feather_rim.003",
+        "feather_rim.004",
+        "feather_rim.005",
+        "feather_rim.006",
+        "feather_rim.007"
+      ]
+    }
+  ],
+  "golden_hen": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.9735002517700195,
+        -2.65142822265625
+      ],
+      "name": "Head",
+      "parts": [
+        "beak",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -1.5699462890625,
+        1.9635000228881836,
+        -1.15826416015625
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "shoulder_feather.003",
+        "shoulder_feather.004",
+        "shoulder_feather.005",
+        "upper_wing_feather.003",
+        "upper_wing_feather.004",
+        "upper_wing_feather.005",
+        "wing_color.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        1.5699462890625,
+        1.9635000228881836,
+        -1.15826416015625
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "shoulder_feather",
+        "shoulder_feather.001",
+        "shoulder_feather.002",
+        "upper_wing_feather",
+        "upper_wing_feather.001",
+        "upper_wing_feather.002",
+        "wing_color",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.8325004577636719,
+        1.839111328125
+      ],
+      "name": "Tail",
+      "parts": [
+        "feather_color",
+        "feather_color.001",
+        "feather_color.002",
+        "feather_color.003",
+        "feather_color.004",
+        "feather_color.005",
+        "feather_color.006",
+        "feather_color.007",
+        "feather_rim",
+        "feather_rim.001",
+        "feather_rim.002",
+        "feather_rim.003",
+        "feather_rim.004",
+        "feather_rim.005",
+        "feather_rim.006",
+        "feather_rim.007"
+      ]
+    }
+  ],
+  "lava_dragon": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim",
+        "spine",
+        "spine.001",
+        "spine.002",
+        "spine.003",
+        "spine.004",
+        "spine_stripe"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.4670000076293945,
+        -4.488616943359375
+      ],
+      "name": "Head",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "horn",
+        "horn.001",
+        "nostril",
+        "nostril.001",
+        "snout_color",
+        "snout_rim",
+        "sparkle",
+        "sparkle.001",
+        "tooth",
+        "tooth.001",
+        "tooth.002",
+        "tooth.003"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -4.7110595703125,
+        1.7989997863769531,
+        -1.59698486328125
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "wing_color.001",
+        "wing_membrane.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        4.7110595703125,
+        1.7989997863769531,
+        -1.59698486328125
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "wing_color",
+        "wing_membrane",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.9149999618530273,
+        3.665008544921875
+      ],
+      "name": "Tail",
+      "parts": [
+        "tail_color",
+        "tail_rim"
+      ]
+    }
+  ],
+  "spider": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "abdomen_color",
+        "abdomen_rim",
+        "red_mark"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.8500003814697266,
+        -2.0999755859375
+      ],
+      "name": "Head",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.300048828125,
+        0.6374998092651367,
+        -1.69500732421875
+      ],
+      "name": "Leg_L1",
+      "parts": [
+        "leg.007",
+        "leg_border.007"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.300048828125,
+        0.6374998092651367,
+        -0.6669921875
+      ],
+      "name": "Leg_L2",
+      "parts": [
+        "leg.006",
+        "leg_border.006"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.300048828125,
+        0.6374998092651367,
+        0.36102294921875
+      ],
+      "name": "Leg_L3",
+      "parts": [
+        "leg.005",
+        "leg_border.005"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.300048828125,
+        0.6374998092651367,
+        1.38897705078125
+      ],
+      "name": "Leg_L4",
+      "parts": [
+        "leg.004",
+        "leg_border.004"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.300048828125,
+        0.6374998092651367,
+        -1.69500732421875
+      ],
+      "name": "Leg_R1",
+      "parts": [
+        "leg.003",
+        "leg_border.003"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.300048828125,
+        0.6374998092651367,
+        -0.6669921875
+      ],
+      "name": "Leg_R2",
+      "parts": [
+        "leg.002",
+        "leg_border.002"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.300048828125,
+        0.6374998092651367,
+        0.36102294921875
+      ],
+      "name": "Leg_R3",
+      "parts": [
+        "leg.001",
+        "leg_border.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.300048828125,
+        0.6374998092651367,
+        1.38897705078125
+      ],
+      "name": "Leg_R4",
+      "parts": [
+        "leg",
+        "leg_border"
+      ]
+    }
+  ],
+  "vulture": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.9735002517700195,
+        -3.0172119140625
+      ],
+      "name": "Head",
+      "parts": [
+        "beak",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -1.78662109375,
+        1.9635000228881836,
+        -1.31890869140625
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "shoulder_feather.003",
+        "shoulder_feather.004",
+        "shoulder_feather.005",
+        "upper_wing_feather.003",
+        "upper_wing_feather.004",
+        "upper_wing_feather.005",
+        "wing_color.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        1.78662109375,
+        1.9635000228881836,
+        -1.31890869140625
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "shoulder_feather",
+        "shoulder_feather.001",
+        "shoulder_feather.002",
+        "upper_wing_feather",
+        "upper_wing_feather.001",
+        "upper_wing_feather.002",
+        "wing_color",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        0.8325004577636719,
+        2.09368896484375
+      ],
+      "name": "Tail",
+      "parts": [
+        "feather_color",
+        "feather_color.001",
+        "feather_color.002",
+        "feather_color.003",
+        "feather_color.004",
+        "feather_color.005",
+        "feather_rim",
+        "feather_rim.001",
+        "feather_rim.002",
+        "feather_rim.003",
+        "feather_rim.004",
+        "feather_rim.005"
+      ]
+    }
+  ],
+  "crab": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "shell_color",
+        "shell_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.4200439453125,
+        0.5959997177124023,
+        0.241851806640625
+      ],
+      "name": "Leg_L1",
+      "parts": [
+        "leg.005",
+        "leg_rim.005"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.279052734375,
+        0.5959997177124023,
+        1.347259521484375
+      ],
+      "name": "Leg_L2",
+      "parts": [
+        "leg.004",
+        "leg_rim.004"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.1639404296875,
+        0.5959997177124023,
+        2.452667236328125
+      ],
+      "name": "Leg_L3",
+      "parts": [
+        "leg.003",
+        "leg_rim.003"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.8404541015625,
+        1.0795001983642578,
+        -1.58599853515625
+      ],
+      "name": "Claw_L",
+      "parts": [
+        "claw_color.001",
+        "claw_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.4200439453125,
+        0.5959997177124023,
+        0.241851806640625
+      ],
+      "name": "Leg_R1",
+      "parts": [
+        "leg.002",
+        "leg_rim.002"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.279052734375,
+        0.5959997177124023,
+        1.347259521484375
+      ],
+      "name": "Leg_R2",
+      "parts": [
+        "leg.001",
+        "leg_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.1639404296875,
+        0.5959997177124023,
+        2.452667236328125
+      ],
+      "name": "Leg_R3",
+      "parts": [
+        "leg",
+        "leg_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.841552734375,
+        1.0795001983642578,
+        -1.58599853515625
+      ],
+      "name": "Claw_R",
+      "parts": [
+        "claw_color",
+        "claw_rim"
+      ]
+    }
+  ],
+  "rabbit": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "Body_ivory",
+        "Body_lower_edge",
+        "Eye_L",
+        "Eye_L_sparkle",
+        "Eye_R",
+        "Eye_R_sparkle",
+        "Face_pink"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.4000244140625,
+        1.8564996719360352,
+        0.32000732421875
+      ],
+      "name": "Ear_L",
+      "parts": [
+        "Ear_R_ivory",
+        "Ear_R_lower_edge",
+        "Ear_R_pink"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.4000244140625,
+        1.8564996719360352,
+        0.32000732421875
+      ],
+      "name": "Ear_R",
+      "parts": [
+        "Ear_L_ivory",
+        "Ear_L_lower_edge",
+        "Ear_L_pink"
+      ]
+    }
+  ],
+  "boar": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "back_color",
+        "back_rim",
+        "mane"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.8299999237060547,
+        0.04998779296875
+      ],
+      "name": "Head",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "nostril",
+        "nostril.001",
+        "snout",
+        "sparkle",
+        "sparkle.001",
+        "tusk",
+        "tusk.001"
+      ]
+    },
+    {
+      "parent": "Head",
+      "pivot": [
+        -2.9000244140625,
+        1.634500503540039,
+        -0.0999755859375
+      ],
+      "name": "Ear_L",
+      "parts": [
+        "ear_color.001",
+        "ear_rim.001"
+      ]
+    },
+    {
+      "parent": "Head",
+      "pivot": [
+        2.9000244140625,
+        1.634500503540039,
+        -0.0999755859375
+      ],
+      "name": "Ear_R",
+      "parts": [
+        "ear_color",
+        "ear_rim"
+      ]
+    }
+  ],
+  "lava_monster": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "grin",
+        "grin.001",
+        "grin.002",
+        "grin.003",
+        "grin.004",
+        "inner_flame",
+        "outer_flame_color",
+        "outer_flame_rim",
+        "skull",
+        "sparkle",
+        "sparkle.001"
+      ]
+    }
+  ],
+  "arctic_fox": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "inner_ear",
+        "inner_ear.001",
+        "nose",
+        "sparkle",
+        "sparkle.001"
+      ]
+    }
+  ],
+  "polar_bear": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "muzzle_color",
+        "muzzle_rim",
+        "nose",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -3.5,
+        1.3979997634887695,
+        3.79998779296875
+      ],
+      "name": "Ear_L",
+      "parts": [
+        "ear_color.001",
+        "ear_inner.001",
+        "ear_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        3.5,
+        1.3979997634887695,
+        3.79998779296875
+      ],
+      "name": "Ear_R",
+      "parts": [
+        "ear_color",
+        "ear_inner",
+        "ear_rim"
+      ]
+    }
+  ],
+  "hawk": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "body_color",
+        "body_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.871999740600586,
+        -3.85736083984375
+      ],
+      "name": "Head",
+      "parts": [
+        "beak",
+        "eye",
+        "eye.001",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.2843017578125,
+        2.565999984741211,
+        -1.6865234375
+      ],
+      "name": "Wing_L",
+      "parts": [
+        "shoulder_feather.003",
+        "shoulder_feather.004",
+        "shoulder_feather.005",
+        "upper_wing_feather.003",
+        "upper_wing_feather.004",
+        "upper_wing_feather.005",
+        "wing_color.001",
+        "wing_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.2843017578125,
+        2.565999984741211,
+        -1.6865234375
+      ],
+      "name": "Wing_R",
+      "parts": [
+        "shoulder_feather",
+        "shoulder_feather.001",
+        "shoulder_feather.002",
+        "upper_wing_feather",
+        "upper_wing_feather.001",
+        "upper_wing_feather.002",
+        "wing_color",
+        "wing_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        1.2115001678466797,
+        2.67742919921875
+      ],
+      "name": "Tail",
+      "parts": [
+        "feather_color",
+        "feather_color.001",
+        "feather_color.002",
+        "feather_color.003",
+        "feather_color.004",
+        "feather_color.005",
+        "feather_rim",
+        "feather_rim.001",
+        "feather_rim.002",
+        "feather_rim.003",
+        "feather_rim.004",
+        "feather_rim.005"
+      ]
+    }
+  ],
+  "mammoth": [
+    {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ],
+      "name": "Body",
+      "parts": [
+        "eye",
+        "eye.001",
+        "fringe",
+        "head_color",
+        "head_rim",
+        "sparkle",
+        "sparkle.001",
+        "tusk",
+        "tusk.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        -2.2340087890625,
+        1.4184999465942383,
+        2.74102783203125
+      ],
+      "name": "Ear_L",
+      "parts": [
+        "ear_color.001",
+        "ear_rim.001"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        2.2340087890625,
+        1.4184999465942383,
+        2.74102783203125
+      ],
+      "name": "Ear_R",
+      "parts": [
+        "ear_color",
+        "ear_rim"
+      ]
+    },
+    {
+      "parent": "Body",
+      "pivot": [
+        0,
+        2.7509994506835938,
+        -0.64398193359375
+      ],
+      "name": "Trunk",
+      "parts": [
+        "trunk_color",
+        "trunk_crease",
+        "trunk_crease.001",
+        "trunk_crease.002",
+        "trunk_rim"
+      ]
+    }
+  ]
+}
