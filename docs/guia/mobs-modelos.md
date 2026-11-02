@@ -163,7 +163,8 @@ Mesmo caminho do boneco do jogador (`boneco.md`): o **servidor** só tem uma rai
   - `MobId` (string): o id em `Assets.Mobs`;
   - `MobAttack` (número): contador, sobe 1 a cada ataque;
   - `MobHurt` (número): contador, sobe 1 a cada dano;
-  - `MobDead` (booleano): morreu (a raiz some logo depois).
+  - `MobDead` (booleano): morreu (a raiz some logo depois);
+  - `MobHostile` (booleano): quer atacar agora. O servidor decide pelo comportamento do mob (abaixo): agressivo sempre `true`, neutro `true` depois de apanhar, passivo sempre `false`.
 - Contadores, e não "atacando = true", para o cliente não perder um ataque curto entre dois quadros.
 
 ### O que cada estado mostra
@@ -172,9 +173,22 @@ A câmera olha de cima, então quase tudo que aparece é **giro em volta do Y, d
 
 - **Parado**: respiração (escala leve) e um balanço pequeno de orelha, cauda e antena.
 - **Andando** (pela velocidade da raiz): quique e ginga do corpo; pernas e patas alternando; asas batendo; braços do kraken em onda, com fase diferente em cada um; mandíbulas do verme abrindo e fechando em sequência (o modelo é uma boca com 4 mandíbulas, não tem segmentos). Cauda dos dragões com balanço pequeno: a faixa dorsal fica no corpo e não acompanha a cauda.
-- **Ataque** (`MobAttack` subiu): investida curta para a frente e volta; mandíbula, garra ou boca fechando.
-- **Dano** (`MobHurt` subiu): tranco para trás e piscar, como no boneco.
-- **Morte** (`MobDead`): encolhe e some em ~0,5 s.
+- **Ataque** (`MobAttack` subiu): bote para a frente, com o corpo crescendo um pouco, e volta; mandíbula, garra ou boca fechando. A aranha fecha as duas patas da frente.
+- **Dano** (`MobHurt` subiu): fecha os olhos, recua, encolhe, treme de lado e pisca em vermelho.
+- **Morte** (`MobDead`): fecha os olhos, encolhe e some em ~0,5 s.
+- **Sempre**: pisca os olhos a cada ~3,5 s, cada mob no seu tempo. Olhos são as peças com `eye` no nome (achatam na frente-trás); o brilho (`sparkle`) some com o olho fechado.
+
+### Comportamento e borda
+
+`src/shared/Defs/Mobs.luau` guarda o comportamento de cada mob, da wiki de fãs do Starve.io (01/11):
+
+| Comportamento | Mobs | Borda |
+|---|---|---|
+| Passivo (nunca ataca) | coelho, pinguim; galinha e pintinho dourados (provisório: a wiki não diz) | sempre a do modelo (branca; a do coelho é rosada) |
+| Neutro (ataca depois de apanhar) | falcão, javali, caranguejo, caranguejo-rei, filhote de mamute, filhote de dragão, filhote de dragão de lava | branca; vermelha enquanto quer atacar |
+| Agressivo (ataca quem vê) | lobo, aranha, raposa-do-ártico, urso-polar, mamute, dragão, piranha, kraken, monstro de lava, dragão de lava, abutre, verme da areia | sempre vermelha |
+
+A borda são as camadas de fora do modelo, marcadas com o atributo `MobOutline` pelo script `scripts/studio/mark-mob-outlines.luau` (nome com `rim`/`border`/`edge` **e** cor de borda; as bordas de dentro, como a boca do kraken, ficam de fora). Calmo, ela tem a cor do modelo; com `MobHostile`, passa para `OUTLINE_HOSTILE` em `OUTLINE_FADE` s. **Depois de importar ou remodelar um mob, rode o script e salve o place.**
 
 ### Desempenho
 
@@ -192,7 +206,7 @@ print(game.ServerStorage.DevMobs:Invoke(true)) -- 23: galeria ao sul do jogador
 print(game.ServerStorage.DevMobs:Invoke(false)) -- 0: apaga
 ```
 
-Cada mob repete um ciclo de 12 s: parado (3 s) → andando em círculo (5 s, ~5 studs/s) → ataque → dano → morte → renasce. Os tempos são só da galeria (`DevMobService`), não de gameplay. Testado em 01/11 com os 23 a 60 fps.
+Cada mob repete um ciclo de 12 s: parado (3 s) → andando em círculo (5 s, ~5 studs/s) → ataque → dano → morte → renasce. A borda segue o comportamento: os neutros ficam vermelhos depois do dano e voltam ao branco ao renascer. Os tempos são só da galeria (`DevMobService`), não de gameplay. Testado em 01/11 com os 23 a 60 fps.
 
 ## Ajustar as animações
 
@@ -205,9 +219,11 @@ Tudo fica em `src/shared/Mobs/MobAnimConfig.luau`. Depois de mexer, rode `bash s
 | `IDLE_PERIOD`, `BREATHE_SCALE` | Ciclo (s) e tamanho da respiração parado |
 | `WALK_PERIOD`, `WALK_SPEED_REF` | Duração de um passo e a velocidade (studs/s) em que a animação de andar chega ao máximo |
 | `BODY_SWAY`, `BODY_SHIFT`, `BOB_HEIGHT` | Ginga, balanço lateral e quique do corpo andando |
-| `ATTACK_DURATION`, `ATTACK_DISTANCE` | Duração e investida (studs, antes da escala) do ataque |
-| `HURT_DURATION`, `HURT_DISTANCE`, `FLASH_COLOR` | Duração, recuo e cor do piscar no dano |
+| `ATTACK_DURATION`, `ATTACK_DISTANCE`, `ATTACK_PUFF` | Duração, bote (studs, antes da escala) e quanto o corpo cresce no ataque |
+| `HURT_DURATION`, `HURT_DISTANCE`, `HURT_SQUASH`, `HURT_SHAKE`, `HURT_SHAKES`, `FLASH_COLOR` | Dano: duração, recuo, encolhida, tremida (tamanho e vezes) e cor do piscar vermelho |
 | `DEATH_DURATION` | Tempo para encolher e sumir |
+| `BLINK_PERIOD`, `BLINK_DURATION`, `BLINK_SQUASH`, `EYE_PATTERN`, `SPARKLE_PATTERN` | Piscar dos olhos: de quanto em quanto tempo, quanto dura, quanto o olho achata e como achar olhos e brilhos pelo nome |
+| `OUTLINE_HOSTILE`, `OUTLINE_FADE` | Cor da borda querendo atacar e o tempo da troca |
 | `ANIM_RANGE`, `MAX_DT`, `SIZE_STEP` | Desempenho (veja acima) |
 
 **Por mob**: `scale` (tamanho em jogo sobre o modelo do place; **0,4 em todos é provisório**, o tamanho final é decisão do Elizeu) e `groups`, um jeito de mexer por grupo:
@@ -220,4 +236,4 @@ Ear_L = group("sway", idle, walk, attack, phase)
 - `phase`: atraso (radianos). Os lados são espelhados: o mesmo giro abre as duas orelhas, mas leva a pata esquerda para a frente e a direita para trás. Por isso pares simétricos (orelhas, asas) usam `math.pi` no lado R, e as pernas do mesmo par usam a mesma fase.
 - Jeitos (`motion`): `sway` (balança), `stride` (perna), `flap` (asa, nadadeira), `wave` (braço do kraken, fase por braço), `radial` (mandíbula do verme: também se afasta do centro, `travel` studs na direção `x`/`z`) e `mouth` (encolhe `close` no ataque).
 
-Mob novo: importar e montar as juntas como acima, depois uma entrada em `Mobs` com os grupos dele. O código não muda.
+Mob novo: importar e montar as juntas como acima, rodar `mark-mob-outlines.luau`, uma entrada em `Defs/Mobs.luau` (comportamento) com o nome em `Strings/ptBR.luau` (`mob.<id>`), e uma entrada em `Mobs` da `MobAnimConfig` com os grupos dele. O código não muda; os testes conferem que `Defs.Mobs` e a config têm os mesmos mobs.
