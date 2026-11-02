@@ -4,9 +4,11 @@
 -- frente, no máximo um golpe a cada GatherRules.HIT_INTERVAL (o primeiro sai
 -- na hora do aperto, se o último foi há mais que isso).
 -- O golpe: acha o alvo mais perto à frente entre recursos (ResourceService) e
--- peças de construção (StructureService), mobs no chão (MobService) e os outros
--- jogadores vivos (G6), com GatherRules.pickTarget. Peça: StructureService.hit
--- (tira vida ou abre a porta do dono). Mob: MobService.hit. Jogador:
+-- peças de construção (StructureService), mobs no chão (MobService), os outros
+-- jogadores vivos e as caixas de itens (CrateService) (G6), com
+-- GatherRules.pickTarget. Peça: StructureService.hit (tira vida ou abre a porta
+-- do dono). Caixa: CrateService.hit (tira vida; 0 = some com os itens).
+-- Mob: MobService.hit. Jogador:
 -- CharacterService.hurt com o dano do golpe em mob (MobRules.damageOf), tipo
 -- combate (o capacete corta) e quem bateu como attacker; sem empurrão (a lança
 -- nunca empurra jogador). Quem bate nunca é alvo de si mesmo.
@@ -28,6 +30,7 @@ local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
+local CrateService = require(script.Parent.CrateService)
 local InventoryService = require(script.Parent.InventoryService)
 local MobService = require(script.Parent.MobService)
 local ResourceService = require(script.Parent.ResourceService)
@@ -43,8 +46,8 @@ local FX_RANGE = 100 -- studs: quem está a até isso do golpe vê o efeito
 local SEARCH_MARGIN = 5
 local PLAYER_CAUSE = "death.cause.player" -- causa da morte por golpe de jogador
 
--- Alvo possível do golpe: recurso, peça, mob ou personagem de outro jogador
--- (x, z, radius para o pickTarget).
+-- Alvo possível do golpe: recurso, peça, mob, personagem de outro jogador ou
+-- caixa de itens (x, z, radius para o pickTarget).
 type Candidate = {
 	x: number,
 	z: number,
@@ -53,6 +56,7 @@ type Candidate = {
 	structure: StructureService.Entry?,
 	mob: MobService.Mob?,
 	character: Model?,
+	crate: CrateService.Entry?,
 }
 
 local GatherService = {}
@@ -121,6 +125,10 @@ local function hit(player: Player, character: Model, root: BasePart)
 	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS) do
 		table.insert(candidates, { x = structure.x, z = structure.z, radius = structure.radius, structure = structure })
 	end
+	-- Caixas: como as peças, near já conta o raio (CrateRules.RADIUS) de cada uma.
+	for _, crate in CrateService.near(px, pz, GatherRules.HIT_RADIUS) do
+		table.insert(candidates, { x = crate.x, z = crate.z, radius = crate.radius, crate = crate })
+	end
 	-- Mobs no chão (voando e mortos ficam de fora): folga de 3 studs na busca.
 	for _, mob in MobService.near(px, pz, GatherRules.HIT_RADIUS + 3) do
 		if not mob.flying and not mob.dead then
@@ -148,6 +156,10 @@ local function hit(player: Player, character: Model, root: BasePart)
 	end
 	if target.structure then
 		StructureService.hit(target.structure, player, tool)
+		return
+	end
+	if target.crate then
+		CrateService.hit(target.crate, player, tool)
 		return
 	end
 	if target.mob then

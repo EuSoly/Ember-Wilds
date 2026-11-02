@@ -171,6 +171,8 @@ Queue.Reliable[11] = table.create(256)
 Queue.Reliable[14] = table.create(256)
 Queue.Reliable[15] = table.create(256)
 Queue.Reliable[16] = table.create(256)
+Queue.Reliable[17] = table.create(256)
+Queue.Reliable[19] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -412,6 +414,59 @@ function SerdesFunctions.ReadEVENT_ChestTake(): (Instance?)
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_CrateWatch(): (Instance?)
+	local Value
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value) ~= "Instance" then error(`Expected an Instance, got {typeof(Value)} instead.`) end
+	end
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_CrateTake(): ({ Crate: Instance?, Slot: number })
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = {} :: any
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value.Crate = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Crate) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Crate)} instead.`) end
+	end
+	Value.Slot = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	return Value
+end
+
+function SerdesFunctions.WriteEVENT_CrateContents(Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 18)
+	table.insert(SendInstances, Value.Crate or Null)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 1, #Value.Slots)
+		-- Allocate BLOCK: 3 bytes
+	local ARRAY_START_1 = Allocate(3 * #Value.Slots)
+	for Index = 1, #Value.Slots do
+		local Item_1 = Value.Slots[Index]
+		local Length = #Item_1.Id
+		-- Allocate 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Id, Length)
+		-- Allocate 2
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 2
+		buffer.writeu16(SendBuffer, OPERATION_OFFSET_1, Item_1.Count)
+	end
+	-- END ARRAY
+end
+
 function SerdesFunctions.ReadEVENT_SetBuildRotation(): (number)
 	-- Read BLOCK: 1 bytes
 	local BLOCK_START = Read(1)
@@ -496,6 +551,18 @@ if not RunService:IsRunning() then
 	},
 	ChestTake = {
 		On = NOOP
+	},
+	CrateWatch = {
+		On = NOOP
+	},
+	CrateTake = {
+		On = NOOP
+	},
+	CrateContents = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
 	},
 	SetBuildRotation = {
 		On = NOOP
@@ -653,14 +720,34 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 				table.insert(Queue.Reliable[15], {Player, Value} :: {any})
 			end
 		elseif Index == 16 then
-			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			local Value: Instance? = SerdesFunctions.ReadEVENT_CrateWatch()
 			if Events.Reliable[16] ~= nil then
 				task.spawn(Events.Reliable[16], Player, Value)
 			else
 				if #Queue.Reliable[16] > 256 then
-					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"CrateWatch\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[16], {Player, Value} :: {any})
+			end
+		elseif Index == 17 then
+			local Value: { Crate: Instance?, Slot: number } = SerdesFunctions.ReadEVENT_CrateTake()
+			if Events.Reliable[17] ~= nil then
+				task.spawn(Events.Reliable[17], Player, Value)
+			else
+				if #Queue.Reliable[17] > 256 then
+					warn("[Blink]: Event queue of \"CrateTake\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[17], {Player, Value} :: {any})
+			end
+		elseif Index == 19 then
+			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			if Events.Reliable[19] ~= nil then
+				task.spawn(Events.Reliable[19], Player, Value)
+			else
+				if #Queue.Reliable[19] > 256 then
+					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[19], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1172,8 +1259,8 @@ local Returns = table.freeze({
 			end
 		end
 	},
-	SetBuildRotation = {
-		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+	CrateWatch = {
+		On = function(Listener: (Player: Player, Value: Instance?) -> ()): () -> ()
 			Events.Reliable[16] = Listener
 			for Index, Arguments in Queue.Reliable[16] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -1182,6 +1269,80 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[16] == Listener then
 					Events.Reliable[16] = nil
+				end
+			end
+		end
+	},
+	CrateTake = {
+		On = function(Listener: (Player: Player, Value: { Crate: Instance?, Slot: number }) -> ()): () -> ()
+			Events.Reliable[17] = Listener
+			for Index, Arguments in Queue.Reliable[17] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[17] = {}
+			return function (): ()
+				if Events.Reliable[17] == Listener then
+					Events.Reliable[17] = nil
+				end
+			end
+		end
+	},
+	CrateContents = {
+		Fire = function(Player: Player, Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_CrateContents(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CrateContents(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CrateContents(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CrateContents(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	SetBuildRotation = {
+		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+			Events.Reliable[19] = Listener
+			for Index, Arguments in Queue.Reliable[19] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[19] = {}
+			return function (): ()
+				if Events.Reliable[19] == Listener then
+					Events.Reliable[19] = nil
 				end
 			end
 		end

@@ -197,6 +197,46 @@ event ChestTake {
 	Data: Instance?
 }
 
+-- Caixas de itens (G6). Todo morto (jogador ou mob) vira uma caixa que qualquer
+-- um saqueia. O conteúdo vive só no servidor (CrateService) e vai por evento
+-- para quem está olhando a caixa (não cabe em atributo). O cliente só pede; o
+-- servidor confere caixa viva, distância e slot e ignora o inválido. A caixa
+-- pode chegar nil (sumiu entre o clique e o pedido).
+-- Caixa que o cliente está olhando (nil = nenhuma). O servidor responde com
+-- CrateContents e manda de novo a cada mudança enquanto ela for a olhada.
+event CrateWatch {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: Instance?
+}
+
+-- Pegar o slot `Slot` (1 = primeiro de CrateContents.Slots): leva o que couber
+-- no inventário, o resto fica na caixa.
+event CrateTake {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Crate: Instance?,
+		Slot: u8
+	}
+}
+
+-- Conteúdo da caixa olhada, em ordem (os slots vazios saem e os de trás sobem).
+-- Crate é opcional de propósito: se a caixa não estiver no cliente (streaming),
+-- ela chega nil; com Instance obrigatória o Blink daria erro e perderia os
+-- outros eventos do mesmo pacote. nil no cliente = ignorar.
+event CrateContents {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Crate: Instance?,
+		Slots: Slot[]
+	}
+}
+
 -- Construção livre (G4). Giro escolhido para a próxima peça, em passos de 45°
 -- (0..7; BuildRules.ROTATE_STEPS). O servidor (StructureService) só aceita
 -- inteiro de 0 a 7 com uma peça na mão, volta a 0 ao trocar de item e calcula

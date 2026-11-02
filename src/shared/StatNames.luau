@@ -148,6 +148,12 @@ return table.freeze({
 	ChestItem = "ChestItem",
 	ChestCount = "ChestCount",
 
+	-- Caixas de itens (G6). Tag (CollectionService) dos modelos de caixa em
+	-- Workspace.Crates (CrateService). A vida usa StructureHealth/StructureHealthMax,
+	-- como as peças, para a mesma barrinha aparecer; o conteúdo vai por evento
+	-- (Net.CrateContents), não por atributo.
+	CrateTag = "Crate",
+
 	StatusMax = 100,
 	-- Teto da vida (as outras barras vão até StatusMax)
 	HealthMax = 200,
