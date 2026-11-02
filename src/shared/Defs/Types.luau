@@ -222,12 +222,15 @@ export type MobStats = {
 -- Quantos mobs o bioma mantém vivos de dia e de noite.
 export type MobPopulation = { day: number, night: number }
 
+export type MobLoot = { id: string, count: number }
+
 export type MobDef = {
 	id: string,
 	nameKey: string,
 	behavior: MobBehavior,
 	stats: MobStats?, -- nil = ainda sem IA/servidor (só visual)
 	population: { [string]: MobPopulation }?, -- por id de bioma (WorldConfig.BIOMES)
+	loot: { MobLoot }?, -- o que a caixa do mob guarda ao morrer
 	mountFlies: boolean?, -- gancho: montado, voa (montaria ainda não existe)
 }
 

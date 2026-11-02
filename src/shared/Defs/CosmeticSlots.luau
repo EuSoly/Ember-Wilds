@@ -7,6 +7,7 @@ type CosmeticSlotDef = Types.CosmeticSlotDef
 
 local CosmeticSlots: { [string]: CosmeticSlotDef } = {
 	body = { id = "body", nameKey = "cosmeticSlot.body", default = "body_default" },
+	crate = { id = "crate", nameKey = "cosmeticSlot.crate", default = "crate_default" },
 }
 
 for _, slot in CosmeticSlots do

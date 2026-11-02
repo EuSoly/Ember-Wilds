@@ -28,6 +28,7 @@ end
 
 return table.freeze({
 	rabbit = mob("rabbit", "passive", {
+		loot = { { id = "raw_meat", count = 1 }, { id = "rabbit_fur", count = 1 } },
 		stats = { health = 60, speed = 14, radius = 1.8, points = 20 },
 		population = { forest = { day = 40, night = 15 } },
 	}),
@@ -35,11 +36,13 @@ return table.freeze({
 	golden_hen = mob("golden_hen", "passive"),
 	golden_chick = mob("golden_chick", "passive"),
 	hawk = mob("hawk", "neutral", {
+		loot = { { id = "raw_meat", count = 2 }, { id = "hawk_feather", count = 4 } },
 		stats = { health = 300, bite = 24, speed = 18, radius = 2.75, points = 60, flies = true },
 		population = { forest = { day = 6, night = 6 } },
 		mountFlies = true,
 	}),
 	boar = mob("boar", "neutral", {
+		loot = { { id = "raw_meat", count = 4 }, { id = "boar_fur", count = 1 } },
 		stats = { health = 400, bite = 25, speed = 15, radius = 3.3, points = 80 },
 		population = { forest = { day = 8, night = 8 } },
 		mountFlies = true,
@@ -50,10 +53,12 @@ return table.freeze({
 	baby_dragon = mob("baby_dragon", "neutral", { mountFlies = true }),
 	baby_lava_dragon = mob("baby_lava_dragon", "neutral", { mountFlies = true }),
 	wolf = mob("wolf", "aggressive", {
+		loot = { { id = "raw_meat", count = 2 }, { id = "wolf_fur", count = 1 } },
 		stats = { health = 300, bite = 24, speed = 13, radius = 4.5, points = 60 },
 		population = { forest = { day = 10, night = 20 } },
 	}),
 	spider = mob("spider", "aggressive", {
+		loot = { { id = "thread", count = 2 } },
 		stats = {
 			health = 120,
 			bite = 16,

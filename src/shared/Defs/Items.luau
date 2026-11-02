@@ -15,6 +15,23 @@ local Items: { [string]: ItemDef } = {
 	-- Comida
 	berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255, food = { hunger = 10 } },
 
+	-- Carne dos mobs (crua vem do loot; assada na fogueira)
+	raw_meat = { id = "raw_meat", nameKey = "item.raw_meat", category = "food", maxStack = 255, food = { hunger = 15 } },
+	cooked_meat = {
+		id = "cooked_meat",
+		nameKey = "item.cooked_meat",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 35 },
+	},
+
+	-- Peles, pena e linha (loot dos mobs)
+	rabbit_fur = { id = "rabbit_fur", nameKey = "item.rabbit_fur", category = "resource", maxStack = 255 },
+	wolf_fur = { id = "wolf_fur", nameKey = "item.wolf_fur", category = "resource", maxStack = 255 },
+	boar_fur = { id = "boar_fur", nameKey = "item.boar_fur", category = "resource", maxStack = 255 },
+	hawk_feather = { id = "hawk_feather", nameKey = "item.hawk_feather", category = "resource", maxStack = 255 },
+	thread = { id = "thread", nameKey = "item.thread", category = "resource", maxStack = 255 },
+
 	-- Mochilas (vestidas, não ocupam slot; dão bagSlots slots a mais).
 	-- Para uma mochila maior num update, é só adicionar outra entrada aqui.
 	leather_bag = {

@@ -1037,6 +1037,60 @@ return {
 		end
 	end,
 
+	["forest mobs drop the expected loot, the others none"] = function()
+		local expected = {
+			rabbit = { { id = "raw_meat", count = 1 }, { id = "rabbit_fur", count = 1 } },
+			wolf = { { id = "raw_meat", count = 2 }, { id = "wolf_fur", count = 1 } },
+			spider = { { id = "thread", count = 2 } },
+			boar = { { id = "raw_meat", count = 4 }, { id = "boar_fur", count = 1 } },
+			hawk = { { id = "raw_meat", count = 2 }, { id = "hawk_feather", count = 4 } },
+		}
+		for id, mob in Defs.Mobs do
+			local want = expected[id]
+			if want == nil then
+				assert(mob.loot == nil, `{id} não deveria ter loot`)
+			else
+				assert(mob.loot ~= nil and #mob.loot == #want, `{id} loot com tamanho errado`)
+				for index, entry in want do
+					assert(mob.loot[index].id == entry.id, `{id} loot[{index}] id`)
+					assert(mob.loot[index].count == entry.count, `{id} loot[{index}] count`)
+				end
+			end
+		end
+	end,
+
+	["invalid mob loot is an error"] = function()
+		local function check(label: string, loot: any)
+			local defs: any = {
+				Tiers = {},
+				Items = {
+					raw_meat = { id = "raw_meat", nameKey = "item.raw_meat", category = "resource", maxStack = 255 },
+				},
+				Mobs = { wolf = { id = "wolf", nameKey = "mob.wolf", behavior = "aggressive", loot = loot } },
+			}
+			local errors = Validate.all(defs, alwaysHas)
+			assert(containsError(errors, "loot"), `{label}: faltou erro de loot: {table.concat(errors, "; ")}`)
+		end
+		check("item inexistente", { { id = "missing", count = 1 } })
+		check("contagem fracionária", { { id = "raw_meat", count = 1.5 } })
+		check("contagem zero", { { id = "raw_meat", count = 0 } })
+		check("contagem negativa", { { id = "raw_meat", count = -1 } })
+	end,
+
+	["meat items, cooked meat recipe and crate skin exist"] = function()
+		assert(Defs.Items.raw_meat.food.hunger == 15, "carne crua")
+		assert(Defs.Items.cooked_meat.food.hunger == 35, "carne assada")
+		for _, id in { "raw_meat", "cooked_meat", "rabbit_fur", "wolf_fur", "boar_fur", "hawk_feather", "thread" } do
+			assert(Defs.Items[id].maxStack == 255, `{id} maxStack`)
+		end
+		local cooked = Defs.Recipes.cooked_meat
+		assert(cooked.station == "fire" and cooked.time == 3 and cooked.count == 1, "receita da carne assada")
+		assert(#cooked.ingredients == 1 and cooked.ingredients[1].id == "raw_meat", "ingrediente da carne assada")
+		assert(cooked.ingredients[1].count == 1, "1 carne crua")
+		assert(Defs.CosmeticSlots.crate.default == "crate_default", "slot da caixa")
+		assert(Defs.Cosmetics.crate_default.slot == "crate", "skin padrão da caixa")
+	end,
+
 	["invalid mob stats and population are errors"] = function()
 		local function stats(change: (any) -> ()): any
 			local s: any =
