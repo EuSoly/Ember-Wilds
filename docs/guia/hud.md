@@ -36,6 +36,7 @@ create("TextLabel")({
 | `src/client/UI/ChestPanel.luau`, `src/client/ChestState.luau` | Painel do baú sobre a hotbar quando há um baú perto (item guardado e quantidade; clicar tira). Veja `construcao.md` |
 | `src/client/World/BuildGhost.luau` | Fantasma verde/vermelho no chão, girado como o servidor vai construir (aproximação; o servidor decide) |
 | `src/client/BuildRotation.luau`, `src/client/UI/RotateButton.luau` | Giro da peça: tecla R (ignorada no chat) e botão "Girar", visível só no toque com uma peça na mão; 45° por vez, vale até trocar de item |
+| `src/client/UI/WeaponLock.luau` | Relógio da arma presa: círculo ao lado da hotbar com os segundos que faltam para poder trocar de slot depois de equipar espada ou lança (`equipLock`) |
 | `src/client/World/StructureHealth.luau` | Barrinha de vida da peça por 3 s depois de levar dano |
 | `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima do **próprio** boneco enquanto crafta (os outros jogadores não veem) |
 

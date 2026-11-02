@@ -5,28 +5,65 @@
 -- behavior: wiki de fãs do Starve.io (starveiopro.fandom.com/wiki/Mobs),
 -- pesquisado em 01/11. As aves douradas não estão lá: passivas (decisão do
 -- Elizeu).
+-- Velocidades em relação ao jogador (16; com espada ou lança na mão, 12): o
+-- coelho (14) foge de quem está armado e é alcançado por quem está de mão ou
+-- picareta; lobo (13) e aranha (14) alcançam quem está armado, e quem está de
+-- mão ou picareta foge deles (como no Starve, explicado pelo Elizeu em 02/11).
+-- radius: corpo no jogo, na proporção do tamanho visual (scale em
+-- Mobs/MobAnimConfig, escolhido pelo Elizeu em 02/11).
 local Types = require("./Types")
 
 type MobDef = Types.MobDef
 
-local function mob(id: string, behavior: Types.MobBehavior): MobDef
-	return table.freeze({ id = id, nameKey = "mob." .. id, behavior = behavior })
+-- extra: stats, population e mountFlies (só os mobs que já têm IA).
+local function mob(id: string, behavior: Types.MobBehavior, extra: { [string]: any }?): MobDef
+	local def: any = { id = id, nameKey = "mob." .. id, behavior = behavior }
+	if extra then
+		for key, value in extra do
+			def[key] = value
+		end
+	end
+	return table.freeze(def)
 end
 
 return table.freeze({
-	rabbit = mob("rabbit", "passive"),
+	rabbit = mob("rabbit", "passive", {
+		stats = { health = 60, speed = 14, radius = 1.8, points = 20 },
+		population = { forest = { day = 40, night = 15 } },
+	}),
 	penguin = mob("penguin", "passive"),
 	golden_hen = mob("golden_hen", "passive"),
 	golden_chick = mob("golden_chick", "passive"),
-	hawk = mob("hawk", "neutral"),
-	boar = mob("boar", "neutral"),
+	hawk = mob("hawk", "neutral", {
+		stats = { health = 300, bite = 24, speed = 18, radius = 2.75, points = 60, flies = true },
+		population = { forest = { day = 6, night = 6 } },
+		mountFlies = true,
+	}),
+	boar = mob("boar", "neutral", {
+		stats = { health = 400, bite = 25, speed = 15, radius = 3.3, points = 80 },
+		population = { forest = { day = 8, night = 8 } },
+		mountFlies = true,
+	}),
 	crab = mob("crab", "neutral"),
 	king_crab = mob("king_crab", "neutral"),
 	baby_mammoth = mob("baby_mammoth", "neutral"),
-	baby_dragon = mob("baby_dragon", "neutral"),
-	baby_lava_dragon = mob("baby_lava_dragon", "neutral"),
-	wolf = mob("wolf", "aggressive"),
-	spider = mob("spider", "aggressive"),
+	baby_dragon = mob("baby_dragon", "neutral", { mountFlies = true }),
+	baby_lava_dragon = mob("baby_lava_dragon", "neutral", { mountFlies = true }),
+	wolf = mob("wolf", "aggressive", {
+		stats = { health = 300, bite = 24, speed = 13, radius = 4.5, points = 60 },
+		population = { forest = { day = 10, night = 20 } },
+	}),
+	spider = mob("spider", "aggressive", {
+		stats = {
+			health = 120,
+			bite = 16,
+			speed = 14,
+			radius = 4.4,
+			points = 40,
+			web = { duration = 2, cooldown = 6 },
+		},
+		population = { forest = { day = 8, night = 16 } },
+	}),
 	arctic_fox = mob("arctic_fox", "aggressive"),
 	polar_bear = mob("polar_bear", "aggressive"),
 	mammoth = mob("mammoth", "aggressive"),

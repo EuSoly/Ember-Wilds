@@ -59,6 +59,20 @@ export type ItemDef = {
 	structure: StructureDef?,
 	-- Dano do golpe em peça de construção (> 0). Ausente = golpe de mão.
 	structureDamage: number?,
+	-- Dano do golpe em mob (> 0). Ausente = golpe de mão (MobRules.HAND_DAMAGE).
+	mobDamage: number?,
+	-- Fração da velocidade de andar com o item na mão (0–1; ausente = 1). No
+	-- Starve, espada e lança deixam o jogador bem mais lento.
+	moveSpeed: number?,
+	-- Segundos que o item fica preso na mão depois de equipado (ausente = 0):
+	-- não dá para trocar de slot antes (arma do Starve).
+	equipLock: number?,
+	-- Studs a mais de alcance do golpe (ausente = 0). A lança alcança mais longe.
+	reach: number?,
+	-- Studs que o golpe empurra o mob para longe de quem bateu (ausente = 0).
+	-- A lança empurra: fugindo e batendo para trás, o mob da floresta não alcança.
+	-- Só mob: nunca empurra jogador (no PvP seria forte demais; decisão do Elizeu).
+	knockback: number?,
 }
 
 export type CraftStation = "workbench" | "fire"
@@ -196,10 +210,25 @@ export type ResourceZoneDef = {
 -- neutral só ataca depois de apanhar, aggressive ataca quem vê.
 export type MobBehavior = "passive" | "neutral" | "aggressive"
 
+export type MobStats = {
+	health: number,
+	bite: number?, -- dano da mordida (vida do jogador, 0–100); nil = não morde
+	speed: number, -- studs/s
+	radius: number, -- círculo do corpo no chão
+	points: number, -- pontos para quem mata
+	flies: boolean?, -- alterna voar/andar
+	web: { duration: number, cooldown: number }?, -- teia ao morder
+}
+-- Quantos mobs o bioma mantém vivos de dia e de noite.
+export type MobPopulation = { day: number, night: number }
+
 export type MobDef = {
 	id: string,
 	nameKey: string,
 	behavior: MobBehavior,
+	stats: MobStats?, -- nil = ainda sem IA/servidor (só visual)
+	population: { [string]: MobPopulation }?, -- por id de bioma (WorldConfig.BIOMES)
+	mountFlies: boolean?, -- gancho: montado, voa (montaria ainda não existe)
 }
 
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de

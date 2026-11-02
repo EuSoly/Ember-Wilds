@@ -44,6 +44,9 @@ return table.freeze({
 	Using = "Using",
 	-- Id do item na mão (slot selecionado da hotbar), ou nil (escrito pelo EquipService).
 	Equipped = "Equipped",
+	-- Instante (GetServerTimeNow) até quando a arma recém-equipada fica presa na
+	-- mão (item com equipLock); nil = solta. Escrito pelo EquipService.
+	EquipLockUntil = "EquipLockUntil",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
 	HurtAt = "HurtAt",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
@@ -58,10 +61,26 @@ return table.freeze({
 	MobDead = "MobDead",
 	-- Quer atacar agora (agressivo sempre; neutro depois de apanhar): borda vermelha.
 	MobHostile = "MobHostile",
+	-- Voando agora (booleano), na raiz do mob (MobService): o cliente sobe o
+	-- visual e deixa translúcido.
+	MobFlying = "MobFlying",
+	-- Instante (GetServerTimeNow) em que a teia da aranha solta, atributo no
+	-- personagem (MobService). Preso enquanto MobRules.isWebbed; no personagem
+	-- local previsto, ler por polling.
+	WebbedUntil = "WebbedUntil",
 	-- Nas MeshParts de Assets.Mobs: esta camada é a borda que muda de cor.
 	MobOutline = "MobOutline",
 	-- Nas MeshParts de Assets.Mobs: versão brava (cortada) de um olho.
 	MobAngryEye = "MobAngryEye",
+	-- Ajuste de tamanho ao vivo, só no Studio: atributos nos modelos de
+	-- Assets.Mobs (Tamanho = visual, todos os mobs; RaioCorpo = corpo no jogo,
+	-- só mobs com IA) e na pasta Assets.Mobs (MostrarCorpo = disco do corpo;
+	-- Pacifico = mobs ignoram os jogadores). Em português para não confundir
+	-- com a propriedade Scale do Model. Veja docs/guia/mobs.md.
+	MobDevScale = "Tamanho",
+	MobDevRadius = "RaioCorpo",
+	MobDevShowBody = "MostrarCorpo",
+	MobDevPeaceful = "Pacifico",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",

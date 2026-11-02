@@ -144,7 +144,9 @@ Nenhuma animação ou número de gameplay foi implementado na etapa de juntas. P
 
 ## Animações (contrato)
 
-Mesmo caminho do boneco do jogador (`boneco.md`): o **servidor** só tem uma raiz invisível por mob (posição, direção e alguns atributos); **cada cliente** clona o modelo de `Assets.Mobs`, segue a raiz e anima. Ainda não há IA nem dano de mobs: isso é de outra fase. Por enquanto, um comando de teste do Studio cria raízes que andam, atacam, levam dano e morrem, só para ver as animações.
+Mesmo caminho do boneco do jogador (`boneco.md`): o **servidor** só tem uma raiz invisível por mob (posição, direção e alguns atributos); **cada cliente** clona o modelo de `Assets.Mobs`, segue a raiz e anima.
+
+**Galeria vs. mobs de verdade:** a galeria (`DevMobService`, comando `DevMobs`) cria raízes dos 23 mobs que andam, atacam, levam dano e morrem num ciclo fixo, só para ver o visual; não tem IA. Os mobs de verdade (coelho, lobo, aranha, javali e falcão) vêm do `MobService`, com IA, mordida, dano, população e voo: veja [`mobs.md`](mobs.md). As duas coisas usam a mesma raiz e o mesmo `MobRenderer`; os outros 18 mobs só aparecem na galeria até ganharem `stats`.
 
 ### Arquivos
 
@@ -154,7 +156,8 @@ Mesmo caminho do boneco do jogador (`boneco.md`): o **servidor** só tem uma rai
 | `src/shared/Mobs/MobAnimConfig.luau` | Números: gerais (durações, `MAX_DT`, `ANIM_RANGE`) e por mob (`scale` e o jeito de mexer cada grupo). **Mob novo = uma entrada aqui**, sem `if id == "rabbit"` no código |
 | `src/client/Mobs/MobVisual.luau` | Um mob na tela: clona `Assets.Mobs.<id>`, aplica `scale` (`Model:ScaleTo`), guarda a posição de repouso de cada grupo e transforma a `Pose` em CFrames |
 | `src/client/Mobs/AngryEyes.luau` | Corta os olhos bravos de cada tipo de mob (uma vez por cliente) |
-| `src/client/Mobs/MobRenderer.luau` | O loop (como o `BonecoRenderer`): acha as raízes pela tag, cria/apaga os `MobVisual`, segue a raiz a cada quadro, calcula a velocidade e lê os atributos |
+| `src/client/Mobs/MobRenderer.luau` | O loop (como o `BonecoRenderer`): acha as raízes pela tag, cria/apaga os `MobVisual`, segue a raiz a cada quadro (suavizando, porque o servidor a move a 10 Hz), calcula a velocidade e lê os atributos, `MobFlying` inclusive |
+| `src/server/Services/MobService.luau` | Os mobs de verdade (IA, dano, população): veja [`mobs.md`](mobs.md) |
 | `src/server/Services/DevMobService.luau` | Só no Studio (como o `DevBonecoService`): `ServerStorage.DevMobs:Invoke(true)` cria as raízes dos 23 mobs numa galeria perto do spawn, em ciclo de parado → andando em círculo → ataque → dano → morte → renasce; `Invoke(false)` apaga |
 
 ### Raiz no servidor
@@ -165,7 +168,8 @@ Mesmo caminho do boneco do jogador (`boneco.md`): o **servidor** só tem uma rai
   - `MobAttack` (número): contador, sobe 1 a cada ataque;
   - `MobHurt` (número): contador, sobe 1 a cada dano;
   - `MobDead` (booleano): morreu (a raiz some logo depois);
-  - `MobHostile` (booleano): quer atacar agora. O servidor decide pelo comportamento do mob (abaixo): agressivo sempre `true`, neutro `true` depois de apanhar, passivo sempre `false`.
+  - `MobHostile` (booleano): quer atacar agora. O servidor decide pelo comportamento do mob (abaixo): agressivo sempre `true`, neutro `true` depois de apanhar, passivo sempre `false`;
+  - `MobFlying` (booleano): está voando (só o falcão, e o abutre quando entrar). O servidor decide; o cliente desenha o mob `FLY_HEIGHT` (6) studs mais alto e com transparência `FLY_TRANSPARENCY` (0,4), em `FLY_FADE` s (`MobAnimConfig`). A galeria não liga esse atributo.
 - Contadores, e não "atacando = true", para o cliente não perder um ataque curto entre dois quadros.
 
 ### O que cada estado mostra
@@ -228,7 +232,7 @@ Tudo fica em `src/shared/Mobs/MobAnimConfig.luau`. Depois de mexer, rode `bash s
 | `ANGRY_DURATION`, `ANGRY_CUT_ANGLE`, `ANGRY_CUT`, `PUPIL_SHIFT` | Cara de brava: quanto dura, a inclinação do corte do olho, onde ele passa (fração da profundidade do olho, atrás do centro) e quanto o brilho vai para o lado do focinho |
 | `ANIM_RANGE`, `MAX_DT`, `SIZE_STEP` | Desempenho (veja acima) |
 
-**Por mob**: `scale` (tamanho em jogo sobre o modelo do place; **0,4 em todos é provisório**, o tamanho final é decisão do Elizeu) e `groups`, um jeito de mexer por grupo:
+**Por mob**: `scale` (tamanho em jogo sobre o modelo do place, escolhido pelo Elizeu em 02/11 no ajuste ao vivo; veja "Ajustar o tamanho dos mobs" em `mobs.md`) e `groups`, um jeito de mexer por grupo:
 
 ```lua
 Ear_L = group("sway", idle, walk, attack, phase)

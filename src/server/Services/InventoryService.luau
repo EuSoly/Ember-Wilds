@@ -9,8 +9,10 @@
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
@@ -260,7 +262,21 @@ local function onSelect(player: Player, index: number)
 	if player.Parent == nil or index < 1 or index > HOTBAR_SLOTS or index % 1 ~= 0 then
 		return
 	end
-	ensure(player)
+	local inv = ensure(player)
+	-- Arma recém-equipada fica presa na mão (EquipService grava a trava).
+	local current = inv.slots[selected[player] or 1]
+	local character = player.Character
+	if
+		current
+		and character
+		and HeldItem.isLocked(
+			Defs.Items[current.id],
+			character:GetAttribute(StatNames.EquipLockUntil),
+			Workspace:GetServerTimeNow()
+		)
+	then
+		return
+	end
 	if selected[player] ~= index then
 		selected[player] = index
 		notifySelected(player)

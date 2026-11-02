@@ -5,6 +5,7 @@
 local InventoryConfig = require("../InventoryConfig")
 local StatNames = require("../StatNames")
 local SurvivalConfig = require("../SurvivalConfig")
+local WorldConfig = require("../WorldConfig")
 local Types = require("./Types")
 local BuildRules = require("../Build/BuildRules")
 
@@ -447,6 +448,59 @@ end
 
 local MOB_BEHAVIORS = { passive = true, neutral = true, aggressive = true }
 
+local function isPositiveFinite(value: any): boolean
+	return isFiniteNumber(value) and value > 0
+end
+
+local function isNonNegativeFinite(value: any): boolean
+	return isFiniteNumber(value) and value >= 0
+end
+
+local function validateMobStats(errors: { string }, key: string, mob: Types.MobDef)
+	local stats = mob.stats
+	if stats == nil then
+		return
+	end
+	local function bad(message: string)
+		table.insert(errors, `Mob "{key}": {message}`)
+	end
+	if
+		not isPositiveFinite(stats.health)
+		or not isPositiveFinite(stats.speed)
+		or not isPositiveFinite(stats.radius)
+	then
+		bad("stats.health, speed e radius devem ser maiores que 0")
+	end
+	if stats.bite ~= nil and not isNonNegativeFinite(stats.bite) then
+		bad("stats.bite não pode ser negativo")
+	end
+	if not isNonNegativeFinite(stats.points) then
+		bad("stats.points não pode ser negativo")
+	end
+	local web = stats.web
+	if web ~= nil and (not isPositiveFinite(web.duration) or not isPositiveFinite(web.cooldown)) then
+		bad("stats.web precisa de duration e cooldown maiores que 0")
+	end
+end
+
+local function validateMobPopulation(errors: { string }, key: string, mob: Types.MobDef)
+	local population = mob.population
+	if population == nil then
+		return
+	end
+	if mob.stats == nil then
+		table.insert(errors, `Mob "{key}": population exige stats`)
+	end
+	for biome, counts in population do
+		if WorldConfig.BIOMES[biome] == nil then
+			table.insert(errors, `Mob "{key}": population usa bioma desconhecido "{biome}"`)
+		end
+		if not isWholeNumber(counts.day, 0) or not isWholeNumber(counts.night, 0) then
+			table.insert(errors, `Mob "{key}": population "{biome}" precisa de day e night inteiros >= 0`)
+		end
+	end
+end
+
 local function validateMobs(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	-- Tabela ausente (testes antigos) conta como vazia.
 	local mobs: { [string]: Types.MobDef } = (defs :: any).Mobs or {}
@@ -456,6 +510,8 @@ local function validateMobs(errors: { string }, defs: Types.DefsTables, hasStrin
 		if not MOB_BEHAVIORS[mob.behavior] then
 			table.insert(errors, `Mob "{key}": behavior deve ser passive, neutral ou aggressive`)
 		end
+		validateMobStats(errors, key, mob)
+		validateMobPopulation(errors, key, mob)
 	end
 end
 
@@ -677,6 +733,21 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 	local damage = item.structureDamage
 	if damage ~= nil and not isPositive(damage) then
 		table.insert(errors, `Item "{key}": structureDamage deve ser maior que 0`)
+	end
+	if item.moveSpeed ~= nil and (not isPositive(item.moveSpeed) or item.moveSpeed > 1) then
+		table.insert(errors, `Item "{key}": moveSpeed deve ser maior que 0 e no máximo 1`)
+	end
+	if item.equipLock ~= nil and not isPositive(item.equipLock) then
+		table.insert(errors, `Item "{key}": equipLock deve ser maior que 0`)
+	end
+	if item.knockback ~= nil and not isPositive(item.knockback) then
+		table.insert(errors, `Item "{key}": knockback deve ser maior que 0`)
+	end
+	if item.reach ~= nil and not isPositive(item.reach) then
+		table.insert(errors, `Item "{key}": reach deve ser maior que 0`)
+	end
+	if item.mobDamage ~= nil and not isPositive(item.mobDamage) then
+		table.insert(errors, `Item "{key}": mobDamage deve ser maior que 0`)
 	end
 end
 

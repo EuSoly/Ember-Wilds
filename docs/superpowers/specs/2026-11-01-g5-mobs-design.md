@@ -90,6 +90,14 @@ Escolha minha (provisória, em dados), para a floresta inteira (~960 × 960 stud
 - Morreu: o lugar dele volta a ficar livre depois de **30 s**, e então nasce outro.
 - Na troca dia/noite, os tipos acima do novo limite **somem aos poucos, só os que estão longe de todos os jogadores** (ninguém vê sumir); os abaixo do limite nascem aos poucos.
 
+### Revisão de 02/11 (Elizeu): arma na mão e velocidades
+
+Depois de testar, o Elizeu explicou como se mata cada mob no Starve: de mão ou picareta o jogador alcança o coelho e foge do lobo e da aranha; armado (espada, lança) o coelho foge e o lobo e a aranha alcançam; de lança dá para matar recuando, de espada se mata tomando dano. Wiki (Weapons, Swords, Spears, por busca): espada e lança deixam o jogador "bem mais lento"; a lança dá menos dano mas alcança mais longe; a arma recém-equipada só pode ser trocada depois de "alguns segundos" (relógio no canto). Decidido:
+
+- Espada e lança na mão: velocidade × 0,75 (16 → 12); presas na mão por 4 s depois de equipadas, com relógio no HUD; lança alcança 3 studs mais longe (números meus, a wiki não traz).
+- Velocidades: coelho 14, lobo 13, aranha 14 (substituem 15, 14 e 20 da tabela acima).
+- Depois do teste: com lança o mob da floresta não pode morder quem foge batendo para trás. O golpe de lança empurra o mob 4 studs (`knockback`). **Só mob**: a lança nunca empurra jogador, nem quando o PvP entrar (seria forte demais).
+
 ## Como funciona (decisões)
 
 - **Dados**: `Defs.Mobs` (já existe com `behavior`) ganha vida, mordida, velocidade, raio de percepção, se voa, se voa montado (só o campo), teia (só a aranha), pontos e população por bioma e período. `ItemDef` ganha o dano em mob. `Validate` confere tudo. Um bioma novo = população nos dados; um mob novo = uma entrada (o visual já é dado).

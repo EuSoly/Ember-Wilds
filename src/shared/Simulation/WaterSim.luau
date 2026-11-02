@@ -9,10 +9,15 @@
 -- chegam aos poucos pelo streaming.
 -- WaterSim.isInWater(player) diz o último resultado (o WaterService usa para
 -- o fôlego e o atributo InWater); WaterSim.isWet(x, z) confere um ponto qualquer.
+-- Também segura quem está preso na teia de aranha (velocidade 0).
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local Defs = require("../Defs")
+local HeldItem = require("../HeldItem")
+local MobRules = require("../Mobs/MobRules")
+local StatNames = require("../StatNames")
 local MapShapes = require("../World/MapShapes")
 local Shapes = require("../World/Shapes")
 local WorldConfig = require("../WorldConfig")
@@ -84,6 +89,7 @@ function WaterSim.start(getPlayers: () -> { Player }): RBXScriptConnection
 	startWatching()
 	local slowSpeed = WorldConfig.WALK_SPEED * WorldConfig.WATER_SPEED_FACTOR
 	return RunService:BindToSimulation(function()
+		local now = Workspace:GetServerTimeNow()
 		for _, player in getPlayers() do
 			local character = player.Character
 			local root = character and character:FindFirstChild("HumanoidRootPart")
@@ -95,6 +101,14 @@ function WaterSim.start(getPlayers: () -> { Player }): RBXScriptConnection
 			local wet = isWet(root.Position.X, root.Position.Z)
 			inWater[player] = wet
 			local speed = if wet then slowSpeed else WorldConfig.WALK_SPEED
+			-- Arma na mão (espada, lança) deixa mais lento: moveSpeed do item.
+			local equipped = character and character:GetAttribute(StatNames.Equipped)
+			speed *= HeldItem.speedFactor(if type(equipped) == "string" then Defs.Items[equipped] else nil)
+			-- Teia (aranha): preso até o instante gravado no personagem. Lido a
+			-- cada passo (AttributeChanged não dispara no personagem previsto).
+			if character and MobRules.isWebbed(character:GetAttribute(StatNames.WebbedUntil), now) then
+				speed = 0
+			end
 			-- Só escreve quando muda (não replica à toa).
 			if humanoid.WalkSpeed ~= speed then
 				humanoid.WalkSpeed = speed
