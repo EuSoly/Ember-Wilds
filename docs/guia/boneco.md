@@ -139,6 +139,16 @@ Pronto. A validação no boot confere o id, o slot, as cores (`#RRGGBB`) e o tex
 
 Se uma skin for removida num update e alguém ainda estiver com ela, o boneco usa a skin padrão do slot (`CosmeticSlots.body.default`) e aparece um aviso no Output.
 
+### Skin de caixa (slot `crate`)
+
+Além do corpo, existe o slot `crate`: a skin da **caixa de itens** que o jogador deixa ao morrer. O padrão é `crate_default` (`Defs/CosmeticSlots.luau`), sem campos extras:
+
+```lua
+crate_default = { id = "crate_default", nameKey = "cosmetic.crate_default", slot = "crate" },
+```
+
+Se o jogador morre **por outro jogador**, a caixa sai com a skin de caixa **de quem matou**; senão, com a dele mesmo. O visual vem de `ReplicatedStorage.Assets.Crates.<id da skin>` (um Model com o pivô no chão, no centro); sem ele aparece a caixa provisória dourada. Skin nova de caixa = uma entrada em `Defs/Cosmetics.luau` com `slot = "crate"`, o texto `cosmetic.<id>` e, quando houver, o modelo em `Assets.Crates`. Veja `combate.md`.
+
 ### Skin salva no perfil
 
 A skin equipada e as skins que o jogador possui ficam no **perfil salvo** (`Cosmetics.Equipped` e `Cosmetics.Owned`, veja `dados.md`). Quando o perfil carrega, o `CosmeticService` aplica a skin salva, mas só se ela ainda existe, é do slot certo e o jogador a possui. Senão usa a padrão. A skin padrão de cada slot conta como possuída sempre. Equipar uma skin que o jogador não possui falha (`equip` devolve `false`). Até a loja (F5), a posse vem do comando `DevGrantCosmetic`.

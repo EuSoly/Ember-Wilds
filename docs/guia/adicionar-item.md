@@ -37,6 +37,8 @@ coat = {
 
 Veja `sobrevivencia.md`.
 
+A carne crua (`raw_meat`, fome +15) e a assada (`cooked_meat`, +35, receita na fogueira) são comidas assim; as peles (`rabbit_fur`, `wolf_fur`, `boar_fur`), a pena (`hawk_feather`) e a linha (`thread`) são `category = "resource"`, sem receita ainda.
+
 Picareta (`category = "tool"`) ganha `pickaxe = { level = n }`: quanto maior o nível, mais pega por golpe e mais duros os recursos que ela coleta. Veja `coleta.md`.
 
 ### Peça de construção e dano em construção
@@ -71,6 +73,12 @@ stone_sword = {
 	mobDamage = 19,
 },
 ```
+
+### Item que um mob deixa (loot)
+
+Para um mob deixar o item, ponha-o no `loot` do mob em `src/shared/Defs/Mobs.luau`: `loot = { { id = "wolf_fur", count = 1 } }`. O item precisa existir em `Defs/Items.luau` (com o texto `item.<id>`); o `Validate` reprova `loot` com item inexistente ou `count` que não seja inteiro maior ou igual a 1. Os itens de um jogador morto vão para a caixa dele sem nada a configurar. Veja `combate.md`.
+
+`structureDamage` também vale contra a **caixa de itens** (vida 600); `mobDamage`, contra jogador, como contra mob.
 
 ### Receita e velocidade de crafting
 
