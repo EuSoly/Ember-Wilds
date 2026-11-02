@@ -249,7 +249,8 @@ local function panelFrame(panel: MenuState.Panel): Frame
 	})
 end
 
--- Aviso de compra simulada: faixa embaixo, sobre os painéis, só enquanto há texto.
+-- Aviso de compra simulada: faixa na linha do título (entre o título e o
+-- Fechar), longe dos botões dos painéis; só enquanto há texto.
 local function noticeBanner(): Frame
 	return Kit.pill({
 		Name = "Notice",
@@ -257,9 +258,9 @@ local function noticeBanner(): Frame
 			return MenuState.notice() ~= nil
 		end,
 		ZIndex = 10,
-		Position = UDim2.fromScale(0.58, 0.93),
+		Position = UDim2.fromScale(0.585, BODY_TOP + 0.07),
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.fromScale(0.55, 0.08),
+		Size = UDim2.fromScale(0.36, 0.08),
 		BackgroundColor3 = Theme.ui.warning,
 		BackgroundTransparency = 0,
 		text = function()

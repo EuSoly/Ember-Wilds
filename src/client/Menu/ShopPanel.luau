@@ -62,7 +62,7 @@ local function actionButton(props: { [any]: any }, text: string, onClick: () -> 
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			FontFace = Theme.font.number,
 			Text = text,
-			maxSize = 20,
+			maxSize = 28,
 		})
 	)
 	return create("TextButton")(props)
@@ -131,6 +131,7 @@ function ShopPanel.build(): Frame
 			Activated = function()
 				selected(spin.id)
 			end,
+			create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
 			create("UICorner")({ CornerRadius = Theme.corner }),
 			Kit.text({
 				Position = UDim2.fromScale(0.5, 0.32),
