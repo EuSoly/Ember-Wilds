@@ -7,9 +7,11 @@
 -- item na mão; "Pegada" (StatNames.ToolGrip; studs, 0 = Grip importado) desliza
 -- onde a mão segura ao longo da arma (positivo = mais perto da ponta).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Defs = require("../Defs")
 local StatNames = require("../StatNames")
+local Types = require("../Defs/Types")
 
 local ToolModel = {}
 
@@ -43,9 +45,24 @@ function ToolModel.gripOffsetOf(itemId: string): number
 	return 0
 end
 
+-- Golpe do item: o da definição; um modelo que ainda não é item (só aparece
+-- na galeria do Studio) estoca se for lança, como na bancada.
+function ToolModel.attackAnimOf(itemId: string): Types.AttackAnim
+	local def = Defs.Items[itemId]
+	if def then
+		return def.attackAnim or "swing"
+	end
+	return if itemId:match("_spear$") then "thrust" else "swing"
+end
+
 function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
-	if def == nil or (def.category ~= "tool" and def.category ~= "weapon") then
+	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" then
+		return nil
+	end
+	-- Sem definição: só no Studio, para conferir modelos que ainda não são itens
+	-- (galeria DevWeapons).
+	if def == nil and not RunService:IsStudio() then
 		return nil
 	end
 	local source = template(itemId)

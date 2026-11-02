@@ -18,15 +18,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local C = require(Shared.BonecoConfig)
 local Defs = require(Shared.Defs)
+local ToolGallery = require(Shared.Models.ToolGallery)
 local BonecoModel = require(game:GetService("StarterPlayer").StarterPlayerScripts.Client.Boneco.BonecoModel)
 
 local BENCH = "BancadaArmas"
 local ORIGIN = Vector3.new(-630, 1, 590) -- perto do nascimento; y = centro do corpo
 local SPACING_X, SPACING_Z = 7, 9
--- Uma fileira por tipo (o fim do id: wood_pickaxe = pickaxe); o resto vai
--- para a fileira "outros", em ordem alfabética.
-local KINDS = { "pickaxe", "hammer", "shovel", "sword", "spear", "pitchfork", "shield", "outros" }
-local TIERS = { "wood", "stone", "gold", "diamond", "amethyst", "reidite", "dragon", "lava", "pirate", "crab" }
 local TOLERANCE = 1e-3
 
 local tools = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Tools")
@@ -62,35 +59,6 @@ local function anchorAll(model: Instance)
 	end
 end
 
--- Tipo e posição na fileira de cada modelo de Assets.Tools.
-local function layout(): { [string]: { string } }
-	local rows: { [string]: { string } } = {}
-	for _, kind in KINDS do
-		rows[kind] = {}
-	end
-	local tierIndex = {}
-	for i, tier in TIERS do
-		tierIndex[tier] = i
-	end
-	for _, template in tools:GetChildren() do
-		local id = template.Name
-		local tier, kind = id:match("^(%a+)_(%a+)$")
-		local row = if tier and tierIndex[tier] and rows[kind] then kind else "outros"
-		table.insert(rows[row], id)
-	end
-	for kind, ids in rows do
-		table.sort(ids, function(a, b)
-			local ta = tierIndex[a:match("^(%a+)_") or ""] or 99
-			local tb = tierIndex[b:match("^(%a+)_") or ""] or 99
-			if ta ~= tb and kind ~= "outros" then
-				return ta < tb
-			end
-			return a < b
-		end)
-	end
-	return rows
-end
-
 local function montar()
 	local old = workspace:FindFirstChild(BENCH)
 	if old then
@@ -99,14 +67,13 @@ local function montar()
 	local bench = Instance.new("Model")
 	bench.Name = BENCH
 
-	local rows = layout()
-	local row = 0
-	for _, kind in KINDS do
-		if #rows[kind] == 0 then
-			continue
-		end
-		row += 1
-		for column, id in rows[kind] do
+	local ids = {}
+	for _, template in tools:GetChildren() do
+		table.insert(ids, template.Name)
+	end
+	-- Uma fileira por tipo (ToolGallery, a mesma organização da galeria do jogo).
+	for row, entry in ToolGallery.rows(ids) do
+		for column, id in entry.ids do
 			local template = tools:FindFirstChild(id) :: Instance
 			local station = Instance.new("Model")
 			station.Name = id

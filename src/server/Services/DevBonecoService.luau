@@ -8,7 +8,8 @@
 --   em círculo, batendo, trocando o item na mão e levando dano (0 = só apaga).
 --   São criados no servidor para testar o caminho real de replicação.
 -- - ServerStorage.DevWeapons:Invoke(true) -> number: galeria das ferramentas e
---   armas: fileiras de bonecos parados ao lado do jogador, cada um com um item
+--   armas: todos os modelos de Assets.Tools (até os que ainda não são itens),
+--   uma fileira por tipo, em volta do jogador, bonecos parados, cada um com um item
 --   (nome do boneco = id do item); o atributo Golpear da pasta Workspace.DevWeapons
 --   liga o golpe. Para ajustar Tamanho e Pegada de cada modelo ao vivo
 --   (Assets.Tools, vista do servidor). false apaga.
@@ -17,7 +18,7 @@ local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
-local Defs = require(ReplicatedStorage.Shared.Defs)
+local ToolGallery = require(ReplicatedStorage.Shared.Models.ToolGallery)
 local BonecoConfig = require(ReplicatedStorage.Shared.BonecoConfig)
 local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -26,10 +27,9 @@ local CosmeticService = require(script.Parent.CosmeticService)
 
 local CROWD_FOLDER = "DevCrowd"
 local GALLERY_FOLDER = "DevWeapons"
-local GALLERY_SPACING = 7 -- studs entre os bonecos da galeria
-local GALLERY_COLUMNS = 6 -- bonecos por fileira (cabe na tela)
+local GALLERY_SPACING_X = 6 -- studs entre os bonecos de uma fileira
+local GALLERY_SPACING_Z = 7 -- studs entre as fileiras
 local GALLERY_SWING = "Golpear" -- atributo da pasta: true = os bonecos golpeiam
-local GALLERY_ROWS_Z = { -8, 7 } -- studs: fileira acima e abaixo do jogador (na tela)
 local CROWD_CENTER = Vector3.new(0, 0, 40)
 local CROWD_RADIUS = 24
 local CROWD_SKINS = { "body_default", "body_ember" }
@@ -148,31 +148,17 @@ local function clearGallery()
 	end
 end
 
+-- Todos os modelos de Assets.Tools, inclusive os que ainda não são itens (no
+-- Studio o ToolModel os mostra na mão para conferir).
 local function galleryItems(): { string }
-	local tools = ReplicatedStorage:FindFirstChild("Assets")
-	tools = tools and tools:FindFirstChild("Tools")
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local tools = assets and assets:FindFirstChild("Tools")
 	local ids = {}
-	for id, def in Defs.Items do
-		if (def.category == "tool" or def.category == "weapon") and tools and tools:FindFirstChild(id) then
-			table.insert(ids, id)
+	if tools then
+		for _, template in tools:GetChildren() do
+			table.insert(ids, template.Name)
 		end
 	end
-	-- Ferramentas antes das armas; dentro de cada uma, pela escada de tiers.
-	local function key(id: string): (number, number)
-		local def = Defs.Items[id]
-		local tier = def.tier and Defs.Tiers[def.tier]
-		return if def.category == "tool" then 0 else 1, if tier then tier.order else 0
-	end
-	table.sort(ids, function(a, b)
-		local ca, ta = key(a)
-		local cb, tb = key(b)
-		if ca ~= cb then
-			return ca < cb
-		elseif ta ~= tb then
-			return ta < tb
-		end
-		return a < b
-	end)
 	return ids
 end
 
@@ -193,29 +179,28 @@ local function spawnGallery(show: boolean): number
 	folder.Name = GALLERY_FOLDER
 	folder.Parent = Workspace
 
-	-- Fileiras alinhadas com o mundo (a câmera de cima não gira): ao longo de X,
-	-- uma acima e outra abaixo do jogador; todos olham para baixo na tela (+Z, para a câmera),
-	-- com o item à mostra (ferramentas numa fileira, armas na outra).
-	local forward = Vector3.zAxis
-	local side = Vector3.xAxis
-	local facing = Vector3.zAxis
-	local ids = galleryItems()
+	-- Uma fileira por tipo (ToolGallery), alinhadas com o mundo (a câmera de cima
+	-- não gira): ao longo de X, empilhadas em Z, com o jogador no meio; todos
+	-- olham para baixo na tela (+Z, para a câmera), com o item à mostra. Ande
+	-- pela galeria: os bonecos não colidem com o jogador.
+	local rows = ToolGallery.rows(galleryItems())
 	local members: { Model } = {}
-	for i, id in ids do
-		local model = CharacterBody.build()
-		model.Name = id
-		local humanoid = model:FindFirstChildOfClass("Humanoid") :: Humanoid
-		humanoid.AutoRotate = false
-		local column = (i - 1) % GALLERY_COLUMNS
-		local row = (i - 1) // GALLERY_COLUMNS
-		local offset = (column - (GALLERY_COLUMNS - 1) / 2) * GALLERY_SPACING
-		local ahead = GALLERY_ROWS_Z[row + 1] or (GALLERY_ROWS_Z[#GALLERY_ROWS_Z] + row * GALLERY_SPACING)
-		local position = origin.Position + forward * ahead + side * offset
-		model:PivotTo(CFrame.lookAt(position, position + facing))
-		model:SetAttribute(StatNames.Equipped, id)
-		CharacterService.prepare(model)
-		model.Parent = folder
-		table.insert(members, model)
+	for r, row in rows do
+		for c, id in row.ids do
+			local model = CharacterBody.build()
+			model.Name = id
+			local humanoid = model:FindFirstChildOfClass("Humanoid") :: Humanoid
+			humanoid.AutoRotate = false
+			local x = (c - (#row.ids + 1) / 2) * GALLERY_SPACING_X
+			local z = (r - (#rows + 1) / 2) * GALLERY_SPACING_Z
+			local position = origin.Position + Vector3.new(x, 0, z)
+			local facing = Vector3.zAxis
+			model:PivotTo(CFrame.lookAt(position, position + facing))
+			model:SetAttribute(StatNames.Equipped, id)
+			CharacterService.prepare(model)
+			model.Parent = folder
+			table.insert(members, model)
+		end
 	end
 
 	-- Parados; com o atributo Golpear da pasta ligado (no Studio, ao vivo),

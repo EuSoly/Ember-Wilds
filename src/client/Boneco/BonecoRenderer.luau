@@ -20,6 +20,7 @@ local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
@@ -126,8 +127,7 @@ end
 local function applyEquipped(entry: Entry, id: string?)
 	entry.equippedId = id
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id)
-	local def = if id then Defs.Items[id] else nil
-	entry.thrust = def ~= nil and def.attackAnim == "thrust"
+	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
 end
 
 -- Só mostra a careta se o dano for recente: um HurtAt antigo chega quando o
