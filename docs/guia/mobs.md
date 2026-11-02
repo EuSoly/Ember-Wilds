@@ -29,14 +29,14 @@ O cérebro é puro e testado no Lune: `src/shared/Mobs/MobBrain.luau` (a cada pa
 | **Agressivo** (lobo, aranha) | Percebe o jogador só num raio pequeno (`SENSE_RADIUS` = 18 studs). Depois que começa, **não desiste por distância**: corre atrás. Desiste quando passam `GIVE_UP` = 10 s sem o alvo bater nele; cada golpe do alvo reinicia o tempo. |
 | **Passivo** (coelho) | Foge de quem chega a `FLEE_RADIUS` = 14 studs (até ficar mais longe que isso) e, depois de apanhar, foge por `FLEE_AFTER_HIT` = 3 s. Nunca ataca. |
 | **Neutro** (javali, falcão) | Ignora o jogador até apanhar. Depois age como o agressivo (persegue, desiste do mesmo jeito). |
-| **Sozinho** | Anda devagar (`WANDER_SPEED` = 40% da velocidade) até um ponto a `WANDER_RADIUS` = 20 studs de onde nasceu, para de 1 a 4 s e sorteia outro. |
+| **Sozinho** | Anda devagar (`WANDER_SPEED` = 40% da velocidade) até um ponto a `WANDER_RADIUS` = 20 studs de onde nasceu, para de 1 a 4 s e sorteia outro. Se não chegar (ponto dentro de árvore, na água ou fora do bioma), desiste do ponto após o tempo de viagem + `WANDER_SLACK` (3 s) e age como se tivesse chegado. |
 
 Detalhes que valem saber:
 
 - **Desistir**: volta a andar à toa e fica `CALM_TIME` = 5 s sem perseguir ninguém sozinho (um golpe do jogador nesse tempo ainda o faz perseguir).
 - **Alvo que some** (morreu, renasceu, saiu do bioma): o mob desiste e volta a andar à toa.
 - **Golpe de outro jogador** durante a perseguição não troca o alvo: só o alvo reinicia o tempo de desistir.
-- **Mordida**: alcance = raio do mob + `BITE_REACH` (2) + raio do jogador (1,5), uma a cada `BITE_INTERVAL` (1 s). Usa `CharacterService.hurt(..., "combat")`: o capacete protege. A morte mostra o mob ("Morto por: Lobo", texto `mob.<id>` em `Strings/ptBR.luau`).
+- **Mordida**: alcance = raio do mob + `BITE_REACH` (2) + raio do jogador (1,5), uma a cada `BITE_INTERVAL` (1 s). Usa `CharacterService.hurt(..., "combat")`: o capacete protege. A morte mostra o mob ("Causa: Lobo", chave `death.cause` = "Causa: {cause}", texto `mob.<id>` em `Strings/ptBR.luau`).
 - **Borda vermelha** (`MobHostile`): sempre acesa no agressivo; no neutro acende ao ficar bravo e apaga ao desistir; o passivo nunca acende.
 - **Sem pathfinding**: o mob vai reto e escorrega pela beirada (`MobMove.luau`). Um lobo atrás de uma parede fica empurrando a parede, como no Starve.
 
@@ -49,7 +49,7 @@ Os mobs que não voam colidem como círculos no chão (`MobMove.step`), com:
 - **água**: mob que não voa não entra no lago. Um jogador dentro da água está a salvo deles;
 - **borda do bioma**: o mob nunca sai do bioma em que nasceu. Perseguindo, para na borda e solta o alvo, como se tivesse desistido.
 
-Os espinhos também ferem os mobs que encostam (`SpikeService`), com o mesmo dano e o mesmo compasso de 1 s do espinho em jogador. Mob morto por espinho **não dá pontos**.
+Os espinhos também ferem os mobs que encostam (`SpikeService`): conta como encostar a raio do mob + `MOB_SPIKE_SLACK` (0,3, em `BuildRules`) da borda do espinho, porque o `MobMove` deixa o mob parado a raio + epsilon do círculo. O dano e o compasso de 1 s são os do espinho em jogador. Mob morto por espinho **não dá pontos**.
 
 ## Dano do jogador no mob
 
@@ -130,7 +130,8 @@ print(game.ServerStorage.DevMobCount:Invoke())          -- vivos, vagas esfriand
 |---|---|
 | Vida, mordida, velocidade, raio, pontos, voo, teia de um mob | `stats` em `src/shared/Defs/Mobs.luau` |
 | População de dia e de noite | `population` em `Defs/Mobs.luau` |
-| Raio de percepção, fuga, tempo de desistir, calma, mordida, passeio, voo, distâncias de nascer, tempo de renascer | constantes em `src/shared/Mobs/MobRules.luau` |
+| Folga do espinho no mob | `MOB_SPIKE_SLACK` em `src/shared/Build/BuildRules.luau` |
+| Raio de percepção, fuga, tempo de desistir, calma, mordida, passeio (inclusive `WANDER_SLACK`), voo, distâncias de nascer, tempo de renascer | constantes em `src/shared/Mobs/MobRules.luau` |
 | Dano de uma arma em mob | `mobDamage` no item (`Defs/Items.luau`; veja `adicionar-item.md`) |
 | Duração e intervalo da teia | `stats.web` do mob |
 | Quanto o falcão sobe e fica translúcido | `FLY_HEIGHT`, `FLY_TRANSPARENCY` em `MobAnimConfig.luau` |

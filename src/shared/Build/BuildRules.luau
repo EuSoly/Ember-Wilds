@@ -13,6 +13,7 @@ local BuildRules = {}
 BuildRules.HAND_DAMAGE = 5
 BuildRules.SPIKE_INTERVAL = 1 -- s por par espinho/vítima
 BuildRules.MAX_PER_PLAYER = MAX_PER_PLAYER
+BuildRules.MOB_SPIKE_SLACK = 0.3 -- studs: folga além do raio do mob para o espinho feri-lo (o MobMove o deixa a raio + EPSILON do círculo)
 BuildRules.PLAYER_RADIUS = 1.5 -- studs: raio do corpo (folga entre o jogador e a peça)
 
 -- Construção livre: a peça é um círculo no chão, posto a PLACE_DISTANCE de quem constrói.
@@ -62,6 +63,11 @@ function BuildRules.touchesCircle(px: number, pz: number, cx: number, cz: number
 	local dx, dz = px - cx, pz - cz
 	local reach = r + margin
 	return dx * dx + dz * dz <= reach * reach
+end
+
+-- Margem do espinho para um mob de raio `mobRadius`: o corpo mais a folga.
+function BuildRules.mobSpikeMargin(mobRadius: number): number
+	return mobRadius + BuildRules.MOB_SPIKE_SLACK
 end
 
 function BuildRules.damageOf(item: ItemDef?): number

@@ -32,6 +32,7 @@ export type Brain = {
 	fleeFromZ: number,
 	wanderX: number?, -- ponto do passeio (nil = em pausa)
 	wanderZ: number?,
+	wanderDeadline: number, -- passeio: instante em que desiste do ponto (inalcançável)
 	pauseUntil: number,
 	flying: boolean,
 	switchAt: number, -- voador: quando acaba o voo (ou o tempo no chão)
@@ -110,6 +111,7 @@ function MobBrain.new(def: MobDef, homeX: number, homeZ: number, now: number, rn
 		fleeFromZ = homeZ,
 		wanderX = nil,
 		wanderZ = nil,
+		wanderDeadline = math.huge,
 		pauseUntil = now,
 		flying = false, -- nasce no chão (o ponto de nascer é chão livre)
 		switchAt = if flies then now + draw(rng, MobRules.GROUND_TIME) else math.huge,
@@ -249,14 +251,18 @@ local function wander(brain: Brain, stats: MobStats, now: number, x: number, z: 
 	if brain.wanderX == nil and now >= brain.pauseUntil then
 		local angle = rng:nextNumber() * 2 * math.pi
 		local radius = math.sqrt(rng:nextNumber()) * MobRules.WANDER_RADIUS
-		brain.wanderX = brain.homeX + math.cos(angle) * radius
-		brain.wanderZ = brain.homeZ + math.sin(angle) * radius
+		local pickX = brain.homeX + math.cos(angle) * radius
+		local pickZ = brain.homeZ + math.sin(angle) * radius
+		brain.wanderX, brain.wanderZ = pickX, pickZ
+		local travel = distance(x, z, pickX, pickZ) / (stats.speed * MobRules.WANDER_SPEED)
+		brain.wanderDeadline = now + travel + MobRules.WANDER_SLACK
 	end
 	local wanderX, wanderZ = brain.wanderX, brain.wanderZ
 	if wanderX == nil or wanderZ == nil then
 		return
 	end
-	if distance(x, z, wanderX, wanderZ) <= ARRIVE then
+	-- Chegou, ou estourou o prazo (ponto em recurso, água ou fora do bioma): pausa.
+	if distance(x, z, wanderX, wanderZ) <= ARRIVE or now >= brain.wanderDeadline then
 		brain.wanderX, brain.wanderZ = nil, nil
 		brain.pauseUntil = now + draw(rng, WANDER_PAUSE)
 		return

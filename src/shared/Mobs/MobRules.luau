@@ -16,6 +16,7 @@ local MobRules = {
 	HAND_DAMAGE = 5, -- golpe sem item de dano
 	WANDER_RADIUS = 20,
 	WANDER_SPEED = 0.4, -- fração da velocidade ao andar à toa
+	WANDER_SLACK = 3, -- segundos além do tempo de viagem até desistir de um ponto inalcançável
 	FLY_TIME = { 4, 10 }, -- segundos voando (sorteio min, max)
 	GROUND_TIME = { 4, 10 }, -- segundos andando
 	LAND_RANGE = 8, -- raio para escolher onde pousar

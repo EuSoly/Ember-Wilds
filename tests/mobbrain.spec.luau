@@ -198,6 +198,40 @@ return {
 		assert(brain.wanderX ~= nil, "depois da pausa sorteia outro ponto")
 	end,
 
+	["ponto inalcançável: passado o prazo, pausa e sorteia outro"] = function()
+		local rng = Rng.new(11)
+		local brain = MobBrain.new(wolf, 100, 50, 0, rng)
+		MobBrain.think(brain, wolf, 0, 100, 50, nil, nil, true, rng)
+		local wx, wz = brain.wanderX :: number, brain.wanderZ :: number
+		local travel = math.sqrt((wx - 100) ^ 2 + (wz - 50) ^ 2) / (14 * MobRules.WANDER_SPEED)
+		-- O mob nunca sai do lugar (preso numa árvore, na água...): antes do prazo continua tentando.
+		local beforeDeadline = travel + MobRules.WANDER_SLACK - 0.1
+		local intent = MobBrain.think(brain, wolf, beforeDeadline, 100, 50, nil, nil, true, rng)
+		assert(brain.wanderX == wx and intent.speed > 0, "antes do prazo segue tentando")
+		-- No prazo: age como se tivesse chegado (pausa), e a mesma chamada de novo não muda nada.
+		local deadline = travel + MobRules.WANDER_SLACK
+		intent = MobBrain.think(brain, wolf, deadline, 100, 50, nil, nil, true, rng)
+		assert(brain.wanderX == nil and intent.speed == 0, "estourou o prazo: pausa")
+		local before, rngBefore = snapshot(brain), (rng :: any)._state
+		MobBrain.think(brain, wolf, deadline, 100, 50, nil, nil, true, rng)
+		assert(sameSnapshot(before, snapshot(brain)) and (rng :: any)._state == rngBefore, "idempotente")
+		MobBrain.think(brain, wolf, deadline + 5, 100, 50, nil, nil, true, rng)
+		assert(brain.wanderX ~= nil, "depois da pausa sorteia outro ponto")
+	end,
+
+	["ponto alcançado antes do prazo não é afetado"] = function()
+		local rng = Rng.new(11)
+		local brain = MobBrain.new(wolf, 100, 50, 0, rng)
+		MobBrain.think(brain, wolf, 0, 100, 50, nil, nil, true, rng)
+		local wx, wz = brain.wanderX :: number, brain.wanderZ :: number
+		local wanderX = brain.wanderX
+		local intent = MobBrain.think(brain, wolf, 0.5, 100, 50, nil, nil, true, rng)
+		assert(brain.wanderX == wanderX and intent.speed > 0, "ainda andando, ponto mantido")
+		intent = MobBrain.think(brain, wolf, 1, wx, wz, nil, nil, true, rng)
+		assert(brain.wanderX == nil and intent.speed == 0, "chegou: pausa como antes")
+		assert(brain.pauseUntil >= 2 and brain.pauseUntil <= 5, "pausa sorteada de 1 a 4 s")
+	end,
+
 	["hostile por comportamento"] = function()
 		local rng = Rng.new(2)
 		local w = MobBrain.new(wolf, 0, 0, 0, rng)

@@ -6,7 +6,7 @@
 -- def.spikeDamage como dano de combate (o capacete protege), causa "death.cause.spike". Cada
 -- espinho fere cada vítima no máximo uma vez a cada BuildRules.SPIKE_INTERVAL,
 -- por conta própria: entre três espinhos, toma dos três.
--- Mobs vivos no chão (MobService) também levam o espinho (corpo = mob.radius),
+-- Mobs vivos no chão (MobService) também levam o espinho (corpo = mob.radius + BuildRules.MOB_SPIKE_SLACK, pois o MobMove os deixa a raio + epsilon),
 -- no mesmo intervalo por par espinho/mob, sem pontos (MobService.damage, sem autor).
 --
 -- Fica fora do StructureService por causa do ciclo de módulos: o dano passa
@@ -49,12 +49,13 @@ local function stepMobs(now: number)
 		if mob.flying or mob.dead then
 			continue
 		end
-		for _, entry in StructureService.near(mob.x, mob.z, mob.radius) do
+		local margin = BuildRules.mobSpikeMargin(mob.radius)
+		for _, entry in StructureService.near(mob.x, mob.z, margin) do
 			local damage = entry.def.spikeDamage
 			if entry.def.kind ~= "spike" or damage == nil then
 				continue
 			end
-			if not BuildRules.touchesCircle(mob.x, mob.z, entry.x, entry.z, entry.radius, mob.radius) then
+			if not BuildRules.touchesCircle(mob.x, mob.z, entry.x, entry.z, entry.radius, margin) then
 				continue
 			end
 			local hits = mobLastHit[mob]
