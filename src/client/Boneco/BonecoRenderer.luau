@@ -367,8 +367,8 @@ function BonecoRenderer.start()
 		add(character)
 	end
 
-	-- Studio: mudou o Tamanho de um modelo de Assets.Tools (ajuste ao vivo,
-	-- como o dos mobs): refaz esse item na mão de quem o segura.
+	-- Studio: mudou o Tamanho ou a Pegada de um modelo de Assets.Tools (ajuste
+	-- ao vivo, como o dos mobs): refaz esse item na mão de quem o segura.
 	if RunService:IsStudio() then
 		task.spawn(function()
 			local assets = ReplicatedStorage:WaitForChild("Assets", 10)
@@ -377,13 +377,15 @@ function BonecoRenderer.start()
 				return
 			end
 			for _, template in tools:GetChildren() do
-				template:GetAttributeChangedSignal(StatNames.ToolScale):Connect(function()
+				local function refresh()
 					for _, entry in entries do
 						if entry.equippedId == template.Name then
 							applyEquipped(entry, entry.equippedId)
 						end
 					end
-				end)
+				end
+				template:GetAttributeChangedSignal(StatNames.ToolScale):Connect(refresh)
+				template:GetAttributeChangedSignal(StatNames.ToolGrip):Connect(refresh)
 			end
 		end)
 	end

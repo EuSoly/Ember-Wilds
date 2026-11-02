@@ -198,14 +198,17 @@ local tools = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Tools")
 local made = {}
 for part, shape in shapes do
 	local kind = kindOf(part.Name) :: string
-	-- Reimportar mantém o Tamanho já escolhido no Studio (1 na primeira vez).
+	-- Reimportar mantém Tamanho e Pegada já escolhidos no Studio (1 e 0 na
+	-- primeira vez).
 	local old = tools:FindFirstChild(part.Name)
 	local scale = old and old:GetAttribute("Tamanho")
+	local grip = old and old:GetAttribute("Pegada")
 	if old then
 		old:Destroy()
 	end
 	local tool = build(part, shape, factor[kind])
 	tool:SetAttribute("Tamanho", if type(scale) == "number" then scale else 1)
+	tool:SetAttribute("Pegada", if type(grip) == "number" then grip else 0)
 	tool.Parent = tools
 	table.insert(made, part.Name)
 end

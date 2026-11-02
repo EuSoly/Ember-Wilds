@@ -2,8 +2,10 @@
 -- Modelos importados das ferramentas e armas em ReplicatedStorage.Assets.Tools.
 -- Cada modelo tem PrimaryPart = Handle e Attachment "Grip" (Y = cabo/lâmina
 -- para a frente, X = lado). As espadas e lanças vêm do Blender do Elizeu
--- (scripts/studio/import-weapons.luau). O atributo "Tamanho" de cada modelo
--- (StatNames.ToolScale; 1 = como foi importado) escala o item na mão.
+-- (scripts/studio/import-weapons.luau). Atributos de cada modelo, ajustáveis
+-- no Studio: "Tamanho" (StatNames.ToolScale; 1 = como foi importado) escala o
+-- item na mão; "Pegada" (StatNames.ToolGrip; studs, 0 = Grip importado) desliza
+-- onde a mão segura ao longo da arma (positivo = mais perto da ponta).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require("../Defs")
@@ -31,6 +33,16 @@ function ToolModel.scaleOf(itemId: string): number
 	return 1
 end
 
+-- Pegada escolhida no modelo (0 se faltar ou for inválida).
+function ToolModel.gripOffsetOf(itemId: string): number
+	local model = template(itemId)
+	local value = model and model:GetAttribute(StatNames.ToolGrip)
+	if type(value) == "number" and value == value and math.abs(value) < math.huge then
+		return value
+	end
+	return 0
+end
+
 function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
 	if def == nil or (def.category ~= "tool" and def.category ~= "weapon") then
@@ -48,6 +60,14 @@ function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	if scale ~= 1 then
 		-- Escala peças e attachments (o Grip acompanha).
 		model:ScaleTo(model:GetScale() * scale)
+	end
+	-- Pegada: o Grip anda no próprio eixo Y (ao longo da arma, para a ponta),
+	-- na escala do Tamanho.
+	local offset = ToolModel.gripOffsetOf(itemId)
+	local handle = model.PrimaryPart
+	local grip = handle and handle:FindFirstChild("Grip")
+	if offset ~= 0 and grip and grip:IsA("Attachment") then
+		grip.CFrame *= CFrame.new(0, offset * scale, 0)
 	end
 	return model
 end

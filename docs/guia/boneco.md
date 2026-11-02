@@ -112,13 +112,18 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 
 Depois de mexer em animação, rode `bash scripts/check.sh`: os testes de `BonecoAnim` conferem que as curvas continuam certas.
 
-### Tamanho de cada ferramenta e arma
+### Tamanho e pegada de cada ferramenta e arma
 
-Cada modelo em `ReplicatedStorage.Assets.Tools` tem o atributo **`Tamanho`** (1 = como foi importado). O item na mão é escalado por ele, com o encaixe na mão junto. Mesmo esquema dos mobs:
+Cada modelo em `ReplicatedStorage.Assets.Tools` tem dois atributos:
 
-- **No Play** (vista do **servidor**: botão Current: Server/Client no topo do Studio), mude o `Tamanho` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: anote os que gostou (ou me peça para ler e gravar no place).
-- **No Edit**, mude o `Tamanho` e salve o place: fica valendo para sempre.
-- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item e golpeando de tempos em tempos; o nome do boneco é o id do item. `Invoke(false)` apaga.
+- **`Tamanho`** (1 = como foi importado): escala o item na mão, com o encaixe junto.
+- **`Pegada`** (studs, 0 = encaixe importado): desliza onde a mão segura ao longo do item. Positivo = a mão vai para a ponta (sobra mais cabo atrás); negativo = para o fim do cabo.
+
+Mesmo esquema dos mobs:
+
+- **No Play** (vista do **servidor**: botão Current: Server/Client no topo do Studio), mude o `Tamanho` ou a `Pegada` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: anote os que gostou (ou me peça para ler e gravar no place).
+- **No Edit**, mude os atributos e salve o place: fica valendo para sempre.
+- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item, parados; o nome do boneco é o id do item. Para vê-los golpeando, marque o atributo `Golpear` da pasta `Workspace.DevWeapons` (vista do servidor). `Invoke(false)` apaga.
 
 ### Modelos das espadas e lanças
 

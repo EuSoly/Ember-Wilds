@@ -8,9 +8,10 @@
 --   em círculo, batendo, trocando o item na mão e levando dano (0 = só apaga).
 --   São criados no servidor para testar o caminho real de replicação.
 -- - ServerStorage.DevWeapons:Invoke(true) -> number: galeria das ferramentas e
---   armas: uma fila de bonecos parados ao lado do jogador, cada um com um item
---   (nome do boneco = id do item), golpeando de tempos em tempos. Para ajustar o
---   Tamanho de cada modelo ao vivo (Assets.Tools, vista do servidor). false apaga.
+--   armas: fileiras de bonecos parados ao lado do jogador, cada um com um item
+--   (nome do boneco = id do item); o atributo Golpear da pasta Workspace.DevWeapons
+--   liga o golpe. Para ajustar Tamanho e Pegada de cada modelo ao vivo
+--   (Assets.Tools, vista do servidor). false apaga.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
@@ -27,6 +28,7 @@ local CROWD_FOLDER = "DevCrowd"
 local GALLERY_FOLDER = "DevWeapons"
 local GALLERY_SPACING = 7 -- studs entre os bonecos da galeria
 local GALLERY_COLUMNS = 6 -- bonecos por fileira (cabe na tela)
+local GALLERY_SWING = "Golpear" -- atributo da pasta: true = os bonecos golpeiam
 local GALLERY_ROWS_Z = { -8, 7 } -- studs: fileira acima e abaixo do jogador (na tela)
 local CROWD_CENTER = Vector3.new(0, 0, 40)
 local CROWD_RADIUS = 24
@@ -192,11 +194,11 @@ local function spawnGallery(show: boolean): number
 	folder.Parent = Workspace
 
 	-- Fileiras alinhadas com o mundo (a câmera de cima não gira): ao longo de X,
-	-- uma acima e outra abaixo do jogador; todos olham para cima na tela (-Z),
+	-- uma acima e outra abaixo do jogador; todos olham para baixo na tela (+Z, para a câmera),
 	-- com o item à mostra (ferramentas numa fileira, armas na outra).
 	local forward = Vector3.zAxis
 	local side = Vector3.xAxis
-	local facing = -Vector3.zAxis
+	local facing = Vector3.zAxis
 	local ids = galleryItems()
 	local members: { Model } = {}
 	for i, id in ids do
@@ -216,11 +218,14 @@ local function spawnGallery(show: boolean): number
 		table.insert(members, model)
 	end
 
-	-- Golpeiam 1,5 s a cada 3 s (mostra a animação de cada item).
+	-- Parados; com o atributo Golpear da pasta ligado (no Studio, ao vivo),
+	-- golpeiam 1,5 s a cada 3 s (mostra a animação de cada item).
+	folder:SetAttribute(GALLERY_SWING, false)
 	galleryThread = task.spawn(function()
 		local start = os.clock()
 		while true do
-			local using = (os.clock() - start) % USE_PERIOD < USE_PERIOD / 2
+			local swinging = folder:GetAttribute(GALLERY_SWING) == true
+			local using = swinging and (os.clock() - start) % USE_PERIOD < USE_PERIOD / 2
 			for _, model in members do
 				setIfChanged(model, StatNames.Using, using)
 			end
