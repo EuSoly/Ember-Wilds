@@ -86,7 +86,7 @@ Carne crua dá +15 de fome; **carne assada** dá +35 e sai da fogueira (1 carne 
 | Tempo de vida da caixa de jogador / de mob | `PLAYER_LIFETIME` (180 s) / `MOB_LIFETIME` (60 s) em `src/shared/Crate/CrateRules.luau` |
 | Vida da caixa | `HEALTH` (600) em `CrateRules.luau` |
 | Alcance de abrir e pegar | `OPEN_RANGE` (8) em `CrateRules.luau` |
-| Raio do corpo da caixa (golpe, colisão) | `RADIUS` (1,5) em `CrateRules.luau` |
+| Raio do corpo da caixa (alvo do golpe; a caixa não bloqueia peças de construção) | `RADIUS` (1,5) em `CrateRules.luau` |
 | Fração dos pontos que o matador ganha | `KILL_BONUS` (0,25) em `CrateRules.luau` |
 | Vida do jogador | `HealthMax` (200) em `src/shared/StatNames.luau` |
 | Intervalo da mordida | `BITE_INTERVAL` (1,5) em `src/shared/Mobs/MobRules.luau` |

@@ -212,7 +212,7 @@ export type MobBehavior = "passive" | "neutral" | "aggressive"
 
 export type MobStats = {
 	health: number,
-	bite: number?, -- dano da mordida (vida do jogador, 0–100); nil = não morde
+	bite: number?, -- dano da mordida (vida do jogador, escala 0–200, StatNames.HealthMax); nil = não morde
 	speed: number, -- studs/s
 	radius: number, -- círculo do corpo no chão
 	points: number, -- pontos para quem mata
