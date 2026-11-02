@@ -82,7 +82,8 @@ function DevDataService.Start(_self)
 			warn(`[DevBar] use Health, Hunger, Cold, Thirst ou Heat com um número`)
 			return
 		end
-		player:SetAttribute(name, math.clamp(value, 0, StatNames.StatusMax))
+		local max = if name == StatNames.Health then StatNames.HealthMax else StatNames.StatusMax
+		player:SetAttribute(name, math.clamp(value, 0, max))
 	end)
 
 	newCommand("DevArmor", function(player: Player, itemId: string?): boolean

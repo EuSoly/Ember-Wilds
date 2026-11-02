@@ -2,6 +2,7 @@
 local ArmorRules = require("../src/shared/Survival/ArmorRules")
 local SurvivalConfig = require("../src/shared/SurvivalConfig")
 local Strings = require("../src/shared/Strings")
+local StatNames = require("../src/shared/StatNames")
 local SurvivalRules = require("../src/shared/Survival/SurvivalRules")
 
 local function near(a: number, b: number): boolean
@@ -78,7 +79,7 @@ return {
 		expect("fome", r.bars.hunger, 94)
 		expect("sede", r.bars.thirst, 95)
 		expect("frio", r.bars.cold, 96)
-		expect("vida", r.bars.health, 100)
+		expect("vida", r.bars.health, 200)
 		expect("dano", r.damage, 0)
 		assert(r.cause == nil, "sem causa")
 	end,
@@ -116,7 +117,7 @@ return {
 		local r = SurvivalRules.step(bars({ hunger = 0 }), ctx(), 2)
 		expect("dano", r.damage, 3)
 		assert(r.cause == "hunger", `causa {r.cause}`)
-		expect("vida não muda nas regras", r.bars.health, 100)
+		expect("vida não muda nas regras", r.bars.health, 200)
 	end,
 
 	["empty bars add up"] = function()
@@ -153,8 +154,8 @@ return {
 	["bars never leave 0..100"] = function()
 		local r = SurvivalRules.step(bars({ hunger = 1 }), ctx(), 100)
 		expect("fome", r.bars.hunger, 0)
-		local regen = SurvivalRules.step(bars({ health = 99.9 }), ctx(), 100)
-		expect("vida", regen.bars.health, 100)
+		local regen = SurvivalRules.step(bars({ health = 199.9 }), ctx(), 100)
+		expect("vida", regen.bars.health, 200)
 		local water = SurvivalRules.step(bars({ thirst = 99 }), ctx({ inWater = true }), 10)
 		expect("sede", water.bars.thirst, 100)
 	end,
@@ -166,7 +167,7 @@ return {
 			assert(value == value, `{name} virou NaN`)
 		end
 		expect("fome", r.bars.hunger, 99.4)
-		expect("vida", r.bars.health, 100)
+		expect("vida", r.bars.health, 200)
 	end,
 
 	["bad dt does nothing"] = function()
@@ -233,7 +234,7 @@ return {
 	end,
 
 	["nil or NaN heat counts as none"] = function()
-		local r = SurvivalRules.step({ health = 100, hunger = 100, cold = 100, thirst = 100, heat = 0 / 0 }, ctx(), 1)
+		local r = SurvivalRules.step({ health = 200, hunger = 100, cold = 100, thirst = 100, heat = 0 / 0 }, ctx(), 1)
 		expect("calor", r.bars.heat, 0)
 	end,
 
@@ -246,5 +247,30 @@ return {
 		assert(b ~= nil, "repõe a sede")
 		expect("sede", b.thirst, 55)
 		expect("fome", b.hunger, 100)
+	end,
+
+	["health starts at 200 and other bars at 100"] = function()
+		assert(StatNames.HealthMax == 200, "vida máxima 200")
+		local full = SurvivalRules.full()
+		expect("vida", full.health, 200)
+		expect("fome", full.hunger, 100)
+		expect("frio", full.cold, 100)
+		expect("sede", full.thirst, 100)
+	end,
+
+	["eating health food caps at 200"] = function()
+		local a = SurvivalRules.eat(bars({ health = 190 }), { health = 30 })
+		assert(a ~= nil, "come")
+		expect("vida", a.health, 200)
+		assert(SurvivalRules.eat(SurvivalRules.full(), { health = 10 }) == nil, "vida cheia não come")
+		local b = SurvivalRules.eat(bars({ health = 100 }), { health = 30 })
+		assert(b ~= nil, "come")
+		expect("vida acima de 100", b.health, 130)
+	end,
+
+	["health above 100 survives a step and hunger stays capped at 100"] = function()
+		local r = SurvivalRules.step(bars({ health = 150, hunger = 150 }), ctx(), 1)
+		expect("vida", r.bars.health, 150.5)
+		expect("fome", r.bars.hunger, 99.4)
 	end,
 }

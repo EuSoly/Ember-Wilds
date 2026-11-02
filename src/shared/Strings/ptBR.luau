@@ -27,12 +27,20 @@ return table.freeze({
 	["hud.nightComing"] = "A noite está chegando",
 	["hud.backpack"] = "Mochila",
 	["hud.rotate"] = "Girar",
+	["hud.crate"] = "Caixa",
 
 	-- Itens
 	["item.wood"] = "Madeira",
 	["item.stone"] = "Pedra",
 	["item.gold"] = "Ouro",
 	["item.berry"] = "Frutinha",
+	["item.raw_meat"] = "Carne crua",
+	["item.cooked_meat"] = "Carne assada",
+	["item.rabbit_fur"] = "Pele de coelho",
+	["item.wolf_fur"] = "Pele de lobo",
+	["item.boar_fur"] = "Pele de javali",
+	["item.hawk_feather"] = "Pena de falcão",
+	["item.thread"] = "Linha",
 	["item.leather_bag"] = "Mochila de Couro",
 	["item.wood_pickaxe"] = "Picareta de Madeira",
 	["item.stone_pickaxe"] = "Picareta de Pedra",
@@ -68,6 +76,8 @@ return table.freeze({
 
 	-- Cosméticos
 	["cosmeticSlot.body"] = "Corpo",
+	["cosmeticSlot.crate"] = "Caixa",
+	["cosmetic.crate_default"] = "Caixa padrão",
 	["cosmetic.body_default"] = "Clássico",
 	["cosmetic.body_ember"] = "Brasa",
 
@@ -135,6 +145,7 @@ return table.freeze({
 	["death.cause.drown"] = "Afogado",
 	["death.cause.heat"] = "Calor",
 	["death.cause.spike"] = "Espinho",
+	["death.cause.player"] = "Jogador",
 
 	-- Coleta
 	["gather.empty"] = "Este recurso acabou",

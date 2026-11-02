@@ -34,11 +34,18 @@ create("TextLabel")({
 | `src/client/UI/CraftColumn.luau`, `src/client/CraftState.luau` | Receitas disponíveis, tooltip e progresso; clique na receita ativa cancela |
 | `src/client/UI/RecipeBookButton.luau` | Abre o livro completo de receitas |
 | `src/client/UI/ChestPanel.luau`, `src/client/ChestState.luau` | Painel do baú sobre a hotbar quando há um baú perto (item guardado e quantidade; clicar tira). Veja `construcao.md` |
+| `src/client/UI/CratePanel.luau`, `src/client/CrateState.luau` | Painel da caixa de itens (ver abaixo) |
 | `src/client/World/BuildGhost.luau` | Fantasma verde/vermelho no chão, girado como o servidor vai construir (aproximação; o servidor decide) |
 | `src/client/BuildRotation.luau`, `src/client/UI/RotateButton.luau` | Giro da peça: tecla R (ignorada no chat) e botão "Girar", visível só no toque com uma peça na mão; 45° por vez, vale até trocar de item |
 | `src/client/UI/WeaponLock.luau` | Relógio da arma presa: círculo ao lado da hotbar com os segundos que faltam para poder trocar de slot depois de equipar espada ou lança (`equipLock`) |
 | `src/client/World/StructureHealth.luau` | Barrinha de vida da peça por 3 s depois de levar dano |
 | `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima do **próprio** boneco enquanto crafta (os outros jogadores não veem) |
+
+## Painel da caixa
+
+Com uma caixa de itens (de jogador ou de mob morto) a até 8 studs, o `CratePanel` aparece sozinho **logo acima da hotbar**, com os itens da caixa em **8 colunas**. Se também há um baú perto, ele sobe a altura do painel do baú para não sobrepor. Clicar (ou tocar) num slot pega o item para o inventário (o que couber) e o painel se reorganiza; a caixa vazia some e o painel também.
+
+O `CrateState` procura a caixa mais perto (modelos com a tag `Crate`) por **polling a cada 0,25 s**, avisa o servidor (`CrateWatch`) quando ela muda e guarda o conteúdo que chega por `CrateContents`. O cliente só pede (`CrateTake`); o servidor decide. Veja `combate.md`.
 
 ## Quando o HUD aparece
 
@@ -63,7 +70,7 @@ Cuidado com efeitos (`vide.effect`): ler uma fonte dentro de um efeito faz o efe
 
 O HUD **não lê o Workspace** (com streaming, partes do mapa podem nem estar carregadas). Ele lê:
 
-- **Atributos do Player**: `Health`, `Hunger`, `Cold`, `Thirst`, `Heat` (0–100; o anel do frio mostra o calor quando ele passa de 0), `Score`, `Rank`. Nomes em `src/shared/StatNames.luau`.
+- **Atributos do Player**: `Health` (0–200; o anel usa `HealthMax`), `Hunger`, `Cold`, `Thirst`, `Heat` (0–100; o anel do frio mostra o calor quando ele passa de 0), `Score`, `Rank`. Nomes em `src/shared/StatNames.luau`.
 - **Atributo do Workspace**: `CycleStart`, o início do ciclo de dia (`src/shared/DayCycle.luau` calcula dia, hora e aviso de noite).
 - **InputActions** do contexto `Gameplay` (seleção de slot, mochila).
 - **Inventário** (`InventoryState`): cópia mantida pelo servidor via rede (Blink). A hotbar e a mochila só leem daqui; para mover ou selecionar, o cliente pede ao servidor. Veja `inventario.md`.

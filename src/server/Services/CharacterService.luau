@@ -42,9 +42,11 @@ end
 
 -- Dano num personagem: grava HurtAt (o visual de todos mostra "> <" e o flash)
 -- e, se for de um jogador, tira `amount` do atributo Health do Player. Vida
--- zerada = DeathService.kill(player, causeKey) (causeKey = chave de Strings,
--- ex. "death.cause.hunger"). Bonecos de teste (sem jogador) só fazem a careta.
-function CharacterService.hurt(character: Model, amount: number, causeKey: string, kind: HurtKind)
+-- zerada = DeathService.kill(player, causeKey, attacker) (causeKey = chave de
+-- Strings, ex. "death.cause.hunger"; attacker = jogador que bateu, só no golpe
+-- de jogador: quem dá o golpe final é quem matou). Bonecos de teste (sem
+-- jogador) só fazem a careta.
+function CharacterService.hurt(character: Model, amount: number, causeKey: string, kind: HurtKind, attacker: Player?)
 	-- `not (amount > 0)` também recusa NaN (NaN <= 0 seria false e passaria).
 	if not (amount > 0) or character:FindFirstChildOfClass("Humanoid") == nil then
 		return
@@ -62,12 +64,12 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 
 	if player then
 		local current = player:GetAttribute(StatNames.Health)
-		local health = if type(current) == "number" and current == current then current else StatNames.StatusMax
+		local health = if type(current) == "number" and current == current then current else StatNames.HealthMax
 		health = math.max(health - amount, 0)
 		player:SetAttribute(StatNames.Health, health)
 		-- Só o personagem atual morre (um antigo, já trocado, não mata o novo).
 		if health <= 0 and player.Character == character then
-			DeathService.kill(player, causeKey)
+			DeathService.kill(player, causeKey, attacker)
 		end
 	end
 end

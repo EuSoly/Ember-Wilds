@@ -1,6 +1,6 @@
 --!strict
--- Barrinha de vida acima de uma peça de construção: aparece por 3 s sempre que
--- o atributo StructureHealth muda. As peças chegam e saem pelo streaming, então
+-- Barrinha de vida acima de uma peça de construção ou de uma caixa de itens
+-- (G6, mesmos atributos): aparece por 3 s sempre que o atributo StructureHealth muda. As peças chegam e saem pelo streaming, então
 -- cada uma é seguida enquanto existe e a barra é limpa quando ela some.
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -96,10 +96,12 @@ function StructureHealth.start()
 		end
 	end
 
-	CollectionService:GetInstanceAddedSignal(StatNames.StructureTag):Connect(track)
-	CollectionService:GetInstanceRemovedSignal(StatNames.StructureTag):Connect(untrack)
-	for _, piece in CollectionService:GetTagged(StatNames.StructureTag) do
-		track(piece)
+	for _, tag in { StatNames.StructureTag, StatNames.CrateTag } do
+		CollectionService:GetInstanceAddedSignal(tag):Connect(track)
+		CollectionService:GetInstanceRemovedSignal(tag):Connect(untrack)
+		for _, piece in CollectionService:GetTagged(tag) do
+			track(piece)
+		end
 	end
 
 	-- Polling: não depende de AttributeChanged (que falha com Server Authority).

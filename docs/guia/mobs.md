@@ -2,7 +2,7 @@
 
 Os mobs da floresta (coelho, lobo, aranha, javali e falcão) vivem no jogo: nascem espalhados, andam à toa, fogem, perseguem, mordem, apanham, morrem e renascem. O servidor decide tudo; o cliente só desenha (o visual, as juntas e as animações estão em [`mobs-modelos.md`](mobs-modelos.md)). Os outros 18 mobs ainda são só visual: entram bioma por bioma, só com dados.
 
-Todo número aqui é **provisório** e fica em dados ou em constantes, nunca espalhado no código. Os números do design vêm da wiki de fãs do Starve.io (a vida do jogador do Ember Wilds vai de 0 a 100, a do Starve de 0 a 200, então **a mordida é a metade da wiki**) e de escolhas do Elizeu.
+Todo número aqui é **provisório** e fica em dados ou em constantes, nunca espalhado no código. Os números do design vêm da wiki de fãs do Starve.io (desde a G6 a vida do jogador vai de 0 a 200, como a do Starve; as mordidas ficaram como estavam, a metade da wiki, e agora são a cada 1,5 s) e de escolhas do Elizeu.
 
 ## Os 5 mobs da floresta
 
@@ -20,7 +20,7 @@ Tudo em `src/shared/Defs/Mobs.luau`, no bloco `stats` de cada mob. O jogador and
 | Javali (`boar`) | neutro | 400 | 25 | 15 | 3,3 | 80 |
 | Falcão (`hawk`) | neutro, voa | 300 | 24 | 18 | 2,75 | 60 |
 
-- Uma mordida por segundo (`BITE_INTERVAL`): o lobo tira 24 por segundo e mata um jogador parado em uns 5 s.
+- Uma mordida a cada **1,5 s** (`BITE_INTERVAL`, era 1 s): o lobo tira 24 por mordida e leva um jogador parado de 200 de vida em umas 9 mordidas (~12 s) sem capacete.
 - O raio do corpo é o círculo no chão (como as peças da construção, veja `construcao.md`).
 - Os mobs **não têm barra de vida** (decisão do Elizeu). A reação ao golpe é a do visual: pisca em vermelho, recua, fecha os olhos.
 
@@ -40,7 +40,7 @@ Detalhes que valem saber:
 - **Desistir**: volta a andar à toa e fica `CALM_TIME` = 5 s sem perseguir ninguém sozinho (um golpe do jogador nesse tempo ainda o faz perseguir).
 - **Alvo que some** (morreu, renasceu, saiu do bioma): o mob desiste e volta a andar à toa.
 - **Golpe de outro jogador** durante a perseguição não troca o alvo: só o alvo reinicia o tempo de desistir.
-- **Mordida**: alcance = raio do mob + `BITE_REACH` (2) + raio do jogador (1,5), uma a cada `BITE_INTERVAL` (1 s). Usa `CharacterService.hurt(..., "combat")`: o capacete protege. A morte mostra o mob ("Causa: Lobo", chave `death.cause` = "Causa: {cause}", texto `mob.<id>` em `Strings/ptBR.luau`).
+- **Mordida**: alcance = raio do mob + `BITE_REACH` (2) + raio do jogador (1,5), uma a cada `BITE_INTERVAL` (1,5 s). Usa `CharacterService.hurt(..., "combat")`: o capacete protege. A morte mostra o mob ("Causa: Lobo", chave `death.cause` = "Causa: {cause}", texto `mob.<id>` em `Strings/ptBR.luau`).
 - **Borda vermelha** (`MobHostile`): sempre acesa no agressivo; no neutro acende ao ficar bravo e apaga ao desistir; o passivo nunca acende.
 - **Sem pathfinding**: o mob vai reto e escorrega pela beirada (`MobMove.luau`). Um lobo atrás de uma parede fica empurrando a parede, como no Starve.
 
@@ -57,7 +57,7 @@ Os espinhos também ferem os mobs que encostam (`SpikeService`): conta como enco
 
 ## Dano do jogador no mob
 
-O mesmo golpe da coleta (`GatherService`, um a cada 0,5 s) acerta o que estiver mais perto à frente: recurso, peça ou mob. O dano vem do campo `mobDamage` do item na mão (`src/shared/Defs/Items.luau`); sem o campo, vale a mão: `HAND_DAMAGE` = 5 (`MobRules.damageOf`).
+O mesmo golpe da coleta (`GatherService`, um a cada 0,5 s) acerta o que estiver mais perto à frente: recurso, peça, mob, caixa de itens ou outro jogador (veja `combate.md`). O dano vem do campo `mobDamage` do item na mão (`src/shared/Defs/Items.luau`); sem o campo, vale a mão: `HAND_DAMAGE` = 5 (`MobRules.damageOf`).
 
 | Na mão | Dano |
 |---|---:|
@@ -77,8 +77,22 @@ Quando a vida zera (`MobService.damage`):
 
 1. Marca `MobDead` na raiz (o cliente anima a morte) e a raiz some `DEATH_REMOVE` = 0,6 s depois.
 2. Dá os pontos a quem deu o último golpe (uma vez só: mob morto não apanha de novo).
-3. Chama os ouvintes de `MobService.onDeath(listener)`: é o **gancho da caixa de drop** (hoje o mob morto não deixa nada; a caixa vai entrar ali).
+3. Chama os ouvintes de `MobService.onDeath(listener)`: é o **gancho da caixa de drop**. O `CrateService` ouve e cria uma **caixa com o `loot` do mob** (abaixo; veja `combate.md`).
 4. A vaga esfria por `RESPAWN_DELAY` = 30 s e então a população repõe outro.
+
+## Loot (o que o mob deixa)
+
+Cada mob com IA tem `loot = { { id = "<item>", count = N }, ... }` em `Defs/Mobs.luau`. Ao morrer ele vira uma caixa com esses itens, que some em 1 min (`CrateRules.MOB_LIFETIME`) e que qualquer jogador pode saquear ou quebrar.
+
+| Mob | Loot |
+|---|---|
+| Coelho | 1 carne crua, 1 pele de coelho |
+| Lobo | 2 carnes cruas, 1 pele de lobo |
+| Aranha | 2 linhas |
+| Javali | 4 carnes cruas, 1 pele de javali |
+| Falcão | 2 carnes cruas, 4 penas de falcão |
+
+Mob sem `loot` não deixa caixa. Mob novo: basta pôr o `loot` (o `Validate` confere item e quantidade); o modelo da caixa é o id do mob. Detalhes em `combate.md`.
 
 ## População
 
@@ -152,6 +166,7 @@ Os atributos só existem no Play do Studio (somem ao parar) e não mudam nada no
 | Folga do espinho no mob | `MOB_SPIKE_SLACK` em `src/shared/Build/BuildRules.luau` |
 | Raio de percepção, fuga, tempo de desistir, calma, mordida, passeio (inclusive `WANDER_SLACK`), voo, distâncias de nascer, tempo de renascer | constantes em `src/shared/Mobs/MobRules.luau` |
 | Dano de uma arma em mob | `mobDamage` no item (`Defs/Items.luau`; veja `adicionar-item.md`) |
+| O que o mob deixa ao morrer | `loot` do mob em `Defs/Mobs.luau` |
 | Duração e intervalo da teia | `stats.web` do mob |
 | Quanto o falcão sobe e fica translúcido | `FLY_HEIGHT`, `FLY_TRANSPARENCY` em `MobAnimConfig.luau` |
 | Suavização do movimento no cliente | `ROOT_SMOOTHING` em `MobAnimConfig.luau` |
@@ -187,7 +202,6 @@ Quando os outros biomas ficarem jogáveis, o sistema já serve: é só dado.
 
 ## Fora do escopo (por enquanto)
 
-- **Drops**: o mob morto não deixa nada; a caixa de drop entra em `MobService.onDeath`.
 - **Domesticar e montar**: só existe o campo `mountFlies` nos dados.
-- Mobs quebrando construções, telhado (que protegeria de voadores), PvP, bosses e cavernas.
+- Mobs quebrando construções, telhado (que protegeria de voadores), bosses e cavernas. (O PvP e as caixas de drop entraram na G6: `combate.md`.)
 - Busca de caminho inteligente.

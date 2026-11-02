@@ -14,6 +14,8 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		slot = "body",
 		body = { bodyColor = "#DDF3F8", outlineColor = "#1F6F7A" },
 	},
+	-- Skin padrão da caixa de itens (slot "crate", sem campos extras).
+	crate_default = { id = "crate_default", nameKey = "cosmetic.crate_default", slot = "crate" },
 	-- Segunda skin, para testar a troca.
 	body_ember = {
 		id = "body_ember",

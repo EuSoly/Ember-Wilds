@@ -74,7 +74,7 @@ Hoje o jogador só morre para a fome, o frio, os espinhos e os mobs, e quem morr
 - Vida da caixa: **600** (uma parede de madeira tem 1000; picareta de ouro = 30 golpes ≈ 15 s). Dano na caixa = o mesmo dano em construção (`structureDamage`, mão 5).
 - Abrir: até **8 studs** do centro da caixa (o mesmo alcance do baú).
 - Carne crua: fome +15. Carne assada: fome +35; receita na fogueira, 3 s. (Frutinha hoje: +10.)
-- Raio da caixa (para golpe e colisão de construção): 1,5 stud.
+- Raio da caixa (usado como alvo do golpe; a colisão com construção ficou de fora, então a caixa não bloqueia peças): 1,5 stud.
 
 ## Como funciona (decisões)
 

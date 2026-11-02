@@ -17,7 +17,7 @@ local Net = require(script.Parent:WaitForChild("Net"))
 
 export type Screen = ScreenFlow.Screen
 export type Event = ScreenFlow.Event
-export type LifeSummary = { CauseKey: string, Days: number, Points: number, Currency: number }
+export type LifeSummary = { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }
 
 local ScreenState = {}
 

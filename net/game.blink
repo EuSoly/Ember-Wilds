@@ -93,6 +93,8 @@ event RequestSpawn {
 -- Resumo da vida que acabou, para a tela de morte (DeathService.kill).
 -- CauseKey = chave de Strings (ex. "death.cause.dev"); Days = ciclos vividos;
 -- Points = pontos da vida; Currency = Golden Ember concedida de fato (após tetos).
+-- KillerName = nome de quem deu o golpe final (morte por jogador, G6); a tela
+-- mostra o nome no lugar da causa.
 event LifeEnded {
 	From: Server,
 	Type: Reliable,
@@ -101,7 +103,8 @@ event LifeEnded {
 		CauseKey: string(1..48),
 		Days: u16,
 		Points: u32,
-		Currency: u16
+		Currency: u16,
+		KillerName: string(1..64)?
 	}
 }
 
@@ -192,6 +195,49 @@ event ChestTake {
 	Type: Reliable,
 	Call: SingleAsync,
 	Data: Instance?
+}
+
+-- Caixas de itens (G6). Todo morto (jogador ou mob) vira uma caixa que qualquer
+-- um saqueia. O conteúdo vive só no servidor (CrateService) e vai por evento
+-- para quem está olhando a caixa (não cabe em atributo). O cliente só pede; o
+-- servidor confere caixa viva, distância e slot e ignora o inválido. A caixa
+-- pode chegar nil (sumiu entre o clique e o pedido).
+-- Caixa que o cliente está olhando (nil = nenhuma). O servidor responde com
+-- CrateContents e manda de novo a cada mudança enquanto ela for a olhada.
+event CrateWatch {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: Instance?
+}
+
+-- Pegar o slot `Slot` (1 = primeiro de CrateContents.Slots): leva o que couber
+-- no inventário, o resto fica na caixa. `ItemId` = o item que o cliente mostra
+-- nesse slot: os slots sobem quando um esvazia, então se o slot já não tem esse
+-- item o servidor não entrega e reenvia CrateContents a quem pediu.
+event CrateTake {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Crate: Instance?,
+		Slot: u8,
+		ItemId: string(1..32)
+	}
+}
+
+-- Conteúdo da caixa olhada, em ordem (os slots vazios saem e os de trás sobem).
+-- Crate é opcional de propósito: se a caixa não estiver no cliente (streaming),
+-- ela chega nil; com Instance obrigatória o Blink daria erro e perderia os
+-- outros eventos do mesmo pacote. nil no cliente = ignorar.
+event CrateContents {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Crate: Instance?,
+		Slots: Slot[]
+	}
 }
 
 -- Construção livre (G4). Giro escolhido para a próxima peça, em passos de 45°

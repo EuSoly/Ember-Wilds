@@ -1,6 +1,6 @@
 # Sobrevivência
 
-As quatro barras do HUD (vida, fome, temperatura e sede) são calculadas no servidor pelo `SurvivalService` e vão de **0 a 100**. Ele atualiza duas vezes por segundo, então os anéis descem de forma contínua. Cada vida nova começa com tudo cheio.
+As quatro barras do HUD (vida, fome, temperatura e sede) são calculadas no servidor pelo `SurvivalService` e vão de **0 a 100** (a vida, desde a G6, vai de **0 a 200**; veja `combate.md`). Ele atualiza duas vezes por segundo, então os anéis descem de forma contínua. Cada vida nova começa com tudo cheio.
 
 ## Os números
 
@@ -14,7 +14,7 @@ Todos ficam em `src/shared/SurvivalConfig.luau`. Mudou um número, o jogo muda n
 | Frio cai de noite | 1,6 por segundo | ~1 min sem fogo |
 | Na água | frio cai 2× mais rápido; sede **sobe** 5 por segundo | enche a sede em ~20 s |
 | Perto do fogo | frio **sobe** 5 por segundo (mesmo de noite ou na água) | enche em ~20 s |
-| Vida regenera | 0,5 por segundo | só com fome, frio e sede **≥ 35** e sem tomar dano |
+| Vida regenera | 0,5 por segundo (com 200 de vida, enche na metade da velocidade em proporção) | só com fome, frio e sede **≥ 35** e sem tomar dano |
 | Fome vazia | −1,5 de vida por segundo | |
 | Frio, sede ou fôlego vazios | −1 de vida por segundo cada (somam) | tudo vazio = morte em ~30 s |
 | Em cima do fogo (até 3 studs do centro) | esquenta 20 por segundo: enche o frio e, cheio, enche o **calor** | calor cheio em ~5 s |
@@ -22,7 +22,7 @@ Todos ficam em `src/shared/SurvivalConfig.luau`. Mudou um número, o jogo muda n
 | Calor cheio | −1,2 de vida por segundo | a vida só regenera com o calor abaixo de 65 |
 | Frutinha | +10 de fome | |
 
-Vida zerada é morte (a mesma do resto do jogo: perde tudo, pontos viram Golden Ember). A tela de morte mostra a causa: **Fome**, **Frio**, **Calor**, **Sede** ou **Afogado** (a barra que mais tirou vida no fim).
+Vida zerada é morte (a mesma do resto do jogo: pontos viram Golden Ember, e o inventário, a mochila e a armadura vão para uma **caixa** no lugar da morte, que qualquer um pode saquear; veja `combate.md`). A vida tem teto próprio (`StatNames.HealthMax` = 200); as outras barras continuam em `StatNames.StatusMax` = 100, e a comida e a regeneração curam os mesmos pontos de antes. A tela de morte mostra a causa: **Fome**, **Frio**, **Calor**, **Sede** ou **Afogado** (a barra que mais tirou vida no fim).
 
 ## Temperatura: frio + calor por cima
 
@@ -53,7 +53,7 @@ Já existe a base; **ainda não existe nenhum item de armadura**, nem tela para 
   - `coldFactor`, `hungerFactor`, `thirstFactor`: quanto mais devagar a barra cai (0,5 = metade da velocidade; de 0 a 2).
   - `heatFactor`: quanto mais devagar o calor sobe (para as proteções de calor do deserto/lava).
 - Exemplos: capacete de madeira `armor = { defense = 0.2 }`; casaco `armor = { coldFactor = 0.5 }`.
-- A morte tira a armadura (como a mochila).
+- A morte tira a armadura (como a mochila): ela vai **para a caixa** do morto, como item, e outro jogador pode pegá-la.
 - Quem veste é o `ArmorService.wear(player, itemId)` no servidor. Ele não tira o item do inventário: a tela de equipamento, quando existir, cuida disso.
 
 ## Testar no Studio

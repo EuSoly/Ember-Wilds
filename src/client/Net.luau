@@ -168,6 +168,7 @@ Queue.Unreliable[0] = table.create(256)
 Queue.Reliable[9] = table.create(256)
 Queue.Reliable[12] = table.create(256)
 Queue.Reliable[13] = table.create(256)
+Queue.Reliable[18] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
@@ -297,9 +298,9 @@ function SerdesFunctions.WriteEVENT_RequestSpawn(Value: { KitId: string? }): ()
 	end
 end
 
-function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number })
-	-- Read BLOCK: 9 bytes
-	local BLOCK_START = Read(9)
+function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? })
+	-- Read BLOCK: 10 bytes
+	local BLOCK_START = Read(10)
 	local Value = {} :: any
 	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	Value.CauseKey = buffer.readstring(RecieveBuffer, Read(Length), Length)
@@ -308,6 +309,14 @@ function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: numbe
 	Value.Days = buffer.readu16(RecieveBuffer, BLOCK_START + 1)
 	Value.Points = buffer.readu32(RecieveBuffer, BLOCK_START + 3)
 	Value.Currency = buffer.readu16(RecieveBuffer, BLOCK_START + 7)
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 9) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		Value.KillerName = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Value.KillerName < 1 then error(`Expected length of "Value.KillerName" to be larger than or equal to 1, got {#Value.KillerName} instead.`) end
+		if #Value.KillerName > 64 then error(`Expected length of "Value.KillerName" to be smaller than or equal to  64, got {#Value.KillerName} instead.`) end
+	end
 	return Value
 end
 
@@ -411,10 +420,68 @@ function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance?): ()
 	table.insert(SendInstances, Value or Null)
 end
 
+function SerdesFunctions.WriteEVENT_CrateWatch(Value: Instance?): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 16)
+	table.insert(SendInstances, Value or Null)
+end
+
+function SerdesFunctions.WriteEVENT_CrateTake(Value: { Crate: Instance?, Slot: number, ItemId: string }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 17)
+	table.insert(SendInstances, Value.Crate or Null)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Slot)
+	local Length = #Value.ItemId
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.ItemId, Length)
+end
+
+function SerdesFunctions.ReadEVENT_CrateContents(): ({ Crate: Instance?, Slots: { { Id: string, Count: number } } })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value.Crate = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Crate) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Crate)} instead.`) end
+	end
+	-- START ARRAY
+	local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 0)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Slots = table.create(Length)
+		-- Read BLOCK: 3 bytes
+	local ARRAY_START_1 = Read(3 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_0)
+		Item_1.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Id < 1 then error(`Expected length of "Item_1.Id" to be larger than or equal to 1, got {#Item_1.Id} instead.`) end
+		if #Item_1.Id > 32 then error(`Expected length of "Item_1.Id" to be smaller than or equal to  32, got {#Item_1.Id} instead.`) end
+		-- Read 2
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 2
+		Item_1.Count = buffer.readu16(RecieveBuffer, OPERATION_OFFSET_1)
+		if Item_1.Count < 1 then error(`Expected "Item_1.Count" to be larger than or equal to 1, got {Item_1.Count} instead.`) end
+		if Item_1.Count > 65535 then error(`Expected "Item_1.Count" to be smaller than or equal to 65535, got {Item_1.Count} instead.`) end
+		table.insert(Value.Slots, Item_1)
+	end
+	-- END ARRAY
+	return Value
+end
+
 function SerdesFunctions.WriteEVENT_SetBuildRotation(Value: number): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 16)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 19)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
 end
 
@@ -471,6 +538,15 @@ if not RunService:IsRunning() then
 	},
 	ChestTake = {
 		Fire = NOOP
+	},
+	CrateWatch = {
+		Fire = NOOP
+	},
+	CrateTake = {
+		Fire = NOOP
+	},
+	CrateContents = {
+		On = NOOP
 	},
 	SetBuildRotation = {
 		Fire = NOOP
@@ -548,7 +624,7 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				table.insert(Queue.Reliable[2], {Value} :: {any})
 			end
 		elseif Index == 8 then
-			local Value: { CauseKey: string, Days: number, Points: number, Currency: number } = SerdesFunctions.ReadEVENT_LifeEnded()
+			local Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? } = SerdesFunctions.ReadEVENT_LifeEnded()
 			if Events.Reliable[8] ~= nil then
 				task.spawn(Events.Reliable[8], Value)
 			else
@@ -586,6 +662,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"CraftNotice\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[13], {Value} :: {any})
+			end
+		elseif Index == 18 then
+			local Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } } = SerdesFunctions.ReadEVENT_CrateContents()
+			if Events.Reliable[18] ~= nil then
+				task.spawn(Events.Reliable[18], Value)
+			else
+				if #Queue.Reliable[18] > 256 then
+					warn("[Blink]: Event queue of \"CrateContents\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[18], {Value} :: {any})
 			end
 		end
 	end
@@ -686,7 +772,7 @@ local Returns = table.freeze({
 		end
 	},
 	LifeEnded = {
-		On = function(Listener: (Value: { CauseKey: string, Days: number, Points: number, Currency: number }) -> ()): () -> ()
+		On = function(Listener: (Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }) -> ()): () -> ()
 			Events.Reliable[8] = Listener
 			for Index, Arguments in Queue.Reliable[8] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -769,6 +855,30 @@ local Returns = table.freeze({
 	ChestTake = {
 		Fire = function(Value: Instance?): ()
 			SerdesFunctions.WriteEVENT_ChestTake(Value)
+		end
+	},
+	CrateWatch = {
+		Fire = function(Value: Instance?): ()
+			SerdesFunctions.WriteEVENT_CrateWatch(Value)
+		end
+	},
+	CrateTake = {
+		Fire = function(Value: { Crate: Instance?, Slot: number, ItemId: string }): ()
+			SerdesFunctions.WriteEVENT_CrateTake(Value)
+		end
+	},
+	CrateContents = {
+		On = function(Listener: (Value: { Crate: Instance?, Slots: { { Id: string, Count: number } } }) -> ()): () -> ()
+			Events.Reliable[18] = Listener
+			for Index, Arguments in Queue.Reliable[18] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[18] = {}
+			return function (): ()
+				if Events.Reliable[18] == Listener then
+					Events.Reliable[18] = nil
+				end
+			end
 		end
 	},
 	SetBuildRotation = {

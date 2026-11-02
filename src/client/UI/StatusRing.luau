@@ -31,7 +31,8 @@ local HALF_MASK = NumberSequence.new({
 })
 
 export type Props = {
-	value: () -> number, -- 0 a StatNames.StatusMax
+	value: () -> number, -- 0 a max
+	max: number?, -- valor cheio; padrão StatNames.StatusMax (a vida usa HealthMax)
 	color: Color3 | () -> Color3, -- fixa ou reativa (o anel de temperatura troca de cor)
 	name: string,
 	-- Alerta (pulso) e crítico (trilho piscando). Padrão: abaixo de 35% / zerado.
@@ -80,7 +81,7 @@ end
 
 local function StatusRing(props: Props): Frame
 	local fraction = vide.derive(function()
-		return UIMath.fraction(props.value(), StatNames.StatusMax)
+		return UIMath.fraction(props.value(), props.max or StatNames.StatusMax)
 	end)
 	local rightRotation = vide.derive(function()
 		local right = UIMath.ringRotations(fraction())

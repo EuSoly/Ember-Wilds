@@ -212,7 +212,7 @@ export type MobBehavior = "passive" | "neutral" | "aggressive"
 
 export type MobStats = {
 	health: number,
-	bite: number?, -- dano da mordida (vida do jogador, 0–100); nil = não morde
+	bite: number?, -- dano da mordida (vida do jogador, escala 0–200, StatNames.HealthMax); nil = não morde
 	speed: number, -- studs/s
 	radius: number, -- círculo do corpo no chão
 	points: number, -- pontos para quem mata
@@ -222,12 +222,15 @@ export type MobStats = {
 -- Quantos mobs o bioma mantém vivos de dia e de noite.
 export type MobPopulation = { day: number, night: number }
 
+export type MobLoot = { id: string, count: number }
+
 export type MobDef = {
 	id: string,
 	nameKey: string,
 	behavior: MobBehavior,
 	stats: MobStats?, -- nil = ainda sem IA/servidor (só visual)
 	population: { [string]: MobPopulation }?, -- por id de bioma (WorldConfig.BIOMES)
+	loot: { MobLoot }?, -- o que a caixa do mob guarda ao morrer
 	mountFlies: boolean?, -- gancho: montado, voa (montaria ainda não existe)
 }
 

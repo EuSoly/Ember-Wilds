@@ -501,6 +501,20 @@ local function validateMobPopulation(errors: { string }, key: string, mob: Types
 	end
 end
 
+local function validateMobLoot(errors: { string }, key: string, mob: Types.MobDef, items: { [string]: Types.ItemDef }?)
+	if mob.loot == nil then
+		return
+	end
+	for index, entry in mob.loot do
+		if items ~= nil and items[entry.id] == nil then
+			table.insert(errors, `Mob "{key}": loot[{index}] usa item inexistente "{entry.id}"`)
+		end
+		if not isWholeNumber(entry.count, 1) then
+			table.insert(errors, `Mob "{key}": loot[{index}] precisa de count inteiro maior ou igual a 1`)
+		end
+	end
+end
+
 local function validateMobs(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
 	-- Tabela ausente (testes antigos) conta como vazia.
 	local mobs: { [string]: Types.MobDef } = (defs :: any).Mobs or {}
@@ -512,6 +526,7 @@ local function validateMobs(errors: { string }, defs: Types.DefsTables, hasStrin
 		end
 		validateMobStats(errors, key, mob)
 		validateMobPopulation(errors, key, mob)
+		validateMobLoot(errors, key, mob, defs.Items)
 	end
 end
 
