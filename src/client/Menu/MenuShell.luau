@@ -18,6 +18,7 @@ local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Templa
 local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
+local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 
 local create = vide.create
 
@@ -186,8 +187,15 @@ local function topBar(): { Frame }
 	return { left, right }
 end
 
--- Painel placeholder: título e botão de fechar (volta a "play").
+-- Conteúdo de cada painel, abaixo do título; quem não está aqui fica só com
+-- título e botão de fechar. Os builders rodam uma vez, dentro do root Vide.
+local CONTENT: { [MenuState.Panel]: () -> Instance } = {
+	cosmetics = CosmeticsPanel.build,
+}
+
+-- Painel: título, botão de fechar (volta a "play") e o conteúdo do CONTENT.
 local function panelFrame(panel: MenuState.Panel): Frame
+	local content = CONTENT[panel]
 	return Kit.panel({
 		Name = "Panel_" .. panel,
 		Visible = function()
@@ -227,6 +235,7 @@ local function panelFrame(panel: MenuState.Panel): Frame
 				maxSize = 22,
 			}),
 		}),
+		if content then content() else nil,
 	})
 end
 
