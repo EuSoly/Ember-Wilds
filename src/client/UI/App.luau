@@ -10,6 +10,7 @@ local ScreenState = require(script.Parent.Parent:WaitForChild("ScreenState"))
 local AimStick = require(script.Parent:WaitForChild("AimStick"))
 local Backpack = require(script.Parent:WaitForChild("Backpack"))
 local ChestPanel = require(script.Parent:WaitForChild("ChestPanel"))
+local CratePanel = require(script.Parent:WaitForChild("CratePanel"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
 local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
@@ -37,6 +38,7 @@ local function App(): ScreenGui
 		RecipeBookButton(),
 		Notifications.Component(),
 		ChestPanel(),
+		CratePanel(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),
 		RotateButton(),

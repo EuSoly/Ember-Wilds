@@ -27,6 +27,7 @@ return table.freeze({
 	["hud.nightComing"] = "A noite está chegando",
 	["hud.backpack"] = "Mochila",
 	["hud.rotate"] = "Girar",
+	["hud.crate"] = "Caixa",
 
 	-- Itens
 	["item.wood"] = "Madeira",
