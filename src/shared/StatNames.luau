@@ -81,6 +81,13 @@ return table.freeze({
 	MobDevRadius = "RaioCorpo",
 	MobDevShowBody = "MostrarCorpo",
 	MobDevPeaceful = "Pacifico",
+	-- Tamanho de cada ferramenta/arma: atributo nos modelos de Assets.Tools
+	-- (1 = tamanho importado), salvo com o place. No Studio, mudar o valor
+	-- refaz o item na mão na hora. Veja docs/guia/boneco.md.
+	ToolScale = "Tamanho",
+	-- Onde a mão segura: studs ao longo da arma a partir do Grip importado
+	-- (positivo = mão mais perto da ponta). Mesmo esquema do Tamanho.
+	ToolGrip = "Pegada",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",

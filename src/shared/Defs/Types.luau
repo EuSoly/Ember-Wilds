@@ -73,7 +73,12 @@ export type ItemDef = {
 	-- A lança empurra: fugindo e batendo para trás, o mob da floresta não alcança.
 	-- Só mob: nunca empurra jogador (no PvP seria forte demais; decisão do Elizeu).
 	knockback: number?,
+	-- Animação do golpe com o item na mão: "swing" (padrão, arco de lado, como a
+	-- picareta e a espada) ou "thrust" (estocada para a frente: as lanças). Só visual.
+	attackAnim: AttackAnim?,
 }
+
+export type AttackAnim = "swing" | "thrust"
 
 export type CraftStation = "workbench" | "fire"
 export type RecipeIngredient = { id: string, count: number }

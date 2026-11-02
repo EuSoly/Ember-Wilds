@@ -20,6 +20,7 @@ local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
@@ -41,6 +42,7 @@ type Entry = {
 	anim: BonecoAnim.State,
 	expression: ExpressionState.State,
 	hasTool: boolean,
+	thrust: boolean, -- o item na mão golpeia com estocada (attackAnim "thrust")
 	lastPosition: Vector3,
 	eyes: Defs.EyeStyle,
 	flash: string?,
@@ -125,6 +127,7 @@ end
 local function applyEquipped(entry: Entry, id: string?)
 	entry.equippedId = id
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id)
+	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
 end
 
 -- Só mostra a careta se o dano for recente: um HurtAt antigo chega quando o
@@ -179,6 +182,7 @@ local function build(character: Model, hrp: BasePart)
 		anim = BonecoAnim.newState(),
 		expression = ExpressionState.new(),
 		hasTool = false,
+		thrust = false,
 		lastPosition = hrp.Position,
 		eyes = "open",
 		flash = nil,
@@ -255,6 +259,7 @@ local function animate(entry: Entry, dt: number, speed: number, now: number)
 		using = character:GetAttribute(StatNames.Using) == true
 			and not (character == Players.LocalPlayer.Character and CraftState.isCrafting()),
 		hasTool = entry.hasTool,
+		thrust = entry.thrust,
 	})
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
@@ -360,6 +365,29 @@ function BonecoRenderer.start()
 	end)
 	for _, character in CollectionService:GetTagged(StatNames.BonecoTag) do
 		add(character)
+	end
+
+	-- Studio: mudou o Tamanho ou a Pegada de um modelo de Assets.Tools (ajuste ao
+	-- vivo, na vista do Client ou do Server): refaz esse item na mão de quem o segura.
+	if RunService:IsStudio() then
+		task.spawn(function()
+			local assets = ReplicatedStorage:WaitForChild("Assets", 10)
+			local tools = assets and assets:WaitForChild("Tools", 10)
+			if tools == nil then
+				return
+			end
+			for _, template in tools:GetChildren() do
+				local function refresh()
+					for _, entry in entries do
+						if entry.equippedId == template.Name then
+							applyEquipped(entry, entry.equippedId)
+						end
+					end
+				end
+				template:GetAttributeChangedSignal(StatNames.ToolScale):Connect(refresh)
+				template:GetAttributeChangedSignal(StatNames.ToolGrip):Connect(refresh)
+			end
+		end)
 	end
 
 	-- Prioridade Character: depois da câmera e do input, antes do desenho do

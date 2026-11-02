@@ -39,7 +39,7 @@ Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService
 | `src/shared/Defs/CosmeticSlots.luau`, `Cosmetics.luau`, `Expressions.luau` | Skins e expressões como dados |
 | `src/shared/Models/CharacterBody.luau` | O corpo simulado |
 | `src/client/Boneco/BonecoModel.luau` | Monta o boneco visual (peças, cores, olhos, ferramenta, nome) |
-| `src/shared/Models/ToolModel.luau` | Clona a picareta pelo id do item em `ReplicatedStorage.Assets.Tools` |
+| `src/shared/Models/ToolModel.luau` | Clona a ferramenta ou arma pelo id do item em `ReplicatedStorage.Assets.Tools` (no `Tamanho` escolhido) |
 | `src/client/Boneco/BonecoRenderer.luau` | O loop que segue, anima e troca expressões de todos os bonecos |
 | `src/server/Services/CharacterService.luau` | `StarterCharacter`, tag, `hurt` (a função única de dano) |
 | `src/server/Services/CosmeticService.luau` | Posse e skin equipada de cada jogador (salvas no perfil) |
@@ -96,6 +96,9 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `SWING_ARC` | Quanto (graus) a mão da ferramenta gira no golpe |
 | `OTHER_HAND_RECOIL` | Quanto a outra mão recua durante o golpe |
 | `PUNCH_DISTANCE` | Alcance do soco de mão vazia |
+| `THRUST_HOLD_BACK` | Segurando a lança, quanto as mãos recuam para o lado do corpo |
+| `THRUST_DISTANCE` | Quanto a mão da lança avança na estocada (do lado para a frente do corpo) |
+| `THRUST_REST_ANGLE` | Ângulo (graus) da lança em repouso (0 = reto; negativo = ponta para dentro) |
 
 **Desempenho e expressões**
 
@@ -105,15 +108,38 @@ Com os valores atuais o centro do colisor fica a `HIP_HEIGHT + ROOT_HEIGHT / 2 =
 | `HURT_RECENT` | Um `HurtAt` mais velho que isso (s) não mostra a careta (ex.: chegou pelo streaming) |
 | `MAX_DT` | Limite do passo de tempo: um quadro travado não faz a animação pular |
 
+**Arco ou estocada.** O jeito do golpe é do item, em `Defs/Items.luau`: sem nada (ou `attackAnim = "swing"`), a mão gira de lado como a picareta; com `attackAnim = "thrust"` (as lanças, como no Starve), as mãos ficam do lado do corpo, a lança aponta para a frente (um pouco para dentro) e na estocada a mão vai do lado para a frente do corpo e volta. As espadas batem no arco, como a picareta. Uma arma nova ganha a estocada só com essa linha.
+
 Depois de mexer em animação, rode `bash scripts/check.sh`: os testes de `BonecoAnim` conferem que as curvas continuam certas.
 
-### Modelos das picaretas
+### Tamanho e pegada de cada ferramenta e arma
 
-Cada picareta em `ReplicatedStorage.Assets.Tools` é um **Model** com o mesmo nome do id em `Defs/Items.luau` (por exemplo, `wood_pickaxe`) e `PrimaryPart = Handle`. O `Handle` deve conter o attachment `Grip`, posicionado na parte baixa do cabo: eixo local **Y ao longo do cabo, em direção à cabeça**, X atravessando a largura da cabeça e Z na espessura da ferramenta. Esses eixos são os do attachment, não necessariamente os da MeshPart importada.
+Cada modelo em `ReplicatedStorage.Assets.Tools` tem dois atributos:
 
-O boneco alinha o Y do Grip com a direção para a frente da mão (`LookVector`) e o X com a lateral (`RightVector`), aplicando o ângulo de repouso para fora. Assim a picareta fica deitada no plano do chão, com a cabeça afastada da mão e visível de cima. O golpe existente gira mão e ferramenta juntas no plano horizontal. Solde as outras peças ao `Handle`; o renderer desliga ancoragem, massa e colisões dos clones e preserva os materiais dos MeshParts. `ToolModel` clona o Model como `HeldItem`. Não use `StarterPack` nem uma Tool padrão: o jogo tem inventário e hotbar próprios.
+- **`Tamanho`** (1 = como foi importado): escala o item na mão, com o encaixe junto.
+- **`Pegada`** (studs, 0 = encaixe importado): desliza onde a mão segura ao longo do item. Positivo = a mão vai para a ponta (sobra mais cabo atrás); negativo = para o fim do cabo.
 
-Os modelos importados ficam salvos no place, fora do Rojo. Para reaplicar o encaixe aprovado às seis picaretas atuais após uma reimportação, execute `scripts/studio/align-pickaxe-grips.luau` na Command Bar, em **Edit**, e salve o place. O script posiciona Grip e RightGripAttachment em `(0, -1.25, 0.02437)` nas coordenadas do pivô de cada modelo, preserva as malhas e permite desfazer. Essa posição corresponde aos assets atuais; modelos com outro tamanho ou pivô precisam de um Grip ajustado ao próprio cabo.
+Mesmo esquema dos mobs:
+
+- **No Play**, na vista do **Client** (a padrão, onde você vê o jogo; na vista do Server os bonecos não aparecem, porque o visual é só do cliente), mude o `Tamanho` ou a `Pegada` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: antes de parar, me peça para ler os valores (do cliente) e gravar no place, ou anote os que gostou.
+- **No Edit**, mude os atributos e salve o place: fica valendo para sempre.
+- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item, parados; o nome do boneco é o id do item. Para vê-los golpeando, marque o atributo `Golpear` da pasta `Workspace.DevWeapons` na vista do **Server** (quem manda os bonecos golpearem é o servidor) e volte para a do Client para ver. `Invoke(false)` apaga.
+
+### Modelos de mão (ferramentas, armas e outros)
+
+Tudo o que vai na mão fica em `ReplicatedStorage.Assets.Tools` (salvo no place, fora do Rojo): um **Tool** com o mesmo nome do id do item (por exemplo, `wood_pickaxe`), `PrimaryPart = Handle` e o attachment **`Grip`** no `Handle`, onde a mão segura: eixo local **Y para a cabeça/ponta**, X para o lado e Z para cima. O boneco alinha o Y do Grip com a frente da mão e o X com a lateral, girando o ângulo de repouso (`SWING_REST_ANGLE` para fora; nas lanças, `THRUST_REST_ANGLE`). O `ToolModel` clona o modelo como `HeldItem`; o renderer desliga ancoragem, massa e colisões. Não use `StarterPack` nem Tool padrão: o jogo tem inventário e hotbar próprios.
+
+Hoje são 47 modelos, todos do Blender do Elizeu (`assets/weapons/` e os de `Workspace["picaretas-e-ferramentas"]`): picaretas, martelos, pás, espadas, lanças, forcados, escudos, livro, balde, facão, regador e chave inglesa. Só madeira/pedra/ouro de espada e lança e as 6 picaretas são itens do jogo; os outros esperam virar itens em `Defs/Items.luau`. As picaretas antigas ficaram em `ServerStorage.ToolsAntigos`.
+
+**Como um modelo novo entra (passo a passo):**
+
+1. Exporte do Blender e importe no Studio numa pasta do Workspace (MeshParts deitados, como vêm do Blender).
+2. **Importar:** em **Edit**, rode `scripts/studio/import-tools.luau` (troque `SOURCE_NAME` pela pasta) na barra de comandos. Ele cria o Tool em `Assets.Tools` com um Grip de partida (mão perto do fim do cabo, pela geometria) e guarda em `ServerStorage.ToolsAntigos` um modelo que já existisse com o mesmo nome. As espadas e lanças usaram `scripts/studio/import-weapons.luau`, que acha o eixo pela de madeira de cada tipo.
+3. **Ajustar na bancada:** rode `scripts/studio/weapon-bench.luau` com `MODE = "montar"`. Aparece `Workspace.BancadaArmas`, um boneco travado por modelo (uma fileira por tipo), segurando o item como no jogo. Mova, gire e redimensione o `Item` de cada um até a mão segurar certo.
+4. **Captar:** rode de novo com `MODE = "captar"`. O ponto e o giro da mão viram o `Grip` do modelo; o tamanho também (num modelo de uma peça, o tamanho exato do `Handle`, até diferente por eixo; no de várias peças, o `Tamanho`). Depois `MODE = "apagar"` e **salve o place**.
+5. **Conferir no jogo:** no Play, `game.ServerStorage.DevWeapons:Invoke(true)` (barra de comandos, lado servidor) põe a galeria de todos os modelos em volta do seu boneco. No Studio a galeria mostra até os modelos que ainda não são itens; o livro (`book`) não aparece porque é item de outro tipo (só ferramentas e armas vão para a mão).
+
+Cuidado: rodar um script de importação de novo **substitui** o modelo e perde o Grip e o tamanho ajustados na bancada (só `Tamanho` e `Pegada` são mantidos). Para trocar só o desenho de um item, importe e ajuste de novo na bancada.
 
 ## Adicionar uma skin de corpo
 

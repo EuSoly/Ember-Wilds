@@ -1,6 +1,7 @@
 --!strict
 -- Matemática das animações do boneco: parado (respira), andar (quique e
--- balanço das mãos), golpe com ferramenta e soco alternado de mão vazia.
+-- balanço das mãos), golpe com ferramenta (arco de lado, ou estocada para a
+-- frente nas lanças, attackAnim "thrust") e soco alternado de mão vazia.
 -- Pura (sem APIs do Roblox): o renderer do cliente transforma a Pose em
 -- CFrames, e os testes do Lune verificam as curvas.
 local C = require("./BonecoConfig")
@@ -9,8 +10,8 @@ local C = require("./BonecoConfig")
 -- radianos em torno do pivô do golpe (centro do corpo).
 export type HandPose = { x: number, y: number, z: number, yaw: number }
 export type Pose = { bodyY: number, left: HandPose, right: HandPose }
--- speed = studs/s no plano.
-export type Input = { speed: number, using: boolean, hasTool: boolean }
+-- speed = studs/s no plano. thrust = o item na mão golpeia com estocada.
+export type Input = { speed: number, using: boolean, hasTool: boolean, thrust: boolean? }
 
 -- Estado interno de um boneco. Quem usa só passa adiante (não mexa nos campos).
 export type State = {
@@ -93,12 +94,17 @@ function BonecoAnim.step(state: State, dt: number, input: Input): Pose
 	local sway = C.HAND_SWAY * math.sin(state.phase) * walk
 	local breathe = C.BREATHE_HEIGHT * math.sin(TWO_PI * state.time / C.BREATHE_PERIOD) * (1 - walk)
 
-	local left: HandPose = { x = 0, y = breathe, z = sway, yaw = 0 }
-	local right: HandPose = { x = 0, y = breathe, z = -sway, yaw = 0 }
+	-- Com arma de estocada (lança), as duas mãos ficam do lado do corpo.
+	local hold = if input.hasTool and input.thrust then C.THRUST_HOLD_BACK else 0
+	local left: HandPose = { x = 0, y = breathe, z = hold + sway, yaw = 0 }
+	local right: HandPose = { x = 0, y = breathe, z = hold - sway, yaw = 0 }
 
 	if state.swingActive then
 		local c = BonecoAnim.swingCurve(state.swingTime / C.SWING_PERIOD)
-		if input.hasTool then
+		if input.hasTool and input.thrust then
+			right.z -= C.THRUST_DISTANCE * c
+			left.z += C.OTHER_HAND_RECOIL * c
+		elseif input.hasTool then
 			right.yaw = math.rad(C.SWING_ARC) * c
 			left.z = C.OTHER_HAND_RECOIL * c
 		elseif state.swingCount % 2 == 1 then
