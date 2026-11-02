@@ -4,9 +4,26 @@ local C = require("./MobAnimConfig")
 export type GroupPose = { x: number, y: number, z: number, yaw: number, scale: number }
 -- blink: 0 = olhos abertos, 1 = fechados. outline: 0 = borda do modelo, 1 = vermelha.
 -- angry: 0 ou 1, cara de brava (olhos semicerrados e sobrancelhas).
-export type Pose = { groups: { [string]: GroupPose }, flash: number, blink: number, outline: number, angry: number }
+-- fly: 0 (no chão) a 1 (voando), sobe e desce em FLY_FADE s.
+export type Pose = {
+	groups: { [string]: GroupPose },
+	flash: number,
+	blink: number,
+	outline: number,
+	angry: number,
+	fly: number,
+}
 -- hostile: o mob quer atacar agora (atributo MobHostile da raiz).
-export type Input = { config: C.Mob, speed: number, attack: number, hurt: number, dead: boolean, hostile: boolean }
+-- flying: o mob está no ar (atributo MobFlying da raiz).
+export type Input = {
+	config: C.Mob,
+	speed: number,
+	attack: number,
+	hurt: number,
+	dead: boolean,
+	hostile: boolean,
+	flying: boolean,
+}
 export type State = {
 	time: number,
 	phase: number,
@@ -21,6 +38,7 @@ export type State = {
 	blinkClock: number,
 	outline: number,
 	angryTime: number,
+	fly: number,
 }
 
 local A = {}
@@ -30,7 +48,7 @@ local EPS = 1e-9
 
 -- seed (0–1): atraso do piscar, para os mobs não piscarem todos juntos.
 -- hostile: começa já com a borda da cor certa, sem transição.
-function A.newState(attack: number?, hurt: number?, seed: number?, hostile: boolean?): State
+function A.newState(attack: number?, hurt: number?, seed: number?, hostile: boolean?, flying: boolean?): State
 	return {
 		time = 0,
 		phase = 0,
@@ -45,6 +63,7 @@ function A.newState(attack: number?, hurt: number?, seed: number?, hostile: bool
 		blinkClock = ((seed or 0) % 1) * C.BLINK_PERIOD,
 		outline = if hostile then 1 else 0,
 		angryTime = C.ANGRY_DURATION,
+		fly = if flying then 1 else 0,
 	}
 end
 
@@ -57,7 +76,7 @@ function A.restPose(config: C.Mob): Pose
 	for name in config.groups do
 		groups[name] = groupPose()
 	end
-	return { groups = groups, flash = 0, blink = 0, outline = 0, angry = 0 }
+	return { groups = groups, flash = 0, blink = 0, outline = 0, angry = 0, fly = 0 }
 end
 
 local function pulse(time: number, duration: number): number
@@ -81,6 +100,13 @@ function A.step(state: State, dt: number, input: Input): Pose
 	local pose = A.restPose(input.config)
 	local body = pose.groups.Body
 	pose.outline = stepOutline(state, dt, input.hostile)
+	-- Morto não voa: desce junto com o encolher da morte.
+	local flyChange = dt / C.FLY_FADE
+	local flyTarget = if input.flying and not input.dead and not state.dead then 1 else 0
+	state.fly = if state.fly < flyTarget
+		then math.min(flyTarget, state.fly + flyChange)
+		else math.max(flyTarget, state.fly - flyChange)
+	pose.fly = state.fly
 	if input.dead and not state.dead then
 		state.dead = true
 		state.deathScale = 1 + C.BREATHE_SCALE * math.sin(TWO_PI * state.time / C.IDLE_PERIOD) * (1 - state.walk)

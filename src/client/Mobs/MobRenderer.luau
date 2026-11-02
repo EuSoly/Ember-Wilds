@@ -16,6 +16,7 @@ type Entry = {
 	visual: V.Visual,
 	state: A.State,
 	lastPosition: Vector3,
+	displayed: CFrame, -- posição mostrada: segue a raiz (10 Hz) com suavização
 	resting: A.Pose,
 	seed: number, -- atraso do piscar deste mob (0–1)
 }
@@ -24,6 +25,7 @@ local entries: { [BasePart]: Entry } = {}
 local folder: Folder? = nil
 local started = false
 local random = Random.new()
+local TELEPORT_DISTANCE = 30 -- acima disto o mostrado pula direto para a raiz
 
 local function counter(root: BasePart, name: string): number
 	local value = root:GetAttribute(name)
@@ -56,9 +58,11 @@ local function add(root: BasePart, id: string): Entry?
 			counter(root, Names.MobAttack),
 			counter(root, Names.MobHurt),
 			seed,
-			root:GetAttribute(Names.MobHostile) == true
+			root:GetAttribute(Names.MobHostile) == true,
+			root:GetAttribute(Names.MobFlying) == true
 		),
 		lastPosition = root.Position,
+		displayed = root.CFrame,
 		resting = A.restPose(config),
 		seed = seed,
 	}
@@ -96,29 +100,42 @@ local function update(dt: number)
 		if not entry then
 			continue
 		end
-		local target = root.CFrame
+		-- A raiz anda em passos de 10 Hz: o mostrado a segue com suavização
+		-- exponencial; a velocidade da animação sai do mostrado.
+		local goal = root.CFrame
+		local alpha = 1 - math.exp(-C.ROOT_SMOOTHING * math.clamp(dt, 0, C.MAX_DT))
+		local target = if (goal.Position - entry.displayed.Position).Magnitude > TELEPORT_DISTANCE
+			then goal -- salto grande (renasceu/teletransporte): não desliza
+			else entry.displayed:Lerp(goal, alpha)
+		entry.displayed = target
 		local delta = target.Position - entry.lastPosition
 		entry.lastPosition = target.Position
 		local speed = if dt > 0 then Vector2.new(delta.X, delta.Z).Magnitude / dt else 0
 		local attack, hurt = counter(root, Names.MobAttack), counter(root, Names.MobHurt)
 		local dead = root:GetAttribute(Names.MobDead) == true
 		local hostile = root:GetAttribute(Names.MobHostile) == true
+		local flying = root:GetAttribute(Names.MobFlying) == true
 		local pose: A.Pose
 		if camera == nil or (target.Position - camera.CFrame.Position).Magnitude <= C.ANIM_RANGE then
-			pose = A.step(
-				entry.state,
-				dt,
-				{ config = entry.config, speed = speed, attack = attack, hurt = hurt, dead = dead, hostile = hostile }
-			)
+			pose = A.step(entry.state, dt, {
+				config = entry.config,
+				speed = speed,
+				attack = attack,
+				hurt = hurt,
+				dead = dead,
+				hostile = hostile,
+				flying = flying,
+			})
 		else
 			-- Não guarda eventos fora do alcance para dispará-los ao voltar.
 			local latchedDead = dead or entry.state.dead
-			entry.state = A.newState(attack, hurt, entry.seed, hostile)
+			entry.state = A.newState(attack, hurt, entry.seed, hostile, flying)
 			entry.state.dead = latchedDead
 			entry.state.deathTime = if latchedDead then C.DEATH_DURATION else 0
 			pose = entry.resting
 			pose.groups.Body.scale = if latchedDead then 0 else 1
 			pose.outline = if hostile then 1 else 0
+			pose.fly = if flying and not latchedDead then 1 else 0
 		end
 		V.append(entry.visual, target, pose, parts, frames)
 	end

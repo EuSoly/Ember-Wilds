@@ -166,6 +166,9 @@ function V.append(visual: Visual, root: CFrame, pose: A.Pose, parts: { BasePart 
 	local hidden = pose.groups.Body.scale <= 0
 	local recolor = pose.flash ~= visual.lastFlash or pose.outline ~= visual.lastOutline
 	local angry = pose.angry > 0.5
+	-- Voo: tudo sobe e fica translúcido (as juntas partem da raiz já elevada).
+	root += Vector3.new(0, C.FLY_HEIGHT * pose.fly, 0)
+	local flyTransparency = C.FLY_TRANSPARENCY * pose.fly
 	for _, g in visual.groups do
 		local parent = visual.groups[g.parent]
 		local parentFrame = if parent then parent.frame else root
@@ -197,7 +200,7 @@ function V.append(visual: Visual, root: CFrame, pose: A.Pose, parts: { BasePart 
 				or (piece.kind == "sparkle" and pose.blink > 0.5)
 				or (piece.kind == "eye" and angry and piece.hasAngry)
 				or (piece.kind == "angryEye" and not angry)
-			local transparency = if gone then 1 else piece.transparency
+			local transparency = if gone then 1 else math.max(piece.transparency, flyTransparency)
 			if transparency ~= piece.shownTransparency then
 				piece.shownTransparency = transparency
 				part.Transparency = transparency

@@ -149,6 +149,12 @@ return table.freeze({
 	OUTLINE_FADE = 0.25, -- segundos para a borda trocar de cor
 	SIZE_STEP = 0.002, -- o cliente só troca o Size das peças quando a escala anda isso
 
+	-- Voo (falcão etc.): sobe FLY_HEIGHT studs e fica translúcido, em FLY_FADE s.
+	FLY_HEIGHT = 6,
+	FLY_TRANSPARENCY = 0.4,
+	FLY_FADE = 0.4,
+	ROOT_SMOOTHING = 15, -- suavização da posição mostrada (segue a raiz a 10 Hz)
+
 	FLASH_COLOR = { 1, 0.35, 0.3 },
 	Mobs = table.freeze({
 		rabbit = mob(ears()),

@@ -10,7 +10,7 @@ local function near(a: number, b: number)
 end
 
 local function input(id: string): A.Input
-	return { config = C.Mobs[id], speed = 0, attack = 0, hurt = 0, dead = false, hostile = false }
+	return { config = C.Mobs[id], speed = 0, attack = 0, hurt = 0, dead = false, hostile = false, flying = false }
 end
 
 -- O piscar fica de fora: tem ciclo próprio e é testado à parte.
@@ -242,6 +242,35 @@ return {
 		local state = A.newState()
 		inp.dead = true
 		assert(A.step(state, 1 / 60, inp).blink == 1, "morto de olho fechado")
+	end,
+
+	["fly rises to 1 in FLY_FADE and returns to 0"] = function()
+		local inp = input("hawk")
+		local state = A.newState()
+		inp.flying = true
+		local half = advance(state, C.FLY_FADE / 2, inp)
+		assert(half.fly > 0.4 and half.fly < 0.6, "sobe aos poucos")
+		near(advance(state, C.FLY_FADE, inp).fly, 1)
+		inp.flying = false
+		near(advance(state, C.FLY_FADE / 2, inp).fly, 0.5)
+		near(advance(state, C.FLY_FADE, inp).fly, 0)
+		near(
+			A.step(
+				A.newState(0, 0, 0, false, true),
+				0,
+				{ config = C.Mobs.hawk, speed = 0, attack = 0, hurt = 0, dead = false, hostile = false, flying = true }
+			).fly,
+			1
+		)
+	end,
+
+	["dead mobs do not fly"] = function()
+		local inp = input("hawk")
+		local state = A.newState()
+		inp.flying, inp.dead = true, true
+		near(advance(state, C.FLY_FADE, inp).fly, 0)
+		local flying = A.newState(0, 0, 0, false, true)
+		near(advance(flying, C.FLY_FADE, inp).fly, 0)
 	end,
 
 	["outline fades to red while hostile and back when calm"] = function()
