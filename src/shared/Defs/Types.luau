@@ -69,6 +69,9 @@ export type ItemDef = {
 	equipLock: number?,
 	-- Studs a mais de alcance do golpe (ausente = 0). A lança alcança mais longe.
 	reach: number?,
+	-- Studs que o golpe empurra o mob para longe de quem bateu (ausente = 0).
+	-- A lança empurra: fugindo e batendo para trás, o mob da floresta não alcança.
+	knockback: number?,
 }
 
 export type CraftStation = "workbench" | "fire"

@@ -16,6 +16,11 @@ function HeldItem.reach(item: Types.ItemDef?): number
 	return if item and item.reach then item.reach else 0
 end
 
+-- Studs que o golpe empurra o mob para longe de quem bateu.
+function HeldItem.knockback(item: Types.ItemDef?): number
+	return if item and item.knockback then item.knockback else 0
+end
+
 -- O item na mão ainda está preso (não dá para trocar de slot)? `lockUntil` é
 -- o atributo EquipLockUntil do personagem (instante do servidor).
 function HeldItem.isLocked(item: Types.ItemDef?, lockUntil: any, now: number): boolean

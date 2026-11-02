@@ -740,6 +740,9 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 	if item.equipLock ~= nil and not isPositive(item.equipLock) then
 		table.insert(errors, `Item "{key}": equipLock deve ser maior que 0`)
 	end
+	if item.knockback ~= nil and not isPositive(item.knockback) then
+		table.insert(errors, `Item "{key}": knockback deve ser maior que 0`)
+	end
 	if item.reach ~= nil and not isPositive(item.reach) then
 		table.insert(errors, `Item "{key}": reach deve ser maior que 0`)
 	end

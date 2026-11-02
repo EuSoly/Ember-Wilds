@@ -37,6 +37,7 @@ local Workspace = game:GetService("Workspace")
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local DayCycle = require(ReplicatedStorage.Shared.DayCycle)
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local MobBrain = require(ReplicatedStorage.Shared.Mobs.MobBrain)
 local MobMove = require(ReplicatedStorage.Shared.Mobs.MobMove)
 local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
@@ -398,27 +399,40 @@ local function bite(mob: Mob, character: Model, web: boolean)
 end
 
 -- Anda o que a intenção pede; devolve a nova CFrame da raiz, ou nil se nada mudou.
+-- Anda `distance` na direção dada, escorregando pelos obstáculos (voando só
+-- não sai do bioma). Devolve a nova posição; não mexe no mob.
+local function slide(
+	mob: Mob,
+	dirX: number,
+	dirZ: number,
+	distance: number,
+	bodies: { MobBrain.Seen }
+): (number, number)
+	local x, z = mob.x, mob.z
+	local rect = mob.rect
+	local circles: { MobMove.Circle }
+	local blocked: (number, number) -> boolean
+	if mob.flying then
+		-- Voando passa por cima de tudo; só não sai do bioma.
+		circles = {}
+		blocked = function(px: number, pz: number): boolean
+			return not inRect(rect, px, pz)
+		end
+	else
+		circles = circlesAround(mob, x, z, mob.radius + distance, bodies)
+		blocked = function(px: number, pz: number): boolean
+			return not inRect(rect, px, pz) or WaterSim.isWet(px, pz)
+		end
+	end
+	return MobMove.step(x, z, dirX, dirZ, distance, mob.radius, circles, blocked)
+end
+
 local function move(mob: Mob, intent: MobBrain.Intent, dt: number, bodies: { MobBrain.Seen }): CFrame?
 	local hasDir = intent.dirX ~= 0 or intent.dirZ ~= 0
 	local distance = intent.speed * dt
 	local x, z = mob.x, mob.z
 	if hasDir and distance > 0 then
-		local rect = mob.rect
-		local circles: { MobMove.Circle }
-		local blocked: (number, number) -> boolean
-		if mob.flying then
-			-- Voando passa por cima de tudo; só não sai do bioma.
-			circles = {}
-			blocked = function(px: number, pz: number): boolean
-				return not inRect(rect, px, pz)
-			end
-		else
-			circles = circlesAround(mob, x, z, mob.radius + distance, bodies)
-			blocked = function(px: number, pz: number): boolean
-				return not inRect(rect, px, pz) or WaterSim.isWet(px, pz)
-			end
-		end
-		x, z = MobMove.step(x, z, intent.dirX, intent.dirZ, distance, mob.radius, circles, blocked)
+		x, z = slide(mob, intent.dirX, intent.dirZ, distance, bodies)
 	end
 	local facing = if hasDir then Vector3.new(intent.dirX, 0, intent.dirZ).Unit else mob.facing
 	if x == mob.x and z == mob.z and facing == mob.facing then
@@ -708,13 +722,37 @@ function MobService.damage(mob: Mob, amount: number, attacker: Player?)
 	end
 end
 
+-- Empurra o mob `distance` studs para longe de (fromX, fromZ), pelo mesmo
+-- caminho do andar (não atravessa parede, recurso, água nem a borda), sem
+-- virar o mob.
+local function push(mob: Mob, fromX: number, fromZ: number, distance: number)
+	local away = Vector3.new(mob.x - fromX, 0, mob.z - fromZ)
+	if away.Magnitude < 1e-3 then
+		return
+	end
+	away = away.Unit
+	local x, z = slide(mob, away.X, away.Z, distance, livingBodies())
+	if x == mob.x and z == mob.z then
+		return
+	end
+	mob.x, mob.z = x, z
+	regrid(mob)
+	local position = Vector3.new(x, mob.y, z)
+	mob.root.CFrame = CFrame.lookAt(position, position + mob.facing)
+end
+
 -- Golpe do jogador com o item na mão (MobRules.damageOf). Quem está no chão
--- não acerta mob voando.
+-- não acerta mob voando. Item com knockback (lança) empurra o mob.
 function MobService.hit(mob: Mob, attacker: Player, item: Defs.ItemDef?)
 	if mob.dead or mob.flying then
 		return
 	end
 	MobService.damage(mob, MobRules.damageOf(item), attacker)
+	local knockback = HeldItem.knockback(item)
+	local root = rootOf(attacker.Character)
+	if not mob.dead and knockback > 0 and root then
+		push(mob, root.Position.X, root.Position.Z, knockback)
+	end
 end
 
 -- Chamado (sem pausa, protegido) em toda morte, com quem deu o último golpe

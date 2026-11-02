@@ -87,7 +87,8 @@ local Items: { [string]: ItemDef } = {
 		mobDamage = 14,
 	},
 	-- Armas craftáveis. Na mão deixam o jogador mais lento (moveSpeed) e ficam
-	-- presas por equipLock s; a lança alcança mais longe (reach). Números do Starve
+	-- presas por equipLock s; a lança alcança mais longe (reach) e empurra o mob
+	-- (knockback: fugindo de lança, o mob da floresta não morde). Números do Starve
 	-- sem valor na wiki ("bem mais lento", "alguns segundos"): escolha provisória.
 	wood_sword = {
 		id = "wood_sword",
@@ -133,6 +134,7 @@ local Items: { [string]: ItemDef } = {
 		moveSpeed = 0.75,
 		equipLock = 4,
 		reach = 3,
+		knockback = 4,
 	},
 	stone_spear = {
 		id = "stone_spear",
@@ -145,6 +147,7 @@ local Items: { [string]: ItemDef } = {
 		moveSpeed = 0.75,
 		equipLock = 4,
 		reach = 3,
+		knockback = 4,
 	},
 	gold_spear = {
 		id = "gold_spear",
@@ -157,6 +160,7 @@ local Items: { [string]: ItemDef } = {
 		moveSpeed = 0.75,
 		equipLock = 4,
 		reach = 3,
+		knockback = 4,
 	},
 	-- Proteção provisória, ajustada quando o combate for implementado.
 	wood_helmet = {

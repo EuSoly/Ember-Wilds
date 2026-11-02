@@ -16,6 +16,25 @@ return {
 		assert(HeldItem.reach(Defs.Items.stone_spear) == 3, "lança")
 	end,
 
+	["only spears push mobs back"] = function()
+		assert(HeldItem.knockback(nil) == 0, "mão")
+		assert(HeldItem.knockback(Defs.Items.gold_sword) == 0, "espada")
+		assert(HeldItem.knockback(Defs.Items.wood_spear) == 4, "lança")
+	end,
+
+	["kiting with a spear keeps every forest mob out of bite range"] = function()
+		-- Fugindo de lança (12) e batendo a cada 0,5 s: o mob chega no máximo
+		-- (velocidade - 12) * 0,5 por golpe; o empurrão tem que ser maior.
+		local armed = 16 * Defs.Items.gold_spear.moveSpeed :: number
+		local push = HeldItem.knockback(Defs.Items.gold_spear)
+		for id, mob in Defs.Mobs do
+			if mob.population and mob.population.forest then
+				local speed = (mob.stats :: any).speed
+				assert((speed - armed) * 0.5 < push, `{id} alcança quem foge de lança`)
+			end
+		end
+	end,
+
 	["a fresh weapon stays in the hand until equipLock ends"] = function()
 		local sword = Defs.Items.gold_sword
 		assert(HeldItem.isLocked(sword, 104, 100), "dentro do prazo")
