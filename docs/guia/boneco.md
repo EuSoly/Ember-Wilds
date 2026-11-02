@@ -118,6 +118,7 @@ Cada modelo em `ReplicatedStorage.Assets.Tools` tem o atributo **`Tamanho`** (1 
 
 - **No Play** (vista do **servidor**: botão Current: Server/Client no topo do Studio), mude o `Tamanho` do modelo e o item na mão de quem o segura muda na hora. Ao parar o Play o valor volta: anote os que gostou (ou me peça para ler e gravar no place).
 - **No Edit**, mude o `Tamanho` e salve o place: fica valendo para sempre.
+- **Galeria:** no Play, na barra de comandos (lado servidor), `game.ServerStorage.DevWeapons:Invoke(true)` põe duas fileiras de bonecos ao seu lado (ferramentas em cima, armas embaixo), cada um com um item e golpeando de tempos em tempos; o nome do boneco é o id do item. `Invoke(false)` apaga.
 
 ### Modelos das espadas e lanças
 
