@@ -8,6 +8,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
 local CrateState = require(script.Parent.Parent:WaitForChild("CrateState"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
@@ -16,15 +17,17 @@ local create = vide.create
 
 local CELL = 56 -- px (slot: acima do mínimo de toque)
 local GAP = 6
-local COLUMNS = 4
+local COLUMNS = 8
 local CHEST_SPACE = 76 -- px: altura do painel do baú (64) + folga, para não sobrepor
 
 local function CratePanel(): Frame
 	return Kit.panel({
 		Name = "CratePanel",
 		AnchorPoint = Vector2.new(0.5, 1),
-		-- Mesma base do painel do baú, subida a altura dele.
-		Position = UDim2.new(0.5, 0, 0.77, -CHEST_SPACE),
+		-- Na base do painel do baú; sobe a altura dele só quando o baú está visível.
+		Position = function()
+			return UDim2.new(0.5, 0, 0.77, if ChestState.near() ~= nil then -CHEST_SPACE else 0)
+		end,
 		AutomaticSize = Enum.AutomaticSize.XY,
 		Size = UDim2.fromOffset(0, 0),
 		Visible = function()
