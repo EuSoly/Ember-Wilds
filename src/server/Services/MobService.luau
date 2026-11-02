@@ -678,6 +678,15 @@ function MobService.near(x: number, z: number, radius: number): { Mob }
 	return found
 end
 
+-- Todos os mobs vivos (voando também), numa lista nova (o SpikeService varre).
+function MobService.list(): { Mob }
+	local found: { Mob } = {}
+	for mob in alive do
+		table.insert(found, mob)
+	end
+	return found
+end
+
 -- Dano genérico (espinho: attacker nil, sem pontos nem reação de perseguir).
 -- Morto não apanha de novo: pontos e remoção só uma vez.
 function MobService.damage(mob: Mob, amount: number, attacker: Player?)

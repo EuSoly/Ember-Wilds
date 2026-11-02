@@ -4,8 +4,9 @@
 -- frente, no máximo um golpe a cada GatherRules.HIT_INTERVAL (o primeiro sai
 -- na hora do aperto, se o último foi há mais que isso).
 -- O golpe: acha o alvo mais perto à frente entre recursos (ResourceService) e
--- peças de construção (StructureService), com GatherRules.pickTarget. Peça:
--- StructureService.hit (tira vida ou abre a porta do dono). Recurso: confere a
+-- peças de construção (StructureService) e mobs no chão (MobService), com GatherRules.pickTarget. Peça:
+-- StructureService.hit (tira vida ou abre a porta do dono). Mob: MobService.hit.
+-- Recurso: confere a
 -- ferramenta e a reserva, dá o que couber no inventário, desconta da reserva
 -- só o que entrou, soma pontos (ScoreService) e a estatística, e avisa os
 -- jogadores perto para mostrarem o tranco/lasquinhas/som (Net.ResourceHit).
@@ -20,6 +21,7 @@ local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
+local MobService = require(script.Parent.MobService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
 local StatsService = require(script.Parent.StatsService)
@@ -39,6 +41,7 @@ type Candidate = {
 	radius: number,
 	resource: ResourceService.Entry?,
 	structure: StructureService.Entry?,
+	mob: MobService.Mob?,
 }
 
 local GatherService = {}
@@ -105,12 +108,22 @@ local function hit(player: Player, character: Model, root: BasePart)
 	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS) do
 		table.insert(candidates, { x = structure.x, z = structure.z, radius = structure.radius, structure = structure })
 	end
+	-- Mobs no chão (voando e mortos ficam de fora): folga de 3 studs na busca.
+	for _, mob in MobService.near(px, pz, GatherRules.HIT_RADIUS + 3) do
+		if not mob.flying and not mob.dead then
+			table.insert(candidates, { x = mob.x, z = mob.z, radius = mob.radius, mob = mob })
+		end
+	end
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
 		return
 	end
 	if target.structure then
 		StructureService.hit(target.structure, player, tool)
+		return
+	end
+	if target.mob then
+		MobService.hit(target.mob, player, tool)
 		return
 	end
 	local entry = target.resource
