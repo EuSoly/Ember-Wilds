@@ -149,6 +149,8 @@ return table.freeze({
 	ChestCount = "ChestCount",
 
 	StatusMax = 100,
+	-- Teto da vida (as outras barras vão até StatusMax)
+	HealthMax = 200,
 	-- Abaixo desta fração a barra entra em alerta (e a vida para de regenerar)
 	WarningFraction = 0.35,
 })

@@ -18,10 +18,10 @@ local create = vide.create
 
 -- Ordem e cor de cada anel (cores das barras na identidade visual).
 local RINGS = {
-	{ stat = StatNames.Health, color = Theme.status.health },
-	{ stat = StatNames.Hunger, color = Theme.status.hunger },
-	{ stat = StatNames.Cold, color = Theme.status.cold },
-	{ stat = StatNames.Thirst, color = Theme.status.thirst },
+	{ stat = StatNames.Health, color = Theme.status.health, max = StatNames.HealthMax },
+	{ stat = StatNames.Hunger, color = Theme.status.hunger, max = StatNames.StatusMax },
+	{ stat = StatNames.Cold, color = Theme.status.cold, max = StatNames.StatusMax },
+	{ stat = StatNames.Thirst, color = Theme.status.thirst, max = StatNames.StatusMax },
 }
 
 -- O anel do frio vira anel de temperatura (frio + calor por cima).
@@ -56,7 +56,11 @@ local function StatusRings(): Frame
 	for order, ring in RINGS do
 		local props: { [string]: any } = if ring.stat == StatNames.Cold
 			then temperatureProps(player)
-			else { value = Sources.attribute(player, ring.stat, StatNames.StatusMax), color = ring.color }
+			else {
+				value = Sources.attribute(player, ring.stat, ring.max),
+				max = ring.max,
+				color = ring.color,
+			}
 		table.insert(
 			rings,
 			create("Frame")({
@@ -69,6 +73,7 @@ local function StatusRings(): Frame
 				StatusRing({
 					name = "Ring",
 					value = props.value,
+					max = props.max,
 					color = props.color,
 					warning = props.warning,
 					critical = props.critical,

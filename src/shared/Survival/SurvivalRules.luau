@@ -46,21 +46,23 @@ SurvivalRules.CAUSE_KEYS = table.freeze({
 -- Ordem de desempate da causa (igual parcela de dano: a primeira ganha).
 local CAUSE_ORDER: { Cause } = { "hunger", "cold", "heat", "thirst", "oxygen" }
 
-local function clamp(value: number): number
-	return math.clamp(value, 0, MAX)
+local HEALTH_MAX = StatNames.HealthMax
+
+local function clamp(value: number, max: number?): number
+	return math.clamp(value, 0, max or MAX)
 end
 
 -- nil ou NaN viram `default` (nunca propaga NaN para os atributos).
-local function sane(value: number?, default: number?): number
+local function sane(value: number?, default: number?, max: number?): number
 	if type(value) ~= "number" or value ~= value then
-		return default or MAX
+		return default or max or MAX
 	end
-	return clamp(value)
+	return clamp(value, max)
 end
 
 -- Começo de vida: tudo cheio e sem calor.
 function SurvivalRules.full(): Bars
-	return { health = MAX, hunger = MAX, cold = MAX, thirst = MAX, heat = 0 }
+	return { health = HEALTH_MAX, hunger = MAX, cold = MAX, thirst = MAX, heat = 0 }
 end
 
 function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
@@ -68,7 +70,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		dt = 0
 	end
 	local mods = ctx.mods
-	local health = sane(bars.health)
+	local health = sane(bars.health, nil, HEALTH_MAX)
 	local hunger = sane(bars.hunger)
 	local cold = sane(bars.cold)
 	local thirst = sane(bars.thirst)
@@ -131,7 +133,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		and thirst >= C.REGEN_MIN
 		and heat < C.REGEN_MAX_HEAT
 	then
-		health = clamp(health + C.REGEN_RATE * dt)
+		health = clamp(health + C.REGEN_RATE * dt, HEALTH_MAX)
 	end
 
 	return {
@@ -145,7 +147,7 @@ end
 -- (tudo já cheio: não desperdiça a comida).
 function SurvivalRules.eat(bars: Bars, food: Types.FoodEffect): Bars?
 	local after: Bars = {
-		health = sane(bars.health),
+		health = sane(bars.health, nil, HEALTH_MAX),
 		hunger = sane(bars.hunger),
 		cold = sane(bars.cold),
 		thirst = sane(bars.thirst),
@@ -157,7 +159,7 @@ function SurvivalRules.eat(bars: Bars, food: Types.FoodEffect): Bars?
 			return
 		end
 		local before = after[field]
-		after[field] = clamp(before + amount)
+		after[field] = clamp(before + amount, if field == "health" then HEALTH_MAX else MAX)
 		if after[field] > before then
 			gained = true
 		end

@@ -62,7 +62,7 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 
 	if player then
 		local current = player:GetAttribute(StatNames.Health)
-		local health = if type(current) == "number" and current == current then current else StatNames.StatusMax
+		local health = if type(current) == "number" and current == current then current else StatNames.HealthMax
 		health = math.max(health - amount, 0)
 		player:SetAttribute(StatNames.Health, health)
 		-- Só o personagem atual morre (um antigo, já trocado, não mata o novo).

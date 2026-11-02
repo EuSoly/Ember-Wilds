@@ -144,22 +144,24 @@ return {
 		intent = MobBrain.think(brain, wolf, 0.2, 0, 0, nil, seen(P1, reach, 0), true, rng)
 		assert(intent.bite == P1, "no alcance morde o alvo")
 		assert(intent.web == false, "lobo não tem teia")
-		intent = MobBrain.think(brain, wolf, 0.7, 0, 0, nil, seen(P1, reach, 0), true, rng)
-		assert(intent.bite == nil, "antes de 1 s não morde de novo")
-		intent = MobBrain.think(brain, wolf, 1.3, 0, 0, nil, seen(P1, reach, 0), true, rng)
-		assert(intent.bite == P1, "depois de 1 s morde de novo")
+		intent =
+			MobBrain.think(brain, wolf, 0.2 + MobRules.BITE_INTERVAL - 0.1, 0, 0, nil, seen(P1, reach, 0), true, rng)
+		assert(intent.bite == nil, "antes do intervalo não morde de novo")
+		intent =
+			MobBrain.think(brain, wolf, 0.2 + MobRules.BITE_INTERVAL + 0.1, 0, 0, nil, seen(P1, reach, 0), true, rng)
+		assert(intent.bite == P1, "depois do intervalo morde de novo")
 	end,
 
 	["teia só com def de teia e respeita a recarga"] = function()
 		local brain, rng = chasing(spider, 0)
 		local intent = MobBrain.think(brain, spider, 0, 0, 0, nil, seen(P1, 3, 0), true, rng)
 		assert(intent.bite == P1 and intent.web == true, "primeira mordida prende")
-		intent = MobBrain.think(brain, spider, 1, 0, 0, nil, seen(P1, 3, 0), true, rng)
+		intent = MobBrain.think(brain, spider, MobRules.BITE_INTERVAL, 0, 0, nil, seen(P1, 3, 0), true, rng)
 		assert(intent.bite == P1 and intent.web == false, "na recarga morde sem teia")
 		intent = MobBrain.think(brain, spider, 5.9, 0, 0, nil, seen(P1, 3, 0), true, rng)
 		assert(intent.bite == P1 and intent.web == false, "aos 5,9 s ainda na recarga")
 		MobBrain.onHit(brain, spider, P1, 3, 0, 6)
-		intent = MobBrain.think(brain, spider, 7, 0, 0, nil, seen(P1, 3, 0), true, rng)
+		intent = MobBrain.think(brain, spider, 5.9 + MobRules.BITE_INTERVAL, 0, 0, nil, seen(P1, 3, 0), true, rng)
 		assert(intent.bite == P1 and intent.web == true, "passada a recarga prende de novo")
 	end,
 
