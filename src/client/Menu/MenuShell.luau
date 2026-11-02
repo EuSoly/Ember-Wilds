@@ -79,36 +79,46 @@ local function column(): Frame
 		Position = UDim2.fromScale(0.01, BODY_TOP),
 		Size = UDim2.fromScale(COLUMN_WIDTH, 1 - BODY_TOP - BAR_TOP),
 		-- Em tela baixa os botões mantêm o mínimo de toque.
-		create("UISizeConstraint")({ MinSize = Vector2.new(84, 6 * 44 + 5 * 4) }),
+		create("UISizeConstraint")({
+			MinSize = Vector2.new(2 * Theme.touchMinSize.X, 6 * Theme.touchMinSize.Y + 5 * 4),
+		}),
 		children,
 	}) :: Frame
 end
 
-local function topBar(): Frame
+local function topBar(): { Frame }
 	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
 	local profile = MockStore.PROFILE
 
-	return Kit.panel({
-		Name = "TopBar",
+	-- Dois "pods" nos cantos: o centro fica livre para o logo do molde MainMenu.
+	local left = Kit.panel({
+		Name = "TopLeft",
 		Position = UDim2.fromScale(0.01, BAR_TOP),
-		Size = UDim2.fromScale(0.98, BAR_HEIGHT),
-		create("UISizeConstraint")({ MinSize = Vector2.new(0, 44) }),
+		Size = UDim2.fromScale(0.24, BAR_HEIGHT),
+		create("UISizeConstraint")({ MinSize = Vector2.new(0, 2 * Theme.touchMinSize.Y) }),
 		Kit.text({
 			Name = "Level",
-			Position = UDim2.fromScale(0.02, 0.5),
-			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromScale(0.13, 0.7),
+			Position = UDim2.fromScale(0.04, 0.05),
+			Size = UDim2.fromScale(0.5, 0.45),
 			FontFace = Theme.font.number,
 			Text = Strings.format("menu.level", { level = profile.level }),
 			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 24,
+			maxSize = 22,
+		}),
+		Kit.pill({
+			Name = "MockupBadge",
+			Position = UDim2.fromScale(0.96, 0.27),
+			AnchorPoint = Vector2.new(1, 0.5),
+			Size = UDim2.fromScale(0.4, 0.38),
+			BackgroundColor3 = Theme.ui.warning,
+			text = Strings.get("menu.mockup"),
 		}),
 		-- Barra de XP (falsa): trilho escuro com o preenchimento proporcional.
 		create("Frame")({
 			Name = "XpBar",
-			Position = UDim2.fromScale(0.16, 0.5),
-			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromScale(0.28, 0.45),
+			Position = UDim2.fromScale(0.5, 0.75),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Size = UDim2.fromScale(0.92, 0.36),
 			BackgroundColor3 = Theme.ui.panelRaised,
 			BorderSizePixel = 0,
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
@@ -125,40 +135,40 @@ local function topBar(): Frame
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				FontFace = Theme.font.body,
 				Text = Strings.format("menu.xp", { xp = profile.xp, max = profile.xpMax }),
-				maxSize = 16,
+				maxSize = 14,
 			}),
 		}),
-		Kit.pill({
-			Name = "MockupBadge",
-			Position = UDim2.fromScale(0.47, 0.5),
-			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromScale(0.13, 0.6),
-			BackgroundColor3 = Theme.ui.warning,
-			text = Strings.get("menu.mockup"),
-		}),
+	})
+
+	local right = Kit.panel({
+		Name = "TopRight",
+		Position = UDim2.fromScale(0.99, BAR_TOP),
+		AnchorPoint = Vector2.new(1, 0),
+		Size = UDim2.fromScale(0.24, BAR_HEIGHT),
+		create("UISizeConstraint")({ MinSize = Vector2.new(0, 2 * Theme.touchMinSize.Y) }),
 		-- Saldo real (atributo Currency); o mockup nunca o altera.
 		Kit.text({
 			Name = "Balance",
-			Position = UDim2.fromScale(0.63, 0.5),
+			Position = UDim2.fromScale(0.04, 0.5),
 			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.fromScale(0.27, 0.7),
+			Size = UDim2.fromScale(0.68, 0.6),
 			FontFace = Theme.font.number,
 			Text = function()
 				return Strings.format("menu.balance", { amount = currency() })
 			end,
-			TextXAlignment = Enum.TextXAlignment.Right,
-			maxSize = 24,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			maxSize = 22,
 		}),
 		create("TextButton")({
 			Name = "BuyButton",
 			Text = "",
 			AutoButtonColor = true,
-			Position = UDim2.fromScale(0.98, 0.5),
+			Position = UDim2.fromScale(0.96, 0.5),
 			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.fromScale(0.06, 0.8),
+			Size = UDim2.fromScale(0.2, 0.7),
 			BackgroundColor3 = Theme.ui.action,
 			BorderSizePixel = 0,
-			create("UISizeConstraint")({ MinSize = Vector2.new(36, 36) }),
+			create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			Activated = function()
 				MenuState.open("buy")
@@ -173,6 +183,7 @@ local function topBar(): Frame
 			}),
 		}),
 	})
+	return { left, right }
 end
 
 -- Painel placeholder: título e botão de fechar (volta a "play").
@@ -223,7 +234,8 @@ local MenuShell = {}
 
 -- Monta a casca (dentro do root Vide do ScreenController); só aparece no menu.
 function MenuShell.mount(playerGui: Instance): ScreenGui
-	local children: { Instance } = { topBar(), column() }
+	local pods = topBar()
+	local children: { Instance } = { pods[1], pods[2], column() }
 	for i = 1, #PANELS do
 		table.insert(children, panelFrame(PANELS[i]))
 	end

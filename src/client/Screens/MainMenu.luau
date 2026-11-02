@@ -33,7 +33,11 @@ function MainMenu.mount(playerGui: Instance, openSettings: () -> ()): ScreenGui?
 	Template.bind(gui)
 
 	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
-	local balance = Template.find(gui, "BalanceLabel", "TextLabel")
+	local balance = Template.find(gui, "BalanceLabel", "TextLabel") :: TextLabel?
+	-- O saldo agora é mostrado pela casca do menu (MenuShell); aqui só esconde.
+	if balance then
+		balance.Visible = false
+	end
 	vide.effect(function()
 		Template.setText(balance, Strings.format("menu.balance", { amount = currency() }))
 	end)
@@ -56,6 +60,8 @@ function MainMenu.mount(playerGui: Instance, openSettings: () -> ()): ScreenGui?
 		vide.effect(function()
 			root.Visible = MenuState.panel() == "play"
 		end)
+	else
+		warn("MainMenu: Root não encontrado; o molde não esconde com painéis abertos")
 	end
 
 	KitList.mount(gui)
