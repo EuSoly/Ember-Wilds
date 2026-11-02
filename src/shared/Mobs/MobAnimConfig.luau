@@ -51,9 +51,12 @@ end
 
 local function legs(count: number): { [string]: Group }
 	local groups = {}
+	-- Os lados são espelhados: o mesmo giro leva a pata da esquerda para a
+	-- frente e a da direita para trás. Por isso o par usa a mesma fase, e a
+	-- pata vizinha do mesmo lado vai ao contrário.
 	for i = 1, count do
 		groups["Leg_L" .. i] = group("stride", 0, 19, 0, (i - 1) * math.pi)
-		groups["Leg_R" .. i] = group("stride", 0, 19, 0, i * math.pi)
+		groups["Leg_R" .. i] = group("stride", 0, 19, 0, (i - 1) * math.pi)
 	end
 	return groups
 end
@@ -117,6 +120,8 @@ return table.freeze({
 	HURT_DURATION = 0.3,
 	HURT_DISTANCE = 0.35,
 	DEATH_DURATION = 0.5,
+	SIZE_STEP = 0.002, -- o cliente só troca o Size das peças quando a escala anda isso
+
 	FLASH_COLOR = { 1, 0.35, 0.3 },
 	Mobs = table.freeze({
 		rabbit = mob(ears()),

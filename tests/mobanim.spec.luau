@@ -78,9 +78,15 @@ return {
 			local moved = false
 			for _ = 1, 150 do
 				local p = A.step(state, 1 / 60, inp)
-				for i = 1, if id == "spider" then 4 else 3 do
+				local count = if id == "spider" then 4 else 3
+				for i = 1, count do
 					local l, r = p.groups["Leg_L" .. i], p.groups["Leg_R" .. i]
-					near(l.yaw, -r.yaw)
+					-- Lados espelhados: o mesmo giro põe a esquerda à frente e a
+					-- direita atrás. A ponta da pata em ±X anda em Z = ∓sin(yaw).
+					near(l.yaw, r.yaw)
+					if i < count then
+						near(l.yaw, -p.groups["Leg_L" .. (i + 1)].yaw)
+					end
 					moved = moved or math.abs(l.yaw) > 0.1
 				end
 			end

@@ -50,6 +50,12 @@ return table.freeze({
 	CosmeticPrefix = "Cosmetic_",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
+	-- Raízes visuais dos mobs; contadores de eventos, sem regras de combate.
+	MobTag = "Mob",
+	MobId = "MobId",
+	MobAttack = "MobAttack",
+	MobHurt = "MobHurt",
+	MobDead = "MobDead",
 	-- Grupo de colisão do corpo simulado: bonecos não colidem entre si
 	-- (registrado no CharacterService.Init, aplicado no CharacterBody).
 	BonecoCollisionGroup = "Bonecos",
