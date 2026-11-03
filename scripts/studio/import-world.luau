@@ -7,8 +7,7 @@
 --   *_viewport     -> ReplicatedStorage.Assets.Icons/<itemId> (ícone do item)
 --   o resto        -> ReplicatedStorage.Assets.Structures/<itemId> (construções e estruturas)
 --
--- Cada template: nome sem "_root", pivô no CENTRO DA BASE (centro table.concat(lines, "
-")/Z da caixa e
+-- Cada template: nome sem "_root", pivô no CENTRO DA BASE (centro X/Z da caixa e
 -- Y mínimo, calculados da geometria, porque todos os "_root" importados têm o mesmo
 -- pivô), na origem do mundo; peças Anchored e sem colisão/consulta/toque (o modelo é
 -- só visual). PrimaryPart fica nil. As peças móveis (_panel_left, _lid, _rotor,
@@ -163,6 +162,7 @@ for _, kind in { "structures", "resources", "icons" } do
 	table.sort(made[kind])
 	table.insert(lines, `[import-world] {kind} ({#made[kind]}): {table.concat(made[kind], ", ")}`)
 end
-local summary = X
+local summary = table.concat(lines, "
+")
 print(summary)
 return summary
