@@ -79,6 +79,14 @@ function WaterSim.isWet(x: number, z: number): boolean
 	return isWet(x, z)
 end
 
+-- true se há água de verdade em (x, z): a peça de água crua, sem contar ponte.
+-- (isWet passa a ignorar pontes na Tarefa 13; quem precisa da água em si, como
+-- encher o balde, usa esta.)
+function WaterSim.isWaterAt(x: number, z: number): boolean
+	startWatching()
+	return isWet(x, z)
+end
+
 -- Último resultado da simulação para o jogador (false sem personagem).
 function WaterSim.isInWater(player: Player): boolean
 	return inWater[player] == true

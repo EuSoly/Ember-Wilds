@@ -145,6 +145,29 @@ function InventoryService.takeAt(player: Player, index: number, count: number): 
 	return ok
 end
 
+-- Troca, no próprio slot `index`, o item `fromId` (1 unidade) por `toId`: o
+-- item na mão vira outro sem mudar de lugar (balde ↔ balde com água).
+-- false (nada muda) se o slot não tem exatamente 1 de `fromId` ou `toId` não
+-- está disponível ao jogador (testOnly fora do Studio).
+function InventoryService.swapAt(player: Player, index: number, fromId: string, toId: string): boolean
+	local inv = inventories[player]
+	local slot = inv and inv.slots[index]
+	if
+		inv == nil
+		or slot == nil
+		or slot.id ~= fromId
+		or slot.count ~= 1
+		or Defs.Items[toId] == nil
+		or maxStackOf(toId) < 1
+		or not ItemAccess.isAvailable(toId, RunService:IsStudio())
+	then
+		return false
+	end
+	inv.slots[index] = { id = toId, count = 1 }
+	sendChanges(player, inv, { index })
+	return true
+end
+
 -- Quanto de `id` caberia agora no inventário (0 sem inventário), sem mudar nada.
 function InventoryService.spaceFor(player: Player, id: string): number
 	local inv = inventories[player]
