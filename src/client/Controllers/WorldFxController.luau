@@ -21,6 +21,7 @@ local CraftBubble = require(World:WaitForChild("CraftBubble"))
 local BuildGhost = require(World:WaitForChild("BuildGhost"))
 local BuildRotation = require(Client:WaitForChild("BuildRotation"))
 local StructureHealth = require(World:WaitForChild("StructureHealth"))
+local StructureFx = require(World:WaitForChild("StructureFx"))
 local WebVisual = require(World:WaitForChild("WebVisual"))
 
 local WorldFxController = {}
@@ -36,6 +37,7 @@ function WorldFxController.Start(_self)
 	BuildGhost.start()
 	StructureHealth.start()
 	WebVisual.start()
+	StructureFx.start()
 
 	-- Fogueiras chegam aos poucos (streaming): liga cada uma quando aparece.
 	local function flicker(instance: Instance)
