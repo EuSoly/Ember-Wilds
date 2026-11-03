@@ -105,6 +105,9 @@ builders.door = function(model, side, color)
 	return block
 end
 
+-- Porta com espinhos: mesmo corpo da porta (as folhas deslizam igual).
+builders.spike_door = builders.door
+
 builders.spike = function(model, _side, color)
 	local core = newPart(
 		"Core",
@@ -131,6 +134,12 @@ builders.station = function(model, side, color)
 	local top = decor(newPart("Top", Vector3.new(side * 0.9, 0.4, side * 0.7), CFrame.new(0, 2, 0), color, model))
 	top.Material = Enum.Material.WoodPlanks
 	return body
+end
+
+-- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,
+-- ponte, telhado, placa, poço e cama. Ponte e telhado mudam na tarefa 13.
+for _, kind in { "extractor", "furnace", "bridge", "roof", "sign", "well", "bed" } do
+	builders[kind] = builders.station
 end
 
 builders.chest = function(model, side, color)
@@ -224,6 +233,11 @@ local function moveFireLight(model: Model, visual: Model)
 	FireLight.attach(flames)
 end
 
+-- Portas deslizam as folhas: a porta comum e a com espinhos.
+local function isDoorKind(kind: string): boolean
+	return kind == "door" or kind == "spike_door"
+end
+
 -- Medida da caixa da peça (girada por `cframe`) nos eixos X e Z de quem a contém.
 local function footprint(cframe: CFrame, size: Vector3): (number, number)
 	local x, y, z = cframe.XVector, cframe.YVector, cframe.ZVector
@@ -270,7 +284,7 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		visual.Parent = model
 		if def.kind == "fire" then
 			moveFireLight(model, visual)
-		elseif def.kind == "door" then
+		elseif isDoorKind(def.kind) then
 			rememberPanels(model, visual)
 		end
 	end
@@ -278,7 +292,7 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		model:AddTag(StatNames.CraftStationTag)
 		model:SetAttribute(StatNames.Station, def.station)
 	end
-	if def.kind == "door" then
+	if isDoorKind(def.kind) then
 		model:SetAttribute(StatNames.DoorOpen, false)
 	end
 	return model

@@ -321,6 +321,144 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 255,
 		structure = { kind = "chest", health = 500 },
 	},
+	-- G8: estruturas novas, só para teste (testOnly). Números provisórios salvo onde diz wiki.
+	wood_spike_door = {
+		id = "wood_spike_door",
+		testOnly = true,
+		nameKey = "item.wood_spike_door",
+		category = "placeable",
+		tier = "wood",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 1000, spikeDamage = 10 },
+	},
+	stone_spike_door = {
+		id = "stone_spike_door",
+		testOnly = true,
+		nameKey = "item.stone_spike_door",
+		category = "placeable",
+		tier = "stone",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 1500, spikeDamage = 20 },
+	},
+	gold_spike_door = {
+		id = "gold_spike_door",
+		testOnly = true,
+		nameKey = "item.gold_spike_door",
+		category = "placeable",
+		tier = "gold",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 2000, spikeDamage = 30 },
+	},
+	stone_extractor = {
+		id = "stone_extractor",
+		testOnly = true,
+		nameKey = "item.stone_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "extractor",
+			health = 300, -- provisório
+			-- cycleSeconds: wiki; o resto provisório
+			extractor = {
+				output = "stone",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 100,
+				maxStock = 100,
+			},
+		},
+	},
+	gold_extractor = {
+		id = "gold_extractor",
+		testOnly = true,
+		nameKey = "item.gold_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "extractor",
+			health = 300, -- provisório
+			-- cycleSeconds: wiki; o resto provisório
+			extractor = {
+				output = "gold",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 100,
+				maxStock = 100,
+			},
+		},
+	},
+	furnace = {
+		id = "furnace",
+		testOnly = true,
+		nameKey = "item.furnace",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "furnace",
+			health = 500, -- provisório
+			heatRadius = 24, -- provisório
+			station = "fire",
+			furnace = { burnEvery = 6, maxWood = 200 }, -- burnEvery: wiki; maxWood provisório
+		},
+	},
+	bridge = {
+		id = "bridge",
+		testOnly = true,
+		nameKey = "item.bridge",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "bridge", health = 300, radius = 2.1 }, -- provisório
+	},
+	roof = {
+		id = "roof",
+		testOnly = true,
+		nameKey = "item.roof",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "roof", health = 300, radius = 2.1 }, -- provisório
+	},
+	sign = {
+		id = "sign",
+		testOnly = true,
+		nameKey = "item.sign",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "sign", health = 100 }, -- provisório
+	},
+	well = {
+		id = "well",
+		testOnly = true,
+		nameKey = "item.well",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "well",
+			health = 500, -- provisório
+			well = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20 }, -- drinksPerBucket: wiki
+		},
+	},
+	bed = {
+		id = "bed",
+		testOnly = true,
+		nameKey = "item.bed",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "bed",
+			health = 300, -- provisório
+			bed = { regenFactor = 2, drainFactor = 0.5 },
+		},
+	},
+	bucket = { id = "bucket", testOnly = true, nameKey = "item.bucket", category = "misc", maxStack = 1 },
+	water_bucket = {
+		id = "water_bucket",
+		testOnly = true,
+		nameKey = "item.water_bucket",
+		category = "misc",
+		maxStack = 1,
+	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
 	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3 },
 }
@@ -336,6 +474,12 @@ for _, item in Items do
 		table.freeze(item.pickaxe)
 	end
 	if item.structure ~= nil then
+		for _, field in { "extractor", "furnace", "well", "bed" } do
+			local block = (item.structure :: any)[field]
+			if block ~= nil then
+				table.freeze(block)
+			end
+		end
 		table.freeze(item.structure)
 	end
 	table.freeze(item)

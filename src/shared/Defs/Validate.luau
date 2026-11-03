@@ -700,8 +700,55 @@ local function validateArmor(errors: { string }, key: string, item: Types.ItemDe
 	end
 end
 
-local STRUCTURE_KINDS: { [string]: boolean } =
-	{ wall = true, door = true, spike = true, station = true, chest = true, fire = true }
+local STRUCTURE_KINDS: { [string]: boolean } = {
+	wall = true,
+	door = true,
+	spike = true,
+	station = true,
+	chest = true,
+	fire = true,
+	spike_door = true,
+	extractor = true,
+	furnace = true,
+	bridge = true,
+	roof = true,
+	sign = true,
+	well = true,
+	bed = true,
+}
+-- Bloco de dados que só vale (e é obrigatório) no seu kind: campos numéricos > 0.
+local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } } = {
+	{
+		kind = "extractor",
+		field = "extractor",
+		numbers = { "woodPerCycle", "cycleSeconds", "yield", "maxWood", "maxStock" },
+	},
+	{ kind = "furnace", field = "furnace", numbers = { "burnEvery", "maxWood" } },
+	{ kind = "well", field = "well", numbers = { "drinksPerBucket", "maxDrinks", "thirstPerDrink" } },
+	{ kind = "bed", field = "bed", numbers = { "regenFactor", "drainFactor" } },
+}
+
+local function validateStructureBlocks(errors: { string }, key: string, structure: Types.StructureDef)
+	for _, spec in STRUCTURE_BLOCKS do
+		local block = (structure :: any)[spec.field]
+		if structure.kind ~= spec.kind then
+			if block ~= nil then
+				table.insert(errors, `Item "{key}": structure.{spec.field} só vale para kind "{spec.kind}"`)
+			end
+		elseif type(block) ~= "table" then
+			table.insert(errors, `Item "{key}": kind "{spec.kind}" precisa de structure.{spec.field}`)
+		else
+			for _, name in spec.numbers do
+				if not isPositiveFinite(block[name]) then
+					table.insert(errors, `Item "{key}": structure.{spec.field}.{name} deve ser maior que 0`)
+				end
+			end
+			if spec.kind == "extractor" and (type(block.output) ~= "string" or block.output == "") then
+				table.insert(errors, `Item "{key}": structure.extractor.output deve ser um id de item`)
+			end
+		end
+	end
+end
 local STRUCTURE_STATIONS: { [string]: boolean } = { workbench = true, fire = true }
 
 local function validateStructure(errors: { string }, key: string, item: Types.ItemDef)
@@ -732,23 +779,29 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 		if station ~= nil and STRUCTURE_STATIONS[station] ~= true then
 			table.insert(errors, `Item "{key}": structure.station inválida`)
 		end
-		if structure.kind == "spike" then
+		if structure.kind == "spike" or structure.kind == "spike_door" then
 			if not isPositive(structure.spikeDamage) then
 				table.insert(errors, `Item "{key}": espinho precisa de structure.spikeDamage maior que 0`)
 			end
 		elseif structure.spikeDamage ~= nil then
-			table.insert(errors, `Item "{key}": structure.spikeDamage só vale para kind "spike"`)
+			table.insert(errors, `Item "{key}": structure.spikeDamage só vale para kind "spike" e "spike_door"`)
 		end
 		if structure.kind == "fire" then
 			if not isPositive(structure.lifetime) then
 				table.insert(errors, `Item "{key}": fogueira precisa de structure.lifetime maior que 0`)
 			end
-			if not isPositive(structure.heatRadius) then
-				table.insert(errors, `Item "{key}": fogueira precisa de structure.heatRadius maior que 0`)
-			end
-		elseif structure.lifetime ~= nil or structure.heatRadius ~= nil then
-			table.insert(errors, `Item "{key}": lifetime e heatRadius só valem para kind "fire"`)
+		elseif structure.lifetime ~= nil then
+			table.insert(errors, `Item "{key}": structure.lifetime só vale para kind "fire"`)
 		end
+		-- A fornalha esquenta como a fogueira, mas queima enquanto tem madeira (sem lifetime).
+		if structure.kind == "fire" or structure.kind == "furnace" then
+			if not isPositive(structure.heatRadius) then
+				table.insert(errors, `Item "{key}": fogueira e fornalha precisam de structure.heatRadius maior que 0`)
+			end
+		elseif structure.heatRadius ~= nil then
+			table.insert(errors, `Item "{key}": structure.heatRadius só vale para kind "fire" e "furnace"`)
+		end
+		validateStructureBlocks(errors, key, structure)
 	end
 	local damage = item.structureDamage
 	if damage ~= nil and not isPositive(damage) then

@@ -175,6 +175,60 @@ local Recipes: { [string]: RecipeDef } = {
 		"workbench",
 		29
 	),
+	-- G8: estruturas novas (só para teste).
+	wood_spike_door = recipe(
+		"wood_spike_door",
+		1,
+		{ ingredient("wood_door", 1), ingredient("wood_spike", 1) },
+		10,
+		"workbench",
+		51
+	), -- provisório
+	stone_spike_door = recipe(
+		"stone_spike_door",
+		1,
+		{ ingredient("stone_door", 1), ingredient("stone_spike", 1) },
+		10,
+		"workbench",
+		52
+	), -- provisório
+	gold_spike_door = recipe(
+		"gold_spike_door",
+		1,
+		{ ingredient("gold_door", 1), ingredient("gold_spike", 1) },
+		10,
+		"workbench",
+		53
+	), -- provisório
+	stone_extractor = recipe(
+		"stone_extractor",
+		1,
+		{ ingredient("wood", 200), ingredient("stone", 50) },
+		10,
+		"workbench",
+		54
+	), -- provisório
+	gold_extractor = recipe(
+		"gold_extractor",
+		1,
+		{ ingredient("wood", 200), ingredient("gold", 30) },
+		10,
+		"workbench",
+		55
+	), -- provisório
+	furnace = recipe("furnace", 1, { ingredient("stone", 100), ingredient("gold", 30) }, 10, "workbench", 44), -- provisório
+	bridge = recipe("bridge", 1, { ingredient("wood", 30) }, 5, "workbench", 45), -- provisório
+	roof = recipe("roof", 1, { ingredient("wood", 25) }, 5, "workbench", 46), -- provisório
+	sign = recipe("sign", 1, { ingredient("wood", 20) }, 5, "workbench", 47), -- wiki
+	well = recipe("well", 1, { ingredient("stone", 60) }, 8, "workbench", 48), -- provisório
+	bed = recipe("bed", 1, {
+		ingredient("wood", 100),
+		ingredient("stone", 50),
+		ingredient("wolf_fur", 5),
+		ingredient("rabbit_fur", 5),
+		ingredient("thread", 6),
+	}, 10, "workbench", 49), -- wiki
+	bucket = recipe("bucket", 1, { ingredient("wood", 15) }, 5, "workbench", 50), -- provisório
 }
 
 return table.freeze(Recipes)
