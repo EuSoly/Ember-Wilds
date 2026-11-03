@@ -82,6 +82,16 @@ function BuildRules.areAllies(a: number, b: number): boolean
 	return a == b
 end
 
+-- Abre e fecha como porta (porta comum e porta com espinhos).
+function BuildRules.isDoor(kind: string): boolean
+	return kind == "door" or kind == "spike_door"
+end
+
+-- Fere quem não é aliado, aberta ou fechada (espinho e porta com espinhos).
+function BuildRules.hurts(kind: string): boolean
+	return kind == "spike" or kind == "spike_door"
+end
+
 function BuildRules.underLimit(count: number): boolean
 	local max = BuildRules.MAX_PER_PLAYER
 	return max == nil or count < max

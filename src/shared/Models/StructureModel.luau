@@ -233,11 +233,6 @@ local function moveFireLight(model: Model, visual: Model)
 	FireLight.attach(flames)
 end
 
--- Portas deslizam as folhas: a porta comum e a com espinhos.
-local function isDoorKind(kind: string): boolean
-	return kind == "door" or kind == "spike_door"
-end
-
 -- Medida da caixa da peça (girada por `cframe`) nos eixos X e Z de quem a contém.
 local function footprint(cframe: CFrame, size: Vector3): (number, number)
 	local x, y, z = cframe.XVector, cframe.YVector, cframe.ZVector
@@ -284,7 +279,7 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		visual.Parent = model
 		if def.kind == "fire" then
 			moveFireLight(model, visual)
-		elseif isDoorKind(def.kind) then
+		elseif BuildRules.isDoor(def.kind) then
 			rememberPanels(model, visual)
 		end
 	end
@@ -292,7 +287,7 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		model:AddTag(StatNames.CraftStationTag)
 		model:SetAttribute(StatNames.Station, def.station)
 	end
-	if isDoorKind(def.kind) then
+	if BuildRules.isDoor(def.kind) then
 		model:SetAttribute(StatNames.DoorOpen, false)
 	end
 	return model

@@ -16,6 +16,20 @@ function spec.areAllies_hoje_so_o_mesmo_jogador()
 	assert(not BuildRules.areAllies(1, 2), "UserIds diferentes não são aliados")
 end
 
+function spec.isDoor_porta_e_porta_com_espinhos()
+	assert(BuildRules.isDoor("door"), "porta é porta")
+	assert(BuildRules.isDoor("spike_door"), "porta com espinhos é porta")
+	assert(not BuildRules.isDoor("spike"), "espinho não é porta")
+	assert(not BuildRules.isDoor("wall"), "parede não é porta")
+end
+
+function spec.hurts_espinho_e_porta_com_espinhos()
+	assert(BuildRules.hurts("spike"), "espinho fere")
+	assert(BuildRules.hurts("spike_door"), "porta com espinhos fere")
+	assert(not BuildRules.hurts("door"), "porta comum não fere")
+	assert(not BuildRules.hurts("wall"), "parede não fere")
+end
+
 function spec.underLimit_sem_limite()
 	assert(BuildRules.MAX_PER_PLAYER == nil, "hoje não há limite")
 	assert(BuildRules.underLimit(0) and BuildRules.underLimit(100000), "nil = sempre abaixo do limite")

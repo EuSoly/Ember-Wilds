@@ -52,7 +52,7 @@ local function stepMobs(now: number)
 		local margin = BuildRules.mobSpikeMargin(mob.radius)
 		for _, entry in StructureService.near(mob.x, mob.z, margin) do
 			local damage = entry.def.spikeDamage
-			if entry.def.kind ~= "spike" or damage == nil then
+			if not BuildRules.hurts(entry.def.kind) or damage == nil then
 				continue
 			end
 			if not BuildRules.touchesCircle(mob.x, mob.z, entry.x, entry.z, entry.radius, margin) then
@@ -92,7 +92,7 @@ local function step()
 		local px, pz = root.Position.X, root.Position.Z
 		for _, entry in StructureService.near(px, pz, SPIKE_MARGIN) do
 			local damage = entry.def.spikeDamage
-			if entry.def.kind ~= "spike" or damage == nil then
+			if not BuildRules.hurts(entry.def.kind) or damage == nil then
 				continue
 			end
 			if BuildRules.areAllies(entry.owner.UserId, victim.UserId) then

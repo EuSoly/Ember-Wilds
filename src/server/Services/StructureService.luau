@@ -200,7 +200,7 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 		return
 	end
 	-- Porta do aliado: abre ou fecha, sem dano. Quem não é aliado só tira vida.
-	if entry.def.kind == "door" and BuildRules.areAllies(entry.owner.UserId, attacker.UserId) then
+	if BuildRules.isDoor(entry.def.kind) and BuildRules.areAllies(entry.owner.UserId, attacker.UserId) then
 		toggleDoor(entry)
 		return
 	end
