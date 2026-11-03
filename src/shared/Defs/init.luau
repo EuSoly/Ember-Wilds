@@ -16,6 +16,7 @@ export type RecipeIngredient = Types.RecipeIngredient
 export type CraftStation = Types.CraftStation
 export type ItemCategory = Types.ItemCategory
 export type FoodEffect = Types.FoodEffect
+export type BedDef = Types.BedDef
 export type ArmorStats = Types.ArmorStats
 export type EyeStyle = Types.EyeStyle
 export type ExpressionTrigger = Types.ExpressionTrigger

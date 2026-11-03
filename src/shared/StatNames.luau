@@ -49,6 +49,8 @@ return table.freeze({
 	EquipLockUntil = "EquipLockUntil",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
 	HurtAt = "HurtAt",
+	-- true enquanto o personagem dorme numa cama (escrito pelo BedService; olhos fechados).
+	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
 	CosmeticPrefix = "Cosmetic_",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.

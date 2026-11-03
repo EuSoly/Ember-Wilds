@@ -84,13 +84,11 @@ local function conditionHolds(character: Model, def: Defs.ExpressionDef): boolea
 	end
 	local owner: Instance = Players:GetPlayerFromCharacter(character) or character
 	local value = owner:GetAttribute(condition.attribute)
-	if type(value) ~= "number" then
-		return false
+	if value == nil then
+		-- Estado do personagem (ex. Sleeping) fica no próprio modelo, não no Player.
+		value = character:GetAttribute(condition.attribute)
 	end
-	if condition.below ~= nil and value < condition.below then
-		return true
-	end
-	return condition.above ~= nil and value > condition.above
+	return ExpressionState.conditionMet(condition, value)
 end
 
 local function remove(character: Model)

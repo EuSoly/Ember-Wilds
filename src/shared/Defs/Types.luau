@@ -130,6 +130,7 @@ export type EyeStyle = "open" | "closed" | "squeeze"
 
 -- Como uma expressão fica ativa: sempre (a base), de tempos em tempos,
 -- quando um evento acontece (ex. dano) ou enquanto um atributo passa de um limiar.
+export type ExpressionCondition = { attribute: string, below: number?, above: number?, equals: boolean? }
 export type ExpressionTrigger = "always" | "periodic" | "event" | "condition"
 
 export type ExpressionDef = {
@@ -141,7 +142,7 @@ export type ExpressionDef = {
 	intervalMin: number?, -- "periodic": intervalo sorteado entre min e max
 	intervalMax: number?,
 	event: string?, -- "event": nome do evento (ex. "hurt")
-	condition: { attribute: string, below: number?, above: number? }?, -- "condition"
+	condition: ExpressionCondition?, -- "condition"
 	flash: { color: string, duration: number }?, -- pisca o corpo nessa cor
 }
 

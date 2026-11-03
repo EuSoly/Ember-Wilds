@@ -170,8 +170,12 @@ local function validateExpressions(errors: { string }, defs: Types.DefsTables)
 			local condition = expression.condition
 			if condition == nil or type(condition.attribute) ~= "string" then
 				table.insert(errors, `Expression "{key}": trigger "condition" precisa de condition.attribute`)
-			elseif type(condition.below) ~= "number" and type(condition.above) ~= "number" then
-				table.insert(errors, `Expression "{key}": condition precisa de below ou above`)
+			elseif
+				type(condition.below) ~= "number"
+				and type(condition.above) ~= "number"
+				and type(condition.equals) ~= "boolean"
+			then
+				table.insert(errors, `Expression "{key}": condition precisa de below, above ou equals`)
 			end
 		end
 
