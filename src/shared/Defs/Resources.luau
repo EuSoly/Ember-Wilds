@@ -71,7 +71,7 @@ local Resources: { [string]: ResourceDef } = {
 			regen = { amount = 2, every = 10 },
 		}),
 	}),
-	rock = resource("rock", 5, 3.8, 3, {
+	rock = resource("rock", 5, 3.8, 1, {
 		size = 9,
 		sizeJitter = 0.15,
 		gather = gather({
