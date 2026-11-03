@@ -26,10 +26,12 @@
 -- O dano do espinho fica no SpikeService (ver lá o porquê).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local StructureModel = require(ReplicatedStorage.Shared.Models.StructureModel)
@@ -327,6 +329,10 @@ local function place(player: Player, character: Model)
 		return
 	end
 	local itemId = slot.id
+	-- Item só-para-teste fora do Studio: recusa antes de tirar da mão.
+	if not ItemAccess.isAvailable(itemId, RunService:IsStudio()) then
+		return
+	end
 	local item = Defs.Items[itemId]
 	local def = if item and item.category == "placeable" then item.structure else nil
 	if def == nil then

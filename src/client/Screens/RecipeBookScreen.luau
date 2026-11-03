@@ -1,11 +1,13 @@
 --!strict
 -- Livro completo de receitas, desenhado pelo molde RecipeBook.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local CraftRules = require(Shared:WaitForChild("Craft"):WaitForChild("CraftRules"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local ItemAccess = require(Shared:WaitForChild("ItemAccess"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 local InventoryState = require(script.Parent.Parent:WaitForChild("InventoryState"))
@@ -98,8 +100,11 @@ function RecipeBookScreen.mount(playerGui: Instance): ScreenGui?
 	local list = Template.find(gui, "List", "GuiObject")
 	if list then
 		local sorted = {}
+		local inStudio = RunService:IsStudio()
 		for _, recipe in Defs.Recipes do
-			table.insert(sorted, recipe)
+			if ItemAccess.recipeAvailable(recipe, inStudio) then
+				table.insert(sorted, recipe)
+			end
 		end
 		table.sort(sorted, function(a, b)
 			return a.order < b.order

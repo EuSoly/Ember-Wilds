@@ -624,6 +624,15 @@ return {
 		assert(containsError(errors, "plastic"), `faltou erro do item: {table.concat(errors, "; ")}`)
 	end,
 
+	["kit with a testOnly item is an error"] = function()
+		local defs = validKitDefs()
+		defs.Items.secret =
+			{ id = "secret", nameKey = "item.secret", category = "resource", maxStack = 255, testOnly = true }
+		defs.Kits.kit_b.items = { { id = "secret", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "testOnly"), `faltou erro de testOnly: {table.concat(errors, "; ")}`)
+	end,
+
 	["kit with two bags is an error"] = function()
 		local defs = validKitDefs()
 		defs.Kits.kit_a.items = { { id = "leather_bag", count = 1 }, { id = "leather_bag", count = 1 } }
@@ -1085,6 +1094,31 @@ return {
 		check("contagem fracionária", { { id = "raw_meat", count = 1.5 } })
 		check("contagem zero", { { id = "raw_meat", count = 0 } })
 		check("contagem negativa", { { id = "raw_meat", count = -1 } })
+	end,
+
+	["mob loot with a testOnly item is an error"] = function()
+		local defs: any = {
+			Tiers = {},
+			Items = {
+				secret = {
+					id = "secret",
+					nameKey = "item.secret",
+					category = "resource",
+					maxStack = 255,
+					testOnly = true,
+				},
+			},
+			Mobs = {
+				wolf = {
+					id = "wolf",
+					nameKey = "mob.wolf",
+					behavior = "aggressive",
+					loot = { { id = "secret", count = 1 } },
+				},
+			},
+		}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "testOnly"), `faltou erro de testOnly: {table.concat(errors, "; ")}`)
 	end,
 
 	["meat items, cooked meat recipe and crate skin exist"] = function()

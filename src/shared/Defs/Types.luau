@@ -40,6 +40,8 @@ export type StructureDef = {
 
 export type ItemDef = {
 	id: string,
+	-- Só para teste: fora do Studio o item não existe para o jogador (ItemAccess).
+	testOnly: boolean?,
 	nameKey: string,
 	category: ItemCategory,
 	tier: string?, -- id em Tiers; nil = moldura neutra (recursos, comida)

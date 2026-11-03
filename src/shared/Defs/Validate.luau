@@ -348,6 +348,9 @@ local function validateKits(errors: { string }, defs: Types.DefsTables, hasStrin
 				allValid = false
 				continue
 			end
+			if item.testOnly == true then
+				table.insert(errors, `Kit "{key}": item "{entry.id}" é testOnly e não pode estar num kit`)
+			end
 			if not isWholeNumber(entry.count, 1) then
 				table.insert(errors, `Kit "{key}": count de "{entry.id}" deve ser inteiro maior ou igual a 1`)
 				allValid = false
@@ -508,6 +511,8 @@ local function validateMobLoot(errors: { string }, key: string, mob: Types.MobDe
 	for index, entry in mob.loot do
 		if items ~= nil and items[entry.id] == nil then
 			table.insert(errors, `Mob "{key}": loot[{index}] usa item inexistente "{entry.id}"`)
+		elseif items ~= nil and items[entry.id].testOnly == true then
+			table.insert(errors, `Mob "{key}": loot[{index}] usa item testOnly "{entry.id}"`)
 		end
 		if not isWholeNumber(entry.count, 1) then
 			table.insert(errors, `Mob "{key}": loot[{index}] precisa de count inteiro maior ou igual a 1`)

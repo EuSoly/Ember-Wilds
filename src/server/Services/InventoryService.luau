@@ -9,6 +9,7 @@
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
@@ -16,6 +17,7 @@ local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
+local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local Net = require(script.Parent.Parent.Net)
 
 local HOTBAR_SLOTS = InventoryConfig.HOTBAR_SLOTS
@@ -112,7 +114,7 @@ end
 
 -- Dá itens ao jogador. Devolve o que não coube (0 = coube tudo).
 function InventoryService.give(player: Player, id: string, count: number): number
-	if Defs.Items[id] == nil or count < 1 or count % 1 ~= 0 then
+	if not ItemAccess.isAvailable(id, RunService:IsStudio()) or count < 1 or count % 1 ~= 0 then
 		return count
 	end
 	local inv = ensure(player)
