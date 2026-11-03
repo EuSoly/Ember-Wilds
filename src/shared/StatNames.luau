@@ -160,6 +160,11 @@ return table.freeze({
 	Wood = "Wood",
 	Stock = "Stock",
 	Drinks = "Drinks",
+	-- true enquanto o extrator trabalha (o rotor gira), atributo no modelo (MachineService).
+	Working = "Working",
+	-- false com a peça apagada (as chamas somem; sem atributo = acesa), atributo
+	-- no modelo da fornalha (MachineService).
+	Lit = "Lit",
 
 	-- Caixas de itens (G6). Tag (CollectionService) dos modelos de caixa em
 	-- Workspace.Crates (CrateService). A vida usa StructureHealth/StructureHealthMax,

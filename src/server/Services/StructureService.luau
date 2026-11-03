@@ -22,7 +22,8 @@
 -- vida (BuildRules.damageOf). Vida 0 = some. Porta não fecha com jogador
 -- encostando no círculo dela. Fogo some sozinho depois de def.lifetime segundos.
 -- Dono morreu (DeathService.kill) ou saiu: removeOwned some com tudo dele.
--- Toda remoção tira a peça do índice espacial e avisa quem pediu (onRemoved).
+-- Toda remoção tira a peça do índice espacial e avisa quem pediu (onRemoved);
+-- toda peça criada também avisa (onCreated).
 -- O dano do espinho fica no SpikeService (ver lá o porquê).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -77,6 +78,7 @@ local alive: { [Entry]: boolean } = {}
 local byModel: { [Model]: Entry } = {}
 local owned: { [Player]: { [Entry]: boolean } } = {}
 local counts: { [Player]: number } = {}
+local createdListeners: { (Entry) -> () } = {}
 local removedListeners: { (Entry) -> () } = {}
 local folder: Folder? = nil
 -- Giro escolhido (passos de BuildRules.ROTATE_STEP) por jogador; nil = 0.
@@ -137,6 +139,11 @@ end
 -- A peça viva deste modelo, ou nil (já removida, ou não é peça).
 function StructureService.entryOf(model: Instance): Entry?
 	return byModel[model :: any]
+end
+
+-- Chamado (sem pausa) em toda peça criada, já no mundo e registrada (entryOf acha).
+function StructureService.onCreated(listener: (Entry) -> ())
+	table.insert(createdListeners, listener)
 end
 
 -- Chamado (sem pausa) em toda remoção de peça, antes de o modelo sumir.
@@ -307,6 +314,12 @@ local function create(
 	local lifetime = def.lifetime
 	if lifetime then
 		task.delay(lifetime, remove, entry)
+	end
+	for _, listener in createdListeners do
+		local called, err = pcall(listener :: any, entry)
+		if not called then
+			warn(`[StructureService] onCreated: {err}`)
+		end
 	end
 	return true
 end

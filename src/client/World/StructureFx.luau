@@ -21,8 +21,6 @@ local ChestState = require(Client:WaitForChild("ChestState"))
 local LID_OPEN_DEGREES = 105
 local LID_SPEED = math.rad(420) -- rad/s ao abrir e fechar
 local ROTOR_SPEED = math.rad(180) -- rad/s
-local WORKING_ATTRIBUTE = "Working" -- extrator (Task 9)
-local LIT_ATTRIBUTE = "Lit" -- fogueira/fornalha (Task 9); sem atributo = acesa
 
 type Mover = { part: BasePart, pivotRel: CFrame, angle: number, written: boolean }
 type Piece = {
@@ -128,7 +126,7 @@ local function step(dt: number)
 		end
 
 		-- Rotor: gira no eixo da peça só com Working == true.
-		if model:GetAttribute(WORKING_ATTRIBUTE) == true then
+		if model:GetAttribute(StatNames.Working) == true then
 			for _, rotor in piece.rotors do
 				if rotor.part.Parent then
 					rotor.angle = (rotor.angle + ROTOR_SPEED * dt) % (2 * math.pi)
@@ -138,7 +136,7 @@ local function step(dt: number)
 		end
 
 		-- Chamas: visíveis salvo Lit == false (só local; Transparency fica do servidor).
-		local modifier = if model:GetAttribute(LIT_ATTRIBUTE) == false then 1 else 0
+		local modifier = if model:GetAttribute(StatNames.Lit) == false then 1 else 0
 		for _, flame in piece.flames do
 			if flame.LocalTransparencyModifier ~= modifier then
 				flame.LocalTransparencyModifier = modifier
