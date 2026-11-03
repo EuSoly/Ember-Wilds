@@ -478,10 +478,19 @@ function SerdesFunctions.ReadEVENT_CrateContents(): ({ Crate: Instance?, Slots: 
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_StructureAction(Value: { Target: Instance?, Action: number, Arg: number }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 19)
+	table.insert(SendInstances, Value.Target or Null)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Action)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Arg)
+end
+
 function SerdesFunctions.WriteEVENT_SetBuildRotation(Value: number): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 19)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 20)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
 end
 
@@ -547,6 +556,9 @@ if not RunService:IsRunning() then
 	},
 	CrateContents = {
 		On = NOOP
+	},
+	StructureAction = {
+		Fire = NOOP
 	},
 	SetBuildRotation = {
 		Fire = NOOP
@@ -879,6 +891,11 @@ local Returns = table.freeze({
 					Events.Reliable[18] = nil
 				end
 			end
+		end
+	},
+	StructureAction = {
+		Fire = function(Value: { Target: Instance?, Action: number, Arg: number }): ()
+			SerdesFunctions.WriteEVENT_StructureAction(Value)
 		end
 	},
 	SetBuildRotation = {

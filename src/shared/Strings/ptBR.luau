@@ -29,6 +29,17 @@ return table.freeze({
 	["hud.rotate"] = "Girar",
 	["hud.crate"] = "Caixa",
 
+	-- Painel de interação com estruturas (G8): botões das ações e estado da peça
+	["interact.put_wood"] = "Pôr madeira",
+	["interact.take"] = "Pegar",
+	["interact.drink"] = "Beber",
+	["interact.sleep"] = "Deitar",
+	["interact.fill"] = "Encher",
+	["interact.symbol"] = "Símbolo",
+	["interact.wood"] = "Madeira: {count}",
+	["interact.stock"] = "Estoque: {count}",
+	["interact.drinks"] = "Goles: {count}",
+
 	-- Itens
 	["item.wood"] = "Madeira",
 	["item.stone"] = "Pedra",

@@ -154,6 +154,12 @@ return table.freeze({
 	-- ainda não tem os atributos: sem atributo = vazio.
 	ChestItem = "ChestItem",
 	ChestCount = "ChestCount",
+	-- Estado das estruturas de usar de perto (G8), atributos no modelo da peça
+	-- (todos veem; o painel de interação mostra só os que existem): madeira
+	-- dentro (extrator e fornalha), estoque pronto (extrator) e goles (poço).
+	Wood = "Wood",
+	Stock = "Stock",
+	Drinks = "Drinks",
 
 	-- Caixas de itens (G6). Tag (CollectionService) dos modelos de caixa em
 	-- Workspace.Crates (CrateService). A vida usa StructureHealth/StructureHealthMax,

@@ -240,6 +240,23 @@ event CrateContents {
 	}
 }
 
+-- Estruturas que se usam de perto (G8: extrator, fornalha, poço, cama, placa).
+-- O cliente só pede; o servidor (InteractService) confere taxa, jogador vivo,
+-- peça registrada, distância (InteractRules.RANGE) e permissão
+-- (InteractRules.allowed), e passa ao tratador do tipo; o inválido é ignorado.
+-- `Action` = InteractRules.ACTIONS; `Arg` = extra da ação (ex.: símbolo da
+-- placa), 0 quando não usa. A peça pode chegar nil (sumiu antes do pedido).
+event StructureAction {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Target: Instance?,
+		Action: u8,
+		Arg: u8
+	}
+}
+
 -- Construção livre (G4). Giro escolhido para a próxima peça, em passos de 45°
 -- (0..7; BuildRules.ROTATE_STEPS). O servidor (StructureService) só aceita
 -- inteiro de 0 a 7 com uma peça na mão, volta a 0 ao trocar de item e calcula

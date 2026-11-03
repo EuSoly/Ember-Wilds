@@ -173,6 +173,7 @@ Queue.Reliable[15] = table.create(256)
 Queue.Reliable[16] = table.create(256)
 Queue.Reliable[17] = table.create(256)
 Queue.Reliable[19] = table.create(256)
+Queue.Reliable[20] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
@@ -471,6 +472,22 @@ function SerdesFunctions.WriteEVENT_CrateContents(Value: { Crate: Instance?, Slo
 	-- END ARRAY
 end
 
+function SerdesFunctions.ReadEVENT_StructureAction(): ({ Target: Instance?, Action: number, Arg: number })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	RecieveInstanceCursor += 1
+	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
+		RecieveInstanceCursor -= 1
+		RecieveInstanceCursor += 1
+		Value.Target = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Target) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Target)} instead.`) end
+	end
+	Value.Action = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Arg = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	return Value
+end
+
 function SerdesFunctions.ReadEVENT_SetBuildRotation(): (number)
 	-- Read BLOCK: 1 bytes
 	local BLOCK_START = Read(1)
@@ -567,6 +584,9 @@ if not RunService:IsRunning() then
 		FireAll = NOOP,
 		FireList = NOOP,
 		FireExcept = NOOP
+	},
+	StructureAction = {
+		On = NOOP
 	},
 	SetBuildRotation = {
 		On = NOOP
@@ -744,14 +764,24 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 				table.insert(Queue.Reliable[17], {Player, Value} :: {any})
 			end
 		elseif Index == 19 then
-			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			local Value: { Target: Instance?, Action: number, Arg: number } = SerdesFunctions.ReadEVENT_StructureAction()
 			if Events.Reliable[19] ~= nil then
 				task.spawn(Events.Reliable[19], Player, Value)
 			else
 				if #Queue.Reliable[19] > 256 then
-					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"StructureAction\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[19], {Player, Value} :: {any})
+			end
+		elseif Index == 20 then
+			local Value: number = SerdesFunctions.ReadEVENT_SetBuildRotation()
+			if Events.Reliable[20] ~= nil then
+				task.spawn(Events.Reliable[20], Player, Value)
+			else
+				if #Queue.Reliable[20] > 256 then
+					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[20], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1337,8 +1367,8 @@ local Returns = table.freeze({
 			end
 		end,
 	},
-	SetBuildRotation = {
-		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+	StructureAction = {
+		On = function(Listener: (Player: Player, Value: { Target: Instance?, Action: number, Arg: number }) -> ()): () -> ()
 			Events.Reliable[19] = Listener
 			for Index, Arguments in Queue.Reliable[19] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -1347,6 +1377,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[19] == Listener then
 					Events.Reliable[19] = nil
+				end
+			end
+		end
+	},
+	SetBuildRotation = {
+		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+			Events.Reliable[20] = Listener
+			for Index, Arguments in Queue.Reliable[20] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[20] = {}
+			return function (): ()
+				if Events.Reliable[20] == Listener then
+					Events.Reliable[20] = nil
 				end
 			end
 		end
