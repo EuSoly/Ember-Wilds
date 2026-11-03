@@ -162,7 +162,6 @@ for _, kind in { "structures", "resources", "icons" } do
 	table.sort(made[kind])
 	table.insert(lines, `[import-world] {kind} ({#made[kind]}): {table.concat(made[kind], ", ")}`)
 end
-local summary = table.concat(lines, "
-")
+local summary = table.concat(lines, "\n")
 print(summary)
 return summary
