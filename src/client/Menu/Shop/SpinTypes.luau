@@ -10,6 +10,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
+local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -32,8 +33,8 @@ local CARD_ART: { [string]: string } = {
 	book = "blue",
 	crate = "orange",
 }
-local SAMPLE_COUNT = 3 -- skins de amostra por cartão
 local SAMPLE_TILE = 70 -- só dimensiona o nome (o tamanho real vem da faixa)
+local rng = Random.new()
 local WHEEL_SPEED = 40 -- graus por segundo
 
 local SpinTypes = {}
@@ -135,13 +136,10 @@ local function roulette(): (Frame, GuiObject)
 	return box, disc
 end
 
--- Faixa de amostras abaixo do título: as skins mais raras do tipo em 3D, paradas
--- (sem trabalho por quadro). Tipo sem skins ("Em breve") fica com a faixa vazia.
-local function samples(spinType: MockStore.SpinType): Frame
-	local picked: { MockStore.SpinItem } = {}
-	for i = #spinType.items, math.max(#spinType.items - SAMPLE_COUNT + 1, 1), -1 do
-		table.insert(picked, 1, spinType.items[i])
-	end
+-- Faixa abaixo do título: UMA skin em destaque do tipo, em 3D — sorteada entre
+-- as Míticas (ou as mais raras, se não houver Mítica) a cada vez que a loja
+-- abre. Parada (sem trabalho por quadro). Tipo sem skins ("Em breve") fica vazio.
+local function samples(spinType: MockStore.SpinType, open: () -> boolean): Frame
 	local strip = create("Frame")({
 		Name = "Samples",
 		AnchorPoint = Vector2.new(0.5, 0),
@@ -150,38 +148,28 @@ local function samples(spinType: MockStore.SpinType): Frame
 		BackgroundTransparency = 1,
 		ZIndex = 3,
 	}) :: Frame
-	-- Caixa com a proporção de N quadradinhos lado a lado: ela encolhe para caber
-	-- na faixa (na largura ou na altura, o que apertar primeiro) e os
-	-- quadradinhos têm a altura dela, então nunca passam da faixa.
-	local gap = 0.08
-	local ratio = SAMPLE_COUNT + (SAMPLE_COUNT - 1) * gap
-	local row = create("Frame")({
-		Name = "Row",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(1, 1),
-		BackgroundTransparency = 1,
-		ZIndex = 3,
-		create("UIAspectRatioConstraint")({
-			AspectRatio = ratio,
-			AspectType = Enum.AspectType.FitWithinMaxSize,
-		}),
-		create("UIListLayout")({
-			FillDirection = Enum.FillDirection.Horizontal,
-			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			VerticalAlignment = Enum.VerticalAlignment.Center,
-			Padding = UDim.new(gap / ratio, 0),
-			SortOrder = Enum.SortOrder.LayoutOrder,
-		}),
-	}) :: Frame
-	row.Parent = strip
-	for i, item in picked do
+	local current: GuiObject? = nil
+	vide.effect(function()
+		if not open() then
+			return
+		end
+		if current then
+			current:Destroy()
+			current = nil
+		end
+		local item = SpinRules.featuredItem(spinType.items, rng:NextNumber())
+		if item == nil then
+			return
+		end
 		local tile = SpinTile.build(item, SAMPLE_TILE)
+		-- Quadrado da altura da faixa, no meio.
+		tile.AnchorPoint = Vector2.new(0.5, 0.5)
+		tile.Position = UDim2.fromScale(0.5, 0.5)
 		tile.Size = UDim2.fromScale(1, 1)
 		tile.SizeConstraint = Enum.SizeConstraint.RelativeYY
-		tile.LayoutOrder = i
-		tile.Parent = row
-	end
+		tile.Parent = strip
+		current = tile
+	end)
 	return strip
 end
 
@@ -203,7 +191,7 @@ local function bottomButton(spinType: MockStore.SpinType): Instance
 	})
 end
 
-local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiObject }): Frame
+local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiObject }, open: () -> boolean): Frame
 	local wheelBox, disc = roulette()
 	table.insert(wheels, disc)
 	return ShopParts.vividCard(Color3.fromHex(spinType.theme), {
@@ -219,7 +207,7 @@ local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiOb
 			maxSize = 28,
 		}),
 		wheelBox,
-		samples(spinType),
+		samples(spinType, open),
 		bottomButton(spinType),
 	})
 end
@@ -235,7 +223,7 @@ function SpinTypes.build(layout: () -> ShopLayout.Layout, open: () -> boolean): 
 		end, ShopLayout.GAP),
 	}
 	for i, spinType in MockStore.SPIN_TYPES do
-		table.insert(children, card(spinType, i, wheels))
+		table.insert(children, card(spinType, i, wheels, open))
 	end
 
 	-- Uma conexão só gira todas as roletas, e só enquanto a loja está aberta.

@@ -6,9 +6,8 @@
 -- No meio, a vitrine: o boneco com tudo equipado (MenuBoneco: skin, mochila
 -- nas costas e livro na mão) e, embaixo, a caixa equipada (CratePreview).
 -- Dos lados, um cartão por categoria (CosmeticCatalog.CATEGORIES): placa com
--- o nome, uma frase e até 3 quadradinhos das skins que o jogador tem (o item
--- em 3D sobre a cor da raridade). Tem = a padrão do slot ou Owns_<id> no
--- Player. Acessórios ainda não tem slot: mostra "Em breve" e não abre.
+-- o nome, uma frase e a skin equipada daquela categoria (o item em 3D sobre a
+-- cor da raridade). Acessórios ainda não tem slot: mostra "Em breve" e não abre.
 --
 -- Clicar num cartão abre a categoria: o estado local `category` (nil = esta
 -- tela principal) guarda qual, e a CategoryView aparece no lugar da Main (com
@@ -51,7 +50,6 @@ local BODY = Color3.fromHex("#2B2018")
 local ROW = Color3.fromHex("#3A2B20")
 local SHOWCASE = Color3.fromHex("#221912") -- fundo da vitrine, um tom abaixo do corpo
 
-local SAMPLE_MAX = 3
 -- Cartão (pixels lógicos a partir do topo): placa, frase e as amostras embaixo.
 local PLATE_TOP, PLATE_HEIGHT = 6, 30
 local TAGLINE_TOP, TAGLINE_HEIGHT = 40, 18
@@ -81,37 +79,14 @@ local function place(rect: () -> CosmeticsLayout.Rect): { [string]: any }
 	}
 end
 
--- Ids (separados por vírgula) das até 3 skins do slot que o jogador tem: a
--- equipada primeiro, depois das mais raras para as mais comuns.
-local function sampleIds(slot: string): () -> string
-	local player = Players.LocalPlayer
-	local default = Defs.CosmeticSlots[slot].default
-	local items = CosmeticCatalog.items(slot)
-	local owned: { [string]: () -> boolean } = {}
-	for _, def in items do
-		owned[def.id] = Sources.attribute(player, StatNames.OwnedPrefix .. def.id, false)
+-- Id da skin equipada no slot (o cartão mostra só ela).
+local function equippedId(slot: string): () -> string
+	local value =
+		Sources.attribute(Players.LocalPlayer, StatNames.CosmeticPrefix .. slot, Defs.CosmeticSlots[slot].default)
+	return function(): string
+		local id = value()
+		return if type(id) == "string" then id else Defs.CosmeticSlots[slot].default
 	end
-	local equipped = Sources.attribute(player, StatNames.CosmeticPrefix .. slot, default)
-	local function has(id: string): boolean
-		return id == default or (owned[id] ~= nil and owned[id]() == true)
-	end
-	return vide.derive(function(): string
-		local list: { string } = {}
-		local current = equipped()
-		if owned[current] ~= nil and has(current) then
-			table.insert(list, current)
-		end
-		for i = #items, 1, -1 do
-			if #list >= SAMPLE_MAX then
-				break
-			end
-			local id = items[i].id
-			if id ~= current and has(id) then
-				table.insert(list, id)
-			end
-		end
-		return table.concat(list, ",")
-	end)
 end
 
 -- Quadradinho da amostra: cor da raridade com o item em 3D por cima.
@@ -121,7 +96,7 @@ local function tile(id: string, order: number): Frame
 	local frame = create("Frame")({
 		Name = "Tile_" .. id,
 		LayoutOrder = order,
-		Size = UDim2.new(1 / SAMPLE_MAX, -TILE_GAP, 1, 0),
+		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Color3.fromHex(rarity.color),
 		BorderSizePixel = 0,
 		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
@@ -132,11 +107,10 @@ local function tile(id: string, order: number): Frame
 	return frame
 end
 
--- Linha das amostras. Os quadradinhos (ViewportFrames) só existem com a tela
--- principal à vista: montados ao abrir e refeitos quando a posse ou a
--- equipada muda.
+-- Amostra do cartão: a skin equipada. O quadradinho (ViewportFrame) só existe
+-- com a tela principal à vista: montado ao abrir e refeito quando a equipada muda.
 local function samples(slot: string, open: () -> boolean): Frame
-	local ids = sampleIds(slot)
+	local equipped = equippedId(slot)
 	local row = create("Frame")({
 		Name = "Samples",
 		Position = UDim2.fromOffset(8, SAMPLES_TOP),
@@ -152,19 +126,17 @@ local function samples(slot: string, open: () -> boolean): Frame
 	}) :: Frame
 	local tiles: { Instance } = {}
 	vide.effect(function()
-		local key = if open() then ids() else ""
+		local id = if open() then equipped() else nil
 		for _, old in tiles do
 			old:Destroy()
 		end
 		table.clear(tiles)
-		if key == "" then
+		if id == nil or Defs.Cosmetics[id] == nil then
 			return
 		end
-		for i, id in string.split(key, ",") do
-			local new = tile(id, i)
-			new.Parent = row
-			table.insert(tiles, new)
-		end
+		local new = tile(id, 1)
+		new.Parent = row
+		table.insert(tiles, new)
 	end)
 	return row
 end

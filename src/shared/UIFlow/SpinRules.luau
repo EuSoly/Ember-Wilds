@@ -53,6 +53,26 @@ function SpinRules.pickItem(items: { Item }, rarity: number, r: number): Item
 	error("[SpinRules] lista de itens vazia")
 end
 
+-- Skin em destaque no cartão do giro (loja): uma das mais raras do tipo —
+-- Míticas, ou a maior raridade que existir — escolhida por r em [0, 1).
+-- Lista vazia: nil.
+function SpinRules.featuredItem(items: { Item }, r: number): Item?
+	local best = 0
+	for _, item in items do
+		best = math.max(best, item.rarity)
+	end
+	local pool: { Item } = {}
+	for _, item in items do
+		if item.rarity == best then
+			table.insert(pool, item)
+		end
+	end
+	if #pool == 0 then
+		return nil
+	end
+	return pool[math.clamp(math.floor(r * #pool) + 1, 1, #pool)]
+end
+
 function SpinRules.newCounts(): Counts
 	return {}
 end

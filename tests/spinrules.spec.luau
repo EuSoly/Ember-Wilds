@@ -102,6 +102,22 @@ return {
 		assert(SpinRules.tensionRamp(mid) < 0.5, "devia acelerar no fim")
 	end,
 
+	["featuredItem sorteia entre as míticas"] = function()
+		local items = { item("a", 1), item("b", 5), item("c", 3), item("d", 5) }
+		assert(SpinRules.featuredItem(items, 0).id == "b", "r=0 pega a primeira mítica")
+		assert(SpinRules.featuredItem(items, 0.99).id == "d", "r alto pega a última mítica")
+	end,
+
+	["featuredItem sem mítica usa a mais rara que existir"] = function()
+		local items = { item("a", 1), item("b", 3), item("c", 3) }
+		assert(SpinRules.featuredItem(items, 0).id == "b", "raridade 3 é a maior")
+		assert(SpinRules.featuredItem({ item("livro", 1) }, 0.5).id == "livro", "uma só")
+	end,
+
+	["featuredItem sem itens devolve nil"] = function()
+		assert(SpinRules.featuredItem({}, 0.5) == nil, "lista vazia")
+	end,
+
 	["markerTile conta os quadradinhos que passaram pelo marcador"] = function()
 		-- Janela de 400 (marcador em 200), passo de 100.
 		assert(SpinRules.markerTile(0, 100, 400) == 2, "parado")
