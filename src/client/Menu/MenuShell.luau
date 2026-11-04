@@ -290,22 +290,6 @@ local function branch(layout: () -> Layout): ImageLabel
 	}) :: ImageLabel
 end
 
--- Árvore atrás da coluna: tronco do chão até a copa, que segura a placa do nível.
-local function tree(layout: () -> Layout): ImageLabel
-	return create("ImageLabel")({
-		Name = "Tree",
-		Visible = UiImages.has(UiImages.TREE),
-		Size = function()
-			local l = layout()
-			return UDim2.fromOffset(l.treeWidth, l.treeHeight)
-		end,
-		BackgroundTransparency = 1,
-		Image = UiImages.TREE,
-		ScaleType = Enum.ScaleType.Fit,
-		ZIndex = 0,
-	}) :: ImageLabel
-end
-
 -- Logo maior no menu; com um painel do mockup aberto, encolhe para não cobrir o título.
 local PANEL_LOGO_HEIGHT = 56
 local function logo(layout: () -> Layout): ImageLabel
@@ -530,7 +514,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	end)
 
 	local children: { Instance } =
-		{ tree(layout), levelPod(layout), branch(layout), balancePod(layout), logo(layout), column(layout) }
+		{ levelPod(layout), branch(layout), balancePod(layout), logo(layout), column(layout) }
 	for _, instance in home(layout) do
 		table.insert(children, instance)
 	end
@@ -553,6 +537,30 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		children,
 	}) :: ScreenGui
 	Template.bindUiScale(gui)
+
+	-- Fundo do menu: a árvore, em tela cheia (passa por trás dos botões do
+	-- Roblox no topo) e da altura da tela. Fica num ScreenGui próprio, abaixo
+	-- do menu, porque o menu respeita a área segura e a árvore não.
+	local backdrop = create("ScreenGui")({
+		Name = "MenuBackdrop",
+		ResetOnSpawn = false,
+		DisplayOrder = 0,
+		IgnoreGuiInset = true,
+		ScreenInsets = Enum.ScreenInsets.None,
+		Enabled = function()
+			return ScreenState.current() == "menu" and not SettingsScreen.open()
+		end,
+		create("ImageLabel")({
+			Name = "Tree",
+			Visible = UiImages.has(UiImages.TREE),
+			Size = UDim2.fromScale(MenuLayout.TREE_ASPECT, 1),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY, -- largura proporcional à altura
+			BackgroundTransparency = 1,
+			Image = UiImages.TREE,
+			ScaleType = Enum.ScaleType.Fit,
+		}),
+	}) :: ScreenGui
+	backdrop.Parent = playerGui
 
 	local scale = gui:FindFirstChildOfClass("UIScale")
 	local function refresh()

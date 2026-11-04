@@ -19,6 +19,9 @@ UiImages.PLANK = "rbxassetid://72342906066027" -- plank-wood.png (480x178): plac
 -- Placa em 9 partes: as pontas (com os pregos) não esticam; só o miolo estica.
 UiImages.PLANK_SIZE = Vector2.new(480, 178)
 UiImages.PLANK_SLICE = Rect.new(66, 52, 414, 126)
+UiImages.BUTTON_EMBER = "rbxassetid://90320494973222" -- button-ember.png (480x150): botão laranja (JOGAR)
+UiImages.BUTTON_EMBER_SIZE = Vector2.new(480, 150)
+UiImages.BUTTON_EMBER_SLICE = Rect.new(48, 36, 432, 114) -- chanfros das pontas não esticam
 
 -- true se a imagem já tem id.
 function UiImages.has(id: string): boolean

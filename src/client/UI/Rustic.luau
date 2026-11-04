@@ -49,16 +49,26 @@ local function usesPlank(kind: Kind): boolean
 	return UiImages.has(UiImages.PLANK) and (kind == "wood" or kind == "leather")
 end
 
--- Placa de madeira em 9 partes cobrindo o pai: as pontas (com os pregos) não
--- esticam. O SliceScale acompanha a altura, para os pregos crescerem junto.
-local function plankImage(visible: boolean | () -> boolean, tint: Color3 | () -> Color3): ImageLabel
+-- A brasa (JOGAR, "+", selecionado) usa a imagem do botão laranja chanfrado.
+local function usesEmberImage(kind: Kind): boolean
+	return UiImages.has(UiImages.BUTTON_EMBER) and kind == "ember"
+end
+
+type SliceArt = { image: string, size: Vector2, slice: Rect }
+local PLANK_ART: SliceArt = { image = UiImages.PLANK, size = UiImages.PLANK_SIZE, slice = UiImages.PLANK_SLICE }
+local EMBER_ART: SliceArt =
+	{ image = UiImages.BUTTON_EMBER, size = UiImages.BUTTON_EMBER_SIZE, slice = UiImages.BUTTON_EMBER_SLICE }
+
+-- Imagem em 9 partes cobrindo o pai: as pontas (pregos, chanfros) não esticam.
+-- O SliceScale acompanha a altura, para as pontas crescerem junto.
+local function sliceImage(art: SliceArt, visible: boolean | () -> boolean, tint: Color3 | () -> Color3): ImageLabel
 	local image = create("ImageLabel")({
-		Name = "Plank",
+		Name = "Art",
 		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
-		Image = UiImages.PLANK,
+		Image = art.image,
 		ScaleType = Enum.ScaleType.Slice,
-		SliceCenter = UiImages.PLANK_SLICE,
+		SliceCenter = art.slice,
 		ImageColor3 = tint,
 		Visible = visible,
 		ZIndex = 0,
@@ -72,7 +82,7 @@ local function plankImage(visible: boolean | () -> boolean, tint: Color3 | () ->
 		local gui = image:FindFirstAncestorOfClass("ScreenGui")
 		local uiScale = gui and gui:FindFirstChildOfClass("UIScale")
 		local factor = if uiScale and uiScale.Scale > 0 then uiScale.Scale else 1
-		image.SliceScale = image.AbsoluteSize.Y / factor / UiImages.PLANK_SIZE.Y
+		image.SliceScale = image.AbsoluteSize.Y / factor / art.size.Y
 	end
 	image:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
 	fit()
@@ -129,7 +139,7 @@ function Rustic.plate(props: { [any]: any }): Frame
 		local frame = create("Frame")({
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
-			plankImage(true, PLANK_TINT.wood),
+			sliceImage(PLANK_ART, true, PLANK_TINT.wood),
 		}) :: Frame
 		return vide.apply(frame)(props) :: Frame
 	end
@@ -185,6 +195,12 @@ function Rustic.button(props: { [any]: any }): TextButton
 	local function plank(): boolean
 		return usesPlank(read(kind))
 	end
+	local function emberArt(): boolean
+		return usesEmberImage(read(kind))
+	end
+	local function anyArt(): boolean
+		return plank() or emberArt()
+	end
 	local function textStroke(): UIStroke
 		return create("UIStroke")({
 			Enabled = plank,
@@ -204,14 +220,14 @@ function Rustic.button(props: { [any]: any }): TextButton
 		end,
 		BackgroundColor3 = Color3.new(1, 1, 1),
 		BackgroundTransparency = function()
-			return if plank() then 1 else 0
+			return if anyArt() then 1 else 0
 		end,
 		BorderSizePixel = 0,
 		create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
 		create("UICorner")({ CornerRadius = CORNER }),
 		create("UIGradient")({
 			Enabled = function()
-				return not plank()
+				return not anyArt()
 			end,
 			Rotation = 90,
 			Color = function()
@@ -221,15 +237,16 @@ function Rustic.button(props: { [any]: any }): TextButton
 		}),
 		create("UIStroke")({
 			Enabled = function()
-				return not plank()
+				return not anyArt()
 			end,
 			Color = R.outline,
 			Thickness = OUTLINE,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		}),
-		plankImage(plank, function()
+		sliceImage(PLANK_ART, plank, function()
 			return if read(kind) == "leather" then PLANK_TINT.leather else PLANK_TINT.wood
 		end),
+		sliceImage(EMBER_ART, emberArt, Color3.new(1, 1, 1)),
 		Rustic.label({
 			Name = "Label",
 			AnchorPoint = Vector2.new(0.5, 0.5),

@@ -18,7 +18,7 @@ MenuLayout.LOGO_ASPECT = 1200 / 804 -- proporção do PNG do logo
 MenuLayout.LOGO_HEIGHT = 120
 MenuLayout.LOGO_HEIGHT_COMPACT = 64
 MenuLayout.LOGO_GAP = 8 -- folga mínima entre o logo e os pods
--- Árvore atrás da coluna: acompanha a altura da tela (proporção do PNG).
+-- Árvore atrás da coluna (fundo em tela cheia): largura = altura × proporção do PNG.
 MenuLayout.TREE_ASPECT = 589 / 916
 MenuLayout.COLUMN_WIDTH = 200 -- design system §8: 200 no PC
 MenuLayout.COLUMN_WIDTH_COMPACT = 144 -- e 144 no compacto
@@ -64,8 +64,6 @@ export type Layout = {
 	podWidth: number,
 	logoTop: number,
 	logoHeight: number,
-	treeWidth: number,
-	treeHeight: number,
 	bodyTop: number,
 	columnX: number,
 	columnWidth: number,
@@ -164,8 +162,6 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		podWidth = podWidth,
 		logoTop = logoTop,
 		logoHeight = logoHeight,
-		treeWidth = height * MenuLayout.TREE_ASPECT,
-		treeHeight = height,
 		bodyTop = bodyTop,
 		columnX = m,
 		columnWidth = columnWidth,
