@@ -61,6 +61,39 @@ local Palette = {
 
 	-- Moldura de itens sem tier (comida, recursos).
 	neutralFrame = "#8A8F98",
+
+	-- Design system rústico (docs/game-design/design-system/README.md, seção 2):
+	-- madeira estrutura, couro convida à interação, papel explica, brasa destaca.
+	-- As telas novas (carregamento, menu) usam estas cores; o resto da UI ainda
+	-- usa o grupo `ui` até ser redesenhado.
+	rustic = {
+		outline = "#211A15", -- contorno externo e sombra mais profunda
+		charcoal = "#29241F", -- fundos escuros e tinta sobre papel
+		woodShadow = "#38291F",
+		walnut = "#59402D", -- corpo da madeira
+		woodLight = "#805739", -- face iluminada da madeira
+		woodEdge = "#AD7745",
+		leatherShadow = "#68432D",
+		leather = "#95603D", -- botão secundário
+		leatherLight = "#B87C4B",
+		paperShadow = "#B99462",
+		paper = "#E8D5AE", -- área de leitura
+		paperLight = "#F4E5C6",
+		moss = "#78834F",
+		emberShadow = "#B75A22",
+		ember = "#E99843", -- ação principal e seleção
+		emberLight = "#FFC66B",
+		cream = "#FFF3D6", -- texto sobre fundo escuro
+		textSecondaryDark = "#C9B898", -- texto secundário sobre carvão/nogueira
+		textSecondaryLight = "#59402D", -- texto secundário sobre papel
+		success = "#92B56A",
+		disabled = "#51483D", -- fundo de botão sem ação
+		disabledText = "#B9AA91",
+		-- Noite da barra de carregamento (o sol vira lua na metade).
+		nightShadow = "#363F84",
+		night = "#5B6FC4",
+		nightLight = "#9FB6FF",
+	},
 }
 
 return deepFreeze(Palette)

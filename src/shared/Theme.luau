@@ -31,6 +31,7 @@ end
 Theme.ui = toColors(Palette.ui)
 Theme.tier = toColors(Palette.tier)
 Theme.status = toColors(Palette.status)
+Theme.rustic = toColors(Palette.rustic)
 
 local builderSans = Font.fromEnum(Enum.Font.BuilderSans).Family
 

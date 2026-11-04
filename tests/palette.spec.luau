@@ -19,6 +19,7 @@ return {
 		assertAllHex(Palette.tier, "tier")
 		assertAllHex(Palette.status, "status")
 		assertAllHex(Palette.biome, "biome")
+		assertAllHex(Palette.rustic, "rustic")
 		assert(string.match(Palette.neutralFrame, HEX), "neutralFrame não é hex")
 	end,
 
@@ -27,6 +28,16 @@ return {
 		assert(Palette.tier.wood == "#8B5A2B", `madeira: {Palette.tier.wood}`)
 		assert(Palette.biome.forest[1] == "#6FBF4A", `floresta: {Palette.biome.forest[1]}`)
 		assert(#Palette.biome.nightFire == 4, "noite e fogo deveria ter 4 cores")
+	end,
+
+	["rustic colors match the design system"] = function()
+		local r = Palette.rustic
+		assert(r.walnut == "#59402D", `nogueira: {r.walnut}`)
+		assert(r.leather == "#95603D", `couro: {r.leather}`)
+		assert(r.paper == "#E8D5AE", `papel: {r.paper}`)
+		assert(r.ember == "#E99843", `brasa: {r.ember}`)
+		assert(r.cream == "#FFF3D6", `creme: {r.cream}`)
+		assert(r.charcoal == "#29241F", `carvão: {r.charcoal}`)
 	end,
 
 	["palette is frozen"] = function()
