@@ -47,6 +47,20 @@ MockStore.KIT = {
 	offers = { { hours = 1, price = 300 }, { hours = 24, price = 600 } },
 } :: { items: { string }, offers: { Offer } }
 
+-- Kits iniciais com Robux (mockup da UI 1): preço para 1 vida e para sempre,
+-- por id de Defs.Kits. Provisórios: o Elizeu ajusta. Apagar daqui quando a
+-- compra real existir (aí os preços vão para Defs.Kits).
+export type KitRobux = { once: number, forever: number }
+MockStore.KIT_ROBUX = {
+	kit_starter = { once = 15, forever = 99 },
+	kit_explorer = { once = 25, forever = 199 },
+	kit_survivor = { once = 49, forever = 399 },
+	kit_veteran = { once = 99, forever = 799 },
+} :: { [string]: KitRobux }
+
+-- Kits que o mockup já começa tendo para sempre (para mostrar o botão "Usar").
+MockStore.KIT_STARTS_OWNED = { "kit_starter" } :: { string }
+
 MockStore.CATEGORIES = {
 	{ id = "skins", nameKey = "mock.cat.skins", items = {} }, -- usa as skins de corpo reais
 	{

@@ -1,4 +1,5 @@
 --!strict
+local Defs = require("../src/shared/Defs")
 local MockStore = require("../src/shared/UIFlow/MockStore")
 local Strings = require("../src/shared/Strings")
 
@@ -74,6 +75,33 @@ return {
 			end
 		end
 		assert(table.concat(ids, ",") == "skins,accessories,bag,book,crate", table.concat(ids, ","))
+	end,
+
+	["kit robux prices"] = function()
+		local expected = {
+			kit_starter = { 15, 99 },
+			kit_explorer = { 25, 199 },
+			kit_survivor = { 49, 399 },
+			kit_veteran = { 99, 799 },
+		}
+		for id, prices in expected do
+			local entry = MockStore.KIT_ROBUX[id]
+			assert(entry ~= nil, `{id} sem preço em Robux`)
+			assert(entry.once == prices[1] and entry.forever == prices[2], `{id}: {entry.once}/{entry.forever}`)
+		end
+	end,
+
+	["every kit has robux prices"] = function()
+		for id in Defs.Kits do
+			assert(MockStore.KIT_ROBUX[id] ~= nil, `{id} sem preço em Robux`)
+		end
+	end,
+
+	["starts owned exists"] = function()
+		assert(#MockStore.KIT_STARTS_OWNED > 0, "nenhum kit começa permanente")
+		for _, id in MockStore.KIT_STARTS_OWNED do
+			assert(Defs.Kits[id] ~= nil, `{id} não existe em Defs.Kits`)
+		end
 	end,
 
 	["ranking tem 10 linhas em ordem decrescente"] = function()
