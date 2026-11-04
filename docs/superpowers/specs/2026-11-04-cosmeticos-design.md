@@ -74,6 +74,10 @@ O carrossel, as amostras dos cartões e o prêmio dos giros da loja passam a usa
 
 - **(minha decisão)** Categoria sem nenhuma skin real (Acessórios) mostra "Em breve" também na loja e não abre o giro. Livro tem uma skin só: o giro de livro sempre "sorteia" ela, até existirem outras.
 
+## Fácil de personalizar (Elizeu)
+
+Todas as skins ficam **num arquivo só** de dados (`src/shared/Defs/Cosmetics.luau`), que alimenta os Cosméticos **e** o carrossel/giros da loja. Cada skin tem, num lugar só: id, nome (texto em pt-BR), categoria, **raridade**, as cores e, opcional, a **imagem** do quadradinho (quando existir a arte, ela substitui a cor) e se **aparece nos giros da loja** (sim por padrão; a skin padrão de cada categoria não aparece). Mudar a ordem, a raridade, tirar do carrossel ou acrescentar uma skin = editar só essa entrada. O guia ganha um passo a passo "como adicionar ou mudar uma skin", e a validação dos dados avisa erro de digitação (raridade fora de 1–5, categoria inexistente, texto faltando).
+
 ## Posse e equipar (minha decisão, por ser o necessário para "de verdade")
 
 - O servidor já guarda posse e equipado no perfil (`Cosmetics.Owned` / `Cosmetics.Equipped`) e já publica o equipado de cada slot como atributo (`Cosmetic_<slot>`, no personagem e no Player).
