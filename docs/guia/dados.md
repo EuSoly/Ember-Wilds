@@ -4,7 +4,7 @@ Tudo o que sobrevive à morte fica salvo por jogador num **perfil**: a moeda Gol
 
 O perfil usa o [ProfileStore](https://madstudioroblox.github.io/ProfileStore/) (pacote `lm-loleris/profilestore`, instalado pelo Wally em `ServerPackages/`). Ele cuida do **session lock** (dois servidores nunca mexem no mesmo perfil), do autosave e do save ao sair.
 
-O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`) e só pode **pedir** mudança de configuração, que o servidor valida.
+O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Stat_<id>`) e só pode **pedir** mudança de configuração, que o servidor valida.
 
 ## O perfil (schema v1)
 
@@ -15,6 +15,7 @@ O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos d
 | `Cosmetics` | `{ Owned = { [id] = true }, Equipped = { [slot] = id } }` |
 | `Stats` | `{ [statId] = número }` ou, nas keyed, `{ [statId] = { [chave] = número } }` |
 | `Settings` | `{ [settingId] = número, booleano ou texto }` |
+| `Xp` | `{ Seeded, HourWindowStart, HourEarned }`: XP inicial já copiado do total de pontos? e a janela do teto de XP por hora. O XP em si é a estatística `xp_total` |
 | `PurchaseIdCache` | Reservado para as compras com Robux (F5) |
 
 O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat no perfil (GDPR).
@@ -159,10 +160,24 @@ Como funciona: ao abrir o perfil, os passos que faltam rodam em ordem **antes** 
 - Para ajustar, mexa nos números de `DataConfig` (`POINTS_PER_CURRENCY`, `MAX_CURRENCY_PER_LIFE`, `MAX_CURRENCY_PER_HOUR`, `HOUR_SECONDS`).
 - Toda mudança de saldo passa pelo `CurrencyService` (`earnFromGameplay`, `grant`, `spend`, sempre com um `reason`, que aparece no Output do Studio). O saldo vai para o atributo `Currency` do Player.
 
+## Nível e XP
+
+- **XP = pontos de cada vida**, arredondados para baixo, somados em `xp_total` no fim da vida. O nível não é salvo: sai do XP (`src/shared/Data/LevelRules.luau`, teste `tests/levelrules.spec.luau`).
+- **Curva:** subir do nível n para n+1 pede `1000 × n` XP (nível 2 = 1.000 no total; 8 = 28.000; 10 = 45.000; 50 = 1.225.000). Sem máximo.
+- **Teto: 100.000 XP por hora**, rede de segurança contra trapaça e bug (como o da Golden Ember). A janela fica em `data.Xp` (sair e voltar não zera).
+- **Quem já jogou:** na primeira vez que o perfil carrega nesta versão, `xp_total` recebe `score_total` (fica com o maior) e `data.Xp.Seeded` vira `true`. Não subiu a versão do esquema, para servidores antigos abertos durante a atualização não recusarem perfis.
+- Para ajustar: `DataConfig.XP_STEP` e `DataConfig.MAX_XP_PER_HOUR`.
+- **Passe de batalha (futuro):** escutar `StatsService.onChanged` de `xp_total` (ou o XP do resumo da vida) e somar numa trilha da temporada.
+
+## Estatísticas no cliente
+
+O `StatsService` publica cada estatística de `Defs.Stats` no atributo `Stat_<id>` do Player, ao carregar o perfil e a cada mudança. Counter e max vão como estão; keyed vai o **total somado** (`StatsRules.total`); o detalhe por chave fica só no servidor.
+
 ### Vida e fim de vida
 
 - A vida começa quando o personagem nasce (só a pedido: botão Jogar).
-- `LifeService.endLife(player)` é o fim de vida: converte os pontos (`Score`), soma `score_total` e `deaths`, registra `score_best` e `days_best` (ciclos completos de 480 s vividos), zera os pontos e salva. Devolve o resumo `{ points, days, currency }` (moeda = a concedida de fato, depois dos tetos), ou `nil` se não havia vida ativa ou perfil.
+- `LifeService.endLife(player)` é o fim de vida: converte os pontos (`Score`) em Golden Ember e em XP, soma `score_total`, `deaths`, `days_total` e `xp_total`, registra `score_best` e `days_best` (ciclos completos de 480 s vividos), zera os pontos e salva. Devolve o resumo `{ points, days, currency, xp }` (moeda e XP = os concedidos de fato, depois dos tetos), ou `nil` se não havia vida ativa ou perfil.
+- `deaths` conta **toda vida terminada** (sair do jogo também). `real_deaths` conta só morte de verdade (somado no `DeathService.kill`) e é o "Mortes" do Perfil.
 - Só faz a contabilidade: não limpa o inventário nem faz renascer.
 
 ### Morte

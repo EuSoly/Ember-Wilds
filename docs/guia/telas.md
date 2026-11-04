@@ -98,6 +98,9 @@ Os textos e os ids das imagens ficam escritos no molde e no script: os textos e 
 | `DaysLabel` | TextLabel | Dias vividos (`death.days`) |
 | `PointsLabel` | TextLabel | Pontos descendo até 0 (`death.points`) |
 | `CurrencyLabel` | TextLabel | Golden Ember subindo (`death.currency`) |
+| `XpBar` → `XpFill` | Frame | Barra de XP: o `XpFill` (filho) enche do XP de antes até o de agora e recomeça a cada nível |
+| `XpLabel` | TextLabel | XP ganho na vida (`death.xp`, "+30.000 XP") |
+| `LevelUpLabel` | TextLabel | "Subiu para o nível N!" (`death.levelup`); só aparece se subiu de nível, no fim da contagem |
 | `KitList` | Lista | Linhas de kit |
 | `KitPointsLabel` | TextLabel | Pontos para kit |
 | `PlayAgainButton` | Botão | Nasce de novo com o kit escolhido |
@@ -206,12 +209,13 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 
 | Parte | O que é |
 |---|---|
-| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
+| Topo | Esquerda: **nível e XP de verdade** (atributo `Stat_xp_total`, nível pelo `LevelRules`), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
 | Árvore | Imagem atrás da coluna, num ScreenGui próprio (`MenuBackdrop`) em tela cheia: vai do topo (por trás dos botões do Roblox) até embaixo, com a largura proporcional à altura. Tronco, copa (onde fica o nível) e cogumelos; os botões ficam como placas pregadas no tronco |
 | Coluna à esquerda | Perfil, Cosméticos, Loja, Ranking e Configurações (esta abre a janela de configurações por cima do menu). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
 | Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
-| Painéis do mockup | Perfil, Cosméticos e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+| Perfil | Janela rústica no centro, **sem escurecer** o menu atrás. Veja "Perfil (UI 4)" |
+| Painéis do mockup | Cosméticos e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
 | Loja | Abre em **tela cheia** (some coluna, nível, logo, boneco e árvore; só o card da Golden Ember fica). Veja "Loja (UI 2)" |
 
 | Arquivo | O que é |
@@ -257,14 +261,24 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 
 Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`, `KitShop.buyForever` ou pelo `onClick` dos cartões (`Featured`, `Passes`, `EmberPacks`); é aí que entra o `MarketplaceService`.
 
+### Perfil (UI 4)
+
+Janela no centro do menu, no visual das Configurações (placa "PERFIL", Fechar volta ao "play"), sem fundo escuro. Tudo **de verdade**, lido dos atributos `Stat_<id>` que o servidor publica (veja `dados.md`, "Nível e XP" e "Estatísticas no cliente"). Design: `docs/superpowers/specs/2026-11-04-perfil-nivel-design.md`.
+
+1. Topo: nome, **NÍVEL N**, barra de XP do nível atual ("9.269/60.000 XP") e o XP total.
+2. Cartões: **Mortes** (`real_deaths`, só mortes de verdade), **Dias sobrevividos** (`days_total`), **Recorde de dias** (`days_best`).
+3. **Outros**: jogadores mortos, criaturas mortas, recursos coletados, itens criados (totais), recorde de pontos numa vida e tempo de jogo.
+
+Números com ponto de milhar e tempo em "12h 30min" (`src/shared/UIFlow/ProfileFormat.luau`, teste `tests/profileformat.spec.luau`). No celular a lista rola e o Fechar fica à vista. Arquivo: `src/client/Menu/ProfilePanel.luau`. Para mudar a ordem, mexa em `CARDS` e `OTHERS` no topo dele.
+
 ### Mockups do menu (G7a)
 
-Os painéis Perfil, Cosméticos e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
+Os painéis Cosméticos e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
 
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
 | `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco. A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
-| `RankingPanel.luau`, `ProfilePanel.luau` | Ranking e perfil |
+| `RankingPanel.luau` | Ranking |
 
 ### O que é falso e o que é de verdade
 
@@ -277,7 +291,7 @@ Tudo em `src/shared/UIFlow/MockStore.luau`:
 
 - os dados da Loja (veja "Loja (UI 2)");
 - `CATEGORIES`: as abas de cosméticos (skins usa as skins de corpo de verdade; acessórios, mochila, livro e caixa são inventados);
-- `RANKING`, `PROFILE`.
+- `RANKING`.
 
 Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
 
