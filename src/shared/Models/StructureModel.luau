@@ -9,7 +9,9 @@
 -- só o pivô (yaw da peça). Tudo ancorado e com
 -- CanTouch = false (o espinho é conferido por varredura, não por Touched).
 -- Sai com o que o tipo oferece: estação (CraftStation + Station) e calor
--- (HeatSource + HeatRadius/BurnRadius). Dono, vida e a tag de construção quem
+-- (HeatSource + HeatRadius/BurnRadius). Ponte e telhado (G8) não colidem e
+-- saem com a tag Bridge/Roof e o raio em PieceRadius; o visual do telhado fica
+-- a BuildRules.ROOF_HEIGHT do chão. Dono, vida e a tag de construção quem
 -- grava é o StructureService. (Só roda no Roblox: cria instâncias.)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
@@ -137,9 +139,34 @@ builders.station = function(model, side, color)
 end
 
 -- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,
--- ponte, telhado, placa, poço e cama. Ponte e telhado mudam na tarefa 13.
-for _, kind in { "extractor", "furnace", "bridge", "roof", "sign", "well", "bed" } do
+-- placa, poço e cama.
+for _, kind in { "extractor", "furnace", "sign", "well", "bed" } do
 	builders[kind] = builders.station
+end
+
+-- Ponte: uma tábua rente ao chão que não colide (anda-se por cima, no nível do
+-- chão; a água deixa de contar pelo WaterSim). Continua sendo a peça principal (pivô).
+local BRIDGE_THICKNESS = 0.4
+builders.bridge = function(model, side, color)
+	local deck =
+		newPart("Deck", Vector3.new(side, BRIDGE_THICKNESS, side), CFrame.new(0, BRIDGE_THICKNESS / 2, 0), color, model)
+	deck.Material = Enum.Material.WoodPlanks
+	return decor(deck)
+end
+
+-- Telhado: uma laje no alto (BuildRules.ROOF_HEIGHT) que não colide; quem está
+-- embaixo passa livre. O pivô continua no chão (PivotOffset do build).
+local ROOF_THICKNESS = 0.45
+builders.roof = function(model, side, color)
+	local slab = newPart(
+		"Slab",
+		Vector3.new(side, ROOF_THICKNESS, side),
+		CFrame.new(0, BuildRules.ROOF_HEIGHT + ROOF_THICKNESS / 2, 0),
+		darker(color),
+		model
+	)
+	slab.Material = Enum.Material.WoodPlanks
+	return decor(slab)
 end
 
 builders.chest = function(model, side, color)
@@ -274,8 +301,10 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 	local visual = cloneVisual(itemId)
 	if visual then
 		hidePlaceholder(model)
-		-- Pivô do template (centro da base) no pivô da peça (centro do chão).
-		visual:PivotTo(model:GetPivot())
+		-- Pivô do template (centro da base) no pivô da peça (centro do chão); o
+		-- telhado sobe até a altura dele.
+		local lift = if BuildRules.layerOf(def.kind) == "roof" then BuildRules.ROOF_HEIGHT else 0
+		visual:PivotTo(model:GetPivot() * CFrame.new(0, lift, 0))
 		visual.Parent = model
 		if def.kind == "fire" then
 			moveFireLight(model, visual)
@@ -289,6 +318,12 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 	end
 	if BuildRules.isDoor(def.kind) then
 		model:SetAttribute(StatNames.DoorOpen, false)
+	end
+	-- Ponte e telhado: achados pela tag + raio (a água e os mobs não leem o StructureService).
+	local layer = BuildRules.layerOf(def.kind)
+	if layer ~= "solid" then
+		model:AddTag(if layer == "bridge" then StatNames.BridgeTag else StatNames.RoofTag)
+		model:SetAttribute(StatNames.PieceRadius, BuildRules.radiusOf(def))
 	end
 	return model
 end

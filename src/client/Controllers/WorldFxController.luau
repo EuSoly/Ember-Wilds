@@ -2,7 +2,8 @@
 -- Liga os efeitos do mundo que só existem no cliente: a bolha de ar do
 -- fôlego, as copas transparentes sobre o boneco, o aviso de borda, a
 -- tremulação das luzes de fogo (o servidor só cria a luz; tremer é visual),
--- os efeitos da coleta e as frutinhas visíveis dos arbustos.
+-- os efeitos da coleta, as frutinhas visíveis dos arbustos e o telhado
+-- translúcido sobre o boneco.
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -17,6 +18,7 @@ local BorderWarning = require(World:WaitForChild("BorderWarning"))
 local CanopyFade = require(World:WaitForChild("CanopyFade"))
 local GatherFx = require(World:WaitForChild("GatherFx"))
 local OxygenBubble = require(World:WaitForChild("OxygenBubble"))
+local RoofFade = require(World:WaitForChild("RoofFade"))
 local CraftBubble = require(World:WaitForChild("CraftBubble"))
 local BuildGhost = require(World:WaitForChild("BuildGhost"))
 local BuildRotation = require(Client:WaitForChild("BuildRotation"))
@@ -38,6 +40,7 @@ function WorldFxController.Start(_self)
 	StructureHealth.start()
 	WebVisual.start()
 	StructureFx.start()
+	RoofFade.start()
 
 	-- Fogueiras chegam aos poucos (streaming): liga cada uma quando aparece.
 	local function flicker(instance: Instance)

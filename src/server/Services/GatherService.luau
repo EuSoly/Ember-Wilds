@@ -6,8 +6,8 @@
 -- O golpe: acha o alvo mais perto à frente entre recursos (ResourceService) e
 -- peças de construção (StructureService), mobs no chão (MobService), os outros
 -- jogadores vivos e as caixas de itens (CrateService) (G6), com
--- GatherRules.pickTarget. Peça: StructureService.hit (tira vida ou abre a porta
--- do dono). Caixa: CrateService.hit (tira vida; 0 = some com os itens).
+-- GatherRules.pickTarget (ponte e telhado só sem mais nada ao alcance). Peça:
+-- StructureService.hit (tira vida ou abre a porta do dono). Caixa: CrateService.hit (tira vida; 0 = some com os itens).
 -- Mob: MobService.hit. Jogador:
 -- CharacterService.hurt com o dano do golpe em mob (MobRules.damageOf), tipo
 -- combate (o capacete corta) e quem bateu como attacker; sem empurrão (a lança
@@ -122,8 +122,13 @@ local function hit(player: Player, character: Model, root: BasePart)
 		table.insert(candidates, { x = resource.x, z = resource.z, radius = resource.radius, resource = resource })
 	end
 	-- near já conta o raio de cada peça: traz as que encostam no círculo do golpe.
+	-- Ponte e telhado (não sólidos) ficam de lado: quem está em cima/embaixo
+	-- deles quase sempre tem o golpe dentro do círculo, e eles ganhariam de tudo.
+	local overlays: { Candidate } = {}
 	for _, structure in StructureService.near(px, pz, GatherRules.HIT_RADIUS) do
-		table.insert(candidates, { x = structure.x, z = structure.z, radius = structure.radius, structure = structure })
+		local candidate: Candidate =
+			{ x = structure.x, z = structure.z, radius = structure.radius, structure = structure }
+		table.insert(if BuildRules.isSolid(structure.def.kind) then candidates else overlays, candidate)
 	end
 	-- Caixas: como as peças, near já conta o raio (CrateRules.RADIUS) de cada uma.
 	for _, crate in CrateService.near(px, pz, GatherRules.HIT_RADIUS) do
@@ -150,7 +155,9 @@ local function hit(player: Player, character: Model, root: BasePart)
 			)
 		end
 	end
+	-- Ponte/telhado só leva o golpe se não houver mais nada ao alcance.
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
+		or GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
 		return
 	end

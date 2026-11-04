@@ -9,11 +9,15 @@
 -- chegam aos poucos pelo streaming.
 -- WaterSim.isInWater(player) diz o último resultado (o WaterService usa para
 -- o fôlego e o atributo InWater); WaterSim.isWet(x, z) confere um ponto qualquer.
+-- Ponte (G8): em cima dela é chão (sem perder fôlego nem ficar lento). As pontes
+-- vêm pela tag StatNames.BridgeTag + raio PieceRadius (TaggedCircles), lidas
+-- aqui nos dois lados; WaterSim.isWaterAt dá a água bruta, sem contar ponte.
 -- Também segura quem está preso na teia de aranha (velocidade 0).
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local TaggedCircles = require("../Build/TaggedCircles")
 local Defs = require("../Defs")
 local HeldItem = require("../HeldItem")
 local MobRules = require("../Mobs/MobRules")
@@ -27,6 +31,8 @@ local WaterSim = {}
 local waterShapes: { [BasePart]: Shapes.Shape } = {}
 local inWater: { [Player]: boolean } = {}
 local watching = false
+-- Pontes no mundo (liga junto com o acompanhamento da água).
+local bridges: TaggedCircles.Watcher? = nil
 
 local function track(instance: Instance)
 	if instance:IsA("BasePart") then
@@ -44,6 +50,7 @@ local function startWatching()
 		return
 	end
 	watching = true
+	bridges = TaggedCircles.watch(StatNames.BridgeTag, StatNames.PieceRadius)
 	task.spawn(function()
 		local map = Workspace:WaitForChild("Map", math.huge)
 		local water = map:WaitForChild("Water", math.huge)
@@ -62,7 +69,7 @@ local function startWatching()
 	end)
 end
 
-local function isWet(x: number, z: number): boolean
+local function isWater(x: number, z: number): boolean
 	for _, shape in waterShapes do
 		if Shapes.contains(shape, x, z) then
 			return true
@@ -71,20 +78,29 @@ local function isWet(x: number, z: number): boolean
 	return false
 end
 
--- true se o ponto (x, z) está dentro de alguma peça de água (visto de cima).
--- Serve fora do passo da simulação (ex.: o StructureService recusa construir
--- na água); liga o acompanhamento das peças se ninguém ligou ainda.
+-- Água e não em cima de uma ponte. Só olha as pontes quando há água no ponto.
+local function isWet(x: number, z: number): boolean
+	if not isWater(x, z) then
+		return false
+	end
+	local watcher = bridges
+	return watcher == nil or not TaggedCircles.contains(watcher, x, z)
+end
+
+-- true se o ponto (x, z) está dentro de alguma peça de água (visto de cima) e
+-- não em cima de uma ponte. Serve fora do passo da simulação; liga o
+-- acompanhamento das peças se ninguém ligou ainda.
 function WaterSim.isWet(x: number, z: number): boolean
 	startWatching()
 	return isWet(x, z)
 end
 
 -- true se há água de verdade em (x, z): a peça de água crua, sem contar ponte.
--- (isWet passa a ignorar pontes na Tarefa 13; quem precisa da água em si, como
--- encher o balde, usa esta.)
+-- Quem precisa da água em si usa esta: construir (StructureService.canPlace),
+-- encher o balde e o andar dos mobs.
 function WaterSim.isWaterAt(x: number, z: number): boolean
 	startWatching()
-	return isWet(x, z)
+	return isWater(x, z)
 end
 
 -- Último resultado da simulação para o jogador (false sem personagem).

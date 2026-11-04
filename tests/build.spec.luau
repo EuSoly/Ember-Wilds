@@ -139,6 +139,48 @@ function spec.placePoint_nunca_encosta_no_corpo()
 	end
 end
 
+function spec.insideAny_dentro_fora_borda_e_vazio()
+	local circles = { { x = 0, z = 0, r = 2 }, { x = 10, z = 0, r = 1 } }
+	assert(BuildRules.insideAny(0.5, -0.5, circles), "dentro do primeiro")
+	assert(BuildRules.insideAny(10.5, 0, circles), "dentro do segundo")
+	assert(not BuildRules.insideAny(5, 0, circles), "entre os dois: fora")
+	assert(not BuildRules.insideAny(0, 2.01, circles), "logo além da borda: fora")
+	assert(BuildRules.insideAny(2, 0, circles), "exatamente na borda conta como dentro")
+	assert(BuildRules.insideAny(10, -1, circles), "na borda do segundo")
+	assert(not BuildRules.insideAny(0, 0, {}), "lista vazia: nunca dentro")
+end
+
+function spec.layerOf_ponte_telhado_e_o_resto()
+	assert(BuildRules.layerOf("bridge") == "bridge", "ponte")
+	assert(BuildRules.layerOf("roof") == "roof", "telhado")
+	for _, kind in { "wall", "door", "spike", "spike_door", "station", "fire", "chest", "well", "bed" } do
+		assert(BuildRules.layerOf(kind) == "solid", `{kind} é sólida`)
+		assert(BuildRules.isSolid(kind), `{kind} segura corpos`)
+	end
+	assert(not BuildRules.isSolid("bridge"), "ponte não segura corpos")
+	assert(not BuildRules.isSolid("roof"), "telhado não segura corpos")
+end
+
+function spec.blocksPlacement_so_na_mesma_camada()
+	assert(BuildRules.blocksPlacement("bridge", "bridge"), "ponte sobre ponte não")
+	assert(BuildRules.blocksPlacement("roof", "roof"), "telhado sobre telhado não")
+	assert(BuildRules.blocksPlacement("wall", "spike"), "parede sobre espinho não")
+	assert(not BuildRules.blocksPlacement("roof", "wall"), "telhado sobre parede pode")
+	assert(not BuildRules.blocksPlacement("wall", "roof"), "parede debaixo do telhado pode")
+	assert(not BuildRules.blocksPlacement("bridge", "wall"), "ponte encostando na parede da margem pode")
+	assert(not BuildRules.blocksPlacement("wall", "bridge"), "parede na margem encostando na ponte pode")
+	assert(not BuildRules.blocksPlacement("bridge", "roof"), "ponte e telhado não se veem")
+end
+
+function spec.waterAllows_ponte_so_na_agua_o_resto_nunca()
+	assert(BuildRules.waterAllows("bridge", true), "ponte na água pode")
+	assert(not BuildRules.waterAllows("bridge", false), "ponte em terra não")
+	for _, kind in { "wall", "roof", "spike", "fire", "chest" } do
+		assert(BuildRules.waterAllows(kind, false), `{kind} em terra pode`)
+		assert(not BuildRules.waterAllows(kind, true), `{kind} na água não`)
+	end
+end
+
 function spec.constantes_da_construcao_livre()
 	assert(BuildRules.PIECE_RADIUS == 2, "PIECE_RADIUS")
 	assert(BuildRules.ROTATE_STEP == 45 and BuildRules.ROTATE_STEPS == 8, "passos de giro")

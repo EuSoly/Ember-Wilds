@@ -5,11 +5,13 @@
 -- servidor (SpatialGrid).
 -- - Passo (MobRules.TICK): para cada mob vivo, os jogadores vivos no bioma dele
 --   viram `nearest`/`target` do MobBrain.think; a intenção anda com
---   MobMove.step entre os círculos de peças (porta aberta não conta), recursos,
---   outros mobs no chão e jogadores, sem entrar na água nem sair do bioma
---   (voando: só o bioma). Mordida = CharacterService.hurt de combate (causa =
---   nome do mob) e MobAttack += 1; teia = WebbedUntil no personagem (instante
---   absoluto, renova sem somar). Mob sem jogador a FAR_RADIUS pensa a cada
+--   MobMove.step entre os círculos de peças sólidas (porta aberta, ponte e
+--   telhado não contam), recursos, outros mobs no chão e jogadores, sem entrar
+--   na água (bruta: a ponte não é chão para mob) nem sair do bioma (voando: só
+--   o bioma). Mordida = CharacterService.hurt de combate (causa = nome do mob)
+--   e MobAttack += 1; teia = WebbedUntil no personagem (instante absoluto,
+--   renova sem somar). Mob que voa (stats.flies) não morde quem está debaixo de
+--   um telhado (tag Roof + PieceRadius). Mob sem jogador a FAR_RADIUS pensa a cada
 --   FAR_EVERY. Atributos só são escritos quando mudam.
 -- - Dano (hit = golpe do jogador; damage = genérico, ex. espinho sem pontos):
 --   MobHurt += 1, MobBrain.onHit se tem atacante; vida 0 = MobDead, pontos a
@@ -35,6 +37,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
+local TaggedCircles = require(ReplicatedStorage.Shared.Build.TaggedCircles)
 local DayCycle = require(ReplicatedStorage.Shared.DayCycle)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local MobAnimConfig = require(ReplicatedStorage.Shared.Mobs.MobAnimConfig)
@@ -112,6 +115,8 @@ local cooling: { Slot } = {}
 local deathListeners: { (Mob, Player?) -> () } = {}
 local rng = Rng.new(Random.new():NextInteger(0, 2 ^ 31 - 1))
 local folder: Folder? = nil
+-- Telhados no mundo (protegem quem está embaixo dos mobs que voam).
+local roofs = TaggedCircles.watch(StatNames.RoofTag, StatNames.PieceRadius)
 
 -- Maior raio de mob nos dados: a busca no índice cresce por ele.
 local maxRadius = 0
@@ -262,7 +267,8 @@ local function retire(mob: Mob)
 end
 
 -- Círculos que seguram um corpo no chão perto de (x, z), até `reach` do centro:
--- peças (porta aberta não), recursos, outros mobs no chão e jogadores vivos.
+-- peças sólidas (porta aberta, ponte e telhado não), recursos, outros mobs no
+-- chão e jogadores vivos.
 local function circlesAround(
 	mob: Mob,
 	x: number,
@@ -272,7 +278,7 @@ local function circlesAround(
 ): { MobMove.Circle }
 	local circles: { MobMove.Circle } = {}
 	for _, entry in StructureService.near(x, z, reach) do
-		if entry.model:GetAttribute(StatNames.DoorOpen) ~= true then
+		if BuildRules.isSolid(entry.def.kind) and entry.model:GetAttribute(StatNames.DoorOpen) ~= true then
 			table.insert(circles, { x = entry.x, z = entry.z, radius = entry.radius })
 		end
 	end
@@ -296,7 +302,7 @@ end
 
 -- O corpo do mob cabe no chão em (x, z): no bioma, fora da água, sem sobrepor nada.
 local function groundFree(mob: Mob, x: number, z: number, bodies: { MobBrain.Seen }): boolean
-	if not inRect(mob.rect, x, z) or WaterSim.isWet(x, z) then
+	if not inRect(mob.rect, x, z) or WaterSim.isWaterAt(x, z) then
 		return false
 	end
 	for _, circle in circlesAround(mob, x, z, mob.radius, bodies) do
@@ -310,7 +316,7 @@ end
 -- Ponto para nascer: fora da água, sem encostar em recurso ou mob, longe de
 -- todo jogador (SPAWN_PLAYER_GAP) e de toda construção (SPAWN_STRUCTURE_GAP).
 local function spawnFree(radius: number, x: number, z: number, bodies: { MobBrain.Seen }): boolean
-	if WaterSim.isWet(x, z) then
+	if WaterSim.isWaterAt(x, z) then
 		return false
 	end
 	local _, nearestSq = closest(bodies, x, z)
@@ -420,10 +426,16 @@ local function setHostile(mob: Mob, hostile: boolean)
 end
 
 -- Mordida no personagem (que o cérebro escolheu no passo); teia antes do dano,
--- porque a mordida pode matar e o personagem some.
+-- porque a mordida pode matar e o personagem some. Mob que voa (o falcão pousa
+-- para morder, então vale o tipo, não o voo de agora) não alcança quem está
+-- debaixo de um telhado.
 local function bite(mob: Mob, character: Model, web: boolean)
 	local amount = mob.stats.bite
-	if amount == nil or rootOf(character) == nil then
+	local root = rootOf(character)
+	if amount == nil or root == nil then
+		return
+	end
+	if mob.stats.flies and TaggedCircles.contains(roofs, root.Position.X, root.Position.Z) then
 		return
 	end
 	mob.attacks += 1
@@ -458,7 +470,9 @@ local function slide(
 	else
 		circles = circlesAround(mob, x, z, mob.radius + distance, bodies)
 		blocked = function(px: number, pz: number): boolean
-			return not inRect(rect, px, pz) or WaterSim.isWet(px, pz)
+			-- Água bruta: a ponte não é chão para mob (ponte que some não o
+			-- deixa preso na água).
+			return not inRect(rect, px, pz) or WaterSim.isWaterAt(px, pz)
 		end
 	end
 	return MobMove.step(x, z, dirX, dirZ, distance, mob.radius, circles, blocked)

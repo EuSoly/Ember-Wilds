@@ -149,6 +149,13 @@ return table.freeze({
 	-- Vida atual e máxima da peça, atributos no modelo (a barrinha de vida lê).
 	StructureHealth = "StructureHealth",
 	StructureHealthMax = "StructureHealthMax",
+	-- Tags (CollectionService) da ponte e do telhado (StructureModel.build), com o
+	-- raio do círculo da peça (studs) no atributo PieceRadius do modelo: a água
+	-- (WaterSim, nos dois lados), o MobService e o cliente acham as peças por aqui
+	-- sem depender do StructureService.
+	BridgeTag = "Bridge",
+	RoofTag = "Roof",
+	PieceRadius = "PieceRadius",
 	-- true com a porta aberta (as peças dela não colidem), atributo no modelo da porta.
 	DoorOpen = "DoorOpen",
 	-- Conteúdo do baú, atributos no modelo do baú (ChestService; todos veem):

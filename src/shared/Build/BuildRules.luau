@@ -23,6 +23,15 @@ BuildRules.PIECE_RADIUS = 2 -- studs: meia largura do bloco provisório (raio pa
 BuildRules.PLACE_DISTANCE = BuildRules.PIECE_RADIUS + BuildRules.PLAYER_RADIUS + BuildRules.PIECE_RADIUS
 BuildRules.ROTATE_STEP = 45 -- graus por aperto
 BuildRules.ROTATE_STEPS = 8 -- giros válidos: 0..7
+-- Altura (studs) da base do telhado acima do chão: acima da cabeça do boneco. -- provisório (ajustar na bancada)
+BuildRules.ROOF_HEIGHT = 3
+
+-- Camada da peça: a ponte fica no chão da água, o telhado no alto e o resto
+-- (sólida) no chão, segurando corpos. Peças só disputam lugar na mesma camada.
+export type Layer = "solid" | "bridge" | "roof"
+
+-- Círculo no chão (centro x, z e raio r), visto de cima.
+export type Circle = { x: number, z: number, r: number }
 
 -- Centro da peça: a PLACE_DISTANCE de (x, z) na direção dir (vetor unitário no chão).
 function BuildRules.placePoint(x: number, z: number, dirX: number, dirZ: number): (number, number)
@@ -63,6 +72,46 @@ function BuildRules.touchesCircle(px: number, pz: number, cx: number, cz: number
 	local dx, dz = px - cx, pz - cz
 	local reach = r + margin
 	return dx * dx + dz * dz <= reach * reach
+end
+
+-- O ponto está dentro (ou na borda) de algum dos círculos? Lista vazia = não.
+function BuildRules.insideAny(x: number, z: number, circles: { Circle }): boolean
+	for _, circle in circles do
+		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, 0) then
+			return true
+		end
+	end
+	return false
+end
+
+function BuildRules.layerOf(kind: string): Layer
+	if kind == "bridge" then
+		return "bridge"
+	elseif kind == "roof" then
+		return "roof"
+	end
+	return "solid"
+end
+
+-- A peça segura corpos no chão (colide)? Ponte e telhado não: anda-se por cima
+-- da ponte e por baixo do telhado.
+function BuildRules.isSolid(kind: string): boolean
+	return BuildRules.layerOf(kind) == "solid"
+end
+
+-- Uma peça `kind` sobrepondo outra `otherKind` impede colocar? Só na mesma
+-- camada: ponte com ponte, telhado com telhado, sólida com sólida.
+function BuildRules.blocksPlacement(kind: string, otherKind: string): boolean
+	return BuildRules.layerOf(kind) == BuildRules.layerOf(otherKind)
+end
+
+-- A água bruta no ponto (`water`, sem contar ponte) deixa colocar a peça? A
+-- ponte só vai na água; o resto nunca (ponte não torna a água construível).
+function BuildRules.waterAllows(kind: string, water: boolean): boolean
+	if BuildRules.layerOf(kind) == "bridge" then
+		return water
+	end
+	return not water
 end
 
 -- Margem do espinho para um mob de raio `mobRadius`: o corpo mais a folga.
