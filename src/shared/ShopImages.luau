@@ -6,10 +6,12 @@
 local ShopImages = {}
 
 -- Roleta em 3 camadas no mesmo quadro (320x320): o disco gira, moldura e
--- ponteiro ficam parados por cima.
-ShopImages.WHEEL_DISC = "rbxassetid://76372227015002"
-ShopImages.WHEEL_FRAME = "rbxassetid://75556963387452"
-ShopImages.WHEEL_POINTER = "rbxassetid://126933206606519"
+-- ponteiro ficam parados por cima. A moldura da arte é um pouco oval e o disco
+-- ficava acima do centro: no preparo a moldura foi achatada até a abertura
+-- virar círculo, e o disco foi centrado e ajustado a ela.
+ShopImages.WHEEL_DISC = "rbxassetid://110052848988843"
+ShopImages.WHEEL_FRAME = "rbxassetid://105254591878902"
+ShopImages.WHEEL_POINTER = "rbxassetid://139105883979322"
 
 -- Fundos dos cartões (com raios de luz), por cor.
 ShopImages.CARD = {

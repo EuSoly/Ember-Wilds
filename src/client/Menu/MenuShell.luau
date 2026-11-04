@@ -41,6 +41,7 @@ local EmberPacks = require(ShopFolder:WaitForChild("EmberPacks"))
 local SpinTypes = require(ShopFolder:WaitForChild("SpinTypes"))
 local SpinScreen = require(ShopFolder:WaitForChild("SpinScreen"))
 local SpinFx = require(ShopFolder:WaitForChild("SpinFx"))
+local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
@@ -544,6 +545,12 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local balance = balancePod(layout)
 	local branchImage = branch(layout)
 	balance.ZIndex = 6
+	-- No celular a tela do giro sobe até o topo: o card sairia por cima do X.
+	vide.apply(balance)({
+		Visible = function()
+			return not (shopOpen() and ShopState.spinType() ~= nil and shopLayout().compact)
+		end,
+	})
 	-- O galho fica só no menu: na loja as folhas cobririam as abas.
 	vide.apply(branchImage)({
 		Visible = function()

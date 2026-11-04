@@ -27,10 +27,19 @@ function SpinRules.pickIndex(weights: { number }, r: number): number
 	return #weights
 end
 
+local MAX_RARITY = 6
+
 -- Item da raridade pedida (r escolhe entre eles). Sem nenhum dessa raridade,
--- desce até achar: o sorteio nunca fica sem prêmio.
+-- desce até achar; sem nada abaixo, sobe: o sorteio nunca fica sem prêmio.
 function SpinRules.pickItem(items: { Item }, rarity: number, r: number): Item
+	local order: { number } = {}
 	for wanted = rarity, 1, -1 do
+		table.insert(order, wanted)
+	end
+	for wanted = rarity + 1, MAX_RARITY do
+		table.insert(order, wanted)
+	end
+	for _, wanted in order do
 		local pool: { Item } = {}
 		for _, item in items do
 			if item.rarity == wanted then

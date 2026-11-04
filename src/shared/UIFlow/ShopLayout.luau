@@ -12,6 +12,14 @@ ShopLayout.GAP = 8 -- entre cartões e entre peças do topo
 ShopLayout.BACK_WIDTH = 120
 ShopLayout.BACK_WIDTH_COMPACT = 88
 ShopLayout.TITLE_WIDTH = 140
+-- Tela do giro: no celular ela sobe até o topo (fica por cima de tudo) e usa
+-- título e quadradinhos menores, para os dois lados caberem sem rolar.
+ShopLayout.SPIN_PADDING = 10
+ShopLayout.SPIN_GAP = 8
+ShopLayout.SPIN_REEL_EXTRA = 20 -- a janela do carrossel = quadradinho + isto
+ShopLayout.SPIN_SIDE_MIN = 250 -- altura que um lado completo precisa
+ShopLayout.SPIN_SIDE_MIN_COMPACT = 130 -- lado compacto: 3 linhas
+ShopLayout.SPIN_SIDE_MAX = 300
 
 export type Layout = {
 	compact: boolean,
@@ -31,6 +39,10 @@ export type Layout = {
 	emberBottom: number, -- e na de baixo (maiores)
 	bannerHeight: number,
 	spinSideBySide: boolean, -- tela do giro: normal e pago lado a lado
+	spinBoxTop: number, -- topo da janela do giro
+	spinTitleRow: number,
+	spinTile: number, -- lado do quadradinho do carrossel
+	spinSideHeight: number, -- altura de cada lado (normal / pago)
 }
 
 function ShopLayout.compute(width: number, height: number): Layout
@@ -45,6 +57,18 @@ function ShopLayout.compute(width: number, height: number): Layout
 	local tabsX = m + backWidth + gap + (if titleWidth > 0 then titleWidth + gap else 0)
 	local top = m
 	local topHeight = MenuLayout.POD_HEIGHT
+
+	local spinBoxTop = if compact then m else top + topHeight + m
+	local spinTitleRow = if compact then 34 else 50
+	local spinTile = if compact then 56 else 100
+	local spinSideRoom = height
+		- m
+		- spinBoxTop
+		- 2 * ShopLayout.SPIN_PADDING
+		- spinTitleRow
+		- spinTile
+		- ShopLayout.SPIN_REEL_EXTRA
+		- 2 * ShopLayout.SPIN_GAP
 
 	return {
 		compact = compact,
@@ -63,7 +87,11 @@ function ShopLayout.compute(width: number, height: number): Layout
 		emberTop = if compact then 2 else 3,
 		emberBottom = 2,
 		bannerHeight = if compact then math.clamp(height * 0.42, 120, 200) else math.clamp(width * 0.2, 180, 300),
-		spinSideBySide = not compact or width >= 700,
+		spinSideBySide = true,
+		spinBoxTop = spinBoxTop,
+		spinTitleRow = spinTitleRow,
+		spinTile = spinTile,
+		spinSideHeight = math.min(spinSideRoom, ShopLayout.SPIN_SIDE_MAX),
 	}
 end
 

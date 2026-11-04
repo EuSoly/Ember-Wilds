@@ -297,15 +297,17 @@ function ShopParts.badge(text: string): TextLabel
 	})
 end
 
--- Grade de cartões com `columns` colunas e cartões de altura `height`.
-function ShopParts.grid(columns: () -> number, height: number, gap: number): UIGridLayout
+-- Grade de cartões com `columns` colunas e cartões de altura `height` (fixa
+-- ou reativa, para mudar no celular).
+function ShopParts.grid(columns: () -> number, height: number | () -> number, gap: number): UIGridLayout
 	return create("UIGridLayout")({
 		CellPadding = UDim2.fromOffset(gap, gap),
 		CellSize = function()
 			local n = columns()
+			local h = if type(height) == "function" then height() else height
 			-- -1 px por cartão: sem a folga, o arredondamento empurra o último
 			-- cartão para a linha de baixo.
-			return UDim2.new(1 / n, -gap * (n - 1) / n - 1, 0, height)
+			return UDim2.new(1 / n, -gap * (n - 1) / n - 1, 0, h)
 		end,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 	}) :: UIGridLayout

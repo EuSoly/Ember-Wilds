@@ -37,6 +37,12 @@ return {
 		assert(SpinRules.pickItem({ item("a", 1) }, 6, 0.5).id == "a", "devia descer até a 1")
 	end,
 
+	["pickItem sem nada abaixo sobe até achar"] = function()
+		-- Tipo cujos itens começam no Raro: um sorteio de Comum não pode travar.
+		local items = { item("b", 3), item("c", 5) }
+		assert(SpinRules.pickItem(items, 1, 0.5).id == "b", "devia subir para a raridade 3")
+	end,
+
 	["contadores somam por tipo e tipo de giro sem mutar"] = function()
 		local c0 = SpinRules.newCounts()
 		local c1 = SpinRules.addSpins(c0, "book", "paid", 3)

@@ -20,6 +20,15 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Porta com espinhos:** sem teste Lune da recusa do toggle nem do dono ignorado (código de serviço).
 - **Bancada das estruturas:** cópia de atributo repetida (`structure-bench.luau` ~linhas 275-277); sem aviso para template com `PrimaryPart`; `difference()` compara por índice (falha para o lado seguro).
 
+## Loja (UI 2, 04/11)
+
+- **Fechar a loja no meio de um giro perde o giro:** pela tela não dá (o X fica travado e a tela do giro cobre o voltar), mas se a loja fechar por outro motivo o contador já desceu e não sai prêmio (`SpinScreen`, reset ao fechar).
+- **Relógio do destaque roda a sessão toda:** uma volta por segundo, também durante o jogo (não vaza; para quando o menu desmonta). Ideal: só contar com a loja aberta (`Featured`).
+- **Roletas giram com a loja aberta mesmo fora da tela:** o spec pedia só com a seção visível (`SpinTypes`).
+- **Tamanho do quadradinho do carrossel fixo ao abrir o giro:** girar o celular (entrar/sair do compacto) com a tela aberta deixa o tamanho antigo (`SpinScreen`).
+- **Efeitos com posição tirada uma vez:** se a tela mudar de tamanho durante o giro pago, os raios e a tremida usam a posição antiga (`SpinFx`).
+- **Aviso de compra simulada no celular cobre o carrossel por 2,5 s** (posição vem do `MenuLayout`).
+
 ## Carregamento, menu e kits (UI 1, 04/11)
 
 - **Tela mínima com interface no máximo:** em 568x320 com o tamanho da interface em 1,25 (tela lógica 454x256), os pods do topo (mínimo 200) encostam no logo e a linha Kits/JOGAR fica 12 px mais larga que a área do boneco. Ideal: deixar o pod encolher ou esconder o logo quando não couber (`MenuLayout`, `MenuShell`).

@@ -58,9 +58,27 @@ return {
 		assert(phone.titleWidth == 0, "celular sem a placa LOJA")
 	end,
 
-	["spin screen stacks when narrow"] = function()
-		assert(ShopLayout.compute(1280, 720).spinSideBySide, "PC lado a lado")
-		assert(ShopLayout.compute(844, 390).spinSideBySide, "844 ainda cabe lado a lado")
-		assert(not ShopLayout.compute(667, 375).spinSideBySide, "667 empilha")
+	["spin screen sides always side by side"] = function()
+		for _, size in SIZES do
+			assert(ShopLayout.compute(size[1], size[2]).spinSideBySide, `{size[1]}x{size[2]}: lados empilhados`)
+		end
+	end,
+
+	["spin screen fits without scrolling"] = function()
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local used = l.spinBoxTop
+				+ ShopLayout.SPIN_PADDING * 2
+				+ l.spinTitleRow
+				+ l.spinTile
+				+ ShopLayout.SPIN_REEL_EXTRA
+				+ ShopLayout.SPIN_GAP * 2
+				+ l.spinSideHeight
+			assert(used <= h - ShopLayout.MARGIN, `{w}x{h}: tela do giro não cabe ({used} > {h - ShopLayout.MARGIN})`)
+			local minimum = if l.compact then ShopLayout.SPIN_SIDE_MIN_COMPACT else ShopLayout.SPIN_SIDE_MIN
+			assert(l.spinSideHeight >= minimum, `{w}x{h}: lado baixo demais ({l.spinSideHeight})`)
+			assert(l.spinTile >= 48, `{w}x{h}: quadradinho pequeno demais`)
+		end
 	end,
 }

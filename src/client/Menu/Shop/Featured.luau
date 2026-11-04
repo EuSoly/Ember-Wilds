@@ -152,9 +152,11 @@ end
 function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): Frame
 	local bundles = MockStore.BUNDLES
 	local current = vide.source(1)
+	local sinceSwap = 0 -- segundos desde a última troca (as setas zeram)
 	local elapsed = vide.source(0) -- segundos desde que o menu montou (contador dos pacotes)
 
 	local function go(step: number)
+		sinceSwap = 0
 		current((vide.untrack(current) - 1 + step) % #bundles + 1)
 	end
 
@@ -164,7 +166,6 @@ function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): F
 		alive = false
 	end)
 	task.spawn(function()
-		local sinceSwap = 0
 		while alive do
 			task.wait(1)
 			elapsed(vide.untrack(elapsed) + 1)

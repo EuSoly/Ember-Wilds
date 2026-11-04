@@ -21,7 +21,8 @@ local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local create = vide.create
 local R = Theme.rustic
 
-local CARD_HEIGHT = 250
+local CARD_HEIGHT = 360 -- alto: abaixo do título fica a faixa das skins de amostra
+local CARD_HEIGHT_COMPACT = 250 -- no celular o cartão alto passaria da tela
 -- Fundo de cartão (ShopImages.CARD) de cada tipo, na mesma ordem de cores da referência.
 local CARD_ART: { [string]: string } = {
 	body = "red",
@@ -88,10 +89,11 @@ local function roulette(): (Frame, GuiObject)
 		local disc = layer("Disc", ShopImages.WHEEL_DISC, 3)
 		local box = create("Frame")({
 			Name = "WheelBox",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.16),
-			Size = UDim2.fromScale(0.62, 0.62),
-			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+			-- Embaixo, logo acima do botão: em cima ficam as skins de amostra.
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.new(0.5, 0, 1, -62),
+			Size = UDim2.fromScale(0.72, 0.72),
+			SizeConstraint = Enum.SizeConstraint.RelativeXX, -- pela largura do cartão
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 			disc,
@@ -141,6 +143,15 @@ local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiOb
 			maxSize = 28,
 		}),
 		wheelBox,
+		-- Faixa reservada para as skins de amostra (ainda vazia), abaixo do título.
+		create("Frame")({
+			Name = "Samples",
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.fromScale(0.5, 0.16),
+			Size = UDim2.fromScale(0.9, 0.22),
+			BackgroundTransparency = 1,
+			ZIndex = 3,
+		}),
 		Rustic.button({
 			Name = "Choose",
 			AnchorPoint = Vector2.new(0.5, 1),
@@ -162,7 +173,9 @@ function SpinTypes.build(layout: () -> ShopLayout.Layout, open: () -> boolean): 
 	local children: { Instance } = {
 		ShopParts.grid(function()
 			return layout().spinColumns
-		end, CARD_HEIGHT, ShopLayout.GAP),
+		end, function()
+			return if layout().compact then CARD_HEIGHT_COMPACT else CARD_HEIGHT
+		end, ShopLayout.GAP),
 	}
 	for i, spinType in MockStore.SPIN_TYPES do
 		table.insert(children, card(spinType, i, wheels))

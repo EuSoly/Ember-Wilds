@@ -29,11 +29,7 @@ local create = vide.create
 local R = Theme.rustic
 
 local BOX_MAX_WIDTH = 980
-local TITLE_ROW = 50
-local TILE = 100
-local TILE_COMPACT = 80
 local TILE_GAP = 8
-local SIDE_HEIGHT = 260
 local WON_TILE = 170
 local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
@@ -117,9 +113,15 @@ local function side(
 	typeId: () -> string?,
 	currency: () -> number,
 	onSpin: (SpinRules.Kind) -> (),
-	order: number
+	order: number,
+	layout: () -> ShopLayout.Layout
 ): Frame
 	local paid = kind == "paid"
+	-- Compacto (celular): 3 linhas — título com o contador, chances, e
+	-- comprar +1/+3/+10 com o GIRAR na mesma linha.
+	local function compact(): boolean
+		return layout().compact
+	end
 	local prices: { MockStore.SpinPrice } = if paid then MockStore.SPIN_PRICES.paid else MockStore.SPIN_PRICES.normal
 	local function count(): number
 		local id = typeId()
@@ -140,10 +142,13 @@ local function side(
 			create("Frame")({
 				Name = "Buy" .. offer.qty,
 				LayoutOrder = i,
-				Size = UDim2.new(1 / #prices, -8, 1, 0),
+				Size = function()
+					local n = if compact() then #prices + 1 else #prices
+					return UDim2.new(1 / n, -8, 1, 0)
+				end,
 				BackgroundTransparency = 1,
 				ShopParts.outlined({
-					Size = UDim2.fromScale(1, 0.34),
+					Size = UDim2.fromScale(1, 0.24),
 					FontFace = Theme.font.number,
 					Text = Strings.format("shop.spin.buy", { qty = offer.qty }),
 					maxSize = 18,
@@ -162,13 +167,41 @@ local function side(
 							ShopState.buySpins(id, kind, offer.qty, offer.price)
 						end
 					end,
-					position = UDim2.fromScale(0, 0.36),
-					size = UDim2.fromScale(1, 0.64),
+					position = UDim2.fromScale(0, 0.26),
+					size = UDim2.fromScale(1, 0.74),
 					textSize = 20,
 				}),
 			})
 		)
 	end
+
+	local function spinKind(): Rustic.Kind
+		return if count() > 0 and not ShopState.spinning() then "ember" else "disabled"
+	end
+	-- GIRAR dentro da linha de compra (só no compacto), com o contador no texto.
+	table.insert(
+		buyCells,
+		create("Frame")({
+			Name = "SpinCell",
+			LayoutOrder = #prices + 1,
+			Visible = compact,
+			Size = UDim2.new(1 / (#prices + 1), -8, 1, 0),
+			BackgroundTransparency = 1,
+			Rustic.button({
+				Name = "Spin",
+				Position = UDim2.fromScale(0, 0.26),
+				Size = UDim2.fromScale(1, 0.74),
+				kind = spinKind,
+				text = function()
+					return `{Strings.get("shop.spin.go")} · {count()}`
+				end,
+				maxSize = 18,
+				Activated = function()
+					onSpin(kind)
+				end,
+			}),
+		})
+	)
 
 	return ShopParts.vividCard(if paid then PAID_THEME else NORMAL_THEME, {
 		art = if paid then "purple" else nil,
@@ -181,30 +214,45 @@ local function side(
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 			create("UIPadding")({
-				PaddingLeft = UDim.new(0, 14),
-				PaddingRight = UDim.new(0, 14),
-				PaddingTop = UDim.new(0, 10),
-				PaddingBottom = UDim.new(0, 12),
+				PaddingLeft = UDim.new(0, 12),
+				PaddingRight = UDim.new(0, 12),
+				PaddingTop = UDim.new(0, 6),
+				PaddingBottom = UDim.new(0, 6),
 			}),
 			create("UIListLayout")({
 				SortOrder = Enum.SortOrder.LayoutOrder,
-				Padding = UDim.new(0, 8),
+				Padding = function()
+					return UDim.new(0, if compact() then 4 else 8)
+				end,
 				HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			}),
 			ShopParts.outlined({
 				LayoutOrder = 1,
-				Size = UDim2.new(1, 0, 0, 28),
+				Size = function()
+					return UDim2.new(1, 0, 0, if compact() then 20 else 28)
+				end,
 				FontFace = Theme.font.number,
-				Text = Strings.get(if paid then "shop.spin.paid" else "shop.spin.normal"),
+				Text = function()
+					local title = Strings.get(if paid then "shop.spin.paid" else "shop.spin.normal")
+					return if compact() then `{title} · {count()}` else title
+				end,
 				maxSize = 24,
 			}),
 			(function()
 				local row = oddsRow(if paid then MockStore.SPIN_ODDS.paid else MockStore.SPIN_ODDS.normal)
 				row.LayoutOrder = 2
+				vide.apply(row)({
+					Size = function()
+						return UDim2.new(1, 0, 0, if compact() then 28 else 42)
+					end,
+				})
 				return row
 			end)(),
 			ShopParts.outlined({
 				LayoutOrder = 3,
+				Visible = function()
+					return not compact()
+				end,
 				Size = UDim2.new(1, 0, 0, 22),
 				FontFace = Theme.font.number,
 				Text = function()
@@ -215,17 +263,18 @@ local function side(
 			create("Frame")({
 				Name = "Buy",
 				LayoutOrder = 4,
-				Size = UDim2.new(1, 0, 0, 62),
+				Size = UDim2.new(1, 0, 0, 62), -- "+N" em cima e o botão (44+) embaixo
 				BackgroundTransparency = 1,
 				buyCells,
 			}),
 			Rustic.button({
 				Name = "Spin",
 				LayoutOrder = 5,
-				Size = UDim2.new(0.7, 0, 0, 48),
-				kind = function()
-					return if count() > 0 and not ShopState.spinning() then "ember" else "disabled"
+				Visible = function()
+					return not compact()
 				end,
+				Size = UDim2.new(0.7, 0, 0, 48),
+				kind = spinKind,
 				text = Strings.get("shop.spin.go"),
 				maxSize = 26,
 				Activated = function()
@@ -248,14 +297,14 @@ function SpinScreen.build(
 	local rng = Random.new()
 
 	local function tileSize(): number
-		return if layout().compact then TILE_COMPACT else TILE
+		return layout().spinTile
 	end
 
 	local window = create("Frame")({
 		Name = "ReelWindow",
 		LayoutOrder = 2,
 		Size = function()
-			return UDim2.new(1, 0, 0, tileSize() + 24)
+			return UDim2.new(1, 0, 0, tileSize() + ShopLayout.SPIN_REEL_EXTRA)
 		end,
 		BackgroundColor3 = Color3.fromHex("#1A130D"),
 		BorderSizePixel = 0,
@@ -418,10 +467,10 @@ function SpinScreen.build(
 	}) :: UIListLayout
 
 	local function sideSize(): UDim2
-		return if layout().spinSideBySide then UDim2.new(0.5, -6, 0, SIDE_HEIGHT) else UDim2.new(1, -8, 0, SIDE_HEIGHT)
+		return UDim2.new(0.5, -6, 0, layout().spinSideHeight)
 	end
-	local normalSide = side("normal", ShopState.spinType, currency, spin, 1)
-	local paidSide = side("paid", ShopState.spinType, currency, spin, 2)
+	local normalSide = side("normal", ShopState.spinType, currency, spin, 1, layout)
+	local paidSide = side("paid", ShopState.spinType, currency, spin, 2, layout)
 	vide.apply(normalSide)({ Size = sideSize })
 	vide.apply(paidSide)({ Size = sideSize })
 
@@ -429,13 +478,13 @@ function SpinScreen.build(
 		Name = "SpinBox",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = function()
-			return UDim2.new(0.5, 0, 0, layout().contentTop)
+			return UDim2.new(0.5, 0, 0, layout().spinBoxTop)
 		end,
 		Size = function()
 			local l = layout()
 			return UDim2.fromOffset(
 				math.min(l.contentWidth, BOX_MAX_WIDTH),
-				screenSize().Y - l.contentTop - ShopLayout.MARGIN
+				screenSize().Y - l.spinBoxTop - ShopLayout.MARGIN
 			)
 		end,
 		BackgroundColor3 = Color3.fromHex("#2B2018"),
@@ -446,14 +495,16 @@ function SpinScreen.build(
 		create("UIPadding")({
 			PaddingLeft = UDim.new(0, 12),
 			PaddingRight = UDim.new(0, 12),
-			PaddingTop = UDim.new(0, 8),
-			PaddingBottom = UDim.new(0, 12),
+			PaddingTop = UDim.new(0, ShopLayout.SPIN_PADDING),
+			PaddingBottom = UDim.new(0, ShopLayout.SPIN_PADDING),
 		}),
-		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 10) }),
+		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, ShopLayout.SPIN_GAP) }),
 		create("Frame")({
 			Name = "TitleRow",
 			LayoutOrder = 1,
-			Size = UDim2.new(1, 0, 0, TITLE_ROW),
+			Size = function()
+				return UDim2.new(1, 0, 0, layout().spinTitleRow)
+			end,
 			BackgroundTransparency = 1,
 			ShopParts.outlined({
 				Size = UDim2.new(1, -60, 1, 0),
@@ -471,7 +522,7 @@ function SpinScreen.build(
 				Name = "Close",
 				AnchorPoint = Vector2.new(1, 0.5),
 				Position = UDim2.fromScale(1, 0.5),
-				Size = UDim2.fromOffset(46, 46),
+				Size = UDim2.fromOffset(44, 44),
 				kind = function()
 					return if ShopState.spinning() then "disabled" else "wood"
 				end,
@@ -486,7 +537,13 @@ function SpinScreen.build(
 			Name = "Sides",
 			LayoutOrder = 3,
 			Size = function()
-				return UDim2.new(1, 0, 1, -(TITLE_ROW + tileSize() + 24 + 20))
+				local l = layout()
+				return UDim2.new(
+					1,
+					0,
+					1,
+					-(l.spinTitleRow + l.spinTile + ShopLayout.SPIN_REEL_EXTRA + 2 * ShopLayout.SPIN_GAP)
+				)
 			end,
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
