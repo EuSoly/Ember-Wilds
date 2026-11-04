@@ -7,7 +7,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 
-export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "buy" | "tutorial" | "ranking"
+export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "tutorial" | "ranking"
+-- Seções da Loja (abas). A loja pula para a pedida e limpa o pedido.
+export type ShopSection = "packs" | "passes" | "spins" | "ember"
 
 -- Fonte Vide: chamar sem argumento lê, com argumento escreve (tipo escrito
 -- aqui porque sem ele o vide.source alarga "play" para string).
@@ -21,6 +23,16 @@ MenuState.panel = panel
 -- Abre um painel (escrever pela fonte direto confunde o tipo nas chamadas).
 function MenuState.open(target: Panel)
 	panel(target)
+end
+
+local shopSection: Source<ShopSection?> = vide.source(nil :: ShopSection?) :: any
+MenuState.shopSection = shopSection
+
+-- Abre a Loja (tela cheia), opcionalmente já numa seção (ex. o "+" da Golden
+-- Ember abre em "ember").
+function MenuState.openShop(section: ShopSection?)
+	panel("shop")
+	shopSection(section)
 end
 
 -- Aviso curto de "compra simulada" (G7a): aparece sobre os painéis e some

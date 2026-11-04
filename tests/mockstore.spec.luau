@@ -171,6 +171,45 @@ return {
 		)
 	end,
 
+	["shop UI strings exist"] = function()
+		for _, key in
+			{
+				"shop.title",
+				"shop.back",
+				"shop.tab.packs",
+				"shop.tab.passes",
+				"shop.tab.spins",
+				"shop.tab.ember",
+				"shop.section.packs",
+				"shop.section.passes",
+				"shop.section.spins",
+				"shop.section.ember",
+				"shop.choose",
+				"shop.spin.title",
+				"shop.spin.normal",
+				"shop.spin.paid",
+				"shop.spin.have",
+				"shop.spin.go",
+				"shop.spin.won",
+				"shop.spin.take",
+				"shop.spin.chance",
+				"shop.spin.buy",
+				"shop.missing",
+				"shop.ember.amount",
+				"shop.ember.instant",
+				"shop.provisional",
+				"shop.owned",
+				"shop.timer",
+			}
+		do
+			checkKey(key)
+		end
+		assert(
+			Strings.format("shop.timer", { d = 2, h = 10, m = 7 }) == "2D 10H 7M",
+			Strings.format("shop.timer", { d = 2, h = 10, m = 7 })
+		)
+	end,
+
 	["ranking tem 10 linhas em ordem decrescente"] = function()
 		assert(#MockStore.RANKING == 10, `veio {#MockStore.RANKING}`)
 		for i = 2, #MockStore.RANKING do

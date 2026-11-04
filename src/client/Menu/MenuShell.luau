@@ -34,7 +34,6 @@ local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local KitsPanel = require(script.Parent:WaitForChild("KitsPanel"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
-local BuyPanel = require(script.Parent:WaitForChild("BuyPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
@@ -46,7 +45,7 @@ local R = Theme.rustic
 -- não é painel: abre a janela de Configurações de sempre.
 local NAV: { string } = { "profile", "cosmetics", "shop", "tutorial", "ranking", "settings" }
 -- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "profile", "cosmetics", "shop", "buy", "tutorial", "ranking" } :: { MenuState.Panel }
+local PANELS = { "profile", "cosmetics", "shop", "tutorial", "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
@@ -262,7 +261,7 @@ local function balancePod(layout: () -> Layout): Frame
 			text = "+",
 			maxSize = 26,
 			Activated = function()
-				MenuState.open("buy")
+				MenuState.openShop("ember")
 			end,
 		}),
 	})
@@ -423,7 +422,6 @@ end
 -- vez, dentro do root Vide.
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
-	buy = BuyPanel.build,
 	ranking = RankingPanel.build,
 	profile = ProfilePanel.build,
 	tutorial = TutorialPanel.build,
