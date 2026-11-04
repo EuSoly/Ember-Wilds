@@ -92,10 +92,15 @@ local function roulette(): (Frame, GuiObject)
 			-- Embaixo, logo acima do botão: em cima ficam as skins de amostra.
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new(0.5, 0, 1, -62),
-			Size = UDim2.fromScale(0.72, 0.72),
-			SizeConstraint = Enum.SizeConstraint.RelativeXX, -- pela largura do cartão
+			-- Cabe no menor lado: até 78% da largura e até metade da altura do
+			-- cartão (em tela larga, só pela largura ela cobria o título).
+			Size = UDim2.fromScale(0.78, 0.5),
 			BackgroundTransparency = 1,
 			ZIndex = 3,
+			create("UIAspectRatioConstraint")({
+				AspectRatio = 1,
+				AspectType = Enum.AspectType.FitWithinMaxSize,
+			}),
 			disc,
 			layer("Frame", ShopImages.WHEEL_FRAME, 4),
 			layer("Pointer", ShopImages.WHEEL_POINTER, 5),

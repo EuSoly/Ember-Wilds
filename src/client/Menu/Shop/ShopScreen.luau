@@ -231,7 +231,7 @@ function ShopScreen.build(
 			Name = "Back",
 			Position = function()
 				local l = layout()
-				return UDim2.fromOffset(l.contentX, l.top)
+				return UDim2.fromOffset(l.barX, l.top)
 			end,
 			Size = function()
 				local l = layout()
@@ -251,7 +251,7 @@ function ShopScreen.build(
 			end,
 			Position = function()
 				local l = layout()
-				return UDim2.fromOffset(l.contentX + l.backWidth + ShopLayout.GAP, l.top)
+				return UDim2.fromOffset(l.barX + l.backWidth + ShopLayout.GAP, l.top)
 			end,
 			Size = function()
 				local l = layout()

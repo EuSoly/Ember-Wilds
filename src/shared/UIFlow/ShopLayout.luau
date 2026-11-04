@@ -12,6 +12,10 @@ ShopLayout.GAP = 8 -- entre cartões e entre peças do topo
 ShopLayout.BACK_WIDTH = 120
 ShopLayout.BACK_WIDTH_COMPACT = 88
 ShopLayout.TITLE_WIDTH = 140
+-- Em telas grandes a loja não se estica até as bordas: o conteúdo para nesta
+-- largura (centralizado) e as abas nesta.
+ShopLayout.CONTENT_MAX = 1120
+ShopLayout.TABS_MAX = 640
 -- Tela do giro: no celular ela sobe até o topo (fica por cima de tudo) e usa
 -- título e quadradinhos menores, para os dois lados caberem sem rolar.
 ShopLayout.SPIN_PADDING = 10
@@ -25,6 +29,7 @@ export type Layout = {
 	compact: boolean,
 	top: number,
 	topHeight: number,
+	barX: number, -- começo da barra do topo (voltar, LOJA, abas): na borda da tela
 	backWidth: number,
 	titleWidth: number, -- 0 = sem a placa LOJA
 	tabsX: number,
@@ -57,6 +62,7 @@ function ShopLayout.compute(width: number, height: number): Layout
 	local tabsX = m + backWidth + gap + (if titleWidth > 0 then titleWidth + gap else 0)
 	local top = m
 	local topHeight = MenuLayout.POD_HEIGHT
+	local contentWidth = math.min(width - 2 * m, ShopLayout.CONTENT_MAX)
 
 	local spinBoxTop = if compact then m else top + topHeight + m
 	local spinTitleRow = if compact then 34 else 50
@@ -74,13 +80,14 @@ function ShopLayout.compute(width: number, height: number): Layout
 		compact = compact,
 		top = top,
 		topHeight = topHeight,
+		barX = m,
 		backWidth = backWidth,
 		titleWidth = titleWidth,
 		tabsX = tabsX,
-		tabsWidth = balanceLeft - gap - tabsX,
+		tabsWidth = math.min(balanceLeft - gap - tabsX, ShopLayout.TABS_MAX),
 		balanceLeft = balanceLeft,
-		contentX = m,
-		contentWidth = width - 2 * m,
+		contentX = (width - contentWidth) / 2,
+		contentWidth = contentWidth,
 		contentTop = top + topHeight + m,
 		passColumns = if compact then 3 else 5,
 		spinColumns = if compact then 3 else 5,

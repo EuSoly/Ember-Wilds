@@ -26,7 +26,7 @@ return {
 			assert(l.topHeight >= 44 and l.backWidth >= 44, `{w}x{h}: topo menor que o toque`)
 			assert(l.tabsWidth >= 4 * 44, `{w}x{h}: abas sem lugar ({l.tabsWidth})`)
 			assert(l.tabsX + l.tabsWidth <= l.balanceLeft - 8, `{w}x{h}: abas por cima do saldo`)
-			assert(l.tabsX >= l.contentX + l.backWidth + l.titleWidth, `{w}x{h}: abas por cima do voltar/título`)
+			assert(l.tabsX >= l.barX + l.backWidth + l.titleWidth, `{w}x{h}: abas por cima do voltar/título`)
 		end
 	end,
 
@@ -56,6 +56,15 @@ return {
 			"celular devia ter menos colunas"
 		)
 		assert(phone.titleWidth == 0, "celular sem a placa LOJA")
+	end,
+
+	["big screens keep the shop at a comfortable width"] = function()
+		local l = ShopLayout.compute(1920, 1080)
+		assert(l.contentWidth <= ShopLayout.CONTENT_MAX, `conteúdo largo demais: {l.contentWidth}`)
+		assert(math.abs(l.contentX - (1920 - l.contentWidth) / 2) < 1, "conteúdo devia ficar centralizado")
+		assert(l.tabsWidth <= ShopLayout.TABS_MAX, `abas largas demais: {l.tabsWidth}`)
+		local small = ShopLayout.compute(1024, 640)
+		assert(small.contentWidth == 1024 - 16, "em 1024 a loja usa a largura toda")
 	end,
 
 	["spin screen sides always side by side"] = function()
