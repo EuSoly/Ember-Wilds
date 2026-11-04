@@ -8,6 +8,7 @@ local SurvivalConfig = require("../SurvivalConfig")
 local WorldConfig = require("../WorldConfig")
 local Types = require("./Types")
 local BuildRules = require("../Build/BuildRules")
+local SettingsFormat = require("../UIFlow/SettingsFormat")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
 local HEX_PATTERN = "^#%x%x%x%x%x%x$"
@@ -262,6 +263,9 @@ local function validateSettings(errors: { string }, defs: Types.DefsTables, hasS
 		checkDataId(errors, "Setting", key, setting.id)
 		checkString(errors, "Setting", key, "nameKey", setting.nameKey, hasString)
 		checkOrder(errors, "Setting", key, setting.order, orders)
+		if not table.find(SettingsFormat.GROUPS, setting.group) then
+			table.insert(errors, `Setting "{key}": group "{tostring(setting.group)}" não existe`)
+		end
 		local kind = setting.kind
 		if not table.find(SETTING_KINDS, kind) then
 			table.insert(errors, `Setting "{key}": kind "{kind}" não existe`)

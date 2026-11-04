@@ -102,6 +102,7 @@ end)
 camera_shake = {
 	id = "camera_shake",
 	nameKey = "setting.camera_shake",
+	group = "controls", -- grupo na tela: "sound", "screen" ou "controls"
 	order = 7, -- posição na tela de configurações (inteiro ≥ 1, sem repetir)
 	kind = "boolean",
 	default = true,

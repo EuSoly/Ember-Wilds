@@ -1,11 +1,11 @@
 --!strict
 -- Menu (UI 1, design system rústico). Tudo do menu mora aqui:
 --   topo: placa de nível + XP (falsos, selo MOCKUP), logo, saldo real + "+";
---   coluna à esquerda: Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações;
+--   coluna à esquerda: Perfil, Cosméticos, Loja, Ranking e Configurações;
 --   centro: o boneco do jogador segurando o livro (MenuBoneco), com os botões
 --   Kits e JOGAR embaixo; o painel de kits abre à direita (KitsPanel);
 --   os painéis do mockup (Perfil, Loja…) abrem à direita da coluna.
--- Só aparece no estado "menu" e sem Configurações aberta. As posições vêm do
+-- Só aparece no estado "menu" (a janela de Configurações abre por cima). As posições vêm do
 -- MenuLayout (pixels lógicos, testados do celular ao PC) e são recalculadas
 -- quando o tamanho da tela ou o tamanho da interface muda.
 local Players = game:GetService("Players")
@@ -47,16 +47,15 @@ local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
-local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
 
 local create = vide.create
 local R = Theme.rustic
 
 -- Botões da coluna, de cima para baixo (ids de MenuState.Panel). "settings"
 -- não é painel: abre a janela de Configurações de sempre.
-local NAV: { string } = { "profile", "cosmetics", "shop", "tutorial", "ranking", "settings" }
+local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" }
 -- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "profile", "cosmetics", "tutorial", "ranking" } :: { MenuState.Panel }
+local PANELS = { "profile", "cosmetics", "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
@@ -435,7 +434,6 @@ local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
 	ranking = RankingPanel.build,
 	profile = ProfilePanel.build,
-	tutorial = TutorialPanel.build,
 }
 
 -- Painel do mockup: título, botão de fechar (volta a "play") e o conteúdo.
@@ -604,10 +602,10 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
 		ResetOnSpawn = false,
-		-- Abaixo da janela de Configurações (que precisa ficar por cima).
+		-- Abaixo da janela de Configurações (que abre por cima, com o menu escurecido).
 		DisplayOrder = 1,
 		Enabled = function()
-			return ScreenState.current() == "menu" and not SettingsScreen.open()
+			return ScreenState.current() == "menu"
 		end,
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
@@ -625,7 +623,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		IgnoreGuiInset = true,
 		ScreenInsets = Enum.ScreenInsets.None,
 		Enabled = function()
-			return ScreenState.current() == "menu" and not SettingsScreen.open() and MenuState.panel() ~= "shop"
+			return ScreenState.current() == "menu" and MenuState.panel() ~= "shop"
 		end,
 		create("ImageLabel")({
 			Name = "Tree",

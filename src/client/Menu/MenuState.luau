@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 
-export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "tutorial" | "ranking"
+export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "ranking"
 -- Seções da Loja (abas). A loja pula para a pedida e limpa o pedido.
 export type ShopSection = "packs" | "passes" | "spins" | "ember"
 

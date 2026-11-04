@@ -57,6 +57,7 @@ local function validDataDefs(): any
 			music_volume = {
 				id = "music_volume",
 				nameKey = "setting.music_volume",
+				group = "sound",
 				order = 1,
 				kind = "number",
 				default = 0.8,
@@ -66,6 +67,7 @@ local function validDataDefs(): any
 			quality = {
 				id = "quality",
 				nameKey = "setting.quality",
+				group = "screen",
 				order = 2,
 				kind = "choice",
 				default = "auto",
@@ -74,6 +76,7 @@ local function validDataDefs(): any
 			left_handed = {
 				id = "left_handed",
 				nameKey = "setting.left_handed",
+				group = "controls",
 				order = 3,
 				kind = "boolean",
 				default = false,
@@ -694,6 +697,13 @@ return {
 		defs.Kits.kit_b.items = {}
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "items"), `faltou erro de items: {table.concat(errors, "; ")}`)
+	end,
+
+	["setting with an unknown group is an error"] = function()
+		local defs = validDataDefs()
+		defs.Settings.quality.group = "audio"
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, `Setting "quality": group`), `faltou erro de group: {table.concat(errors, "; ")}`)
 	end,
 
 	["settings with repeated order is an error"] = function()

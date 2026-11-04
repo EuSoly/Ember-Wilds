@@ -60,7 +60,7 @@ Importe o design para o Studio com um plugin (FigBloxUI, Framewisp, UILint ou Fi
 ### Regras dos moldes
 
 - **Cada tela é um `ScreenGui`** com um **`CanvasGroup` chamado `Root`** contendo tudo. É por ele que o código faz o fade de abrir e fechar. Sem `Root`, a tela funciona, mas abre sem animação.
-- **Linhas repetidas** (`KitRow`, `SettingRow*`) são um `Frame` simples. O código clona uma por item dentro da lista da tela. A lista deve ter um `UIListLayout` e, se for rolar, ser um `ScrollingFrame` com `AutomaticCanvasSize = Y`.
+- **Linhas repetidas** (`KitRow`, `RecipeRow`) são um `Frame` simples. O código clona uma por item dentro da lista da tela. A lista deve ter um `UIListLayout` e, se for rolar, ser um `ScrollingFrame` com `AutomaticCanvasSize = Y`.
 - **Use Scale, não pixels**, em tamanho e posição, para funcionar do celular ao PC. Limite o texto com `UITextSizeConstraint`.
 - **Moldes não têm scripts.** Toda lógica e animação ficam no código.
 - Telas que cobrem tudo (menu, morte, configurações) usam `ScreenInsets = None` e `IgnoreGuiInset = true`, para cobrir também a faixa da barra do Roblox. Por isso, deixe os botões longe da borda de cima.
@@ -113,16 +113,6 @@ Os textos e os ids das imagens ficam escritos no molde e no script: os textos e 
 | `SelectButton` | Botão | Seleciona / tira a seleção (de preferência cobrindo a linha toda) |
 
 O destaque do kit escolhido usa o `UIStroke` filho direto da linha (fica laranja e mais grosso). Sem `UIStroke`, o fundo fica laranja.
-
-**`Settings`**: `List` (Lista; uma linha por configuração, na ordem do campo `order`) e `CloseButton` (Botão).
-
-**Linhas de configuração**: todas têm `NameLabel` (nome) e `ValueLabel` (valor atual), os dois TextLabel.
-
-| Molde | Tipo | Botões |
-|---|---|---|
-| `SettingRowNumber` | número (volumes, tamanho da interface) | `MinusButton`, `PlusButton` (passo 0,1) |
-| `SettingRowBoolean` | liga/desliga | `ToggleButton` |
-| `SettingRowChoice` | escolha (qualidade) | `PrevButton`, `NextButton` |
 
 **`RecipeBook`** (livro de crafting): molde `ScreenGui` com `Root` (`CanvasGroup`), `List` (`ScrollingFrame`) e `CloseButton`. O botão do livro fica na HUD ao lado da engrenagem.
 
@@ -189,7 +179,15 @@ Pronto: o kit aparece no menu e na tela de morte. A validação no boot recusa:
 
 ## Configurações
 
-As linhas saem de `src/shared/Defs/Settings.luau`, na ordem do campo `order` (inteiro ≥ 1, sem repetir). Configuração nova aparece sozinha (veja "Adicionar uma configuração" em `dados.md`). Cada mudança é um pedido ao servidor (`Net.SetSetting`), e a tela mostra sempre o valor do atributo `Setting_<id>`.
+Janela no estilo rústico, feita em código (`src/client/Screens/SettingsScreen.luau`, sem molde). Abre pelo botão do menu e pela engrenagem da HUD, **por cima** do menu (que fica escurecido atrás) ou do jogo. Fecha no **Fechar** ou tocando fora da janela.
+
+As linhas saem de `src/shared/Defs/Settings.luau`, separadas em grupos (**Som**, **Tela**, **Controles**: campo `group`, títulos `setting.group.<id>`) e, dentro do grupo, na ordem do campo `order`. Configuração nova aparece sozinha (veja "Adicionar uma configuração" em `dados.md`). O controle depende do tipo:
+
+- número → **barrinha de arrastar**, de 5 em 5%. Os volumes mudam enquanto arrasta (dá para ouvir); o tamanho da interface só muda ao soltar (senão a tela mexeria embaixo do dedo);
+- liga/desliga → **chave**;
+- escolha → **setas** `<` `>` com o nome da opção no meio.
+
+Cada mudança é um pedido ao servidor (`Net.SetSetting`), e a tela mostra sempre o valor do atributo `Setting_<id>` (menos durante o arraste). A conta da barrinha e os grupos ficam em `src/shared/UIFlow/SettingsFormat.luau` (teste: `tests/settingsformat.spec.luau`).
 
 | Configuração | O que faz hoje |
 |---|---|
@@ -210,16 +208,16 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 |---|---|
 | Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
 | Árvore | Imagem atrás da coluna, num ScreenGui próprio (`MenuBackdrop`) em tela cheia: vai do topo (por trás dos botões do Roblox) até embaixo, com a largura proporcional à altura. Tronco, copa (onde fica o nível) e cogumelos; os botões ficam como placas pregadas no tronco |
-| Coluna à esquerda | Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações (esta abre a janela de configurações de sempre). Rola se a tela for baixa |
+| Coluna à esquerda | Perfil, Cosméticos, Loja, Ranking e Configurações (esta abre a janela de configurações por cima do menu). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
 | Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
-| Painéis do mockup | Perfil, Cosméticos, Tutorial e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+| Painéis do mockup | Perfil, Cosméticos e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
 | Loja | Abre em **tela cheia** (some coluna, nível, logo, boneco e árvore; só o card da Golden Ember fica). Veja "Loja (UI 2)" |
 
 | Arquivo | O que é |
 |---|---|
 | `src/client/Menu/MenuShell.luau` | Monta tudo; só liga no estado `menu` e desliga com Configurações aberta. Recalcula as posições quando a tela ou o tamanho da interface muda |
-| `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"`, `"tutorial"` ou `"ranking"`; o pedido de seção da loja (`openShop(seção)`, `shopSection`) e o aviso de compra simulada |
+| `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"` ou `"ranking"`; o pedido de seção da loja (`openShop(seção)`, `shopSection`) e o aviso de compra simulada |
 | `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). O livro é um clone de `ReplicatedStorage.Assets.Tools.book`; a pose (livro e mãos) são constantes no topo do arquivo |
 | `src/client/Menu/KitsPanel.luau`, `KitShop.luau` | Painel e estado dos kits (veja "Os três jeitos de levar um kit") |
 | `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `green`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura; `ember` (JOGAR, "+", botão selecionado) usa a imagem do botão laranja chanfrado (`UiImages.BUTTON_EMBER`); `green` (preços em Robux da loja) usa o mesmo botão em verde (`ShopImages.BUTTON_GREEN`). Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
@@ -261,12 +259,12 @@ Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`,
 
 ### Mockups do menu (G7a)
 
-Os painéis Perfil, Cosméticos, Tutorial e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
+Os painéis Perfil, Cosméticos e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
 
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
 | `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco. A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
-| `RankingPanel.luau`, `ProfilePanel.luau`, `TutorialPanel.luau` | Ranking, perfil e tutorial |
+| `RankingPanel.luau`, `ProfilePanel.luau` | Ranking e perfil |
 
 ### O que é falso e o que é de verdade
 
@@ -279,7 +277,7 @@ Tudo em `src/shared/UIFlow/MockStore.luau`:
 
 - os dados da Loja (veja "Loja (UI 2)");
 - `CATEGORIES`: as abas de cosméticos (skins usa as skins de corpo de verdade; acessórios, mochila, livro e caixa são inventados);
-- `RANKING`, `PROFILE`, `TUTORIAL`.
+- `RANKING`, `PROFILE`.
 
 Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
 

@@ -102,15 +102,6 @@ MockStore.PROFILE = {
 	},
 } :: { level: number, xp: number, xpMax: number, stats: { Stat } }
 
--- Chaves dos passos do tutorial, na ordem.
-MockStore.TUTORIAL = {
-	"mock.tutorial.1",
-	"mock.tutorial.2",
-	"mock.tutorial.3",
-	"mock.tutorial.4",
-	"mock.tutorial.5",
-} :: { string }
-
 -- ================= Loja (UI 2) =================
 
 -- Raridades das skins (tabela do Elizeu, 04/11): 5 níveis com cores próprias,

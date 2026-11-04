@@ -25,7 +25,7 @@ MenuLayout.COLUMN_WIDTH_COMPACT = 144 -- e 144 no compacto
 MenuLayout.BUTTON_HEIGHT = 52 -- botão padrão
 MenuLayout.BUTTON_HEIGHT_COMPACT = 44 -- mínimo de toque
 MenuLayout.BUTTON_GAP = 4
-MenuLayout.NAV_COUNT = 6 -- Perfil, Cosméticos, Loja, Tutorial, Ranking, Configurações
+MenuLayout.NAV_COUNT = 5 -- Perfil, Cosméticos, Loja, Ranking, Configurações
 -- Linha do título do painel: título e Fechar (44 px de toque) cabem nela, e o
 -- conteúdo do painel começa logo abaixo.
 MenuLayout.TITLE_ROW = 52

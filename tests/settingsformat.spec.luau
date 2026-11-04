@@ -8,18 +8,51 @@ local function fake(key: string): string
 end
 
 return {
-	["step moves by 0.1 inside the range"] = function()
-		local def = Defs.Settings.music_volume
-		assert(SettingsFormat.step(def, 0.8, 1) == 0.9, `{SettingsFormat.step(def, 0.8, 1)}`)
-		assert(SettingsFormat.step(def, 0.8, -1) == 0.7, `{SettingsFormat.step(def, 0.8, -1)}`)
-		assert(SettingsFormat.step(def, 1, 1) == 1, "preso no máximo")
-		assert(SettingsFormat.step(def, 0, -1) == 0, "preso no mínimo")
+	["fraction places the value along the bar"] = function()
+		assert(SettingsFormat.fraction(Defs.Settings.music_volume, 0.3) == 0.3, "música 30%")
+		local ui = Defs.Settings.ui_scale
+		assert(SettingsFormat.fraction(ui, 0.8) == 0, "mínimo no começo")
+		assert(SettingsFormat.fraction(ui, 1.25) == 1, "máximo no fim")
+		assert(math.abs(SettingsFormat.fraction(ui, 1.025) - 0.5) < 1e-9, "meio")
+		assert(SettingsFormat.fraction(ui, 2) == 1 and SettingsFormat.fraction(ui, 0) == 0, "fora da faixa prende")
 	end,
 
-	["step clamps ui_scale to its own range"] = function()
-		local def = Defs.Settings.ui_scale
-		assert(SettingsFormat.step(def, 1.2, 1) == 1.25, `{SettingsFormat.step(def, 1.2, 1)}`)
-		assert(SettingsFormat.step(def, 0.85, -1) == 0.8, `{SettingsFormat.step(def, 0.85, -1)}`)
+	["fromFraction snaps to 5% and stays in range"] = function()
+		local music = Defs.Settings.music_volume
+		assert(SettingsFormat.fromFraction(music, 0.33) == 0.35, `{SettingsFormat.fromFraction(music, 0.33)}`)
+		assert(SettingsFormat.fromFraction(music, 0.31) == 0.3, `{SettingsFormat.fromFraction(music, 0.31)}`)
+		assert(SettingsFormat.fromFraction(music, -0.2) == 0, "antes do começo")
+		assert(SettingsFormat.fromFraction(music, 1.3) == 1, "depois do fim")
+		local ui = Defs.Settings.ui_scale
+		assert(SettingsFormat.fromFraction(ui, 0) == 0.8, "mínimo da escala")
+		assert(SettingsFormat.fromFraction(ui, 1) == 1.25, "máximo da escala")
+		assert(SettingsFormat.fromFraction(ui, 0.6) == 1.05, `{SettingsFormat.fromFraction(ui, 0.6)}`)
+	end,
+
+	["grouped follows the group order and then the order field"] = function()
+		local parts: { string } = {}
+		for _, group in SettingsFormat.grouped(Defs.Settings) do
+			local ids: { string } = {}
+			for _, def in group.settings do
+				table.insert(ids, def.id)
+			end
+			table.insert(parts, `{group.id}:{table.concat(ids, ",")}`)
+		end
+		local expected = "sound:music_volume,ambient_volume,effects_volume|screen:ui_scale,quality|controls:left_handed"
+		assert(table.concat(parts, "|") == expected, table.concat(parts, "|"))
+	end,
+
+	["grouped skips empty groups"] = function()
+		local only = { left_handed = Defs.Settings.left_handed }
+		local groups = SettingsFormat.grouped(only :: any)
+		assert(#groups == 1 and groups[1].id == "controls", `{#groups}`)
+	end,
+
+	["every group has a title text"] = function()
+		local ptBR = require("../src/shared/Strings/ptBR") :: { [string]: string }
+		for _, id in SettingsFormat.GROUPS do
+			assert(ptBR[`setting.group.{id}`] ~= nil, id)
+		end
 	end,
 
 	["cycle wraps around"] = function()

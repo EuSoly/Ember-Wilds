@@ -172,10 +172,13 @@ export type StatDef = { id: string, nameKey: string, kind: StatKind, keyKind: St
 -- Configurações do jogador salvas no perfil (o cliente pede, o servidor valida).
 export type SettingKind = "number" | "boolean" | "choice"
 export type SettingValue = number | boolean | string
+-- Grupo na tela de configurações (a ordem dos grupos é SettingsFormat.GROUPS).
+export type SettingGroup = "sound" | "screen" | "controls"
 export type SettingDef = {
 	id: string,
 	nameKey: string,
-	order: number, -- posição na tela de configurações (1 = primeira)
+	group: SettingGroup,
+	order: number, -- posição dentro do grupo (inteiro ≥ 1, sem repetir no arquivo)
 	kind: SettingKind,
 	default: SettingValue,
 	min: number?, -- "number"

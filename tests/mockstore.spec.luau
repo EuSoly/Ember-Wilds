@@ -250,9 +250,5 @@ return {
 		for _, stat in MockStore.PROFILE.stats do
 			checkKey(stat.nameKey)
 		end
-		assert(#MockStore.TUTORIAL > 0, "tutorial vazio")
-		for _, key in MockStore.TUTORIAL do
-			checkKey(key)
-		end
 	end,
 }
