@@ -1,7 +1,7 @@
 --!strict
 -- Regras dos giros da loja (puras, testadas no Lune): sorteio por peso,
 -- escolha do item pela raridade, contadores de giros comprados e confete.
--- Raridade é um índice 1..6 na ordem de MockStore.RARITIES (madeira → reidite).
+-- Raridade é um índice 1..5 na ordem de MockStore.RARITIES (Comum → Mítico).
 -- Os contadores são imutáveis: cada função devolve uma tabela nova (assim a
 -- fonte do Vide sempre muda e a tela atualiza).
 local SpinRules = {}
@@ -27,7 +27,7 @@ function SpinRules.pickIndex(weights: { number }, r: number): number
 	return #weights
 end
 
-local MAX_RARITY = 6
+local MAX_RARITY = 5
 
 -- Item da raridade pedida (r escolhe entre eles). Sem nenhum dessa raridade,
 -- desce até achar; sem nada abaixo, sobe: o sorteio nunca fica sem prêmio.
@@ -106,8 +106,8 @@ function SpinRules.canAfford(balance: number, price: number): boolean
 end
 
 -- Peças de confete na janelinha do prêmio: no pago sempre (mais quanto mais
--- raro); no normal só de Raro (3) para cima, com pouco.
-local CONFETTI_PAID = { 20, 30, 50, 80, 110, 140 }
+-- raro); no normal só de Épico (3) para cima, com pouco.
+local CONFETTI_PAID = { 20, 35, 60, 100, 150 }
 local CONFETTI_NORMAL = 20
 local NORMAL_FROM = 3
 

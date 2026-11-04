@@ -10,7 +10,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
-local Defs = require(Shared:WaitForChild("Defs"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"))
@@ -54,7 +53,7 @@ local function typeOf(typeId: string): MockStore.SpinType?
 end
 
 local function rarityColor(rarity: number): Color3
-	return Theme.tier[MockStore.RARITIES[rarity]]
+	return Color3.fromHex(MockStore.RARITIES[rarity].color)
 end
 
 -- Linha das chances: uma célula por raridade, na cor dela.
@@ -67,7 +66,7 @@ local function oddsRow(odds: { number }): Frame
 		}) :: Instance,
 	}
 	for i, value in odds do
-		local name = Strings.get(Defs.Tiers[MockStore.RARITIES[i]].rarityKey)
+		local name = Strings.get(MockStore.RARITIES[i].nameKey)
 		table.insert(
 			cells,
 			create("Frame")({
@@ -450,7 +449,7 @@ function SpinScreen.build(
 		local tile = SpinTile.build(result.item, result.typeId, WON_TILE)
 		tile.ZIndex = 32
 		tile.Parent = prizeHolder
-		local rarityName = Strings.get(Defs.Tiers[MockStore.RARITIES[result.item.rarity]].rarityKey)
+		local rarityName = Strings.get(MockStore.RARITIES[result.item.rarity].nameKey)
 		prizeName.Text =
 			`{Strings.get(result.item.nameKey)} · <font color="#{rarityColor(result.item.rarity):ToHex()}">{rarityName}</font>`
 		if hooks.celebrate then

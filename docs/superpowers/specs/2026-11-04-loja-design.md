@@ -41,12 +41,12 @@ Uma loja vistosa, no estilo das lojas de jogos Roblox populares, mas com o visua
 - Página única que rola, com título de seção ("PACOTES EM DESTAQUE", "GAMEPASSES", "GIROS · ESCOLHA O TIPO", "GOLDEN EMBER").
 - Destaque: contador de tempo, raridade, lista do que vem com ícones, preço; troca sozinho a cada 6 s (pausa com a tela do giro aberta); bolinhas de página.
 - Gamepasses: os 4 kits permanentes (preços de `MockStore.KIT_ROBUX`) + **VIP (+3 espaços)**, que já está preparado no jogo; marcados como **provisórios**.
-- **Raridades (decisão do Elizeu depois do preview): os 6 níveis do jogo, com as cores dos tiers** (pilar "tier é cor" da identidade visual; `Defs/Tiers`, `Palette.tier`, textos `rarity.*`): Comum (madeira #8B5A2B), Incomum (pedra #8A8F98), Raro (ouro #F2B632), Épico (diamante #3FD0E0), Mítico (ametista #9B5DE5), Lendário (reidite #D63384). O preview de 4 raridades fica só como referência de layout.
-- Chances provisórias: **normal 60 / 25 / 10 / 4 / 0,9 / 0,1 %**, **pago 30 / 25 / 20 / 15 / 7 / 3 %** (de comum a lendário). A tabela de chances fica **sempre visível antes de girar** (regra do Roblox para item aleatório pago).
-- O carrossel ocioso mostra as raridades misturadas (pesos 30 / 25 / 18 / 13 / 9 / 5, só visual).
+- **Raridades (tabela do Elizeu, 04/11, substitui a escolha anterior dos 6 tiers):** 5 níveis com cores próprias — Comum #9CA3AF, Raro #3B9DFF, Épico #A855F7, Lendário #FFBD38, Mítico #FF4545 (o mais raro). As skins não seguem mais o pilar "tier é cor".
+- Chances: **normal 30 / 40 / 23 / 6 / 1 %**, **especial 5 / 25 / 40 / 25 / 5 %** (de Comum a Mítico). A tabela de chances fica **sempre visível antes de girar** (regra do Roblox para item aleatório pago).
+- O carrossel ocioso mostra as raridades misturadas (pesos 30 / 30 / 20 / 13 / 7, só visual).
 - Preços provisórios dos giros: normal **100 / 280 / 850** Golden Ember (1 / 3 / 10); pago **49 / 129 / 399** Robux.
 - Contadores de giros: **separados por tipo e por giro normal/pago**.
-- Efeitos do giro pago: raios de luz girando atrás da janela, brilho pulsando, borda colorida correndo no carrossel, faíscas atravessando, marcador piscando; ao parar, clarão e tremida. Janelinha do prêmio: raios na cor da raridade e confete (20 / 30 / 50 / 80 / 110 / 140 peças de comum a lendário; no giro normal só a partir de raro, com 20).
+- Efeitos do giro pago: raios de luz girando atrás da janela, brilho pulsando, borda colorida correndo no carrossel, faíscas atravessando, marcador piscando; ao parar, clarão e tremida. Janelinha do prêmio: raios na cor da raridade e confete (20 / 35 / 60 / 100 / 150 peças de Comum a Mítico; no giro normal só a partir de Épico, com 20).
 - Golden Ember: fitas "POPULAR", "-30%", "MELHOR" (as tags que já existem em `MockStore.PACKS`); frase dos cartões grandes "Receba na hora N Golden Ember".
 
 ## Escolhas minhas (aprovadas pelo Elizeu no chat: "está tudo certinho")

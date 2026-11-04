@@ -39,8 +39,8 @@ local SpinTypes = {}
 local function wheel(): Frame
 	local keys: { ColorSequenceKeypoint } = {}
 	local n = #MockStore.RARITIES
-	for i, id in MockStore.RARITIES do
-		local color = Theme.tier[id]
+	for i, rarity in MockStore.RARITIES do
+		local color = Color3.fromHex(rarity.color)
 		table.insert(keys, ColorSequenceKeypoint.new((i - 1) / n, color))
 		table.insert(keys, ColorSequenceKeypoint.new(i / n - (if i < n then 0.001 else 0), color))
 	end

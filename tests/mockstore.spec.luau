@@ -20,7 +20,7 @@ return {
 		assert(MockStore.PACKS[5].tag == "best", "pacote 5 deveria ser best")
 	end,
 
-	["chances dos giros têm 6 raridades e somam 100"] = function()
+	["chances dos giros têm 5 raridades e somam 100"] = function()
 		for name, odds in
 			{
 				normal = MockStore.SPIN_ODDS.normal,
@@ -28,7 +28,7 @@ return {
 				vitrine = MockStore.SHOWCASE_WEIGHTS,
 			}
 		do
-			assert(#odds == 6, `{name}: {#odds} valores`)
+			assert(#odds == 5, `{name}: {#odds} valores`)
 			local total = 0
 			for _, v in odds do
 				assert(v > 0, `{name}: chance não positiva`)
@@ -36,32 +36,33 @@ return {
 			end
 			assert(math.abs(total - 100) <= 1e-6, `{name}: soma {total}`)
 		end
-		local n, p = MockStore.SPIN_ODDS.normal, MockStore.SPIN_ODDS.paid
-		assert(n[1] == 60 and n[6] == 0.1 and p[1] == 30 and p[6] == 3, "chances combinadas mudaram")
+		assert(table.concat(MockStore.SPIN_ODDS.normal, ",") == "30,40,23,6,1", "chances do giro normal")
+		assert(table.concat(MockStore.SPIN_ODDS.paid, ",") == "5,25,40,25,5", "chances do giro especial")
 	end,
 
-	["raridades seguem os tiers"] = function()
-		assert(
-			table.concat(MockStore.RARITIES, ",") == "wood,stone,gold,diamond,amethyst,reidite",
-			"ordem das raridades"
-		)
-		for _, id in MockStore.RARITIES do
-			assert(Defs.Tiers[id] ~= nil, `tier {id} não existe`)
+	["raridades da tabela do Elizeu"] = function()
+		local ids, colors = {}, {}
+		for _, rarity in MockStore.RARITIES do
+			table.insert(ids, rarity.id)
+			table.insert(colors, rarity.color)
+			checkKey(rarity.nameKey)
 		end
+		assert(table.concat(ids, ",") == "common,rare,epic,legendary,mythic", table.concat(ids, ","))
+		assert(table.concat(colors, ",") == "#9CA3AF,#3B9DFF,#A855F7,#FFBD38,#FF4545", table.concat(colors, ","))
 	end,
 
 	["tipos de giro na ordem e com item de cada raridade"] = function()
 		local ids = {}
 		for _, t in MockStore.SPIN_TYPES do
 			table.insert(ids, t.id)
-			assert(#t.items >= 6 and #t.items <= 8, `{t.id}: {#t.items} itens`)
+			assert(#t.items >= 5 and #t.items <= 8, `{t.id}: {#t.items} itens`)
 			local seen = {}
 			for _, item in t.items do
-				assert(item.rarity >= 1 and item.rarity <= 6, `{item.id}: raridade {item.rarity}`)
+				assert(item.rarity >= 1 and item.rarity <= 5, `{item.id}: raridade {item.rarity}`)
 				assert(string.match(item.color, "^#%x%x%x%x%x%x$"), `{item.id}: cor {item.color}`)
 				seen[item.rarity] = true
 			end
-			for r = 1, 6 do
+			for r = 1, 5 do
 				assert(seen[r], `{t.id}: sem item de raridade {r}`)
 			end
 		end

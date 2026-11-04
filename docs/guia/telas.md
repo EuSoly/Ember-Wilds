@@ -236,7 +236,7 @@ Loja em tela cheia, toda **simulada** (visual e fluxo completos; comprar só mos
 3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
 4. **Golden Ember**: os 5 pacotes de moeda (3 em cima, 2 largos embaixo).
 
-Raridades = os 6 tiers, com as cores deles (Comum = madeira … Lendário = reidite).
+Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais raro), com cores próprias em `MockStore.RARITIES`.
 
 | Arquivo (`src/client/Menu/Shop/`) | O que é |
 |---|---|
@@ -251,7 +251,7 @@ Raridades = os 6 tiers, com as cores deles (Comum = madeira … Lendário = reid
 |---|---|
 | `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente e confete. Teste: `tests/spinrules.spec.luau` |
 | `src/shared/UIFlow/ShopLayout.luau` | Medidas da loja e colunas das grades (menos no celular). Teste: `tests/shoplayout.spec.luau` |
-| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 60/25/10/4/0,9/0,1; pago 30/25/20/15/7/3), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (itens de mentirinha), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
+| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 30/40/23/6/1; especial 5/25/40/25/5), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (itens de mentirinha), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
 | `src/shared/ShopImages.luau` | Ids das artes da loja (fontes em `assets/ui/shop/`): roleta em 3 camadas, fundos de cartão, ícone do Robux, botão verde, fita, pilhas de moedas e ícones. Id vazio = desenho feito por código |
 
 Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`, `KitShop.buyForever` ou pelo `onClick` dos cartões (`Featured`, `Passes`, `EmberPacks`); é aí que entra o `MarketplaceService`.
@@ -282,7 +282,7 @@ Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.
 
 ### Como mexer nos valores
 
-- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. As chances dos giros são em % e têm de somar 100, com 6 valores (um por raridade); o teste confere. Todo tipo de giro precisa de pelo menos um item de cada raridade.
+- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. As chances dos giros são em % e têm de somar 100, com 5 valores (um por raridade); o teste confere. Todo tipo de giro precisa de pelo menos um item de cada raridade.
 - **Texto:** edite a chave `mock.*` ou `shop.*` correspondente em `ptBR.luau`.
 - Rode `bash scripts/check.sh` depois.
 

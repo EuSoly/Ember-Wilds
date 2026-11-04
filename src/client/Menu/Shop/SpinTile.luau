@@ -165,7 +165,7 @@ local function art(typeId: string, color: Color3): Frame
 end
 
 local function tileFrame(typeId: string, colorHex: string, rarity: number, props: { [any]: any }): Frame
-	local rarityColor = Theme.tier[MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)]]
+	local rarityColor = Color3.fromHex(MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)].color)
 	local frame = create("Frame")({
 		BackgroundColor3 = Color3.new(1, 1, 1),
 		BorderSizePixel = 0,

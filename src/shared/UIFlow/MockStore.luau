@@ -113,28 +113,37 @@ MockStore.TUTORIAL = {
 
 -- ================= Loja (UI 2) =================
 
--- Raridades = os tiers, de Comum (madeira) a Lendário (reidite): a cor e o
--- nome vêm de Defs.Tiers (pilar "tier é cor" da identidade visual).
-MockStore.RARITIES = { "wood", "stone", "gold", "diamond", "amethyst", "reidite" } :: { string }
+-- Raridades das skins (tabela do Elizeu, 04/11): 5 níveis com cores próprias,
+-- do mais comum ao mais raro. Mítico (vermelho) fica acima de Lendário.
+export type Rarity = { id: string, nameKey: string, color: string }
+MockStore.RARITIES = {
+	{ id = "common", nameKey = "shop.rarity.common", color = "#9CA3AF" },
+	{ id = "rare", nameKey = "shop.rarity.rare", color = "#3B9DFF" },
+	{ id = "epic", nameKey = "shop.rarity.epic", color = "#A855F7" },
+	{ id = "legendary", nameKey = "shop.rarity.legendary", color = "#FFBD38" },
+	{ id = "mythic", nameKey = "shop.rarity.mythic", color = "#FF4545" },
+} :: { Rarity }
 
--- Chances (%) por raridade, na ordem acima. Provisórias.
+-- Chances (%) por raridade, na ordem acima (tabela do Elizeu).
 MockStore.SPIN_ODDS = {
-	normal = { 60, 25, 10, 4, 0.9, 0.1 }, -- giro com Golden Ember
-	paid = { 30, 25, 20, 15, 7, 3 }, -- giro especial com Robux
+	normal = { 30, 40, 23, 6, 1 }, -- giro com Golden Ember
+	paid = { 5, 25, 40, 25, 5 }, -- giro especial com Robux
 }
 -- Só para o carrossel ocioso mostrar as raridades misturadas (não é chance).
-MockStore.SHOWCASE_WEIGHTS = { 30, 25, 18, 13, 9, 5 } :: { number }
+MockStore.SHOWCASE_WEIGHTS = { 30, 30, 20, 13, 7 } :: { number }
 
 export type SpinItem = { id: string, nameKey: string, rarity: number, color: string }
 export type SpinType = { id: string, nameKey: string, theme: string, items: { SpinItem } }
 
--- Um item de mentirinha por raridade (índice = raridade); `color` pinta o
--- quadradinho do carrossel até existirem os ícones de verdade.
+-- Itens de mentirinha (6 por tipo): raridade de cada um pela ordem abaixo
+-- (dois comuns, depois um de cada); `color` pinta o quadradinho do carrossel
+-- até existirem os ícones de verdade.
+local ITEM_RARITIES = { 1, 1, 2, 3, 4, 5 }
 local function spinItems(typeId: string, colors: { string }): { SpinItem }
 	local list: { SpinItem } = {}
 	for i, color in colors do
 		local id = `{typeId}_{i}`
-		table.insert(list, { id = id, nameKey = `shop.item.{id}`, rarity = i, color = color })
+		table.insert(list, { id = id, nameKey = `shop.item.{id}`, rarity = ITEM_RARITIES[i], color = color })
 	end
 	return list
 end
@@ -206,7 +215,7 @@ MockStore.BUNDLES = {
 	{
 		id = "brasa",
 		nameKey = "shop.bundle.brasa",
-		rarity = 6,
+		rarity = 5,
 		theme = "#B8361A",
 		robux = 399,
 		endsIn = 2 * DAY + 10 * HOUR + 7 * MINUTE,
@@ -215,7 +224,7 @@ MockStore.BUNDLES = {
 	{
 		id = "geada",
 		nameKey = "shop.bundle.geada",
-		rarity = 5,
+		rarity = 4,
 		theme = "#2F7FD8",
 		robux = 349,
 		endsIn = 5 * DAY + 2 * HOUR + 40 * MINUTE,
@@ -224,7 +233,7 @@ MockStore.BUNDLES = {
 	{
 		id = "musgo",
 		nameKey = "shop.bundle.musgo",
-		rarity = 3,
+		rarity = 2,
 		theme = "#4E9A2E",
 		robux = 299,
 		endsIn = 12 * HOUR + 5 * MINUTE,

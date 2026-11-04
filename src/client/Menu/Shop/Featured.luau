@@ -7,7 +7,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
-local Defs = require(Shared:WaitForChild("Defs"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -31,11 +30,11 @@ local RIGHT_EDGE = -(ARROW + 22) -- a coluna da direita fica longe da seta
 local Featured = {}
 
 local function rarityColor(rarity: number): Color3
-	return Theme.tier[MockStore.RARITIES[rarity]]
+	return Color3.fromHex(MockStore.RARITIES[rarity].color)
 end
 
 local function rarityName(rarity: number): string
-	return Strings.get(Defs.Tiers[MockStore.RARITIES[rarity]].rarityKey)
+	return Strings.get(MockStore.RARITIES[rarity].nameKey)
 end
 
 -- "2D 10H 7M" a partir de segundos.

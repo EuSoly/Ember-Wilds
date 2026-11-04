@@ -71,14 +71,14 @@ return {
 
 	["confete por raridade"] = function()
 		local paid = {}
-		for r = 1, 6 do
+		for r = 1, 5 do
 			table.insert(paid, SpinRules.confettiFor(r, true))
 		end
-		assert(table.concat(paid, ",") == "20,30,50,80,110,140", table.concat(paid, ","))
+		assert(table.concat(paid, ",") == "20,35,60,100,150", table.concat(paid, ","))
 		assert(
 			SpinRules.confettiFor(1, false) == 0 and SpinRules.confettiFor(2, false) == 0,
 			"normal comum/incomum sem confete"
 		)
-		assert(SpinRules.confettiFor(3, false) == 20 and SpinRules.confettiFor(6, false) == 20, "normal raro+ com 20")
+		assert(SpinRules.confettiFor(3, false) == 20 and SpinRules.confettiFor(5, false) == 20, "normal épico+ com 20")
 	end,
 }

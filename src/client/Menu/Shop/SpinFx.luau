@@ -202,7 +202,7 @@ function SpinFx.celebrate(popup: GuiObject, rarity: number, paid: boolean)
 	if count <= 0 then
 		return
 	end
-	local color = Theme.tier[MockStore.RARITIES[rarity]]
+	local color = Color3.fromHex(MockStore.RARITIES[rarity].color)
 	-- Atrás da janelinha (irmão dela, com ZIndex menor), no mesmo centro.
 	local glow = rays(overlay, UDim2.fromOffset(640, 640), { color, WHITE }, math.max(popup.ZIndex - 1, 1))
 	glow.Position = popup.Position
