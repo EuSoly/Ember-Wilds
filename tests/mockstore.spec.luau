@@ -218,12 +218,6 @@ return {
 		end
 	end,
 
-	["perfil tem xp dentro do máximo"] = function()
-		local profile = MockStore.PROFILE
-		assert(profile.level >= 1 and profile.xp >= 0 and profile.xp <= profile.xpMax, "xp inválido")
-		assert(#profile.stats > 0, "sem estatísticas")
-	end,
-
 	["toda nameKey do mockup existe em Strings"] = function()
 		for _, t in MockStore.SPIN_TYPES do
 			checkKey(t.nameKey)
@@ -246,9 +240,6 @@ return {
 			for _, item in cat.items do
 				checkKey(item.nameKey)
 			end
-		end
-		for _, stat in MockStore.PROFILE.stats do
-			checkKey(stat.nameKey)
 		end
 	end,
 }

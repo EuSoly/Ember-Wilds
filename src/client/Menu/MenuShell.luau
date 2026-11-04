@@ -17,6 +17,7 @@ local Defs = require(Shared:WaitForChild("Defs"))
 local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local LevelRules = require(Shared:WaitForChild("Data"):WaitForChild("LevelRules"))
+local ProfileFormat = require(Shared:WaitForChild("UIFlow"):WaitForChild("ProfileFormat"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -55,7 +56,7 @@ local R = Theme.rustic
 -- não é painel: abre a janela de Configurações de sempre.
 local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" }
 -- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "profile", "cosmetics", "ranking" } :: { MenuState.Panel }
+local PANELS = { "cosmetics", "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
@@ -224,7 +225,10 @@ local function levelPod(layout: () -> Layout): Frame
 				FontFace = Theme.font.body,
 				Text = function()
 					local p = progress()
-					return Strings.format("menu.xp", { xp = p.into, max = p.need })
+					return Strings.format(
+						"menu.xp",
+						{ xp = ProfileFormat.thousands(p.into), max = ProfileFormat.thousands(p.need) }
+					)
 				end,
 				maxSize = 12,
 			}),
@@ -439,7 +443,6 @@ end
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
 	ranking = RankingPanel.build,
-	profile = ProfilePanel.build,
 }
 
 -- Painel do mockup: título, botão de fechar (volta a "play") e o conteúdo.
@@ -602,6 +605,8 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	for i = 1, #PANELS do
 		table.insert(children, panelFrame(PANELS[i], layout))
 	end
+	-- Perfil: janela no centro, por cima do menu (sem escurecer).
+	table.insert(children, ProfilePanel.build())
 	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
 

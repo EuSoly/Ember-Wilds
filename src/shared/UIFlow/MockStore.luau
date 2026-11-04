@@ -9,7 +9,6 @@ export type Pack = { amount: number, robux: number, tag: string? }
 export type CategoryItem = { id: string, nameKey: string }
 export type Category = { id: string, nameKey: string, items: { CategoryItem } }
 export type RankRow = { name: string, points: number }
-export type Stat = { nameKey: string, value: number }
 
 -- Pacotes de moeda (quantidade ↔ preço em Robux).
 MockStore.PACKS = {
@@ -89,18 +88,6 @@ MockStore.RANKING = {
 	{ name = "Pedregulho", points = 11986 },
 	{ name = "Fagulha", points = 8421 },
 } :: { RankRow }
-
-MockStore.PROFILE = {
-	level = 7,
-	xp = 340,
-	xpMax = 500,
-	stats = {
-		{ nameKey = "mock.stat.kills", value = 23 },
-		{ nameKey = "mock.stat.deaths", value = 41 },
-		{ nameKey = "mock.stat.days", value = 96 },
-		{ nameKey = "mock.stat.crafted", value = 312 },
-	},
-} :: { level: number, xp: number, xpMax: number, stats: { Stat } }
 
 -- ================= Loja (UI 2) =================
 
