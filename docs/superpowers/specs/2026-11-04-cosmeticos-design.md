@@ -76,7 +76,11 @@ O carrossel, as amostras dos cartões e o prêmio dos giros da loja passam a usa
 
 ## Fácil de personalizar (Elizeu)
 
-Todas as skins ficam **num arquivo só** de dados (`src/shared/Defs/Cosmetics.luau`), que alimenta os Cosméticos **e** o carrossel/giros da loja. Cada skin tem, num lugar só: id, nome (texto em pt-BR), categoria, **raridade**, as cores e, opcional, a **imagem** do quadradinho (quando existir a arte, ela substitui a cor) e se **aparece nos giros da loja** (sim por padrão; a skin padrão de cada categoria não aparece). Mudar a ordem, a raridade, tirar do carrossel ou acrescentar uma skin = editar só essa entrada. O guia ganha um passo a passo "como adicionar ou mudar uma skin", e a validação dos dados avisa erro de digitação (raridade fora de 1–5, categoria inexistente, texto faltando).
+Todas as skins ficam **num arquivo só** de dados (`src/shared/Defs/Cosmetics.luau`), que alimenta os Cosméticos **e** o carrossel/giros da loja. Cada skin tem, num lugar só: id, nome (texto em pt-BR), categoria, **raridade**, as cores e se **aparece nos giros da loja** (sim por padrão; a skin padrão de cada categoria não aparece). Mudar a ordem, a raridade, tirar do carrossel ou acrescentar uma skin = editar só essa entrada. O guia ganha um passo a passo "como adicionar ou mudar uma skin", e a validação dos dados avisa erro de digitação (raridade fora de 1–5, categoria inexistente, texto faltando).
+
+## Itens em 3D nos quadradinhos (Elizeu)
+
+Os quadradinhos mostram o **item em 3D** (ViewportFrame), não uma cor chapada: o boneco com a skin, a mochila, a caixa, o livro. Vale para o **carrossel e o prêmio da loja**, as amostras dos cartões da loja e dos Cosméticos e a **grade dos Cosméticos** (minha decisão: tudo igual). O fundo do quadradinho continua na cor da raridade. Como um giro cria dezenas de quadradinhos de uma vez, o modelo de cada skin é montado uma vez e depois só copiado, e o giro precisa continuar liso.
 
 ## Posse e equipar (minha decisão, por ser o necessário para "de verdade")
 
