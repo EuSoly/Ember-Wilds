@@ -16,7 +16,7 @@ loading ──ready──▶ menu ──spawned──▶ playing ──died─�
 | Estado | O que aparece | Quando muda |
 |---|---|---|
 | `loading` | Tela de carregamento | `ready`: o perfil está pronto (atributo `DataReady` do Player). A tela de carregamento também espera o jogo carregar e cobre a espera até lá |
-| `menu` | Menu: logo, saldo, kits, Jogar, Configurações. Sem personagem; a câmera passeia pelo mapa | `spawned`: o personagem nasceu (o jogador clicou Jogar) |
+| `menu` | Menu: nível, logo, saldo, coluna de botões, o boneco do jogador com o livro, Kits e JOGAR. Sem personagem; a câmera passeia pelo mapa atrás | `spawned`: o personagem nasceu (o jogador clicou Jogar) |
 | `playing` | HUD | `died`: chegou o resumo da vida (`Net.LifeEnded`) |
 | `dead` | Tela de morte: causa, dias, pontos virando Golden Ember, kits, Jogar de novo, Menu | `spawned` (Jogar de novo) ou `toMenu` (Menu) |
 
@@ -31,17 +31,20 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 | `assets/ui/*.model.json` | Os moldes (no jogo: `ReplicatedStorage.UITemplates`) |
 | `src/first/LoadingScreen.model.json`, `Loading.client.luau` | Molde e script da tela de carregamento (em `ReplicatedFirst`, roda antes de tudo) |
 | `src/client/UITemplates/Template.luau` | Liga os moldes: `clone`, `find`, `bind`, `show` |
-| `src/client/Screens/` | Uma tela por arquivo: `MainMenu`, `DeathScreen`, `SettingsScreen` e a lista de kits `KitList` |
+| `src/client/Screens/` | Uma tela por arquivo: `DeathScreen`, `SettingsScreen`, `RecipeBookScreen` e a lista de kits de pontos `KitList` (usada pela morte; a escolha é compartilhada com o menu) |
+| `src/client/Menu/` | O menu inteiro, em código (Vide): veja "Menu" abaixo |
 | `src/client/Controllers/ScreenController.luau` | Monta as telas e mostra/esconde conforme o estado |
 | `src/client/ScreenState.luau` | O estado de tela |
 | `src/client/AudioSettings.luau` | Grupos de som e volumes |
-| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `CountUp`, `SettingsFormat` |
+| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `KitOffer`, `MenuLayout`, `CountUp`, `SettingsFormat` |
+| `src/shared/UiImages.luau` | Ids das imagens da interface (logo, sol, lua) num lugar só |
+| `assets/ui/brand/` | PNGs da marca (logo, sol, lua), fonte das imagens enviadas ao Roblox |
 
 ## Como trocar o visual de uma tela
 
 ### No Studio
 
-1. Com o `rojo serve` conectado, abra `ReplicatedStorage.UITemplates` e escolha o molde (ex. `MainMenu`).
+1. Com o `rojo serve` conectado, abra `ReplicatedStorage.UITemplates` e escolha o molde (ex. `Death`).
 2. Para ver enquanto edita, copie o molde para `StarterGui` e ligue `Enabled`. Edite à vontade: cores, fontes, imagens, posições, enfeites novos.
 3. **Mantenha os nomes combinados** (tabela abaixo). Pode mudar onde eles ficam: o código procura em qualquer profundidade dentro do molde.
 4. Terminou: apague a cópia do `StarterGui`, clique com o botão direito no molde editado → **Save to File** e salve como `assets/ui/Nome.rbxmx` (mesmo nome do molde).
@@ -70,17 +73,22 @@ Se um nome combinado sumir ou for renomeado, o jogo **não quebra**. Aparece **u
 
 "Botão" aceita `TextButton` ou `ImageButton`. "Lista" aceita `Frame` ou `ScrollingFrame`.
 
-**`LoadingScreen`** (em `src/first`): `Root` (CanvasGroup, fade ao sumir, opcional) e `Fill` (Frame, a barra: o código muda a largura `Size.X.Scale` de 0 a 1). Os textos ficam fixos no molde, porque os textos do jogo ainda não chegaram ao cliente nessa hora.
-
-**`MainMenu`**
+**`LoadingScreen`** (em `src/first`, roda antes de tudo). Um sol anda junto com a ponta da barra; na metade vira lua, o céu escurece e a barra fica azul-noite. As contas (ritmo da barra, metade, textos) ficam em `src/first/LoadingMath.luau` (testado). Todos os nomes são opcionais: o que faltar só deixa de animar.
 
 | Nome | Classe | Para quê |
 |---|---|---|
-| `BalanceLabel` | TextLabel | Saldo (`menu.balance`) |
-| `PlayButton` | Botão | Nasce com o kit escolhido |
-| `SettingsButton` | Botão | Abre as configurações |
-| `KitList` | Lista | Onde entram as linhas de kit |
-| `KitPointsLabel` | TextLabel | Pontos para kit (`kit.points`) |
+| `Root` | CanvasGroup | Fade ao sumir |
+| `Sky` | Frame | Céu provisório (degradê). Pode apagar quando a arte entrar |
+| `Art` | ImageLabel | **A arte de fundo**: troque só a propriedade `Image` |
+| `Night` | CanvasGroup | Céu da noite com estrelas; o código o faz aparecer depois da metade |
+| `Logo` | ImageLabel | Logo (id escrito no molde) |
+| `Track` | Frame | Trilho de madeira (o código escurece à noite) |
+| `Fill` | Frame | A barra: o código muda a largura `Size.X.Scale` de 0 a 1 e a cor (brasa → noite) |
+| `Sun`, `Moon` | ImageLabel | Andam na ponta do `Fill`; sem imagem viram um círculo |
+| `StatusLabel` | TextLabel | "Carregando o mundo…" → "Acendendo as fogueiras…" → "Pronto!" |
+| `TipLabel` | TextLabel | Dica fixa |
+
+Os textos e os ids das imagens ficam escritos no molde e no script: os textos e o `UiImages` do jogo ainda não chegaram ao cliente nessa hora. Para trocar a arte de fundo: no Studio, ponha o id da imagem em `Art.Image` e salve o molde (veja "Como trocar o visual de uma tela").
 
 **`Death`**
 
@@ -122,7 +130,7 @@ O destaque do kit escolhido usa o `UIStroke` filho direto da linha (fica laranja
 
 ## O atributo `TextKey`
 
-Qualquer `TextLabel` ou `TextButton` de um molde com o atributo **`TextKey`** recebe automaticamente `Strings.get(TextKey)`. Ex.: um botão com `TextKey = "menu.play"` mostra "Jogar". No Studio: Properties → Attributes → `+`, nome `TextKey`, tipo `string`.
+Qualquer `TextLabel` ou `TextButton` de um molde com o atributo **`TextKey`** recebe automaticamente `Strings.get(TextKey)`. Ex.: um botão com `TextKey = "death.playAgain"` mostra "Jogar de novo". No Studio: Properties → Attributes → `+`, nome `TextKey`, tipo `string`.
 
 Textos com dados (saldo, pontos, dias) são escritos pelo código nos elementos combinados. O que vier escrito no molde é só exemplo para o design.
 
@@ -139,6 +147,18 @@ Textos com dados (saldo, pontos, dias) são escritos pelo código nos elementos 
 Como no Starve.io: antes de nascer, o jogador pode comprar **um** kit com os **pontos da vida que acabou** (não com Golden Ember). Esses pontos ficam no atributo `KitPoints` do Player, só em memória (ao sair do jogo, perde). Os mesmos pontos também viram Golden Ember normalmente na morte: são duas coisas independentes.
 
 O servidor (`SpawnService`) confere o kit e os pontos, desconta e dá os itens depois de nascer; uma mochila no kit é vestida primeiro. Kit inexistente ou caro demais faz nascer sem kit, sem descontar nada. Se algum item não couber (não deveria, por causa da validação abaixo), aparece um `warn` no Output.
+
+### Os três jeitos de levar um kit (UI 1)
+
+No menu, o botão **Kits** (embaixo do boneco) abre o painel "ESCOLHA SEU KIT". Cada kit pode ir de três jeitos:
+
+1. **Pontos, 1 vida**: o de verdade, descrito acima. A escolha fica em `KitList.selected` (a mesma da tela de morte).
+2. **Robux, 1 vida** (mockup).
+3. **Robux, para sempre** (mockup): depois de comprado, o botão vira **Usar**; ativado, o kit vem sozinho em toda vida (botão **Ativo**; clicar de novo desativa). Só um permanente ativo por vez.
+
+Vai **um kit por vida**. Quem vale: escolha de pontos → compra de 1 vida com Robux → permanente ativo → nenhum. Escolher de pontos limpa a compra de 1 vida com Robux e vice-versa. Ao nascer, a compra de 1 vida é gasta; o permanente continua. O botão Kits mostra embaixo o kit desta vida.
+
+**Robux ainda é mockup:** comprar só mostra o aviso "compra simulada" e muda um estado local (`src/client/Menu/KitShop.luau`), que volta ao início ao sair do jogo. O JOGAR só leva ao servidor o kit de **pontos**; por isso um kit de Robux aparece como "Explorador (simulado)". As regras puras ficam em `src/shared/UIFlow/KitOffer.luau` (teste `tests/kitoffer.spec.luau`). Os preços provisórios (`KIT_ROBUX`) e o kit que já começa permanente (`KIT_STARTS_OWNED`, hoje o Iniciante) ficam no `MockStore`. Kit novo em `Defs.Kits` precisa de preço em `KIT_ROBUX` (o teste avisa).
 
 ### Como adicionar um kit
 
@@ -182,25 +202,39 @@ As linhas saem de `src/shared/Defs/Settings.luau`, na ordem do campo `order` (in
 
 Sem personagem (menu e tela de morte), o servidor (`SpectateService`) escolhe um jogador vivo aleatório a cada 8 s e grava o UserId no atributo `SpectateTarget` (0 = ninguém). Também aponta o foco de streaming (`ReplicationFocus`) para ele, para o mapa em volta chegar ao cliente. O `CameraController` segue esse jogador um pouco mais alto; sem ninguém vivo, gira devagar sobre o centro do mapa. Bonecos de teste não contam (não são jogadores).
 
-## Mockups do menu e da loja (G7a)
+## Menu (UI 1)
 
-O menu ganhou uma **casca** com painéis de mentirinha: Perfil, Cosméticos, Loja, Comprar Golden Ember, Tutorial e Ranking. É só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez: primeiro comprar Golden Ember com Robux (e o menu), depois cosméticos (ter e equipar), depois giros e kit, depois ranking e nível.
+O menu é todo feito em código (Vide), no visual do [design system rústico](../game-design/design-system/README.md). O antigo molde `MainMenu` foi aposentado.
 
-### A casca e os painéis
+| Parte | O que é |
+|---|---|
+| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP). Meio: logo pequeno. Direita: o **saldo de verdade** e um "+" que abre "Comprar Golden Ember" |
+| Coluna à esquerda | Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações (esta abre a janela de configurações de sempre). Rola se a tela for baixa |
+| Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
+| Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
+| Painéis do mockup | Perfil, Loja… abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+
+| Arquivo | O que é |
+|---|---|
+| `src/client/Menu/MenuShell.luau` | Monta tudo; só liga no estado `menu` e desliga com Configurações aberta. Recalcula as posições quando a tela ou o tamanho da interface muda |
+| `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"`, `"buy"`, `"tutorial"` ou `"ranking"`; e o aviso de compra simulada |
+| `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). O livro é um clone de `ReplicatedStorage.Assets.Tools.book`; a pose (livro e mãos) são constantes no topo do arquivo |
+| `src/client/Menu/KitsPanel.luau`, `KitShop.luau` | Painel e estado dos kits (veja "Os três jeitos de levar um kit") |
+| `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `success`, `disabled`). Cores em `Palette.rustic` |
+| `src/shared/UIFlow/MenuLayout.luau` | Todas as medidas em pixels lógicos: coluna (200 no PC, 144 no compacto), botões, boneco, Kits/JOGAR e painel de kits. **Compacto** = largura < 900 ou altura < 500. Teste: `tests/menulayout.spec.luau` (de 568×320 a 1920×1080) |
+
+O `MenuShell` tem uma tabela `CONTENT` (painel do mockup → função que monta o conteúdo). É nela que cada painel é ligado.
+
+### Mockups da loja (G7a)
+
+Os painéis Perfil, Cosméticos, Loja, Comprar Golden Ember, Tutorial e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
 
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
-| `MenuState.luau` | Qual painel está aberto (`panel`: "play", "profile", "cosmetics", "shop", "buy", "tutorial" ou "ranking"; abrir com `open(painel)`) e o aviso de "compra simulada" (`notice`, `notify(texto)`) |
-| `MenuShell.luau` | A casca: um `ScreenGui` do Vide (`DisplayOrder` 1) que só liga no estado `menu` e desliga com Configurações aberta. Coluna rolável de 6 botões à esquerda (Perfil, Jogar, Cosméticos, Loja, Tutorial, Ranking); dois cantinhos em cima (esquerda: nível e XP falsos e a etiqueta MOCKUP; direita: o **saldo de verdade** e um "+" que abre "buy"); a área do painel; o aviso no título |
-| `src/shared/UIFlow/MenuLayout.luau` | As medidas da casca em pixels (margens, pods de 56 px, coluna de 120 px, botões de 44 px, linha do título de 52 px). A casca usa offsets, então cabe de ~800x400 a 1920x1080 (a coluna rola se faltar altura). Teste: `tests/menulayout.spec.luau` |
-| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco (o `ViewportFrame` fica; só o boneco é criado ao abrir e destruído ao fechar). A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
-| `ShopPanel.luau` | Loja: giros (skin e personalizado) e kit. O detalhe do giro mostra a **tabela de chances antes de girar** (as regras do Roblox exigem isso para item aleatório pago). A animação do giro é cancelada ao sair do painel |
+| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco. A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
+| `ShopPanel.luau` | Loja: giros (skin e personalizado) e kit. O detalhe do giro mostra a **tabela de chances antes de girar** (as regras do Roblox exigem isso para item aleatório pago) |
 | `BuyPanel.luau` | Pacotes de Golden Ember (5) |
 | `RankingPanel.luau`, `ProfilePanel.luau`, `TutorialPanel.luau` | Ranking, perfil e tutorial |
-
-O painel "Jogar" é o molde `MainMenu` de sempre (`src/client/Screens/MainMenu.luau`). O `Root` dele se esconde quando outro painel está aberto, e o `BalanceLabel` dele fica escondido, porque agora quem mostra o saldo é a casca.
-
-O `MenuShell` tem uma tabela `CONTENT` (painel → função que monta o conteúdo). É nela que cada painel é ligado.
 
 ### O que é falso e o que é de verdade
 
@@ -235,12 +269,13 @@ Dois caminhos, por painel:
 
 Quando um painel ficar real, apague o que ele usava do `MockStore` (e as chaves `mock.*` dele).
 
-### Como apagar tudo
+### Como apagar um mockup
 
-1. Apague `src/shared/UIFlow/MockStore.luau`, `src/shared/UIFlow/MenuLayout.luau`, `tests/mockstore.spec.luau` e `tests/menulayout.spec.luau`.
-2. Em `src/shared/Strings/ptBR.luau`, apague o bloco `mock.*` e as chaves do menu novo: `menu.nav.*`, `menu.panel.*`, `menu.close`, `menu.level`, `menu.xp` e `menu.mockup`. Mantenha `menu.play`, `menu.settings`, `menu.balance` e `menu.kits` (o molde usa).
-3. Apague a pasta `src/client/Menu/`.
-4. Em `src/client/Controllers/ScreenController.luau`, tire os `require` de `MenuShell` e `MenuState`, a chamada `MenuShell.mount(...)` e o bloco inteiro `if screen ~= "menu" then MenuState.open("play") end` (com o comentário dele), sem deixar um `if` vazio.
-5. Em `src/client/Screens/MainMenu.luau`, tire o `require` do `MenuState`, o `if balance then balance.Visible = false end` (com o comentário; sem ele o `BalanceLabel` do molde volta a aparecer, e o texto dele já é escrito pelo `vide.effect` logo abaixo, então nada precisa ser reescrito) e o trecho inteiro que esconde o `Root` conforme o painel (o `if root ... else warn(...) end`).
-6. Apague esta seção do guia (e o item "Mockups" do índice, se houver) e a seção "Mockups do menu (G7a)" de `docs/pendencias.md`.
-7. Rode `bash scripts/check.sh`.
+O menu (coluna, boneco, Kits, JOGAR) é de verdade e fica. Para tirar um painel do mockup (ex. Ranking):
+
+1. Em `src/client/Menu/MenuShell.luau`, tire o id do painel de `NAV` e de `PANELS`, a entrada dele em `CONTENT` e o `require` do arquivo do painel.
+2. Apague o arquivo do painel em `src/client/Menu/` e o que só ele usava no `MockStore` (e o teste correspondente em `tests/mockstore.spec.luau`).
+3. Em `src/shared/Strings/ptBR.luau`, apague as chaves `menu.nav.<painel>`, `menu.panel.<painel>` e as `mock.*` dele. Se o painel sair de vez, tire também o id do tipo `Panel` em `MenuState.luau`.
+4. Rode `bash scripts/check.sh`.
+
+Quando a compra de kits com Robux ficar real, apague `KIT_ROBUX` e `KIT_STARTS_OWNED` do `MockStore` (os preços vão para `Defs.Kits`) e troque o estado local do `KitShop` pelo que vier do servidor.

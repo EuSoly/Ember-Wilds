@@ -417,5 +417,7 @@ Os tokens neste diretório são especificações de design, não um módulo carr
 
 Entregues: especificação do design system, tokens estruturados e referência visual aprovada. A prancha complementar de componentes é uma ilustração do sistema; medidas, cores e comportamento exatos vêm deste documento.
 
-Permanecem etapas de produção: arte final isolada da marca, exportação dos assets por componente, integração às telas e teste no Studio. A aprovação do estilo está registrada; essas etapas não exigem escolher novamente uma direção visual.
+Aplicado em 04/11/2026 (UI 1): tela de carregamento e menu (topo, coluna, boneco com o livro, Kits/JOGAR e painel de kits), com as cores em `Palette.rustic` e as peças em `src/client/UI/Rustic.luau` (molduras feitas com UIGradient e UIStroke enquanto as texturas finais não existem). Logo extraído da prancha em `assets/ui/brand/`. Veja `docs/guia/telas.md`.
+
+Permanecem etapas de produção: arte final isolada da marca em alta resolução, exportação dos assets por componente, integração às outras telas (morte, HUD, loja, cosméticos, perfil, ranking, tutorial, configurações) e teste no Studio. A aprovação do estilo está registrada; essas etapas não exigem escolher novamente uma direção visual.
 
