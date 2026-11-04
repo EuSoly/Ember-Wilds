@@ -86,4 +86,58 @@ return {
 		end
 		assert(l.crate.y >= l.boneco.y + l.boneco.h, "a caixa fica embaixo do boneco")
 	end,
+	["category: everything inside and nothing overlaps"] = function()
+		for _, size in SIZES do
+			local c = CosmeticsLayout.compute(size[1], size[2], SIDES).category
+			assert(#c.tiles == CosmeticsLayout.PER_PAGE, "um retângulo por quadradinho")
+			local rects = { c.showcase, c.name, c.rarity, c.back, c.plate, c.prev, c.next }
+			for _, t in c.tiles do
+				table.insert(rects, t)
+			end
+			for i, r in rects do
+				assert(inside(r, c.width, c.height), `{size[1]}x{size[2]}: peça {i} da categoria fora`)
+				for j = i + 1, #rects do
+					assert(not overlaps(r, rects[j]), `{size[1]}x{size[2]}: peças {i} e {j} da categoria se cobrem`)
+				end
+			end
+		end
+	end,
+
+	["category: square tiles in a 3x3 grid, big enough to touch and read"] = function()
+		for _, size in SIZES do
+			local c = CosmeticsLayout.compute(size[1], size[2], SIDES).category
+			for i, t in c.tiles do
+				assert(math.abs(t.w - t.h) < 0.01, `{size[1]}x{size[2]}: quadradinho {i} não é quadrado`)
+				assert(t.w >= CosmeticsLayout.TILE_MIN, `{size[1]}x{size[2]}: quadradinho pequeno ({t.w})`)
+				local row, column = (i - 1) // 3, (i - 1) % 3
+				local first = c.tiles[row * 3 + 1]
+				local top = c.tiles[column + 1]
+				assert(math.abs(t.y - first.y) < 0.01, `{size[1]}x{size[2]}: quadradinho {i} fora da linha`)
+				assert(math.abs(t.x - top.x) < 0.01, `{size[1]}x{size[2]}: quadradinho {i} fora da coluna`)
+			end
+			for _, button in { c.prev, c.next, c.back } do
+				assert(button.w >= 44 and button.h >= 44, `{size[1]}x{size[2]}: botão menor que o toque`)
+			end
+		end
+	end,
+
+	["category: showcase left of the grid, arrows beside it, plate above it"] = function()
+		for _, size in SIZES do
+			local c = CosmeticsLayout.compute(size[1], size[2], SIDES).category
+			local first, last = c.tiles[1], c.tiles[#c.tiles]
+			assert(c.showcase.x + c.showcase.w <= c.prev.x, `{size[1]}x{size[2]}: vitrine não está à esquerda`)
+			assert(c.prev.x + c.prev.w <= first.x, `{size[1]}x{size[2]}: seta < não está à esquerda da grade`)
+			assert(c.next.x >= last.x + last.w, `{size[1]}x{size[2]}: seta > não está à direita da grade`)
+			assert(c.plate.y + c.plate.h <= first.y, `{size[1]}x{size[2]}: placa não está acima da grade`)
+			assert(c.name.y >= c.showcase.y + c.showcase.h, `{size[1]}x{size[2]}: nome não está embaixo da vitrine`)
+		end
+	end,
+
+	["category uses the space of the hidden close button"] = function()
+		for _, size in SIZES do
+			local l = CosmeticsLayout.compute(size[1], size[2], SIDES)
+			assert(l.category.width == l.bodyWidth, `{size[1]}x{size[2]}: largura diferente do corpo`)
+			assert(l.category.height > l.bodyHeight, `{size[1]}x{size[2]}: categoria não ganhou a altura do Fechar`)
+		end
+	end,
 }

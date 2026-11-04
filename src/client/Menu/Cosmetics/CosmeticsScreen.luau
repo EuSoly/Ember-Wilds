@@ -11,8 +11,10 @@
 -- Player. Acessórios ainda não tem slot: mostra "Em breve" e não abre.
 --
 -- Clicar num cartão abre a categoria: o estado local `category` (nil = esta
--- tela principal) guarda qual. Onde cada peça fica vem do CosmeticsLayout; no
--- celular tudo vira uma lista que rola, com o Fechar sempre à vista.
+-- tela principal) guarda qual, e a CategoryView aparece no lugar da Main (com
+-- o próprio Voltar; o Fechar some). Onde cada peça fica vem do
+-- CosmeticsLayout; no celular tudo vira uma lista que rola, com o Fechar
+-- sempre à vista.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -33,6 +35,7 @@ local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(Menu:WaitForChild("MenuState"))
 local MenuBoneco = require(Menu:WaitForChild("MenuBoneco"))
+local CategoryView = require(script.Parent:WaitForChild("CategoryView"))
 local CratePreview = require(script.Parent:WaitForChild("CratePreview"))
 local ItemViewport = require(script.Parent:WaitForChild("ItemViewport"))
 
@@ -254,8 +257,8 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 	local function open(): boolean
 		return MenuState.panel() == "cosmetics" and ScreenState.current() == "menu"
 	end
-	-- Categoria aberta (nil = tela principal). A tela da categoria (Task 5)
-	-- lê e escreve esta fonte; fechar a janela volta à principal.
+	-- Categoria aberta (nil = tela principal). A CategoryView lê e escreve
+	-- esta fonte (Voltar = nil); fechar a janela volta à principal.
 	local category: Source<string?> = vide.source(nil :: string?) :: any
 	vide.effect(function()
 		if not open() then
@@ -369,8 +372,12 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 			ScrollingDirection = Enum.ScrollingDirection.Y,
 			children,
 		}),
+		CategoryView.build(category, layout),
 		Rustic.button({
 			Name = "CloseButton",
+			Visible = function()
+				return category() == nil
+			end,
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new(0.5, 0, 1, -14),
 			Size = UDim2.fromOffset(200, CosmeticsLayout.CLOSE_HEIGHT),

@@ -88,4 +88,14 @@ function CosmeticCatalog.page<T>(list: { T }, page: number, perPage: number): { 
 	return out
 end
 
+-- Página (1 = primeira) em que a skin `id` aparece; id fora da lista = 1.
+function CosmeticCatalog.pageOf(list: { CosmeticDef }, id: string, perPage: number): number
+	for i, def in list do
+		if def.id == id then
+			return (i - 1) // perPage + 1
+		end
+	end
+	return 1
+end
+
 return CosmeticCatalog

@@ -211,6 +211,7 @@ return table.freeze({
 	["cosmetics.tagline.crate"] = "O que fica para trás quando você cai.",
 	["cosmetics.tagline.bag"] = "Carregue o saque com estilo.",
 	["cosmetics.tagline.book"] = "Seu companheiro de jornada.",
+	["cosmetics.back"] = "Voltar",
 	["menu.mockup"] = "MOCKUP",
 
 	-- Morte

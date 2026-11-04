@@ -79,4 +79,11 @@ return {
 		assert(CosmeticCatalog.CATEGORIES[2].slot == nil, "accessory sem slot")
 		assert(CosmeticCatalog.CATEGORIES[1].slot == "body", "body com slot")
 	end,
+	["pageOf finds the page of an id"] = function()
+		local items = CosmeticCatalog.items("body")
+		assert(CosmeticCatalog.pageOf(items, items[1].id, 9) == 1, "primeira skin na página 1")
+		assert(CosmeticCatalog.pageOf(items, items[9].id, 9) == 1, "nona skin na página 1")
+		assert(CosmeticCatalog.pageOf(items, items[10].id, 9) == 2, "décima skin na página 2")
+		assert(CosmeticCatalog.pageOf(items, "nao_existe", 9) == 1, "id desconhecido cai na página 1")
+	end,
 }
