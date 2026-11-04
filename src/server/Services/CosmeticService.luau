@@ -4,6 +4,8 @@
 -- memória, por jogador e por slot, o id equipado e grava no personagem o
 -- atributo Cosmetic_<slot> (ex. Cosmetic_body). Cada cliente lê esse atributo e
 -- pinta o boneco visual: todos veem a mesma skin.
+-- O mesmo atributo vai também no Player: no menu não há personagem, e o boneco
+-- do menu (MenuBoneco) mostra a skin equipada lendo dali.
 -- O padrão de cada slot conta como possuído sempre. Equipar um cosmético não
 -- possuído falha. Até a loja (F5), a posse vem do comando de dev (DevDataService).
 local Players = game:GetService("Players")
@@ -30,10 +32,11 @@ function CosmeticService.equipped(player: Player, slot: string): string
 	return slotDef.default
 end
 
-local function writeSlot(character: Model, slot: string, id: string)
+-- Grava o id no atributo do slot (no personagem ou no Player), só se mudou.
+local function writeSlot(target: Instance, slot: string, id: string)
 	local attribute = StatNames.CosmeticPrefix .. slot
-	if character:GetAttribute(attribute) ~= id then
-		character:SetAttribute(attribute, id)
+	if target:GetAttribute(attribute) ~= id then
+		target:SetAttribute(attribute, id)
 	end
 end
 
@@ -61,7 +64,7 @@ function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boo
 	return true
 end
 
--- Põe o id no slot (memória + personagem atual), sem checar posse.
+-- Põe o id no slot (memória + Player + personagem atual), sem checar posse.
 local function apply(player: Player, slot: string, cosmeticId: string)
 	local equipped = equippedByPlayer[player]
 	if equipped == nil then
@@ -69,6 +72,7 @@ local function apply(player: Player, slot: string, cosmeticId: string)
 		equippedByPlayer[player] = equipped
 	end
 	equipped[slot] = cosmeticId
+	writeSlot(player, slot, cosmeticId)
 	if player.Character then
 		writeSlot(player.Character, slot, cosmeticId)
 	end

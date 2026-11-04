@@ -22,7 +22,7 @@ Por que dois: é o jeito oficial de fazer visual com Server Authority. O visual 
 | `Using` | `true` enquanto segura o botão de bater | `UseSim` (simulação) |
 | `Equipped` | id do item na mão, ou nada | `EquipService` |
 | `HurtAt` | instante (`GetServerTimeNow`) do último dano | `CharacterService.hurt` |
-| `Cosmetic_body` | id da skin do corpo | `CosmeticService` |
+| `Cosmetic_body` | id da skin do corpo (também gravado no **Player**, para o boneco do menu, que não tem personagem) | `CosmeticService` |
 
 Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService) marca os personagens que ganham um boneco visual (`CharacterService.prepare`).
 
