@@ -78,6 +78,17 @@ event SetSetting {
 	}
 }
 
+-- Equipar um cosmético (Id = id em Defs/Cosmetics). O servidor (CosmeticService)
+-- ignora em silêncio id inexistente, não possuído ou pedido rápido demais.
+event EquipCosmetic {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Id: string(1..48)
+	}
+}
+
 -- Pedido para nascer (botões Jogar / Jogar de novo). KitId = id em Defs/Kits,
 -- opcional. O servidor (SpawnService) ignora se o perfil não carregou, se o
 -- jogador já está vivo ou nascendo; kit inexistente ou caro demais = nasce sem kit.

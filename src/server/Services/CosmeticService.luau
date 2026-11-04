@@ -14,11 +14,17 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local DataService = require(script.Parent.DataService)
+local Net = require(script.Parent.Parent.Net)
 
 local CosmeticService = {}
 
 -- jogador → slot → id equipado (slot ausente = padrão do slot).
 local equippedByPlayer: { [Player]: { [string]: string } } = {}
+
+-- Intervalo mínimo entre pedidos de equipar do mesmo jogador (s).
+local EQUIP_COOLDOWN = 0.2
+-- jogador → os.clock() do último pedido de equipar.
+local lastEquipRequest: { [Player]: number } = {}
 
 -- Id equipado no slot (o padrão do slot se nada foi equipado).
 function CosmeticService.equipped(player: Player, slot: string): string
@@ -61,6 +67,7 @@ function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boo
 		return false
 	end
 	data.Cosmetics.Owned[cosmeticId] = true
+	player:SetAttribute(StatNames.OwnedPrefix .. cosmeticId, true)
 	return true
 end
 
@@ -103,6 +110,27 @@ local function loadEquipped(player: Player, data: { [string]: any })
 	end
 end
 
+-- Perfil carregou: publica no Player um atributo Owns_<id> por cosmético possuído.
+local function publishOwned(player: Player, data: { [string]: any })
+	for id, owned in data.Cosmetics.Owned do
+		if owned == true and Defs.Cosmetics[id] ~= nil then
+			player:SetAttribute(StatNames.OwnedPrefix .. id, true)
+		end
+	end
+end
+
+-- Pedido do cliente: vem de fora, então tudo é validado e o inválido é ignorado
+-- em silêncio (sem warn).
+local function onEquipRequest(player: Player, request: { Id: string })
+	local now = os.clock()
+	local last = lastEquipRequest[player]
+	if last ~= nil and now - last < EQUIP_COOLDOWN then
+		return
+	end
+	lastEquipRequest[player] = now
+	CosmeticService.equip(player, request.Id)
+end
+
 -- Personagem novo nasce sem atributos: grava todos os slots.
 local function writeAll(player: Player, character: Model)
 	for slot in Defs.CosmeticSlots do
@@ -120,10 +148,13 @@ local function setupPlayer(player: Player)
 end
 
 function CosmeticService.Start(_self)
+	DataService.onLoaded(publishOwned)
 	DataService.onLoaded(loadEquipped)
+	Net.EquipCosmetic.On(onEquipRequest)
 	Players.PlayerAdded:Connect(setupPlayer)
 	Players.PlayerRemoving:Connect(function(player)
 		equippedByPlayer[player] = nil
+		lastEquipRequest[player] = nil
 	end)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

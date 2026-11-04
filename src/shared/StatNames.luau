@@ -56,6 +56,8 @@ return table.freeze({
 	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
 	CosmeticPrefix = "Cosmetic_",
+	-- Prefixo da posse publicada no Player: "Owns_body_fire" = true se possui.
+	OwnedPrefix = "Owns_",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
 	-- Raízes visuais dos mobs; contadores de eventos, sem regras de combate.

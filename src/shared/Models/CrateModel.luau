@@ -62,8 +62,10 @@ end
 
 local function buildPlaceholder(modelId: string): Model
 	local model = Instance.new("Model")
-	local wood = Theme.tier.wood
-	local band = bandColor(modelId)
+	-- Caixa de jogador com `crate` no cosmético usa as cores dele.
+	local look = Defs.Cosmetics[modelId] and Defs.Cosmetics[modelId].crate
+	local wood = if look then Color3.fromHex(look.bodyColor) else Theme.tier.wood
+	local band = if look then Color3.fromHex(look.bandColor) else bandColor(modelId)
 	local body = newPart("Body", BODY, CFrame.new(0, BODY.Y / 2, 0), wood, model)
 	newPart(
 		"Lid",
