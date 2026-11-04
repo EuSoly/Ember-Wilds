@@ -36,7 +36,7 @@ Cada peça ocupa um círculo no chão (centro x, z e raio). Duas peças **encost
 
 A distância é meia peça + o raio do corpo (1,5) + meia peça: a peça nasce sempre à frente do corpo, e o próprio construtor nunca a bloqueia. As regras puras estão em `src/shared/Build/BuildRules.luau` (testadas no Lune).
 
-**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; o raio máximo aceito é `PLACE_DISTANCE - PLAYER_RADIUS` (4 studs); acima disso a peça sempre cobriria o corpo e o boot recusa o item.
+**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). Desde a G8 cada peça com modelo do Elizeu tem o `radius` do tamanho do modelo (metade da maior medida vista de cima, ajustado na bancada): paredes, portas, espinhos e portas com espinhos 3 (peça de 6), bancada e fornalha 3, fogueira 2,7, fogueira grande 3,1, baú 2,3, extratores 2,7, poço 2,6, cama 3,5, ponte 3,1, telhado 3,2; a placa usa o padrão (2). Mudou o tamanho de um modelo na bancada? Ajuste o `radius` do item junto. O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; o raio máximo aceito é `PLACE_DISTANCE - PLAYER_RADIUS` (4 studs); acima disso a peça sempre cobriria o corpo e o boot recusa o item.
 
 ## Vida e dano em construção
 

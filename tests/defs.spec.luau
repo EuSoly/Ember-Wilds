@@ -1260,8 +1260,8 @@ return {
 		local furnace = s("furnace")
 		assert(furnace.heatRadius == 24 and furnace.station == "fire" and furnace.health == 500, "fornalha")
 		assert(furnace.lifetime == nil and furnace.furnace.burnEvery == 6 and furnace.furnace.maxWood == 200, "queima")
-		assert(s("bridge").radius == 2.1 and s("bridge").health == 300, "ponte")
-		assert(s("roof").radius == 2.1 and s("roof").health == 300, "telhado")
+		assert(s("bridge").radius == 3.1 and s("bridge").health == 300, "ponte")
+		assert(s("roof").radius == 3.2 and s("roof").health == 300, "telhado")
 		assert(s("sign").health == 100, "placa")
 		local well = s("well").well
 		assert(s("well").health == 500 and well.drinksPerBucket == 12, "poço")
