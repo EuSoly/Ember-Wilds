@@ -15,6 +15,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
+local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -32,6 +33,7 @@ local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local KitsPanel = require(script.Parent:WaitForChild("KitsPanel"))
+local ShopScreen = require(script.Parent:WaitForChild("Shop"):WaitForChild("ShopScreen"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
@@ -45,7 +47,7 @@ local R = Theme.rustic
 -- não é painel: abre a janela de Configurações de sempre.
 local NAV: { string } = { "profile", "cosmetics", "shop", "tutorial", "ranking", "settings" }
 -- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "profile", "cosmetics", "shop", "tutorial", "ranking" } :: { MenuState.Panel }
+local PANELS = { "profile", "cosmetics", "tutorial", "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
@@ -509,8 +511,44 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		return MenuLayout.compute(size.X, size.Y, MenuState.panel() == "kits")
 	end)
 
-	local children: { Instance } =
-		{ levelPod(layout), branch(layout), balancePod(layout), logo(layout), column(layout) }
+	local shopLayout = vide.derive(function(): ShopLayout.Layout
+		local size = screenSize()
+		return ShopLayout.compute(size.X, size.Y)
+	end)
+	-- Loja aberta: ocupa a tela toda; só o card da Golden Ember fica.
+	local function shopOpen(): boolean
+		return MenuState.panel() == "shop"
+	end
+	local function notShop(): boolean
+		return not shopOpen()
+	end
+
+	local pod = levelPod(layout)
+	local logoImage = logo(layout)
+	local nav = column(layout)
+	vide.apply(pod)({ Visible = notShop })
+	vide.apply(logoImage)({
+		Visible = function()
+			return UiImages.has(UiImages.LOGO) and notShop()
+		end,
+	})
+	vide.apply(nav)({ Visible = notShop })
+	-- O card do saldo fica acima da loja (ZIndex maior).
+	local balance = balancePod(layout)
+	local branchImage = branch(layout)
+	balance.ZIndex = 6
+	-- O galho fica só no menu: na loja as folhas cobririam as abas.
+	vide.apply(branchImage)({
+		Visible = function()
+			return UiImages.has(UiImages.BRANCH) and notShop()
+		end,
+	})
+
+	local shop = ShopScreen.build(shopLayout, function()
+		return screenSize().Y
+	end, shopOpen, {})
+
+	local children: { Instance } = { pod, branchImage, balance, logoImage, nav }
 	for _, instance in home(layout) do
 		table.insert(children, instance)
 	end
@@ -518,6 +556,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	for i = 1, #PANELS do
 		table.insert(children, panelFrame(PANELS[i], layout))
 	end
+	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
 
 	local gui = create("ScreenGui")({
@@ -544,7 +583,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		IgnoreGuiInset = true,
 		ScreenInsets = Enum.ScreenInsets.None,
 		Enabled = function()
-			return ScreenState.current() == "menu" and not SettingsScreen.open()
+			return ScreenState.current() == "menu" and not SettingsScreen.open() and MenuState.panel() ~= "shop"
 		end,
 		create("ImageLabel")({
 			Name = "Tree",
