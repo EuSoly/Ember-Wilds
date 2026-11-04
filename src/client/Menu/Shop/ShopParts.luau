@@ -31,6 +31,13 @@ function ShopParts.shade(color: Color3, factor: number): Color3
 	)
 end
 
+-- 20000 → "20.000" (separador de milhar do pt-BR).
+function ShopParts.thousands(value: number): string
+	local digits = tostring(math.floor(math.max(value, 0)))
+	local out = digits:reverse():gsub("(%d%d%d)", "%1."):reverse()
+	return (out:gsub("^%.", ""))
+end
+
 -- Texto com contorno escuro (para cima de cores vivas).
 function ShopParts.outlined(props: { [any]: any }): TextLabel
 	table.insert(props, create("UIStroke")({ Color = R.outline, Thickness = 2 }))
@@ -224,7 +231,9 @@ function ShopParts.grid(columns: () -> number, height: number, gap: number): UIG
 		CellPadding = UDim2.fromOffset(gap, gap),
 		CellSize = function()
 			local n = columns()
-			return UDim2.new(1 / n, -gap * (n - 1) / n, 0, height)
+			-- -1 px por cartão: sem a folga, o arredondamento empurra o último
+			-- cartão para a linha de baixo.
+			return UDim2.new(1 / n, -gap * (n - 1) / n - 1, 0, height)
 		end,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 	}) :: UIGridLayout

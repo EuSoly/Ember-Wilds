@@ -33,7 +33,11 @@ local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local KitsPanel = require(script.Parent:WaitForChild("KitsPanel"))
-local ShopScreen = require(script.Parent:WaitForChild("Shop"):WaitForChild("ShopScreen"))
+local ShopFolder = script.Parent:WaitForChild("Shop")
+local ShopScreen = require(ShopFolder:WaitForChild("ShopScreen"))
+local Featured = require(ShopFolder:WaitForChild("Featured"))
+local Passes = require(ShopFolder:WaitForChild("Passes"))
+local EmberPacks = require(ShopFolder:WaitForChild("EmberPacks"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
@@ -544,9 +548,24 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		end,
 	})
 
-	local shop = ShopScreen.build(shopLayout, function()
-		return screenSize().Y
-	end, shopOpen, {})
+	local shop = ShopScreen.build(
+		shopLayout,
+		function()
+			return screenSize().Y
+		end,
+		shopOpen,
+		{
+			packs = function()
+				return Featured.build(shopLayout, shopOpen)
+			end,
+			passes = function()
+				return Passes.build(shopLayout)
+			end,
+			ember = function()
+				return EmberPacks.build(shopLayout)
+			end,
+		}
+	)
 
 	local children: { Instance } = { pod, branchImage, balance, logoImage, nav }
 	for _, instance in home(layout) do

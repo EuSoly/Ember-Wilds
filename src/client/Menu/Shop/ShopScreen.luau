@@ -109,10 +109,15 @@ function ShopScreen.build(
 	-- A aba ativa é a última seção cujo topo já passou do topo da lista.
 	scroll:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
 		local current: Section = "packs"
+		local maxY = scroll.AbsoluteCanvasSize.Y - scroll.AbsoluteWindowSize.Y
 		for _, tab in TABS do
 			if sectionOffset(tab.id) <= scroll.CanvasPosition.Y + ACTIVE_SLACK then
 				current = tab.id
 			end
+		end
+		-- No fim da lista a última seção pode não chegar ao topo: vale ela.
+		if maxY > 0 and scroll.CanvasPosition.Y >= maxY - 2 then
+			current = TABS[#TABS].id
 		end
 		if vide.untrack(active) ~= current then
 			active(current)
