@@ -106,6 +106,18 @@ return {
 		assert(def.id == "cold", `esperava cold, veio {def.id}`)
 	end,
 
+	["conditionMet compares numbers and booleans"] = function()
+		local sleeping = { attribute = "Sleeping", equals = true }
+		assert(ExpressionState.conditionMet(sleeping, true) == true, "Sleeping=true deve valer")
+		assert(ExpressionState.conditionMet(sleeping, false) == false, "Sleeping=false não vale")
+		assert(ExpressionState.conditionMet(sleeping, nil) == false, "ausente não vale")
+		assert(ExpressionState.conditionMet(sleeping, 1) == false, "número não vale para equals")
+		local cold = { attribute = "Cold", below = 35 }
+		assert(ExpressionState.conditionMet(cold, 10) == true, "10 < 35")
+		assert(ExpressionState.conditionMet(cold, 50) == false, "50 não < 35")
+		assert(ExpressionState.conditionMet(cold, true) == false, "boolean não vale para below")
+	end,
+
 	["flash only during its duration"] = function()
 		local defs = fakeDefs()
 		local state = ExpressionState.new()

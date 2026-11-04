@@ -3,6 +3,7 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 
@@ -10,6 +11,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local CraftRules = require(Shared:WaitForChild("Craft"):WaitForChild("CraftRules"))
+local ItemAccess = require(Shared:WaitForChild("ItemAccess"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Net = require(script.Parent:WaitForChild("Net"))
@@ -88,9 +90,12 @@ local function updateRows()
 	local craftable = CraftRules.craftable(Defs.Recipes, counts(), near)
 	local out: { Row } = {}
 	local seen: { [string]: boolean } = {}
+	local inStudio = RunService:IsStudio()
 	for _, recipe in craftable do
-		seen[recipe.id] = true
-		table.insert(out, { id = recipe.id, order = recipe.order })
+		if ItemAccess.recipeAvailable(recipe, inStudio) then
+			seen[recipe.id] = true
+			table.insert(out, { id = recipe.id, order = recipe.order })
+		end
 	end
 	local current = CraftState.current()
 	if current and not seen[current.id] then

@@ -273,4 +273,20 @@ return {
 		expect("vida", r.bars.health, 150.5)
 		expect("fome", r.bars.hunger, 99.4)
 	end,
+	["sleeping regenerates twice as fast and drains half as fast"] = function()
+		local sleep = { regenFactor = 2, drainFactor = 0.5 }
+		local start = bars({ health = 100, hunger = 80, cold = 80, thirst = 80 })
+		local awake = SurvivalRules.step(start, ctx(), 10)
+		local asleep = SurvivalRules.step(start, ctx({ sleep = sleep }), 10)
+		expect("vida", asleep.bars.health - 100, (awake.bars.health - 100) * 2)
+		expect("fome", 80 - asleep.bars.hunger, (80 - awake.bars.hunger) * 0.5)
+		expect("sede", 80 - asleep.bars.thirst, (80 - awake.bars.thirst) * 0.5)
+		expect("frio", 80 - asleep.bars.cold, (80 - awake.bars.cold) * 0.5)
+	end,
+
+	["sleeping near a fire still warms"] = function()
+		local sleep = { regenFactor = 2, drainFactor = 0.5 }
+		local r = SurvivalRules.step(bars({ cold = 50 }), ctx({ nearFire = true, sleep = sleep }), 2)
+		expect("frio", r.bars.cold, 60)
+	end,
 }

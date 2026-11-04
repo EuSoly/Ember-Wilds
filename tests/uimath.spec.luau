@@ -62,6 +62,19 @@ return {
 		assert(UIMath.initials("Ouro") == "Ou", UIMath.initials("Ouro"))
 	end,
 
+	["icon camera distance fits the bounding sphere with margin"] = function()
+		-- caixa 2x0x0: raio 1; fov 60 → sen(30°)=0.5 → 1 * 1.1 / 0.5 = 2.2
+		local d = UIMath.iconCameraDistance(2, 0, 0, 60, 0.1)
+		assert(math.abs(d - 2.2) < 1e-6, tostring(d))
+	end,
+
+	["icon camera distance grows with the model and never hits zero"] = function()
+		local small = UIMath.iconCameraDistance(1, 0.2, 1, 40, 0.1)
+		local big = UIMath.iconCameraDistance(2, 0.4, 2, 40, 0.1)
+		assert(math.abs(big - small * 2) < 1e-6, "dobrou o modelo, dobra a distância")
+		assert(UIMath.iconCameraDistance(0, 0, 0, 40, 0.1) > 0, "modelo zerado ainda dá distância")
+	end,
+
 	["small finger movement is still a tap"] = function()
 		assert(UIMath.isDrag(3, 4, 8) == false, "5 px não é arrasto")
 		assert(UIMath.isDrag(0, 0, 8) == false, "parado não é arrasto")

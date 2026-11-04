@@ -1,17 +1,26 @@
 --!strict
--- Modelos provisórios das peças de construção (G4): blocos feitos de peças na
--- cor do tier do item (sem tier = madeira), um formato por tipo (kind) da
--- peça; a fogueira usa o CampfireModel. Quando os modelos do Elizeu chegarem,
--- trocar o visual = mexer só neste arquivo.
+-- Modelos das peças de construção. O colisor é o de sempre (G4): blocos feitos
+-- de peças na cor do tier do item (sem tier = madeira), um formato por tipo
+-- (kind) da peça; a fogueira usa o CampfireModel. Se existir o modelo do
+-- Elizeu (G8, ReplicatedStorage.Assets.Structures/<itemId>), o colisor fica
+-- invisível (os enfeites dele saem) e uma cópia do modelo vai por cima, só
+-- visual; sem o modelo (Lune, outro place), fica o provisório de hoje.
 -- Pivô no centro do quadrado da peça, no chão (Y = 0); o StructureService gira
 -- só o pivô (yaw da peça). Tudo ancorado e com
 -- CanTouch = false (o espinho é conferido por varredura, não por Touched).
 -- Sai com o que o tipo oferece: estação (CraftStation + Station) e calor
--- (HeatSource + HeatRadius/BurnRadius). Dono, vida e a tag de construção quem
+-- (HeatSource + HeatRadius/BurnRadius). Ponte e telhado (G8) não colidem e
+-- saem com a tag Bridge/Roof e o raio em PieceRadius; o visual do telhado fica
+-- a BuildRules.ROOF_HEIGHT do chão. Dono, vida e a tag de construção quem
 -- grava é o StructureService. (Só roda no Roblox: cria instâncias.)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
 local BuildRules = require("../Build/BuildRules")
 local CampfireModel = require("./CampfireModel")
 local Defs = require("../Defs")
+local DoorSlide = require("../Build/DoorSlide")
+local FireLight = require("./FireLight")
 local Palette = require("../Palette")
 local StatNames = require("../StatNames")
 local Theme = require("../Theme")
@@ -20,8 +29,17 @@ type StructureDef = Defs.StructureDef
 
 local StructureModel = {}
 
--- Transparência das peças da porta aberta (fechada = opaca).
+-- Transparência das peças da porta provisória aberta (fechada = opaca).
 local OPEN_TRANSPARENCY = 0.7
+-- Nome da cópia do modelo do Elizeu dentro da peça.
+local VISUAL_NAME = "Visual"
+-- Atributo de cada folha da porta do Elizeu: o CFrame dela fechada, relativo
+-- ao pivô da peça (gravado na montagem, com a peça ainda na origem).
+local PANEL_CLOSED = "PanelClosed"
+local PANEL_SUFFIXES = { "_panel_left", "_panel_right" }
+local FLAMES_SUFFIX = "_flames"
+-- Folhas deslizando ao abrir/fechar (curto: o colisor muda na hora).
+local SLIDE_INFO = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local WALL_HEIGHT = 4
 -- Lado do miolo que colide do espinho (menor que o círculo da peça). A
 -- varredura do SpikeService usa o círculo da peça (raio 2), que cobre o
@@ -55,7 +73,8 @@ local function darker(color: Color3): Color3
 end
 
 -- Cada builder monta as peças no modelo (centro do chão na origem) e devolve
--- a peça principal (vira o PrimaryPart).
+-- a peça principal (vira o PrimaryPart). É também o colisor da peça com o
+-- modelo do Elizeu; tipo novo pode reaproveitar um (ex. builders.x = builders.station).
 type Builder = (model: Model, side: number, color: Color3) -> Part
 
 local builders: { [string]: Builder } = {}
@@ -88,6 +107,9 @@ builders.door = function(model, side, color)
 	return block
 end
 
+-- Porta com espinhos: mesmo corpo da porta (as folhas deslizam igual).
+builders.spike_door = builders.door
+
 builders.spike = function(model, _side, color)
 	local core = newPart(
 		"Core",
@@ -114,6 +136,37 @@ builders.station = function(model, side, color)
 	local top = decor(newPart("Top", Vector3.new(side * 0.9, 0.4, side * 0.7), CFrame.new(0, 2, 0), color, model))
 	top.Material = Enum.Material.WoodPlanks
 	return body
+end
+
+-- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,
+-- placa, poço e cama.
+for _, kind in { "extractor", "furnace", "sign", "well", "bed" } do
+	builders[kind] = builders.station
+end
+
+-- Ponte: uma tábua rente ao chão que não colide (anda-se por cima, no nível do
+-- chão; a água deixa de contar pelo WaterSim). Continua sendo a peça principal (pivô).
+local BRIDGE_THICKNESS = 0.4
+builders.bridge = function(model, side, color)
+	local deck =
+		newPart("Deck", Vector3.new(side, BRIDGE_THICKNESS, side), CFrame.new(0, BRIDGE_THICKNESS / 2, 0), color, model)
+	deck.Material = Enum.Material.WoodPlanks
+	return decor(deck)
+end
+
+-- Telhado: uma laje no alto (BuildRules.ROOF_HEIGHT) que não colide; quem está
+-- embaixo passa livre. O pivô continua no chão (PivotOffset do build).
+local ROOF_THICKNESS = 0.45
+builders.roof = function(model, side, color)
+	local slab = newPart(
+		"Slab",
+		Vector3.new(side, ROOF_THICKNESS, side),
+		CFrame.new(0, BuildRules.ROOF_HEIGHT + ROOF_THICKNESS / 2, 0),
+		darker(color),
+		model
+	)
+	slab.Material = Enum.Material.WoodPlanks
+	return decor(slab)
 end
 
 builders.chest = function(model, side, color)
@@ -143,6 +196,93 @@ local function buildFire(def: StructureDef): Model
 	return model
 end
 
+-- Uma cópia do modelo do Elizeu para o item, ou nil se não houver template.
+local function cloneVisual(itemId: string): Model?
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local structures = assets and assets:FindFirstChild("Structures")
+	local template = structures and structures:FindFirstChild(itemId)
+	if template == nil or not template:IsA("Model") then
+		return nil
+	end
+	local visual = template:Clone()
+	visual.Name = VISUAL_NAME
+	-- Só visual, mesmo que o template venha diferente.
+	for _, part in visual:GetDescendants() do
+		if part:IsA("BasePart") then
+			part.Anchored = true
+			part.CanCollide = false
+			part.CanQuery = false
+			part.CanTouch = false
+		end
+	end
+	return visual
+end
+
+-- Com o modelo do Elizeu por cima: o provisório fica só com o colisor (a peça
+-- principal e as que colidem), invisível; os enfeites saem.
+local function hidePlaceholder(model: Model)
+	for _, part in model:GetDescendants() do
+		if not part:IsA("BasePart") then
+			continue
+		end
+		if part == model.PrimaryPart or part.CanCollide then
+			part.Transparency = 1
+			part.CastShadow = false
+		else
+			part:Destroy()
+		end
+	end
+end
+
+-- Primeira peça do modelo cujo nome termina com `suffix`, ou nil.
+local function findBySuffix(model: Model, suffix: string): BasePart?
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") and string.sub(part.Name, -#suffix) == suffix then
+			return part
+		end
+	end
+	return nil
+end
+
+-- A luz do fogo sai da chama provisória (invisível) e vai para as chamas do
+-- modelo do Elizeu. Sem chamas no template, a luz fica onde está.
+local function moveFireLight(model: Model, visual: Model)
+	local flames = findBySuffix(visual, FLAMES_SUFFIX)
+	local primary = model.PrimaryPart
+	if flames == nil or primary == nil then
+		return
+	end
+	local old = FireLight.find(primary)
+	if old then
+		old:Destroy()
+	end
+	primary:RemoveTag(StatNames.FireLightTag)
+	FireLight.attach(flames)
+end
+
+-- Medida da caixa da peça (girada por `cframe`) nos eixos X e Z de quem a contém.
+local function footprint(cframe: CFrame, size: Vector3): (number, number)
+	local x, y, z = cframe.XVector, cframe.YVector, cframe.ZVector
+	return math.abs(x.X) * size.X + math.abs(y.X) * size.Y + math.abs(z.X) * size.Z,
+		math.abs(x.Z) * size.X + math.abs(y.Z) * size.Y + math.abs(z.Z) * size.Z
+end
+
+-- Grava em cada folha da porta do Elizeu onde ela fica fechada (relativo ao
+-- pivô da peça, que ainda está na origem).
+local function rememberPanels(model: Model, visual: Model)
+	local pivot = model:GetPivot()
+	for _, part in visual:GetDescendants() do
+		if not part:IsA("BasePart") then
+			continue
+		end
+		for _, suffix in PANEL_SUFFIXES do
+			if string.sub(part.Name, -#suffix) == suffix then
+				part:SetAttribute(PANEL_CLOSED, pivot:ToObjectSpace(part.CFrame))
+			end
+		end
+	end
+end
+
 function StructureModel.build(itemId: string, def: StructureDef): Model
 	local model: Model
 	if def.kind == "fire" then
@@ -158,24 +298,78 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		main.PivotOffset = main.CFrame:Inverse()
 	end
 	model.Name = itemId
+	local visual = cloneVisual(itemId)
+	if visual then
+		hidePlaceholder(model)
+		-- Pivô do template (centro da base) no pivô da peça (centro do chão); o
+		-- telhado sobe até a altura dele.
+		local lift = if BuildRules.layerOf(def.kind) == "roof" then BuildRules.ROOF_HEIGHT else 0
+		visual:PivotTo(model:GetPivot() * CFrame.new(0, lift, 0))
+		visual.Parent = model
+		if def.kind == "fire" then
+			moveFireLight(model, visual)
+		elseif BuildRules.isDoor(def.kind) then
+			rememberPanels(model, visual)
+		end
+	end
 	if def.station then
 		model:AddTag(StatNames.CraftStationTag)
 		model:SetAttribute(StatNames.Station, def.station)
 	end
-	if def.kind == "door" then
+	if BuildRules.isDoor(def.kind) then
 		model:SetAttribute(StatNames.DoorOpen, false)
+	end
+	-- Ponte e telhado: achados pela tag + raio (a água e os mobs não leem o StructureService).
+	local layer = BuildRules.layerOf(def.kind)
+	if layer ~= "solid" then
+		model:AddTag(if layer == "bridge" then StatNames.BridgeTag else StatNames.RoofTag)
+		model:SetAttribute(StatNames.PieceRadius, BuildRules.radiusOf(def))
 	end
 	return model
 end
 
--- Abre (true) ou fecha a porta: aberta, nenhuma peça colide e todas ficam
--- semitransparentes.
+-- Folha da porta do Elizeu desliza até a posição aberta (ou fechada), relativa
+-- ao pivô atual da peça.
+local function slidePanel(part: BasePart, pivot: CFrame, open: boolean)
+	local closed = part:GetAttribute(PANEL_CLOSED)
+	if typeof(closed) ~= "CFrame" then
+		return
+	end
+	local target = closed
+	if open then
+		local sizeX, sizeZ = footprint(closed, part.Size)
+		local dx, dz = DoorSlide.offset(closed.X, closed.Z, sizeX, sizeZ)
+		target = CFrame.new(dx, 0, dz) * closed
+	end
+	-- Um tween novo na mesma propriedade cancela o anterior (abre/fecha rápido).
+	TweenService:Create(part, SLIDE_INFO, { CFrame = pivot * target }):Play()
+end
+
+-- Abre (true) ou fecha a porta: aberta, nenhuma peça colide. Provisória: todas
+-- ficam semitransparentes. Com o modelo do Elizeu: o colisor (invisível) solta
+-- e as folhas deslizam para fora; o modelo continua opaco.
 function StructureModel.setOpen(model: Model, open: boolean)
 	model:SetAttribute(StatNames.DoorOpen, open)
-	for _, part in model:GetDescendants() do
+	local visual = model:FindFirstChild(VISUAL_NAME)
+	if visual == nil then
+		for _, part in model:GetDescendants() do
+			if part:IsA("BasePart") then
+				part.CanCollide = not open
+				part.Transparency = if open then OPEN_TRANSPARENCY else 0
+			end
+		end
+		return
+	end
+	-- O colisor são as peças filhas diretas (o visual nunca colide).
+	for _, part in model:GetChildren() do
 		if part:IsA("BasePart") then
 			part.CanCollide = not open
-			part.Transparency = if open then OPEN_TRANSPARENCY else 0
+		end
+	end
+	local pivot = model:GetPivot()
+	for _, part in visual:GetDescendants() do
+		if part:IsA("BasePart") then
+			slidePanel(part, pivot, open)
 		end
 	end
 end

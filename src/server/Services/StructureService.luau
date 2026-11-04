@@ -9,7 +9,8 @@
 -- BuildRules.placePoint da raiz + direção do olhar (achatada), e a peça fica
 -- de frente para quem constrói, mais o giro escolhido (BuildRules.facingYaw),
 -- tudo do servidor. Recusa calado (nada gasto): círculo sobrepondo outra peça,
--- recurso ou jogador (encostar pode), água no ponto, acima do limite. Só
+-- recurso ou jogador (encostar pode), água no ponto, acima do limite. Ponte e
+-- telhado têm regras de camada próprias (ver canPlace). Só
 -- depois de tudo conferido tira o item do inventário (InventoryService.take,
 -- tudo ou nada) e cria a peça, sem pausa (yield) no meio: o inventário não
 -- muda entre conferir e gastar.
@@ -22,14 +23,17 @@
 -- vida (BuildRules.damageOf). Vida 0 = some. Porta não fecha com jogador
 -- encostando no círculo dela. Fogo some sozinho depois de def.lifetime segundos.
 -- Dono morreu (DeathService.kill) ou saiu: removeOwned some com tudo dele.
--- Toda remoção tira a peça do índice espacial e avisa quem pediu (onRemoved).
+-- Toda remoção tira a peça do índice espacial e avisa quem pediu (onRemoved);
+-- toda peça criada também avisa (onCreated).
 -- O dano do espinho fica no SpikeService (ver lá o porquê).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local StructureModel = require(ReplicatedStorage.Shared.Models.StructureModel)
@@ -75,6 +79,7 @@ local alive: { [Entry]: boolean } = {}
 local byModel: { [Model]: Entry } = {}
 local owned: { [Player]: { [Entry]: boolean } } = {}
 local counts: { [Player]: number } = {}
+local createdListeners: { (Entry) -> () } = {}
 local removedListeners: { (Entry) -> () } = {}
 local folder: Folder? = nil
 -- Giro escolhido (passos de BuildRules.ROTATE_STEP) por jogador; nil = 0.
@@ -135,6 +140,11 @@ end
 -- A peça viva deste modelo, ou nil (já removida, ou não é peça).
 function StructureService.entryOf(model: Instance): Entry?
 	return byModel[model :: any]
+end
+
+-- Chamado (sem pausa) em toda peça criada, já no mundo e registrada (entryOf acha).
+function StructureService.onCreated(listener: (Entry) -> ())
+	table.insert(createdListeners, listener)
 end
 
 -- Chamado (sem pausa) em toda remoção de peça, antes de o modelo sumir.
@@ -198,7 +208,7 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 		return
 	end
 	-- Porta do aliado: abre ou fecha, sem dano. Quem não é aliado só tira vida.
-	if entry.def.kind == "door" and BuildRules.areAllies(entry.owner.UserId, attacker.UserId) then
+	if BuildRules.isDoor(entry.def.kind) and BuildRules.areAllies(entry.owner.UserId, attacker.UserId) then
 		toggleDoor(entry)
 		return
 	end
@@ -209,25 +219,37 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 	end
 end
 
--- Pode colocar uma peça de raio `radius` com o centro em (x, z)? Tudo do
--- servidor. Encostar (distância = soma dos raios) pode; sobrepor, não.
-local function canPlace(player: Player, x: number, z: number, radius: number): boolean
+-- Pode colocar uma peça `kind` de raio `radius` com o centro em (x, z)? Tudo
+-- do servidor. Encostar (distância = soma dos raios) pode; sobrepor, não.
+-- Por camada (BuildRules.layerOf): a ponte só vai na água bruta e só disputa
+-- lugar com pontes e jogadores; o telhado só com telhados; as sólidas com
+-- sólidas, recursos e jogadores, e nunca na água (mesmo com ponte por cima).
+local function canPlace(player: Player, kind: string, x: number, z: number, radius: number): boolean
 	if not BuildRules.underLimit(counts[player] or 0) then
 		return false
 	end
-	if WaterSim.isWet(x, z) then
+	if not BuildRules.waterAllows(kind, WaterSim.isWaterAt(x, z)) then
 		return false
 	end
 	-- Cada peça com o próprio raio (near já traz só as que encostam ou entram).
 	for _, other in StructureService.near(x, z, radius) do
-		if BuildRules.circlesOverlap(x, z, radius, other.x, other.z, other.radius) then
+		if
+			BuildRules.blocksPlacement(kind, other.def.kind)
+			and BuildRules.circlesOverlap(x, z, radius, other.x, other.z, other.radius)
+		then
 			return false
 		end
 	end
-	-- A peça de colisão (círculo) do recurso.
-	for _, resource in ResourceService.near(x, z, radius + RESOURCE_SEARCH) do
-		if BuildRules.circlesOverlap(x, z, radius, resource.x, resource.z, resource.radius) then
-			return false
+	local layer = BuildRules.layerOf(kind)
+	if layer == "roof" then
+		return true
+	end
+	-- A peça de colisão (círculo) do recurso (só as sólidas).
+	if layer == "solid" then
+		for _, resource in ResourceService.near(x, z, radius + RESOURCE_SEARCH) do
+			if BuildRules.circlesOverlap(x, z, radius, resource.x, resource.z, resource.radius) then
+				return false
+			end
 		end
 	end
 	for _, other in Players:GetPlayers() do
@@ -306,6 +328,12 @@ local function create(
 	if lifetime then
 		task.delay(lifetime, remove, entry)
 	end
+	for _, listener in createdListeners do
+		local called, err = pcall(listener :: any, entry)
+		if not called then
+			warn(`[StructureService] onCreated: {err}`)
+		end
+	end
 	return true
 end
 
@@ -327,6 +355,10 @@ local function place(player: Player, character: Model)
 		return
 	end
 	local itemId = slot.id
+	-- Item só-para-teste fora do Studio: recusa antes de tirar da mão.
+	if not ItemAccess.isAvailable(itemId, RunService:IsStudio()) then
+		return
+	end
 	local item = Defs.Items[itemId]
 	local def = if item and item.category == "placeable" then item.structure else nil
 	if def == nil then
@@ -342,7 +374,7 @@ local function place(player: Player, character: Model)
 	local rx, rz = root.Position.X, root.Position.Z
 	local x, z = BuildRules.placePoint(rx, rz, dir.X, dir.Z)
 	local radius = BuildRules.radiusOf(def)
-	if not canPlace(player, x, z, radius) then
+	if not canPlace(player, def.kind, x, z, radius) then
 		return
 	end
 	local yaw = BuildRules.facingYaw(x, z, rx, rz, rotation[player] or 0)

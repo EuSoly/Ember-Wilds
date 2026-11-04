@@ -66,7 +66,7 @@ Para um recurso num lugar exato: coloque uma Part (ou um Model) em `Map/Resource
 | `ResourceId` | Recurso |
 |---|---|
 | `tree` | Árvore (3 variações) |
-| `rock` | Rocha (3 variações) |
+| `rock` | Rocha (1 variação, desde a G8) |
 | `gold_vein` | Jazida de ouro (1 variação) |
 | `berry_bush` | Arbusto de frutinha (1 variação) |
 | `pebble` | Pedra do chão, só enfeite (10 variações) |
@@ -82,7 +82,7 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 | Nome | O que é |
 |---|---|
 | `tree_1`, `tree_2`, `tree_3` | árvores |
-| `rock_1`, `rock_2`, `rock_3` | rochas |
+| `rock_1` | rocha (modelo único do mundo-completo; os antigos `rock_2`/`rock_3` ficam em `ServerStorage.ResourcesAntigos`) |
 | `gold_vein_1` | jazida de ouro |
 | `berry_bush_1` | arbusto de frutinha |
 | `pebble_1` … `pebble_10` | pedras do chão (enfeite) |

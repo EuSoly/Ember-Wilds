@@ -624,6 +624,15 @@ return {
 		assert(containsError(errors, "plastic"), `faltou erro do item: {table.concat(errors, "; ")}`)
 	end,
 
+	["kit with a testOnly item is an error"] = function()
+		local defs = validKitDefs()
+		defs.Items.secret =
+			{ id = "secret", nameKey = "item.secret", category = "resource", maxStack = 255, testOnly = true }
+		defs.Kits.kit_b.items = { { id = "secret", count = 1 } }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "testOnly"), `faltou erro de testOnly: {table.concat(errors, "; ")}`)
+	end,
+
 	["kit with two bags is an error"] = function()
 		local defs = validKitDefs()
 		defs.Kits.kit_a.items = { { id = "leather_bag", count = 1 }, { id = "leather_bag", count = 1 } }
@@ -1087,6 +1096,31 @@ return {
 		check("contagem negativa", { { id = "raw_meat", count = -1 } })
 	end,
 
+	["mob loot with a testOnly item is an error"] = function()
+		local defs: any = {
+			Tiers = {},
+			Items = {
+				secret = {
+					id = "secret",
+					nameKey = "item.secret",
+					category = "resource",
+					maxStack = 255,
+					testOnly = true,
+				},
+			},
+			Mobs = {
+				wolf = {
+					id = "wolf",
+					nameKey = "mob.wolf",
+					behavior = "aggressive",
+					loot = { { id = "secret", count = 1 } },
+				},
+			},
+		}
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "testOnly"), `faltou erro de testOnly: {table.concat(errors, "; ")}`)
+	end,
+
 	["meat items, cooked meat recipe and crate skin exist"] = function()
 		assert(Defs.Items.raw_meat.food.hunger == 15, "carne crua")
 		assert(Defs.Items.cooked_meat.food.hunger == 35, "carne assada")
@@ -1156,5 +1190,180 @@ return {
 		local defs: any = { Tiers = {}, Items = { stick = item } }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "mobDamage"), `faltou erro de mobDamage: {table.concat(errors, "; ")}`)
+	end,
+
+	["G8 new items exist, are testOnly and have the table recipes"] = function()
+		local ids = {
+			"wood_spike_door",
+			"stone_spike_door",
+			"gold_spike_door",
+			"stone_extractor",
+			"gold_extractor",
+			"furnace",
+			"bridge",
+			"roof",
+			"sign",
+			"well",
+			"bed",
+			"bucket",
+			"water_bucket",
+		}
+		for _, id in ids do
+			local item = (Defs.Items :: any)[id]
+			assert(item ~= nil and item.testOnly == true, `{id}: falta ou não é testOnly`)
+			if id == "water_bucket" then
+				assert(Defs.Recipes[id] == nil, "balde cheio não tem receita")
+			else
+				local recipe = Defs.Recipes[id]
+				assert(recipe ~= nil and recipe.station == "workbench", `{id}: receita na bancada`)
+			end
+		end
+		local function cost(id: string): { [string]: number }
+			local out = {}
+			for _, ing in Defs.Recipes[id].ingredients do
+				out[ing.id] = ing.count
+			end
+			return out
+		end
+		local bed = cost("bed")
+		assert(
+			bed.wood == 100 and bed.stone == 50 and bed.wolf_fur == 5 and bed.rabbit_fur == 5 and bed.thread == 6,
+			"cama"
+		)
+		assert(cost("stone_extractor").wood == 200 and cost("stone_extractor").stone == 50, "extrator de pedra")
+		assert(cost("gold_extractor").wood == 200 and cost("gold_extractor").gold == 30, "extrator de ouro")
+		assert(cost("furnace").stone == 100 and cost("furnace").gold == 30, "fornalha")
+		assert(cost("bridge").wood == 30 and cost("roof").wood == 25 and cost("sign").wood == 20, "madeira")
+		assert(cost("well").stone == 60 and cost("bucket").wood == 15, "poço e balde")
+		assert(cost("stone_spike_door").stone_door == 1 and cost("stone_spike_door").stone_spike == 1, "porta espinhos")
+		local items: any = Defs.Items
+		assert(
+			items.bucket.category == "misc" and items.bucket.maxStack == 1 and items.bucket.structure == nil,
+			"balde"
+		)
+		assert(items.water_bucket.category == "misc" and items.water_bucket.maxStack == 1, "balde cheio")
+	end,
+
+	["G8 structure data matches the table"] = function()
+		local items: any = Defs.Items
+		local function s(id: string): any
+			return items[id].structure
+		end
+		assert(s("wood_spike_door").kind == "spike_door" and s("wood_spike_door").health == 1000, "porta madeira")
+		assert(s("stone_spike_door").health == 1500 and s("stone_spike_door").spikeDamage == 20, "porta pedra")
+		assert(s("gold_spike_door").health == 2000 and s("gold_spike_door").spikeDamage == 30, "porta ouro")
+		local ext = s("gold_extractor").extractor
+		assert(s("gold_extractor").health == 300 and ext.output == "gold", "extrator de ouro")
+		assert(ext.woodPerCycle == 2 and ext.cycleSeconds == 10 and ext.yield == 1, "ciclo")
+		assert(ext.maxWood == 100 and ext.maxStock == 100, "limites do extrator")
+		assert(s("stone_extractor").extractor.output == "stone", "extrator de pedra")
+		local furnace = s("furnace")
+		assert(furnace.heatRadius == 24 and furnace.station == "fire" and furnace.health == 500, "fornalha")
+		assert(furnace.lifetime == nil and furnace.furnace.burnEvery == 6 and furnace.furnace.maxWood == 200, "queima")
+		assert(s("bridge").radius == 3.1 and s("bridge").health == 300, "ponte")
+		assert(s("roof").radius == 3.2 and s("roof").health == 300, "telhado")
+		assert(s("sign").health == 100, "placa")
+		local well = s("well").well
+		assert(s("well").health == 500 and well.drinksPerBucket == 12, "poço")
+		assert(well.maxDrinks == 48 and well.thirstPerDrink == 20, "poço")
+		local bed = s("bed").bed
+		assert(s("bed").health == 300 and bed.regenFactor == 2 and bed.drainFactor == 0.5, "cama")
+	end,
+
+	["structure blocks are required in their kind and refused elsewhere"] = function()
+		local function errorsFor(structure: any): { string }
+			local item = validItem("thing")
+			item.category = "placeable"
+			item.structure = structure
+			return Validate.all({ Tiers = {}, Items = { thing = item } }, alwaysHas)
+		end
+		local goodExtractor =
+			{ output = "stone", woodPerCycle = 2, cycleSeconds = 10, yield = 1, maxWood = 1, maxStock = 1 }
+		assert(#errorsFor({ kind = "extractor", health = 100, extractor = goodExtractor }) == 0, "extrator válido")
+		assert(containsError(errorsFor({ kind = "extractor", health = 100 }), "structure.extractor"), "sem bloco")
+		local bad = table.clone(goodExtractor)
+		bad.yield = nil
+		assert(
+			containsError(errorsFor({ kind = "extractor", health = 100, extractor = bad }), "extractor.yield"),
+			"sem yield"
+		)
+		bad = table.clone(goodExtractor)
+		bad.cycleSeconds = "10"
+		assert(
+			containsError(errorsFor({ kind = "extractor", health = 100, extractor = bad }), "cycleSeconds"),
+			"tipo errado"
+		)
+		bad = table.clone(goodExtractor)
+		bad.output = ""
+		assert(containsError(errorsFor({ kind = "extractor", health = 100, extractor = bad }), "output"), "sem output")
+		assert(
+			containsError(errorsFor({ kind = "wall", health = 100, extractor = goodExtractor }), "só vale"),
+			"campo em tipo errado"
+		)
+		assert(
+			containsError(errorsFor({ kind = "furnace", health = 100, heatRadius = 24 }), "structure.furnace"),
+			"fornalha sem bloco"
+		)
+		assert(
+			containsError(
+				errorsFor({
+					kind = "well",
+					health = 100,
+					well = { drinksPerBucket = 1, maxDrinks = 0, thirstPerDrink = 1 },
+				}),
+				"well.maxDrinks"
+			),
+			"poço com zero"
+		)
+		assert(
+			containsError(errorsFor({ kind = "bed", health = 100, bed = { regenFactor = 2 } }), "bed.drainFactor"),
+			"cama sem campo"
+		)
+		assert(
+			containsError(
+				errorsFor({
+					kind = "bed",
+					health = 100,
+					well = { drinksPerBucket = 1, maxDrinks = 1, thirstPerDrink = 1 },
+				}),
+				"structure.well"
+			),
+			"poço na cama"
+		)
+	end,
+
+	["spike_door needs spikeDamage and furnace needs heatRadius"] = function()
+		local function errorsFor(structure: any): { string }
+			local item = validItem("thing")
+			item.category = "placeable"
+			item.structure = structure
+			return Validate.all({ Tiers = {}, Items = { thing = item } }, alwaysHas)
+		end
+		assert(containsError(errorsFor({ kind = "spike_door", health = 100 }), "spikeDamage"), "porta sem dano")
+		assert(#errorsFor({ kind = "spike_door", health = 100, spikeDamage = 10 }) == 0, "porta válida")
+		assert(
+			containsError(errorsFor({ kind = "door", health = 100, spikeDamage = 10 }), "spikeDamage"),
+			"dano em porta comum"
+		)
+		local furnace = { burnEvery = 6, maxWood = 10 }
+		assert(
+			containsError(errorsFor({ kind = "furnace", health = 100, furnace = furnace }), "heatRadius"),
+			"sem calor"
+		)
+		assert(
+			#errorsFor({ kind = "furnace", health = 100, heatRadius = 24, station = "fire", furnace = furnace }) == 0,
+			"fornalha válida"
+		)
+		assert(
+			containsError(
+				errorsFor({ kind = "furnace", health = 100, heatRadius = 24, lifetime = 5, furnace = furnace }),
+				"lifetime"
+			),
+			"lifetime na fornalha"
+		)
+		assert(
+			containsError(errorsFor({ kind = "wall", health = 100, heatRadius = 5 }), "heatRadius"),
+			"calor na parede"
+		)
 	end,
 }

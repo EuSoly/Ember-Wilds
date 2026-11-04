@@ -27,19 +27,51 @@ export type ArmorStats = {
 	heatFactor: number?, -- multiplica quanto o calor sobe (proteções de calor, N4)
 }
 
-export type StructureKind = "wall" | "door" | "spike" | "station" | "chest" | "fire"
+export type StructureKind =
+	"wall"
+	| "door"
+	| "spike"
+	| "station"
+	| "chest"
+	| "fire"
+	| "spike_door"
+	| "extractor"
+	| "furnace"
+	| "bridge"
+	| "roof"
+	| "sign"
+	| "well"
+	| "bed"
+export type ExtractorDef = {
+	output: string, -- id do item produzido
+	woodPerCycle: number,
+	cycleSeconds: number,
+	yield: number,
+	maxWood: number,
+	maxStock: number,
+}
+export type FurnaceDef = { burnEvery: number, maxWood: number }
+export type WellDef = { drinksPerBucket: number, maxDrinks: number, thirstPerDrink: number }
+export type BedDef = { regenFactor: number, drainFactor: number }
 export type StructureDef = {
 	kind: StructureKind,
 	health: number, -- vida máxima (> 0)
 	radius: number?, -- studs: raio do círculo da peça no chão; padrão BuildRules.PIECE_RADIUS
-	spikeDamage: number?, -- só kind "spike" (obrigatório nele)
+	spikeDamage: number?, -- só kind "spike" e "spike_door" (obrigatório neles)
 	lifetime: number?, -- segundos até sumir; só kind "fire" (obrigatório nele)
-	heatRadius: number?, -- studs; só kind "fire" (obrigatório nele)
-	station: CraftStation?, -- estação oferecida: "workbench" (kind station) ou "fire" (kind fire)
+	heatRadius: number?, -- studs; só kind "fire" e "furnace" (obrigatório neles)
+	station: CraftStation?, -- estação oferecida: "workbench" (kind station) ou "fire" (kind fire/furnace)
+	-- Blocos por tipo: só no seu kind e obrigatórios nele.
+	extractor: ExtractorDef?,
+	furnace: FurnaceDef?, -- calor por heatRadius; queima enquanto tem madeira (sem lifetime)
+	well: WellDef?,
+	bed: BedDef?,
 }
 
 export type ItemDef = {
 	id: string,
+	-- Só para teste: fora do Studio o item não existe para o jogador (ItemAccess).
+	testOnly: boolean?,
 	nameKey: string,
 	category: ItemCategory,
 	tier: string?, -- id em Tiers; nil = moldura neutra (recursos, comida)
@@ -98,6 +130,7 @@ export type EyeStyle = "open" | "closed" | "squeeze"
 
 -- Como uma expressão fica ativa: sempre (a base), de tempos em tempos,
 -- quando um evento acontece (ex. dano) ou enquanto um atributo passa de um limiar.
+export type ExpressionCondition = { attribute: string, below: number?, above: number?, equals: boolean? }
 export type ExpressionTrigger = "always" | "periodic" | "event" | "condition"
 
 export type ExpressionDef = {
@@ -109,7 +142,7 @@ export type ExpressionDef = {
 	intervalMin: number?, -- "periodic": intervalo sorteado entre min e max
 	intervalMax: number?,
 	event: string?, -- "event": nome do evento (ex. "hurt")
-	condition: { attribute: string, below: number?, above: number? }?, -- "condition"
+	condition: ExpressionCondition?, -- "condition"
 	flash: { color: string, duration: number }?, -- pisca o corpo nessa cor
 }
 

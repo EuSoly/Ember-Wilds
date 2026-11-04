@@ -40,12 +40,24 @@ create("TextLabel")({
 | `src/client/UI/WeaponLock.luau` | Relógio da arma presa: círculo ao lado da hotbar com os segundos que faltam para poder trocar de slot depois de equipar espada ou lança (`equipLock`) |
 | `src/client/World/StructureHealth.luau` | Barrinha de vida da peça por 3 s depois de levar dano |
 | `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima do **próprio** boneco enquanto crafta (os outros jogadores não veem) |
+| `src/client/UI/InteractPanel.luau`, `src/client/InteractState.luau` | Painel de interação com estruturas (ver abaixo) |
+| `src/client/UI/ItemIcon.luau` | Ícone do slot: moldura na cor do tier com as iniciais; se existe modelo em `Assets.Icons/<id>`, mostra o 3D (ver abaixo) |
 
 ## Painel da caixa
 
 Com uma caixa de itens (de jogador ou de mob morto) a até 8 studs, o `CratePanel` aparece sozinho **logo acima da hotbar**, com os itens da caixa em **8 colunas**. Se também há um baú perto, ele sobe a altura do painel do baú para não sobrepor. Clicar (ou tocar) num slot pega o item para o inventário (o que couber) e o painel se reorganiza; a caixa vazia some e o painel também.
 
 O `CrateState` procura a caixa mais perto (modelos com a tag `Crate`) por **polling a cada 0,25 s**, avisa o servidor (`CrateWatch`) quando ela muda e guarda o conteúdo que chega por `CrateContents`. O cliente só pede (`CrateTake`); o servidor decide. Veja `combate.md`.
+
+## Painel de interação (G8)
+
+Com uma estrutura de usar de perto a até 8 studs (extrator, fornalha, poço, cama ou placa), o `InteractPanel` aparece **acima da hotbar**, sozinho. Ele mostra o nome da peça, o estado (só o que a peça tem: madeira, estoque, goles de água, símbolo atual) e **um botão por ação que você pode usar**: Pôr madeira, Pegar (só dono e aliados), Beber, Encher, Deitar. A placa não tem botão de ação: o dono vê uma grade de botões de símbolo para escolher (4 por fileira), e quem não é dono não vê nada para clicar. Se o painel do baú ou da caixa também está visível, ele sobe e empilha em cima, sem sobrepor.
+
+O `InteractState` procura a peça mais perto por **polling a cada 0,25 s** e lê os atributos da peça (`Wood`, `Stock`, `Drinks`, `Symbol`), que o servidor mantém e replica; não avisa o servidor qual peça está olhando e o servidor não responde com estado. O cliente só pede: o botão dispara o evento `StructureAction` (ação + argumento) e o servidor (`InteractService`) confere distância, dono, item e taxa. O cliente esconde os botões que o jogador não pode usar (`InteractRules.allowed`), mas quem decide é o servidor. Quais ações cada peça tem está em `InteractRules` (`ACTIONS`, por kind). O que cada peça faz está em `construcao.md`. Botões têm 44 px de altura (mínimo de toque).
+
+## Ícones 3D nos slots
+
+O `ItemIcon` mostra, no lugar das iniciais ("Ma", "Pe", "Ou"), um modelo 3D num `ViewportFrame` quando existe `ReplicatedStorage.Assets.Icons/<itemId>`. Hoje têm ícone **madeira, pedra e ouro** (`wood`, `stone`, `gold`); os outros itens continuam com a moldura e as iniciais. A câmera é calculada do tamanho do modelo para ele caber no slot com uma folga fixa. Para um item novo ter ícone 3D: modele (`*_viewport` no Blender), rode `scripts/studio/import-world.luau` (veja `construcao.md`) e o template aparece em `Assets.Icons/<itemId>`; nenhum código muda. Se o template ainda não chegou ao cliente no primeiro quadro, o slot começa com as iniciais.
 
 ## Quando o HUD aparece
 

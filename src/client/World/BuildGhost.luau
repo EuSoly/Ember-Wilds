@@ -3,7 +3,8 @@
 -- translúcido no ponto à frente (o mesmo que o servidor escolhe), girado como a
 -- peça sairá (o giro vem de BuildRotation), verde se parece livre e vermelho se
 -- não. Uma faixa mais escura marca a "frente" da peça. É só uma dica: o servidor
--- decide de verdade (inclusive água, que o cliente não checa).
+-- decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
+-- BuildRules.waterAllows: ponte só na água, o resto nunca).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -16,6 +17,7 @@ local BuildRules = require(Shared:WaitForChild("Build"):WaitForChild("BuildRules
 local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
 local BuildRotation = require(script.Parent.Parent:WaitForChild("BuildRotation"))
 
 local THICKNESS = 0.3
@@ -44,8 +46,8 @@ local function makePart(name: string): Part
 	return part
 end
 
--- Raio da peça se o item é uma peça colocável; nil se não é.
-local function radiusOfItem(itemId: unknown): number?
+-- A peça do item se ele é uma peça colocável; nil se não é.
+local function structureOf(itemId: unknown): Defs.StructureDef?
 	if typeof(itemId) ~= "string" then
 		return nil
 	end
@@ -53,8 +55,7 @@ local function radiusOfItem(itemId: unknown): number?
 	if item == nil or item.category ~= "placeable" then
 		return nil
 	end
-	local structure = item.structure
-	return if structure then BuildRules.radiusOf(structure) else nil
+	return item.structure
 end
 
 local function pivotXZ(instance: Instance): (number?, number?)
@@ -75,18 +76,50 @@ local function extentOf(instance: Instance): number
 	return 0
 end
 
--- O círculo (centro px, pz; raio radius) parece livre?
-local function looksFree(px: number, pz: number, radius: number): boolean
+-- Nenhum jogador (inclusive o próprio) sobrepondo o círculo?
+local function looksFreeOfPlayers(px: number, pz: number, radius: number): boolean
+	for _, player in Players:GetPlayers() do
+		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+		if root and root:IsA("BasePart") then
+			if
+				BuildRules.circlesOverlap(px, pz, radius, root.Position.X, root.Position.Z, BuildRules.PLAYER_RADIUS)
+			then
+				return false
+			end
+		end
+	end
+	return true
+end
+
+-- O círculo (centro px, pz; raio radius) de uma peça `kind` parece livre? As
+-- mesmas camadas do servidor (BuildRules.layerOf): o telhado só vê telhados, a
+-- ponte só pontes e jogadores.
+local function looksFree(kind: string, px: number, pz: number, radius: number): boolean
+	if not BuildRules.waterAllows(kind, WaterSim.isWaterAt(px, pz)) then
+		return false
+	end
+	local layer = BuildRules.layerOf(kind)
 	-- Peças já colocadas: o pivô fica no centro da peça.
 	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
 		local x, z = pivotXZ(instance)
 		-- Longe demais para tocar: nem lê o atributo.
 		if x and z and math.abs(x - px) <= radius + RESOURCE_RANGE and math.abs(z - pz) <= radius + RESOURCE_RANGE then
-			local otherRadius = radiusOfItem(instance:GetAttribute(StatNames.StructureItem)) or BuildRules.PIECE_RADIUS
-			if BuildRules.circlesOverlap(px, pz, radius, x, z, otherRadius) then
+			local other = structureOf(instance:GetAttribute(StatNames.StructureItem))
+			local otherKind = if other then other.kind else "wall"
+			local otherRadius = if other then BuildRules.radiusOf(other) else BuildRules.PIECE_RADIUS
+			if
+				BuildRules.blocksPlacement(kind, otherKind)
+				and BuildRules.circlesOverlap(px, pz, radius, x, z, otherRadius)
+			then
 				return false
 			end
 		end
+	end
+	if layer == "roof" then
+		return true
+	end
+	if layer ~= "solid" then
+		return looksFreeOfPlayers(px, pz, radius)
 	end
 	-- Recursos: o raio de colisão que o servidor publica; sem ele, aproxima
 	-- pelo tamanho do modelo.
@@ -102,18 +135,7 @@ local function looksFree(px: number, pz: number, radius: number): boolean
 			end
 		end
 	end
-	-- Jogadores (inclusive o próprio).
-	for _, player in Players:GetPlayers() do
-		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-		if root and root:IsA("BasePart") then
-			if
-				BuildRules.circlesOverlap(px, pz, radius, root.Position.X, root.Position.Z, BuildRules.PLAYER_RADIUS)
-			then
-				return false
-			end
-		end
-	end
-	return true
+	return looksFreeOfPlayers(px, pz, radius)
 end
 
 function BuildGhost.start()
@@ -129,8 +151,8 @@ function BuildGhost.start()
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		-- Polling de propósito: com Server Authority o AttributeChanged não
 		-- dispara no personagem previsto local.
-		local radius = if character then radiusOfItem(character:GetAttribute(StatNames.Equipped)) else nil
-		if radius == nil or root == nil or not root:IsA("BasePart") then
+		local structure = if character then structureOf(character:GetAttribute(StatNames.Equipped)) else nil
+		if structure == nil or root == nil or not root:IsA("BasePart") then
 			ghost.Parent = nil
 			lastRadius = 0
 			return
@@ -142,6 +164,7 @@ function BuildGhost.start()
 			return
 		end
 		flat = flat.Unit
+		local radius = BuildRules.radiusOf(structure)
 		local px, pz = BuildRules.placePoint(root.Position.X, root.Position.Z, flat.X, flat.Z)
 		local steps = vide.untrack(BuildRotation.steps)
 		local yaw = BuildRules.facingYaw(px, pz, root.Position.X, root.Position.Z, steps)
@@ -152,7 +175,7 @@ function BuildGhost.start()
 		if radius ~= lastRadius or now - lastCheck >= REFRESH then
 			lastRadius = radius
 			lastCheck = now
-			free = looksFree(px, pz, radius)
+			free = looksFree(structure.kind, px, pz, radius)
 		end
 
 		local side = radius * 2

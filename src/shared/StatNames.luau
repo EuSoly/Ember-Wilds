@@ -49,6 +49,8 @@ return table.freeze({
 	EquipLockUntil = "EquipLockUntil",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
 	HurtAt = "HurtAt",
+	-- true enquanto o personagem dorme numa cama (escrito pelo BedService; olhos fechados).
+	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
 	CosmeticPrefix = "Cosmetic_",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
@@ -147,6 +149,13 @@ return table.freeze({
 	-- Vida atual e máxima da peça, atributos no modelo (a barrinha de vida lê).
 	StructureHealth = "StructureHealth",
 	StructureHealthMax = "StructureHealthMax",
+	-- Tags (CollectionService) da ponte e do telhado (StructureModel.build), com o
+	-- raio do círculo da peça (studs) no atributo PieceRadius do modelo: a água
+	-- (WaterSim, nos dois lados), o MobService e o cliente acham as peças por aqui
+	-- sem depender do StructureService.
+	BridgeTag = "Bridge",
+	RoofTag = "Roof",
+	PieceRadius = "PieceRadius",
 	-- true com a porta aberta (as peças dela não colidem), atributo no modelo da porta.
 	DoorOpen = "DoorOpen",
 	-- Conteúdo do baú, atributos no modelo do baú (ChestService; todos veem):
@@ -154,6 +163,19 @@ return table.freeze({
 	-- ainda não tem os atributos: sem atributo = vazio.
 	ChestItem = "ChestItem",
 	ChestCount = "ChestCount",
+	-- Estado das estruturas de usar de perto (G8), atributos no modelo da peça
+	-- (todos veem; o painel de interação mostra só os que existem): madeira
+	-- dentro (extrator e fornalha), estoque pronto (extrator) e goles (poço).
+	Wood = "Wood",
+	Stock = "Stock",
+	Drinks = "Drinks",
+	-- Índice do símbolo da placa (SignRules.SYMBOLS), 0 = nenhum; atributo no modelo.
+	Symbol = "Symbol",
+	-- true enquanto o extrator trabalha (o rotor gira), atributo no modelo (MachineService).
+	Working = "Working",
+	-- false com a peça apagada (as chamas somem; sem atributo = acesa), atributo
+	-- no modelo da fornalha (MachineService).
+	Lit = "Lit",
 
 	-- Caixas de itens (G6). Tag (CollectionService) dos modelos de caixa em
 	-- Workspace.Crates (CrateService). A vida usa StructureHealth/StructureHealthMax,

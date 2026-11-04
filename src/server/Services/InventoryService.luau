@@ -9,6 +9,7 @@
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
@@ -16,6 +17,7 @@ local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
+local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local Net = require(script.Parent.Parent.Net)
 
 local HOTBAR_SLOTS = InventoryConfig.HOTBAR_SLOTS
@@ -112,7 +114,7 @@ end
 
 -- Dá itens ao jogador. Devolve o que não coube (0 = coube tudo).
 function InventoryService.give(player: Player, id: string, count: number): number
-	if Defs.Items[id] == nil or count < 1 or count % 1 ~= 0 then
+	if not ItemAccess.isAvailable(id, RunService:IsStudio()) or count < 1 or count % 1 ~= 0 then
 		return count
 	end
 	local inv = ensure(player)
@@ -141,6 +143,29 @@ function InventoryService.takeAt(player: Player, index: number, count: number): 
 	local ok, changed = Inventory.removeAt(inv, index, count)
 	sendChanges(player, inv, changed)
 	return ok
+end
+
+-- Troca, no próprio slot `index`, o item `fromId` (1 unidade) por `toId`: o
+-- item na mão vira outro sem mudar de lugar (balde ↔ balde com água).
+-- false (nada muda) se o slot não tem exatamente 1 de `fromId` ou `toId` não
+-- está disponível ao jogador (testOnly fora do Studio).
+function InventoryService.swapAt(player: Player, index: number, fromId: string, toId: string): boolean
+	local inv = inventories[player]
+	local slot = inv and inv.slots[index]
+	if
+		inv == nil
+		or slot == nil
+		or slot.id ~= fromId
+		or slot.count ~= 1
+		or Defs.Items[toId] == nil
+		or maxStackOf(toId) < 1
+		or not ItemAccess.isAvailable(toId, RunService:IsStudio())
+	then
+		return false
+	end
+	inv.slots[index] = { id = toId, count = 1 }
+	sendChanges(player, inv, { index })
+	return true
 end
 
 -- Quanto de `id` caberia agora no inventário (0 sem inventário), sem mudar nada.

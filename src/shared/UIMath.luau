@@ -61,6 +61,21 @@ function UIMath.initials(name: string): string
 	return string.upper(firstChars(words[1], 1)) .. string.upper(firstChars(words[2], 1))
 end
 
+-- Distância da câmera ao centro de um modelo para ele caber inteiro no ViewportFrame.
+-- Usa a esfera que envolve a caixa (meia diagonal), então cabe em qualquer ângulo de visão.
+-- `fovDegrees` é o campo de visão vertical; `margin` é a folga fixa (0.1 = 10%).
+function UIMath.iconCameraDistance(
+	sizeX: number,
+	sizeY: number,
+	sizeZ: number,
+	fovDegrees: number,
+	margin: number
+): number
+	local radius = math.sqrt(sizeX * sizeX + sizeY * sizeY + sizeZ * sizeZ) / 2
+	radius = math.max(radius, 0.01) -- modelo vazio/zerado não vira distância 0
+	return radius * (1 + margin) / math.sin(math.rad(fovDegrees) / 2)
+end
+
 -- Um toque/clique segurado vira "arrasto" quando o dedo anda mais que
 -- `threshold` pixels; antes disso ainda é um toque simples.
 function UIMath.isDrag(dx: number, dy: number, threshold: number): boolean

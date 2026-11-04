@@ -27,6 +27,9 @@ local SurvivalService = {}
 -- personagem recém-nascido).
 local lifeOf: { [Player]: Model } = {}
 
+-- Fatores da cama de quem está dormindo (BedService liga e desliga).
+local sleeping: { [Player]: Defs.BedDef } = {}
+
 -- Grava o valor exato: arredondar a cada passo acumula erro (com passos de
 -- 0,25 a barra caía 0,3 por passo, ~18% rápido demais).
 local function setIfChanged(player: Player, name: string, value: any)
@@ -130,6 +133,7 @@ local function step(player: Player, dt: number, night: boolean)
 		-- Só a floresta é jogável; o inverno (N2) vai escolher pelo bioma da posição.
 		biomeColdFactor = SurvivalConfig.BIOME_COLD_FACTOR.forest,
 		biomeHeat = SurvivalConfig.BIOME_HEAT.forest,
+		sleep = sleeping[player],
 	}, dt)
 	writeBars(player, result.bars)
 	local cause = result.cause
@@ -153,6 +157,11 @@ function SurvivalService.canEat(player: Player, food: Defs.FoodEffect): boolean
 	return SurvivalRules.eat(readBars(player), food) ~= nil
 end
 
+-- Liga (fatores da cama) ou desliga (nil) o efeito de dormir no jogador.
+function SurvivalService.setSleep(player: Player, bed: Defs.BedDef?)
+	sleeping[player] = bed :: any
+end
+
 local function setupPlayer(player: Player)
 	player.CharacterAdded:Connect(function()
 		writeBars(player, SurvivalRules.full())
@@ -166,6 +175,7 @@ function SurvivalService.Start(_self)
 	Players.PlayerAdded:Connect(setupPlayer)
 	Players.PlayerRemoving:Connect(function(player)
 		lifeOf[player] = nil
+		sleeping[player] = nil
 	end)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

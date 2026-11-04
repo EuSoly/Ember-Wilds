@@ -220,7 +220,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.workbench",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "station", health = 300, station = "workbench" },
+		structure = { kind = "station", health = 300, radius = 3, station = "workbench" },
 	},
 	campfire = {
 		id = "campfire",
@@ -228,6 +228,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		maxStack = 255,
 		structure = {
+			radius = 2.7, -- tamanho do modelo (bancada)
 			kind = "fire",
 			health = 150,
 			lifetime = 120,
@@ -240,7 +241,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.big_campfire",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "fire", health = 300, lifetime = 360, heatRadius = 18, station = "fire" },
+		structure = { kind = "fire", health = 300, radius = 3.1, lifetime = 360, heatRadius = 18, station = "fire" },
 	},
 	wood_wall = {
 		id = "wood_wall",
@@ -248,7 +249,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "wall", health = 1000 },
+		structure = { kind = "wall", health = 1000, radius = 3 },
 	},
 	stone_wall = {
 		id = "stone_wall",
@@ -256,7 +257,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "wall", health = 1500 },
+		structure = { kind = "wall", health = 1500, radius = 3 },
 	},
 	gold_wall = {
 		id = "gold_wall",
@@ -264,7 +265,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "wall", health = 2000 },
+		structure = { kind = "wall", health = 2000, radius = 3 },
 	},
 	wood_door = {
 		id = "wood_door",
@@ -272,7 +273,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "door", health = 1000 },
+		structure = { kind = "door", health = 1000, radius = 3 },
 	},
 	stone_door = {
 		id = "stone_door",
@@ -280,7 +281,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "door", health = 1500 },
+		structure = { kind = "door", health = 1500, radius = 3 },
 	},
 	gold_door = {
 		id = "gold_door",
@@ -288,7 +289,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "door", health = 2000 },
+		structure = { kind = "door", health = 2000, radius = 3 },
 	},
 	wood_spike = {
 		id = "wood_spike",
@@ -296,7 +297,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "spike", health = 150, spikeDamage = 10 },
+		structure = { kind = "spike", health = 150, radius = 3, spikeDamage = 10 },
 	},
 	stone_spike = {
 		id = "stone_spike",
@@ -304,7 +305,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "spike", health = 300, spikeDamage = 20 },
+		structure = { kind = "spike", health = 300, radius = 3, spikeDamage = 20 },
 	},
 	gold_spike = {
 		id = "gold_spike",
@@ -312,14 +313,157 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "spike", health = 600, spikeDamage = 30 },
+		structure = { kind = "spike", health = 600, radius = 3, spikeDamage = 30 },
 	},
 	chest = {
 		id = "chest",
 		nameKey = "item.chest",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "chest", health = 500 },
+		structure = { kind = "chest", health = 500, radius = 2.3 },
+	},
+	-- G8: estruturas novas, só para teste (testOnly). Números provisórios salvo onde diz wiki.
+	wood_spike_door = {
+		id = "wood_spike_door",
+		testOnly = true,
+		nameKey = "item.wood_spike_door",
+		category = "placeable",
+		tier = "wood",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 1000, radius = 3, spikeDamage = 10 },
+	},
+	stone_spike_door = {
+		id = "stone_spike_door",
+		testOnly = true,
+		nameKey = "item.stone_spike_door",
+		category = "placeable",
+		tier = "stone",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 1500, radius = 3, spikeDamage = 20 },
+	},
+	gold_spike_door = {
+		id = "gold_spike_door",
+		testOnly = true,
+		nameKey = "item.gold_spike_door",
+		category = "placeable",
+		tier = "gold",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 2000, radius = 3, spikeDamage = 30 },
+	},
+	stone_extractor = {
+		id = "stone_extractor",
+		testOnly = true,
+		nameKey = "item.stone_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.7, -- tamanho do modelo (bancada)
+			kind = "extractor",
+			health = 300, -- provisório
+			-- cycleSeconds: wiki; o resto provisório
+			extractor = {
+				output = "stone",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 100,
+				maxStock = 100,
+			},
+		},
+	},
+	gold_extractor = {
+		id = "gold_extractor",
+		testOnly = true,
+		nameKey = "item.gold_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.7, -- tamanho do modelo (bancada)
+			kind = "extractor",
+			health = 300, -- provisório
+			-- cycleSeconds: wiki; o resto provisório
+			extractor = {
+				output = "gold",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 100,
+				maxStock = 100,
+			},
+		},
+	},
+	furnace = {
+		id = "furnace",
+		testOnly = true,
+		nameKey = "item.furnace",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 3, -- tamanho do modelo (bancada)
+			kind = "furnace",
+			health = 500, -- provisório
+			heatRadius = 24, -- provisório
+			station = "fire",
+			furnace = { burnEvery = 6, maxWood = 200 }, -- burnEvery: wiki; maxWood provisório
+		},
+	},
+	bridge = {
+		id = "bridge",
+		testOnly = true,
+		nameKey = "item.bridge",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "bridge", health = 300, radius = 3.1 }, -- provisório
+	},
+	roof = {
+		id = "roof",
+		testOnly = true,
+		nameKey = "item.roof",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "roof", health = 300, radius = 3.2 }, -- provisório
+	},
+	sign = {
+		id = "sign",
+		testOnly = true,
+		nameKey = "item.sign",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "sign", health = 100 }, -- provisório
+	},
+	well = {
+		id = "well",
+		testOnly = true,
+		nameKey = "item.well",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.6, -- tamanho do modelo (bancada)
+			kind = "well",
+			health = 500, -- provisório
+			well = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20 }, -- drinksPerBucket: wiki
+		},
+	},
+	bed = {
+		id = "bed",
+		testOnly = true,
+		nameKey = "item.bed",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 3.5, -- tamanho do modelo (bancada)
+			kind = "bed",
+			health = 300, -- provisório
+			bed = { regenFactor = 2, drainFactor = 0.5 },
+		},
+	},
+	bucket = { id = "bucket", testOnly = true, nameKey = "item.bucket", category = "misc", maxStack = 1 },
+	water_bucket = {
+		id = "water_bucket",
+		testOnly = true,
+		nameKey = "item.water_bucket",
+		category = "misc",
+		maxStack = 1,
 	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
 	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3 },
@@ -336,6 +480,12 @@ for _, item in Items do
 		table.freeze(item.pickaxe)
 	end
 	if item.structure ~= nil then
+		for _, field in { "extractor", "furnace", "well", "bed" } do
+			local block = (item.structure :: any)[field]
+			if block ~= nil then
+				table.freeze(block)
+			end
+		end
 		table.freeze(item.structure)
 	end
 	table.freeze(item)

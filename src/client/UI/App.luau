@@ -15,6 +15,7 @@ local Clock = require(script.Parent:WaitForChild("Clock"))
 local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
+local InteractPanel = require(script.Parent:WaitForChild("InteractPanel"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local RecipeBookButton = require(script.Parent:WaitForChild("RecipeBookButton"))
@@ -39,6 +40,7 @@ local function App(): ScreenGui
 		Notifications.Component(),
 		ChestPanel(),
 		CratePanel(),
+		InteractPanel(),
 		Hotbar({ StatusRings() :: Instance }),
 		AimStick(),
 		RotateButton(),

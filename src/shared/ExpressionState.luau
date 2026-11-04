@@ -78,6 +78,21 @@ local function better(a: ExpressionDef, b: ExpressionDef?): boolean
 	return a.id < b.id
 end
 
+-- O valor do atributo satisfaz a condição? Número: below/above; boolean: equals.
+-- Atributo ausente ou de outro tipo nunca satisfaz.
+function ExpressionState.conditionMet(condition: Types.ExpressionCondition, value: any): boolean
+	if type(value) == "boolean" then
+		return condition.equals ~= nil and value == condition.equals
+	end
+	if type(value) ~= "number" then
+		return false
+	end
+	if condition.below ~= nil and value < condition.below then
+		return true
+	end
+	return condition.above ~= nil and value > condition.above
+end
+
 function ExpressionState.current(
 	state: State,
 	defs: Defs,

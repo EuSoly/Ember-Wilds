@@ -5,11 +5,13 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local CraftRules = require(ReplicatedStorage.Shared.Craft.CraftRules)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
+local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
 local StatsService = require(script.Parent.StatsService)
@@ -80,6 +82,10 @@ local function start(player: Player, recipeId: string)
 	local character = player.Character
 	local recipe = Defs.Recipes[recipeId]
 	if recipe == nil or active[player] ~= nil or character == nil then
+		return
+	end
+	-- Receita com item só-para-teste: recusa quieto (o cliente já a esconde).
+	if not ItemAccess.recipeAvailable(recipe, RunService:IsStudio()) then
 		return
 	end
 	local humanoid = character:FindFirstChildOfClass("Humanoid")

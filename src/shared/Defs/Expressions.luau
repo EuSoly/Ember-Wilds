@@ -4,6 +4,7 @@
 -- Para adicionar uma (ex. frio por condição), uma entrada aqui basta.
 -- Veja docs/guia/boneco.md.
 local Palette = require("../Palette")
+local StatNames = require("../StatNames")
 local Types = require("./Types")
 
 type ExpressionDef = Types.ExpressionDef
@@ -20,6 +21,14 @@ local Expressions: { [string]: ExpressionDef } = {
 		duration = 0.12,
 		intervalMin = 3,
 		intervalMax = 6,
+	},
+	-- Dormindo na cama (atributo Sleeping do personagem): olhos fechados.
+	sleeping = {
+		id = "sleeping",
+		priority = 50,
+		eyes = "closed",
+		trigger = "condition",
+		condition = { attribute = StatNames.Sleeping, equals = true },
 	},
 	-- Levou dano: olhos "> <" e o corpo pisca em vermelho.
 	hurt = {

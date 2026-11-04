@@ -16,6 +16,20 @@ function spec.areAllies_hoje_so_o_mesmo_jogador()
 	assert(not BuildRules.areAllies(1, 2), "UserIds diferentes não são aliados")
 end
 
+function spec.isDoor_porta_e_porta_com_espinhos()
+	assert(BuildRules.isDoor("door"), "porta é porta")
+	assert(BuildRules.isDoor("spike_door"), "porta com espinhos é porta")
+	assert(not BuildRules.isDoor("spike"), "espinho não é porta")
+	assert(not BuildRules.isDoor("wall"), "parede não é porta")
+end
+
+function spec.hurts_espinho_e_porta_com_espinhos()
+	assert(BuildRules.hurts("spike"), "espinho fere")
+	assert(BuildRules.hurts("spike_door"), "porta com espinhos fere")
+	assert(not BuildRules.hurts("door"), "porta comum não fere")
+	assert(not BuildRules.hurts("wall"), "parede não fere")
+end
+
 function spec.underLimit_sem_limite()
 	assert(BuildRules.MAX_PER_PLAYER == nil, "hoje não há limite")
 	assert(BuildRules.underLimit(0) and BuildRules.underLimit(100000), "nil = sempre abaixo do limite")
@@ -122,6 +136,69 @@ function spec.placePoint_nunca_encosta_no_corpo()
 			not BuildRules.touchesCircle(x, z, px, pz, BuildRules.PIECE_RADIUS, BuildRules.PLAYER_RADIUS),
 			`direção {i}: a peça encosta no corpo de quem constrói`
 		)
+	end
+end
+
+function spec.insideAny_dentro_fora_borda_e_vazio()
+	local circles = { { x = 0, z = 0, r = 2 }, { x = 10, z = 0, r = 1 } }
+	assert(BuildRules.insideAny(0.5, -0.5, circles), "dentro do primeiro")
+	assert(BuildRules.insideAny(10.5, 0, circles), "dentro do segundo")
+	assert(not BuildRules.insideAny(5, 0, circles), "entre os dois: fora")
+	assert(not BuildRules.insideAny(0, 2.01, circles), "logo além da borda: fora")
+	assert(BuildRules.insideAny(2, 0, circles), "exatamente na borda conta como dentro")
+	assert(BuildRules.insideAny(10, -1, circles), "na borda do segundo")
+	assert(not BuildRules.insideAny(0, 0, {}), "lista vazia: nunca dentro")
+end
+
+function spec.insideAny_com_margem()
+	local circles = { { x = 0, z = 0, r = 2 } }
+	assert(BuildRules.insideAny(3, 0, circles, 1), "na borda expandida conta")
+	assert(not BuildRules.insideAny(3.01, 0, circles, 1), "além da margem: fora")
+	assert(not BuildRules.insideAny(3, 0, circles), "sem margem: fora")
+end
+
+-- Ruling 11: uma fila de pontes postas a PLACE_DISTANCE dá caminho seco.
+function spec.onBridge_emenda_entre_duas_pontes_e_seca()
+	local r = 2.1 -- raio da ponte nos dados
+	local d = BuildRules.PLACE_DISTANCE
+	local bridges = { { x = 0, z = 0, r = r }, { x = d, z = 0, r = r } }
+	assert(d == 5.5, "pontes a 5,5 uma da outra")
+	assert(not BuildRules.insideAny(d / 2, 0, bridges), "sem margem o meio seria água (o bug)")
+	assert(BuildRules.onBridge(d / 2, 0, bridges), "o meio entre as duas é seco")
+	assert(BuildRules.onBridge(0, 0, bridges), "centro da ponte")
+	assert(BuildRules.onBridge(0, r + BuildRules.PLAYER_RADIUS, bridges), "na borda do corpo ainda conta")
+	assert(not BuildRules.onBridge(0, r + BuildRules.PLAYER_RADIUS + 0.01, bridges), "além do corpo: água")
+	assert(not BuildRules.onBridge(0, 0, {}), "sem ponte: nunca")
+end
+
+function spec.layerOf_ponte_telhado_e_o_resto()
+	assert(BuildRules.layerOf("bridge") == "bridge", "ponte")
+	assert(BuildRules.layerOf("roof") == "roof", "telhado")
+	for _, kind in { "wall", "door", "spike", "spike_door", "station", "fire", "chest", "well", "bed" } do
+		assert(BuildRules.layerOf(kind) == "solid", `{kind} é sólida`)
+		assert(BuildRules.isSolid(kind), `{kind} segura corpos`)
+	end
+	assert(not BuildRules.isSolid("bridge"), "ponte não segura corpos")
+	assert(not BuildRules.isSolid("roof"), "telhado não segura corpos")
+end
+
+function spec.blocksPlacement_so_na_mesma_camada()
+	assert(BuildRules.blocksPlacement("bridge", "bridge"), "ponte sobre ponte não")
+	assert(BuildRules.blocksPlacement("roof", "roof"), "telhado sobre telhado não")
+	assert(BuildRules.blocksPlacement("wall", "spike"), "parede sobre espinho não")
+	assert(not BuildRules.blocksPlacement("roof", "wall"), "telhado sobre parede pode")
+	assert(not BuildRules.blocksPlacement("wall", "roof"), "parede debaixo do telhado pode")
+	assert(not BuildRules.blocksPlacement("bridge", "wall"), "ponte encostando na parede da margem pode")
+	assert(not BuildRules.blocksPlacement("wall", "bridge"), "parede na margem encostando na ponte pode")
+	assert(not BuildRules.blocksPlacement("bridge", "roof"), "ponte e telhado não se veem")
+end
+
+function spec.waterAllows_ponte_so_na_agua_o_resto_nunca()
+	assert(BuildRules.waterAllows("bridge", true), "ponte na água pode")
+	assert(not BuildRules.waterAllows("bridge", false), "ponte em terra não")
+	for _, kind in { "wall", "roof", "spike", "fire", "chest" } do
+		assert(BuildRules.waterAllows(kind, false), `{kind} em terra pode`)
+		assert(not BuildRules.waterAllows(kind, true), `{kind} na água não`)
 	end
 end
 

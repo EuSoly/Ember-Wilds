@@ -21,6 +21,9 @@ export type Context = {
 	oxygen: number, -- 0 a 100 (WaterService)
 	mods: ArmorRules.Modifiers,
 	biomeColdFactor: number, -- 1 na floresta
+	-- Dormindo numa cama (BedDef): regeneração × regenFactor e queda de fome,
+	-- sede e frio × drainFactor; o calor da fogueira continua valendo por cima.
+	sleep: { regenFactor: number, drainFactor: number }?,
 }
 
 export type Cause = "hunger" | "cold" | "heat" | "thirst" | "oxygen"
@@ -75,13 +78,16 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 	local cold = sane(bars.cold)
 	local thirst = sane(bars.thirst)
 	local heat = sane(bars.heat, 0)
+	local sleep = ctx.sleep
+	local drainFactor = if sleep then sleep.drainFactor else 1
+	local regenFactor = if sleep then sleep.regenFactor else 1
 
 	-- 1. Barras.
-	hunger = clamp(hunger - C.HUNGER_DRAIN * mods.hungerFactor * dt)
+	hunger = clamp(hunger - C.HUNGER_DRAIN * mods.hungerFactor * drainFactor * dt)
 	if ctx.inWater then
 		thirst = clamp(thirst + C.WATER_THIRST_REFILL * dt)
 	else
-		thirst = clamp(thirst - C.THIRST_DRAIN * mods.thirstFactor * dt)
+		thirst = clamp(thirst - C.THIRST_DRAIN * mods.thirstFactor * drainFactor * dt)
 	end
 	-- Temperatura: o calor fica "por cima" do frio.
 	local heating = (if ctx.onFire then C.ON_FIRE_HEAT else 0) + ctx.biomeHeat
@@ -99,6 +105,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		local drain = (if ctx.isNight then C.COLD_DRAIN_NIGHT else C.COLD_DRAIN_DAY)
 			* ctx.biomeColdFactor
 			* mods.coldFactor
+			* drainFactor
 		if ctx.inWater then
 			drain *= C.WATER_COLD_FACTOR
 		end
@@ -133,7 +140,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		and thirst >= C.REGEN_MIN
 		and heat < C.REGEN_MAX_HEAT
 	then
-		health = clamp(health + C.REGEN_RATE * dt, HEALTH_MAX)
+		health = clamp(health + C.REGEN_RATE * regenFactor * dt, HEALTH_MAX)
 	end
 
 	return {

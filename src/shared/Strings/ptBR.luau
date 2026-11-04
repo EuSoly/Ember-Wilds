@@ -29,6 +29,18 @@ return table.freeze({
 	["hud.rotate"] = "Girar",
 	["hud.crate"] = "Caixa",
 
+	-- Painel de interação com estruturas (G8): botões das ações e estado da peça
+	["interact.put_wood"] = "Pôr madeira",
+	["interact.take"] = "Pegar",
+	["interact.drink"] = "Beber",
+	["interact.sleep"] = "Deitar",
+	["interact.fill"] = "Encher",
+	["interact.symbol"] = "Símbolo",
+	["interact.wood"] = "Madeira: {count}",
+	["interact.stock"] = "Estoque: {count}",
+	["interact.drinks"] = "Goles: {count}",
+	["interact.symbol_now"] = "Símbolo: {symbol}",
+
 	-- Itens
 	["item.wood"] = "Madeira",
 	["item.stone"] = "Pedra",
@@ -73,6 +85,19 @@ return table.freeze({
 	["item.chest"] = "Baú",
 	["item.paper"] = "Papel",
 	["item.book"] = "Livro",
+	["item.wood_spike_door"] = "Porta de espinhos de madeira",
+	["item.stone_spike_door"] = "Porta de espinhos de pedra",
+	["item.gold_spike_door"] = "Porta de espinhos de ouro",
+	["item.stone_extractor"] = "Extrator de pedra",
+	["item.gold_extractor"] = "Extrator de ouro",
+	["item.furnace"] = "Fornalha",
+	["item.bridge"] = "Ponte",
+	["item.roof"] = "Telhado",
+	["item.sign"] = "Placa",
+	["item.well"] = "Poço",
+	["item.bed"] = "Cama",
+	["item.bucket"] = "Balde",
+	["item.water_bucket"] = "Balde com água",
 
 	-- Cosméticos
 	["cosmeticSlot.body"] = "Corpo",
