@@ -26,6 +26,7 @@ local function validLookDefs(): any
 				id = "body_default",
 				nameKey = "cosmetic.body_default",
 				slot = "body",
+				rarity = 1,
 				body = { bodyColor = "#DDF3F8", outlineColor = "#1F6F7A" },
 			},
 		},
@@ -464,12 +465,27 @@ return {
 
 	["cosmetic with unknown slot is an error"] = function()
 		local defs = validLookDefs()
-		defs.Cosmetics.hat_red = { id = "hat_red", nameKey = "cosmetic.hat_red", slot = "hat" }
+		defs.Cosmetics.hat_red = { id = "hat_red", nameKey = "cosmetic.hat_red", slot = "hat", rarity = 1 }
 		local errors = Validate.all(defs, alwaysHas)
 		assert(
 			containsError(errors, "não existe em CosmeticSlots"),
 			`faltou erro de slot: {table.concat(errors, "; ")}`
 		)
+	end,
+
+	["cosmetic with rarity 6 is an error"] = function()
+		local defs = validLookDefs()
+		defs.Cosmetics.body_default.rarity = 6
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "rarity"), `faltou erro de rarity: {table.concat(errors, "; ")}`)
+	end,
+
+	["bag cosmetic without bag look is an error"] = function()
+		local defs = validLookDefs()
+		defs.CosmeticSlots.bag = { id = "bag", nameKey = "cosmeticSlot.bag", default = "bag_default" }
+		defs.Cosmetics.bag_default = { id = "bag_default", nameKey = "cosmetic.bag_default", slot = "bag", rarity = 1 }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "bag"), `faltou erro de bag: {table.concat(errors, "; ")}`)
 	end,
 
 	["body cosmetic with bad color is an error"] = function()

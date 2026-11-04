@@ -88,6 +88,33 @@ local function validateCosmetics(errors: { string }, defs: Types.DefsTables, has
 		if slots[cosmetic.slot] == nil then
 			table.insert(errors, `Cosmetic "{key}": slot "{cosmetic.slot}" não existe em CosmeticSlots`)
 		end
+		local rarity = (cosmetic :: any).rarity
+		if type(rarity) ~= "number" or rarity % 1 ~= 0 or rarity < 1 or rarity > 5 then
+			table.insert(errors, `Cosmetic "{key}": rarity deve ser inteira de 1 a 5`)
+		end
+		if cosmetic.slot == "bag" then
+			local bag = cosmetic.bag
+			if bag == nil then
+				table.insert(errors, `Cosmetic "{key}": slot "bag" precisa de bag`)
+			else
+				for _, field in { "color", "strapColor" } do
+					if not isHex((bag :: any)[field]) then
+						table.insert(errors, `Cosmetic "{key}": {field} inválida (use #RRGGBB)`)
+					end
+				end
+			end
+		elseif cosmetic.slot == "crate" then
+			local crate = cosmetic.crate
+			if crate == nil then
+				table.insert(errors, `Cosmetic "{key}": slot "crate" precisa de crate`)
+			else
+				for _, field in { "bodyColor", "bandColor" } do
+					if not isHex((crate :: any)[field]) then
+						table.insert(errors, `Cosmetic "{key}": {field} inválida (use #RRGGBB)`)
+					end
+				end
+			end
+		end
 		if cosmetic.slot == "body" then
 			local body = cosmetic.body
 			if body == nil then

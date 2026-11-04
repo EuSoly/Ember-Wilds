@@ -149,6 +149,9 @@ export type ExpressionDef = {
 -- Cores de uma skin de corpo. handColor ausente = cor do corpo; eyeColor ausente = preto.
 export type BodyLook = { bodyColor: string, outlineColor: string, handColor: string?, eyeColor: string? }
 
+export type BagLook = { color: string, strapColor: string }
+export type CrateLook = { bodyColor: string, bandColor: string }
+
 export type CosmeticSlotDef = {
 	id: string,
 	nameKey: string,
@@ -159,7 +162,11 @@ export type CosmeticDef = {
 	id: string,
 	nameKey: string,
 	slot: string, -- id em CosmeticSlots
+	rarity: number, -- 1 Comum, 2 Raro, 3 Épico, 4 Lendário, 5 Mítico
+	inSpins: boolean?, -- entra no giro da loja? (padrão do slot: só se true)
 	body: BodyLook?, -- dados do slot "body"
+	bag: BagLook?, -- dados do slot "bag"
+	crate: CrateLook?, -- dados do slot "crate"
 }
 
 -- Estatísticas salvas no perfil. "counter" só soma, "max" guarda o maior valor,

@@ -8,6 +8,8 @@ type CosmeticSlotDef = Types.CosmeticSlotDef
 local CosmeticSlots: { [string]: CosmeticSlotDef } = {
 	body = { id = "body", nameKey = "cosmeticSlot.body", default = "body_default" },
 	crate = { id = "crate", nameKey = "cosmeticSlot.crate", default = "crate_default" },
+	bag = { id = "bag", nameKey = "cosmeticSlot.bag", default = "bag_default" },
+	book = { id = "book", nameKey = "cosmeticSlot.book", default = "book_default" },
 }
 
 for _, slot in CosmeticSlots do
