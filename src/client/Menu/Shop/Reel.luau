@@ -75,7 +75,7 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 
 	local function push(item: MockStore.SpinItem)
 		order += 1
-		local tile = SpinTile.build(item, spinType.id, tileSize)
+		local tile = SpinTile.build(item, tileSize)
 		tile.LayoutOrder = order
 		tile.Parent = strip
 		table.insert(tiles, tile)

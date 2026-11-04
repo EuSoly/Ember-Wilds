@@ -3,6 +3,8 @@
 -- Tudo que é número ou nome inventado fica aqui, num lugar só, para apagar
 -- quando a loja de verdade existir. Nada daqui compra, grava ou sorteia de
 -- verdade: o sorteio da loja (SpinRules) só escolhe o que a animação mostra.
+local CosmeticCatalog = require("./CosmeticCatalog")
+
 local MockStore = {}
 
 export type Pack = { amount: number, robux: number, tag: string? }
@@ -69,51 +71,39 @@ MockStore.SHOWCASE_WEIGHTS = { 30, 30, 20, 13, 7 } :: { number }
 export type SpinItem = { id: string, nameKey: string, rarity: number, color: string }
 export type SpinType = { id: string, nameKey: string, theme: string, items: { SpinItem } }
 
--- Itens de mentirinha (6 por tipo): raridade de cada um pela ordem abaixo
--- (dois comuns, depois um de cada); `color` pinta o quadradinho do carrossel
--- até existirem os ícones de verdade.
-local ITEM_RARITIES = { 1, 1, 2, 3, 4, 5 }
-local function spinItems(typeId: string, colors: { string }): { SpinItem }
-	local list: { SpinItem } = {}
-	for i, color in colors do
-		local id = `{typeId}_{i}`
-		table.insert(list, { id = id, nameKey = `shop.item.{id}`, rarity = ITEM_RARITIES[i], color = color })
-	end
-	return list
-end
-
 -- Um tipo de giro por categoria de skin (a caixa de saque e a de morte usam
--- as mesmas skins: um tipo só).
+-- as mesmas skins: um tipo só). Os itens são as skins reais do catálogo; tipo
+-- sem skins (acessório, por enquanto) fica com a lista vazia: "Em breve".
 MockStore.SPIN_TYPES = {
 	{
 		id = "body",
 		nameKey = "shop.type.body",
 		theme = "#D8452B",
-		items = spinItems("body", { "#78834F", "#E8B86D", "#7FC8F0", "#2EC4B6", "#B07CF0", "#E5402B" }),
+		items = CosmeticCatalog.spinItems("body"),
 	},
 	{
 		id = "accessory",
 		nameKey = "shop.type.accessory",
 		theme = "#7A4FD8",
-		items = spinItems("accessory", { "#78834F", "#7FC8F0", "#E99843", "#E8B86D", "#8B5A2B", "#E5402B" }),
+		items = CosmeticCatalog.spinItems("accessory"),
 	},
 	{
 		id = "bag",
 		nameKey = "shop.type.bag",
 		theme = "#4E9A2E",
-		items = spinItems("bag", { "#95603D", "#B87C4B", "#3E8E41", "#7FC8F0", "#3B3F8F", "#E5402B" }),
+		items = CosmeticCatalog.spinItems("bag"),
 	},
 	{
 		id = "book",
 		nameKey = "shop.type.book",
 		theme = "#2F7FD8",
-		items = spinItems("book", { "#5E5E5E", "#78834F", "#2EC4B6", "#3B3F8F", "#9B5DE5", "#E5402B" }),
+		items = CosmeticCatalog.spinItems("book"),
 	},
 	{
 		id = "crate",
 		nameKey = "shop.type.crate",
 		theme = "#E97F22",
-		items = spinItems("crate", { "#A77B4F", "#8A8F98", "#59402D", "#E8E0D0", "#3FD0E0", "#E5402B" }),
+		items = CosmeticCatalog.spinItems("crate"),
 	},
 } :: { SpinType }
 

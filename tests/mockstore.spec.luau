@@ -2,6 +2,7 @@
 local Defs = require("../src/shared/Defs")
 local MockStore = require("../src/shared/UIFlow/MockStore")
 local Strings = require("../src/shared/Strings")
+local CosmeticCatalog = require("../src/shared/UIFlow/CosmeticCatalog")
 
 local function checkKey(key: string)
 	assert(Strings.has(key), `chave de texto faltando: {key}`)
@@ -51,22 +52,46 @@ return {
 		assert(table.concat(colors, ",") == "#9CA3AF,#3B9DFF,#A855F7,#FFBD38,#FF4545", table.concat(colors, ","))
 	end,
 
-	["tipos de giro na ordem e com item de cada raridade"] = function()
+	["tipos de giro na ordem, com as skins reais do catálogo"] = function()
 		local ids = {}
 		for _, t in MockStore.SPIN_TYPES do
 			table.insert(ids, t.id)
-			assert(#t.items >= 5 and #t.items <= 8, `{t.id}: {#t.items} itens`)
-			local seen = {}
-			for _, item in t.items do
+			local expected = CosmeticCatalog.spinItems(t.id)
+			assert(#t.items == #expected, `{t.id}: {#t.items} itens, catálogo tem {#expected}`)
+			for i, item in t.items do
+				assert(item.id == expected[i].id, `{t.id}[{i}]: {item.id} ~= {expected[i].id}`)
 				assert(item.rarity >= 1 and item.rarity <= 5, `{item.id}: raridade {item.rarity}`)
 				assert(string.match(item.color, "^#%x%x%x%x%x%x$"), `{item.id}: cor {item.color}`)
-				seen[item.rarity] = true
 			end
-			for r = 1, 5 do
-				assert(seen[r], `{t.id}: sem item de raridade {r}`)
-			end
+			-- Só o acessório (sem slot ainda) fica vazio.
+			assert((#t.items == 0) == (t.id == "accessory"), `{t.id}: {#t.items} itens`)
 		end
 		assert(table.concat(ids, ",") == "body,accessory,bag,book,crate", table.concat(ids, ","))
+	end,
+
+	["giro do corpo, do livro e do acessório"] = function()
+		local byId = {}
+		for _, t in MockStore.SPIN_TYPES do
+			byId[t.id] = t
+		end
+		local bodyIds = {}
+		for _, item in CosmeticCatalog.spinItems("body") do
+			table.insert(bodyIds, item.id)
+		end
+		local got = {}
+		for _, item in byId.body.items do
+			table.insert(got, item.id)
+		end
+		assert(table.concat(got, ",") == table.concat(bodyIds, ","), table.concat(got, ","))
+		assert(#byId.accessory.items == 0, "acessório deveria estar vazio")
+		assert(#byId.book.items == 1 and byId.book.items[1].id == "book_default", "livro = só book_default")
+		local seen = {}
+		for _, item in byId.body.items do
+			seen[item.rarity] = true
+		end
+		for r = 1, 5 do
+			assert(seen[r], `body: sem item de raridade {r}`)
+		end
 	end,
 
 	["preços dos giros"] = function()

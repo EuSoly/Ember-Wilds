@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -55,10 +56,22 @@ function ShopState.useSpin(typeId: string, kind: SpinRules.Kind): boolean
 	return true
 end
 
--- Abre a tela do giro de um tipo (nil fecha; não fecha no meio de um giro).
+-- Abre a tela do giro de um tipo (nil fecha; não fecha no meio de um giro;
+-- tipo sem skins não abre).
 function ShopState.openSpin(typeId: string?)
 	if typeId == nil and vide.untrack(spinning) then
 		return
+	end
+	if typeId ~= nil then
+		-- Tipo sem skins ("Em breve") não abre: o sorteio não tem o que escolher.
+		for _, spin in MockStore.SPIN_TYPES do
+			if spin.id == typeId then
+				if #spin.items == 0 then
+					return
+				end
+				break
+			end
+		end
 	end
 	spinType(typeId)
 end

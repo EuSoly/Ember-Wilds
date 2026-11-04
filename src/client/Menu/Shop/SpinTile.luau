@@ -1,9 +1,8 @@
 --!strict
 -- Quadradinho de uma skin da loja (carrossel, prêmio, pacotes): fundo na cor
--- da raridade (cores dos tiers), desenho da peça e nome embaixo.
--- Até existirem os ícones de verdade, cada tipo tem um desenho simples feito
--- de Frames na cor da skin: corpo (carinha do boneco), acessório (chapéu),
--- mochila, livro e caixa.
+-- da raridade (cores dos tiers), a skin em 3D (ItemViewport) e nome embaixo.
+-- A prévia dos pacotes (preview) ainda usa um desenho simples feito de Frames,
+-- porque os pacotes são só um mockup: corpo, acessório, mochila, livro e caixa.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -13,6 +12,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local ItemViewport = require(Client:WaitForChild("Menu"):WaitForChild("Cosmetics"):WaitForChild("ItemViewport"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -164,7 +164,7 @@ local function art(typeId: string, color: Color3): Frame
 	return holder
 end
 
-local function tileFrame(typeId: string, colorHex: string, rarity: number, props: { [any]: any }): Frame
+local function tileFrame(content: () -> Instance, rarity: number, props: { [any]: any }): Frame
 	local rarityColor = Color3.fromHex(MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)].color)
 	local frame = create("Frame")({
 		BackgroundColor3 = Color3.new(1, 1, 1),
@@ -186,37 +186,50 @@ local function tileFrame(typeId: string, colorHex: string, rarity: number, props
 		BackgroundTransparency = 1,
 		ZIndex = 2,
 	}) :: Frame
-	art(typeId, Color3.fromHex(colorHex)).Parent = holder
+	content().Parent = holder
 	holder.Parent = frame
 	return vide.apply(frame)(props) :: Frame
 end
 
 -- Quadradinho do carrossel/prêmio, com `size` px de lado e o nome embaixo.
-function SpinTile.build(item: MockStore.SpinItem, typeId: string, size: number): Frame
-	return tileFrame(typeId, item.color, item.rarity, {
-		Name = item.id,
-		Size = UDim2.fromOffset(size, size),
-		Rustic.label({
-			Name = "ItemName",
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 0.96),
-			Size = UDim2.fromScale(0.92, 0.2),
-			dark = true,
-			FontFace = Theme.font.number,
-			Text = Strings.get(item.nameKey),
-			maxSize = math.max(math.floor(size / 7), 11),
-			ZIndex = 6,
-		}),
-	})
+function SpinTile.build(item: MockStore.SpinItem, size: number): Frame
+	-- O ViewportFrame nasce com o quadradinho e morre com ele (Destroy do quadradinho).
+	return tileFrame(
+		function()
+			return ItemViewport.build(item.id)
+		end,
+		item.rarity,
+		{
+			Name = item.id,
+			Size = UDim2.fromOffset(size, size),
+			Rustic.label({
+				Name = "ItemName",
+				AnchorPoint = Vector2.new(0.5, 1),
+				Position = UDim2.fromScale(0.5, 0.96),
+				Size = UDim2.fromScale(0.92, 0.2),
+				dark = true,
+				FontFace = Theme.font.number,
+				Text = Strings.get(item.nameKey),
+				maxSize = math.max(math.floor(size / 7), 11),
+				ZIndex = 6,
+			}),
+		}
+	)
 end
 
 -- Peça solta (sem nome) para a prévia dos pacotes: `sizeScale` da altura do pai.
 function SpinTile.preview(typeId: string, colorHex: string, rarity: number, sizeScale: number): Frame
-	return tileFrame(typeId, colorHex, rarity, {
-		Name = typeId,
-		Size = UDim2.fromScale(sizeScale, sizeScale),
-		SizeConstraint = Enum.SizeConstraint.RelativeYY,
-	})
+	return tileFrame(
+		function()
+			return art(typeId, Color3.fromHex(colorHex))
+		end,
+		rarity,
+		{
+			Name = typeId,
+			Size = UDim2.fromScale(sizeScale, sizeScale),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		}
+	)
 end
 
 return SpinTile

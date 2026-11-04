@@ -471,7 +471,7 @@ function SpinScreen.build(
 		if result == nil then
 			return
 		end
-		local tile = SpinTile.build(result.item, result.typeId, WON_TILE)
+		local tile = SpinTile.build(result.item, WON_TILE)
 		tile.ZIndex = 32
 		tile.Parent = prizeHolder
 		local rarityName = Strings.get(MockStore.RARITIES[result.item.rarity].nameKey)

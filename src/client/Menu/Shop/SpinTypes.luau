@@ -157,18 +157,30 @@ local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiOb
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 		}),
-		Rustic.button({
-			Name = "Choose",
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -10),
-			Size = UDim2.new(0.86, 0, 0, 46),
-			ZIndex = 4,
-			kind = "ember",
-			text = Strings.get("shop.choose"),
-			Activated = function()
-				ShopState.openSpin(spinType.id)
-			end,
-		}),
+		if #spinType.items > 0
+			then Rustic.button({
+				Name = "Choose",
+				AnchorPoint = Vector2.new(0.5, 1),
+				Position = UDim2.new(0.5, 0, 1, -10),
+				Size = UDim2.new(0.86, 0, 0, 46),
+				ZIndex = 4,
+				kind = "ember",
+				text = Strings.get("shop.choose"),
+				Activated = function()
+					ShopState.openSpin(spinType.id)
+				end,
+			}) :: Instance
+			else
+					-- Sem skins ainda (acessório): "Em breve", sem botão Escolher.
+				Rustic.button({
+						Name = "Soon",
+						AnchorPoint = Vector2.new(0.5, 1),
+						Position = UDim2.new(0.5, 0, 1, -10),
+						Size = UDim2.new(0.86, 0, 0, 46),
+						ZIndex = 4,
+						kind = "disabled",
+						text = Strings.get("cosmetics.soon"),
+					}) :: Instance,
 	})
 end
 
