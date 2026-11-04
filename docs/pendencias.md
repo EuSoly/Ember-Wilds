@@ -30,11 +30,7 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 - **Prévia do boneco sem `vide.cleanup`:** se a raiz do Vide fosse desmontada com Cosméticos aberto, o boneco ficaria. Na prática a raiz nunca desmonta.
 - **Nome sobrando no modelo da prévia:** o modelo carrega o `BillboardGui` de nome, que não é usado.
-- **Código repetido nos 5 painéis:** botão, rolagem e painel são reescritos em cada um (ex. o `actionButton` da `ShopPanel` e o Comprar da `BuyPanel`); e o `actionButton` devolve `any`.
-- **`MockStore.roll` recebe `{ Odd }`:** o luau-lsp não aceitou uma versão genérica.
 - **Celular pequeno em paisagem:** o menu novo (UI 1) cabe de 568x320 a 1920x1080 (teste do `MenuLayout`) e foi visto no Studio com o tamanho da interface em 2 (tela lógica 577x367), mas ainda não num aparelho de verdade.
-- **`Spin.kind` do `MockStore` é `string`:** podia ser a união `"skin" | "custom"`.
-- **`MockStore.roll` com lista vazia devolve 0:** índice que não existe; hoje nenhum giro tem a lista vazia.
 - **`elseif preview ~= nil` redundante na `CosmeticsPanel` (~linha 100):** o `if` logo acima já trata o mesmo caso.
 
 ## Caixas e combate (G6, 02/11)

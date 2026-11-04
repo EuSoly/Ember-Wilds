@@ -208,33 +208,61 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 
 | Parte | O que é |
 |---|---|
-| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre "Comprar Golden Ember", apoiados num galho |
+| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
 | Árvore | Imagem atrás da coluna, num ScreenGui próprio (`MenuBackdrop`) em tela cheia: vai do topo (por trás dos botões do Roblox) até embaixo, com a largura proporcional à altura. Tronco, copa (onde fica o nível) e cogumelos; os botões ficam como placas pregadas no tronco |
 | Coluna à esquerda | Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações (esta abre a janela de configurações de sempre). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
 | Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
-| Painéis do mockup | Perfil, Loja… abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+| Painéis do mockup | Perfil, Cosméticos, Tutorial e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+| Loja | Abre em **tela cheia** (some coluna, nível, logo, boneco e árvore; só o card da Golden Ember fica). Veja "Loja (UI 2)" |
 
 | Arquivo | O que é |
 |---|---|
 | `src/client/Menu/MenuShell.luau` | Monta tudo; só liga no estado `menu` e desliga com Configurações aberta. Recalcula as posições quando a tela ou o tamanho da interface muda |
-| `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"`, `"buy"`, `"tutorial"` ou `"ranking"`; e o aviso de compra simulada |
+| `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"`, `"tutorial"` ou `"ranking"`; o pedido de seção da loja (`openShop(seção)`, `shopSection`) e o aviso de compra simulada |
 | `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). O livro é um clone de `ReplicatedStorage.Assets.Tools.book`; a pose (livro e mãos) são constantes no topo do arquivo |
 | `src/client/Menu/KitsPanel.luau`, `KitShop.luau` | Painel e estado dos kits (veja "Os três jeitos de levar um kit") |
-| `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura; `ember` (JOGAR, "+", botão selecionado) usa a imagem do botão laranja chanfrado (`UiImages.BUTTON_EMBER`). Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
+| `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `green`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura; `ember` (JOGAR, "+", botão selecionado) usa a imagem do botão laranja chanfrado (`UiImages.BUTTON_EMBER`); `green` (preços em Robux da loja) usa o mesmo botão em verde (`ShopImages.BUTTON_GREEN`). Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
 | `src/shared/UIFlow/MenuLayout.luau` | Todas as medidas em pixels lógicos: coluna (200 no PC, 144 no compacto), botões, boneco, Kits/JOGAR e painel de kits. **Compacto** = largura < 900 ou altura < 500. Teste: `tests/menulayout.spec.luau` (de 568×320 a 1920×1080) |
 
 O `MenuShell` tem uma tabela `CONTENT` (painel do mockup → função que monta o conteúdo). É nela que cada painel é ligado.
 
-### Mockups da loja (G7a)
+### Loja (UI 2)
 
-Os painéis Perfil, Cosméticos, Loja, Comprar Golden Ember, Tutorial e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
+Loja em tela cheia, toda **simulada** (visual e fluxo completos; comprar só mostra o aviso e nunca cobra nem salva). Design: `docs/superpowers/specs/2026-11-04-loja-design.md`. Quatro seções, com abas no topo que rolam até cada uma (a aba da seção visível fica destacada):
+
+1. **Pacotes em destaque**: um pacote por vez, com setas, bolinhas, contador e lista do que vem; troca sozinho a cada 6 s.
+2. **Gamepasses**: os 4 kits para sempre (o mesmo estado do painel de kits: comprar aqui libera o "Usar" lá) e o VIP.
+3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
+4. **Golden Ember**: os 5 pacotes de moeda (3 em cima, 2 largos embaixo).
+
+Raridades = os 6 tiers, com as cores deles (Comum = madeira … Lendário = reidite).
+
+| Arquivo (`src/client/Menu/Shop/`) | O que é |
+|---|---|
+| `ShopScreen.luau` | Topo (voltar, LOJA, abas) e a lista que rola com as seções |
+| `Featured.luau`, `Passes.luau`, `SpinTypes.luau`, `EmberPacks.luau` | As quatro seções |
+| `SpinScreen.luau`, `Reel.luau`, `SpinTile.luau` | Tela do giro, carrossel e o quadradinho de cada skin (placeholder por tipo até os ícones reais) |
+| `SpinFx.luau` | Efeitos do giro pago e a comemoração do prêmio |
+| `ShopState.luau` | Giros comprados (por tipo e normal/pago), tela do giro aberta, girando |
+| `ShopParts.luau` | Peças repetidas: título de seção, cartão (fundo de arte `ShopImages.CARD` ou degradê), botão de preço, fita, selo, grade |
+
+| Regras e dados | O que é |
+|---|---|
+| `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente e confete. Teste: `tests/spinrules.spec.luau` |
+| `src/shared/UIFlow/ShopLayout.luau` | Medidas da loja e colunas das grades (menos no celular). Teste: `tests/shoplayout.spec.luau` |
+| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 60/25/10/4/0,9/0,1; pago 30/25/20/15/7/3), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (itens de mentirinha), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
+| `src/shared/ShopImages.luau` | Ids das artes da loja (fontes em `assets/ui/shop/`): roleta em 3 camadas, fundos de cartão, ícone do Robux, botão verde, fita, pilhas de moedas e ícones. Id vazio = desenho feito por código |
+
+Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`, `KitShop.buyForever` ou pelo `onClick` dos cartões (`Featured`, `Passes`, `EmberPacks`); é aí que entra o `MarketplaceService`.
+
+### Mockups do menu (G7a)
+
+Os painéis Perfil, Cosméticos, Tutorial e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
 
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
 | `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco. A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
-| `ShopPanel.luau` | Loja: giros (skin e personalizado) e kit. O detalhe do giro mostra a **tabela de chances antes de girar** (as regras do Roblox exigem isso para item aleatório pago) |
-| `BuyPanel.luau` | Pacotes de Golden Ember (5) |
 | `RankingPanel.luau`, `ProfilePanel.luau`, `TutorialPanel.luau` | Ranking, perfil e tutorial |
 
 ### O que é falso e o que é de verdade
@@ -246,19 +274,16 @@ Os painéis Perfil, Cosméticos, Loja, Comprar Golden Ember, Tutorial e Ranking 
 
 Tudo em `src/shared/UIFlow/MockStore.luau`:
 
-- `PACKS`: os 5 pacotes de Golden Ember;
-- `SPINS`: os giros (skin/personalizado), preços e chances (60/25/12/3%);
-- `KIT`: livro + mochila (1 h por 300, 24 h por 600);
+- os dados da Loja (veja "Loja (UI 2)");
 - `CATEGORIES`: as abas de cosméticos (skins usa as skins de corpo de verdade; acessórios, mochila, livro e caixa são inventados);
-- `RANKING`, `PROFILE`, `TUTORIAL`;
-- `roll(odds, r)`: sorteia um resultado a partir das chances.
+- `RANKING`, `PROFILE`, `TUTORIAL`.
 
-Teste: `tests/mockstore.spec.luau`. Os textos ficam no bloco `mock.*` de `src/shared/Strings/ptBR.luau`.
+Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
 
 ### Como mexer nos valores
 
-- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. Se mexer nas chances de um giro, elas têm de continuar somando 1 (aparecem como %; o teste confere).
-- **Texto:** edite a chave `mock.*` correspondente em `ptBR.luau`.
+- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. As chances dos giros são em % e têm de somar 100, com 6 valores (um por raridade); o teste confere. Todo tipo de giro precisa de pelo menos um item de cada raridade.
+- **Texto:** edite a chave `mock.*` ou `shop.*` correspondente em `ptBR.luau`.
 - Rode `bash scripts/check.sh` depois.
 
 ### Como trocar um mockup por algo real (ou por um molde)
