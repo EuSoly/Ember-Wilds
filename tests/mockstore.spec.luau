@@ -106,19 +106,6 @@ return {
 		assert(byId.vip ~= nil and byId.vip.robux == 149, "VIP de 149")
 	end,
 
-	["categorias: skins vazia e as outras com 3 ou 4 itens"] = function()
-		local ids = {}
-		for _, cat in MockStore.CATEGORIES do
-			table.insert(ids, cat.id)
-			if cat.id == "skins" then
-				assert(#cat.items == 0, "skins usa as skins reais")
-			else
-				assert(#cat.items >= 3 and #cat.items <= 4, `{cat.id}: {#cat.items} itens`)
-			end
-		end
-		assert(table.concat(ids, ",") == "skins,accessories,bag,book,crate", table.concat(ids, ","))
-	end,
-
 	["kit robux prices"] = function()
 		local expected = {
 			kit_starter = { 15, 99 },
@@ -234,12 +221,6 @@ return {
 		for _, pass in MockStore.PASSES do
 			checkKey(pass.nameKey)
 			checkKey(pass.descKey)
-		end
-		for _, cat in MockStore.CATEGORIES do
-			checkKey(cat.nameKey)
-			for _, item in cat.items do
-				checkKey(item.nameKey)
-			end
 		end
 	end,
 }

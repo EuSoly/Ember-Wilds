@@ -1,13 +1,11 @@
 --!strict
--- Dados falsos do mockup de loja, cosméticos, ranking e perfil (G7a e UI 2).
+-- Dados falsos do mockup de loja, ranking e perfil (G7a e UI 2).
 -- Tudo que é número ou nome inventado fica aqui, num lugar só, para apagar
 -- quando a loja de verdade existir. Nada daqui compra, grava ou sorteia de
 -- verdade: o sorteio da loja (SpinRules) só escolhe o que a animação mostra.
 local MockStore = {}
 
 export type Pack = { amount: number, robux: number, tag: string? }
-export type CategoryItem = { id: string, nameKey: string }
-export type Category = { id: string, nameKey: string, items: { CategoryItem } }
 export type RankRow = { name: string, points: number }
 
 -- Pacotes de moeda (quantidade ↔ preço em Robux).
@@ -32,48 +30,6 @@ MockStore.KIT_ROBUX = {
 
 -- Kits que o mockup já começa tendo para sempre (para mostrar o botão "Usar").
 MockStore.KIT_STARTS_OWNED = { "kit_starter" } :: { string }
-
-MockStore.CATEGORIES = {
-	{ id = "skins", nameKey = "mock.cat.skins", items = {} }, -- usa as skins de corpo reais
-	{
-		id = "accessories",
-		nameKey = "mock.cat.accessories",
-		items = {
-			{ id = "hat_ember", nameKey = "mock.item.hat_ember" },
-			{ id = "hat_moss", nameKey = "mock.item.hat_moss" },
-			{ id = "scarf_frost", nameKey = "mock.item.scarf_frost" },
-			{ id = "goggles_dune", nameKey = "mock.item.goggles_dune" },
-		},
-	},
-	{
-		id = "bag",
-		nameKey = "mock.cat.bag",
-		items = {
-			{ id = "bag_leather", nameKey = "mock.item.bag_leather" },
-			{ id = "bag_patchwork", nameKey = "mock.item.bag_patchwork" },
-			{ id = "bag_ranger", nameKey = "mock.item.bag_ranger" },
-		},
-	},
-	{
-		id = "book",
-		nameKey = "mock.cat.book",
-		items = {
-			{ id = "book_cinder", nameKey = "mock.item.book_cinder" },
-			{ id = "book_wild", nameKey = "mock.item.book_wild" },
-			{ id = "book_night", nameKey = "mock.item.book_night" },
-		},
-	},
-	{
-		id = "crate",
-		nameKey = "mock.cat.crate",
-		items = {
-			{ id = "crate_oak", nameKey = "mock.item.crate_oak" },
-			{ id = "crate_iron", nameKey = "mock.item.crate_iron" },
-			{ id = "crate_ember", nameKey = "mock.item.crate_ember" },
-			{ id = "crate_bone", nameKey = "mock.item.crate_bone" },
-		},
-	},
-} :: { Category }
 
 -- Ranking falso, do maior para o menor.
 MockStore.RANKING = {

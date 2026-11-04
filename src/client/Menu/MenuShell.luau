@@ -4,7 +4,8 @@
 --   coluna à esquerda: Perfil, Cosméticos, Loja, Ranking e Configurações;
 --   centro: o boneco do jogador segurando o livro (MenuBoneco), com os botões
 --   Kits e JOGAR embaixo; o painel de kits abre à direita (KitsPanel);
---   os painéis do mockup (Perfil, Loja…) abrem à direita da coluna.
+--   Perfil e Cosméticos abrem como janelas no centro; o Ranking (mockup)
+--   abre à direita da coluna.
 -- Só aparece no estado "menu" (a janela de Configurações abre por cima). As posições vêm do
 -- MenuLayout (pixels lógicos, testados do celular ao PC) e são recalculadas
 -- quando o tamanho da tela ou o tamanho da interface muda.
@@ -45,9 +46,9 @@ local SpinFx = require(ShopFolder:WaitForChild("SpinFx"))
 local SpinSounds = require(ShopFolder:WaitForChild("SpinSounds"))
 local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
-local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
+local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -56,7 +57,7 @@ local R = Theme.rustic
 -- não é painel: abre a janela de Configurações de sempre.
 local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" }
 -- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "cosmetics", "ranking" } :: { MenuState.Panel }
+local PANELS = { "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
@@ -437,7 +438,6 @@ end
 -- Conteúdo de cada painel do mockup, abaixo do título. Os builders rodam uma
 -- vez, dentro do root Vide.
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
-	cosmetics = CosmeticsPanel.build,
 	ranking = RankingPanel.build,
 }
 
@@ -601,8 +601,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	for i = 1, #PANELS do
 		table.insert(children, panelFrame(PANELS[i], layout))
 	end
-	-- Perfil: janela no centro, por cima do menu (sem escurecer).
+	-- Perfil e Cosméticos: janelas no centro, por cima do menu (sem escurecer).
 	table.insert(children, ProfilePanel.build())
+	table.insert(
+		children,
+		CosmeticsScreen.build(function()
+			return screenSize()
+		end)
+	)
 	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
 
