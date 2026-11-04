@@ -10,6 +10,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 
@@ -78,7 +79,31 @@ end
 
 -- Cartão de cor viva: degradê da cor `theme`, brilho no alto e contorno
 -- escuro. `props` vai para o Frame (tamanho, filhos…).
+-- Com `art` (cor de ShopImages.CARD: "red", "purple"…), usa o fundo desenhado
+-- com raios de luz em 9 partes; sem a arte, o degradê da cor `theme`.
+local CARD_SLICE_SCALE = 0.6
+
 function ShopParts.vividCard(theme: Color3, props: { [any]: any }): Frame
+	local art: string? = props.art
+	props.art = nil
+	local image = if art then ShopImages.CARD[art] else nil
+	if ShopImages.has(image) then
+		local card = create("Frame")({
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			create("ImageLabel")({
+				Name = "Background",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				Image = image :: string,
+				ScaleType = Enum.ScaleType.Slice,
+				SliceCenter = ShopImages.CARD_SLICE,
+				SliceScale = CARD_SLICE_SCALE,
+				ZIndex = 0,
+			}),
+		}) :: Frame
+		return vide.apply(card)(props) :: Frame
+	end
 	local card = create("Frame")({
 		BackgroundColor3 = Color3.new(1, 1, 1),
 		BorderSizePixel = 0,
@@ -139,12 +164,16 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		AnchorPoint = p.anchor,
 		kind = function()
 			if isRobux then
-				return "success"
+				return "green"
 			end
 			return if missing() > 0 then "disabled" else "ember"
 		end,
 		text = function()
 			if isRobux then
+				-- Com o ícone do Robux desenhado, o texto deixa espaço para ele.
+				if ShopImages.has(ShopImages.ROBUX) then
+					return `      {p.robux}`
+				end
 				return Strings.format("kit.robux", { price = p.robux :: number })
 			end
 			if missing() > 0 then
@@ -159,6 +188,21 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 			end
 		end,
 	})
+	if isRobux and ShopImages.has(ShopImages.ROBUX) then
+		create("ImageLabel")({
+			Name = "RobuxIcon",
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.fromScale(0.42, 0.46),
+			Size = UDim2.fromScale(0.42, 0.5),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+			BackgroundTransparency = 1,
+			Image = ShopImages.ROBUX,
+			ImageColor3 = R.charcoal,
+			ScaleType = Enum.ScaleType.Fit,
+			ZIndex = 3,
+			Parent = button,
+		})
+	end
 	if not isRobux and UiImages.has(UiImages.COIN) then
 		create("ImageLabel")({
 			Name = "Coin",
@@ -181,6 +225,34 @@ end
 
 -- Fita no canto de cima à direita ("POPULAR", "+ CHANCE"…).
 function ShopParts.ribbon(text: string, color: Color3?, textColor: Color3?): Frame
+	-- A arte da fita é vermelha: as fitas vermelhas usam a imagem.
+	if color == nil and ShopImages.has(ShopImages.RIBBON) then
+		return create("ImageLabel")({
+			Name = "Ribbon",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, 6, 0, 6),
+			Size = UDim2.fromOffset(0, 34),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			Image = ShopImages.RIBBON,
+			ScaleType = Enum.ScaleType.Slice,
+			SliceCenter = ShopImages.RIBBON_SLICE,
+			SliceScale = 0.36,
+			ZIndex = 4,
+			create("UIPadding")({ PaddingLeft = UDim.new(0, 18), PaddingRight = UDim.new(0, 18) }),
+			Rustic.label({
+				Size = UDim2.fromScale(0, 1),
+				AutomaticSize = Enum.AutomaticSize.X,
+				TextScaled = false,
+				TextSize = 14,
+				FontFace = Theme.font.number,
+				TextColor3 = textColor or R.cream,
+				Text = text,
+				ZIndex = 5,
+				create("UIStroke")({ Color = R.outline, Thickness = 1.5 }),
+			}),
+		}) :: any
+	end
 	return create("Frame")({
 		Name = "Ribbon",
 		AnchorPoint = Vector2.new(1, 0),

@@ -9,6 +9,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
@@ -38,8 +39,18 @@ local function icon(pass: MockStore.Pass): GuiObject
 		BackgroundTransparency = 1,
 		ZIndex = 3,
 	}) :: Frame
+	local art = ShopImages.PASS[pass.id]
 	local kit = if pass.kitId then Defs.Kits[pass.kitId] else nil
-	if kit then
+	if ShopImages.has(art) then
+		create("ImageLabel")({
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Image = art,
+			ScaleType = Enum.ScaleType.Fit,
+			ZIndex = 3,
+			Parent = box,
+		})
+	elseif kit then
 		local itemId = kit.items[#kit.items].id
 		ItemIcon({
 			item = function()
@@ -64,6 +75,7 @@ local function card(pass: MockStore.Pass, order: number): Frame
 		return pass.kitId ~= nil and KitShop.state().owned[pass.kitId] == true
 	end
 	return ShopParts.vividCard(GOLD, {
+		art = "orange",
 		Name = pass.id,
 		LayoutOrder = order,
 		ShopParts.badge(Strings.get("shop.provisional")),

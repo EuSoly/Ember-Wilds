@@ -11,6 +11,8 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local Strings = require(Shared:WaitForChild("Strings"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
@@ -35,6 +37,14 @@ local JUMP_INFO = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirectio
 local ACTIVE_SLACK = 40 -- a seção conta como visível um pouco antes de encostar no topo
 
 export type SectionBuilders = { [Section]: () -> GuiObject }
+
+-- Ícone de cada aba; a da Golden Ember usa a moeda.
+local function tabIcon(id: string): string?
+	if id == "ember" then
+		return UiImages.COIN
+	end
+	return ShopImages.TAB[id]
+end
 
 local ShopScreen = {}
 
@@ -177,9 +187,21 @@ function ShopScreen.build(
 				Activated = function()
 					jump(tab.id)
 				end,
+				-- Ícone da aba (presente, coroa, roleta, moeda) à esquerda do texto.
+				create("ImageLabel")({
+					Name = "Icon",
+					Visible = ShopImages.has(tabIcon(tab.id)),
+					AnchorPoint = Vector2.new(0, 0.5),
+					Position = UDim2.fromScale(0.05, 0.5),
+					Size = UDim2.fromScale(0.72, 0.72),
+					SizeConstraint = Enum.SizeConstraint.RelativeYY,
+					BackgroundTransparency = 1,
+					Image = tabIcon(tab.id) or "",
+					ScaleType = Enum.ScaleType.Fit,
+				}),
 				ShopParts.outlined({
-					Size = UDim2.fromScale(0.9, 0.6),
-					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.fromScale(0.68, 0.6),
+					Position = UDim2.fromScale(0.6, 0.5),
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					FontFace = Theme.font.number,
 					Text = Strings.get("shop.tab." .. tab.id),

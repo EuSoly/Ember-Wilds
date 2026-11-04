@@ -10,6 +10,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
@@ -21,6 +22,14 @@ local create = vide.create
 local R = Theme.rustic
 
 local CARD_HEIGHT = 250
+-- Fundo de cartão (ShopImages.CARD) de cada tipo, na mesma ordem de cores da referência.
+local CARD_ART: { [string]: string } = {
+	body = "red",
+	accessory = "purple",
+	bag = "green",
+	book = "blue",
+	crate = "orange",
+}
 local WHEEL_SPEED = 40 -- graus por segundo
 
 local SpinTypes = {}
@@ -60,10 +69,67 @@ local function wheel(): Frame
 	}) :: Frame
 end
 
-local function card(spinType: MockStore.SpinType, order: number, wheels: { Frame }): Frame
+-- Uma camada da roleta desenhada (todas no mesmo quadro, por cima uma da outra).
+local function layer(name: string, image: string, zIndex: number): ImageLabel
+	return create("ImageLabel")({
+		Name = name,
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Image = image,
+		ScaleType = Enum.ScaleType.Fit,
+		ZIndex = zIndex,
+	}) :: ImageLabel
+end
+
+-- Roleta: com a arte, disco (gira) + moldura + ponteiro; sem ela, o desenho
+-- feito por código com um pino de texto. Devolve a roleta e o que gira.
+local function roulette(): (Frame, GuiObject)
+	if ShopImages.has(ShopImages.WHEEL_DISC) then
+		local disc = layer("Disc", ShopImages.WHEEL_DISC, 3)
+		local box = create("Frame")({
+			Name = "WheelBox",
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.fromScale(0.5, 0.16),
+			Size = UDim2.fromScale(0.62, 0.62),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+			BackgroundTransparency = 1,
+			ZIndex = 3,
+			disc,
+			layer("Frame", ShopImages.WHEEL_FRAME, 4),
+			layer("Pointer", ShopImages.WHEEL_POINTER, 5),
+		}) :: Frame
+		return box, disc
+	end
 	local disc = wheel()
+	local box = create("Frame")({
+		Name = "WheelBox",
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.2),
+		Size = UDim2.fromScale(0.52, 0.52),
+		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		BackgroundTransparency = 1,
+		ZIndex = 3,
+		disc :: Instance,
+		ShopParts.outlined({
+			Name = "Pin",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.02),
+			Size = UDim2.fromScale(0.3, 0.3),
+			FontFace = Theme.font.title,
+			Text = "▼",
+			TextColor3 = R.cream,
+			maxSize = 40,
+			ZIndex = 6,
+		}),
+	}) :: Frame
+	return box, disc
+end
+
+local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiObject }): Frame
+	local wheelBox, disc = roulette()
 	table.insert(wheels, disc)
 	return ShopParts.vividCard(Color3.fromHex(spinType.theme), {
+		art = CARD_ART[spinType.id],
 		Name = spinType.id,
 		LayoutOrder = order,
 		ShopParts.outlined({
@@ -74,28 +140,7 @@ local function card(spinType: MockStore.SpinType, order: number, wheels: { Frame
 			Text = Strings.get(spinType.nameKey),
 			maxSize = 28,
 		}),
-		create("Frame")({
-			Name = "WheelBox",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.2),
-			Size = UDim2.fromScale(0.52, 0.52),
-			SizeConstraint = Enum.SizeConstraint.RelativeYY,
-			BackgroundTransparency = 1,
-			ZIndex = 3,
-			disc :: Instance,
-			-- Pino em cima da roleta.
-			ShopParts.outlined({
-				Name = "Pin",
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.02),
-				Size = UDim2.fromScale(0.3, 0.3),
-				FontFace = Theme.font.title,
-				Text = "▼",
-				TextColor3 = R.cream,
-				maxSize = 40,
-				ZIndex = 6,
-			}),
-		}),
+		wheelBox,
 		Rustic.button({
 			Name = "Choose",
 			AnchorPoint = Vector2.new(0.5, 1),
@@ -113,7 +158,7 @@ end
 
 -- Monta a seção. `open` = loja aberta (as roletas só giram nela).
 function SpinTypes.build(layout: () -> ShopLayout.Layout, open: () -> boolean): Frame
-	local wheels: { Frame } = {}
+	local wheels: { GuiObject } = {}
 	local children: { Instance } = {
 		ShopParts.grid(function()
 			return layout().spinColumns

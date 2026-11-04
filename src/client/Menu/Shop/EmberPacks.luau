@@ -11,6 +11,7 @@ local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayou
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 
@@ -26,19 +27,31 @@ local function buy()
 	MenuState.notify(Strings.get("mock.simulated"))
 end
 
--- Moeda maior nos pacotes maiores (índice 1..5).
+-- Moeda dos pacotes (índice 1..5): uma moeda, depois duas, depois a pilha,
+-- cada vez maior (como na referência).
+local function coinArt(index: number): (string, number)
+	if index >= 3 and ShopImages.has(ShopImages.COIN_STACK_3) then
+		return ShopImages.COIN_STACK_3, 1.45 -- pilha: mais larga que alta
+	elseif index == 2 and ShopImages.has(ShopImages.COIN_STACK_2) then
+		return ShopImages.COIN_STACK_2, 1.45
+	end
+	return UiImages.COIN, 1
+end
+
 local function coin(index: number, props: { [any]: any }): ImageLabel
-	local image = create("ImageLabel")({
+	local image, aspect = coinArt(index)
+	local label = create("ImageLabel")({
 		Name = "Coin",
-		Visible = UiImages.has(UiImages.COIN),
+		Visible = image ~= "",
 		BackgroundTransparency = 1,
-		Image = UiImages.COIN,
+		Image = image,
 		ScaleType = Enum.ScaleType.Fit,
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		ZIndex = 3,
 	}) :: ImageLabel
-	props.Size = UDim2.fromScale(0.3 + index * 0.05, 0.3 + index * 0.05)
-	return vide.apply(image)(props) :: ImageLabel
+	local side = 0.32 + index * 0.05
+	props.Size = UDim2.fromScale(side * aspect, side)
+	return vide.apply(label)(props) :: ImageLabel
 end
 
 local function ribbon(pack: MockStore.Pack): Instance?
@@ -51,6 +64,7 @@ end
 
 local function smallCard(pack: MockStore.Pack, index: number): Frame
 	return ShopParts.vividCard(GOLD, {
+		art = "orange",
 		Name = "Pack" .. index,
 		LayoutOrder = index,
 		ribbon(pack),
@@ -75,6 +89,7 @@ end
 
 local function wideCard(pack: MockStore.Pack, index: number): Frame
 	return ShopParts.vividCard(GOLD, {
+		art = "orange",
 		Name = "Pack" .. index,
 		LayoutOrder = index,
 		ribbon(pack),

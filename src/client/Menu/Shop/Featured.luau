@@ -23,6 +23,8 @@ local create = vide.create
 local R = Theme.rustic
 
 local AUTO_SECONDS = 6
+-- Fundo (ShopImages.CARD) de cada pacote, pela cor do tema.
+local BUNDLE_ART: { [string]: string } = { brasa = "red", geada = "blue", musgo = "green" }
 local ARROW = 44
 local RIGHT_EDGE = -(ARROW + 22) -- a coluna da direita fica longe da seta
 
@@ -76,6 +78,7 @@ local function slide(bundle: MockStore.Bundle, index: number, current: () -> num
 	end
 
 	return ShopParts.vividCard(theme, {
+		art = BUNDLE_ART[bundle.id],
 		Name = "Slide_" .. bundle.id,
 		Visible = function()
 			return current() == index

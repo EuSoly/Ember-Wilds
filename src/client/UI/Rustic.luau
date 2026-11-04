@@ -13,13 +13,14 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
 
 local create = vide.create
 local R = Theme.rustic
 
 local Rustic = {}
 
-export type Kind = "wood" | "leather" | "ember" | "success" | "disabled"
+export type Kind = "wood" | "leather" | "ember" | "green" | "success" | "disabled"
 
 -- Cores de cada material: luz (borda de cima), face e espessura (embaixo).
 local MATERIAL: { [Kind]: { light: Color3, face: Color3, shadow: Color3, text: Color3 } } = {
@@ -27,6 +28,13 @@ local MATERIAL: { [Kind]: { light: Color3, face: Color3, shadow: Color3, text: C
 	leather = { light = R.leatherLight, face = R.leather, shadow = R.leatherShadow, text = R.cream },
 	ember = { light = R.emberLight, face = R.ember, shadow = R.emberShadow, text = R.charcoal },
 	success = { light = R.success, face = R.success, shadow = R.woodShadow, text = R.charcoal },
+	-- Verde do Robux (loja): sem a imagem, cai num degradê verde.
+	green = {
+		light = Color3.fromHex("#8FE36A"),
+		face = Color3.fromHex("#4FB52B"),
+		shadow = Color3.fromHex("#2E7A16"),
+		text = R.charcoal,
+	},
 	disabled = { light = R.disabled, face = R.disabled, shadow = R.disabled, text = R.disabledText },
 }
 
@@ -54,10 +62,17 @@ local function usesEmberImage(kind: Kind): boolean
 	return UiImages.has(UiImages.BUTTON_EMBER) and kind == "ember"
 end
 
+-- O verde do Robux usa a mesma arte chanfrada, em verde.
+local function usesGreenImage(kind: Kind): boolean
+	return ShopImages.has(ShopImages.BUTTON_GREEN) and kind == "green"
+end
+
 type SliceArt = { image: string, size: Vector2, slice: Rect }
 local PLANK_ART: SliceArt = { image = UiImages.PLANK, size = UiImages.PLANK_SIZE, slice = UiImages.PLANK_SLICE }
 local EMBER_ART: SliceArt =
 	{ image = UiImages.BUTTON_EMBER, size = UiImages.BUTTON_EMBER_SIZE, slice = UiImages.BUTTON_EMBER_SLICE }
+local GREEN_ART: SliceArt =
+	{ image = ShopImages.BUTTON_GREEN, size = UiImages.BUTTON_EMBER_SIZE, slice = UiImages.BUTTON_EMBER_SLICE }
 
 -- Imagem em 9 partes cobrindo o pai: as pontas (pregos, chanfros) não esticam.
 -- O SliceScale acompanha a altura, para as pontas crescerem junto.
@@ -198,8 +213,11 @@ function Rustic.button(props: { [any]: any }): TextButton
 	local function emberArt(): boolean
 		return usesEmberImage(read(kind))
 	end
+	local function greenArt(): boolean
+		return usesGreenImage(read(kind))
+	end
 	local function anyArt(): boolean
-		return plank() or emberArt()
+		return plank() or emberArt() or greenArt()
 	end
 	local function textStroke(): UIStroke
 		return create("UIStroke")({
@@ -247,6 +265,7 @@ function Rustic.button(props: { [any]: any }): TextButton
 			return if read(kind) == "leather" then PLANK_TINT.leather else PLANK_TINT.wood
 		end),
 		sliceImage(EMBER_ART, emberArt, Color3.new(1, 1, 1)),
+		sliceImage(GREEN_ART, greenArt, Color3.new(1, 1, 1)),
 		Rustic.label({
 			Name = "Label",
 			AnchorPoint = Vector2.new(0.5, 0.5),
