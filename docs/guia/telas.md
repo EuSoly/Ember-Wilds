@@ -215,14 +215,15 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
 | Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
 | Perfil | Janela rústica no centro, **sem escurecer** o menu atrás. Veja "Perfil (UI 4)" |
-| Painéis do mockup | Cosméticos e Ranking abrem à direita da coluna, com o visual antigo (o redesenho deles é outra fase) |
+| Cosméticos | Janela rústica no centro, como o Perfil. Veja "Cosméticos (UI 5)" |
+| Painel do mockup | O Ranking abre à direita da coluna, com o visual antigo (o redesenho dele é outra fase) |
 | Loja | Abre em **tela cheia** (some coluna, nível, logo, boneco e árvore; só o card da Golden Ember fica). Veja "Loja (UI 2)" |
 
 | Arquivo | O que é |
 |---|---|
 | `src/client/Menu/MenuShell.luau` | Monta tudo; só liga no estado `menu` e desliga com Configurações aberta. Recalcula as posições quando a tela ou o tamanho da interface muda |
 | `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"` ou `"ranking"`; o pedido de seção da loja (`openShop(seção)`, `shopSection`) e o aviso de compra simulada |
-| `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). O livro é um clone de `ReplicatedStorage.Assets.Tools.book`; a pose (livro e mãos) são constantes no topo do arquivo |
+| `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). A mochila equipada vai nas costas e o livro (clone de `ReplicatedStorage.Assets.Tools.book`) na mão; a pose (livro e mãos) são constantes no topo do arquivo |
 | `src/client/Menu/KitsPanel.luau`, `KitShop.luau` | Painel e estado dos kits (veja "Os três jeitos de levar um kit") |
 | `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `green`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura; `ember` (JOGAR, "+", botão selecionado) usa a imagem do botão laranja chanfrado (`UiImages.BUTTON_EMBER`); `green` (preços em Robux da loja) usa o mesmo botão em verde (`ShopImages.BUTTON_GREEN`). Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
 | `src/shared/UIFlow/MenuLayout.luau` | Todas as medidas em pixels lógicos: coluna (200 no PC, 144 no compacto), botões, boneco, Kits/JOGAR e painel de kits. **Compacto** = largura < 900 ou altura < 500. Teste: `tests/menulayout.spec.luau` (de 568×320 a 1920×1080) |
@@ -235,7 +236,7 @@ Loja em tela cheia, toda **simulada** (visual e fluxo completos; comprar só mos
 
 1. **Pacotes em destaque**: um pacote por vez, com setas, bolinhas, contador e lista do que vem; troca sozinho a cada 6 s.
 2. **Gamepasses**: os 4 kits para sempre (o mesmo estado do painel de kits: comprar aqui libera o "Usar" lá) e o VIP.
-3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
+3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando. **As skins do carrossel são as de verdade** (`Defs/Cosmetics.luau`): skin nova entra sozinha (veja "Adicionar ou mudar uma skin"). Acessórios ainda não tem skins (slot futuro), então o cartão não tem o que girar; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
    **Sons da roleta**: um tique a cada quadradinho que passa pelo marcador (vai espaçando conforme freia); no fim, um chiado e um rufar de tambores sobem de volume **na medida da raridade que vai sair** (Comum: nada; Raro: quase nada; Épico: um pouco; Lendário: chiado forte + tambor baixo; Mítico: tudo no máximo, e os tiques ficam mais agudos); ao parar, um som de revelação por raridade (do "ding" do Comum à orquestra do Mítico). O giro pago começa com um "vupt".
 4. **Golden Ember**: os 5 pacotes de moeda (3 em cima, 2 largos embaixo).
 
@@ -245,7 +246,7 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 |---|---|
 | `ShopScreen.luau` | Topo (voltar, LOJA, abas) e a lista que rola com as seções |
 | `Featured.luau`, `Passes.luau`, `SpinTypes.luau`, `EmberPacks.luau` | As quatro seções |
-| `SpinScreen.luau`, `Reel.luau`, `SpinTile.luau` | Tela do giro, carrossel e o quadradinho de cada skin (placeholder por tipo até os ícones reais) |
+| `SpinScreen.luau`, `Reel.luau`, `SpinTile.luau` | Tela do giro, carrossel e o quadradinho de cada skin (`SpinTile`, com o item em 3D pelo `ItemViewport` dos Cosméticos) |
 | `SpinFx.luau` | Efeitos do giro pago e a comemoração do prêmio |
 | `SpinSounds.luau` | Sons da roleta (tique, suspense, revelação), no grupo `Effects` |
 | `ShopState.luau` | Giros comprados (por tipo e normal/pago), tela do giro aberta, girando |
@@ -256,7 +257,7 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 | `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente, confete, curva do suspense (`tensionRamp`) e quadradinho sob o marcador (`markerTile`). Teste: `tests/spinrules.spec.luau` |
 | `src/shared/SpinSoundConfig.luau` | **Ids e volumes dos sons da roleta** (para trocar um som, troque o número) e quanto suspense cada raridade tem (`tension`). Teste: `tests/spinsoundconfig.spec.luau` |
 | `src/shared/UIFlow/ShopLayout.luau` | Medidas da loja e colunas das grades (menos no celular). Teste: `tests/shoplayout.spec.luau` |
-| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 30/40/23/6/1; especial 5/25/40/25/5), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (itens de mentirinha), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
+| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 30/40/23/6/1; especial 5/25/40/25/5), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (os itens vêm de `CosmeticCatalog.spinItems`, as skins de verdade), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
 | `src/shared/ShopImages.luau` | Ids das artes da loja (fontes em `assets/ui/shop/`): roleta em 3 camadas, fundos de cartão, ícone do Robux, botão verde, fita, pilhas de moedas e ícones. Id vazio = desenho feito por código |
 
 Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`, `KitShop.buyForever` ou pelo `onClick` dos cartões (`Featured`, `Passes`, `EmberPacks`); é aí que entra o `MarketplaceService`.
@@ -271,18 +272,84 @@ Janela no centro do menu, no visual das Configurações (placa "PERFIL", Fechar 
 
 Números com ponto de milhar e tempo em "12h 30min" (`src/shared/UIFlow/ProfileFormat.luau`, teste `tests/profileformat.spec.luau`). No celular a lista rola e o Fechar fica à vista. Arquivo: `src/client/Menu/ProfilePanel.luau`. Para mudar a ordem, mexa em `CARDS` e `OTHERS` no topo dele.
 
+### Cosméticos (UI 5)
+
+Janela no centro do menu, no visual do Perfil (placa "COSMÉTICOS", sem fundo escuro; Fechar volta ao "play"). Tudo **de verdade**: a posse e a skin equipada vêm do servidor. Design: `docs/superpowers/specs/2026-11-04-cosmeticos-design.md`.
+
+1. **Tela principal:** no meio, a vitrine (o boneco com a skin, a mochila nas costas e o livro na mão; embaixo, a caixa equipada). Dos lados, um cartão por categoria: Corpo, Acessórios, Caixa, Mochila e Livro, com uma frase e até 3 quadradinhos das skins que o jogador tem. **Acessórios** ainda não tem skins: mostra "Em breve" e não abre.
+2. **Tela da categoria** (clicar num cartão): à esquerda a vitrine com a skin selecionada, o nome, a raridade e o Voltar; à direita a grade 3×3 das skins do slot, da Comum à Mítica, com setas para as páginas. Cada quadradinho tem a cor da raridade e o item em 3D. A **equipada** tem borda de brasa; a **selecionada** (experimentando), borda creme. Skin que o jogador **não tem** fica escurecida com cadeado.
+3. **Clicar:** se tem, equipa (o pedido vai ao servidor, que confere tudo); se não tem, só experimenta na vitrine. Dar a skin com a tela aberta tira o cadeado na hora.
+4. **Celular:** a tela principal vira uma lista que rola (vitrine em cima, cartões em duas colunas) e o Fechar fica sempre à vista.
+
+O **livro** tem uma skin só (`book_default`): é sempre o modelo `ReplicatedStorage.Assets.Tools.book`, nunca pintado nem trocado.
+
+| Arquivo | O que é |
+|---|---|
+| `src/client/Menu/Cosmetics/CosmeticsScreen.luau` | A janela e a tela principal (vitrine e cartões) |
+| `src/client/Menu/Cosmetics/CategoryView.luau` | A tela da categoria (grade, páginas, equipar, cadeado) |
+| `src/client/Menu/Cosmetics/ItemViewport.luau` | O item em 3D de qualquer skin num `ViewportFrame` (também usado pela loja) |
+| `src/client/Menu/Cosmetics/BagModel.luau`, `BookModel.luau`, `CratePreview.luau` | A mochila feita de peças, o clone do livro e a prévia da caixa |
+| `src/client/Menu/MenuBoneco.luau` | O boneco da vitrine (skin, mochila e livro equipados) |
+| `src/shared/UIFlow/CosmeticCatalog.luau` | A ordem e o lado das categorias, as skins de cada slot (da Comum à Mítica) e a regra `spinItems` do giro da loja. Teste: `tests/cosmeticcatalog.spec.luau` |
+| `src/shared/UIFlow/CosmeticsLayout.luau` | Onde fica cada peça das duas telas, PC e celular. Teste: `tests/cosmeticslayout.spec.luau` |
+| `src/shared/Defs/Cosmetics.luau`, `CosmeticSlots.luau` | As skins e os slots (corpo, caixa, mochila, livro) |
+| `src/server/Services/CosmeticService.luau` | Posse e equipada. Grava `Owns_<id>` e `Cosmetic_<slot>` no Player (veja `dados.md`) |
+
+Os textos ficam em `Strings/ptBR.luau` (`cosmetics.*`, `cosmetic.*`, `cosmeticSlot.*`).
+
+#### Adicionar ou mudar uma skin
+
+Uma skin é uma entrada em `src/shared/Defs/Cosmetics.luau` e um texto. O resto (tela, loja, boneco) lê dali: não precisa mexer em mais nada.
+
+1. **Copie uma skin parecida** do mesmo slot e troque os campos:
+
+```lua
+body_geada = {
+	id = "body_geada",
+	nameKey = "cosmetic.body_geada",
+	slot = "body",
+	rarity = 3,
+	body = { bodyColor = "#EAF4FB", outlineColor = "#5B6C8F" },
+},
+```
+
+| Campo | O que é |
+|---|---|
+| `id` | Nome único (a chave da tabela é igual). Só `a-z`, `0-9` e `_`, até 50 caracteres. Convenção: `<slot>_<nome>` |
+| `nameKey` | Sempre `"cosmetic.<id>"` |
+| `slot` | `"body"` (corpo), `"bag"` (mochila), `"crate"` (caixa) ou `"book"` (livro) |
+| `rarity` | `1` Comum, `2` Raro, `3` Épico, `4` Lendário, `5` Mítico. Define a cor da moldura e a ordem (da Comum à Mítica) |
+| `inSpins` | Opcional: entra no giro da loja? Sem o campo, entra; `false` tira (skin só de evento ou de presente). A **skin padrão** do slot fica fora do giro, a não ser que tenha `inSpins = true` |
+| cores | `body = { bodyColor, outlineColor, handColor?, eyeColor? }` · `bag = { color, strapColor }` · `crate = { bodyColor, bandColor }`. Todas `"#RRGGBB"`. O livro não tem cores |
+
+2. **O nome em português** em `src/shared/Strings/ptBR.luau`: `["cosmetic.body_geada"] = "Geada",`.
+3. **Rode `bash scripts/check.sh`.** Ele avisa se faltar o texto, se o id for inválido ou grande demais, se o slot não existir, se a `rarity` não for inteira de 1 a 5 ou se uma cor não for `#RRGGBB` (ou faltar o bloco de cores do slot).
+4. **Teste no Studio** (Play, barra de comandos do **servidor**):
+
+```lua
+local SS = game.ServerStorage
+print(SS.DevGrantCosmetic:Invoke(game.Players:GetPlayers()[1], "body_geada")) -- true: dá a posse
+```
+
+Abra Cosméticos: a skin aparece na grade, na posição da raridade, e o cadeado some. Clique nela para equipar e olhe o boneco (e a vitrine). Sem o comando, ela fica com cadeado (experimentar na vitrine funciona).
+
+**A loja pega sozinha.** O carrossel de cada tipo de giro lista as skins do slot com `CosmeticCatalog.spinItems` (menos a padrão e as com `inSpins = false`). O sorteio é por raridade (`SpinRules`): se o tipo não tiver skin de uma raridade, o sorteio desce para a de baixo. Hoje a loja só **simula** o giro (não dá a skin de verdade).
+
+**Mudar uma skin que já existe:** mexa só nas cores ou na `rarity`; o `id` não muda (ele está salvo nos perfis dos jogadores). Para **tirar** uma skin, apague a entrada: quem a tinha equipada volta à padrão do slot. Para tirar só do giro, use `inSpins = false`.
+
+**Skin de caixa com modelo próprio:** o visual vem de `ReplicatedStorage.Assets.Crates.<id>` quando existe; sem ele aparece a caixa provisória. Veja `boneco.md`.
+
 ### Mockups do menu (G7a)
 
-Os painéis Cosméticos e Ranking são **mockups**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez.
+O painel Ranking é um **mockup**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez. (Os Cosméticos já são de verdade: veja "Cosméticos (UI 5)".)
 
 | Arquivo (`src/client/Menu/`) | O que é |
 |---|---|
-| `CosmeticsPanel.luau` | Cosméticos: abas, grade de itens e a prévia do boneco. A aba Skins pinta a prévia com as skins de corpo de verdade, mas nada é salvo |
 | `RankingPanel.luau` | Ranking |
 
 ### O que é falso e o que é de verdade
 
-- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo) e a lista de skins de corpo (vem dos `Defs`).
+- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo).
 - **Falso:** todo o resto. Nenhum evento de rede, nenhuma escrita em atributo e nenhuma chamada a `MarketplaceService` em lugar nenhum dos mockups. Comprar só mostra o aviso "compra simulada" e **nunca** muda o saldo.
 
 ### Onde ficam os números e nomes falsos
@@ -290,7 +357,6 @@ Os painéis Cosméticos e Ranking são **mockups**: só para ver e testar o visu
 Tudo em `src/shared/UIFlow/MockStore.luau`:
 
 - os dados da Loja (veja "Loja (UI 2)");
-- `CATEGORIES`: as abas de cosméticos (skins usa as skins de corpo de verdade; acessórios, mochila, livro e caixa são inventados);
 - `RANKING`.
 
 Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.

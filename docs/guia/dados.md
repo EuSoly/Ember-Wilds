@@ -4,7 +4,7 @@ Tudo o que sobrevive à morte fica salvo por jogador num **perfil**: a moeda Gol
 
 O perfil usa o [ProfileStore](https://madstudioroblox.github.io/ProfileStore/) (pacote `lm-loleris/profilestore`, instalado pelo Wally em `ServerPackages/`). Ele cuida do **session lock** (dois servidores nunca mexem no mesmo perfil), do autosave e do save ao sair.
 
-O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Stat_<id>`) e só pode **pedir** mudança de configuração, que o servidor valida.
+O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Stat_<id>`, `Owns_<id>`, `Cosmetic_<slot>`) e só pode **pedir** mudança de configuração ou de skin equipada, que o servidor valida.
 
 ## O perfil (schema v1)
 
@@ -45,7 +45,7 @@ O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat
 | `src/server/Services/DeathService.luau` | Morte (fim de vida + perde tudo + tela de morte) |
 | `src/server/Services/SpawnService.luau` | Nascer a pedido, com kit inicial |
 | `src/server/Services/SettingsService.luau` | Configurações (atributos + evento `SetSetting`) |
-| `src/server/Services/CosmeticService.luau` | Posse e skin equipada |
+| `src/server/Services/CosmeticService.luau` | Posse (`Owns_<id>`), skin equipada (`Cosmetic_<slot>`) e o pedido `EquipCosmetic` |
 | `src/server/Services/DevDataService.luau` | Comandos de teste (só no Studio) |
 
 ## Adicionar uma estatística
@@ -168,6 +168,15 @@ Como funciona: ao abrir o perfil, os passos que faltam rodam em ordem **antes** 
 - **Quem já jogou:** na primeira vez que o perfil carrega nesta versão, `xp_total` recebe `score_total` (fica com o maior) e `data.Xp.Seeded` vira `true`. Não subiu a versão do esquema, para servidores antigos abertos durante a atualização não recusarem perfis.
 - Para ajustar: `DataConfig.XP_STEP` e `DataConfig.MAX_XP_PER_HOUR`.
 - **Passe de batalha (futuro):** escutar `StatsService.onChanged` de `xp_total` (ou o XP do resumo da vida) e somar numa trilha da temporada.
+
+## Cosméticos no cliente
+
+Skins ficam no perfil (`Cosmetics.Owned` e `Cosmetics.Equipped`, veja o schema). O `CosmeticService` publica no **Player**:
+
+- `Owns_<id>` = `true` para cada skin possuída, ao carregar o perfil e a cada skin dada (`grantOwnership`). A skin **padrão** de cada slot conta como possuída sem o atributo. A tela de Cosméticos lê isto para tirar o cadeado.
+- `Cosmetic_<slot>` = id da skin equipada (`Cosmetic_body`, `Cosmetic_bag`, `Cosmetic_book`, `Cosmetic_crate`), também no personagem. Os slots estão em `Defs/CosmeticSlots.luau`: `body`, `crate`, `bag` (mochila) e `book` (livro, uma skin só).
+
+O cliente **pede** para equipar pelo evento `EquipCosmetic` (`{ Id }`, em `net/game.blink`). O servidor ignora em silêncio id inexistente, skin não possuída ou pedido a menos de 0,2 s do anterior; se vale, equipa e salva. Como dar uma skin para testar: `DevGrantCosmetic` (abaixo). Como criar skins: `telas.md`, "Adicionar ou mudar uma skin".
 
 ## Estatísticas no cliente
 

@@ -22,7 +22,7 @@ Por que dois: é o jeito oficial de fazer visual com Server Authority. O visual 
 | `Using` | `true` enquanto segura o botão de bater | `UseSim` (simulação) |
 | `Equipped` | id do item na mão, ou nada | `EquipService` |
 | `HurtAt` | instante (`GetServerTimeNow`) do último dano | `CharacterService.hurt` |
-| `Cosmetic_body` | id da skin do corpo (também gravado no **Player**, para o boneco do menu, que não tem personagem) | `CosmeticService` |
+| `Cosmetic_<slot>` (`Cosmetic_body`, `Cosmetic_bag`, `Cosmetic_book`, `Cosmetic_crate`) | id da skin equipada no slot (também gravado no **Player**, para o boneco do menu, que não tem personagem) | `CosmeticService` |
 
 Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService) marca os personagens que ganham um boneco visual (`CharacterService.prepare`).
 
@@ -143,6 +143,8 @@ Cuidado: rodar um script de importação de novo **substitui** o modelo e perde 
 
 ## Adicionar uma skin de corpo
 
+O passo a passo completo (todos os slots, raridade, giro da loja e como testar) está em `telas.md`, seção "Adicionar ou mudar uma skin". Resumo para o corpo:
+
 1. Uma entrada em `src/shared/Defs/Cosmetics.luau`:
 
 ```lua
@@ -150,6 +152,7 @@ body_frost = {
 	id = "body_frost",
 	nameKey = "cosmetic.body_frost",
 	slot = "body",
+	rarity = 3, -- 1 Comum ... 5 Mítico
 	body = {
 		bodyColor = "#EAF4FB",
 		outlineColor = "#5B6C8F",
@@ -167,17 +170,23 @@ Se uma skin for removida num update e alguém ainda estiver com ela, o boneco us
 
 ### Skin de caixa (slot `crate`)
 
-Além do corpo, existe o slot `crate`: a skin da **caixa de itens** que o jogador deixa ao morrer. O padrão é `crate_default` (`Defs/CosmeticSlots.luau`), sem campos extras:
+Além do corpo, existe o slot `crate`: a skin da **caixa de itens** que o jogador deixa ao morrer. O padrão é `crate_default` (`Defs/CosmeticSlots.luau`). Cada skin de caixa leva as cores em `crate = { bodyColor, bandColor }`:
 
 ```lua
-crate_default = { id = "crate_default", nameKey = "cosmetic.crate_default", slot = "crate" },
+crate_default = {
+	id = "crate_default",
+	nameKey = "cosmetic.crate_default",
+	slot = "crate",
+	rarity = 1,
+	crate = { bodyColor = "#8B5A2B", bandColor = "#F2B632" },
+},
 ```
 
 Se o jogador morre **por outro jogador**, a caixa sai com a skin de caixa **de quem matou**; senão, com a dele mesmo. O visual vem de `ReplicatedStorage.Assets.Crates.<id da skin>` (um Model com o pivô no chão, no centro); sem ele aparece a caixa provisória dourada. Skin nova de caixa = uma entrada em `Defs/Cosmetics.luau` com `slot = "crate"`, o texto `cosmetic.<id>` e, quando houver, o modelo em `Assets.Crates`. Veja `combate.md`.
 
 ### Skin salva no perfil
 
-A skin equipada e as skins que o jogador possui ficam no **perfil salvo** (`Cosmetics.Equipped` e `Cosmetics.Owned`, veja `dados.md`). Quando o perfil carrega, o `CosmeticService` aplica a skin salva, mas só se ela ainda existe, é do slot certo e o jogador a possui. Senão usa a padrão. A skin padrão de cada slot conta como possuída sempre. Equipar uma skin que o jogador não possui falha (`equip` devolve `false`). Até a loja (F5), a posse vem do comando `DevGrantCosmetic`.
+A skin equipada e as skins que o jogador possui ficam no **perfil salvo** (`Cosmetics.Equipped` e `Cosmetics.Owned`, veja `dados.md`). Quando o perfil carrega, o `CosmeticService` aplica a skin salva, mas só se ela ainda existe, é do slot certo e o jogador a possui. Senão usa a padrão. A skin padrão de cada slot conta como possuída sempre. Equipar uma skin que o jogador não possui falha (`equip` devolve `false`). Até a loja (F5), a posse vem do comando `DevGrantCosmetic`. Além de corpo e caixa existem os slots `bag` (mochila) e `book` (livro, uma skin só); veja `telas.md`, "Cosméticos (UI 5)".
 
 ## Adicionar uma expressão
 
