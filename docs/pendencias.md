@@ -2,6 +2,15 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Cosméticos (UI 5, 04/11)
+
+- **Aparência em 3D a conferir quando os modelos das skins chegarem:** tamanho e posição da mochila nas costas (`BagModel`), enquadramento dos itens nos quadradinhos (`ItemViewport`), nomes pequenos nas amostras dos cartões da loja no celular.
+- **Uma travadinha (~40 ms) no começo do giro:** os ~40 quadradinhos 3D novos nascem no mesmo quadro (`Reel`). Dá para espalhar a criação em alguns quadros.
+- **Pacotes em destaque da loja** ainda usam a arte provisória (não são itens de giro).
+- **Validação:** `inSpins` não tem o tipo conferido; faltam testes de caixa sem `crate` e de cor inválida em mochila/caixa; os três laços de cores do `Validate` são quase iguais.
+- **Equipar:** reequipar a mesma skin salva de novo (os saves já são juntados); clique dentro de 0,2 s é ignorado (clique de novo); `selected` da grade não acompanha troca feita por fora da tela.
+- **Miudezas:** cache do `ItemViewport` vive a sessão toda (comentar); `CratePreview` não usa o cache; o cabeçalho do `BagModel` fala de solda no mundo (a mochila só aparece no menu); prévia da caixa da tela principal fica viva com a janela fechada; `pageCount` com `perPage <= 0`; celular em pé (o jogo é deitado) deixa os quadradinhos pequenos; id de skin com mais de 48 letras num pacote forjado gera uma linha de erro no Output (igual a todos os eventos do Blink).
+
 ## Perfil e nível (UI 4, 04/11)
 
 - **XP inicial avisa como ganho:** o `StatsService` chama `notifyChanged` de `xp_total` ao copiar o total de pontos. Quando o passe de batalha escutar `xp_total`, ignorar essa primeira cópia (ou trocar por só publicar o atributo).
