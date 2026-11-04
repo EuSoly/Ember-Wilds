@@ -150,6 +150,27 @@ function spec.insideAny_dentro_fora_borda_e_vazio()
 	assert(not BuildRules.insideAny(0, 0, {}), "lista vazia: nunca dentro")
 end
 
+function spec.insideAny_com_margem()
+	local circles = { { x = 0, z = 0, r = 2 } }
+	assert(BuildRules.insideAny(3, 0, circles, 1), "na borda expandida conta")
+	assert(not BuildRules.insideAny(3.01, 0, circles, 1), "além da margem: fora")
+	assert(not BuildRules.insideAny(3, 0, circles), "sem margem: fora")
+end
+
+-- Ruling 11: uma fila de pontes postas a PLACE_DISTANCE dá caminho seco.
+function spec.onBridge_emenda_entre_duas_pontes_e_seca()
+	local r = 2.1 -- raio da ponte nos dados
+	local d = BuildRules.PLACE_DISTANCE
+	local bridges = { { x = 0, z = 0, r = r }, { x = d, z = 0, r = r } }
+	assert(d == 5.5, "pontes a 5,5 uma da outra")
+	assert(not BuildRules.insideAny(d / 2, 0, bridges), "sem margem o meio seria água (o bug)")
+	assert(BuildRules.onBridge(d / 2, 0, bridges), "o meio entre as duas é seco")
+	assert(BuildRules.onBridge(0, 0, bridges), "centro da ponte")
+	assert(BuildRules.onBridge(0, r + BuildRules.PLAYER_RADIUS, bridges), "na borda do corpo ainda conta")
+	assert(not BuildRules.onBridge(0, r + BuildRules.PLAYER_RADIUS + 0.01, bridges), "além do corpo: água")
+	assert(not BuildRules.onBridge(0, 0, {}), "sem ponte: nunca")
+end
+
 function spec.layerOf_ponte_telhado_e_o_resto()
 	assert(BuildRules.layerOf("bridge") == "bridge", "ponte")
 	assert(BuildRules.layerOf("roof") == "roof", "telhado")

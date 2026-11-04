@@ -17,6 +17,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local BuildRules = require("../Build/BuildRules")
 local TaggedCircles = require("../Build/TaggedCircles")
 local Defs = require("../Defs")
 local HeldItem = require("../HeldItem")
@@ -78,17 +79,18 @@ local function isWater(x: number, z: number): boolean
 	return false
 end
 
--- Água e não em cima de uma ponte. Só olha as pontes quando há água no ponto.
+-- Água e não em cima de uma ponte (com a margem do corpo: BuildRules.onBridge).
+-- Só olha as pontes quando há água no ponto.
 local function isWet(x: number, z: number): boolean
 	if not isWater(x, z) then
 		return false
 	end
 	local watcher = bridges
-	return watcher == nil or not TaggedCircles.contains(watcher, x, z)
+	return watcher == nil or not BuildRules.onBridge(x, z, (TaggedCircles.list(watcher)))
 end
 
 -- true se o ponto (x, z) está dentro de alguma peça de água (visto de cima) e
--- não em cima de uma ponte. Serve fora do passo da simulação; liga o
+-- não em cima de uma ponte (a raiz a até PLAYER_RADIUS da borda dela conta). Serve fora do passo da simulação; liga o
 -- acompanhamento das peças se ninguém ligou ainda.
 function WaterSim.isWet(x: number, z: number): boolean
 	startWatching()

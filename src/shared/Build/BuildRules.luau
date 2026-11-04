@@ -74,10 +74,12 @@ function BuildRules.touchesCircle(px: number, pz: number, cx: number, cz: number
 	return dx * dx + dz * dz <= reach * reach
 end
 
--- O ponto está dentro (ou na borda) de algum dos círculos? Lista vazia = não.
-function BuildRules.insideAny(x: number, z: number, circles: { Circle }): boolean
+-- O ponto está dentro (ou na borda) de algum dos círculos, cada um expandido
+-- por `margin` (padrão 0)? Lista vazia = não.
+function BuildRules.insideAny(x: number, z: number, circles: { Circle }, margin: number?): boolean
+	local reach = margin or 0
 	for _, circle in circles do
-		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, 0) then
+		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, reach) then
 			return true
 		end
 	end
@@ -103,6 +105,14 @@ end
 -- camada: ponte com ponte, telhado com telhado, sólida com sólida.
 function BuildRules.blocksPlacement(kind: string, otherKind: string): boolean
 	return BuildRules.layerOf(kind) == BuildRules.layerOf(otherKind)
+end
+
+-- O jogador com a raiz em (x, z) está sobre uma das pontes? Conta com a margem
+-- do corpo (PLAYER_RADIUS): as pontes não se sobrepõem e o colocar padrão as
+-- deixa a PLACE_DISTANCE uma da outra, e sem a margem cada emenda seria água
+-- (Ruling 11).
+function BuildRules.onBridge(x: number, z: number, bridges: { Circle }): boolean
+	return BuildRules.insideAny(x, z, bridges, BuildRules.PLAYER_RADIUS)
 end
 
 -- A água bruta no ponto (`water`, sem contar ponte) deixa colocar a peça? A

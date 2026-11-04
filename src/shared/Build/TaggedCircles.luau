@@ -29,15 +29,19 @@ export type Watcher = {
 
 local TaggedCircles = {}
 
--- Círculo do modelo, ou nil se ainda não dá para ler (sem raio ou sem a peça
--- principal, que pode chegar depois no cliente).
-local function circleOf(watcher: Watcher, model: Model): Circle?
+-- Círculo do modelo, ou nil. O segundo valor diz se vale tentar de novo: sem
+-- a peça principal (pode chegar depois no cliente) sim; sem um raio válido
+-- não (o modelo fica de fora e a lista não refaz a cada consulta).
+local function circleOf(watcher: Watcher, model: Model): (Circle?, boolean)
 	local radius = model:GetAttribute(watcher.radiusAttribute)
-	if typeof(radius) ~= "number" or model.PrimaryPart == nil then
-		return nil
+	if typeof(radius) ~= "number" or not (radius > 0) then
+		return nil, false
+	end
+	if model.PrimaryPart == nil then
+		return nil, true
 	end
 	local position = model:GetPivot().Position
-	return { x = position.X, z = position.Z, r = radius }
+	return { x = position.X, z = position.Z, r = radius }, false
 end
 
 local function rebuild(watcher: Watcher)
@@ -48,11 +52,11 @@ local function rebuild(watcher: Watcher)
 		if model.Parent == nil then
 			continue
 		end
-		local circle = circleOf(watcher, model)
+		local circle, retry = circleOf(watcher, model)
 		if circle then
 			table.insert(circles, circle)
 			table.insert(owners, model)
-		else
+		elseif retry then
 			pending = true
 		end
 	end
@@ -107,10 +111,11 @@ function TaggedCircles.list(watcher: Watcher): ({ Circle }, { Model })
 	return watcher.circles, watcher.owners
 end
 
--- O ponto (x, z) está dentro (ou na borda) de algum círculo?
-function TaggedCircles.contains(watcher: Watcher, x: number, z: number): boolean
+-- O ponto (x, z) está dentro (ou na borda) de algum círculo, expandido por
+-- `margin` (padrão 0)?
+function TaggedCircles.contains(watcher: Watcher, x: number, z: number, margin: number?): boolean
 	local circles = TaggedCircles.list(watcher)
-	return BuildRules.insideAny(x, z, circles)
+	return BuildRules.insideAny(x, z, circles, margin)
 end
 
 return TaggedCircles

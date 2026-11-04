@@ -3,7 +3,8 @@
 -- translúcido no ponto à frente (o mesmo que o servidor escolhe), girado como a
 -- peça sairá (o giro vem de BuildRotation), verde se parece livre e vermelho se
 -- não. Uma faixa mais escura marca a "frente" da peça. É só uma dica: o servidor
--- decide de verdade (inclusive água, que o cliente não checa).
+-- decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
+-- BuildRules.waterAllows: ponte só na água, o resto nunca).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -16,6 +17,7 @@ local BuildRules = require(Shared:WaitForChild("Build"):WaitForChild("BuildRules
 local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
 local BuildRotation = require(script.Parent.Parent:WaitForChild("BuildRotation"))
 
 local THICKNESS = 0.3
@@ -93,6 +95,9 @@ end
 -- mesmas camadas do servidor (BuildRules.layerOf): o telhado só vê telhados, a
 -- ponte só pontes e jogadores.
 local function looksFree(kind: string, px: number, pz: number, radius: number): boolean
+	if not BuildRules.waterAllows(kind, WaterSim.isWaterAt(px, pz)) then
+		return false
+	end
 	local layer = BuildRules.layerOf(kind)
 	-- Peças já colocadas: o pivô fica no centro da peça.
 	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
