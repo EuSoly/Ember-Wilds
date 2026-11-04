@@ -75,9 +75,15 @@ local function untrack(instance: Instance)
 	pieces[instance :: Model] = nil
 end
 
+-- "X": gira no eixo X do próprio pivô (dobradiça da tampa). "Y": gira no eixo
+-- VERTICAL da peça, passando pelo pivô da parte (o pivô do rotor veio do Blender
+-- com o "para cima" deitado, então o Y local dele não é o vertical).
 local function moveTo(model: Model, mover: Mover, angle: number, axis: "X" | "Y")
-	local rotation = if axis == "X" then CFrame.Angles(angle, 0, 0) else CFrame.Angles(0, angle, 0)
-	mover.part:PivotTo(model:GetPivot() * mover.pivotRel * rotation)
+	local rel = mover.pivotRel
+	local placed = if axis == "X"
+		then rel * CFrame.Angles(angle, 0, 0)
+		else CFrame.new(rel.Position) * CFrame.Angles(0, angle, 0) * rel.Rotation
+	mover.part:PivotTo(model:GetPivot() * placed)
 	mover.written = true
 end
 
