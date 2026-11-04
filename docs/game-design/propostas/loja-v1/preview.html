@@ -1,0 +1,385 @@
+<style>
+  .shop { --outline:#211A15; --panel:#2B2018; --panel2:#3A2A1E; --edge:#8A5A2B; --cream:#FFF3D6; --sub:#C9B898; --ember:#E99843;
+          --common:#9AA3AD; --rare:#4DA3FF; --epic:#9B5DE5; --legend:#F2B632; }
+  .screen { container-type:inline-size; position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; border:3px solid var(--outline); border-radius:6px;
+            font-family:"Trebuchet MS",system-ui,sans-serif; color:var(--cream); background: radial-gradient(circle at 70% 30%, #3f6f4f 0 6%, transparent 7%), #1d3328; }
+  .dim { position:absolute; inset:0; background:#0b120ecc; }
+  .plank { background:url(../../../../assets/ui/brand/plank-wood.png) center/100% 100% no-repeat; display:flex; align-items:center; justify-content:center; font-weight:900;
+           text-shadow:0 0 .2cqw #211A15, .1cqw .1cqw 0 #211A15; }
+  .emberbtn { background:url(../../../../assets/ui/brand/button-ember.png) center/100% 100% no-repeat; color:#29241F; font-weight:900; display:flex; align-items:center; justify-content:center; gap:.4cqw; cursor:pointer; border:none; font-family:inherit; }
+  .emberbtn:active, .btn:active { transform:translateY(.15cqw); }
+  .out { text-shadow: .15cqw .15cqw 0 #211A15, -.1cqw -.1cqw 0 #211A15, .1cqw -.1cqw 0 #211A15, -.1cqw .1cqw 0 #211A15; }
+  .top { position:absolute; left:1cqw; right:1cqw; top:1cqw; height:4.6cqw; display:flex; gap:1cqw; align-items:center; z-index:3; }
+  .back { width:10cqw; height:4.2cqw; font-size:1.4cqw; cursor:pointer; }
+  .title { width:12cqw; height:4.6cqw; font-size:2cqw; }
+  .tabs { flex:1; display:flex; gap:.6cqw; }
+  .tab { flex:1; height:3.6cqw; border-radius:.6cqw; border:.25cqw solid var(--outline); font-size:1.2cqw; font-weight:900; display:flex; align-items:center; justify-content:center; gap:.5cqw; cursor:pointer; opacity:.75; }
+  .tab.on { opacity:1; transform:translateY(-.15cqw); box-shadow:0 .3cqw 0 var(--outline); }
+  .t1 { background:linear-gradient(#ff8a5c,#d8452b); } .t2 { background:linear-gradient(#ffd45c,#e0961f); } .t3 { background:linear-gradient(#b48cff,#7a4fd8); } .t4 { background:linear-gradient(#ffcf6b,#e97f22); }
+  .coins { width:16cqw; height:4.6cqw; justify-content:flex-start; gap:.6cqw; padding-left:1.2cqw; font-size:1.7cqw; position:relative; }
+  .coins img { width:2.8cqw; } .coins .plus { position:absolute; right:.9cqw; width:3cqw; height:3cqw; font-size:1.6cqw; }
+  .scroll { position:absolute; left:1cqw; right:1cqw; top:6.6cqw; bottom:1cqw; overflow-y:auto; padding-right:.6cqw; z-index:2; scroll-behavior:smooth; }
+  .scroll::-webkit-scrollbar { width:.6cqw } .scroll::-webkit-scrollbar-thumb { background:var(--edge); border-radius:1cqw }
+  .sec { margin-bottom:2.4cqw; }
+  .sechead { display:flex; align-items:center; gap:1cqw; margin-bottom:1cqw; font-weight:900; font-size:1.6cqw; color:var(--sub); letter-spacing:.15cqw; }
+  .sechead::after { content:""; flex:1; height:.25cqw; background:#4a3a2a; border-radius:1cqw; }
+  .grid { display:grid; gap:1cqw; }
+  .g3 { grid-template-columns:repeat(3,1fr); } .g2 { grid-template-columns:repeat(2,1fr); } .g4 { grid-template-columns:repeat(4,1fr); } .g5 { grid-template-columns:repeat(5,1fr); }
+
+  /* Destaque (pacotes): um por vez, com setas */
+  .featured { position:relative; height:24cqw; border-radius:1.4cqw; border:.35cqw solid #FFC66B; overflow:hidden; box-shadow:0 0 1.4cqw #E9984388; }
+  .slide { position:absolute; inset:0; display:flex; align-items:center; transition:opacity .35s, transform .35s; }
+  .slide.hide { opacity:0; transform:translateX(3cqw); pointer-events:none; }
+  .slide .glow { position:absolute; inset:0; background:radial-gradient(circle at 35% 50%, #ffffff40 0 10%, transparent 45%); }
+  .slide .hero { position:absolute; left:10cqw; top:3cqw; display:flex; gap:1.2cqw; align-items:flex-end; }
+  .slide .name { position:absolute; left:6cqw; bottom:2.6cqw; font-size:3.4cqw; font-weight:900; }
+  .slide .rar { position:absolute; left:6.4cqw; bottom:1cqw; font-size:1.4cqw; font-weight:900; color:#29241F; background:var(--legend); padding:.1cqw .8cqw; border-radius:.3cqw; }
+  .slide .timer { position:absolute; right:6cqw; top:1.6cqw; font-weight:900; font-size:1.6cqw; background:#211A15cc; padding:.3cqw 1cqw; border-radius:2cqw; }
+  .slide ul { position:absolute; right:6cqw; top:5.4cqw; margin:0; padding:0; list-style:none; text-align:right; font-weight:900; font-size:1.3cqw; line-height:2.1cqw; }
+  .slide .buy { position:absolute; right:6cqw; bottom:2cqw; width:14cqw; height:4.6cqw; font-size:1.9cqw; }
+  .arrow { position:absolute; top:50%; transform:translateY(-50%); width:3.4cqw; height:3.4cqw; border-radius:50%; background:#211A15aa; display:flex; align-items:center; justify-content:center; font-size:1.8cqw; cursor:pointer; z-index:2; }
+  .arrow.l { left:1cqw } .arrow.r { right:1cqw }
+  .dots { position:absolute; left:50%; bottom:.8cqw; transform:translateX(-50%); display:flex; gap:.5cqw; z-index:2; }
+  .dots i { width:.9cqw; height:.9cqw; border-radius:50%; background:#fff6; } .dots i.on { background:#fff; }
+  .boneco { width:9cqw; height:8cqw; border-radius:2cqw; border:.4cqw solid var(--outline); position:relative; }
+  .boneco::before, .boneco::after { content:""; position:absolute; top:1.8cqw; width:1.6cqw; height:1.1cqw; background:#211A15; border-radius:50%; }
+  .boneco::before { left:2cqw } .boneco::after { right:2cqw }
+  .big { font-size:4.4cqw; }
+
+  /* cartões vibrantes */
+  .vcard { position:relative; border-radius:1.2cqw; border:.3cqw solid var(--outline); padding:1.2cqw; overflow:hidden; display:flex; flex-direction:column; align-items:center; gap:.6cqw; box-shadow: inset 0 -.5cqw 0 #0004; }
+  .vcard::before { content:""; position:absolute; inset:-40%; background:repeating-conic-gradient(#ffffff22 0 6deg, transparent 6deg 18deg); animation:spinbg 30s linear infinite; }
+  .vcard > * { position:relative; }
+  @keyframes spinbg { to { transform:rotate(360deg); } }
+  .vcard h4 { margin:0; font-size:1.8cqw; } .vcard .desc { font-size:1cqw; font-weight:800; }
+  .vcard .price { width:90%; height:3.6cqw; font-size:1.6cqw; }
+  .gold { background:linear-gradient(#ffd96b,#f0a12a); } .wide { flex-direction:row; justify-content:space-between; text-align:left; align-items:center; }
+  .wide .left { display:flex; flex-direction:column; gap:.5cqw; align-items:flex-start; width:60%; }
+  .wide .price { width:16cqw; }
+  .ribbon { position:absolute; top:1cqw; right:-.4cqw; background:#E5484D; color:white; font-size:.95cqw; font-weight:900; padding:.2cqw .9cqw; border-radius:.3cqw 0 0 .3cqw; z-index:2; }
+
+  /* gamepasses */
+  .pass { background:linear-gradient(#ffcf5c,#e0961f); }
+  .pass .ico { font-size:3.4cqw; height:5cqw; display:flex; align-items:center; }
+  .tag { position:absolute; left:.7cqw; top:.7cqw; font-size:.8cqw; background:#211A15; color:#F5C542; font-weight:900; padding:.1cqw .5cqw; border-radius:.3cqw; z-index:2; }
+
+  /* giros: escolha do tipo, com roleta girando */
+  .wheelcard { cursor:pointer; }
+  .wheel { width:10cqw; height:10cqw; border-radius:50%; border:.45cqw solid var(--outline); position:relative; animation:spin 9s linear infinite;
+           background:conic-gradient(var(--legend) 0 18deg, var(--common) 18deg 90deg, var(--rare) 90deg 135deg, var(--common) 135deg 200deg, var(--epic) 200deg 240deg, var(--common) 240deg 300deg, var(--rare) 300deg 360deg); }
+  .wheel::after { content:""; position:absolute; inset:36%; border-radius:50%; background:#211A15; border:.3cqw solid #FFC66B; }
+  .wheelcard:hover .wheel { animation-duration:1.2s; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .pin { width:0; height:0; border:1cqw solid transparent; border-top:1.6cqw solid #FFF3D6; margin-bottom:-1.4cqw; z-index:2; filter:drop-shadow(0 .2cqw 0 #211A15); }
+  .ty-body{background:linear-gradient(#ff8a5c,#d8452b)} .ty-acc{background:linear-gradient(#b48cff,#7a4fd8)} .ty-bag{background:linear-gradient(#9be06b,#4e9a2e)} .ty-book{background:linear-gradient(#6bc7ff,#2f7fd8)} .ty-crate{background:linear-gradient(#ffcf6b,#e97f22)}
+  .wheelcard .emberbtn { width:90%; height:3.4cqw; font-size:1.4cqw; }
+
+  /* modal: escolha do giro (Golden Ember ou pago) e carrossel */
+  .modal { position:absolute; inset:0; z-index:10; background:#000b; display:none; align-items:center; justify-content:center; }
+  .modal.on { display:flex; }
+  .box { width:76cqw; background:var(--panel); border:.3cqw solid var(--edge); border-radius:1.2cqw; padding:1.6cqw; display:flex; flex-direction:column; gap:1.2cqw; position:relative; }
+  .box h3 { margin:0; font-size:2.2cqw; text-align:center; }
+  .x { position:absolute; right:1cqw; top:1cqw; width:3.6cqw; height:3.6cqw; font-size:1.4cqw; cursor:pointer; }
+  .choice { display:grid; grid-template-columns:1fr 1fr; gap:1.4cqw; }
+  .opt { border-radius:1cqw; border:.3cqw solid var(--outline); padding:1.2cqw; display:flex; flex-direction:column; gap:.8cqw; align-items:center; position:relative; overflow:hidden; }
+  .opt.normal { background:linear-gradient(#5a4330,#3a2a1e); } .opt.paid { background:linear-gradient(#7a4fd8,#3c2380); box-shadow:0 0 1.4cqw #b48cff88; }
+  .opt h4 { margin:0; font-size:1.7cqw; }
+  .odds { width:100%; display:grid; grid-template-columns:repeat(4,1fr); gap:.4cqw; font-size:1cqw; text-align:center; font-weight:900; color:#211A15; }
+  .odds span { border-radius:.3cqw; padding:.3cqw 0; } .odds small { display:block; font-size:.75cqw; }
+  .qty { display:flex; gap:.6cqw; width:100%; }
+  .qty .emberbtn { flex:1; height:3.6cqw; font-size:1.3cqw; }
+  .qty .robux { background:linear-gradient(#6bf07a,#2fb04a); border:.25cqw solid var(--outline); border-radius:.6cqw; color:#211A15; }
+  .c-common{background:var(--common)} .c-rare{background:var(--rare)} .c-epic{background:var(--epic)} .c-legend{background:var(--legend)}
+  .reel { position:relative; height:10cqw; background:#1a130d; border-radius:.6cqw; overflow:hidden; border:.25cqw solid #4a3a2a; }
+  .strip { position:absolute; left:0; top:1cqw; display:flex; gap:.6cqw; will-change:transform; }
+  .tile { width:8cqw; height:8cqw; border-radius:.5cqw; background:var(--panel2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3cqw; border-bottom:.6cqw solid var(--common); font-size:.85cqw; font-weight:800; flex:none; }
+  .tile .g { font-size:2.6cqw; } .tile .boneco { width:3.4cqw; height:3cqw; border-width:.25cqw; border-radius:.8cqw; } .tile .boneco::before,.tile .boneco::after{ top:.7cqw; width:.6cqw; height:.45cqw } .tile .boneco::before{left:.7cqw} .tile .boneco::after{right:.7cqw}
+  .marker { position:absolute; left:50%; top:0; bottom:0; width:.35cqw; background:var(--legend); transform:translateX(-50%); box-shadow:0 0 1cqw var(--legend); z-index:2; }
+  .result { text-align:center; font-size:1.4cqw; min-height:2cqw; font-weight:900; }
+  .row { display:flex; gap:1cqw; justify-content:center; } .row .btn { width:16cqw; height:4.2cqw; font-size:1.5cqw; cursor:pointer; }
+  .tile { background:linear-gradient(#ffffff22, #0003), var(--rc) !important; border-bottom:.6cqw solid #0005 !important; color:#211A15; }
+  .tile .g { filter:drop-shadow(0 .2cqw 0 #0004); }
+  .have { font-weight:900; font-size:1.25cqw; background:#211A15aa; padding:.3cqw 1cqw; border-radius:2cqw; }
+  .have b { color:var(--legend); }
+  .spinbtn { width:70%; height:4.2cqw; font-size:1.9cqw; }
+  .spinbtn[disabled] { filter:grayscale(1) brightness(.6); cursor:not-allowed; }
+  .box { width:80cqw; padding:1.4cqw; gap:1cqw; }
+  .opt { padding:1cqw; gap:.6cqw; }
+  .won { position:absolute; inset:0; background:#000a; display:none; align-items:center; justify-content:center; z-index:30; }
+  .won.on { display:flex; }
+  .wonbox { background:var(--panel); border:.35cqw solid var(--legend); border-radius:1.2cqw; padding:1.6cqw 3cqw; display:flex; flex-direction:column; align-items:center; gap:1cqw; animation:pop .35s cubic-bezier(.2,1.6,.4,1); }
+  .wonbox h3 { margin:0; font-size:2.2cqw; } .wonname { font-size:1.6cqw; font-weight:900; }
+  #wonTile .tile { width:14cqw; height:14cqw; font-size:1.3cqw; } #wonTile .tile .g { font-size:5cqw; } #wonTile .boneco { width:7cqw; height:6cqw; }
+  @keyframes pop { from { transform:scale(.6); opacity:0; } }
+  /* ===== efeitos do giro pago ===== */
+  .box { overflow:visible; }
+  .rays { position:absolute; left:50%; top:50%; width:140cqw; height:140cqw; transform:translate(-50%,-50%); pointer-events:none; opacity:0; transition:opacity .4s; z-index:-1;
+          background:repeating-conic-gradient(#b48cff55 0 8deg, transparent 8deg 22deg, #F2B63244 22deg 30deg, transparent 30deg 44deg);
+          -webkit-mask: radial-gradient(circle, #000 0 18%, transparent 55%); mask: radial-gradient(circle, #000 0 18%, transparent 55%); animation:spin 14s linear infinite; }
+  .fx .rays { opacity:1; animation-duration:4s; }
+  .fx.box { animation:pulse .9s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { box-shadow:0 0 1.4cqw #b48cff99, 0 0 0 .2cqw #F2B63266; } 50% { box-shadow:0 0 3.6cqw #b48cffee, 0 0 0 .5cqw #F2B632aa; } }
+  .fx .reel { border-color:transparent; background:linear-gradient(#1a130d,#1a130d) padding-box, linear-gradient(90deg,#b48cff,#F2B632,#ff6bd6,#4DA3FF,#b48cff) border-box; background-size:100% 100%, 300% 100%; animation:flow 1.2s linear infinite; }
+  @keyframes flow { to { background-position:0 0, 300% 0; } }
+  .fx .marker { background:#fff; box-shadow:0 0 1cqw #fff, 0 0 2.4cqw #b48cff; animation:blink .25s steps(2) infinite; }
+  @keyframes blink { 50% { opacity:.55; } }
+  .spark { position:absolute; width:.7cqw; height:.7cqw; border-radius:50%; background:#fff; box-shadow:0 0 .8cqw #F2B632, 0 0 1.6cqw #b48cff; pointer-events:none; z-index:3; animation:fly linear forwards; }
+  @keyframes fly { from { transform:translate(0,0) scale(1); opacity:1; } to { transform:translate(var(--dx),var(--dy)) scale(.2); opacity:0; } }
+  .flash { position:absolute; inset:0; background:radial-gradient(circle, #fff 0 20%, #F2B632aa 45%, transparent 75%); opacity:0; pointer-events:none; z-index:25; }
+  .flash.go { animation:flash .6s ease-out; }
+  @keyframes flash { 0% { opacity:.95; } 100% { opacity:0; } }
+  .shake { animation:shake .35s; }
+  @keyframes shake { 20% { transform:translate(-.6cqw,.3cqw); } 40% { transform:translate(.5cqw,-.4cqw); } 60% { transform:translate(-.3cqw,.2cqw); } 80% { transform:translate(.2cqw,0); } }
+  .wonbox { position:relative; overflow:visible; }
+  .wonrays { position:absolute; left:50%; top:45%; width:60cqw; height:60cqw; transform:translate(-50%,-50%); z-index:-1; pointer-events:none; animation:spin 6s linear infinite;
+             background:repeating-conic-gradient(var(--wc) 0 10deg, transparent 10deg 24deg);
+             -webkit-mask: radial-gradient(circle, #000 0 15%, transparent 60%); mask: radial-gradient(circle, #000 0 15%, transparent 60%); }
+  .confetti { position:absolute; top:-2cqw; width:.9cqw; height:1.4cqw; z-index:31; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translate(var(--dx), 60cqw) rotate(var(--rot)); opacity:.2; } }
+  .toast { position:absolute; left:50%; top:7cqw; transform:translateX(-50%); background:#F5C542; color:#29241F; font-weight:900; font-size:1.2cqw; padding:.6cqw 1.6cqw; border-radius:2cqw; z-index:20; display:none; }
+  .note { font-size:.9rem; color:var(--text-secondary); margin:.6rem 0 0; }
+</style>
+
+<div class="shop">
+<h2>Loja: preview v4 (efeitos do giro pago)</h2>
+<p class="subtitle">Pacotes em destaque (um por vez, com setas), gamepasses, giros (escolhe o tipo → compra giros → GIRAR na mesma tela) e Golden Ember no estilo dos cartões de dinheiro.</p>
+
+<div class="screen">
+  <div class="dim"></div>
+  <div class="top">
+    <div class="plank btn back" onclick="toast('Volta ao menu')">◀ Menu</div>
+    <div class="plank title">LOJA</div>
+    <div class="tabs">
+      <div class="tab t1 out on" data-go="s-packs">🎁 Pacotes</div>
+      <div class="tab t2 out" data-go="s-passes">👑 Gamepasses</div>
+      <div class="tab t3 out" data-go="s-spins">🎡 Giros</div>
+      <div class="tab t4 out" data-go="s-ember"><img src="../../../../assets/ui/brand/golden-ember.png" style="width:1.8cqw"> Golden Ember</div>
+    </div>
+    <div class="plank coins"><img src="../../../../assets/ui/brand/golden-ember.png" alt="">1.321<div class="emberbtn plus" data-go="s-ember">+</div></div>
+  </div>
+
+  <div class="scroll" id="scroll">
+    <div class="sec" id="s-packs">
+      <div class="sechead">PACOTES EM DESTAQUE</div>
+      <div class="featured" id="featured">
+        <div class="arrow l" onclick="slide(-1)">◀</div><div class="arrow r" onclick="slide(1)">▶</div>
+        <div class="dots" id="dots"></div>
+      </div>
+    </div>
+    <div class="sec" id="s-passes">
+      <div class="sechead">GAMEPASSES</div>
+      <div class="grid g5" id="passes"></div>
+    </div>
+    <div class="sec" id="s-spins">
+      <div class="sechead">GIROS · ESCOLHA O TIPO</div>
+      <div class="grid g5" id="types"></div>
+    </div>
+    <div class="sec" id="s-ember">
+      <div class="sechead">GOLDEN EMBER</div>
+      <div class="grid g3" id="ember3"></div>
+      <div class="grid g2" id="ember2" style="margin-top:1cqw"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="choose">
+    <div class="box" id="spinBox">
+      <div class="rays"></div>
+      <div class="plank btn x" onclick="closeAll()">✕</div>
+      <h3 id="cTitle" class="out">Giro de Livro</h3>
+      <div class="reel"><div class="marker"></div><div class="strip" id="strip"></div></div>
+      <div class="choice">
+        <div class="opt normal">
+          <h4 class="out">Giro com Golden Ember</h4>
+          <div class="odds" id="oddsN"></div>
+          <div class="have out" id="haveN">Você tem 0 giros</div>
+          <div class="qty" id="qtyN"></div>
+          <button class="emberbtn spinbtn" id="spinN" onclick="spinNow(0)">GIRAR</button>
+        </div>
+        <div class="opt paid">
+          <div class="ribbon" style="background:var(--legend);color:#211A15">+ CHANCE</div>
+          <h4 class="out">Giro especial</h4>
+          <div class="odds" id="oddsP"></div>
+          <div class="have out" id="haveP">Você tem 0 giros</div>
+          <div class="qty" id="qtyP"></div>
+          <button class="emberbtn spinbtn" id="spinP" onclick="spinNow(1)">GIRAR</button>
+        </div>
+      </div>
+    </div>
+    <div class="flash" id="flash"></div>
+    <div class="won" id="won">
+      <div class="wonbox" id="wonBox">
+        <h3 class="out">VOCÊ GANHOU!</h3>
+        <div id="wonTile"></div>
+        <div class="wonname out" id="wonName"></div>
+        <div class="emberbtn" style="width:14cqw;height:4cqw;font-size:1.5cqw" onclick="closeWon()">Pegar</div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+<p class="note">Itens, nomes, preços e emojis são exemplos. No jogo, as roletas, os pacotes e a moeda usam artes de verdade.</p>
+</div>
+
+<script>
+(function(){
+  function el(id){ return document.getElementById(id); }
+  var R = { comum:'var(--common)', raro:'var(--rare)', 'épico':'var(--epic)', 'lendário':'var(--legend)' }, RK = ['comum','raro','épico','lendário'];
+  var NORMAL = [79,16,4.5,.5], PAID = [50,30,15,5];
+  var TYPES = [{id:'body',name:'Skins',g:null,c:'ty-body'},{id:'acc',name:'Acessórios',g:'🎩',c:'ty-acc'},{id:'bag',name:'Mochila',g:'🎒',c:'ty-bag'},{id:'book',name:'Livro',g:'📕',c:'ty-book'},{id:'crate',name:'Caixa',g:'📦',c:'ty-crate'}];
+  var NAMES = { comum:['Musgo','Cinza','Areia','Barro'], raro:['Geada','Rio','Pinho'], 'épico':['Aurora','Noite'], 'lendário':['Brasa Real'] };
+  var COLORS = { Musgo:'#78834F', Cinza:'#8A8F98', Areia:'#E8B86D', Barro:'#8B5A2B', Geada:'#7FC8F0', Rio:'#2EC4B6', Pinho:'#3E8E41', Aurora:'#B07CF0', Noite:'#3B3F8F', 'Brasa Real':'#E5402B' };
+  function bon(c){ return '<div class="boneco" style="background:'+c+'"></div>'; }
+  window.toast = function(m){ var t=el('toast'); t.textContent=m||'Compra simulada (mockup) — nada foi cobrado'; t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(function(){t.style.display='none'},1800); };
+
+  // Destaque
+  var BUNDLES = [
+    { name:'PACOTE BRASA', rar:'LENDÁRIO', bg:'linear-gradient(120deg,#5a1208,#b8361a 55%,#3a0d06)', color:'#E5402B', feats:['🔥 Skin Brasa','📕 Livro Brasa','🎒 Mochila Brasa','📦 Caixa Brasa'], price:'⏣ 399', timer:'2D 10H 7M' },
+    { name:'PACOTE GEADA', rar:'ÉPICO', bg:'linear-gradient(120deg,#0b2a4a,#2f7fd8 55%,#0a1d33)', color:'#7FC8F0', feats:['❄️ Skin Geada','📕 Livro Geada','🎒 Mochila Geada','📦 Caixa Geada'], price:'⏣ 349', timer:'5D 2H 40M' },
+    { name:'PACOTE MUSGO', rar:'RARO', bg:'linear-gradient(120deg,#16300e,#4e9a2e 55%,#0f2209)', color:'#78834F', feats:['🌿 Skin Musgo','📕 Livro Musgo','🎒 Mochila Musgo','📦 Caixa Musgo'], price:'⏣ 299', timer:'12H 5M' },
+  ];
+  var cur = 0;
+  BUNDLES.forEach(function(b, i){
+    el('featured').insertAdjacentHTML('beforeend', '<div class="slide'+(i?' hide':'')+'" style="background:'+b.bg+'"><div class="glow"></div>'+
+      '<div class="hero">'+bon(b.color)+'<span class="big">📕</span><span class="big">🎒</span><span class="big">📦</span></div>'+
+      '<div class="name out">'+b.name+'</div><div class="rar">'+b.rar+'</div><div class="timer out">⏰ '+b.timer+'</div>'+
+      '<ul class="out">'+b.feats.map(function(f){return '<li>'+f+'</li>'}).join('')+'</ul>'+
+      '<div class="emberbtn buy" onclick="toast()">'+b.price+'</div></div>');
+    el('dots').insertAdjacentHTML('beforeend', '<i'+(i?'':' class="on"')+'></i>');
+  });
+  window.slide = function(d){
+    var s = document.querySelectorAll('#featured .slide'), dots = document.querySelectorAll('#dots i');
+    s[cur].classList.add('hide'); dots[cur].classList.remove('on');
+    cur = (cur + d + s.length) % s.length; s[cur].classList.remove('hide'); dots[cur].classList.add('on');
+  };
+  setInterval(function(){ if (!document.querySelector('.modal.on')) slide(1); }, 6000);
+
+  // Gamepasses
+  [['Kit Iniciante','para sempre','🍓','⏣ 99'],['Kit Explorador','para sempre','⛏️','⏣ 199'],['Kit Sobrevivente','para sempre','🎒','⏣ 399'],['Kit Veterano','para sempre','🥇','⏣ 799'],['VIP','+3 espaços','⭐','⏣ 149']].forEach(function(g){
+    el('passes').insertAdjacentHTML('beforeend', '<div class="vcard pass"><div class="tag">PROVISÓRIO</div><div class="ico">'+g[2]+'</div><h4 class="out">'+g[0]+'</h4><div class="desc out">'+g[1]+'</div><div class="emberbtn price" onclick="toast()">'+g[3]+'</div></div>');
+  });
+
+  // Tipos de giro (roletas)
+  TYPES.forEach(function(t, i){
+    el('types').insertAdjacentHTML('beforeend', '<div class="vcard wheelcard '+t.c+'" onclick="choose('+i+')"><h4 class="out">'+t.name+'</h4><div class="pin"></div><div class="wheel"></div><div class="emberbtn">Escolher</div></div>');
+  });
+
+  // Golden Ember (estilo dos cartões de dinheiro)
+  var PACKS = [[300,'⏣ 80'],[600,'⏣ 150'],[2600,'⏣ 600','POPULAR'],[7000,'⏣ 1500','-30%'],[20000,'⏣ 3500','MELHOR']];
+  PACKS.forEach(function(p, i){
+    var coin = '<img src="../../../../assets/ui/brand/golden-ember.png" style="width:'+(5+i*.9)+'cqw;filter:drop-shadow(0 .4cqw 0 #0005)">';
+    var rib = p[2] ? '<div class="ribbon">'+p[2]+'</div>' : '';
+    if (i < 3) el('ember3').insertAdjacentHTML('beforeend', '<div class="vcard gold">'+rib+'<h4 class="out">+'+p[0].toLocaleString('pt-BR')+'</h4>'+coin+'<div class="emberbtn price" onclick="toast()">'+p[1]+'</div></div>');
+    else el('ember2').insertAdjacentHTML('beforeend', '<div class="vcard gold wide">'+rib+'<div class="left"><h4 class="out">+'+p[0].toLocaleString('pt-BR')+'</h4><div class="desc out">Receba na hora '+p[0].toLocaleString('pt-BR')+' Golden Ember</div><div class="emberbtn price" onclick="toast()">'+p[1]+'</div></div>'+coin+'</div>');
+  });
+
+  // Atalhos
+  document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click', function(){ el('scroll').scrollTop = el(b.getAttribute('data-go')).offsetTop - 6; }); });
+  el('scroll').addEventListener('scroll', function(){
+    var top = el('scroll').scrollTop + 40, c = 's-packs';
+    ['s-packs','s-passes','s-spins','s-ember'].forEach(function(id){ if (el(id).offsetTop <= top) c = id; });
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.getAttribute('data-go') === c); });
+  });
+
+  // Tela do giro: carrossel passando devagar, giros guardados e GIRAR na mesma tela.
+  var type = null, spinning = false;
+  var HAVE = {}; // tipo -> [normais, especiais] (estado de mockup)
+  var RC = { comum:'#9AA3AD', raro:'#4DA3FF', 'épico':'#9B5DE5', 'lendário':'#F2B632' };
+  function oddsHtml(o){ return RK.map(function(rk,k){ return '<span class="c-'+['common','rare','epic','legend'][k]+'">'+o[k]+'%<small>'+rk+'</small></span>'; }).join(''); }
+  function roll(o){ var r=Math.random()*100, a=0; for (var i=0;i<4;i++){ a+=o[i]; if (r<a) return RK[i]; } return 'lendário'; }
+  // Vitrine: mostra todas as raridades misturadas (a cor do fundo é a da raridade).
+  function showcase(){ return roll([40,30,20,10]); }
+  function tile(rk){ var l=NAMES[rk], n=l[Math.floor(Math.random()*l.length)];
+    return { n:n, rk:rk, html:'<div class="tile" style="--rc:'+RC[rk]+'">'+(type.g?'<div class="g">'+type.g+'</div>':bon(COLORS[n]))+'<div>'+n+'</div></div>' }; }
+  function counts(){ return HAVE[type.id] || (HAVE[type.id] = [0, 0]); }
+  function refresh(){
+    var c = counts();
+    el('haveN').innerHTML = 'Você tem <b>'+c[0]+'</b> giro'+(c[0]===1?'':'s');
+    el('haveP').innerHTML = 'Você tem <b>'+c[1]+'</b> giro'+(c[1]===1?'':'s')+' especia'+(c[1]===1?'l':'is');
+    el('spinN').disabled = c[0] === 0 || spinning; el('spinP').disabled = c[1] === 0 || spinning;
+  }
+  // Carrossel ocioso: anda devagar para a esquerda e vai ganhando peças novas.
+  var offset = 0, last = 0, idle = true, raf = null;
+  function step(now){
+    var dt = last ? (now - last) / 1000 : 0; last = now;
+    var strip = el('strip');
+    if (idle && strip.children.length) {
+      offset -= 40 * dt;
+      var w = strip.children[0].getBoundingClientRect().width + parseFloat(getComputedStyle(strip).gap);
+      while (-offset > w) { strip.removeChild(strip.children[0]); strip.insertAdjacentHTML('beforeend', tile(showcase()).html); offset += w; }
+      strip.style.transform = 'translateX('+offset+'px)';
+    }
+    raf = requestAnimationFrame(step);
+  }
+  window.choose = function(i){
+    type = TYPES[i]; el('cTitle').textContent = 'Giro · ' + type.name;
+    el('oddsN').innerHTML = oddsHtml(NORMAL); el('oddsP').innerHTML = oddsHtml(PAID);
+    var ge = '<img src="../../../../assets/ui/brand/golden-ember.png" style="width:1.6cqw">';
+    el('qtyN').innerHTML = [[1,100],[3,280],[10,850]].map(function(q){ return '<div class="emberbtn" onclick="buy(0,'+q[0]+')">+'+q[0]+' '+ge+q[1]+'</div>'; }).join('');
+    el('qtyP').innerHTML = [[1,49],[3,129],[10,399]].map(function(q){ return '<div class="emberbtn robux" onclick="buy(1,'+q[0]+')">+'+q[0]+' ⏣ '+q[1]+'</div>'; }).join('');
+    var strip = el('strip'), html = ''; for (var k=0;k<16;k++) html += tile(showcase()).html;
+    strip.style.transition = 'none'; strip.innerHTML = html; offset = 0; idle = true; last = 0;
+    if (!raf) raf = requestAnimationFrame(step);
+    refresh(); el('choose').classList.add('on');
+  };
+  window.closeAll = function(){ if (!spinning) { document.querySelectorAll('.modal').forEach(function(m){ m.classList.remove('on'); }); } };
+  window.buy = function(paid, qty){ counts()[paid] += qty; toast(); refresh(); };
+  window.spinNow = function(paid){
+    var c = counts(); if (spinning || c[paid] === 0) return;
+    c[paid] -= 1; spinning = true; idle = false; refresh();
+    var box = el('spinBox');
+    if (paid) { box.classList.add('fx'); sparks(5000); }
+    var odds = paid ? PAID : NORMAL, prize = tile(roll(odds)), strip = el('strip');
+    var have = strip.children.length, WIN = have + 34, html = '';
+    for (var k=0;k<40;k++) html += (have + k === WIN ? prize : tile(showcase())).html;
+    strip.insertAdjacentHTML('beforeend', html);
+    var w = strip.children[0].getBoundingClientRect().width, gap = parseFloat(getComputedStyle(strip).gap), reel = strip.parentElement;
+    var target = -(WIN*(w+gap) + w/2 - reel.clientWidth/2 + (Math.random()-.5)*w*.7);
+    strip.style.transition = 'none'; strip.style.transform = 'translateX('+offset+'px)';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ strip.style.transition='transform 5.2s cubic-bezier(.08,.6,.12,1)'; strip.style.transform='translateX('+target+'px)'; }); });
+    setTimeout(function(){
+      if (paid) {
+        var f = el('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+        box.classList.add('shake'); setTimeout(function(){ box.classList.remove('shake', 'fx'); }, 400);
+      }
+      var wb = el('wonBox'); wb.querySelectorAll('.wonrays').forEach(function(r){ r.remove(); });
+      if (paid || prize.rk !== 'comum') {
+        wb.insertAdjacentHTML('afterbegin', '<div class="wonrays" style="--wc:'+RC[prize.rk]+'88"></div>');
+        confetti(paid ? ({ comum:30, raro:50, 'épico':80, 'lendário':140 })[prize.rk] : 20);
+      }
+      el('wonTile').innerHTML = prize.html;
+      el('wonName').innerHTML = prize.n + ' · <span style="color:'+RC[prize.rk]+'">'+prize.rk+'</span>';
+      el('won').classList.add('on');
+      // o carrossel volta a andar devagar a partir de onde parou
+      offset = target; strip.style.transition = 'none';
+      spinning = false; refresh();
+    }, 5400);
+  };
+  // Faíscas atravessando o carrossel enquanto ele gira (só no pago).
+  function sparks(ms){
+    var reel = el('strip').parentElement, until = performance.now() + ms;
+    (function emit(){
+      if (performance.now() > until) return;
+      for (var k=0;k<3;k++){
+        var sp = document.createElement('div'); sp.className = 'spark';
+        sp.style.left = (Math.random()*100)+'%'; sp.style.top = (Math.random()*100)+'%';
+        sp.style.setProperty('--dx', (-8 - Math.random()*14)+'cqw'); sp.style.setProperty('--dy', ((Math.random()-.5)*6)+'cqw');
+        sp.style.animationDuration = (.5 + Math.random()*.6)+'s';
+        reel.appendChild(sp); setTimeout(function(n){ return function(){ n.remove(); }; }(sp), 1200);
+      }
+      setTimeout(emit, 60);
+    })();
+  }
+  // Chuva de confete na janelinha do prêmio.
+  function confetti(n){
+    var won = el('won'), colors = ['#F2B632','#b48cff','#4DA3FF','#ff6bd6','#92B56A','#FFF3D6'];
+    for (var k=0;k<n;k++){
+      var c = document.createElement('div'); c.className = 'confetti';
+      c.style.left = (Math.random()*100)+'%'; c.style.background = colors[k % colors.length];
+      c.style.setProperty('--dx', ((Math.random()-.5)*20)+'cqw'); c.style.setProperty('--rot', (Math.random()*900-450)+'deg');
+      c.style.animationDuration = (1.4 + Math.random()*1.6)+'s'; c.style.animationDelay = (Math.random()*.4)+'s';
+      won.appendChild(c); setTimeout(function(n){ return function(){ n.remove(); }; }(c), 3600);
+    }
+  }
+  window.closeWon = function(){ el('won').classList.remove('on'); idle = true; last = 0; };
+})();
+</script>
