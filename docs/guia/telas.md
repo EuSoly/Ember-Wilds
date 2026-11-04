@@ -37,7 +37,7 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 | `src/client/ScreenState.luau` | O estado de tela |
 | `src/client/AudioSettings.luau` | Grupos de som e volumes |
 | `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `KitOffer`, `MenuLayout`, `CountUp`, `SettingsFormat` |
-| `src/shared/UiImages.luau` | Ids das imagens da interface (logo, sol, lua) num lugar só |
+| `src/shared/UiImages.luau` | Ids das imagens da interface num lugar só: logo, sol, lua, árvore, galho, moeda e placa de madeira. Para trocar uma: envie o PNG novo, cole o id aqui (a árvore, o galho e a placa têm a proporção/corte anotados ao lado) |
 | `assets/ui/brand/` | PNGs da marca (logo, sol, lua), fonte das imagens enviadas ao Roblox |
 
 ## Como trocar o visual de uma tela
@@ -208,7 +208,8 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 
 | Parte | O que é |
 |---|---|
-| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP). Meio: logo pequeno. Direita: o **saldo de verdade** e um "+" que abre "Comprar Golden Ember" |
+| Topo | Esquerda: nível e XP (falsos, com o selo MOCKUP), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre "Comprar Golden Ember", apoiados num galho |
+| Árvore | Imagem atrás da coluna, da altura da tela: tronco, copa (onde fica o nível), cogumelos. Os botões ficam como placas pregadas no tronco |
 | Coluna à esquerda | Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações (esta abre a janela de configurações de sempre). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
 | Painel de kits | Abre à direita do boneco. No celular, cobre a área do boneco |
@@ -220,7 +221,7 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 | `src/client/Menu/MenuState.luau` | Qual painel está aberto: `"play"` (nenhum), `"kits"`, `"profile"`, `"cosmetics"`, `"shop"`, `"buy"`, `"tutorial"` ou `"ranking"`; e o aviso de compra simulada |
 | `src/client/Menu/MenuBoneco.luau` | O boneco do menu num `ViewportFrame`. A skin vem do atributo `Cosmetic_body` do **Player** (o `CosmeticService` grava lá também, porque no menu não há personagem). O livro é um clone de `ReplicatedStorage.Assets.Tools.book`; a pose (livro e mãos) são constantes no topo do arquivo |
 | `src/client/Menu/KitsPanel.luau`, `KitShop.luau` | Painel e estado dos kits (veja "Os três jeitos de levar um kit") |
-| `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `success`, `disabled`). Cores em `Palette.rustic` |
+| `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura. Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
 | `src/shared/UIFlow/MenuLayout.luau` | Todas as medidas em pixels lógicos: coluna (200 no PC, 144 no compacto), botões, boneco, Kits/JOGAR e painel de kits. **Compacto** = largura < 900 ou altura < 500. Teste: `tests/menulayout.spec.luau` (de 568×320 a 1920×1080) |
 
 O `MenuShell` tem uma tabela `CONTENT` (painel do mockup → função que monta o conteúdo). É nela que cada painel é ligado.

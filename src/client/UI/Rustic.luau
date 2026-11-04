@@ -12,6 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -35,6 +36,48 @@ local LIGHT_EDGE = 0.1 -- fração da altura com a luz da borda de cima
 local SHADOW_EDGE = 0.82 -- daqui para baixo, a espessura escura
 local TEXT_MAX = 22
 local SUBTEXT_MAX = 14
+
+-- Madeira e couro usam a imagem da placa (com veio e pregos); o couro é a mesma
+-- placa um pouco mais escura. Sem a imagem, caem no degradê.
+local PLANK_TINT: { wood: Color3, leather: Color3 } = {
+	wood = Color3.new(1, 1, 1),
+	leather = Color3.fromRGB(215, 180, 160),
+}
+local TEXT_STROKE = 1.5 -- contorno do texto sobre a placa (veio atrás do texto)
+
+local function usesPlank(kind: Kind): boolean
+	return UiImages.has(UiImages.PLANK) and (kind == "wood" or kind == "leather")
+end
+
+-- Placa de madeira em 9 partes cobrindo o pai: as pontas (com os pregos) não
+-- esticam. O SliceScale acompanha a altura, para os pregos crescerem junto.
+local function plankImage(visible: boolean | () -> boolean, tint: Color3 | () -> Color3): ImageLabel
+	local image = create("ImageLabel")({
+		Name = "Plank",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Image = UiImages.PLANK,
+		ScaleType = Enum.ScaleType.Slice,
+		SliceCenter = UiImages.PLANK_SLICE,
+		ImageColor3 = tint,
+		Visible = visible,
+		ZIndex = 0,
+	}) :: ImageLabel
+	local function fit()
+		if image.AbsoluteSize.Y <= 0 then
+			return
+		end
+		-- O UIScale da tela (tamanho da interface) também aumenta as pontas da
+		-- placa; sem descontar, os pregos ficariam com a escala aplicada duas vezes.
+		local gui = image:FindFirstAncestorOfClass("ScreenGui")
+		local uiScale = gui and gui:FindFirstChildOfClass("UIScale")
+		local factor = if uiScale and uiScale.Scale > 0 then uiScale.Scale else 1
+		image.SliceScale = image.AbsoluteSize.Y / factor / UiImages.PLANK_SIZE.Y
+	end
+	image:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+	fit()
+	return image
+end
 
 -- Faixas duras (sem degradê suave): luz, face e espessura.
 local function bevel(light: Color3, face: Color3, shadow: Color3): ColorSequence
@@ -80,8 +123,16 @@ function Rustic.label(props: { [any]: any }): TextLabel
 	return vide.apply(label)(props) :: TextLabel
 end
 
--- Placa de madeira (molduras, placas do topo).
+-- Placa de madeira (placas do topo): a imagem da placa; sem ela, o degradê.
 function Rustic.plate(props: { [any]: any }): Frame
+	if UiImages.has(UiImages.PLANK) then
+		local frame = create("Frame")({
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			plankImage(true, PLANK_TINT.wood),
+		}) :: Frame
+		return vide.apply(frame)(props) :: Frame
+	end
 	local frame = create("Frame")({
 		BackgroundColor3 = Color3.new(1, 1, 1), -- o UIGradient pinta
 		BorderSizePixel = 0,
@@ -131,6 +182,17 @@ function Rustic.button(props: { [any]: any }): TextButton
 		local value = read(subtext)
 		return value ~= nil and value ~= ""
 	end
+	local function plank(): boolean
+		return usesPlank(read(kind))
+	end
+	local function textStroke(): UIStroke
+		return create("UIStroke")({
+			Enabled = plank,
+			Color = R.outline,
+			Thickness = TEXT_STROKE,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+		}) :: UIStroke
+	end
 
 	local button = create("TextButton")({
 		Text = "",
@@ -141,17 +203,33 @@ function Rustic.button(props: { [any]: any }): TextButton
 			return read(kind) ~= "disabled"
 		end,
 		BackgroundColor3 = Color3.new(1, 1, 1),
+		BackgroundTransparency = function()
+			return if plank() then 1 else 0
+		end,
 		BorderSizePixel = 0,
 		create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
 		create("UICorner")({ CornerRadius = CORNER }),
 		create("UIGradient")({
+			Enabled = function()
+				return not plank()
+			end,
 			Rotation = 90,
 			Color = function()
 				local m = material()
 				return bevel(m.light, m.face, m.shadow)
 			end,
 		}),
-		outline(),
+		create("UIStroke")({
+			Enabled = function()
+				return not plank()
+			end,
+			Color = R.outline,
+			Thickness = OUTLINE,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+		}),
+		plankImage(plank, function()
+			return if read(kind) == "leather" then PLANK_TINT.leather else PLANK_TINT.wood
+		end),
 		Rustic.label({
 			Name = "Label",
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -169,6 +247,7 @@ function Rustic.button(props: { [any]: any }): TextButton
 				return read(text) or ""
 			end,
 			maxSize = maxSize,
+			textStroke(),
 		}),
 		Rustic.label({
 			Name = "Subtext",
@@ -184,6 +263,7 @@ function Rustic.button(props: { [any]: any }): TextButton
 				return read(subtext) or ""
 			end,
 			maxSize = SUBTEXT_MAX,
+			textStroke(),
 		}),
 	}) :: TextButton
 	return vide.apply(button)(props) :: TextButton

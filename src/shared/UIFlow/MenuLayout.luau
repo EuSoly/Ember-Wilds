@@ -11,6 +11,15 @@ local MenuLayout = {}
 MenuLayout.MARGIN = 8
 MenuLayout.POD_HEIGHT = 56 -- dois pods nos cantos; o centro fica livre para o logo
 MenuLayout.POD_WIDTH = 0.24 -- fração da largura
+MenuLayout.POD_MIN = 200 -- os pods não encolhem abaixo disto (nível + XP + selo)
+MenuLayout.POD_MAX = 320
+-- Logo no alto, entre os pods: maior no PC, menor no compacto.
+MenuLayout.LOGO_ASPECT = 1200 / 804 -- proporção do PNG do logo
+MenuLayout.LOGO_HEIGHT = 120
+MenuLayout.LOGO_HEIGHT_COMPACT = 64
+MenuLayout.LOGO_GAP = 8 -- folga mínima entre o logo e os pods
+-- Árvore atrás da coluna: acompanha a altura da tela (proporção do PNG).
+MenuLayout.TREE_ASPECT = 589 / 916
 MenuLayout.COLUMN_WIDTH = 200 -- design system §8: 200 no PC
 MenuLayout.COLUMN_WIDTH_COMPACT = 144 -- e 144 no compacto
 MenuLayout.BUTTON_HEIGHT = 52 -- botão padrão
@@ -53,6 +62,10 @@ export type Layout = {
 	podTop: number,
 	podBottom: number,
 	podWidth: number,
+	logoTop: number,
+	logoHeight: number,
+	treeWidth: number,
+	treeHeight: number,
 	bodyTop: number,
 	columnX: number,
 	columnWidth: number,
@@ -127,9 +140,16 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 
 	-- Aviso de compra simulada: no alto da área do boneco; com os kits cobrindo
 	-- tudo (celular), dentro do painel, logo abaixo do título e do fechar.
+	-- Logo: o maior que couber entre os pods.
+	local podWidth = clamp(width * MenuLayout.POD_WIDTH, MenuLayout.POD_MIN, MenuLayout.POD_MAX)
+	local logoTop = m - 4
+	local logoRoom = (width - 2 * (m + podWidth) - 2 * MenuLayout.LOGO_GAP) / MenuLayout.LOGO_ASPECT
+	local logoHeight =
+		math.max(math.min(if compact then MenuLayout.LOGO_HEIGHT_COMPACT else MenuLayout.LOGO_HEIGHT, logoRoom), 0)
+
 	local covering = kitsOpen == true and kitsCover
 	local noticeCenterX = areaLeft + heroAreaWidth / 2
-	local noticeY = bodyTop + 4
+	local noticeY = math.max(bodyTop, logoTop + logoHeight) + 4
 	local noticeWidth = math.min(heroAreaWidth - 16, MenuLayout.NOTICE_MAX)
 	if covering then
 		noticeCenterX = kitPanelX + kitPanelWidth / 2
@@ -141,7 +161,11 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		compact = compact,
 		podTop = m,
 		podBottom = m + MenuLayout.POD_HEIGHT,
-		podWidth = width * MenuLayout.POD_WIDTH,
+		podWidth = podWidth,
+		logoTop = logoTop,
+		logoHeight = logoHeight,
+		treeWidth = height * MenuLayout.TREE_ASPECT,
+		treeHeight = height,
 		bodyTop = bodyTop,
 		columnX = m,
 		columnWidth = columnWidth,

@@ -90,6 +90,48 @@ return {
 		end
 	end,
 
+	["logo is bigger on desktop and fits between the pods"] = function()
+		assert(
+			MenuLayout.compute(1920, 1080).logoHeight > MenuLayout.compute(667, 375).logoHeight,
+			"logo do PC devia ser maior"
+		)
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = MenuLayout.compute(w, h)
+			local logoWidth = l.logoHeight * MenuLayout.LOGO_ASPECT
+			assert(w / 2 - logoWidth / 2 >= l.columnX + l.podWidth, `{w}x{h}: logo encosta no pod do nível`)
+			assert(w / 2 + logoWidth / 2 <= w - MenuLayout.MARGIN - l.podWidth, `{w}x{h}: logo encosta no saldo`)
+		end
+	end,
+
+	["notice sits below the logo"] = function()
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = MenuLayout.compute(w, h)
+			assert(l.noticeY >= l.logoTop + l.logoHeight, `{w}x{h}: aviso por cima do logo`)
+			assert(
+				l.noticeY + MenuLayout.NOTICE_HEIGHT <= l.heroBottom - l.heroSize + 40,
+				`{w}x{h}: aviso muito em cima do boneco`
+			)
+		end
+	end,
+
+	["tree follows the screen height"] = function()
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = MenuLayout.compute(w, h)
+			assert(l.treeHeight == h, `{w}x{h}: árvore com altura {l.treeHeight}`)
+			assert(math.abs(l.treeWidth - h * MenuLayout.TREE_ASPECT) < 0.01, `{w}x{h}: proporção da árvore`)
+		end
+	end,
+
+	["pods have a readable width"] = function()
+		for _, size in SIZES do
+			local l = MenuLayout.compute(size[1], size[2])
+			assert(l.podWidth >= MenuLayout.POD_MIN and l.podWidth <= MenuLayout.POD_MAX, `pod com {l.podWidth}`)
+		end
+	end,
+
 	["compact kits cover the hero"] = function()
 		assert(MenuLayout.compute(667, 375, true).kitsCoverHero, "667x375 should cover")
 		assert(not MenuLayout.compute(667, 375, false).kitsCoverHero, "closed kits cover nothing")

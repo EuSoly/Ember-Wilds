@@ -52,16 +52,27 @@ local PANELS = { "profile", "cosmetics", "shop", "buy", "tutorial", "ranking" } 
 local MARGIN = MenuLayout.MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
 local TOUCH = Theme.touchMinSize.Y
-local POD_MIN = 200 -- os pods não encolhem abaixo disto (nível + XP + selo)
-local POD_MAX = 320
-local LOGO_ASPECT = 1200 / 804 -- proporção do PNG do logo
 local SHADOW_SHARE = Vector2.new(0.7, 0.12) -- sombra no chão, fração do lado do boneco
 
 type Layout = MenuLayout.Layout
 
 local function podWidth(l: Layout): number
-	return math.clamp(l.podWidth, POD_MIN, POD_MAX)
+	return l.podWidth
 end
+
+-- 1321 → "1.321" (separador de milhar do pt-BR).
+local function thousands(value: number): string
+	local digits = tostring(math.floor(math.max(value, 0)))
+	local out = digits:reverse():gsub("(%d%d%d)", "%1."):reverse()
+	return (out:gsub("^%.", ""))
+end
+
+-- Galho atrás do card da Golden Ember: maior que o card, encostado na borda
+-- direita, com o tronco do galho passando logo abaixo do card.
+local BRANCH_ASPECT = 584 / 222 -- proporção do PNG do galho
+local BRANCH_SHARE = 1.45 -- largura do galho em relação ao card
+local BRANCH_LIFT = 0.22 -- quanto do galho fica acima do topo do card
+local COIN_SIZE = 40
 
 -- "Nenhum", "Explorador" ou "Iniciante (simulado)" (kit que não vai ao servidor).
 local function kitLabel(): string
@@ -219,25 +230,36 @@ local function balancePod(layout: () -> Layout): Frame
 		Size = function()
 			return UDim2.fromOffset(podWidth(layout()), MenuLayout.POD_HEIGHT)
 		end,
+		create("ImageLabel")({
+			Name = "Coin",
+			Visible = UiImages.has(UiImages.COIN),
+			AnchorPoint = Vector2.new(0, 0.5),
+			Position = UDim2.new(0, 14, 0.5, -1),
+			Size = UDim2.fromOffset(COIN_SIZE, COIN_SIZE),
+			BackgroundTransparency = 1,
+			Image = UiImages.COIN,
+			ScaleType = Enum.ScaleType.Fit,
+		}),
 		-- Saldo real (atributo Currency); o mockup nunca o altera.
 		Rustic.label({
 			Name = "Balance",
 			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 12, 0.5, 0),
-			Size = UDim2.new(1, -(TOUCH + 28), 0.6, 0),
+			Position = UDim2.new(0, 14 + COIN_SIZE + 8, 0.5, 0),
+			Size = UDim2.new(1, -(TOUCH + 34 + COIN_SIZE), 0.6, 0),
 			FontFace = Theme.font.number,
 			Text = function()
-				return Strings.format("menu.balance", { amount = currency() })
+				return thousands(currency())
 			end,
 			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 20,
+			maxSize = 26,
+			create("UIStroke")({ Color = Theme.rustic.outline, Thickness = 1.5 }),
 		}),
 		Rustic.button({
 			Name = "BuyButton",
 			AnchorPoint = Vector2.new(1, 0.5),
-			Position = UDim2.new(1, -6, 0.5, 0),
+			Position = UDim2.new(1, -10, 0.5, 0),
 			Size = UDim2.fromOffset(TOUCH, TOUCH),
-			kind = "leather",
+			kind = "ember",
 			text = "+",
 			maxSize = 26,
 			Activated = function()
@@ -247,15 +269,61 @@ local function balancePod(layout: () -> Layout): Frame
 	})
 end
 
+-- Galho atrás do card do saldo (vem antes dele na lista: fica por baixo).
+local function branch(layout: () -> Layout): ImageLabel
+	return create("ImageLabel")({
+		Name = "Branch",
+		Visible = UiImages.has(UiImages.BRANCH),
+		AnchorPoint = Vector2.new(1, 0),
+		Position = function()
+			local l = layout()
+			local height = l.podWidth * BRANCH_SHARE / BRANCH_ASPECT
+			return UDim2.new(1, 0, 0, l.podTop - height * BRANCH_LIFT)
+		end,
+		Size = function()
+			local width = layout().podWidth * BRANCH_SHARE
+			return UDim2.fromOffset(width, width / BRANCH_ASPECT)
+		end,
+		BackgroundTransparency = 1,
+		Image = UiImages.BRANCH,
+		ScaleType = Enum.ScaleType.Fit,
+	}) :: ImageLabel
+end
+
+-- Árvore atrás da coluna: tronco do chão até a copa, que segura a placa do nível.
+local function tree(layout: () -> Layout): ImageLabel
+	return create("ImageLabel")({
+		Name = "Tree",
+		Visible = UiImages.has(UiImages.TREE),
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(l.treeWidth, l.treeHeight)
+		end,
+		BackgroundTransparency = 1,
+		Image = UiImages.TREE,
+		ScaleType = Enum.ScaleType.Fit,
+		ZIndex = 0,
+	}) :: ImageLabel
+end
+
+-- Logo maior no menu; com um painel do mockup aberto, encolhe para não cobrir o título.
+local PANEL_LOGO_HEIGHT = 56
 local function logo(layout: () -> Layout): ImageLabel
 	return create("ImageLabel")({
 		Name = "Logo",
 		Visible = UiImages.has(UiImages.LOGO),
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = function()
-			return UDim2.new(0.5, 0, 0, layout().podTop - 4)
+			return UDim2.new(0.5, 0, 0, layout().logoTop)
 		end,
-		Size = UDim2.fromOffset(math.floor((MenuLayout.POD_HEIGHT + 8) * LOGO_ASPECT), MenuLayout.POD_HEIGHT + 8),
+		Size = function()
+			local panel = MenuState.panel()
+			local height = layout().logoHeight
+			if panel ~= "play" and panel ~= "kits" then
+				height = math.min(height, PANEL_LOGO_HEIGHT)
+			end
+			return UDim2.fromOffset(height * MenuLayout.LOGO_ASPECT, height)
+		end,
 		BackgroundTransparency = 1,
 		Image = UiImages.LOGO,
 		ScaleType = Enum.ScaleType.Fit,
@@ -461,7 +529,8 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		return MenuLayout.compute(size.X, size.Y, MenuState.panel() == "kits")
 	end)
 
-	local children: { Instance } = { levelPod(layout), balancePod(layout), logo(layout), column(layout) }
+	local children: { Instance } =
+		{ tree(layout), levelPod(layout), branch(layout), balancePod(layout), logo(layout), column(layout) }
 	for _, instance in home(layout) do
 		table.insert(children, instance)
 	end
