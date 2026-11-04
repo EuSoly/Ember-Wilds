@@ -548,6 +548,10 @@ return {
 		assert(Defs.Stats.mobs_killed.kind == "keyed", "mobs_killed deveria ser keyed")
 		assert(Defs.Stats.mobs_killed.keyKind == "mob", "mobs_killed deveria ter chave de mob")
 		assert(Defs.Stats.score_best.kind == "max", "score_best deveria ser max")
+		for _, id in { "xp_total", "days_total", "real_deaths" } do
+			local stat = Defs.Stats[id]
+			assert(stat ~= nil and stat.kind == "counter", `{id} deveria ser counter`)
+		end
 		assert(Defs.Settings.quality.default == "auto", "qualidade padrão deveria ser auto")
 		assert(Defs.Settings.ui_scale.max == 1.25, "ui_scale máximo deveria ser 1.25")
 	end,

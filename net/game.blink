@@ -93,6 +93,7 @@ event RequestSpawn {
 -- Resumo da vida que acabou, para a tela de morte (DeathService.kill).
 -- CauseKey = chave de Strings (ex. "death.cause.dev"); Days = ciclos vividos;
 -- Points = pontos da vida; Currency = Golden Ember concedida de fato (após tetos).
+-- Xp = XP concedido de fato (após o teto por hora); XpTotal = XP total depois dele.
 -- KillerName = nome de quem deu o golpe final (morte por jogador, G6); a tela
 -- mostra o nome no lugar da causa.
 event LifeEnded {
@@ -104,6 +105,8 @@ event LifeEnded {
 		Days: u16,
 		Points: u32,
 		Currency: u16,
+		Xp: u32,
+		XpTotal: u32,
 		KillerName: string(1..64)?
 	}
 }

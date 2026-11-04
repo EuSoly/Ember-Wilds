@@ -126,6 +126,9 @@ return table.freeze({
 	["stat.score_best"] = "Melhor pontuação",
 	["stat.days_best"] = "Mais dias vivo",
 	["stat.playtime_seconds"] = "Tempo de jogo",
+	["stat.xp_total"] = "XP total",
+	["stat.days_total"] = "Dias sobrevividos",
+	["stat.real_deaths"] = "Mortes",
 
 	-- Configurações
 	["setting.group.sound"] = "Som",

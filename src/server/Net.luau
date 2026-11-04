@@ -290,9 +290,9 @@ function SerdesFunctions.ReadEVENT_RequestSpawn(): ({ KitId: string? })
 	return Value
 end
 
-function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }): ()
-	-- Allocate BLOCK: 11 bytes
-	local BLOCK_START = Allocate(11)
+function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
+	-- Allocate BLOCK: 19 bytes
+	local BLOCK_START = Allocate(19)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 8)
 	local Length = #Value.CauseKey
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
@@ -301,7 +301,9 @@ function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: n
 	buffer.writeu16(SendBuffer, BLOCK_START + 2, Value.Days)
 	buffer.writeu32(SendBuffer, BLOCK_START + 4, Value.Points)
 	buffer.writeu16(SendBuffer, BLOCK_START + 8, Value.Currency)
-	buffer.writeu8(SendBuffer, BLOCK_START + 10, Value.KillerName ~= nil and 1 or 0)
+	buffer.writeu32(SendBuffer, BLOCK_START + 10, Value.Xp)
+	buffer.writeu32(SendBuffer, BLOCK_START + 14, Value.XpTotal)
+	buffer.writeu8(SendBuffer, BLOCK_START + 18, Value.KillerName ~= nil and 1 or 0)
 	if Value.KillerName ~= nil then
 		-- Allocate BLOCK: 1 bytes
 		local BLOCK_START = Allocate(1)
@@ -1017,12 +1019,12 @@ local Returns = table.freeze({
 		end
 	},
 	LifeEnded = {
-		Fire = function(Player: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }): ()
+		Fire = function(Player: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
 			Load(PlayersMap[Player])
 			SerdesFunctions.WriteEVENT_LifeEnded(Value)
 			PlayersMap[Player] = Save()
 		end,
-		FireAll = function(Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }): ()
+		FireAll = function(Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_LifeEnded(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
@@ -1034,7 +1036,7 @@ local Returns = table.freeze({
 				PlayersMap[Player] = Save()
 			end
 		end,
-		FireList = function(List: {Player}, Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }): ()
+		FireList = function(List: {Player}, Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_LifeEnded(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
@@ -1046,7 +1048,7 @@ local Returns = table.freeze({
 				PlayersMap[Player] = Save()
 			end
 		end,
-		FireExcept = function(Except: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }): ()
+		FireExcept = function(Except: Player, Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_LifeEnded(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances

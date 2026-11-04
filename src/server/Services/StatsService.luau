@@ -11,6 +11,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatsRules = require(ReplicatedStorage.Shared.Data.StatsRules)
+local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
 local DataService = require(script.Parent.DataService)
 
 local PLAYTIME_STAT = "playtime_seconds"
@@ -74,6 +75,19 @@ function StatsService.record(player: Player, statId: string, value: number)
 	end
 end
 
+-- Dados do nível no perfil (data.Xp). O Reconcile do ProfileStore já cria o
+-- campo nos perfis antigos; o "se faltar" é só rede de segurança.
+function StatsService.xpData(player: Player): LevelRules.XpData?
+	local data = DataService.data(player)
+	if data == nil then
+		return nil
+	end
+	if type(data.Xp) ~= "table" then
+		data.Xp = { Seeded = false, HourWindowStart = 0, HourEarned = 0 }
+	end
+	return data.Xp
+end
+
 -- Valor atual (0 sem perfil ou sem valor).
 function StatsService.get(player: Player, statId: string, key: string?): number
 	local def = Defs.Stats[statId]
@@ -105,8 +119,13 @@ local function flushPlaytime(player: Player)
 end
 
 function StatsService.Start(_self)
-	DataService.onLoaded(function(player)
+	DataService.onLoaded(function(player, data)
 		lastPlaytimeAt[player] = os.clock()
+		-- Quem já jogou começa com o XP do total de pontos (uma vez por perfil).
+		local xp = StatsService.xpData(player)
+		if xp and LevelRules.seed(xp, data.Stats) then
+			notifyChanged(player, "xp_total", nil, StatsRules.get(data.Stats, Defs.Stats.xp_total))
+		end
 	end)
 	DataService.onBeforeSave(function(player)
 		flushPlaytime(player)

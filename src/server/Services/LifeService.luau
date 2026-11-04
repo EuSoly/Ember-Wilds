@@ -15,6 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CurrencyRules = require(ReplicatedStorage.Shared.Data.CurrencyRules)
 local LifeRules = require(ReplicatedStorage.Shared.Data.LifeRules)
+local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local StatsService = require(script.Parent.StatsService)
@@ -22,8 +23,8 @@ local StatsService = require(script.Parent.StatsService)
 local LifeService = {}
 
 -- Resumo de uma vida terminada (tela de morte): pontos, dias vividos
--- (LifeRules.daysSurvived) e Golden Ember concedida de fato (depois dos tetos).
-export type LifeSummary = { points: number, days: number, currency: number }
+-- (LifeRules.daysSurvived), Golden Ember e XP concedidos de fato (depois dos tetos).
+export type LifeSummary = { points: number, days: number, currency: number, xp: number }
 
 local lives: { [Player]: LifeRules.Life } = {}
 
@@ -60,9 +61,18 @@ function LifeService.endLife(player: Player): LifeSummary?
 	StatsService.record(player, "score_best", score)
 	StatsService.record(player, "days_best", days)
 	StatsService.add(player, "deaths", 1)
+	if days > 0 then
+		StatsService.add(player, "days_total", days)
+	end
+	-- XP = pontos da vida, com teto por hora (LevelRules).
+	local xpData = StatsService.xpData(player)
+	local xp = if xpData then LevelRules.earn(xpData, score, os.time()) else 0
+	if xp > 0 then
+		StatsService.add(player, "xp_total", xp)
+	end
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
-	return { points = score, days = days, currency = granted }
+	return { points = score, days = days, currency = granted, xp = xp }
 end
 
 local function startLifeIfNone(player: Player)

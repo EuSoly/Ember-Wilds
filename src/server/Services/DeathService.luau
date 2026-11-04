@@ -39,6 +39,7 @@ local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
+local StatsService = require(script.Parent.StatsService)
 local ScoreService = require(script.Parent.ScoreService)
 local StructureService = require(script.Parent.StructureService)
 local Net = require(script.Parent.Parent.Net)
@@ -123,7 +124,9 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		ScoreService.add(validKiller, CrateRules.killBonus(scoreOf(player)))
 	end
 	-- nil = sem vida ativa ou sem perfil: a tela de morte mostra zeros.
-	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0 }
+	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0, xp = 0 }
+	-- Morte de verdade (sair do jogo não passa por aqui): o "Mortes" do Perfil.
+	StatsService.add(player, "real_deaths", 1)
 
 	-- Pontos da vida que acabou ficam para comprar um kit antes de renascer.
 	player:SetAttribute(StatNames.KitPoints, summary.points)
@@ -141,6 +144,8 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		Days = clampInt(summary.days, MAX_U16),
 		Points = clampInt(summary.points, MAX_U32),
 		Currency = clampInt(summary.currency, MAX_U16),
+		Xp = clampInt(summary.xp, MAX_U32),
+		XpTotal = clampInt(StatsService.get(player, "xp_total"), MAX_U32),
 		KillerName = if validKiller then killerNameOf(validKiller) else nil,
 	})
 end

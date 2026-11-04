@@ -298,9 +298,9 @@ function SerdesFunctions.WriteEVENT_RequestSpawn(Value: { KitId: string? }): ()
 	end
 end
 
-function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? })
-	-- Read BLOCK: 10 bytes
-	local BLOCK_START = Read(10)
+function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? })
+	-- Read BLOCK: 18 bytes
+	local BLOCK_START = Read(18)
 	local Value = {} :: any
 	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	Value.CauseKey = buffer.readstring(RecieveBuffer, Read(Length), Length)
@@ -309,7 +309,9 @@ function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: numbe
 	Value.Days = buffer.readu16(RecieveBuffer, BLOCK_START + 1)
 	Value.Points = buffer.readu32(RecieveBuffer, BLOCK_START + 3)
 	Value.Currency = buffer.readu16(RecieveBuffer, BLOCK_START + 7)
-	if buffer.readu8(RecieveBuffer, BLOCK_START + 9) == 1 then
+	Value.Xp = buffer.readu32(RecieveBuffer, BLOCK_START + 9)
+	Value.XpTotal = buffer.readu32(RecieveBuffer, BLOCK_START + 13)
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 17) == 1 then
 		-- Read BLOCK: 1 bytes
 		local BLOCK_START = Read(1)
 		Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
@@ -636,7 +638,7 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				table.insert(Queue.Reliable[2], {Value} :: {any})
 			end
 		elseif Index == 8 then
-			local Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? } = SerdesFunctions.ReadEVENT_LifeEnded()
+			local Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? } = SerdesFunctions.ReadEVENT_LifeEnded()
 			if Events.Reliable[8] ~= nil then
 				task.spawn(Events.Reliable[8], Value)
 			else
@@ -784,7 +786,7 @@ local Returns = table.freeze({
 		end
 	},
 	LifeEnded = {
-		On = function(Listener: (Value: { CauseKey: string, Days: number, Points: number, Currency: number, KillerName: string? }) -> ()): () -> ()
+		On = function(Listener: (Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }) -> ()): () -> ()
 			Events.Reliable[8] = Listener
 			for Index, Arguments in Queue.Reliable[8] do
 				task.spawn(Listener, table.unpack(Arguments))

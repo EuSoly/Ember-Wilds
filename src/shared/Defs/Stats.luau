@@ -24,6 +24,12 @@ local Stats: { [string]: StatDef } = {
 	-- Ciclos completos (dia + noite) vividos numa vida.
 	days_best = { id = "days_best", nameKey = "stat.days_best", kind = "max" },
 	playtime_seconds = { id = "playtime_seconds", nameKey = "stat.playtime_seconds", kind = "counter" },
+	-- XP total (pontos de cada vida, com teto por hora: LevelRules). O nível sai daqui.
+	xp_total = { id = "xp_total", nameKey = "stat.xp_total", kind = "counter" },
+	-- Soma dos dias (ciclos completos) de todas as vidas. Começou a contar em 04/11.
+	days_total = { id = "days_total", nameKey = "stat.days_total", kind = "counter" },
+	-- Só mortes de verdade (sair do jogo não conta; "deaths" conta). Começou em 04/11.
+	real_deaths = { id = "real_deaths", nameKey = "stat.real_deaths", kind = "counter" },
 }
 
 for _, stat in Stats do

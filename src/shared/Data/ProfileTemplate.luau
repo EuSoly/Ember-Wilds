@@ -14,6 +14,9 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		Currency = { Balance = 0, HourWindowStart = 0, HourEarned = 0 },
 		Cosmetics = { Owned = {}, Equipped = {} },
 		Stats = {},
+		-- Nível (LevelRules): XP inicial já copiado do total de pontos? e a
+		-- janela do teto de XP por hora. O XP em si é a estatística xp_total.
+		Xp = { Seeded = false, HourWindowStart = 0, HourEarned = 0 },
 		Settings = SettingsRules.defaults(defs.Settings),
 		-- Reservado para as compras com Robux (F5/loja), padrão do ProfileStore.
 		PurchaseIdCache = {},
