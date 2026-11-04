@@ -17,6 +17,7 @@ local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
+local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -31,6 +32,8 @@ local CARD_ART: { [string]: string } = {
 	book = "blue",
 	crate = "orange",
 }
+local SAMPLE_COUNT = 3 -- skins de amostra por cartão
+local SAMPLE_TILE = 70 -- só dimensiona o nome (o tamanho real vem da faixa)
 local WHEEL_SPEED = 40 -- graus por segundo
 
 local SpinTypes = {}
@@ -92,9 +95,9 @@ local function roulette(): (Frame, GuiObject)
 			-- Embaixo, logo acima do botão: em cima ficam as skins de amostra.
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new(0.5, 0, 1, -62),
-			-- Cabe no menor lado: até 78% da largura e até metade da altura do
+			-- Cabe no menor lado: até 78% da largura e até 40% da altura do
 			-- cartão (em tela larga, só pela largura ela cobria o título).
-			Size = UDim2.fromScale(0.78, 0.5),
+			Size = UDim2.fromScale(0.78, 0.4),
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 			create("UIAspectRatioConstraint")({
@@ -132,6 +135,74 @@ local function roulette(): (Frame, GuiObject)
 	return box, disc
 end
 
+-- Faixa de amostras abaixo do título: as skins mais raras do tipo em 3D, paradas
+-- (sem trabalho por quadro). Tipo sem skins ("Em breve") fica com a faixa vazia.
+local function samples(spinType: MockStore.SpinType): Frame
+	local picked: { MockStore.SpinItem } = {}
+	for i = #spinType.items, math.max(#spinType.items - SAMPLE_COUNT + 1, 1), -1 do
+		table.insert(picked, 1, spinType.items[i])
+	end
+	local strip = create("Frame")({
+		Name = "Samples",
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.17),
+		Size = UDim2.fromScale(0.9, 0.17),
+		BackgroundTransparency = 1,
+		ZIndex = 3,
+	}) :: Frame
+	-- Caixa com a proporção de N quadradinhos lado a lado: ela encolhe para caber
+	-- na faixa (na largura ou na altura, o que apertar primeiro) e os
+	-- quadradinhos têm a altura dela, então nunca passam da faixa.
+	local gap = 0.08
+	local ratio = SAMPLE_COUNT + (SAMPLE_COUNT - 1) * gap
+	local row = create("Frame")({
+		Name = "Row",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		ZIndex = 3,
+		create("UIAspectRatioConstraint")({
+			AspectRatio = ratio,
+			AspectType = Enum.AspectType.FitWithinMaxSize,
+		}),
+		create("UIListLayout")({
+			FillDirection = Enum.FillDirection.Horizontal,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(gap / ratio, 0),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+	}) :: Frame
+	row.Parent = strip
+	for i, item in picked do
+		local tile = SpinTile.build(item, SAMPLE_TILE)
+		tile.Size = UDim2.fromScale(1, 1)
+		tile.SizeConstraint = Enum.SizeConstraint.RelativeYY
+		tile.LayoutOrder = i
+		tile.Parent = row
+	end
+	return strip
+end
+
+-- Botão de baixo do cartão: "Escolher", ou "Em breve" (apagado) se o tipo ainda
+-- não tem skins.
+local function bottomButton(spinType: MockStore.SpinType): Instance
+	local soon = #spinType.items == 0
+	return Rustic.button({
+		Name = if soon then "Soon" else "Choose",
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, -10),
+		Size = UDim2.new(0.86, 0, 0, 46),
+		ZIndex = 4,
+		kind = if soon then "disabled" else "ember",
+		text = Strings.get(if soon then "cosmetics.soon" else "shop.choose"),
+		Activated = function()
+			ShopState.openSpin(spinType.id)
+		end,
+	})
+end
+
 local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiObject }): Frame
 	local wheelBox, disc = roulette()
 	table.insert(wheels, disc)
@@ -148,39 +219,8 @@ local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiOb
 			maxSize = 28,
 		}),
 		wheelBox,
-		-- Faixa reservada para as skins de amostra (ainda vazia), abaixo do título.
-		create("Frame")({
-			Name = "Samples",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.16),
-			Size = UDim2.fromScale(0.9, 0.22),
-			BackgroundTransparency = 1,
-			ZIndex = 3,
-		}),
-		if #spinType.items > 0
-			then Rustic.button({
-				Name = "Choose",
-				AnchorPoint = Vector2.new(0.5, 1),
-				Position = UDim2.new(0.5, 0, 1, -10),
-				Size = UDim2.new(0.86, 0, 0, 46),
-				ZIndex = 4,
-				kind = "ember",
-				text = Strings.get("shop.choose"),
-				Activated = function()
-					ShopState.openSpin(spinType.id)
-				end,
-			}) :: Instance
-			else
-					-- Sem skins ainda (acessório): "Em breve", sem botão Escolher.
-				Rustic.button({
-						Name = "Soon",
-						AnchorPoint = Vector2.new(0.5, 1),
-						Position = UDim2.new(0.5, 0, 1, -10),
-						Size = UDim2.new(0.86, 0, 0, 46),
-						ZIndex = 4,
-						kind = "disabled",
-						text = Strings.get("cosmetics.soon"),
-					}) :: Instance,
+		samples(spinType),
+		bottomButton(spinType),
 	})
 end
 
