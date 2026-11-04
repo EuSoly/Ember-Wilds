@@ -47,6 +47,11 @@ return {
 		assert(LoadingMath.isNight(0.5), "0.5 já é noite")
 	end,
 
+	["a slow frame does not skip the sun"] = function()
+		-- Primeiro quadro de 3 s num celular lento: a barra não pode pular a metade.
+		assert(not LoadingMath.isNight(LoadingMath.step(0, 3, false)), "pulou o sol")
+	end,
+
 	["big dt is clamped"] = function()
 		assert(LoadingMath.step(0, 10, false) <= LoadingMath.WAITING_TARGET, "dt grande passou do alvo")
 		assert(LoadingMath.step(0.95, 10, true) == 1, "pronto com dt grande deveria ir a 1")

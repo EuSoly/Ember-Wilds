@@ -434,14 +434,13 @@ local function noticeBanner(layout: () -> Layout): Frame
 		end,
 		ZIndex = 10,
 		AnchorPoint = Vector2.new(0.5, 0),
-		-- Sobre a área do boneco: não cobre o título do painel de kits.
+		-- Onde fica vem do MenuLayout: nunca cobre o título nem o fechar dos kits.
 		Position = function()
 			local l = layout()
-			return UDim2.fromOffset(l.heroCenterX, l.bodyTop + 4)
+			return UDim2.fromOffset(l.noticeCenterX, l.noticeY)
 		end,
 		Size = function()
-			local l = layout()
-			return UDim2.fromOffset(math.min(l.heroCenterX - l.panelX, 260) * 2 - 16, 36)
+			return UDim2.fromOffset(layout().noticeWidth, MenuLayout.NOTICE_HEIGHT)
 		end,
 		BackgroundColor3 = Theme.ui.warning,
 		BackgroundTransparency = 0,

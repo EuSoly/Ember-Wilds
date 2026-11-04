@@ -75,6 +75,21 @@ return {
 			assert(l.heroCenterX + l.actionsWidth / 2 <= l.kitPanelX, `{size[1]}: buttons under the kits`)
 		end
 	end,
+	["notice never covers the kits header"] = function()
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = MenuLayout.compute(w, h, true)
+			local left, right = l.noticeCenterX - l.noticeWidth / 2, l.noticeCenterX + l.noticeWidth / 2
+			local top, bottom = l.noticeY, l.noticeY + MenuLayout.NOTICE_HEIGHT
+			local headerBottom = l.bodyTop + MenuLayout.KIT_HEADER_HEIGHT
+			local overlapsX = left < l.kitPanelX + l.kitPanelWidth and right > l.kitPanelX
+			local overlapsY = top < headerBottom and bottom > l.bodyTop
+			assert(not (overlapsX and overlapsY), `{w}x{h}: aviso cobre o título/fechar dos kits`)
+			assert(left >= 0 and right <= w and bottom <= h, `{w}x{h}: aviso fora da tela`)
+			assert(l.noticeWidth > 0, `{w}x{h}: aviso sem largura`)
+		end
+	end,
+
 	["compact kits cover the hero"] = function()
 		assert(MenuLayout.compute(667, 375, true).kitsCoverHero, "667x375 should cover")
 		assert(not MenuLayout.compute(667, 375, false).kitsCoverHero, "closed kits cover nothing")

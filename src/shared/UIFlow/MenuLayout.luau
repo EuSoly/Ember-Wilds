@@ -42,6 +42,11 @@ MenuLayout.HERO_WIDTH_SHARE = 0.9 -- o boneco usa no máximo 90% da largura livr
 MenuLayout.KIT_PANEL_SHARE = 0.36
 MenuLayout.KIT_PANEL_MIN = 340
 MenuLayout.KIT_PANEL_MAX = 520
+-- Título + fechar do painel de kits (KitsPanel): o aviso de compra simulada
+-- nunca fica por cima disso.
+MenuLayout.KIT_HEADER_HEIGHT = 64
+MenuLayout.NOTICE_HEIGHT = 36
+MenuLayout.NOTICE_MAX = 520
 
 export type Layout = {
 	compact: boolean,
@@ -71,6 +76,9 @@ export type Layout = {
 	kitPanelX: number,
 	kitPanelWidth: number,
 	kitsCoverHero: boolean,
+	noticeCenterX: number,
+	noticeY: number,
+	noticeWidth: number,
 }
 
 local function clamp(value: number, low: number, high: number): number
@@ -117,6 +125,18 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 	local heroBottom = actionsY - MenuLayout.HERO_GAP
 	local heroSize = math.min(heroBottom - bodyTop, heroAreaWidth * MenuLayout.HERO_WIDTH_SHARE, MenuLayout.HERO_MAX)
 
+	-- Aviso de compra simulada: no alto da área do boneco; com os kits cobrindo
+	-- tudo (celular), dentro do painel, logo abaixo do título e do fechar.
+	local covering = kitsOpen == true and kitsCover
+	local noticeCenterX = areaLeft + heroAreaWidth / 2
+	local noticeY = bodyTop + 4
+	local noticeWidth = math.min(heroAreaWidth - 16, MenuLayout.NOTICE_MAX)
+	if covering then
+		noticeCenterX = kitPanelX + kitPanelWidth / 2
+		noticeY = bodyTop + MenuLayout.KIT_HEADER_HEIGHT + 4
+		noticeWidth = math.min(kitPanelWidth - 32, MenuLayout.NOTICE_MAX)
+	end
+
 	return {
 		compact = compact,
 		podTop = m,
@@ -144,7 +164,10 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		actionsGap = gap,
 		kitPanelX = kitPanelX,
 		kitPanelWidth = kitPanelWidth,
-		kitsCoverHero = kitsOpen == true and kitsCover,
+		kitsCoverHero = covering,
+		noticeCenterX = noticeCenterX,
+		noticeY = noticeY,
+		noticeWidth = noticeWidth,
 	}
 end
 

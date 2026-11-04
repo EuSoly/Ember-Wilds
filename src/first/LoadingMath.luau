@@ -13,9 +13,13 @@ LoadingMath.WAITING_TARGET = 0.9 -- até onde a barra vai sozinha
 LoadingMath.WAIT_RATE = 0.4 -- por segundo; 0,9·(1−e^(−0,4·2)) ≈ 0,5 em 2 s
 LoadingMath.FINISH_RATE = 1.5 -- fração da barra por segundo depois de pronto
 LoadingMath.NIGHT_AT = 0.5 -- daqui em diante é noite (lua)
+-- Passo máximo por quadro: num celular lento o primeiro quadro pode levar
+-- segundos, e sem limite a barra pularia direto para a noite (sem sol).
+LoadingMath.MAX_STEP = 0.1
 
 -- Próximo valor da barra depois de `dt` segundos.
 function LoadingMath.step(progress: number, dt: number, ready: boolean): number
+	dt = math.min(dt, LoadingMath.MAX_STEP)
 	if ready then
 		return math.min(progress + dt * LoadingMath.FINISH_RATE, 1)
 	end
