@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#D98956"/><stop offset=".48" stop-color="#65744A"/><stop offset="1" stop-color="#34472E"/></linearGradient>
+ <linearGradient id="forest" x2="0" y2="1"><stop stop-color="#75834d"/><stop offset="1" stop-color="#455334"/></linearGradient>
+ <pattern id="papergrain" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="4" cy="8" r="1" fill="#B99462" opacity=".15"/><circle cx="25" cy="22" r=".8" fill="#59402D" opacity=".08"/></pattern>
+ <filter id="shadow" x="-.2" y="-.2" width="1.5" height="1.6"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<!-- board -->
+<rect width="1600" height="1000" fill="#29241F"/>
+<rect x="24" y="24" width="1552" height="952" rx="22" fill="#E8D5AE"/>
+<rect x="24" y="24" width="1552" height="952" rx="22" fill="url(#papergrain)"/>
+<text x="800" y="67" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="24" letter-spacing="4" fill="#59402D">EMBER WILDS  /  PRÉVIA DO DESIGN SYSTEM</text>
+<!-- MENU -->
+<g transform="translate(48 100)">
+ <text x="0" y="0" font-family="Arial,sans-serif" font-weight="700" font-size="15" letter-spacing="3" fill="#59402D">01  MENU PRINCIPAL</text>
+ <rect x="0" y="16" width="740" height="400" rx="4" fill="#211A15" opacity=".22" filter="url(#shadow)"/>
+ <!-- landscape -->
+ <rect x="0" y="16" width="740" height="400" fill="url(#sky)"/>
+ <path d="M0 246 Q100 176 196 225T386 209T570 218T740 181V416H0Z" fill="#586642"/>
+ <path d="M0 302 Q128 243 236 282T445 272T740 258V416H0Z" fill="url(#forest)"/>
+ <!-- polygon pines -->
+ <g fill="#34432D" stroke="#29241F" stroke-width="3">
+ <path d="M30 255l32-85 34 85h-18l27 42H19l27-42z"/><path d="M168 254l34-96 36 96h-19l30 48h-94l29-48z"/>
+ <path d="M390 243l30-83 35 83h-17l26 43h-85l27-43z"/><path d="M540 250l39-106 40 106h-22l32 50h-105l33-50z"/>
+ <path d="M654 241l29-79 32 79h-16l25 39h-78l26-39z"/>
+ </g>
+ <!-- campfire -->
+ <g transform="translate(455 277)"><ellipse cx="0" cy="76" rx="92" ry="35" fill="#E99843" opacity=".16"/><path d="M-47 71l90-22M-39 47l80 31" stroke="#59402D" stroke-width="18" stroke-linecap="round"/><path d="M-10 58Q-38 20-7-15Q-5 7 9 11Q22-17 24-43Q66 1 37 38Q25 57-10 58Z" fill="#E99843" stroke="#29241F" stroke-width="6"/><path d="M4 49Q-6 28 11 9Q14 23 22 26Q30 41 4 49Z" fill="#FFF3D6"/></g>
+ <!-- mascot -->
+ <g transform="translate(275 313)"><ellipse cx="0" cy="29" rx="62" ry="16" fill="#211A15" opacity=".28"/><circle cx="-51" cy="0" r="17" fill="#E8D5AE" stroke="#29241F" stroke-width="5"/><circle cx="52" cy="-5" r="17" fill="#E8D5AE" stroke="#29241F" stroke-width="5"/><rect x="-39" y="-40" width="78" height="68" rx="24" fill="#F4E5C6" stroke="#29241F" stroke-width="6"/><ellipse cx="-14" cy="-8" rx="5" ry="10" fill="#29241F"/><ellipse cx="14" cy="-8" rx="5" ry="10" fill="#29241F"/></g>
+ <!-- logo carved -->
+ <g transform="translate(327 43)">
+  <path d="M18 67 44 48 73 54 98 42 125 52 153 42 181 53 210 45 237 63 248 145 222 161 191 155 160 169 132 158 102 169 74 155 47 164 19 144Z" fill="#211A15" stroke="#211A15" stroke-width="9"/>
+  <path d="M24 72 51 55 79 61 103 49 129 59 156 49 184 60 212 52 236 69V91L219 99 237 113V137L214 151 188 146 159 160 132 149 103 160 76 147 49 156 27 139Z" fill="#59402D" stroke="#29241F" stroke-width="6"/>
+  <path d="M98 59Q91 37 107 21Q109 35 119 38Q126 24 127 8Q150 34 135 54Z" fill="#E99843" stroke="#29241F" stroke-width="5"/>
+  <text x="132" y="103" text-anchor="middle" font-family="Arial,sans-serif" font-weight="1000" font-size="34" letter-spacing="-1" fill="#FFF3D6" stroke="#29241F" stroke-width="5" paint-order="stroke">EMBER</text>
+  <text x="132" y="139" text-anchor="middle" font-family="Arial,sans-serif" font-weight="1000" font-size="34" letter-spacing="2" fill="#FFF3D6" stroke="#29241F" stroke-width="5" paint-order="stroke">WILDS</text>
+ </g>
+ <!-- left nav -->
+ <g font-family="Arial,sans-serif" font-weight="700" font-size="16">
+  <rect x="18" y="117" width="178" height="48" fill="#211A15" stroke="#211A15" stroke-width="6"/><rect x="18" y="111" width="178" height="48" fill="#E99843" stroke="#29241F" stroke-width="3"/><text x="44" y="142" fill="#29241F">▶  Jogar</text>
+  <g fill="#59402D"><path d="M18 171h178v43H18zM18 222h178v43H18zM18 273h178v43H18zM18 324h178v43H18zM18 375h178v33H18z"/></g>
+  <g fill="none" stroke="#211A15" stroke-width="4"><path d="M18 171h178v43H18zM18 222h178v43H18zM18 273h178v43H18zM18 324h178v43H18zM18 375h178v33H18z"/></g>
+  <text x="42" y="199" fill="#FFF3D6">♟  Perfil</text><text x="42" y="250" fill="#FFF3D6">✦  Cosméticos</text><text x="42" y="301" fill="#FFF3D6">▤  Loja</text><text x="42" y="352" fill="#FFF3D6">▣  Tutorial</text><text x="42" y="397" fill="#FFF3D6">♜  Ranking</text>
+ </g>
+ <!-- kit paper card -->
+ <path d="M522 183h198v220l-8 7h-190l-8-9V196Z" fill="#211A15" opacity=".55"/>
+ <path d="M518 175h198v220l-8 7h-190l-8-9V188Z" fill="#E8D5AE" stroke="#29241F" stroke-width="5"/>
+ <path d="M526 183h182v205H526Z" fill="url(#papergrain)" opacity=".65"/>
+ <text x="620" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="17" fill="#29241F">ESCOLHA SEU KIT</text>
+ <g font-family="Arial,sans-serif" font-weight="700" font-size="14">
+  <rect x="537" y="228" width="160" height="39" fill="#F4E5C6" stroke="#95603D" stroke-width="2"/><text x="553" y="253" fill="#29241F">⛏  Sobrevivente</text>
+  <rect x="537" y="277" width="160" height="39" fill="#F4E5C6" stroke="#95603D" stroke-width="2"/><text x="553" y="302" fill="#29241F">➶  Caçador</text>
+  <rect x="537" y="326" width="160" height="39" fill="#F4E5C6" stroke="#95603D" stroke-width="2"/><text x="553" y="351" fill="#29241F">♨  Acampamento</text>
+ </g>
+ <path d="M538 374h159v-5l11 17-11 17v-5h-159z" transform="translate(0 -13)" fill="#B75A22" stroke="#211A15" stroke-width="4"/>
+ <text x="617" y="391" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="20" fill="#29241F">JOGAR</text>
+ <!-- currency -->
+ <path d="M582 43h138v48H582l-8-8V51z" fill="#59402D" stroke="#211A15" stroke-width="4"/><circle cx="606" cy="67" r="16" fill="#E99843" stroke="#29241F" stroke-width="3"/><text x="628" y="73" font-family="Arial" font-weight="bold" font-size="16" fill="#FFF3D6">1.250</text>
+ <path d="M690 31l11-20 11 20-11 15z" fill="#E99843" stroke="#29241F" stroke-width="3"/>
+ <path d="M0 16h740v400H0z" fill="none" stroke="#211A15" stroke-width="12"/>
+</g>
+<!-- HUD -->
+<g transform="translate(812 100)">
+ <text x="0" y="0" font-family="Arial,sans-serif" font-weight="700" font-size="15" letter-spacing="3" fill="#59402D">02  HUD EM JOGO</text>
+ <rect x="0" y="16" width="740" height="400" fill="#53663A"/>
+ <!-- forest floor shapes -->
+ <path d="M0 73q90-34 166 3t160 2 192 1 222-10v347H0Z" fill="#667846"/>
+ <g fill="#75834D" opacity=".7"><circle cx="186" cy="127" r="42"/><circle cx="378" cy="88" r="28"/><circle cx="602" cy="182" r="52"/><circle cx="102" cy="276" r="48"/><circle cx="471" cy="311" r="48"/></g>
+ <g fill="#34432D" stroke="#29241F" stroke-width="3"><path d="M230 164l26-70 29 70h-15l23 34h-70l23-34z"/><path d="M654 212l26-70 29 70h-15l23 34h-70l23-34z"/><path d="M538 113l20-52 23 52h-12l17 27h-52l17-27z"/></g>
+ <!-- ambient terrain props -->
+ <g fill="#8A8F98" stroke="#59402D" stroke-width="4"><path d="M329 223l24-15 26 7 12 21-21 15-31-4z"/><path d="M105 193l18-11 20 5 8 15-15 12-24-3z"/></g>
+ <g fill="#E5484D"><circle cx="617" cy="267" r="6"/><circle cx="629" cy="275" r="6"/><circle cx="615" cy="281" r="6"/></g>
+ <!-- player -->
+ <g transform="translate(370 222)"><ellipse cy="35" rx="47" ry="13" fill="#211A15" opacity=".3"/><circle cx="-37" cy="3" r="13" fill="#E8D5AE" stroke="#29241F" stroke-width="4"/><circle cx="38" cy="2" r="13" fill="#E8D5AE" stroke="#29241F" stroke-width="4"/><rect x="-28" y="-25" width="56" height="51" rx="18" fill="#F4E5C6" stroke="#29241F" stroke-width="5"/><ellipse cx="-10" cy="-1" rx="4" ry="7" fill="#29241F"/><ellipse cx="10" cy="-1" rx="4" ry="7" fill="#29241F"/></g>
+ <!-- world campfire -->
+ <g transform="translate(484 247) scale(.55)"><path d="M-40 53l80-15M-33 34l69 35" stroke="#59402D" stroke-width="15" stroke-linecap="round"/><path d="M-7 46Q-33 14-5-13Q-3 4 9 8Q20-17 22-32Q58 1 35 31Q22 48-7 46Z" fill="#E99843" stroke="#29241F" stroke-width="5"/></g>
+ <!-- top plaques -->
+ <path d="M12 31h168v42H12l-8-7V39Z" fill="#59402D" stroke="#211A15" stroke-width="4"/><text x="28" y="58" font-family="Arial" font-size="17" font-weight="bold" fill="#FFF3D6">1.240 pts  •  #3</text>
+ <path d="M280 31h174v42H280l-8-7V39Z" fill="#59402D" stroke="#211A15" stroke-width="4"/><circle cx="301" cy="52" r="11" fill="#FFC66B"/><text x="321" y="58" font-family="Arial" font-size="16" font-weight="bold" fill="#FFF3D6">DIA 3 • 02:10</text>
+ <!-- map -->
+ <path d="M626 24h94v94h-94z" fill="#59402D" stroke="#211A15" stroke-width="5"/><path d="M635 33h76v76h-76z" fill="#E8D5AE" stroke="#FFF3D6" stroke-width="3"/><path d="M635 77l34-24 42 8M642 103l26-27 42 7" fill="none" stroke="#78834F" stroke-width="7"/><path d="M674 68l9 17-18 0z" fill="#E56A59" stroke="#29241F" stroke-width="2"/>
+ <!-- crafting -->
+ <g font-family="Arial" font-weight="bold" font-size="13"><path d="M12 116h142v49H12l-7-7v-35z" fill="#E8D5AE" stroke="#29241F" stroke-width="3"/><text x="31" y="147" fill="#29241F">♨  Fogueira</text><path d="M12 173h142v49H12l-7-7v-35z" fill="#E8D5AE" stroke="#29241F" stroke-width="3"/><text x="31" y="204" fill="#29241F">⛏  Picareta</text></g>
+ <!-- status medallions with progress rings -->
+ <g transform="translate(287 267)">
+ <g transform="translate(0)"><circle r="26" fill="#29241F" stroke="#211A15" stroke-width="5"/><circle r="23" fill="none" stroke="#E5484D" stroke-width="5" stroke-dasharray="104 145" transform="rotate(-90)"/><path d="M0 11C-23-2-9-18 0-8 9-18 23-2 0 11" fill="#E5484D" stroke="#FFF3D6" stroke-width="2"/></g>
+ <g transform="translate(61)"><circle r="26" fill="#29241F" stroke="#211A15" stroke-width="5"/><circle r="23" fill="none" stroke="#F28C28" stroke-width="5" stroke-dasharray="75 145" transform="rotate(-90)"/><path d="M-9-5q0-10 8-10l5 6 9-1-3 8-8 7h-8z" fill="#F28C28"/></g>
+ <g transform="translate(122)"><circle r="26" fill="#29241F" stroke="#211A15" stroke-width="5"/><circle r="23" fill="none" stroke="#4DA3FF" stroke-width="5" stroke-dasharray="120 145" transform="rotate(-90)"/><path d="M0-14v28M-12-7l24 14M12-7l-24 14M0-14l-3 5m3-5 3 5M0 14l-3-5m3 5 3-5" stroke="#4DA3FF" stroke-width="4"/></g>
+ <g transform="translate(183)"><circle r="26" fill="#29241F" stroke="#211A15" stroke-width="5"/><circle r="23" fill="none" stroke="#2EC4B6" stroke-width="5" stroke-dasharray="93 145" transform="rotate(-90)"/><path d="M0-14C-7-3-12 1-9 9-6 18 7 17 10 9 13 2 6-7 0-14" fill="#2EC4B6"/></g></g>
+ <!-- ten slots -->
+ <path d="M23 318h694v80H23l-10-9v-62Z" fill="#59402D" stroke="#211A15" stroke-width="6"/>
+ <g font-family="Arial" font-weight="bold" text-anchor="middle">
+  <path d="M35 326h55v54h-55l-4-4v-46z" fill="#95603D" stroke="#E99843" stroke-width="4"/><text x="62" y="347" font-size="15" fill="#FFF3D6">⛏</text><text x="62" y="394" font-size="10" fill="#FFF3D6">1</text><text x="78" y="373" text-anchor="end" font-size="10" fill="#FFF3D6">24</text><path d="M103 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="130" y="347" font-size="15" fill="#FFF3D6">⚔</text><text x="130" y="394" font-size="10" fill="#FFF3D6">2</text><text x="146" y="373" text-anchor="end" font-size="10" fill="#FFF3D6">12</text><path d="M171 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="198" y="347" font-size="15" fill="#FFF3D6">▰</text><text x="198" y="394" font-size="10" fill="#FFF3D6">3</text><text x="214" y="373" text-anchor="end" font-size="10" fill="#FFF3D6">8</text><path d="M239 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="266" y="347" font-size="15" fill="#FFF3D6">⬟</text><text x="266" y="394" font-size="10" fill="#FFF3D6">4</text><text x="282" y="373" text-anchor="end" font-size="10" fill="#FFF3D6">1</text><path d="M307 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="334" y="347" font-size="15" fill="#FFF3D6">●</text><text x="334" y="394" font-size="10" fill="#FFF3D6">5</text><path d="M375 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="402" y="347" font-size="15" fill="#FFF3D6">♨</text><text x="402" y="394" font-size="10" fill="#FFF3D6">6</text><path d="M443 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="470" y="347" font-size="15" fill="#FFF3D6"></text><text x="470" y="394" font-size="10" fill="#FFF3D6">7</text><path d="M511 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="538" y="347" font-size="15" fill="#FFF3D6"></text><text x="538" y="394" font-size="10" fill="#FFF3D6">8</text><path d="M579 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="606" y="347" font-size="15" fill="#FFF3D6"></text><text x="606" y="394" font-size="10" fill="#FFF3D6">9</text><path d="M647 326h55v54h-55l-4-4v-46z" fill="#38291F" stroke="#211A15" stroke-width="3"/><text x="674" y="347" font-size="15" fill="#FFF3D6"></text><text x="674" y="394" font-size="10" fill="#FFF3D6">0</text>
+ </g>
+ <rect x="0" y="16" width="740" height="400" fill="none" stroke="#211A15" stroke-width="12"/>
+</g>
+<!-- footer -->
+<path d="M48 548h1504" stroke="#B99462" stroke-width="2"/>
+<text x="800" y="583" text-anchor="middle" font-family="Arial" font-size="15" font-weight="700" fill="#59402D">MESMAS FUNÇÕES DO JOGO  •  NOVA LINGUAGEM DE MATERIAIS E MOLDURAS</text>
+<g transform="translate(304 626)">
+<path d="M6 0h118l8 8v44h-126l-6-7V6z" fill="#29241F" stroke="#29241F" stroke-width="3"/><text x="69" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">CARVÃO</text><path d="M150 0h118l8 8v44h-126l-6-7V6z" fill="#59402D" stroke="#29241F" stroke-width="3"/><text x="213" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">NOGUEIRA</text><path d="M294 0h118l8 8v44h-126l-6-7V6z" fill="#95603D" stroke="#29241F" stroke-width="3"/><text x="357" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">COURO</text><path d="M438 0h118l8 8v44h-126l-6-7V6z" fill="#E8D5AE" stroke="#29241F" stroke-width="3"/><text x="501" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">PAPEL</text><path d="M582 0h118l8 8v44h-126l-6-7V6z" fill="#78834F" stroke="#29241F" stroke-width="3"/><text x="645" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">MUSGO</text><path d="M726 0h118l8 8v44h-126l-6-7V6z" fill="#E99843" stroke="#29241F" stroke-width="3"/><text x="789" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">BRASA</text><path d="M870 0h118l8 8v44h-126l-6-7V6z" fill="#FFF3D6" stroke="#29241F" stroke-width="3"/><text x="933" y="73" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#59402D">CREME</text>
+</g>
+<text x="800" y="802" text-anchor="middle" font-family="Arial" font-size="13" fill="#59402D">SIMULAÇÃO VISUAL  •  DADOS E KITS ILUSTRATIVOS  •  DESIGN SYSTEM DOCUMENTADO NO PROJETO</text>
+</svg>

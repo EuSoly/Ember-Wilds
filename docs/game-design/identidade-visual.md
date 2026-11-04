@@ -1,5 +1,7 @@
 ## Identidade visual — survival para o Roblox
 
+> **Atualização de 03/11/2026:** a direção escolhida para a marca e as interfaces passou a ser o [Design system rústico](design-system/README.md): madeira, couro, papel e brasa, com a composição de logo da [prancha escolhida](propostas/rustica-v1/prancha.png). As especificações de marca, cores de UI, tipografia, molduras e componentes abaixo ficam como histórico e são substituídas pelo novo sistema. A implementação ainda usa o tema anterior. Cores de tiers/status e identidade dos assets do mundo são preservadas conforme o novo guia.
+
 Oct 28, 2026 · @Elizeu Walczuk Ruthes
 
 ### Conceito e direção de arte
