@@ -29,7 +29,7 @@ local R = Theme.rustic
 local PADDING = 16
 local HEADER = 44 -- título + fechar (alvo de toque)
 local POINTS_ROW = 24
-local ROW_HEIGHT = 116
+local ROW_HEIGHT = 130
 local ROW_GAP = 8
 local ICON = 52
 local BUTTONS_HEIGHT = 48
@@ -179,8 +179,8 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		}),
 		Rustic.label({
 			Name = "Items",
-			Position = UDim2.fromOffset(ICON + 20, 34),
-			Size = UDim2.new(1, -(ICON + 30), 0, 26),
+			Position = UDim2.fromOffset(ICON + 20, 32),
+			Size = UDim2.new(1, -(ICON + 30), 0, 32), -- até 2 linhas; encolhe se precisar
 			FontFace = Theme.font.body,
 			TextColor3 = R.textSecondaryLight,
 			Text = itemsText(kit),

@@ -16,10 +16,10 @@ local ScreenState = require(Client:WaitForChild("ScreenState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local MenuShell = require(Client:WaitForChild("Menu"):WaitForChild("MenuShell"))
 local MenuState = require(Client:WaitForChild("Menu"):WaitForChild("MenuState"))
+local KitShop = require(Client:WaitForChild("Menu"):WaitForChild("KitShop"))
 local Screens = Client:WaitForChild("Screens")
 local DeathScreen = require(Screens:WaitForChild("DeathScreen"))
 local KitList = require(Screens:WaitForChild("KitList"))
-local MainMenu = require(Screens:WaitForChild("MainMenu"))
 local RecipeBookScreen = require(Screens:WaitForChild("RecipeBookScreen"))
 local SettingsScreen = require(Screens:WaitForChild("SettingsScreen"))
 
@@ -47,18 +47,12 @@ function ScreenController.Start(_self)
 		local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 		vide.root(function()
-			local menu = MainMenu.mount(playerGui, function()
-				SettingsScreen.open(true)
-			end)
-			-- Casca do mockup (coluna, barra, painéis): liga e desliga sozinha.
+			-- O menu inteiro (coluna, boneco, Kits/JOGAR, painéis): liga e desliga sozinho.
 			MenuShell.mount(playerGui)
 			local death = DeathScreen.mount(playerGui)
 			local settings = SettingsScreen.mount(playerGui)
 			local recipeBook = RecipeBookScreen.mount(playerGui)
 
-			showWhen(menu, function()
-				return ScreenState.current() == "menu"
-			end)
 			showWhen(death, function()
 				return ScreenState.current() == "dead"
 			end)
@@ -87,6 +81,7 @@ function ScreenController.Start(_self)
 				-- escolha começa vazia, para nada ser cobrado sem querer.
 				if screen == "playing" then
 					KitList.selected(nil)
+					KitShop.spend() -- a compra de 1 vida (mockup) também foi usada
 				end
 			end)
 		end)

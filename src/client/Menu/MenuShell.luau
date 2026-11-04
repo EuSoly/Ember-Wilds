@@ -1,27 +1,38 @@
 --!strict
--- Casca do menu (G7a): coluna de botões à esquerda, dois pods nos cantos do
--- topo (nível, XP e selo MOCKUP; saldo real e "+") e a área dos painéis, cada
--- um com título, botão de fechar e o conteúdo do mockup (Cosméticos, Loja,
--- Comprar, Ranking, Perfil, Tutorial). Fica junto do molde MainMenu, só no
--- estado "menu" e sem Configurações aberta. As medidas vêm de
--- Shared/UIFlow/MenuLayout (offsets em pixels, testados em tela pequena).
+-- Menu (UI 1, design system rústico). Tudo do menu mora aqui:
+--   topo: placa de nível + XP (falsos, selo MOCKUP), logo, saldo real + "+";
+--   coluna à esquerda: Perfil, Cosméticos, Loja, Tutorial, Ranking e Configurações;
+--   centro: o boneco do jogador segurando o livro (MenuBoneco), com os botões
+--   Kits e JOGAR embaixo; o painel de kits abre à direita (KitsPanel);
+--   os painéis do mockup (Perfil, Loja…) abrem à direita da coluna.
+-- Só aparece no estado "menu" e sem Configurações aberta. As posições vêm do
+-- MenuLayout (pixels lógicos, testados do celular ao PC) e são recalculadas
+-- quando o tamanho da tela ou o tamanho da interface muda.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local Defs = require(Shared:WaitForChild("Defs"))
 local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
 local Client = script.Parent.Parent
+local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local SettingsScreen = require(Client:WaitForChild("Screens"):WaitForChild("SettingsScreen"))
+local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
+local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
+local KitShop = require(script.Parent:WaitForChild("KitShop"))
+local KitsPanel = require(script.Parent:WaitForChild("KitsPanel"))
+local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
 local ShopPanel = require(script.Parent:WaitForChild("ShopPanel"))
 local BuyPanel = require(script.Parent:WaitForChild("BuyPanel"))
@@ -30,174 +41,335 @@ local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
 
 local create = vide.create
+local R = Theme.rustic
 
--- Botões da coluna, de cima para baixo.
-local NAV = { "profile", "play", "cosmetics", "shop", "tutorial", "ranking" } :: { MenuState.Panel }
--- Painéis com conteúdo próprio (o "play" é o molde MainMenu).
+-- Botões da coluna, de cima para baixo (ids de MenuState.Panel). "settings"
+-- não é painel: abre a janela de Configurações de sempre.
+local NAV: { string } = { "profile", "cosmetics", "shop", "tutorial", "ranking", "settings" }
+-- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
 local PANELS = { "profile", "cosmetics", "shop", "buy", "tutorial", "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
-local BODY_TOP = MenuLayout.BODY_TOP -- coluna e painéis começam abaixo dos pods
-local PANEL_X = MARGIN + MenuLayout.COLUMN_WIDTH + MARGIN
 local TITLE_ROW = MenuLayout.TITLE_ROW
 local TOUCH = Theme.touchMinSize.Y
+local POD_MIN = 200 -- os pods não encolhem abaixo disto (nível + XP + selo)
+local POD_MAX = 320
+local LOGO_ASPECT = 1200 / 804 -- proporção do PNG do logo
+local SHADOW_SHARE = Vector2.new(0.7, 0.12) -- sombra no chão, fração do lado do boneco
 
-local function navButton(panel: MenuState.Panel): TextButton
-	return create("TextButton")({
-		Name = "Nav_" .. panel,
-		Text = "",
-		AutoButtonColor = true,
-		Size = UDim2.new(1, -6, 0, MenuLayout.BUTTON_HEIGHT),
-		BackgroundColor3 = function()
-			return if MenuState.panel() == panel then Theme.ui.action else Theme.ui.panelRaised
-		end,
-		BorderSizePixel = 0,
-		create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
-		create("UICorner")({ CornerRadius = Theme.corner }),
-		create("UIStroke")({
-			Color = Theme.ui.border,
-			Thickness = Theme.strokeThickness,
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-		}),
-		Activated = function()
-			MenuState.open(panel)
-		end,
-		Kit.text({
-			Size = UDim2.fromScale(0.9, 0.6),
-			Position = UDim2.fromScale(0.5, 0.5),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			FontFace = Theme.font.number,
-			Text = Strings.get("menu.nav." .. panel),
-			maxSize = 22,
-		}),
-	}) :: TextButton
+type Layout = MenuLayout.Layout
+
+local function podWidth(l: Layout): number
+	return math.clamp(l.podWidth, POD_MIN, POD_MAX)
 end
 
--- Coluna rolável: os 6 botões mantêm o mínimo de toque e, se a tela for tão
--- baixa que não cabem, a coluna rola em vez de sair da tela.
-local function column(): ScrollingFrame
+-- "Nenhum", "Explorador" ou "Iniciante (simulado)" (kit que não vai ao servidor).
+local function kitLabel(): string
+	local id, source = KitShop.current()
+	if id == nil then
+		return Strings.get("menu.kits.none")
+	end
+	local kit = Defs.Kits[id]
+	local name = if kit then Strings.get(kit.nameKey) else id
+	if source ~= "points" then
+		return Strings.format("menu.kits.simulated", { name = name })
+	end
+	return name
+end
+
+local function navButton(id: string, layout: () -> Layout): TextButton
+	return Rustic.button({
+		Name = "Nav_" .. id,
+		Size = function()
+			return UDim2.new(1, -6, 0, layout().buttonHeight)
+		end,
+		kind = function()
+			return if MenuState.panel() == id then "ember" else "wood"
+		end,
+		text = Strings.get("menu.nav." .. id),
+		maxSize = 20,
+		Activated = function()
+			if id == "settings" then
+				SettingsScreen.open(true)
+			else
+				MenuState.open((id :: any) :: MenuState.Panel)
+			end
+		end,
+	})
+end
+
+-- Coluna rolável: se a tela for baixa demais para os 6 botões, ela rola.
+local function column(layout: () -> Layout): ScrollingFrame
 	local children: { Instance } = {
 		create("UIListLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Padding = UDim.new(0, MenuLayout.BUTTON_GAP),
 		}) :: Instance,
+		create("UIPadding")({ PaddingTop = UDim.new(0, 2), PaddingLeft = UDim.new(0, 2) }) :: Instance,
 	}
-	for i = 1, #NAV do
-		table.insert(children, navButton(NAV[i]))
+	for i, id in NAV do
+		local button = navButton(id, layout)
+		button.LayoutOrder = i
+		table.insert(children, button)
 	end
 	return create("ScrollingFrame")({
 		Name = "Column",
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
-		Position = UDim2.fromOffset(MARGIN, BODY_TOP),
-		Size = UDim2.new(0, MenuLayout.COLUMN_WIDTH, 1, -(BODY_TOP + MARGIN)),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.columnX, l.bodyTop)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(l.columnWidth, l.columnBottom - l.bodyTop)
+		end,
 		CanvasSize = UDim2.fromScale(0, 0),
 		AutomaticCanvasSize = Enum.AutomaticSize.Y,
 		ScrollingDirection = Enum.ScrollingDirection.Y,
 		ScrollBarThickness = 4,
+		ScrollBarImageColor3 = R.woodEdge,
 		children,
 	}) :: ScrollingFrame
 end
 
-local function topBar(): { Frame }
-	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
+local function levelPod(layout: () -> Layout): Frame
 	local profile = MockStore.PROFILE
-
-	-- Dois "pods" nos cantos: o centro fica livre para o logo do molde MainMenu.
-	local left = Kit.panel({
+	return Rustic.plate({
 		Name = "TopLeft",
-		Position = UDim2.new(0.01, 0, 0, MARGIN),
-		Size = UDim2.new(MenuLayout.POD_WIDTH, 0, 0, MenuLayout.POD_HEIGHT),
-		Kit.text({
-			Name = "Level",
-			Position = UDim2.fromScale(0.04, 0.05),
-			Size = UDim2.fromScale(0.5, 0.45),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.columnX, l.podTop)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(podWidth(l), MenuLayout.POD_HEIGHT)
+		end,
+		-- Nível num selo de brasa.
+		create("Frame")({
+			Name = "Badge",
+			Position = UDim2.fromOffset(8, 8),
+			Size = UDim2.fromOffset(40, 40),
+			BackgroundColor3 = R.ember,
+			BorderSizePixel = 0,
+			create("UICorner")({ CornerRadius = UDim.new(0, 10) }),
+			create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+			Rustic.label({
+				Name = "Level",
+				dark = true,
+				Size = UDim2.fromScale(1, 1),
+				FontFace = Theme.font.number,
+				Text = tostring(profile.level),
+				maxSize = 22,
+			}),
+		}),
+		Rustic.label({
+			Name = "LevelText",
+			Position = UDim2.fromOffset(56, 6),
+			Size = UDim2.new(0.55, -56, 0, 22),
 			FontFace = Theme.font.number,
 			Text = Strings.format("menu.level", { level = profile.level }),
 			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 22,
+			maxSize = 18,
 		}),
 		Kit.pill({
 			Name = "MockupBadge",
-			Position = UDim2.fromScale(0.96, 0.27),
-			AnchorPoint = Vector2.new(1, 0.5),
-			Size = UDim2.fromScale(0.4, 0.38),
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -8, 0, 7),
+			Size = UDim2.new(0.42, 0, 0, 20),
 			BackgroundColor3 = Theme.ui.warning,
 			text = Strings.get("menu.mockup"),
 		}),
-		-- Barra de XP (falsa): trilho escuro com o preenchimento proporcional.
+		-- Barra de XP (falsa).
 		create("Frame")({
 			Name = "XpBar",
-			Position = UDim2.fromScale(0.5, 0.75),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Size = UDim2.fromScale(0.92, 0.36),
-			BackgroundColor3 = Theme.ui.panelRaised,
+			Position = UDim2.fromOffset(56, 32),
+			Size = UDim2.new(1, -64, 0, 16),
+			BackgroundColor3 = R.charcoal,
 			BorderSizePixel = 0,
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			create("Frame")({
 				Name = "Fill",
 				Size = UDim2.fromScale(math.clamp(profile.xp / profile.xpMax, 0, 1), 1),
-				BackgroundColor3 = Theme.ui.success,
+				BackgroundColor3 = R.success,
 				BorderSizePixel = 0,
 				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			}),
-			Kit.text({
-				Size = UDim2.fromScale(0.9, 0.8),
+			Rustic.label({
+				Size = UDim2.fromScale(0.9, 0.9),
 				Position = UDim2.fromScale(0.5, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				FontFace = Theme.font.body,
 				Text = Strings.format("menu.xp", { xp = profile.xp, max = profile.xpMax }),
-				maxSize = 14,
+				maxSize = 12,
 			}),
 		}),
 	})
+end
 
-	local right = Kit.panel({
+local function balancePod(layout: () -> Layout): Frame
+	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
+	return Rustic.plate({
 		Name = "TopRight",
-		Position = UDim2.new(0.99, 0, 0, MARGIN),
 		AnchorPoint = Vector2.new(1, 0),
-		Size = UDim2.new(MenuLayout.POD_WIDTH, 0, 0, MenuLayout.POD_HEIGHT),
+		Position = function()
+			local l = layout()
+			return UDim2.new(1, -MARGIN, 0, l.podTop)
+		end,
+		Size = function()
+			return UDim2.fromOffset(podWidth(layout()), MenuLayout.POD_HEIGHT)
+		end,
 		-- Saldo real (atributo Currency); o mockup nunca o altera.
-		Kit.text({
+		Rustic.label({
 			Name = "Balance",
-			Position = UDim2.fromScale(0.04, 0.5),
 			AnchorPoint = Vector2.new(0, 0.5),
-			Size = UDim2.new(1, -(TOUCH + 20), 0.6, 0),
+			Position = UDim2.new(0, 12, 0.5, 0),
+			Size = UDim2.new(1, -(TOUCH + 28), 0.6, 0),
 			FontFace = Theme.font.number,
 			Text = function()
 				return Strings.format("menu.balance", { amount = currency() })
 			end,
 			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 22,
+			maxSize = 20,
 		}),
-		create("TextButton")({
+		Rustic.button({
 			Name = "BuyButton",
-			Text = "",
-			AutoButtonColor = true,
-			Position = UDim2.new(1, -6, 0.5, 0),
 			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.new(1, -6, 0.5, 0),
 			Size = UDim2.fromOffset(TOUCH, TOUCH),
-			BackgroundColor3 = Theme.ui.action,
-			BorderSizePixel = 0,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			kind = "leather",
+			text = "+",
+			maxSize = 26,
 			Activated = function()
 				MenuState.open("buy")
 			end,
-			Kit.text({
-				Size = UDim2.fromScale(0.7, 0.7),
-				Position = UDim2.fromScale(0.5, 0.5),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				FontFace = Theme.font.number,
-				Text = "+",
-				maxSize = 28,
-			}),
 		}),
 	})
-	return { left, right }
 end
 
--- Conteúdo de cada painel, abaixo do título; quem não está aqui fica só com
--- título e botão de fechar. Os builders rodam uma vez, dentro do root Vide.
+local function logo(layout: () -> Layout): ImageLabel
+	return create("ImageLabel")({
+		Name = "Logo",
+		Visible = UiImages.has(UiImages.LOGO),
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = function()
+			return UDim2.new(0.5, 0, 0, layout().podTop - 4)
+		end,
+		Size = UDim2.fromOffset(math.floor((MenuLayout.POD_HEIGHT + 8) * LOGO_ASPECT), MenuLayout.POD_HEIGHT + 8),
+		BackgroundTransparency = 1,
+		Image = UiImages.LOGO,
+		ScaleType = Enum.ScaleType.Fit,
+	}) :: ImageLabel
+end
+
+-- Boneco, sombra e os botões Kits + JOGAR. Somem com painéis do mockup
+-- abertos e quando o painel de kits cobre a área (celular).
+local function home(layout: () -> Layout): { Instance }
+	local function homeVisible(): boolean
+		local panel = MenuState.panel()
+		return ScreenState.current() == "menu" and (panel == "play" or panel == "kits") and not layout().kitsCoverHero
+	end
+
+	local shadow = create("Frame")({
+		Name = "Shadow",
+		Visible = homeVisible,
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.heroCenterX, l.heroBottom - l.heroSize * 0.08)
+		end,
+		Size = function()
+			local side = layout().heroSize
+			return UDim2.fromOffset(side * SHADOW_SHARE.X, side * SHADOW_SHARE.Y)
+		end,
+		BackgroundColor3 = R.outline,
+		BackgroundTransparency = 0.55,
+		BorderSizePixel = 0,
+		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+	}) :: Frame
+
+	local boneco = MenuBoneco.build(homeVisible)
+	vide.apply(boneco)({
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.heroCenterX, l.heroBottom)
+		end,
+		Size = function()
+			local side = layout().heroSize
+			return UDim2.fromOffset(side, side)
+		end,
+		Visible = homeVisible,
+	})
+
+	local actions = create("Frame")({
+		Name = "Actions",
+		Visible = homeVisible,
+		BackgroundTransparency = 1,
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.heroCenterX, l.actionsY)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(l.actionsWidth, l.actionsHeight)
+		end,
+		Rustic.button({
+			Name = "KitsButton",
+			Size = function()
+				local l = layout()
+				return UDim2.fromOffset(l.kitsButtonWidth, l.actionsHeight)
+			end,
+			kind = "leather",
+			text = Strings.get("menu.kits.button"),
+			subtext = kitLabel,
+			Activated = function()
+				MenuState.open(if vide.untrack(MenuState.panel) == "kits" then "play" else "kits")
+			end,
+		}),
+		Rustic.button({
+			Name = "PlayButton",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.fromScale(1, 0),
+			Size = function()
+				local l = layout()
+				return UDim2.fromOffset(l.playButtonWidth, l.actionsHeight)
+			end,
+			kind = "ember",
+			text = Strings.get("menu.play.big"),
+			maxSize = 30,
+			Activated = function()
+				-- Só o kit de pontos vai ao servidor (os de Robux são mockup).
+				Net.RequestSpawn.Fire({ KitId = vide.untrack(KitList.selected) })
+			end,
+		}),
+	}) :: Frame
+
+	return { shadow, boneco, actions }
+end
+
+local function kitsPanel(layout: () -> Layout): Frame
+	local panel = KitsPanel.build()
+	vide.apply(panel)({
+		Visible = function()
+			return MenuState.panel() == "kits"
+		end,
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.kitPanelX, l.bodyTop)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(l.kitPanelWidth, l.panelBottom - l.bodyTop)
+		end,
+		ZIndex = 2,
+	})
+	return panel
+end
+
+-- Conteúdo de cada painel do mockup, abaixo do título. Os builders rodam uma
+-- vez, dentro do root Vide.
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
 	shop = ShopPanel.build,
@@ -207,12 +379,12 @@ local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	tutorial = TutorialPanel.build,
 }
 
--- Painel: título, botão de fechar (volta a "play") e o conteúdo do CONTENT.
-local function panelFrame(panel: MenuState.Panel): Frame
+-- Painel do mockup: título, botão de fechar (volta a "play") e o conteúdo.
+-- O visual destes painéis é o antigo: o redesenho deles é outra fase.
+local function panelFrame(panel: MenuState.Panel, layout: () -> Layout): Frame
 	local builder = CONTENT[panel]
 	local content = if builder then builder() :: GuiObject else nil
 	if content then
-		-- O conteúdo começa abaixo da linha do título (título + Fechar).
 		content.Position = UDim2.new(0.02, 0, 0, TITLE_ROW)
 		content.Size = UDim2.new(0.96, 0, 1, -(TITLE_ROW + MARGIN))
 	end
@@ -221,8 +393,14 @@ local function panelFrame(panel: MenuState.Panel): Frame
 		Visible = function()
 			return MenuState.panel() == panel
 		end,
-		Position = UDim2.fromOffset(PANEL_X, BODY_TOP),
-		Size = UDim2.new(1, -(PANEL_X + MARGIN), 1, -(BODY_TOP + MARGIN)),
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.panelX, l.bodyTop)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(l.panelWidth, l.panelBottom - l.bodyTop)
+		end,
 		Kit.text({
 			Name = "Title",
 			Position = UDim2.fromOffset(12, 4),
@@ -232,45 +410,39 @@ local function panelFrame(panel: MenuState.Panel): Frame
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 36,
 		}),
-		create("TextButton")({
+		Rustic.button({
 			Name = "CloseButton",
-			Text = "",
-			AutoButtonColor = true,
-			Position = UDim2.new(1, -8, 0, 4),
 			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -8, 0, 4),
 			Size = UDim2.new(0.15, 0, 0, TOUCH),
-			BackgroundColor3 = Theme.ui.panelRaised,
-			BorderSizePixel = 0,
-			create("UISizeConstraint")({ MinSize = Theme.touchMinSize }),
-			create("UICorner")({ CornerRadius = Theme.corner }),
+			kind = "wood",
+			text = Strings.get("menu.close"),
 			Activated = function()
 				MenuState.open("play")
 			end,
-			Kit.text({
-				Size = UDim2.fromScale(0.8, 0.6),
-				Position = UDim2.fromScale(0.5, 0.5),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				FontFace = Theme.font.number,
-				Text = Strings.get("menu.close"),
-				maxSize = 22,
-			}),
 		}),
 		content,
 	})
 end
 
--- Aviso de compra simulada: faixa na linha do título (entre o título e o
--- Fechar), longe dos botões dos painéis; só enquanto há texto.
-local function noticeBanner(): Frame
+-- Aviso de compra simulada: faixa no alto, abaixo dos pods; só enquanto há texto.
+local function noticeBanner(layout: () -> Layout): Frame
 	return Kit.pill({
 		Name = "Notice",
 		Visible = function()
 			return MenuState.notice() ~= nil
 		end,
 		ZIndex = 10,
-		Position = UDim2.new(0.585, 0, 0, BODY_TOP + 4 + TOUCH // 2),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Size = UDim2.new(0.36, 0, 0, 36),
+		AnchorPoint = Vector2.new(0.5, 0),
+		-- Sobre a área do boneco: não cobre o título do painel de kits.
+		Position = function()
+			local l = layout()
+			return UDim2.fromOffset(l.heroCenterX, l.bodyTop + 4)
+		end,
+		Size = function()
+			local l = layout()
+			return UDim2.fromOffset(math.min(l.heroCenterX - l.panelX, 260) * 2 - 16, 36)
+		end,
 		BackgroundColor3 = Theme.ui.warning,
 		BackgroundTransparency = 0,
 		text = function()
@@ -281,25 +453,31 @@ end
 
 local MenuShell = {}
 
--- Monta a casca (dentro do root Vide do ScreenController); só aparece no menu.
+-- Monta o menu (dentro do root Vide do ScreenController); só aparece no menu.
 function MenuShell.mount(playerGui: Instance): ScreenGui
-	local pods = topBar()
-	local children: { Instance } = { pods[1], pods[2], column() }
-	for i = 1, #PANELS do
-		table.insert(children, panelFrame(PANELS[i]))
+	-- Tamanho da tela em pixels lógicos (descontada a escala da interface).
+	local screenSize = vide.source(Vector2.new(1280, 720))
+	local layout = vide.derive(function(): Layout
+		local size = screenSize()
+		return MenuLayout.compute(size.X, size.Y, MenuState.panel() == "kits")
+	end)
+
+	local children: { Instance } = { levelPod(layout), balancePod(layout), logo(layout), column(layout) }
+	for _, instance in home(layout) do
+		table.insert(children, instance)
 	end
-	table.insert(children, noticeBanner())
+	table.insert(children, kitsPanel(layout))
+	for i = 1, #PANELS do
+		table.insert(children, panelFrame(PANELS[i], layout))
+	end
+	table.insert(children, noticeBanner(layout))
 
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
 		ResetOnSpawn = false,
-		-- O molde MainMenu tem DisplayOrder 10, então este fica abaixo dele; o
-		-- toque funciona porque a área do Root do molde e os controles da casca
-		-- (pods, coluna, painéis) não se sobrepõem. Não subir a ordem: a
-		-- janela de Configurações precisa ficar por cima.
+		-- Abaixo da janela de Configurações (que precisa ficar por cima).
 		DisplayOrder = 1,
 		Enabled = function()
-			-- Configurações aberta: a coluna e os painéis param de receber toque.
 			return ScreenState.current() == "menu" and not SettingsScreen.open()
 		end,
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,
@@ -307,7 +485,21 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		children,
 	}) :: ScreenGui
 	Template.bindUiScale(gui)
+
+	local scale = gui:FindFirstChildOfClass("UIScale")
+	local function refresh()
+		local factor = if scale and scale.Scale > 0 then scale.Scale else 1
+		local size = gui.AbsoluteSize / factor
+		if size.X > 0 and size.Y > 0 then
+			screenSize(size)
+		end
+	end
+	gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(refresh)
+	if scale then
+		scale:GetPropertyChangedSignal("Scale"):Connect(refresh)
+	end
 	gui.Parent = playerGui
+	refresh()
 	return gui
 end
 

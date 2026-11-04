@@ -35,7 +35,7 @@ MenuLayout.PLAY_BUTTON_WIDTH_COMPACT = 160
 MenuLayout.ACTIONS_GAP_COMPACT = 8
 MenuLayout.ACTIONS_LIFT = 16 -- respiro entre os botões e a borda de baixo (PC)
 MenuLayout.HERO_GAP = 8 -- entre o boneco e os botões
-MenuLayout.HERO_MAX = 460
+MenuLayout.HERO_MAX = 340
 MenuLayout.HERO_WIDTH_SHARE = 0.9 -- o boneco usa no máximo 90% da largura livre
 
 -- Painel de kits: fração da largura, entre o mínimo e o máximo.

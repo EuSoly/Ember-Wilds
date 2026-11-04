@@ -148,11 +148,8 @@ return table.freeze({
 	["loading.status"] = "Carregando…",
 
 	-- Menu
-	["menu.play"] = "Jogar",
-	["menu.settings"] = "Configurações",
 	["menu.balance"] = "{amount} Golden Ember",
 	["menu.kits"] = "Kit inicial",
-	["menu.nav.play"] = "Jogar",
 	["menu.nav.profile"] = "Perfil",
 	["menu.nav.cosmetics"] = "Cosméticos",
 	["menu.nav.shop"] = "Loja",
