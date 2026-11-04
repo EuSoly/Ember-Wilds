@@ -1,12 +1,13 @@
 --!strict
 -- Estado do menu: qual painel está aberto ao lado da coluna de botões.
--- "play" é o menu de sempre (molde MainMenu); os outros são os painéis do
--- mockup (MenuShell). Volta para "play" sempre que o jogador sai do menu.
+-- "play" é o menu sem painel (boneco, Kits e JOGAR); "kits" abre o painel de
+-- kits ao lado do boneco; os outros são os painéis do mockup (MenuShell).
+-- Volta para "play" sempre que o jogador sai do menu.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 
-export type Panel = "play" | "profile" | "cosmetics" | "shop" | "buy" | "tutorial" | "ranking"
+export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "buy" | "tutorial" | "ranking"
 
 -- Fonte Vide: chamar sem argumento lê, com argumento escreve (tipo escrito
 -- aqui porque sem ele o vide.source alarga "play" para string).

@@ -158,6 +158,11 @@ return table.freeze({
 	["menu.nav.shop"] = "Loja",
 	["menu.nav.tutorial"] = "Tutorial",
 	["menu.nav.ranking"] = "Ranking",
+	["menu.nav.settings"] = "Configurações",
+	["menu.kits.button"] = "Kits",
+	["menu.kits.none"] = "Nenhum",
+	["menu.kits.simulated"] = "{name} (simulado)",
+	["menu.play.big"] = "JOGAR",
 	["menu.panel.profile"] = "Perfil",
 	["menu.panel.cosmetics"] = "Cosméticos",
 	["menu.panel.shop"] = "Loja",
@@ -208,6 +213,15 @@ return table.freeze({
 	["kit.kit_veteran"] = "Veterano",
 	["kit.price"] = "{price} pts",
 	["kit.points"] = "Pontos para kit: {points}",
+	-- Painel de kits do menu (UI 1)
+	["kit.panel.title"] = "ESCOLHA SEU KIT",
+	["kit.yourPoints"] = "Seus pontos: {points}",
+	["kit.once"] = "1 vida",
+	["kit.forever"] = "para sempre",
+	["kit.missing"] = "faltam {points}",
+	["kit.robux"] = "\u{E002} {price}", -- \u{E002} = símbolo do Robux nas fontes do Roblox
+	["kit.use"] = "Usar",
+	["kit.active"] = "Ativo",
 
 	-- Mundo
 	["world.locked"] = "Região ainda não descoberta",

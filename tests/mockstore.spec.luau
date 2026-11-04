@@ -104,6 +104,32 @@ return {
 		end
 	end,
 
+	["kit panel strings exist"] = function()
+		for _, key in
+			{
+				"menu.nav.settings",
+				"menu.kits.button",
+				"menu.kits.none",
+				"menu.kits.simulated",
+				"menu.play.big",
+				"kit.panel.title",
+				"kit.yourPoints",
+				"kit.once",
+				"kit.forever",
+				"kit.missing",
+				"kit.robux",
+				"kit.use",
+				"kit.active",
+			}
+		do
+			checkKey(key)
+		end
+		assert(
+			Strings.format("kit.robux", { price = 25 }) == "\u{E002} 25",
+			Strings.format("kit.robux", { price = 25 })
+		)
+	end,
+
 	["ranking tem 10 linhas em ordem decrescente"] = function()
 		assert(#MockStore.RANKING == 10, `veio {#MockStore.RANKING}`)
 		for i = 2, #MockStore.RANKING do
