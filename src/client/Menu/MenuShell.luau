@@ -169,69 +169,65 @@ local function levelPod(layout: () -> Layout): Frame
 			local l = layout()
 			return UDim2.fromOffset(podWidth(l), MenuLayout.POD_HEIGHT)
 		end,
-		-- Nível num selo de brasa.
+		-- Rosto do avatar do Roblox do jogador, numa moldura de madeira.
 		create("Frame")({
-			Name = "Badge",
-			Position = UDim2.fromOffset(8, 8),
-			Size = UDim2.fromOffset(40, 40),
-			BackgroundColor3 = R.ember,
+			Name = "Avatar",
+			Position = UDim2.fromOffset(6, 6),
+			Size = UDim2.fromOffset(44, 44),
+			BackgroundColor3 = R.walnut,
 			BorderSizePixel = 0,
-			create("UICorner")({ CornerRadius = UDim.new(0, 10) }),
+			create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
 			create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
-			Rustic.label({
-				Name = "Level",
-				dark = true,
+			create("ImageLabel")({
+				Name = "Headshot",
 				Size = UDim2.fromScale(1, 1),
-				FontFace = Theme.font.number,
-				Text = function()
-					return tostring(progress().level)
-				end,
-				maxSize = 22,
+				BackgroundTransparency = 1,
+				-- Miniatura pronta do Roblox: carrega sozinha, sem pedir nada antes.
+				Image = `rbxthumb://type=AvatarHeadShot&id={Players.LocalPlayer.UserId}&w=150&h=150`,
+				create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
 			}),
 		}),
 		Rustic.label({
-			Name = "LevelText",
-			Position = UDim2.fromOffset(56, 6),
-			Size = UDim2.new(0.55, -56, 0, 22),
+			Name = "PlayerName",
+			Position = UDim2.fromOffset(58, 5),
+			Size = UDim2.new(0.58, -58, 0, 20),
 			FontFace = Theme.font.number,
+			Text = Players.LocalPlayer.DisplayName,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			maxSize = 17,
+			create("UIStroke")({ Color = R.outline, Thickness = 1.5 }),
+		}),
+		Rustic.label({
+			Name = "LevelText",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -10, 0, 5),
+			Size = UDim2.new(0.42, -10, 0, 20),
+			FontFace = Theme.font.number,
+			TextColor3 = R.emberLight,
 			Text = function()
 				return Strings.format("menu.level", { level = progress().level })
 			end,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 18,
+			TextXAlignment = Enum.TextXAlignment.Right,
+			maxSize = 17,
+			create("UIStroke")({ Color = R.outline, Thickness = 1.5 }),
 		}),
 		-- Barra de XP do nível atual.
-		create("Frame")({
+		Rustic.bar({
 			Name = "XpBar",
-			Position = UDim2.fromOffset(56, 32),
-			Size = UDim2.new(1, -64, 0, 16),
-			BackgroundColor3 = R.charcoal,
-			BorderSizePixel = 0,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-			create("Frame")({
-				Name = "Fill",
-				Size = function()
-					local p = progress()
-					return UDim2.fromScale(math.clamp(p.into / p.need, 0, 1), 1)
-				end,
-				BackgroundColor3 = R.success,
-				BorderSizePixel = 0,
-				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-			}),
-			Rustic.label({
-				Size = UDim2.fromScale(0.9, 0.9),
-				Position = UDim2.fromScale(0.5, 0.5),
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				FontFace = Theme.font.body,
-				Text = function()
-					local p = progress()
-					return Strings.format(
-						"menu.xp",
-						{ xp = ProfileFormat.thousands(p.into), max = ProfileFormat.thousands(p.need) }
-					)
-				end,
-				maxSize = 12,
-			}),
+			Position = UDim2.fromOffset(58, 30),
+			Size = UDim2.new(1, -68, 0, 18),
+			fraction = function()
+				local p = progress()
+				return p.into / p.need
+			end,
+			text = function()
+				local p = progress()
+				return Strings.format(
+					"menu.xp",
+					{ xp = ProfileFormat.thousands(p.into), max = ProfileFormat.thousands(p.need) }
+				)
+			end,
+			maxSize = 12,
 		}),
 	})
 end

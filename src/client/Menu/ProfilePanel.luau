@@ -37,7 +37,6 @@ local GROUP_HEIGHT = 30
 
 local BODY = Color3.fromHex("#2B2018")
 local ROW = Color3.fromHex("#3A2B20")
-local TRACK = Color3.fromHex("#1A130D")
 
 -- Os três cartões grandes e a lista "Outros", na ordem do design.
 local CARDS = { "real_deaths", "days_total", "days_best" }
@@ -83,7 +82,7 @@ local function header(order: number): Frame
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Players.LocalPlayer.DisplayName,
 			maxSize = 28,
-		}),
+		}) :: Instance,
 		outlined({
 			Name = "Level",
 			AnchorPoint = Vector2.new(1, 0),
@@ -97,41 +96,23 @@ local function header(order: number): Frame
 			end,
 			maxSize = 26,
 		}),
-		create("Frame")({
+		Rustic.bar({
 			Name = "XpBar",
 			Position = UDim2.fromOffset(0, 38),
 			Size = UDim2.new(1, 0, 0, 22),
-			BackgroundColor3 = TRACK,
-			BorderSizePixel = 0,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-			create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
-			create("Frame")({
-				Name = "Fill",
-				Size = function()
-					local p = progress()
-					return UDim2.fromScale(math.clamp(p.into / p.need, 0, 1), 1)
-				end,
-				BackgroundColor3 = R.success,
-				BorderSizePixel = 0,
-				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-			}),
-			outlined({
-				Name = "XpText",
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.fromScale(0.9, 0.8),
-				FontFace = Theme.font.number,
-				ZIndex = 2,
-				Text = function()
-					local p = progress()
-					return Strings.format(
-						"menu.xp",
-						{ xp = ProfileFormat.thousands(p.into), max = ProfileFormat.thousands(p.need) }
-					)
-				end,
-				maxSize = 16,
-			}),
-		}),
+			fraction = function()
+				local p = progress()
+				return p.into / p.need
+			end,
+			text = function()
+				local p = progress()
+				return Strings.format(
+					"menu.xp",
+					{ xp = ProfileFormat.thousands(p.into), max = ProfileFormat.thousands(p.need) }
+				)
+			end,
+			maxSize = 16,
+		}) :: Instance,
 		Rustic.label({
 			Name = "TotalXp",
 			Position = UDim2.fromOffset(0, 66),

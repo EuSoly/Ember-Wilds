@@ -209,7 +209,7 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 
 | Parte | O que é |
 |---|---|
-| Topo | Esquerda: **nível e XP de verdade** (atributo `Stat_xp_total`, nível pelo `LevelRules`), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
+| Topo | Esquerda: o **rosto do avatar do Roblox** do jogador, o nick, o **nível** e a **barra de XP** de verdade (atributo `Stat_xp_total`, nível pelo `LevelRules`; barra `Rustic.bar`, a mesma do Perfil), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
 | Árvore | Imagem atrás da coluna, num ScreenGui próprio (`MenuBackdrop`) em tela cheia: vai do topo (por trás dos botões do Roblox) até embaixo, com a largura proporcional à altura. Tronco, copa (onde fica o nível) e cogumelos; os botões ficam como placas pregadas no tronco |
 | Coluna à esquerda | Perfil, Cosméticos, Loja, Ranking e Configurações (esta abre a janela de configurações por cima do menu). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |

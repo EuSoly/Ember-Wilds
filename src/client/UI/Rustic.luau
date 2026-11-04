@@ -305,4 +305,55 @@ function Rustic.button(props: { [any]: any }): TextButton
 	return vide.apply(button)(props) :: TextButton
 end
 
+-- Barra de progresso (XP): trilho escuro com contorno carvão, preenchimento
+-- de brasa com brilho em cima e o texto contornado por cima. `fraction` (0..1)
+-- e `text` são fixos ou reativos; o resto de `props` vai para o Frame.
+local BAR_TRACK = Color3.fromHex("#1A130D")
+
+function Rustic.bar(props: { [any]: any }): Frame
+	local fraction: number | () -> number = props.fraction or 0
+	local text = props.text
+	local maxSize = props.maxSize or 14
+	props.fraction = nil
+	props.text = nil
+	props.maxSize = nil
+	local frame = create("Frame")({
+		BackgroundColor3 = BAR_TRACK,
+		BorderSizePixel = 0,
+		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		outline(2),
+		create("Frame")({
+			Name = "Fill",
+			Size = function()
+				return UDim2.fromScale(math.clamp(read(fraction), 0, 1), 1)
+			end,
+			BackgroundColor3 = Color3.new(1, 1, 1), -- o UIGradient pinta
+			BorderSizePixel = 0,
+			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			create("UIGradient")({
+				Rotation = 90,
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, R.emberLight),
+					ColorSequenceKeypoint.new(0.45, R.ember),
+					ColorSequenceKeypoint.new(1, R.emberShadow),
+				}),
+			}),
+		}),
+		Rustic.label({
+			Name = "Text",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(0.92, 0.82),
+			FontFace = Theme.font.number,
+			ZIndex = 2,
+			Text = function()
+				return read(text) or ""
+			end,
+			maxSize = maxSize,
+			create("UIStroke")({ Color = R.outline, Thickness = TEXT_STROKE }),
+		}),
+	}) :: Frame
+	return vide.apply(frame)(props) :: Frame
+end
+
 return Rustic
