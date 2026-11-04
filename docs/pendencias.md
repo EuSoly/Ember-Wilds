@@ -2,6 +2,16 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Perfil e nível (UI 4, 04/11)
+
+- **XP inicial avisa como ganho:** o `StatsService` chama `notifyChanged` de `xp_total` ao copiar o total de pontos. Quando o passe de batalha escutar `xp_total`, ignorar essa primeira cópia (ou trocar por só publicar o atributo).
+- **Tempo de jogo no Perfil não anda ao vivo:** `playtime_seconds` só soma no save (autosave ou fim de vida); com o Perfil aberto o número fica parado até o próximo save.
+- **`real_deaths` entra num save depois:** é somado depois do `endLife` (que já salvou); se o servidor cair antes do próximo autosave, essa morte se perde (o XP não). Basta somar antes do `endLife` (`DeathService`).
+- **Texto sem uso:** `menu.mockup` em `ptBR.luau`.
+- **Comentário antigo:** `DeathService` (~linha 51) lista só Days, Points e Currency nos limites do `LifeEnded`.
+- **Janela do teto no futuro:** se `HourWindowStart` vier maior que `now` (relógio de servidores diferente), o teto de XP fica travado até o relógio alcançar. Recomeçar a janela também quando `now < HourWindowStart` (`LevelRules`; a Golden Ember tem o mesmo jeito).
+- **Atualização com servidores antigos abertos:** quem já recebeu o XP inicial e joga uma vida num servidor antigo não ganha XP por essa vida (só pontos). Janela curta; aceito.
+
 ## Estruturas da floresta (G8, 03/11)
 
 - **Item `testOnly` e o inventário:** `equipBag` não passa pelo `ItemAccess`; os caminhos de devolução (reembolso) podem perder um item indisponível (só no Studio); o `Validate` de kit com `testOnly` não derruba o `allValid`; testes finos de `give`, `place` e início; `IsStudio()` é chamado a cada uso.
