@@ -35,6 +35,46 @@ function Sources.attribute<T>(instance: Instance, name: string, default: T): () 
 	end
 end
 
+-- Como attribute, mas lido do filho `childName` de `parent` (ex.: a pasta
+-- ProfileStats do Player), que o servidor cria e pode chegar depois: até lá
+-- (ou sem o atributo) devolve `default`. Não espera (WaitForChild) para não
+-- travar quem monta a tela.
+function Sources.childAttribute<T>(parent: Instance, childName: string, name: string, default: T): () -> T
+	local value = vide.source(default)
+	local changed: RBXScriptConnection? = nil
+
+	local function bind(child: Instance)
+		if changed then
+			changed:Disconnect()
+		end
+		local function read()
+			local current = child:GetAttribute(name)
+			value(if current == nil then default else current :: any)
+		end
+		read()
+		changed = child:GetAttributeChangedSignal(name):Connect(read)
+	end
+
+	local existing = parent:FindFirstChild(childName)
+	if existing then
+		bind(existing)
+	end
+	local added = parent.ChildAdded:Connect(function(child)
+		if child.Name == childName then
+			bind(child)
+		end
+	end)
+	vide.cleanup(function()
+		added:Disconnect()
+		if changed then
+			changed:Disconnect()
+		end
+	end)
+	return function()
+		return value()
+	end
+end
+
 -- Dispositivo preferido do jogador (teclado e mouse, toque, gamepad).
 function Sources.preferredInput(): () -> Enum.PreferredInput
 	local value = vide.source(UserInputService.PreferredInput)

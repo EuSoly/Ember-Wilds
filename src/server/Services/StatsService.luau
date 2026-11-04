@@ -25,9 +25,21 @@ local changedListeners: { ChangedListener } = {}
 -- Instante (os.clock) da última soma de tempo de jogo, por jogador.
 local lastPlaytimeAt: { [Player]: number } = {}
 
--- Publica o total de uma estatística no atributo Stat_<id> (o Perfil lê dali).
+-- Pasta Player.ProfileStats (criada na primeira publicação).
+local function statsFolder(player: Player): Folder
+	local folder = player:FindFirstChild(StatNames.StatsFolder)
+	if folder and folder:IsA("Folder") then
+		return folder
+	end
+	local created = Instance.new("Folder")
+	created.Name = StatNames.StatsFolder
+	created.Parent = player
+	return created
+end
+
+-- Publica o total de uma estatística no atributo <id> da pasta (o Perfil lê dali).
 local function publish(player: Player, def: Defs.StatDef, stats: { [string]: any })
-	player:SetAttribute(StatNames.StatPrefix .. def.id, StatsRules.total(stats, def))
+	statsFolder(player):SetAttribute(def.id, StatsRules.total(stats, def))
 end
 
 local function notifyChanged(player: Player, statId: string, key: string?, value: number)

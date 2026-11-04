@@ -21,9 +21,12 @@ return table.freeze({
 	-- Prefixo das configurações do jogador: "Setting_music_volume" etc., atributos
 	-- no Player (escritos pelo SettingsService a partir do perfil).
 	SettingPrefix = "Setting_",
-	-- Prefixo das estatísticas permanentes: "Stat_xp_total" etc., atributos no
-	-- Player (escritos pelo StatsService; keyed = total somado). O Perfil lê dali.
-	StatPrefix = "Stat_",
+	-- Pasta (Folder) no Player com as estatísticas permanentes: um atributo por
+	-- id ("xp_total" etc.; keyed = total somado), escritos pelo StatsService. O
+	-- Perfil lê dali. Fica numa pasta, não no Player, porque o Roblox limita o
+	-- total de atributos de cada instância (~1 KB): com tudo no Player, o
+	-- SetAttribute de Score/Rank/barras passava a falhar.
+	StatsFolder = "ProfileStats",
 
 	-- true quando o perfil salvo carregou (DataService), atributo no Player: a tela
 	-- de carregamento espera por ele e o servidor só deixa nascer depois dele.
@@ -56,8 +59,10 @@ return table.freeze({
 	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
 	CosmeticPrefix = "Cosmetic_",
-	-- Prefixo da posse publicada no Player: "Owns_body_fire" = true se possui.
-	OwnedPrefix = "Owns_",
+	-- Pasta (Folder) no Player com a posse publicada: atributo "<id do cosmético>"
+	-- = true se possui (CosmeticService). Pasta pelo mesmo motivo do StatsFolder:
+	-- cresce a cada skin comprada.
+	OwnedFolder = "OwnedCosmetics",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
 	-- Raízes visuais dos mobs; contadores de eventos, sem regras de combate.

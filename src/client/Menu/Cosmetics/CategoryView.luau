@@ -10,7 +10,7 @@
 --
 -- Cada quadradinho: fundo na cor da raridade, o item em 3D e o nome. A
 -- equipada tem a borda de brasa; a selecionada (experimentando), borda creme.
--- Sem posse (não é a padrão e não tem Owns_<id>) fica escurecida com um
+-- Sem posse (não é a padrão e não está na pasta OwnedCosmetics) fica escurecida com um
 -- cadeado. Clique: tem → pede ao servidor para equipar e seleciona; não tem →
 -- só seleciona (experimenta na vitrine). A posse e a equipada são atributos
 -- do Player, então dar a skin com a tela aberta tira o cadeado na hora.
@@ -261,7 +261,7 @@ local function view(
 	local items = CosmeticCatalog.items(slot)
 	local owned: { [string]: () -> boolean } = {}
 	for _, def in items do
-		owned[def.id] = Sources.attribute(player, StatNames.OwnedPrefix .. def.id, false)
+		owned[def.id] = Sources.childAttribute(player, StatNames.OwnedFolder, def.id, false)
 	end
 	local equipped = Sources.attribute(player, StatNames.CosmeticPrefix .. slot, default)
 	local state: Slot = {

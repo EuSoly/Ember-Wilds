@@ -209,7 +209,7 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 
 | Parte | O que é |
 |---|---|
-| Topo | Esquerda: o **rosto do avatar do Roblox** do jogador, o nick, o **nível** e a **barra de XP** de verdade (atributo `Stat_xp_total`, nível pelo `LevelRules`; barra `Rustic.bar`, a mesma do Perfil), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
+| Topo | Esquerda: o **rosto do avatar do Roblox** do jogador, o nick, o **nível** e a **barra de XP** de verdade (atributo `xp_total` da pasta `ProfileStats` do Player, nível pelo `LevelRules`; barra `Rustic.bar`, a mesma do Perfil), na copa da árvore. Meio: logo (120 px de altura no PC, 64 no compacto, 56 com um painel aberto). Direita: o **saldo de verdade** com o ícone da Golden Ember e um "+" que abre a **Loja já na seção Golden Ember**, apoiados num galho |
 | Árvore | Imagem atrás da coluna, num ScreenGui próprio (`MenuBackdrop`) em tela cheia: vai do topo (por trás dos botões do Roblox) até embaixo, com a largura proporcional à altura. Tronco, copa (onde fica o nível) e cogumelos; os botões ficam como placas pregadas no tronco |
 | Coluna à esquerda | Perfil, Cosméticos, Loja, Ranking e Configurações (esta abre a janela de configurações por cima do menu). Rola se a tela for baixa |
 | Centro | O **boneco do jogador** com a skin equipada, segurando o livro (`MenuBoneco`), sobre uma sombra. Embaixo, **Kits** e **JOGAR** |
@@ -264,7 +264,7 @@ Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`,
 
 ### Perfil (UI 4)
 
-Janela no centro do menu, no visual das Configurações (placa "PERFIL", Fechar volta ao "play"), sem fundo escuro. Tudo **de verdade**, lido dos atributos `Stat_<id>` que o servidor publica (veja `dados.md`, "Nível e XP" e "Estatísticas no cliente"). Design: `docs/superpowers/specs/2026-11-04-perfil-nivel-design.md`.
+Janela no centro do menu, no visual das Configurações (placa "PERFIL", Fechar volta ao "play"), sem fundo escuro. Tudo **de verdade**, lido dos atributos da pasta `ProfileStats` que o servidor publica no Player (veja `dados.md`, "Nível e XP" e "Estatísticas no cliente"). Design: `docs/superpowers/specs/2026-11-04-perfil-nivel-design.md`.
 
 1. Topo: nome, **NÍVEL N**, barra de XP do nível atual ("9.269/60.000 XP") e o XP total.
 2. Cartões: **Mortes** (`real_deaths`, só mortes de verdade), **Dias sobrevividos** (`days_total`), **Recorde de dias** (`days_best`).
@@ -293,7 +293,7 @@ O **livro** tem uma skin só (`book_default`): é sempre o modelo `ReplicatedSto
 | `src/shared/UIFlow/CosmeticCatalog.luau` | A ordem e o lado das categorias, as skins de cada slot (da Comum à Mítica) e a regra `spinItems` do giro da loja. Teste: `tests/cosmeticcatalog.spec.luau` |
 | `src/shared/UIFlow/CosmeticsLayout.luau` | Onde fica cada peça das duas telas, PC e celular. Teste: `tests/cosmeticslayout.spec.luau` |
 | `src/shared/Defs/Cosmetics.luau`, `CosmeticSlots.luau` | As skins e os slots (corpo, caixa, mochila, livro) |
-| `src/server/Services/CosmeticService.luau` | Posse e equipada. Grava `Owns_<id>` e `Cosmetic_<slot>` no Player (veja `dados.md`) |
+| `src/server/Services/CosmeticService.luau` | Posse e equipada. Grava a posse na pasta `OwnedCosmetics` e `Cosmetic_<slot>` no Player (veja `dados.md`) |
 
 Os textos ficam em `Strings/ptBR.luau` (`cosmetics.*`, `cosmetic.*`, `cosmeticSlot.*`).
 

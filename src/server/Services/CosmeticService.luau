@@ -60,6 +60,18 @@ function CosmeticService.owns(player: Player, cosmeticId: string): boolean
 	return data ~= nil and data.Cosmetics.Owned[cosmeticId] == true
 end
 
+-- Pasta Player.OwnedCosmetics (criada na primeira publicação).
+local function ownedFolder(player: Player): Folder
+	local folder = player:FindFirstChild(StatNames.OwnedFolder)
+	if folder and folder:IsA("Folder") then
+		return folder
+	end
+	local created = Instance.new("Folder")
+	created.Name = StatNames.OwnedFolder
+	created.Parent = player
+	return created
+end
+
 -- Dá a posse de um cosmético (loja/dev). false se não existe ou sem perfil.
 function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boolean
 	local data = DataService.data(player)
@@ -67,7 +79,7 @@ function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boo
 		return false
 	end
 	data.Cosmetics.Owned[cosmeticId] = true
-	player:SetAttribute(StatNames.OwnedPrefix .. cosmeticId, true)
+	ownedFolder(player):SetAttribute(cosmeticId, true)
 	return true
 end
 
@@ -110,11 +122,12 @@ local function loadEquipped(player: Player, data: { [string]: any })
 	end
 end
 
--- Perfil carregou: publica no Player um atributo Owns_<id> por cosmético possuído.
+-- Perfil carregou: publica na pasta OwnedCosmetics um atributo <id> por cosmético possuído.
 local function publishOwned(player: Player, data: { [string]: any })
+	local folder = ownedFolder(player)
 	for id, owned in data.Cosmetics.Owned do
 		if owned == true and Defs.Cosmetics[id] ~= nil then
-			player:SetAttribute(StatNames.OwnedPrefix .. id, true)
+			folder:SetAttribute(id, true)
 		end
 	end
 end

@@ -3,7 +3,7 @@
 -- Configurações, mas sem escurecer o menu atrás. Abre pelo botão Perfil da
 -- coluna (painel "profile" do MenuState); Fechar volta ao "play".
 --
--- Tudo real, lido dos atributos que o servidor publica (Stat_<id>, StatsService):
+-- Tudo real, lido dos atributos que o servidor publica (pasta ProfileStats do Player, StatsService):
 --   topo: nome, NÍVEL N, barra de XP do nível (LevelRules) e o XP total;
 --   cartões: Mortes (só de verdade), Dias sobrevividos, Recorde de dias;
 --   Outros: jogadores e criaturas mortas, recursos coletados, itens criados,
@@ -46,7 +46,7 @@ local OTHERS =
 local ProfilePanel = {}
 
 local function stat(id: string): () -> number
-	local value = Sources.attribute(Players.LocalPlayer, StatNames.StatPrefix .. id, 0)
+	local value = Sources.childAttribute(Players.LocalPlayer, StatNames.StatsFolder, id, 0)
 	return function()
 		local v = value()
 		return if type(v) == "number" then v else 0

@@ -1,6 +1,6 @@
 --!strict
 -- Menu (UI 1, design system rústico). Tudo do menu mora aqui:
---   topo: placa de nível + XP (reais: Stat_xp_total), logo, saldo real + "+";
+--   topo: placa de nível + XP (reais: ProfileStats.xp_total), logo, saldo real + "+";
 --   coluna à esquerda: Perfil, Cosméticos, Loja, Ranking e Configurações;
 --   centro: o boneco do jogador segurando o livro (MenuBoneco), com os botões
 --   Kits e JOGAR embaixo; o painel de kits abre à direita (KitsPanel);
@@ -155,7 +155,7 @@ local function column(layout: () -> Layout): ScrollingFrame
 end
 
 local function levelPod(layout: () -> Layout): Frame
-	local xp = Sources.attribute(Players.LocalPlayer, StatNames.StatPrefix .. "xp_total", 0)
+	local xp = Sources.childAttribute(Players.LocalPlayer, StatNames.StatsFolder, "xp_total", 0)
 	local function progress(): LevelRules.Progress
 		local value = xp()
 		return LevelRules.progress(if type(value) == "number" then value else 0)

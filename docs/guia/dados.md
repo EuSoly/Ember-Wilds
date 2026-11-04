@@ -4,7 +4,7 @@ Tudo o que sobrevive à morte fica salvo por jogador num **perfil**: a moeda Gol
 
 O perfil usa o [ProfileStore](https://madstudioroblox.github.io/ProfileStore/) (pacote `lm-loleris/profilestore`, instalado pelo Wally em `ServerPackages/`). Ele cuida do **session lock** (dois servidores nunca mexem no mesmo perfil), do autosave e do save ao sair.
 
-O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Stat_<id>`, `Owns_<id>`, `Cosmetic_<slot>`) e só pode **pedir** mudança de configuração ou de skin equipada, que o servidor valida.
+O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Cosmetic_<slot>`) e em duas pastas dentro dele (`ProfileStats`, `OwnedCosmetics`) e só pode **pedir** mudança de configuração ou de skin equipada, que o servidor valida.
 
 ## O perfil (schema v1)
 
@@ -45,7 +45,7 @@ O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat
 | `src/server/Services/DeathService.luau` | Morte (fim de vida + perde tudo + tela de morte) |
 | `src/server/Services/SpawnService.luau` | Nascer a pedido, com kit inicial |
 | `src/server/Services/SettingsService.luau` | Configurações (atributos + evento `SetSetting`) |
-| `src/server/Services/CosmeticService.luau` | Posse (`Owns_<id>`), skin equipada (`Cosmetic_<slot>`) e o pedido `EquipCosmetic` |
+| `src/server/Services/CosmeticService.luau` | Posse (pasta `OwnedCosmetics`), skin equipada (`Cosmetic_<slot>`) e o pedido `EquipCosmetic` |
 | `src/server/Services/DevDataService.luau` | Comandos de teste (só no Studio) |
 
 ## Adicionar uma estatística
@@ -173,14 +173,16 @@ Como funciona: ao abrir o perfil, os passos que faltam rodam em ordem **antes** 
 
 Skins ficam no perfil (`Cosmetics.Owned` e `Cosmetics.Equipped`, veja o schema). O `CosmeticService` publica no **Player**:
 
-- `Owns_<id>` = `true` para cada skin possuída, ao carregar o perfil e a cada skin dada (`grantOwnership`). A skin **padrão** de cada slot conta como possuída sem o atributo. A tela de Cosméticos lê isto para tirar o cadeado.
+- Pasta `Player.OwnedCosmetics`, atributo `<id>` = `true` para cada skin possuída, ao carregar o perfil e a cada skin dada (`grantOwnership`). A skin **padrão** de cada slot conta como possuída sem o atributo. A tela de Cosméticos lê isto para tirar o cadeado.
 - `Cosmetic_<slot>` = id da skin equipada (`Cosmetic_body`, `Cosmetic_bag`, `Cosmetic_book`, `Cosmetic_crate`), também no personagem. Os slots estão em `Defs/CosmeticSlots.luau`: `body`, `crate`, `bag` (mochila) e `book` (livro, uma skin só).
 
 O cliente **pede** para equipar pelo evento `EquipCosmetic` (`{ Id }`, em `net/game.blink`). O servidor ignora em silêncio id inexistente, skin não possuída ou pedido a menos de 0,2 s do anterior; se vale, equipa e salva. Como dar uma skin para testar: `DevGrantCosmetic` (abaixo). Como criar skins: `telas.md`, "Adicionar ou mudar uma skin".
 
 ## Estatísticas no cliente
 
-O `StatsService` publica cada estatística de `Defs.Stats` no atributo `Stat_<id>` do Player, ao carregar o perfil e a cada mudança. Counter e max vão como estão; keyed vai o **total somado** (`StatsRules.total`); o detalhe por chave fica só no servidor.
+O `StatsService` publica cada estatística de `Defs.Stats` no atributo `<id>` da pasta `Player.ProfileStats`, ao carregar o perfil e a cada mudança. Counter e max vão como estão; keyed vai o **total somado** (`StatsRules.total`); o detalhe por chave fica só no servidor.
+
+> **Limite de atributos por instância (~1 KB no total, nomes + valores).** Quando o Player passou do limite (04/11), todo `SetAttribute` **novo** no Player falhava com `Attribute total payload exceeds 1024 bytes`: sumiram os pontos (`Score`), o `Rank`, a sede e o calor, e o mob morto não soltava caixa (o erro do `ScoreService.add` interrompia o `die` antes do aviso de morte). Por isso estatísticas e posse ficam em pastas próprias. Regra: lista que cresce com o conteúdo (uma entrada por estatística, por skin, por conquista...) vai numa pasta, nunca direto no Player.
 
 ### Vida e fim de vida
 
