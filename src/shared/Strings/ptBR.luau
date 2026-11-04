@@ -172,6 +172,8 @@ return table.freeze({
 	["menu.close"] = "Fechar",
 	["menu.level"] = "Nível {level}",
 	["menu.xp"] = "{xp}/{max} XP",
+	["death.xp"] = "+{xp} XP",
+	["death.levelup"] = "Subiu para o nível {level}!",
 	["profile.title"] = "Perfil",
 	["profile.total_xp"] = "XP total: {xp}",
 	["profile.others"] = "Outros",
