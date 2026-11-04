@@ -1,6 +1,6 @@
 --!strict
 -- Menu (UI 1, design system rústico). Tudo do menu mora aqui:
---   topo: placa de nível + XP (falsos, selo MOCKUP), logo, saldo real + "+";
+--   topo: placa de nível + XP (reais: Stat_xp_total), logo, saldo real + "+";
 --   coluna à esquerda: Perfil, Cosméticos, Loja, Ranking e Configurações;
 --   centro: o boneco do jogador segurando o livro (MenuBoneco), com os botões
 --   Kits e JOGAR embaixo; o painel de kits abre à direita (KitsPanel);
@@ -16,7 +16,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
-local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
+local LevelRules = require(Shared:WaitForChild("Data"):WaitForChild("LevelRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -153,7 +153,11 @@ local function column(layout: () -> Layout): ScrollingFrame
 end
 
 local function levelPod(layout: () -> Layout): Frame
-	local profile = MockStore.PROFILE
+	local xp = Sources.attribute(Players.LocalPlayer, StatNames.StatPrefix .. "xp_total", 0)
+	local function progress(): LevelRules.Progress
+		local value = xp()
+		return LevelRules.progress(if type(value) == "number" then value else 0)
+	end
 	return Rustic.plate({
 		Name = "TopLeft",
 		Position = function()
@@ -178,7 +182,9 @@ local function levelPod(layout: () -> Layout): Frame
 				dark = true,
 				Size = UDim2.fromScale(1, 1),
 				FontFace = Theme.font.number,
-				Text = tostring(profile.level),
+				Text = function()
+					return tostring(progress().level)
+				end,
 				maxSize = 22,
 			}),
 		}),
@@ -187,19 +193,13 @@ local function levelPod(layout: () -> Layout): Frame
 			Position = UDim2.fromOffset(56, 6),
 			Size = UDim2.new(0.55, -56, 0, 22),
 			FontFace = Theme.font.number,
-			Text = Strings.format("menu.level", { level = profile.level }),
+			Text = function()
+				return Strings.format("menu.level", { level = progress().level })
+			end,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 18,
 		}),
-		Kit.pill({
-			Name = "MockupBadge",
-			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, -8, 0, 7),
-			Size = UDim2.new(0.42, 0, 0, 20),
-			BackgroundColor3 = Theme.ui.warning,
-			text = Strings.get("menu.mockup"),
-		}),
-		-- Barra de XP (falsa).
+		-- Barra de XP do nível atual.
 		create("Frame")({
 			Name = "XpBar",
 			Position = UDim2.fromOffset(56, 32),
@@ -209,7 +209,10 @@ local function levelPod(layout: () -> Layout): Frame
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			create("Frame")({
 				Name = "Fill",
-				Size = UDim2.fromScale(math.clamp(profile.xp / profile.xpMax, 0, 1), 1),
+				Size = function()
+					local p = progress()
+					return UDim2.fromScale(math.clamp(p.into / p.need, 0, 1), 1)
+				end,
 				BackgroundColor3 = R.success,
 				BorderSizePixel = 0,
 				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
@@ -219,7 +222,10 @@ local function levelPod(layout: () -> Layout): Frame
 				Position = UDim2.fromScale(0.5, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				FontFace = Theme.font.body,
-				Text = Strings.format("menu.xp", { xp = profile.xp, max = profile.xpMax }),
+				Text = function()
+					local p = progress()
+					return Strings.format("menu.xp", { xp = p.into, max = p.need })
+				end,
 				maxSize = 12,
 			}),
 		}),
