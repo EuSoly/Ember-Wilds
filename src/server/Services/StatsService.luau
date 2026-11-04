@@ -10,6 +10,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local StatsRules = require(ReplicatedStorage.Shared.Data.StatsRules)
 local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
 local DataService = require(script.Parent.DataService)
@@ -24,7 +25,17 @@ local changedListeners: { ChangedListener } = {}
 -- Instante (os.clock) da última soma de tempo de jogo, por jogador.
 local lastPlaytimeAt: { [Player]: number } = {}
 
+-- Publica o total de uma estatística no atributo Stat_<id> (o Perfil lê dali).
+local function publish(player: Player, def: Defs.StatDef, stats: { [string]: any })
+	player:SetAttribute(StatNames.StatPrefix .. def.id, StatsRules.total(stats, def))
+end
+
 local function notifyChanged(player: Player, statId: string, key: string?, value: number)
+	local def = Defs.Stats[statId]
+	local data = DataService.data(player)
+	if def and data then
+		publish(player, def, data.Stats)
+	end
 	for _, listener in changedListeners do
 		task.spawn(listener, player, statId, key, value)
 	end
@@ -125,6 +136,9 @@ function StatsService.Start(_self)
 		local xp = StatsService.xpData(player)
 		if xp and LevelRules.seed(xp, data.Stats) then
 			notifyChanged(player, "xp_total", nil, StatsRules.get(data.Stats, Defs.Stats.xp_total))
+		end
+		for _, def in Defs.Stats do
+			publish(player, def, data.Stats)
 		end
 	end)
 	DataService.onBeforeSave(function(player)

@@ -90,4 +90,19 @@ return {
 		local value, changed = StatsRules.record(stats, scoreBest, 0)
 		assert(value == 0 and changed == false, "0 numa estatística vazia não muda nada")
 	end,
+
+	["total of counter and max is the value"] = function()
+		assert(StatsRules.total({ deaths = 5 }, deaths) == 5, "counter")
+		assert(StatsRules.total({ score_best = 12 }, scoreBest) == 12, "max")
+		assert(StatsRules.total({}, deaths) == 0, "vazio")
+	end,
+
+	["total of keyed sums every key"] = function()
+		assert(StatsRules.total({ mobs_killed = { wolf = 3, bear = 2 } }, mobsKilled) == 5, "soma")
+		assert(StatsRules.total({}, mobsKilled) == 0, "ausente")
+		assert(
+			StatsRules.total({ mobs_killed = { wolf = 3, bad = "x" } } :: any, mobsKilled) == 3,
+			"ignora não-número"
+		)
+	end,
 }

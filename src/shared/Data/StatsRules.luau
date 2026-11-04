@@ -78,4 +78,23 @@ function StatsRules.get(stats: { [string]: any }, def: StatDef, key: string?): n
 	return if type(stored) == "number" then stored else 0
 end
 
+-- Valor para mostrar ao jogador: o próprio número (counter/max) ou a soma de
+-- todas as chaves (keyed). Valores que não são número são ignorados.
+function StatsRules.total(stats: { [string]: any }, def: StatDef): number
+	local stored = stats[def.id]
+	if def.kind == "keyed" then
+		if type(stored) ~= "table" then
+			return 0
+		end
+		local sum = 0
+		for _, value in stored do
+			if isFinite(value) then
+				sum += value
+			end
+		end
+		return sum
+	end
+	return if isFinite(stored) then stored else 0
+end
+
 return StatsRules

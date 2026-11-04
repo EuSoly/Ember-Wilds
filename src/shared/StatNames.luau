@@ -21,6 +21,9 @@ return table.freeze({
 	-- Prefixo das configurações do jogador: "Setting_music_volume" etc., atributos
 	-- no Player (escritos pelo SettingsService a partir do perfil).
 	SettingPrefix = "Setting_",
+	-- Prefixo das estatísticas permanentes: "Stat_xp_total" etc., atributos no
+	-- Player (escritos pelo StatsService; keyed = total somado). O Perfil lê dali.
+	StatPrefix = "Stat_",
 
 	-- true quando o perfil salvo carregou (DataService), atributo no Player: a tela
 	-- de carregamento espera por ele e o servidor só deixa nascer depois dele.
