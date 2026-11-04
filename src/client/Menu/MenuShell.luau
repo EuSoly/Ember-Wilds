@@ -41,6 +41,7 @@ local EmberPacks = require(ShopFolder:WaitForChild("EmberPacks"))
 local SpinTypes = require(ShopFolder:WaitForChild("SpinTypes"))
 local SpinScreen = require(ShopFolder:WaitForChild("SpinScreen"))
 local SpinFx = require(ShopFolder:WaitForChild("SpinFx"))
+local SpinSounds = require(ShopFolder:WaitForChild("SpinSounds"))
 local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
@@ -580,7 +581,9 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		}
 	)
 	-- Tela do giro por cima da loja (abre ao escolher um tipo de giro).
+	SpinSounds.preload()
 	SpinScreen.build(shopLayout, screenSize, shopOpen, {
+		sounds = SpinSounds.begin,
 		startPaid = SpinFx.start,
 		land = SpinFx.land,
 		celebrate = SpinFx.celebrate,

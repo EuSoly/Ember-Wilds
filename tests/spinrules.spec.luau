@@ -81,4 +81,32 @@ return {
 		)
 		assert(SpinRules.confettiFor(3, false) == 20 and SpinRules.confettiFor(5, false) == 20, "normal épico+ com 20")
 	end,
+
+	["tensão fica em zero no começo do giro e chega a 1 no fim"] = function()
+		assert(SpinRules.tensionRamp(0) == 0, "começo")
+		assert(SpinRules.tensionRamp(SpinRules.TENSION_START) == 0, "início da rampa")
+		assert(SpinRules.tensionRamp(1) == 1, "fim")
+		assert(SpinRules.tensionRamp(1.5) == 1, "passou do fim")
+		assert(SpinRules.tensionRamp(-1) == 0, "antes do começo")
+	end,
+
+	["tensão só cresce e acelera perto do fim"] = function()
+		local last = 0
+		for i = 0, 20 do
+			local t = SpinRules.tensionRamp(i / 20)
+			assert(t >= last, `caiu em {i / 20}`)
+			last = t
+		end
+		-- Curva (não reta): na metade da rampa ainda está abaixo da metade.
+		local mid = SpinRules.TENSION_START + (1 - SpinRules.TENSION_START) / 2
+		assert(SpinRules.tensionRamp(mid) < 0.5, "devia acelerar no fim")
+	end,
+
+	["markerTile conta os quadradinhos que passaram pelo marcador"] = function()
+		-- Janela de 400 (marcador em 200), passo de 100.
+		assert(SpinRules.markerTile(0, 100, 400) == 2, "parado")
+		assert(SpinRules.markerTile(-99, 100, 400) == 2, "quase passando")
+		assert(SpinRules.markerTile(-101, 100, 400) == 3, "passou um")
+		assert(SpinRules.markerTile(-1000, 100, 400) == 12, "longe")
+	end,
 }

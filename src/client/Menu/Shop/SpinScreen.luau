@@ -34,7 +34,14 @@ local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
 
 export type Won = { item: MockStore.SpinItem, typeId: string, paid: boolean }
+-- Sons de um giro (SpinSounds): frame a cada quadro, land ao parar, stop se fechar.
+export type SoundSession = {
+	frame: (progress: number, tile: number) -> (),
+	land: () -> (),
+	stop: () -> (),
+}
 export type Hooks = {
+	sounds: ((rarity: number, paid: boolean) -> SoundSession)?,
 	-- Efeitos do giro pago (Task 7). start devolve a função que para tudo.
 	startPaid: ((box: GuiObject, window: GuiObject) -> () -> ())?,
 	land: ((box: GuiObject) -> ())?,
@@ -326,11 +333,19 @@ function SpinScreen.build(
 	local popup: Frame
 	local reel: Reel.Reel? = nil
 	local stopFx: (() -> ())? = nil
+	local sound: SoundSession? = nil
 
 	local function stopEffects()
 		if stopFx then
 			stopFx()
 			stopFx = nil
+		end
+	end
+
+	local function stopSound()
+		if sound then
+			sound.stop()
+			sound = nil
 		end
 	end
 
@@ -343,6 +358,7 @@ function SpinScreen.build(
 			reel = nil
 		end
 		stopEffects()
+		stopSound()
 		if not isOpen and id ~= nil then
 			-- Saiu da loja com a tela aberta: fecha e destrava.
 			task.defer(function()
@@ -373,14 +389,23 @@ function SpinScreen.build(
 		if paid and hooks.startPaid then
 			stopFx = hooks.startPaid(box, window)
 		end
+		-- Os sons seguem a raridade do item que vai sair (o suspense cresce com ela).
+		local session = if hooks.sounds then hooks.sounds(prize.rarity, paid) else nil
+		sound = session
 		current:spinTo(prize, function()
 			stopEffects()
+			if session then
+				session.land()
+				if sound == session then
+					sound = nil
+				end
+			end
 			if paid and hooks.land then
 				hooks.land(box)
 			end
 			ShopState.spinning(false)
 			won({ item = prize, typeId = spinType.id, paid = paid })
-		end)
+		end, if session then session.frame else nil)
 	end
 
 	-- Janelinha do prêmio: refeita a cada prêmio.

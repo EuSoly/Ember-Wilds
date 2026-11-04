@@ -118,4 +118,20 @@ function SpinRules.confettiFor(rarity: number, paid: boolean): number
 	return if rarity >= NORMAL_FROM then CONFETTI_NORMAL else 0
 end
 
+-- Suspense dos sons do giro: 0 até TENSION_START do giro (fração do tempo),
+-- depois sobe em curva até 1 no fim — cresce mais quando o carrossel já está
+-- quase parando. Quanto disso vira som depende da raridade (SpinSoundConfig).
+SpinRules.TENSION_START = 0.3
+
+function SpinRules.tensionRamp(progress: number): number
+	local t = math.clamp((progress - SpinRules.TENSION_START) / (1 - SpinRules.TENSION_START), 0, 1)
+	return t * t
+end
+
+-- Número do quadradinho embaixo do marcador (meio da janela) com a fita na
+-- posição `stripX`. Cada vez que muda, um quadradinho passou: toca o tique.
+function SpinRules.markerTile(stripX: number, step: number, windowWidth: number): number
+	return math.floor((windowWidth / 2 - stripX) / step)
+end
+
 return SpinRules

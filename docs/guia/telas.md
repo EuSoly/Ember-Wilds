@@ -234,6 +234,7 @@ Loja em tela cheia, toda **simulada** (visual e fluxo completos; comprar só mos
 1. **Pacotes em destaque**: um pacote por vez, com setas, bolinhas, contador e lista do que vem; troca sozinho a cada 6 s.
 2. **Gamepasses**: os 4 kits para sempre (o mesmo estado do painel de kits: comprar aqui libera o "Usar" lá) e o VIP.
 3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
+   **Sons da roleta**: um tique a cada quadradinho que passa pelo marcador (vai espaçando conforme freia); no fim, um chiado e um rufar de tambores sobem de volume **na medida da raridade que vai sair** (Comum: nada; Raro: quase nada; Épico: um pouco; Lendário: chiado forte + tambor baixo; Mítico: tudo no máximo, e os tiques ficam mais agudos); ao parar, um som de revelação por raridade (do "ding" do Comum à orquestra do Mítico). O giro pago começa com um "vupt".
 4. **Golden Ember**: os 5 pacotes de moeda (3 em cima, 2 largos embaixo).
 
 Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais raro), com cores próprias em `MockStore.RARITIES`.
@@ -244,12 +245,14 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 | `Featured.luau`, `Passes.luau`, `SpinTypes.luau`, `EmberPacks.luau` | As quatro seções |
 | `SpinScreen.luau`, `Reel.luau`, `SpinTile.luau` | Tela do giro, carrossel e o quadradinho de cada skin (placeholder por tipo até os ícones reais) |
 | `SpinFx.luau` | Efeitos do giro pago e a comemoração do prêmio |
+| `SpinSounds.luau` | Sons da roleta (tique, suspense, revelação), no grupo `Effects` |
 | `ShopState.luau` | Giros comprados (por tipo e normal/pago), tela do giro aberta, girando |
 | `ShopParts.luau` | Peças repetidas: título de seção, cartão (fundo de arte `ShopImages.CARD` ou degradê), botão de preço, fita, selo, grade |
 
 | Regras e dados | O que é |
 |---|---|
-| `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente e confete. Teste: `tests/spinrules.spec.luau` |
+| `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente, confete, curva do suspense (`tensionRamp`) e quadradinho sob o marcador (`markerTile`). Teste: `tests/spinrules.spec.luau` |
+| `src/shared/SpinSoundConfig.luau` | **Ids e volumes dos sons da roleta** (para trocar um som, troque o número) e quanto suspense cada raridade tem (`tension`). Teste: `tests/spinsoundconfig.spec.luau` |
 | `src/shared/UIFlow/ShopLayout.luau` | Medidas da loja e colunas das grades (menos no celular). Teste: `tests/shoplayout.spec.luau` |
 | `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 30/40/23/6/1; especial 5/25/40/25/5), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (itens de mentirinha), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
 | `src/shared/ShopImages.luau` | Ids das artes da loja (fontes em `assets/ui/shop/`): roleta em 3 camadas, fundos de cartão, ícone do Robux, botão verde, fita, pilhas de moedas e ícones. Id vazio = desenho feito por código |
