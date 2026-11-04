@@ -34,7 +34,6 @@ local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local KitsPanel = require(script.Parent:WaitForChild("KitsPanel"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local CosmeticsPanel = require(script.Parent:WaitForChild("CosmeticsPanel"))
-local ShopPanel = require(script.Parent:WaitForChild("ShopPanel"))
 local BuyPanel = require(script.Parent:WaitForChild("BuyPanel"))
 local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
@@ -424,7 +423,6 @@ end
 -- vez, dentro do root Vide.
 local CONTENT: { [MenuState.Panel]: () -> Instance } = {
 	cosmetics = CosmeticsPanel.build,
-	shop = ShopPanel.build,
 	buy = BuyPanel.build,
 	ranking = RankingPanel.build,
 	profile = ProfilePanel.build,

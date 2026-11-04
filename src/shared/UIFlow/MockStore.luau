@@ -1,14 +1,11 @@
 --!strict
--- Dados falsos do mockup de loja, cosméticos, ranking e perfil (G7a).
+-- Dados falsos do mockup de loja, cosméticos, ranking e perfil (G7a e UI 2).
 -- Tudo que é número ou nome inventado fica aqui, num lugar só, para apagar
 -- quando a loja de verdade existir. Nada daqui compra, grava ou sorteia de
--- verdade: `roll` só escolhe qual prêmio a animação do spin vai mostrar.
+-- verdade: o sorteio da loja (SpinRules) só escolhe o que a animação mostra.
 local MockStore = {}
 
 export type Pack = { amount: number, robux: number, tag: string? }
-export type Odd = { nameKey: string, chance: number }
-export type Spin = { id: string, nameKey: string, price: number, kind: string, odds: { Odd } }
-export type Offer = { hours: number, price: number }
 export type CategoryItem = { id: string, nameKey: string }
 export type Category = { id: string, nameKey: string, items: { CategoryItem } }
 export type RankRow = { name: string, points: number }
@@ -22,30 +19,6 @@ MockStore.PACKS = {
 	{ amount = 7000, robux = 1500, tag = "off30" },
 	{ amount = 20000, robux = 3500, tag = "best" },
 } :: { Pack }
-
--- Chances iguais para os três níveis do mesmo tipo; soma 1 por spin.
-local function odds(): { Odd }
-	return {
-		{ nameKey = "mock.prize.common", chance = 0.6 },
-		{ nameKey = "mock.prize.rare", chance = 0.25 },
-		{ nameKey = "mock.prize.epic", chance = 0.12 },
-		{ nameKey = "mock.prize.legendary", chance = 0.03 },
-	}
-end
-
-MockStore.SPINS = {
-	{ id = "skin_starter", nameKey = "mock.spin.skin.starter", price = 100, kind = "skin", odds = odds() },
-	{ id = "skin_golden", nameKey = "mock.spin.skin.golden", price = 300, kind = "skin", odds = odds() },
-	{ id = "skin_dragon", nameKey = "mock.spin.skin.dragon", price = 600, kind = "skin", odds = odds() },
-	{ id = "custom_starter", nameKey = "mock.spin.custom.starter", price = 50, kind = "custom", odds = odds() },
-	{ id = "custom_golden", nameKey = "mock.spin.custom.golden", price = 150, kind = "custom", odds = odds() },
-	{ id = "custom_dragon", nameKey = "mock.spin.custom.dragon", price = 300, kind = "custom", odds = odds() },
-} :: { Spin }
-
-MockStore.KIT = {
-	items = { "mock.kit.book", "mock.kit.backpack" },
-	offers = { { hours = 1, price = 300 }, { hours = 24, price = 600 } },
-} :: { items: { string }, offers: { Offer } }
 
 -- Kits iniciais com Robux (mockup da UI 1): preço para 1 vida e para sempre,
 -- por id de Defs.Kits. Provisórios: o Elizeu ajusta. Apagar daqui quando a
@@ -138,17 +111,147 @@ MockStore.TUTORIAL = {
 	"mock.tutorial.5",
 } :: { string }
 
--- Índice sorteado para r em [0, 1). Se a soma das chances ficar um pouco
--- abaixo de 1, r nas pontas cai no último índice (nunca devolve fora da lista).
-function MockStore.roll(oddsList: { Odd }, r: number): number
-	local acc = 0
-	for i, odd in oddsList do
-		acc += odd.chance
-		if r < acc then
-			return i
-		end
+-- ================= Loja (UI 2) =================
+
+-- Raridades = os tiers, de Comum (madeira) a Lendário (reidite): a cor e o
+-- nome vêm de Defs.Tiers (pilar "tier é cor" da identidade visual).
+MockStore.RARITIES = { "wood", "stone", "gold", "diamond", "amethyst", "reidite" } :: { string }
+
+-- Chances (%) por raridade, na ordem acima. Provisórias.
+MockStore.SPIN_ODDS = {
+	normal = { 60, 25, 10, 4, 0.9, 0.1 }, -- giro com Golden Ember
+	paid = { 30, 25, 20, 15, 7, 3 }, -- giro especial com Robux
+}
+-- Só para o carrossel ocioso mostrar as raridades misturadas (não é chance).
+MockStore.SHOWCASE_WEIGHTS = { 30, 25, 18, 13, 9, 5 } :: { number }
+
+export type SpinItem = { id: string, nameKey: string, rarity: number, color: string }
+export type SpinType = { id: string, nameKey: string, theme: string, items: { SpinItem } }
+
+-- Um item de mentirinha por raridade (índice = raridade); `color` pinta o
+-- quadradinho do carrossel até existirem os ícones de verdade.
+local function spinItems(typeId: string, colors: { string }): { SpinItem }
+	local list: { SpinItem } = {}
+	for i, color in colors do
+		local id = `{typeId}_{i}`
+		table.insert(list, { id = id, nameKey = `shop.item.{id}`, rarity = i, color = color })
 	end
-	return #oddsList
+	return list
 end
+
+-- Um tipo de giro por categoria de skin (a caixa de saque e a de morte usam
+-- as mesmas skins: um tipo só).
+MockStore.SPIN_TYPES = {
+	{
+		id = "body",
+		nameKey = "shop.type.body",
+		theme = "#D8452B",
+		items = spinItems("body", { "#78834F", "#E8B86D", "#7FC8F0", "#2EC4B6", "#B07CF0", "#E5402B" }),
+	},
+	{
+		id = "accessory",
+		nameKey = "shop.type.accessory",
+		theme = "#7A4FD8",
+		items = spinItems("accessory", { "#78834F", "#7FC8F0", "#E99843", "#E8B86D", "#8B5A2B", "#E5402B" }),
+	},
+	{
+		id = "bag",
+		nameKey = "shop.type.bag",
+		theme = "#4E9A2E",
+		items = spinItems("bag", { "#95603D", "#B87C4B", "#3E8E41", "#7FC8F0", "#3B3F8F", "#E5402B" }),
+	},
+	{
+		id = "book",
+		nameKey = "shop.type.book",
+		theme = "#2F7FD8",
+		items = spinItems("book", { "#5E5E5E", "#78834F", "#2EC4B6", "#3B3F8F", "#9B5DE5", "#E5402B" }),
+	},
+	{
+		id = "crate",
+		nameKey = "shop.type.crate",
+		theme = "#E97F22",
+		items = spinItems("crate", { "#A77B4F", "#8A8F98", "#59402D", "#E8E0D0", "#3FD0E0", "#E5402B" }),
+	},
+} :: { SpinType }
+
+export type SpinPrice = { qty: number, price: number }
+MockStore.SPIN_PRICES = {
+	normal = { { qty = 1, price = 100 }, { qty = 3, price = 280 }, { qty = 10, price = 850 } }, -- Golden Ember
+	paid = { { qty = 1, price = 49 }, { qty = 3, price = 129 }, { qty = 10, price = 399 } }, -- Robux
+} :: { normal: { SpinPrice }, paid: { SpinPrice } }
+
+-- Pacotes em destaque (só Robux): conjunto de corpo, livro, mochila e caixa.
+-- endsIn = segundos até a oferta acabar, contados a partir de abrir a loja.
+export type BundleItem = { type: string, nameKey: string }
+export type Bundle = {
+	id: string,
+	nameKey: string,
+	rarity: number,
+	theme: string,
+	robux: number,
+	endsIn: number,
+	items: { BundleItem },
+}
+
+local function bundleItems(id: string): { BundleItem }
+	local list: { BundleItem } = {}
+	for _, typeId in { "body", "book", "bag", "crate" } do
+		table.insert(list, { type = typeId, nameKey = `shop.bundle.{id}.{typeId}` })
+	end
+	return list
+end
+
+local DAY, HOUR, MINUTE = 86400, 3600, 60
+MockStore.BUNDLES = {
+	{
+		id = "brasa",
+		nameKey = "shop.bundle.brasa",
+		rarity = 6,
+		theme = "#B8361A",
+		robux = 399,
+		endsIn = 2 * DAY + 10 * HOUR + 7 * MINUTE,
+		items = bundleItems("brasa"),
+	},
+	{
+		id = "geada",
+		nameKey = "shop.bundle.geada",
+		rarity = 5,
+		theme = "#2F7FD8",
+		robux = 349,
+		endsIn = 5 * DAY + 2 * HOUR + 40 * MINUTE,
+		items = bundleItems("geada"),
+	},
+	{
+		id = "musgo",
+		nameKey = "shop.bundle.musgo",
+		rarity = 3,
+		theme = "#4E9A2E",
+		robux = 299,
+		endsIn = 12 * HOUR + 5 * MINUTE,
+		items = bundleItems("musgo"),
+	},
+} :: { Bundle }
+
+-- Gamepasses (provisórias): os kits para sempre (mesmo preço do painel de
+-- kits) e o VIP de +3 espaços que o jogo já tem preparado.
+export type Pass = { id: string, nameKey: string, descKey: string, robux: number, kitId: string? }
+
+local function kitPass(kitId: string): Pass
+	return {
+		id = kitId,
+		nameKey = `shop.pass.{kitId}`,
+		descKey = "shop.pass.forever",
+		robux = MockStore.KIT_ROBUX[kitId].forever,
+		kitId = kitId,
+	}
+end
+
+MockStore.PASSES = {
+	kitPass("kit_starter"),
+	kitPass("kit_explorer"),
+	kitPass("kit_survivor"),
+	kitPass("kit_veteran"),
+	{ id = "vip", nameKey = "shop.pass.vip", descKey = "shop.pass.vip.desc", robux = 149 },
+} :: { Pass }
 
 return MockStore

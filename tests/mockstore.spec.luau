@@ -20,48 +20,89 @@ return {
 		assert(MockStore.PACKS[5].tag == "best", "pacote 5 deveria ser best")
 	end,
 
-	["spins têm os preços da referência"] = function()
-		local prices = { skin = { 100, 300, 600 }, custom = { 50, 150, 300 } }
-		local seen = { skin = 0, custom = 0 }
-		for _, spin in MockStore.SPINS do
-			seen[spin.kind] += 1
-			local expected = prices[spin.kind][seen[spin.kind]]
-			assert(spin.price == expected, `{spin.id}: preço {spin.price}, esperava {expected}`)
-		end
-		assert(seen.skin == 3 and seen.custom == 3, "esperava 3 spins de cada tipo")
-	end,
-
-	["as chances de cada spin somam 1"] = function()
-		for _, spin in MockStore.SPINS do
+	["chances dos giros têm 6 raridades e somam 100"] = function()
+		for name, odds in
+			{
+				normal = MockStore.SPIN_ODDS.normal,
+				paid = MockStore.SPIN_ODDS.paid,
+				vitrine = MockStore.SHOWCASE_WEIGHTS,
+			}
+		do
+			assert(#odds == 6, `{name}: {#odds} valores`)
 			local total = 0
-			for _, odd in spin.odds do
-				assert(odd.chance > 0, `{spin.id}: chance não positiva`)
-				total += odd.chance
+			for _, v in odds do
+				assert(v > 0, `{name}: chance não positiva`)
+				total += v
 			end
-			assert(math.abs(total - 1) <= 1e-6, `{spin.id}: soma {total}`)
+			assert(math.abs(total - 100) <= 1e-6, `{name}: soma {total}`)
+		end
+		local n, p = MockStore.SPIN_ODDS.normal, MockStore.SPIN_ODDS.paid
+		assert(n[1] == 60 and n[6] == 0.1 and p[1] == 30 and p[6] == 3, "chances combinadas mudaram")
+	end,
+
+	["raridades seguem os tiers"] = function()
+		assert(
+			table.concat(MockStore.RARITIES, ",") == "wood,stone,gold,diamond,amethyst,reidite",
+			"ordem das raridades"
+		)
+		for _, id in MockStore.RARITIES do
+			assert(Defs.Tiers[id] ~= nil, `tier {id} não existe`)
 		end
 	end,
 
-	["roll devolve o índice certo nas bordas"] = function()
-		local odds = { { chance = 0.5 }, { chance = 0.3 }, { chance = 0.2 } }
-		assert(MockStore.roll(odds, 0) == 1, "r=0")
-		assert(MockStore.roll(odds, 0.4999) == 1, "r logo abaixo de 0.5")
-		assert(MockStore.roll(odds, 0.5) == 2, "r=0.5")
-		assert(MockStore.roll(odds, 0.7999) == 2, "r logo abaixo de 0.8")
-		assert(MockStore.roll(odds, 0.8) == 3, "r=0.8")
-		assert(MockStore.roll(odds, 0.999999) == 3, "r=0.999999")
+	["tipos de giro na ordem e com item de cada raridade"] = function()
+		local ids = {}
+		for _, t in MockStore.SPIN_TYPES do
+			table.insert(ids, t.id)
+			assert(#t.items >= 6 and #t.items <= 8, `{t.id}: {#t.items} itens`)
+			local seen = {}
+			for _, item in t.items do
+				assert(item.rarity >= 1 and item.rarity <= 6, `{item.id}: raridade {item.rarity}`)
+				assert(string.match(item.color, "^#%x%x%x%x%x%x$"), `{item.id}: cor {item.color}`)
+				seen[item.rarity] = true
+			end
+			for r = 1, 6 do
+				assert(seen[r], `{t.id}: sem item de raridade {r}`)
+			end
+		end
+		assert(table.concat(ids, ",") == "body,accessory,bag,book,crate", table.concat(ids, ","))
 	end,
 
-	["roll nunca passa do último índice com soma levemente menor que 1"] = function()
-		local odds = { { chance = 0.5 }, { chance = 0.4999999 } }
-		assert(MockStore.roll(odds, 0.9999999) == 2, "caiu fora da lista")
+	["preços dos giros"] = function()
+		local function flat(list)
+			local out = {}
+			for _, e in list do
+				table.insert(out, `{e.qty}:{e.price}`)
+			end
+			return table.concat(out, ",")
+		end
+		assert(flat(MockStore.SPIN_PRICES.normal) == "1:100,3:280,10:850", flat(MockStore.SPIN_PRICES.normal))
+		assert(flat(MockStore.SPIN_PRICES.paid) == "1:49,3:129,10:399", flat(MockStore.SPIN_PRICES.paid))
 	end,
 
-	["kit tem livro e mochila e as duas ofertas"] = function()
-		assert(#MockStore.KIT.items == 2, "esperava 2 itens")
-		assert(#MockStore.KIT.offers == 2, "esperava 2 ofertas")
-		assert(MockStore.KIT.offers[1].hours == 1 and MockStore.KIT.offers[1].price == 300, "oferta de 1 h")
-		assert(MockStore.KIT.offers[2].hours == 24 and MockStore.KIT.offers[2].price == 600, "oferta de 24 h")
+	["pacotes em destaque"] = function()
+		assert(#MockStore.BUNDLES == 3, `veio {#MockStore.BUNDLES}`)
+		for _, b in MockStore.BUNDLES do
+			assert(#b.items == 4 and b.robux > 0 and b.endsIn > 0, `{b.id} incompleto`)
+		end
+	end,
+
+	["gamepasses: kits para sempre e VIP"] = function()
+		local byId = {}
+		for _, pass in MockStore.PASSES do
+			byId[pass.id] = pass
+			if pass.kitId then
+				assert(pass.robux == MockStore.KIT_ROBUX[pass.kitId].forever, `{pass.id}: preço diferente do kit`)
+			end
+		end
+		for id in Defs.Kits do
+			local found = false
+			for _, pass in MockStore.PASSES do
+				found = found or pass.kitId == id
+			end
+			assert(found, `kit {id} sem gamepass`)
+		end
+		assert(byId.vip ~= nil and byId.vip.robux == 149, "VIP de 149")
 	end,
 
 	["categorias: skins vazia e as outras com 3 ou 4 itens"] = function()
@@ -144,14 +185,21 @@ return {
 	end,
 
 	["toda nameKey do mockup existe em Strings"] = function()
-		for _, spin in MockStore.SPINS do
-			checkKey(spin.nameKey)
-			for _, odd in spin.odds do
-				checkKey(odd.nameKey)
+		for _, t in MockStore.SPIN_TYPES do
+			checkKey(t.nameKey)
+			for _, item in t.items do
+				checkKey(item.nameKey)
 			end
 		end
-		for _, key in MockStore.KIT.items do
-			checkKey(key)
+		for _, bundle in MockStore.BUNDLES do
+			checkKey(bundle.nameKey)
+			for _, item in bundle.items do
+				checkKey(item.nameKey)
+			end
+		end
+		for _, pass in MockStore.PASSES do
+			checkKey(pass.nameKey)
+			checkKey(pass.descKey)
 		end
 		for _, cat in MockStore.CATEGORIES do
 			checkKey(cat.nameKey)
