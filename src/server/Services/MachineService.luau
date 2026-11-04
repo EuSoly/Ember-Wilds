@@ -176,7 +176,10 @@ function MachineService.Start(_self)
 		while true do
 			task.wait(TICK)
 			local now = os.clock()
-			step(now - last)
+			local ok, err = pcall(step :: any, now - last)
+			if not ok then
+				warn(`[MachineService] {err}`)
+			end
 			last = now
 		end
 	end)

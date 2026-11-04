@@ -160,8 +160,10 @@ local function InteractPanel(): Frame
 		local current = kind()
 		-- "symbol" não é um botão só: são os botões de símbolo, logo abaixo.
 		local list: { number } = {}
+		local model = InteractState.near()
+		local owner = model ~= nil and isOwner(model)
 		for _, action in InteractRules.actionsFor(current or "") do
-			if action ~= InteractRules.ACTIONS.symbol then
+			if action ~= InteractRules.ACTIONS.symbol and InteractRules.allowed(current or "", action, owner) then
 				table.insert(list, action)
 			end
 		end

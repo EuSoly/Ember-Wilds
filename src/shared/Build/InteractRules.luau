@@ -34,6 +34,7 @@ local BY_KIND: { [string]: { number } } = table.freeze({
 
 -- Ações só do dono (e aliados), por tipo. O resto é de qualquer jogador, como o baú.
 local OWNER_ONLY: { [string]: { [number]: boolean } } = table.freeze({
+	extractor = table.freeze({ [A.take] = true }),
 	sign = table.freeze({ [A.symbol] = true }),
 })
 

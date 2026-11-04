@@ -125,14 +125,14 @@ Chegue perto (até 8 studs do centro, `InteractRules.RANGE`) e o **painel de int
 
 | Peça | Vida | Receita (bancada) | O que faz |
 |---|---:|---|---|
-| Extrator de pedra / ouro | 300 | 200 madeiras + 50 pedras / 30 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s (wiki) e produz 1 pedra / 1 ouro por ciclo, até 100 guardados. Pegue o estoque pelo painel. Guarda até 100 madeiras. |
+| Extrator de pedra / ouro | 300 | 200 madeiras + 50 pedras / 30 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s (wiki) e produz 1 pedra / 1 ouro por ciclo, até 100 guardados. O dono (e aliados) pega o estoque pelo painel. Guarda até 100 madeiras. |
 | Fornalha | 500 | 100 pedras + 30 ouros | "Baú de mão única": você põe madeira (até 200) e não tira. Queima 1 madeira a cada 6 s (wiki). Acesa, esquenta (raio 24) e é estação de fogo do craft; não queima quem encosta. Sem madeira, apaga: tira o calor e a estação. |
-| Poço | 500 | 60 pedras | Com um balde cheio na mão, "Esvaziar" põe água no poço: 1 balde = 12 goles (wiki), até 48. "Beber" gasta 1 gole e dá 20 de sede. |
-| Balde (`bucket`) | - | 15 madeiras | Com o balde na mão, perto da água do mapa (até 3 studs), ele enche sozinho (vira `water_bucket`, no mesmo slot). Do balde não se bebe. Não empilha. |
-| Cama | 300 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Dormir" deita você perto dela: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
+| Poço | 500 | 60 pedras | Com um balde cheio na mão, "Encher" põe água no poço: 1 balde = 12 goles (wiki), até 48. "Beber" gasta 1 gole e dá 20 de sede. |
+| Balde (`bucket`) | - | 15 madeiras | Com o balde na mão, perto da água do mapa (até 3 studs), ele enche quando você aperta ou segura o botão de usar (vira `water_bucket`, no mesmo slot). Do balde não se bebe. Não empilha. |
+| Cama | 300 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Deitar" põe você em cima da cama: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
 | Placa | 100 | 20 madeiras (wiki) | O dono escolhe no painel um símbolo de uma lista fixa (`SignRules.SYMBOLS`: setas, aviso, coração, caveira, estrela, casa, ! e ?). Sem texto livre, porque texto de jogador exige filtro da Roblox. Aparece nas duas faces. |
 
-Os números ficam nos blocos `extractor`, `furnace`, `well` e `bed` da peça, em `Defs/Items.luau`. O extrator produz mais devagar que bater numa rocha com picareta, para não deixar a mineração inútil. Hoje qualquer jogador perto pode pôr e pegar (dono e aliados só valerão quando os times chegarem, via `BuildRules.areAllies`); só trocar o símbolo da placa é do dono.
+Os números ficam nos blocos `extractor`, `furnace`, `well` e `bed` da peça, em `Defs/Items.luau`. O extrator produz mais devagar que bater numa rocha com picareta, para não deixar a mineração inútil. Qualquer jogador perto pode pôr madeira no extrator e na fornalha; pegar o estoque do extrator e trocar o símbolo da placa é só do dono (e aliados, via `BuildRules.areAllies`, quando os times chegarem). A regra está em `InteractRules`.
 
 Código: as regras puras são `MachineRules`, `WellRules`, `SignRules` e `InteractRules` (com testes no Lune); os serviços são `MachineService` (extrator e fornalha), `WellService`, `BedService` e `SignService`, todos registrados no `InteractService.register`. A água do mapa vem de `WaterSim.isWaterAt` e a troca de balde de `InventoryService.swapAt`.
 

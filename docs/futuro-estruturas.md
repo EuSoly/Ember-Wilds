@@ -26,7 +26,7 @@ O que falta, por tier (diamante, ametista, reidite):
 1. **Recurso e bioma:** minério em `Defs/Resources.luau` e zona em `Defs/ResourceZones.luau`; o bioma novo no mapa (veja `guia/mapa.md`). A picareta de nível certo já existe. É o bloqueio de tudo abaixo.
 2. **Item do minério** (`diamond`, `amethyst`, `reidite`) em `Defs/Items.luau`, com texto em `Strings/ptBR.luau`.
 3. **Depósito:** ligar o modelo (`<tier>_deposit_icon`, já em `Assets.Resources`) ao recurso. O mapa já lê os modelos por nome.
-4. **Ícone:** o template `<item>_viewport` já está em `Assets.Icons`; basta o item existir com o mesmo id para o slot mostrar o 3D.
+4. **Ícone:** o template do ícone já está em `Assets.Icons`, com o id do minério ou item (`wood`, `stone`, `diamond`...); basta o item existir com o mesmo id para o slot mostrar o 3D.
 5. **Construções:** parede, porta, espinho e porta com espinhos do tier (`<tier>_wall`, `_door`, `_spike`, `_spike_door`) em `Defs/Items.luau` (bloco `structure`; vida e dano do tier acima do ouro) e receitas em `Defs/Recipes.luau`. Os templates e os colisores seguem as mesmas regras do madeira/pedra/ouro: sem código novo.
 6. **Extratores:** `diamond_extractor`, `amethyst_extractor` e `reidite_extractor` (kind `extractor`, bloco `extractor` com o minério do tier em `output`). O modelo e o rotor já existem; ciclo e estoque provisórios como nos de pedra e ouro.
 7. **Dano em construção:** ajustar o `structureDamage` das armas se for preciso para os tiers novos (valores provisórios hoje).
@@ -48,7 +48,7 @@ O que falta:
 1. **Depósito e ícone:** igual aos minérios acima (recurso, zona, item `emerald`, template já pronto). Precisa do bioma.
 2. **Máquina** (`emerald_machine`, kind novo, por exemplo `emerald_machine`): peça com vida e bloco de dados `emeraldMachine` com pontos por intervalo, por bioma.
 3. **Regras puras** `EmeraldRules` (testadas no Lune): pontos por bioma e intervalo; "uma por jogador" (conferir em `canPlace`, contando as peças do dono); o dono morre se ela for destruída.
-4. **Serviço:** pontua o dono a cada intervalo (placar ainda não existe como sistema de pontos; ver `game-design/` antes) e ligar a destruição da peça (`StructureService.onRemoved`) à morte do dono, com causa de morte nova ("Máquina de esmeralda" em `Strings`).
+4. **Serviço:** pontua o dono a cada intervalo (o `ScoreService` já guarda os pontos da vida atual e o ranking; basta chamar `ScoreService.add`, mas os pontos por intervalo ainda não têm fonte: ver `game-design/` antes) e ligar a destruição da peça (`StructureService.onRemoved`) à morte do dono, com causa de morte nova ("Máquina de esmeralda" em `Strings`).
 5. **Visual:** o efeito de girar/brilhar no `StructureFx`.
 
 Números (pontos por bioma e intervalo) vêm da wiki; sem fonte, provisórios.
@@ -77,7 +77,7 @@ O que falta:
 O que falta:
 
 1. **Totem:** peça que cria e gerencia o time (convite, entrada, saída). Dados em `Defs/Items.luau` e um serviço `TeamService` com regras puras testadas.
-2. **`areAllies`:** passar a olhar o time do dono. Conferir que tudo que hoje é "só o dono" passe a valer para o time: abrir portas, não levar dano de espinho, usar extrator e fornalha. Hoje o extrator e a fornalha deixam qualquer um perto pôr e pegar; isso deve virar "dono e aliados".
+2. **`areAllies`:** passar a olhar o time do dono. Conferir que tudo que hoje é "só o dono" passe a valer para o time: abrir portas, não levar dano de espinho, usar extrator e fornalha. Hoje qualquer um perto põe madeira, mas só o dono pega o estoque do extrator; isso deve virar "dono e aliados".
 3. **Placa:** hoje só o dono troca o símbolo; decidir se aliados também podem.
 4. **Interface:** lista do time no HUD (`guia/hud.md`) e texto das chaves novas em `Strings`.
 5. **Dono que morre:** hoje todas as peças dele somem (`removeOwned`); com time, decidir se a base passa para o time.

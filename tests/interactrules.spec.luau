@@ -44,11 +44,16 @@ function spec.placa_so_o_dono()
 	assert(not InteractRules.allowed("sign", A.symbol, false), "outro jogador não muda o símbolo")
 end
 
+function spec.extrator_pegar_so_o_dono()
+	assert(InteractRules.allowed("extractor", A.take, true), "dono pega o estoque")
+	assert(not InteractRules.allowed("extractor", A.take, false), "outro jogador não pega")
+	assert(InteractRules.allowed("extractor", A.put_wood, false), "pôr lenha é de qualquer jogador")
+end
+
 function spec.resto_qualquer_jogador()
 	for _, case in
 		{
 			{ "extractor", A.put_wood },
-			{ "extractor", A.take },
 			{ "furnace", A.put_wood },
 			{ "well", A.drink },
 			{ "well", A.fill },
