@@ -21,6 +21,12 @@ return table.freeze({
 	MAX_CURRENCY_PER_HOUR = 300,
 	HOUR_SECONDS = 3600,
 
+	-- Nível (LevelRules): subir do nível n para n+1 pede XP_STEP × n de XP.
+	XP_STEP = 1000,
+	-- XP = pontos da vida; no máximo isto por hora (rede contra trapaça/bug,
+	-- como a da Golden Ember). Quem joga normal (~30 mil por partida) nunca bate.
+	MAX_XP_PER_HOUR = 100000,
+
 	-- Um ciclo completo (dia + noite), em segundos: base de days_best.
 	-- Igual a DayCycle.DAY_SECONDS + DayCycle.NIGHT_SECONDS.
 	DAY_CYCLE_SECONDS = 480,
