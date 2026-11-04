@@ -20,6 +20,12 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Porta com espinhos:** sem teste Lune da recusa do toggle nem do dono ignorado (código de serviço).
 - **Bancada das estruturas:** cópia de atributo repetida (`structure-bench.luau` ~linhas 275-277); sem aviso para template com `PrimaryPart`; `difference()` compara por índice (falha para o lado seguro).
 
+## Carregamento, menu e kits (UI 1, 04/11)
+
+- **Tela mínima com interface no máximo:** em 568x320 com o tamanho da interface em 1,25 (tela lógica 454x256), os pods do topo (mínimo 200) encostam no logo e a linha Kits/JOGAR fica 12 px mais larga que a área do boneco. Ideal: deixar o pod encolher ou esconder o logo quando não couber (`MenuLayout`, `MenuShell`).
+- **Pontos do kit dependem do molde da morte:** a fonte de pontos do `KitList` só nasce no `KitList.mount`, chamado pela tela de morte. Sem o molde `Death`, escolher kit de pontos no menu não faz nada. Ideal: criar a fonte no `KitShop`/`MenuShell`.
+- **Imagem com id que não carrega:** sol e lua só viram círculo quando o id está vazio; se o Roblox recusar a imagem, eles somem (a tela continua funcionando). Ideal: conferir `IsLoaded` depois de um tempo (`Loading.client.luau`).
+
 ## Mockups do menu (G7a, 02/11)
 
 - **Prévia do boneco sem `vide.cleanup`:** se a raiz do Vide fosse desmontada com Cosméticos aberto, o boneco ficaria. Na prática a raiz nunca desmonta.
