@@ -21,7 +21,7 @@ local Net = require(script.Parent:WaitForChild("Net"))
 local REFRESH = 0.25 -- segundos entre conferências
 
 -- Estado da peça lido dos atributos do modelo; nil = a peça não tem esse atributo.
-export type Status = { wood: number?, stock: number?, drinks: number? }
+export type Status = { wood: number?, stock: number?, drinks: number?, symbol: number? }
 
 local EMPTY: Status = table.freeze({})
 
@@ -92,6 +92,7 @@ local function readStatus(model: Model?): Status
 		wood = numberAttribute(model, StatNames.Wood),
 		stock = numberAttribute(model, StatNames.Stock),
 		drinks = numberAttribute(model, StatNames.Drinks),
+		symbol = numberAttribute(model, StatNames.Symbol),
 	}
 end
 
@@ -102,7 +103,12 @@ local function refresh()
 	end
 	local now = readStatus(model)
 	local before = InteractState.status()
-	if now.wood ~= before.wood or now.stock ~= before.stock or now.drinks ~= before.drinks then
+	if
+		now.wood ~= before.wood
+		or now.stock ~= before.stock
+		or now.drinks ~= before.drinks
+		or now.symbol ~= before.symbol
+	then
 		InteractState.status(now)
 	end
 end

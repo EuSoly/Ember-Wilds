@@ -39,6 +39,7 @@ return table.freeze({
 	["interact.wood"] = "Madeira: {count}",
 	["interact.stock"] = "Estoque: {count}",
 	["interact.drinks"] = "Goles: {count}",
+	["interact.symbol_now"] = "Símbolo: {symbol}",
 
 	-- Itens
 	["item.wood"] = "Madeira",

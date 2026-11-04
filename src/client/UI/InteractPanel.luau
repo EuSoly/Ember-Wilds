@@ -4,11 +4,14 @@
 -- o nome dela, o estado (madeira, estoque, goles: só o que a peça tem) e um
 -- botão por ação. Fica empilhado em cima dos painéis do baú e da caixa quando
 -- eles estão visíveis, sem sobrepor. Só pede: quem decide é o servidor.
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local InteractRules = require(Shared:WaitForChild("Build"):WaitForChild("InteractRules"))
+local SignRules = require(Shared:WaitForChild("Build"):WaitForChild("SignRules"))
+local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
@@ -21,6 +24,9 @@ local create = vide.create
 local GAP = 6
 local WIDTH = 2 * 120 + GAP -- px: cabe dois botões lado a lado
 local BUTTON = Vector2.new(120, 44) -- px (altura = mínimo de toque)
+-- Botões dos símbolos da placa: 4 por fileira (4 * 56 + 3 * 6 cabe em WIDTH).
+local SYMBOL_BUTTON = Vector2.new(56, 44) -- px (altura = mínimo de toque)
+local SYMBOL_COLUMNS = 4
 local STACK_GAP = 12 -- px entre este painel e o de baixo
 -- Mesmas medidas do ChestPanel (64 px) e do CratePanel (CELL, GAP, COLUMNS,
 -- título de 20 px): a altura deles, para empilhar sem sobrepor.
@@ -68,7 +74,48 @@ local function statusText(): string
 	if status.drinks ~= nil then
 		table.insert(parts, Strings.format("interact.drinks", { count = status.drinks }))
 	end
+	if status.symbol ~= nil and SignRules.isValid(status.symbol) then
+		table.insert(parts, Strings.format("interact.symbol_now", { symbol = SignRules.symbolOf(status.symbol) }))
+	end
 	return table.concat(parts, "   ")
+end
+
+-- O jogador local é o dono da peça? (atributo Owner = UserId, escrito pelo
+-- StructureService). O servidor confere de novo: isto só decide o que mostrar.
+local function isOwner(model: Model): boolean
+	return model:GetAttribute(StatNames.Owner) == Players.LocalPlayer.UserId
+end
+
+-- Botão do símbolo `index` da placa: manda o índice em Arg.
+local function SymbolButton(index: () -> number, order: number): TextButton
+	return create("TextButton")({
+		Name = "Symbol",
+		LayoutOrder = order,
+		Size = UDim2.fromOffset(SYMBOL_BUTTON.X, SYMBOL_BUTTON.Y),
+		Text = "",
+		AutoButtonColor = true,
+		BackgroundColor3 = Theme.ui.panel,
+		BackgroundTransparency = Theme.panelTransparency,
+		BorderSizePixel = 0,
+		create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		create("UIStroke")({
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			Color = Theme.ui.border,
+			Thickness = Theme.strokeThickness,
+		}),
+		Activated = function()
+			InteractState.act(InteractRules.ACTIONS.symbol, vide.untrack(index))
+		end,
+		Kit.text({
+			Size = UDim2.fromScale(0.8, 0.7),
+			Position = UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Text = function()
+				return SignRules.symbolOf(index())
+			end,
+			maxSize = 24,
+		}),
+	}) :: TextButton
 end
 
 -- Botão da ação na posição `order`. `action` é reativo: ao trocar de peça o
@@ -90,11 +137,7 @@ local function ActionButton(action: () -> number, order: number): TextButton
 			Thickness = Theme.strokeThickness,
 		}),
 		Activated = function()
-			-- Tarefa 12: a ação "symbol" (placa) vira uma fileira de botões, um por
-			-- símbolo (SignRules.SYMBOLS), cada um mandando o índice em Arg. Até lá,
-			-- um botão só que manda o símbolo 1.
-			local current = vide.untrack(action)
-			InteractState.act(current, if current == InteractRules.ACTIONS.symbol then 1 else 0)
+			InteractState.act(vide.untrack(action))
 		end,
 		Kit.text({
 			Size = UDim2.fromScale(0.86, 0.6),
@@ -115,7 +158,25 @@ local function InteractPanel(): Frame
 	end
 	local actions = function(): { number }
 		local current = kind()
-		return InteractRules.actionsFor(current or "")
+		-- "symbol" não é um botão só: são os botões de símbolo, logo abaixo.
+		local list: { number } = {}
+		for _, action in InteractRules.actionsFor(current or "") do
+			if action ~= InteractRules.ACTIONS.symbol then
+				table.insert(list, action)
+			end
+		end
+		return list
+	end
+	-- Índices dos símbolos: só o dono da placa vê os botões (lista vazia = nenhum).
+	local symbols = function(): { number }
+		local model = InteractState.near()
+		local list: { number } = {}
+		if model and kind() == "sign" and isOwner(model) then
+			for index = 1, #SignRules.SYMBOLS do
+				table.insert(list, index)
+			end
+		end
+		return list
 	end
 	return Kit.panel({
 		Name = "InteractPanel",
@@ -178,6 +239,26 @@ local function InteractPanel(): Frame
 			}),
 			vide.indexes(actions, function(action, index)
 				return ActionButton(action, index)
+			end),
+		}),
+		create("Frame")({
+			Name = "Symbols",
+			LayoutOrder = 4,
+			BackgroundTransparency = 1,
+			AutomaticSize = Enum.AutomaticSize.Y,
+			Size = UDim2.fromOffset(WIDTH, 0),
+			Visible = function()
+				return #symbols() > 0
+			end,
+			create("UIGridLayout")({
+				CellSize = UDim2.fromOffset(SYMBOL_BUTTON.X, SYMBOL_BUTTON.Y),
+				CellPadding = UDim2.fromOffset(GAP, GAP),
+				FillDirectionMaxCells = SYMBOL_COLUMNS,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}),
+			vide.indexes(symbols, function(symbol, index)
+				return SymbolButton(symbol, index)
 			end),
 		}),
 	}) :: Frame

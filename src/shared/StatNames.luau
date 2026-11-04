@@ -162,6 +162,8 @@ return table.freeze({
 	Wood = "Wood",
 	Stock = "Stock",
 	Drinks = "Drinks",
+	-- Índice do símbolo da placa (SignRules.SYMBOLS), 0 = nenhum; atributo no modelo.
+	Symbol = "Symbol",
 	-- true enquanto o extrator trabalha (o rotor gira), atributo no modelo (MachineService).
 	Working = "Working",
 	-- false com a peça apagada (as chamas somem; sem atributo = acesa), atributo
