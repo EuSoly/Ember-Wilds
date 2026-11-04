@@ -76,6 +76,25 @@ function UIMath.iconCameraDistance(
 	return radius * (1 + margin) / math.sin(math.rad(fovDegrees) / 2)
 end
 
+-- Distância da câmera ao centro do modelo para ele ENCHER o quadro (mais justo
+-- que iconCameraDistance, que usa a esfera). `points` são os cantos da caixa
+-- do modelo já na base da câmera, relativos ao centro: { direita, cima, frente }
+-- (frente positiva = mais longe da câmera). `aspect` = largura / altura do
+-- quadro; `margin` = folga (0.1 = 10%). Nunca devolve um valor que ponha a
+-- câmera em cima ou atrás de um ponto.
+function UIMath.fitDistance(points: { { number } }, fovDegrees: number, aspect: number, margin: number): number
+	local tanV = math.tan(math.rad(fovDegrees) / 2) / (1 + margin)
+	local tanH = tanV * aspect
+	local distance = 0.01
+	for _, point in points do
+		local right, up, forward = point[1], point[2], point[3]
+		-- O ponto fica a (distance + forward) da câmera e precisa caber no ângulo.
+		local needed = math.max(math.abs(up) / tanV, math.abs(right) / tanH) - forward
+		distance = math.max(distance, needed, 0.01 - forward)
+	end
+	return distance
+end
+
 -- Um toque/clique segurado vira "arrasto" quando o dedo anda mais que
 -- `threshold` pixels; antes disso ainda é um toque simples.
 function UIMath.isDrag(dx: number, dy: number, threshold: number): boolean

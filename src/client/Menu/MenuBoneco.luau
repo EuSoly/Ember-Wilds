@@ -1,14 +1,15 @@
 --!strict
--- Boneco do jogador no centro do menu, segurando o livro (futuramente as
--- skins de livro trocam qual modelo é clonado aqui). Fica num ViewportFrame:
--- não depende de onde a câmera do menu está passeando.
+-- Boneco do jogador no centro do menu, segurando o livro e com a mochila nas
+-- costas. Fica num ViewportFrame: não depende de onde a câmera do menu está
+-- passeando.
 --
--- A skin é a equipada de verdade: o CosmeticService grava Cosmetic_body também
--- no Player (no menu não há personagem). O livro é um clone do modelo do
--- Elizeu em ReplicatedStorage.Assets.Tools.book (o original não é mexido).
+-- As skins são as equipadas de verdade: o CosmeticService grava
+-- Cosmetic_<slot> também no Player (no menu não há personagem). A tela de
+-- Cosméticos pode passar um `override` para mostrar outra skin (prévia). O
+-- livro é sempre o modelo do Elizeu (BookModel: clone de Assets.Tools.book).
 --
 -- Num ViewportFrame não roda física: soldas e Motor6D não movem nada. Por
--- isso a pose (livro e mãos) é posta direto no CFrame das peças.
+-- isso a pose (livro, mãos e mochila) é posta direto no CFrame das peças.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -19,14 +20,14 @@ local StatNames = require(Shared:WaitForChild("StatNames"))
 local Client = script.Parent.Parent
 local BonecoModel = require(Client:WaitForChild("Boneco"):WaitForChild("BonecoModel"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
+local Cosmetics = script.Parent:WaitForChild("Cosmetics")
+local BagModel = require(Cosmetics:WaitForChild("BagModel"))
+local BookModel = require(Cosmetics:WaitForChild("BookModel"))
 
 local create = vide.create
 
-local BOOK_ASSET = "book" -- Assets.Tools.<id>
 -- Pose ajustada no olho (em relação à raiz do boneco; a frente é -Z).
 local BOOK_OFFSET = CFrame.new(0, 0.25, -2.75)
-local BOOK_TILT = math.rad(-62) -- capa virada para a câmera
-local BOOK_TWIST = math.rad(17.7) -- o modelo vem girado; isso o endireita
 local HAND_X = 1.3 -- mãos nas bordas do livro
 local HAND_Y = 0.2
 local HAND_Z = -2.85
@@ -35,30 +36,10 @@ local CAMERA_DIRECTION = Vector3.new(0, 0.8, -1.1).Unit
 local CAMERA_FOV = 30
 local CAMERA_MARGIN = 0.85 -- < 1 aproxima (a caixa do modelo é maior que o desenho)
 
+-- Skins mostradas no lugar das equipadas (campo nil = a equipada).
+export type Override = { body: string?, bag: string? }
+
 local MenuBoneco = {}
-
-local warnedMissingBook = false
-
--- Peça do livro (sem a Tool e sem o Attachment do grip), ou nil sem o asset.
-local function cloneBook(): BasePart?
-	local assets = ReplicatedStorage:FindFirstChild("Assets")
-	local tools = assets and assets:FindFirstChild("Tools")
-	local tool = tools and tools:FindFirstChild(BOOK_ASSET)
-	local handle = tool and tool:FindFirstChild("Handle")
-	if handle == nil or not handle:IsA("BasePart") then
-		if not warnedMissingBook then
-			warnedMissingBook = true
-			warn(`[MenuBoneco] sem ReplicatedStorage.Assets.Tools.{BOOK_ASSET}.Handle: boneco sem livro`)
-		end
-		return nil
-	end
-	local book = handle:Clone()
-	book:ClearAllChildren()
-	book.Anchored = true
-	book.CanCollide = false
-	book.CanQuery = false
-	return book
-end
 
 -- Leva a mão (e o contorno soldado a ela) para `target`.
 local function moveHand(model: Model, name: string, target: CFrame)
@@ -76,9 +57,9 @@ end
 
 local function pose(boneco: BonecoModel.Boneco)
 	local root = boneco.root.CFrame
-	local book = cloneBook()
+	local book = BookModel.clone()
 	if book then
-		book.CFrame = root * BOOK_OFFSET * CFrame.Angles(BOOK_TILT, 0, 0) * CFrame.Angles(0, BOOK_TWIST, 0)
+		book.CFrame = root * BOOK_OFFSET * BookModel.ROTATION
 		book.Parent = boneco.model
 	end
 	moveHand(boneco.model, "LeftHand", root * CFrame.new(-HAND_X, HAND_Y, HAND_Z))
@@ -103,11 +84,29 @@ local function lookOf(id: string): Defs.BodyLook
 	return default
 end
 
+-- Cores da mochila `id`; id inválido (ou de outro slot) cai na mochila padrão.
+local function bagLookOf(id: string): Defs.BagLook
+	local cosmetic = Defs.Cosmetics[id]
+	if cosmetic and cosmetic.bag then
+		return cosmetic.bag
+	end
+	local default = Defs.Cosmetics[Defs.CosmeticSlots.bag.default].bag
+	assert(default ~= nil, "[MenuBoneco] mochila padrão sem cores")
+	return default
+end
+
 -- ViewportFrame transparente com o boneco. Chamar dentro de um root Vide.
 -- O boneco existe só enquanto `visible()` é verdadeiro (criado e destruído).
-function MenuBoneco.build(visible: () -> boolean): ViewportFrame
-	local skin =
-		Sources.attribute(Players.LocalPlayer, StatNames.CosmeticPrefix .. "body", Defs.CosmeticSlots.body.default)
+-- Sem `override`, mostra as skins equipadas (Cosmetic_body e Cosmetic_bag do
+-- Player); com ele, cada campo preenchido troca a skin daquele slot.
+function MenuBoneco.build(visible: () -> boolean, override: (() -> Override)?): ViewportFrame
+	local player = Players.LocalPlayer
+	local equippedBody = Sources.attribute(player, StatNames.CosmeticPrefix .. "body", Defs.CosmeticSlots.body.default)
+	local equippedBag = Sources.attribute(player, StatNames.CosmeticPrefix .. "bag", Defs.CosmeticSlots.bag.default)
+	local function chosen(): (string, string)
+		local wanted: Override = if override then override() else {}
+		return wanted.body or equippedBody(), wanted.bag or equippedBag()
+	end
 
 	local camera = Instance.new("Camera")
 	local viewport = create("ViewportFrame")({
@@ -121,21 +120,36 @@ function MenuBoneco.build(visible: () -> boolean): ViewportFrame
 	}) :: ViewportFrame
 
 	local current: BonecoModel.Boneco? = nil
+	local bag: Model? = nil
+	local bagId: string? = nil
 	vide.effect(function()
 		local show = visible()
-		local look = lookOf(skin())
+		local bodyId, wantedBag = chosen()
+		local look = lookOf(bodyId)
 		if show and current == nil then
 			local boneco = BonecoModel.build("")
 			boneco.model.Parent = viewport -- o build põe no Workspace; move já
 			pose(boneco)
+			-- Enquadra antes da mochila: o enquadramento não muda com ela.
 			frameCamera(camera, boneco.model)
 			current = boneco
 		elseif not show and current ~= nil then
-			BonecoModel.destroy(current)
+			BonecoModel.destroy(current) -- leva a mochila junto
 			current = nil
+			bag = nil
+			bagId = nil
 		end
 		if current ~= nil then
 			BonecoModel.applyLook(current, look)
+			if bagId ~= wantedBag then
+				if bag then
+					bag:Destroy()
+				end
+				local model = BagModel.build(bagLookOf(wantedBag))
+				BagModel.attach(model, current)
+				bag = model
+				bagId = wantedBag
+			end
 		end
 	end)
 	vide.cleanup(function()
