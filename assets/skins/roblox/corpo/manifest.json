@@ -18,7 +18,7 @@
   "texture": "corpo_palette.png",
   "texture_size": 512,
   "arquivo_geral": "skins-corpo.fbx",
-  "eixos": "Blender Z-up; FBX forward Z, up Y (Blender +Y = Roblox -Z = frente). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
   "skins": [
     {
       "id": "body_lobo",

@@ -11,7 +11,7 @@
   "texture": "livros_palette.png",
   "texture_size": 256,
   "arquivo_geral": "skins-livros.fbx",
-  "eixos": "Blender Z-up; FBX forward Z, up Y (Blender +Y = Roblox -Z = frente). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
   "skins": [
     {
       "id": "book_pergaminho",

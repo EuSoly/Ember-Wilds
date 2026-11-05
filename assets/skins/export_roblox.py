@@ -1,6 +1,6 @@
 # Exporta as skins de CORPO e de LIVRO para o Roblox (FBX), no padrão dos outros pacotes do projeto
 # (assets/world-pack/export_world.py): cores chapadas viram uma textura de paleta compartilhada,
-# uma malha por peça, triangulada, FBX Z forward / Y up, arquivo geral + individuais,
+# uma malha por peça, triangulada, FBX -Z forward / Y up, arquivo geral + individuais,
 # manifest.json e validation.json (reimportação no Blender).
 #
 # Rodar em SEGUNDO PLANO (não mexe no Blender aberto), a partir da raiz do projeto:
@@ -192,7 +192,7 @@ def exportar(categoria):
     rna = bpy.ops.export_scene.fbx.get_rna_type()
     def op(k, v): return next(e.identifier for e in rna.properties[k].enum_items if e.identifier == v)
     kw = dict(use_selection=True, global_scale=1.0, apply_unit_scale=True, apply_scale_options=op("apply_scale_options", "FBX_SCALE_UNITS"),
-              axis_forward=op("axis_forward", "Z"), axis_up=op("axis_up", "Y"),
+              axis_forward=op("axis_forward", "-Z"), axis_up=op("axis_up", "Y"),  # "-Z": frente do boneco (+Y no Blender) vira -Z no Roblox; com "Z" saía virado 180°
               object_types={op("object_types", "MESH"), op("object_types", "EMPTY")}, use_mesh_modifiers=True,
               mesh_smooth_type=op("mesh_smooth_type", "FACE"), bake_anim=False, add_leaf_bones=False,
               path_mode=op("path_mode", "COPY"), embed_textures=True, use_triangles=True, use_custom_props=True)
@@ -215,7 +215,7 @@ def exportar(categoria):
                      mesh_count=sum(len(r["parts"]) for r in registros),
                      total_triangles=sum(p["triangles"] for r in registros for p in r["parts"]),
                      palette_colors=len(paleta), texture=textura, texture_size=size, arquivo_geral=geral,
-                     eixos="Blender Z-up; FBX forward Z, up Y (Blender +Y = Roblox -Z = frente). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+                     eixos="Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
                      skins=registros)
     json.dump(manifesto, open(os.path.join(out, "manifest.json"), "w", encoding="utf8"), indent=2, ensure_ascii=False)
     return manifesto

@@ -33,7 +33,7 @@ Os **olhos não vêm** no arquivo: continuam sendo do código (piscar, cara de d
 
 **Livro**, id `book_<nome>`: a malha `book_<nome>_livro`, com origem no centro do livro, e mais as peças `_neon` quando houver. Tamanho e orientação são os do `Assets.Tools.book` (2,37 × 0,53 × 2,68, capa para cima).
 
-**Eixos:** a frente do boneco e o topo do livro (+Y no Blender) viram -Z no Roblox, que é a frente. O Z do Blender vira o Y do Roblox. A escala é 1 stud = 1 unidade.
+**Eixos:** a frente do boneco e o topo do livro (+Y no Blender) viram -Z no Roblox, que é a frente, e a mão direita fica em +X. O Z do Blender vira o Y do Roblox. A escala é 1 stud = 1 unidade. (A primeira exportação, de 05/11, saiu girada 180°; as cópias já importadas no Studio foram giradas por script, e o export foi corrigido para `axis_forward = -Z`.)
 
 ## Ajustes no Studio depois de importar
 
