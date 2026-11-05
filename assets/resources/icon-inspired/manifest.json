@@ -1,0 +1,78 @@
+{
+  "source_file": "C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\minerios-trabalho.blend",
+  "originals_preserved": true,
+  "models": [
+    {
+      "item_id": "stone_deposit_icon",
+      "resource": "stone",
+      "source_collection": "pedra",
+      "new_reference_proposal": false,
+      "triangles": 214,
+      "silhouette_max_error_fraction": 0.0014357305474373373,
+      "silhouette_vertices": 27,
+      "height": 1.436245083808899,
+      "width": 4.0,
+      "closed_mesh": true
+    },
+    {
+      "item_id": "gold_deposit_icon",
+      "resource": "gold",
+      "source_collection": "ouro",
+      "new_reference_proposal": false,
+      "triangles": 206,
+      "silhouette_max_error_fraction": 0.006974308599191648,
+      "silhouette_vertices": 26,
+      "height": 1.5376640558242798,
+      "width": 4.0,
+      "closed_mesh": true
+    },
+    {
+      "item_id": "diamond_deposit_icon",
+      "resource": "diamond",
+      "source_collection": "diamante",
+      "new_reference_proposal": false,
+      "triangles": 262,
+      "silhouette_max_error_fraction": 0.0018463348960526247,
+      "silhouette_vertices": 33,
+      "height": 1.851456880569458,
+      "width": 4.0,
+      "closed_mesh": true
+    },
+    {
+      "item_id": "amethyst_deposit_icon",
+      "resource": "amethyst",
+      "source_collection": "ametista",
+      "new_reference_proposal": false,
+      "triangles": 246,
+      "silhouette_max_error_fraction": 0.009513607968624145,
+      "silhouette_vertices": 31,
+      "height": 2.1700499057769775,
+      "width": 4.0,
+      "closed_mesh": true
+    },
+    {
+      "item_id": "reidite_deposit_icon",
+      "resource": "reidite",
+      "source_collection": "reidite",
+      "new_reference_proposal": false,
+      "triangles": 366,
+      "silhouette_max_error_fraction": 0.004469919014773327,
+      "silhouette_vertices": 46,
+      "height": 2.245206832885742,
+      "width": 4.0,
+      "closed_mesh": true
+    },
+    {
+      "item_id": "emerald_deposit_icon",
+      "resource": "emerald",
+      "source_collection": null,
+      "new_reference_proposal": true,
+      "triangles": 118,
+      "silhouette_max_error_fraction": 2.8843394033026846e-07,
+      "silhouette_vertices": 15,
+      "height": 1.9800000190734863,
+      "width": 4.0,
+      "closed_mesh": true
+    }
+  ]
+}

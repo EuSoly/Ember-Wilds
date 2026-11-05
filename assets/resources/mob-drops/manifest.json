@@ -1,0 +1,368 @@
+{
+ "source": "https://starveiopro.fandom.com/wiki/Items (secao Mob Drops)",
+ "units": "~1 unidade = largura do icone",
+ "pivot": "centro do item, base em Z=0",
+ "note": "Uma malha por cor em cada item; faces de baixo removidas.",
+ "total_meshes": 84,
+ "total_triangles": 5256,
+ "items": [
+  {
+   "item_id": "rabbit_fur",
+   "label": "Rabbit Fur",
+   "meshes": 4,
+   "triangles": 202,
+   "mesh_names": [
+    "rabbit_fur_outline",
+    "rabbit_fur_shade",
+    "rabbit_fur_body",
+    "rabbit_fur_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#D8729F",
+    "#EF96BE",
+    "#FFC9E0"
+   ]
+  },
+  {
+   "item_id": "wolf_fur",
+   "label": "Wolf Fur",
+   "meshes": 4,
+   "triangles": 202,
+   "mesh_names": [
+    "wolf_fur_outline",
+    "wolf_fur_shade",
+    "wolf_fur_body",
+    "wolf_fur_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#2F2D35",
+    "#45424C",
+    "#6E6A78"
+   ]
+  },
+  {
+   "item_id": "winter_fur",
+   "label": "Winter Fur",
+   "meshes": 4,
+   "triangles": 202,
+   "mesh_names": [
+    "winter_fur_outline",
+    "winter_fur_shade",
+    "winter_fur_body",
+    "winter_fur_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#C3CFDA",
+    "#F3F7FA",
+    "#FFFFFF"
+   ]
+  },
+  {
+   "item_id": "boar_fur",
+   "label": "Boar Fur",
+   "meshes": 4,
+   "triangles": 202,
+   "mesh_names": [
+    "boar_fur_outline",
+    "boar_fur_shade",
+    "boar_fur_body",
+    "boar_fur_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#3E2F2B",
+    "#584540",
+    "#7E6760"
+   ]
+  },
+  {
+   "item_id": "kraken_skin",
+   "label": "Kraken Skin",
+   "meshes": 4,
+   "triangles": 202,
+   "mesh_names": [
+    "kraken_skin_outline",
+    "kraken_skin_shade",
+    "kraken_skin_body",
+    "kraken_skin_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#140F38",
+    "#211953",
+    "#3F3486"
+   ]
+  },
+  {
+   "item_id": "thread",
+   "label": "Thread",
+   "meshes": 5,
+   "triangles": 372,
+   "mesh_names": [
+    "thread_outline",
+    "thread_body",
+    "thread_part",
+    "thread_part_2",
+    "thread_hole"
+   ],
+   "colors": [
+    "#1E2230",
+    "#E9E6E6",
+    "#C8C0C1",
+    "#FEFEFE",
+    "#8E8587"
+   ]
+  },
+  {
+   "item_id": "crab_claws",
+   "label": "Crab Claws",
+   "meshes": 3,
+   "triangles": 195,
+   "mesh_names": [
+    "crab_claws_outline",
+    "crab_claws_body",
+    "crab_claws_part"
+   ],
+   "colors": [
+    "#1E2230",
+    "#BC4933",
+    "#EC583C"
+   ]
+  },
+  {
+   "item_id": "crab_sticks",
+   "label": "Crab Sticks",
+   "meshes": 4,
+   "triangles": 278,
+   "mesh_names": [
+    "crab_sticks_outline",
+    "crab_sticks_body",
+    "crab_sticks_part",
+    "crab_sticks_part_4"
+   ],
+   "colors": [
+    "#1E2230",
+    "#CA4746",
+    "#EC6052",
+    "#F5EEEC"
+   ]
+  },
+  {
+   "item_id": "piranha_scales",
+   "label": "Piranha Scales",
+   "meshes": 4,
+   "triangles": 486,
+   "mesh_names": [
+    "piranha_scales_outline",
+    "piranha_scales_body",
+    "piranha_scales_hex",
+    "piranha_scales_dot"
+   ],
+   "colors": [
+    "#1E2230",
+    "#6F2827",
+    "#941D1D",
+    "#C13939"
+   ]
+  },
+  {
+   "item_id": "flame",
+   "label": "Flame",
+   "meshes": 5,
+   "triangles": 242,
+   "mesh_names": [
+    "flame_outline",
+    "flame_body",
+    "flame_part",
+    "flame_ring",
+    "flame_core"
+   ],
+   "colors": [
+    "#1E2230",
+    "#DD7C01",
+    "#F8BE45",
+    "#D9481E",
+    "#FFF9E8"
+   ]
+  },
+  {
+   "item_id": "mammoth_fur",
+   "label": "Mammoth Fur",
+   "meshes": 3,
+   "triangles": 233,
+   "mesh_names": [
+    "mammoth_fur_outline",
+    "mammoth_fur_body",
+    "mammoth_fur_strand"
+   ],
+   "colors": [
+    "#1E2230",
+    "#6B3F1D",
+    "#8E5A2E"
+   ]
+  },
+  {
+   "item_id": "raw_meat",
+   "label": "Raw Meat",
+   "meshes": 4,
+   "triangles": 139,
+   "mesh_names": [
+    "raw_meat_outline",
+    "raw_meat_body",
+    "raw_meat_part",
+    "raw_meat_bone"
+   ],
+   "colors": [
+    "#1E2230",
+    "#DE605A",
+    "#F6F5F3",
+    "#6A707C"
+   ]
+  },
+  {
+   "item_id": "fish",
+   "label": "Fish",
+   "meshes": 4,
+   "triangles": 251,
+   "mesh_names": [
+    "fish_outline",
+    "fish_body",
+    "fish_part",
+    "fish_eye"
+   ],
+   "colors": [
+    "#1E2230",
+    "#494E4A",
+    "#6F8186",
+    "#F2F2EE"
+   ]
+  },
+  {
+   "item_id": "sandworm_juice",
+   "label": "Sandworm Juice",
+   "meshes": 6,
+   "triangles": 276,
+   "mesh_names": [
+    "sandworm_juice_outline",
+    "sandworm_juice_body",
+    "sandworm_juice_part",
+    "sandworm_juice_part_2",
+    "sandworm_juice_part_3",
+    "sandworm_juice_part_4"
+   ],
+   "colors": [
+    "#1E2230",
+    "#5DAE7E",
+    "#C8E4D8",
+    "#499469",
+    "#8C6B36",
+    "#B08A4E"
+   ]
+  },
+  {
+   "item_id": "dragon_heart",
+   "label": "Dragon Heart",
+   "meshes": 5,
+   "triangles": 361,
+   "mesh_names": [
+    "dragon_heart_outline",
+    "dragon_heart_shade",
+    "dragon_heart_body",
+    "dragon_heart_tube",
+    "dragon_heart_hole"
+   ],
+   "colors": [
+    "#1E2230",
+    "#0B6371",
+    "#178998",
+    "#2AA3B3",
+    "#06404A"
+   ]
+  },
+  {
+   "item_id": "lava_heart",
+   "label": "Lava Heart",
+   "meshes": 5,
+   "triangles": 355,
+   "mesh_names": [
+    "lava_heart_outline",
+    "lava_heart_shade",
+    "lava_heart_body",
+    "lava_heart_tube",
+    "lava_heart_hole"
+   ],
+   "colors": [
+    "#1E2230",
+    "#6E0B0B",
+    "#971515",
+    "#B02424",
+    "#3D0505"
+   ]
+  },
+  {
+   "item_id": "hawk_feather",
+   "label": "Hawk Feather",
+   "meshes": 5,
+   "triangles": 392,
+   "mesh_names": [
+    "hawk_feather_stem",
+    "hawk_feather_blade",
+    "hawk_feather_tip",
+    "hawk_feather_outline",
+    "hawk_feather_fluff"
+   ],
+   "colors": [
+    "#E9E2C8",
+    "#7A5A36",
+    "#3F2D1A",
+    "#1E2230",
+    "#DDE5E2"
+   ]
+  },
+  {
+   "item_id": "vulture_feather",
+   "label": "Vulture Feather",
+   "meshes": 6,
+   "triangles": 302,
+   "mesh_names": [
+    "vulture_feather_outline",
+    "vulture_feather_stem",
+    "vulture_feather_rim",
+    "vulture_feather_blade",
+    "vulture_feather_stripe",
+    "vulture_feather_rachis"
+   ],
+   "colors": [
+    "#1E2230",
+    "#E6EAEC",
+    "#DDE3E6",
+    "#2A2E35",
+    "#555C66",
+    "#A7B0B8"
+   ]
+  },
+  {
+   "item_id": "penguin_feather",
+   "label": "Penguin Feather",
+   "meshes": 5,
+   "triangles": 364,
+   "mesh_names": [
+    "penguin_feather_rim",
+    "penguin_feather_blade",
+    "penguin_feather_rachis",
+    "penguin_feather_outline",
+    "penguin_feather_fluff"
+   ],
+   "colors": [
+    "#DDE3E6",
+    "#24272D",
+    "#5E6670",
+    "#1E2230",
+    "#E4E9EA"
+   ]
+  }
+ ]
+}

@@ -333,7 +333,7 @@ print(SS.DevGrantCosmetic:Invoke(game.Players:GetPlayers()[1], "body_geada")) --
 
 Abra Cosméticos: a skin aparece na grade, na posição da raridade, e o cadeado some. Clique nela para equipar e olhe o boneco (e a vitrine). Sem o comando, ela fica com cadeado (experimentar na vitrine funciona).
 
-**A loja pega sozinha.** O carrossel de cada tipo de giro lista as skins do slot com `CosmeticCatalog.spinItems` (menos a padrão e as com `inSpins = false`). O sorteio é por raridade (`SpinRules`): se o tipo não tiver skin de uma raridade, o sorteio desce para a de baixo. Hoje a loja só **simula** o giro (não dá a skin de verdade).
+**A loja pega sozinha.** O carrossel de cada tipo de giro lista as skins do slot com `CosmeticCatalog.spinItems` (menos a padrão e as com `inSpins = false`). O sorteio é por raridade (`SpinRules`): se o tipo não tiver skin de uma raridade, o sorteio desce para a de baixo. Hoje a loja só **simula** o giro (não dá a skin de verdade). **Antes de ligar o giro de verdade, siga o checklist em `dados.md`, "Ligar a roleta de verdade"** (sorteio no servidor, posse só por `grantOwnership`, nunca atributo por skin).
 
 **Mudar uma skin que já existe:** mexa só nas cores ou na `rarity`; o `id` não muda (ele está salvo nos perfis dos jogadores). Para **tirar** uma skin, apague a entrada: quem a tinha equipada volta à padrão do slot. Para tirar só do giro, use `inSpins = false`.
 

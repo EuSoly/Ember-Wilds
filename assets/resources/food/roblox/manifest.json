@@ -1,0 +1,335 @@
+{
+  "format": "FBX",
+  "source": "food.blend (cópia em export-work/live-snapshot.blend)",
+  "combined_file": "food.fbx",
+  "texture": "food_palette.png",
+  "color_swatches": 60,
+  "mesh_count": 16,
+  "total_triangles": 4047,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "item deitado: no Roblox a face de cima aponta para +Y",
+  "individual_origin": "centro do item, base em Y=0",
+  "items": [
+    {
+      "item_id": "aloe_vera",
+      "label": "Aloe Vera",
+      "triangles": 267,
+      "vertices": 186,
+      "local_dimensions": [
+        1.0457977056503296,
+        1.3703320026397705,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "aloe_vera_body",
+        "aloe_vera_cut_b",
+        "aloe_vera_front",
+        "aloe_vera_outline"
+      ],
+      "file": "individual/aloe_vera.fbx"
+    },
+    {
+      "item_id": "berry",
+      "label": "Berries",
+      "triangles": 313,
+      "vertices": 222,
+      "local_dimensions": [
+        1.0034454762935638,
+        1.060363233089447,
+        0.1899999976158142
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "berry_body",
+        "berry_outline",
+        "berry_part",
+        "berry_shine"
+      ],
+      "file": "individual/berry.fbx"
+    },
+    {
+      "item_id": "bread",
+      "label": "Bread",
+      "triangles": 232,
+      "vertices": 164,
+      "local_dimensions": [
+        1.238641381263733,
+        0.8603836297988892,
+        0.15000000596046448
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "bread_body",
+        "bread_cut",
+        "bread_outline",
+        "bread_part",
+        "bread_part_2"
+      ],
+      "file": "individual/bread.fbx"
+    },
+    {
+      "item_id": "cactus",
+      "label": "Cactus",
+      "triangles": 363,
+      "vertices": 262,
+      "local_dimensions": [
+        1.2392199635505676,
+        1.073675274848938,
+        0.17000000178813934
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "cactus_body",
+        "cactus_outline",
+        "cactus_part",
+        "cactus_spine"
+      ],
+      "file": "individual/cactus.fbx"
+    },
+    {
+      "item_id": "cake",
+      "label": "Cake",
+      "triangles": 150,
+      "vertices": 108,
+      "local_dimensions": [
+        1.167600393295288,
+        1.0114166736602783,
+        0.15000000596046448
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "cake_body",
+        "cake_cherry",
+        "cake_cherry_hl",
+        "cake_cream",
+        "cake_outline",
+        "cake_part"
+      ],
+      "file": "individual/cake.fbx"
+    },
+    {
+      "item_id": "carrot",
+      "label": "Carrot",
+      "triangles": 216,
+      "vertices": 152,
+      "local_dimensions": [
+        0.7648524343967438,
+        1.2201550006866455,
+        0.11999999731779099
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "carrot_body",
+        "carrot_outline",
+        "carrot_part",
+        "carrot_ridge"
+      ],
+      "file": "individual/carrot.fbx"
+    },
+    {
+      "item_id": "cooked_fish",
+      "label": "Cooked Fish",
+      "triangles": 277,
+      "vertices": 194,
+      "local_dimensions": [
+        1.2472637295722961,
+        1.0833394527435303,
+        0.12999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "cooked_fish_body",
+        "cooked_fish_eye",
+        "cooked_fish_grill",
+        "cooked_fish_outline",
+        "cooked_fish_part"
+      ],
+      "file": "individual/cooked_fish.fbx"
+    },
+    {
+      "item_id": "cooked_meat",
+      "label": "Cooked Meat",
+      "triangles": 185,
+      "vertices": 130,
+      "local_dimensions": [
+        0.9561581611633301,
+        0.9776564240455627,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "cooked_meat_body",
+        "cooked_meat_bone",
+        "cooked_meat_marrow",
+        "cooked_meat_outline",
+        "cooked_meat_rim"
+      ],
+      "file": "individual/cooked_meat.fbx"
+    },
+    {
+      "item_id": "cookies",
+      "label": "Cookies",
+      "triangles": 306,
+      "vertices": 220,
+      "local_dimensions": [
+        1.2297651171684265,
+        0.6869749128818512,
+        0.15000000596046448
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "cookies_body",
+        "cookies_chip",
+        "cookies_outline",
+        "cookies_part"
+      ],
+      "file": "individual/cookies.fbx"
+    },
+    {
+      "item_id": "flour",
+      "label": "Flour",
+      "triangles": 145,
+      "vertices": 102,
+      "local_dimensions": [
+        1.2924590110778809,
+        0.7574238479137421,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "flour_body",
+        "flour_outline",
+        "flour_part",
+        "flour_part_2"
+      ],
+      "file": "individual/flour.fbx"
+    },
+    {
+      "item_id": "garlic",
+      "label": "Garlic",
+      "triangles": 226,
+      "vertices": 150,
+      "local_dimensions": [
+        0.9861541986465454,
+        0.9776679575443268,
+        0.10999999940395355
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "garlic_body",
+        "garlic_line",
+        "garlic_outline"
+      ],
+      "file": "individual/garlic.fbx"
+    },
+    {
+      "item_id": "pumpkin",
+      "label": "Pumpkin",
+      "triangles": 239,
+      "vertices": 174,
+      "local_dimensions": [
+        0.8987944722175598,
+        0.9378269612789154,
+        0.12999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "pumpkin_body",
+        "pumpkin_outline",
+        "pumpkin_rib",
+        "pumpkin_stem"
+      ],
+      "file": "individual/pumpkin.fbx"
+    },
+    {
+      "item_id": "sandwich",
+      "label": "Sandwich",
+      "triangles": 260,
+      "vertices": 200,
+      "local_dimensions": [
+        1.1365383863449097,
+        0.9034116268157959,
+        0.1550000011920929
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "sandwich_crumb",
+        "sandwich_crust",
+        "sandwich_filling",
+        "sandwich_filling_shade",
+        "sandwich_lines",
+        "sandwich_mayo",
+        "sandwich_outline",
+        "sandwich_side_shade",
+        "sandwich_speck",
+        "sandwich_strip"
+      ],
+      "file": "individual/sandwich.fbx"
+    },
+    {
+      "item_id": "tomato",
+      "label": "Tomato",
+      "triangles": 184,
+      "vertices": 128,
+      "local_dimensions": [
+        0.7942824959754944,
+        0.8832285106182098,
+        0.11999999731779099
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "tomato_body",
+        "tomato_outline",
+        "tomato_part",
+        "tomato_shine"
+      ],
+      "file": "individual/tomato.fbx"
+    },
+    {
+      "item_id": "watermelon",
+      "label": "Watermelon",
+      "triangles": 313,
+      "vertices": 226,
+      "local_dimensions": [
+        1.0815445184707642,
+        1.1014187932014465,
+        0.28999999165534973
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "watermelon_body",
+        "watermelon_outline",
+        "watermelon_part",
+        "watermelon_shine",
+        "watermelon_stem"
+      ],
+      "file": "individual/watermelon.fbx"
+    },
+    {
+      "item_id": "wheat",
+      "label": "Wheat",
+      "triangles": 371,
+      "vertices": 252,
+      "local_dimensions": [
+        1.0950207114219666,
+        1.0182099342346191,
+        0.17000000178813934
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "wheat_body",
+        "wheat_outline",
+        "wheat_part",
+        "wheat_stalk"
+      ],
+      "file": "individual/wheat.fbx"
+    }
+  ]
+}

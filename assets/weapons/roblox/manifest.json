@@ -1,0 +1,598 @@
+{
+  "format": "FBX",
+  "source": "armas-colecao-recuperada.blend (live snapshot)",
+  "combined_file": "espadas-e-lancas.fbx",
+  "texture": "weapons_palette.png",
+  "color_swatches": 94,
+  "mesh_count": 18,
+  "total_triangles": 4592,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "individual_origin": "original weapon ROOT, rotation removed; modeled scale retained",
+  "weapons": [
+    {
+      "item_id": "amethyst_spear",
+      "triangles": 252,
+      "vertices": 134,
+      "local_dimensions": [
+        0.2800000011920929,
+        3.2178620100021362,
+        0.14363356679677963
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_spear_collar",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_spear_pommel",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_spear_tip",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_spear.fbx"
+    },
+    {
+      "item_id": "amethyst_sword",
+      "triangles": 414,
+      "vertices": 217,
+      "local_dimensions": [
+        0.6000000238418579,
+        2.387028008699417,
+        0.15724807232618332
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_sword_blade",
+          "evaluated_vertices": 49,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_sword_collar",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_sword_guard",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_sword_handle",
+          "evaluated_vertices": 18,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_sword_pommel",
+          "evaluated_vertices": 72,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_sword.fbx"
+    },
+    {
+      "item_id": "crab_spear",
+      "triangles": 150,
+      "vertices": 83,
+      "local_dimensions": [
+        0.4799996316432953,
+        3.1799997091293335,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "crab_spear_claw_left",
+          "evaluated_vertices": 27,
+          "modifiers_baked": []
+        },
+        {
+          "name": "crab_spear_claw_right",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "crab_spear_collar",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "crab_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/crab_spear.fbx"
+    },
+    {
+      "item_id": "diamond_spear",
+      "triangles": 174,
+      "vertices": 95,
+      "local_dimensions": [
+        0.20999999344348907,
+        3.120188355445862,
+        0.1333365961909294
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_spear_fittings",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_spear_tip",
+          "evaluated_vertices": 15,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_spear.fbx"
+    },
+    {
+      "item_id": "diamond_sword",
+      "triangles": 254,
+      "vertices": 135,
+      "local_dimensions": [
+        0.6000000238418579,
+        2.3445194959640503,
+        0.13999999314546585
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_sword_blade",
+          "evaluated_vertices": 35,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_sword_guard",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_sword_handle",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_sword_pommel",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_sword.fbx"
+    },
+    {
+      "item_id": "dragon_spear",
+      "triangles": 100,
+      "vertices": 56,
+      "local_dimensions": [
+        0.26000000536441803,
+        3.1800001859664917,
+        0.12399999797344208
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "dragon_spear_collar",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "dragon_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "dragon_spear_tip",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/dragon_spear.fbx"
+    },
+    {
+      "item_id": "dragon_sword",
+      "triangles": 132,
+      "vertices": 72,
+      "local_dimensions": [
+        0.6399999260902405,
+        2.359999716281891,
+        0.15000000596046448
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "dragon_sword_blade",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "dragon_sword_guard",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "dragon_sword_handle",
+          "evaluated_vertices": 12,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/dragon_sword.fbx"
+    },
+    {
+      "item_id": "gold_spear",
+      "triangles": 154,
+      "vertices": 87,
+      "local_dimensions": [
+        0.3066508024930954,
+        3.144641876220703,
+        0.1611698493361473
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_spear_fittings",
+          "evaluated_vertices": 56,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_spear_tip",
+          "evaluated_vertices": 15,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_spear.fbx"
+    },
+    {
+      "item_id": "gold_sword",
+      "triangles": 126,
+      "vertices": 69,
+      "local_dimensions": [
+        0.646537572145462,
+        2.3314549326896667,
+        0.13999999314546585
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_sword_blade",
+          "evaluated_vertices": 21,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_sword_guard",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_sword_handle",
+          "evaluated_vertices": 18,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_sword.fbx"
+    },
+    {
+      "item_id": "lava_spear",
+      "triangles": 170,
+      "vertices": 95,
+      "local_dimensions": [
+        0.6800003051757812,
+        3.1999999284744263,
+        0.1459999978542328
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "lava_spear_collar",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_spear_prong_left",
+          "evaluated_vertices": 21,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_spear_prong_right",
+          "evaluated_vertices": 21,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_spear_tip",
+          "evaluated_vertices": 21,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/lava_spear.fbx"
+    },
+    {
+      "item_id": "lava_sword",
+      "triangles": 208,
+      "vertices": 114,
+      "local_dimensions": [
+        0.6899999976158142,
+        2.400000125169754,
+        0.16249999403953552
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "lava_sword_blade",
+          "evaluated_vertices": 39,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_sword_blade_detail",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_sword_guard",
+          "evaluated_vertices": 27,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_sword_handle",
+          "evaluated_vertices": 12,
+          "modifiers_baked": []
+        },
+        {
+          "name": "lava_sword_pommel",
+          "evaluated_vertices": 12,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/lava_sword.fbx"
+    },
+    {
+      "item_id": "pirate_sword",
+      "triangles": 208,
+      "vertices": 110,
+      "local_dimensions": [
+        0.6799997687339783,
+        2.409999907016754,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "pirate_sword_blade",
+          "evaluated_vertices": 39,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pirate_sword_guard",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pirate_sword_handle",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pirate_sword_knuckle_guard",
+          "evaluated_vertices": 35,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/pirate_sword.fbx"
+    },
+    {
+      "item_id": "reidite_spear",
+      "triangles": 344,
+      "vertices": 184,
+      "local_dimensions": [
+        0.16150303184986115,
+        3.059814929962158,
+        0.1615031510591507
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "reidite_spear_fittings",
+          "evaluated_vertices": 144,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_spear_tip",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/reidite_spear.fbx"
+    },
+    {
+      "item_id": "reidite_sword",
+      "triangles": 1098,
+      "vertices": 573,
+      "local_dimensions": [
+        0.7900000512599945,
+        1.9933289289474487,
+        0.1550000160932541
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "reidite_sword_blade",
+          "evaluated_vertices": 128,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_sword_guard",
+          "evaluated_vertices": 15,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_sword_handle",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_sword_handle_studs",
+          "evaluated_vertices": 324,
+          "modifiers_baked": [
+            "Array"
+          ]
+        },
+        {
+          "name": "reidite_sword_knuckle_guard",
+          "evaluated_vertices": 70,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/reidite_sword.fbx"
+    },
+    {
+      "item_id": "stone_spear",
+      "triangles": 174,
+      "vertices": 95,
+      "local_dimensions": [
+        0.25656643509864807,
+        3.1248273849487305,
+        0.11999999731779099
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_spear_fittings",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_spear_shaft",
+          "evaluated_vertices": 16,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_spear_tip",
+          "evaluated_vertices": 15,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_spear.fbx"
+    },
+    {
+      "item_id": "stone_sword",
+      "triangles": 114,
+      "vertices": 63,
+      "local_dimensions": [
+        0.6000000238418579,
+        2.553002417087555,
+        0.13999999314546585
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_sword_blade",
+          "evaluated_vertices": 21,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_sword_guard",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_sword_handle",
+          "evaluated_vertices": 18,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_sword.fbx"
+    },
+    {
+      "item_id": "wood_spear",
+      "triangles": 274,
+      "vertices": 141,
+      "local_dimensions": [
+        0.11501675099134445,
+        3.09000027179718,
+        0.09400000423192978
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "wood_spear_shaft",
+          "evaluated_vertices": 126,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_spear_tip",
+          "evaluated_vertices": 15,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/wood_spear.fbx"
+    },
+    {
+      "item_id": "wood_sword",
+      "triangles": 246,
+      "vertices": 129,
+      "local_dimensions": [
+        0.5959928035736084,
+        2.4865973591804504,
+        0.14000001549720764
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "wood_sword_blade",
+          "evaluated_vertices": 41,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_sword_guard",
+          "evaluated_vertices": 33,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_sword_handle",
+          "evaluated_vertices": 55,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/wood_sword.fbx"
+    }
+  ]
+}

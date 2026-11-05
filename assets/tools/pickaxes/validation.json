@@ -1,0 +1,66 @@
+{
+  "original_objects_unchanged": true,
+  "reference": "https://starveiopro.fandom.com/wiki/Pickaxes",
+  "models": [
+    {
+      "item_id": "wood_pickaxe",
+      "label": "MADEIRA",
+      "parts": [
+        "wood_pickaxe_handle",
+        "wood_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    },
+    {
+      "item_id": "stone_pickaxe",
+      "label": "PEDRA",
+      "parts": [
+        "stone_pickaxe_handle",
+        "stone_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    },
+    {
+      "item_id": "gold_pickaxe",
+      "label": "OURO",
+      "parts": [
+        "gold_pickaxe_handle",
+        "gold_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    },
+    {
+      "item_id": "diamond_pickaxe",
+      "label": "DIAMANTE",
+      "parts": [
+        "diamond_pickaxe_handle",
+        "diamond_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    },
+    {
+      "item_id": "amethyst_pickaxe",
+      "label": "AMETISTA",
+      "parts": [
+        "amethyst_pickaxe_handle",
+        "amethyst_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    },
+    {
+      "item_id": "reidite_pickaxe",
+      "label": "REIDITE",
+      "parts": [
+        "reidite_pickaxe_handle",
+        "reidite_pickaxe_head"
+      ],
+      "triangles": 106,
+      "non_manifold_edges": 0
+    }
+  ]
+}

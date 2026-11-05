@@ -1,0 +1,173 @@
+[
+  {
+    "item_id": "wood_pickaxe",
+    "triangles": 182,
+    "parts": [
+      {
+        "name": "wood_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "wood_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  },
+  {
+    "item_id": "stone_pickaxe",
+    "triangles": 182,
+    "parts": [
+      {
+        "name": "stone_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "stone_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  },
+  {
+    "item_id": "gold_pickaxe",
+    "triangles": 182,
+    "parts": [
+      {
+        "name": "gold_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "gold_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  },
+  {
+    "item_id": "diamond_pickaxe",
+    "triangles": 284,
+    "parts": [
+      {
+        "name": "diamond_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "diamond_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "diamond_pickaxe_crystal_ridge",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "diamond_pickaxe_collar",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "diamond_pickaxe_pommel",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  },
+  {
+    "item_id": "amethyst_pickaxe",
+    "triangles": 396,
+    "parts": [
+      {
+        "name": "amethyst_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_rear_crystal",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_gold_setting",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_inset_crystal",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_collar",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "amethyst_pickaxe_pommel",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  },
+  {
+    "item_id": "reidite_pickaxe",
+    "triangles": 430,
+    "parts": [
+      {
+        "name": "reidite_pickaxe_handle",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_head",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_rear_hook",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_head_ridge",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_collar",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_collar_gem",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_grip_band_1",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_grip_band_2",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      },
+      {
+        "name": "reidite_pickaxe_pommel",
+        "geometry_and_materials_symmetric": true,
+        "non_manifold_edges": 0
+      }
+    ]
+  }
+]

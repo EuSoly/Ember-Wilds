@@ -84,7 +84,10 @@ return {
 		end
 		assert(table.concat(got, ",") == table.concat(bodyIds, ","), table.concat(got, ","))
 		assert(#byId.accessory.items == 0, "acessório deveria estar vazio")
-		assert(#byId.book.items == 1 and byId.book.items[1].id == "book_default", "livro = só book_default")
+		assert(
+			#byId.book.items == 21 and byId.book.items[1].id == "book_default",
+			"21 livros começando por book_default"
+		)
 		local seen = {}
 		for _, item in byId.body.items do
 			seen[item.rarity] = true

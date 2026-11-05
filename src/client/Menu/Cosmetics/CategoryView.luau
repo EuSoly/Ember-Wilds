@@ -246,7 +246,9 @@ local function showcase(state: Slot): GuiObject
 			return { bag = state.selected() }
 		end)
 	end
-	return MenuBoneco.build(always) -- livro: o boneco com o livro de sempre
+	return MenuBoneco.build(always, function(): MenuBoneco.Override
+		return { book = state.selected() }
+	end)
 end
 
 -- Conteúdo de uma categoria. Montado a cada abertura (vide.switch).
@@ -259,16 +261,13 @@ local function view(
 	local player = Players.LocalPlayer
 	local default = Defs.CosmeticSlots[slot].default
 	local items = CosmeticCatalog.items(slot)
-	local owned: { [string]: () -> boolean } = {}
-	for _, def in items do
-		owned[def.id] = Sources.childAttribute(player, StatNames.OwnedFolder, def.id, false)
-	end
+	local owned = Sources.childNames(player, StatNames.OwnedFolder)
 	local equipped = Sources.attribute(player, StatNames.CosmeticPrefix .. slot, default)
 	local state: Slot = {
 		slot = slot,
 		equipped = equipped,
 		has = function(id: string): boolean
-			return id == default or (owned[id] ~= nil and owned[id]() == true)
+			return id == default or owned()[id] == true
 		end,
 		selected = vide.source(vide.untrack(equipped)) :: any,
 	}

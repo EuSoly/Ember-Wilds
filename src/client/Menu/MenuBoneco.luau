@@ -37,11 +37,11 @@ local CAMERA_FOV = 30
 local CAMERA_MARGIN = 0.85 -- < 1 aproxima (a caixa do modelo é maior que o desenho)
 
 -- Skins mostradas no lugar das equipadas (campo nil = a equipada).
-export type Override = { body: string?, bag: string? }
+export type Override = { body: string?, bag: string?, book: string? }
 
 local MenuBoneco = {}
 
--- Leva a mão (e o contorno soldado a ela) para `target`.
+-- Leva a mão (e o contorno ou malha 3D soldada a ela) para `target`.
 local function moveHand(model: Model, name: string, target: CFrame)
 	local hand = model:FindFirstChild(name)
 	local outline = model:FindFirstChild(name .. "Outline")
@@ -53,17 +53,29 @@ local function moveHand(model: Model, name: string, target: CFrame)
 	if outline and outline:IsA("BasePart") then
 		outline.CFrame = delta * outline.CFrame
 	end
+	for _, child in hand:GetDescendants() do
+		if child:IsA("BasePart") then
+			child.CFrame = delta * child.CFrame
+		end
+	end
 end
 
-local function pose(boneco: BonecoModel.Boneco)
+local function spawnBook(boneco: BonecoModel.Boneco, bookId: string?): BasePart?
 	local root = boneco.root.CFrame
-	local book = BookModel.clone()
+	local book = BookModel.clone(bookId, root * BOOK_OFFSET)
 	if book then
-		book.CFrame = root * BOOK_OFFSET * BookModel.ROTATION
+		book.Name = "MenuBook"
 		book.Parent = boneco.model
 	end
+	return book
+end
+
+local function pose(boneco: BonecoModel.Boneco, bookId: string?): BasePart?
+	local root = boneco.root.CFrame
+	local book = spawnBook(boneco, bookId)
 	moveHand(boneco.model, "LeftHand", root * CFrame.new(-HAND_X, HAND_Y, HAND_Z))
 	moveHand(boneco.model, "RightHand", root * CFrame.new(HAND_X, HAND_Y, HAND_Z))
+	return book
 end
 
 local function frameCamera(camera: Camera, model: Model)
@@ -103,9 +115,10 @@ function MenuBoneco.build(visible: () -> boolean, override: (() -> Override)?): 
 	local player = Players.LocalPlayer
 	local equippedBody = Sources.attribute(player, StatNames.CosmeticPrefix .. "body", Defs.CosmeticSlots.body.default)
 	local equippedBag = Sources.attribute(player, StatNames.CosmeticPrefix .. "bag", Defs.CosmeticSlots.bag.default)
-	local function chosen(): (string, string)
+	local equippedBook = Sources.attribute(player, StatNames.CosmeticPrefix .. "book", Defs.CosmeticSlots.book.default)
+	local function chosen(): (string, string, string)
 		local wanted: Override = if override then override() else {}
-		return wanted.body or equippedBody(), wanted.bag or equippedBag()
+		return wanted.body or equippedBody(), wanted.bag or equippedBag(), wanted.book or equippedBook()
 	end
 
 	local camera = Instance.new("Camera")
@@ -122,33 +135,45 @@ function MenuBoneco.build(visible: () -> boolean, override: (() -> Override)?): 
 	local current: BonecoModel.Boneco? = nil
 	local bag: Model? = nil
 	local bagId: string? = nil
+	local bookPart: BasePart? = nil
+	local bookId: string? = nil
 	vide.effect(function()
 		local show = visible()
-		local bodyId, wantedBag = chosen()
+		local bodyId, wantedBag, wantedBook = chosen()
 		local look = lookOf(bodyId)
 		if show and current == nil then
 			local boneco = BonecoModel.build("")
 			boneco.model.Parent = viewport -- o build põe no Workspace; move já
-			pose(boneco)
-			-- Enquadra antes da mochila: o enquadramento não muda com ela.
+			bookPart = pose(boneco, wantedBook)
+			bookId = wantedBook
+			-- Enquadra antes da mochila e dos adereços 3D: o enquadramento não muda com eles.
 			frameCamera(camera, boneco.model)
 			current = boneco
 		elseif not show and current ~= nil then
-			BonecoModel.destroy(current) -- leva a mochila junto
+			BonecoModel.destroy(current) -- leva a mochila e o livro junto
 			current = nil
 			bag = nil
 			bagId = nil
+			bookPart = nil
+			bookId = nil
 		end
 		if current ~= nil then
-			BonecoModel.applyLook(current, look)
+			BonecoModel.applyLook(current, look, bodyId)
 			if bagId ~= wantedBag then
 				if bag then
 					bag:Destroy()
 				end
-				local model = BagModel.build(bagLookOf(wantedBag))
+				local model = BagModel.build(bagLookOf(wantedBag), wantedBag)
 				BagModel.attach(model, current)
 				bag = model
 				bagId = wantedBag
+			end
+			if bookId ~= wantedBook then
+				if bookPart then
+					bookPart:Destroy()
+				end
+				bookPart = spawnBook(current, wantedBook)
+				bookId = wantedBook
 			end
 		end
 	end)

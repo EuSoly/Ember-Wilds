@@ -10,6 +10,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Defs = require("../Defs")
+local SkinAssets = require("./SkinAssets")
+local SkinManifest = require("../Defs/SkinManifest")
 local StatNames = require("../StatNames")
 local Types = require("../Defs/Types")
 
@@ -55,7 +57,7 @@ function ToolModel.attackAnimOf(itemId: string): Types.AttackAnim
 	return if itemId:match("_spear$") then "thrust" else "swing"
 end
 
-function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
+function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
 	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" then
 		return nil
@@ -73,6 +75,27 @@ function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	local model = source:Clone()
 	model.Name = "HeldItem"
 	model:SetAttribute("ItemId", itemId)
+	local handle = model.PrimaryPart
+	if itemId == "book" and handle ~= nil and cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId) then
+		local partNames = SkinManifest.PARTS_BY_SKIN[cosmeticId]
+		if partNames ~= nil then
+			local added = 0
+			for _, partName in partNames do
+				local clone = SkinAssets.clonePart(cosmeticId, partName, handle.CFrame)
+				if clone then
+					clone.Parent = model
+					local weld = Instance.new("WeldConstraint")
+					weld.Part0 = handle
+					weld.Part1 = clone
+					weld.Parent = clone
+					added += 1
+				end
+			end
+			if added > 0 then
+				handle.Transparency = 1
+			end
+		end
+	end
 	local scale = ToolModel.scaleOf(itemId)
 	if scale ~= 1 then
 		-- Escala peças e attachments (o Grip acompanha).
@@ -81,7 +104,6 @@ function ToolModel.build(itemId: string, _cosmeticId: string?): Model?
 	-- Pegada: o Grip anda no próprio eixo Y (ao longo da arma, para a ponta),
 	-- na escala do Tamanho.
 	local offset = ToolModel.gripOffsetOf(itemId)
-	local handle = model.PrimaryPart
 	local grip = handle and handle:FindFirstChild("Grip")
 	if offset ~= 0 and grip and grip:IsA("Attachment") then
 		grip.CFrame *= CFrame.new(0, offset * scale, 0)

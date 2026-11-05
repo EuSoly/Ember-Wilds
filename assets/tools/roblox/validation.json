@@ -1,0 +1,271 @@
+{
+  "combined": {
+    "meshes": 29,
+    "geometry_bounds_max_error": 4.76837158203125e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "amethyst_hammer",
+      "triangles": 380,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "amethyst_pickaxe",
+      "triangles": 396,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "amethyst_shield",
+      "triangles": 268,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "amethyst_shovel",
+      "triangles": 404,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "book",
+      "triangles": 380,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1920928955078125e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "bucket",
+      "triangles": 384,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 5.960464477539063e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_hammer",
+      "triangles": 252,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_pickaxe",
+      "triangles": 284,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_shield",
+      "triangles": 172,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_shovel",
+      "triangles": 260,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_hammer",
+      "triangles": 120,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.9371509552001953e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_pickaxe",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7881393432617188e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_pitchfork",
+      "triangles": 360,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_shield",
+      "triangles": 360,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_shovel",
+      "triangles": 164,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7136335372924805e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "machete",
+      "triangles": 212,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 6.705522537231445e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "pitchfork",
+      "triangles": 288,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.9802322387695312e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "reidite_hammer",
+      "triangles": 492,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "reidite_pickaxe",
+      "triangles": 430,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "reidite_shield",
+      "triangles": 212,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 0.0,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_hammer",
+      "triangles": 120,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.9371509552001953e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_pickaxe",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7881393432617188e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_shield",
+      "triangles": 360,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_shovel",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7136335372924805e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "super_hammer",
+      "triangles": 404,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 5.960464477539063e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "watering_can",
+      "triangles": 308,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 5.960464477539063e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wood_pickaxe",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7881393432617188e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wood_shield",
+      "triangles": 580,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.682209014892578e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wrench",
+      "triangles": 380,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7881393432617188e-07,
+      "pivot_at_origin": true
+    }
+  ],
+  "errors": []
+}

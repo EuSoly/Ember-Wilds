@@ -30,15 +30,22 @@ local function byRarityThenId(a: CosmeticDef, b: CosmeticDef): boolean
 	return a.id < b.id
 end
 
--- Todas as skins do slot, da mais comum para a mais rara.
+-- Todas as skins do slot, com a padrão primeiro e depois da mais comum para a mais rara.
 function CosmeticCatalog.items(slot: string): { CosmeticDef }
+	local slotDef = Defs.CosmeticSlots[slot]
+	local defaultId = slotDef and slotDef.default
 	local list: { CosmeticDef } = {}
 	for _, def in Defs.Cosmetics do
 		if def.slot == slot then
 			table.insert(list, def)
 		end
 	end
-	table.sort(list, byRarityThenId)
+	table.sort(list, function(a: CosmeticDef, b: CosmeticDef): boolean
+		if (a.id == defaultId) ~= (b.id == defaultId) then
+			return a.id == defaultId
+		end
+		return byRarityThenId(a, b)
+	end)
 	return list
 end
 

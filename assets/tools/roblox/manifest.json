@@ -1,0 +1,1140 @@
+{
+  "format": "FBX",
+  "source": "armas-colecao-recuperada.blend (live snapshot)",
+  "combined_file": "picaretas-e-ferramentas.fbx",
+  "texture": "tools_palette.png",
+  "color_swatches": 82,
+  "mesh_count": 29,
+  "total_triangles": 8698,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "individual_origin": "grip-centred ROOT; display rotation removed; pickaxe Z offset corrected; modeled scale retained",
+  "tools": [
+    {
+      "item_id": "amethyst_hammer",
+      "triangles": 380,
+      "vertices": 202,
+      "local_dimensions": [
+        1.3799998760223389,
+        2.2799997329711914,
+        0.6000000238418579
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_hammer_center_crystal",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_hammer_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_hammer_gold_frame",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_hammer_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_hammer.fbx"
+    },
+    {
+      "item_id": "amethyst_pickaxe",
+      "triangles": 396,
+      "vertices": 216,
+      "local_dimensions": [
+        1.9592996835708618,
+        2.8094308376312256,
+        0.5199999809265137
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_pickaxe_collar",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_gold_setting",
+          "evaluated_vertices": 42,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_head",
+          "evaluated_vertices": 45,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_inset_crystal",
+          "evaluated_vertices": 14,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_pommel",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_pickaxe_rear_crystal",
+          "evaluated_vertices": 25,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_pickaxe.fbx"
+    },
+    {
+      "item_id": "amethyst_shield",
+      "triangles": 268,
+      "vertices": 148,
+      "local_dimensions": [
+        1.9800000190734863,
+        1.4800000190734863,
+        0.6000000238418579
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_shield_body",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shield_crest_crystal",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shield_dark_core",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shield_gold_frame",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shield_wing_left",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shield_wing_right",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_shield.fbx"
+    },
+    {
+      "item_id": "amethyst_shovel",
+      "triangles": 404,
+      "vertices": 214,
+      "local_dimensions": [
+        0.85999995470047,
+        2.399999737739563,
+        0.3199999928474426
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "amethyst_shovel_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shovel_gold_rim",
+          "evaluated_vertices": 72,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shovel_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shovel_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shovel_scoop",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "amethyst_shovel_scoop_ridge",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/amethyst_shovel.fbx"
+    },
+    {
+      "item_id": "book",
+      "triangles": 380,
+      "vertices": 202,
+      "local_dimensions": [
+        1.3299999833106995,
+        1.7000000476837158,
+        0.5299999713897705
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "book_cover_border",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "book_cover_emblem",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "book_covers",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "book_pages",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "book_spine",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/book.fbx"
+    },
+    {
+      "item_id": "bucket",
+      "triangles": 384,
+      "vertices": 196,
+      "local_dimensions": [
+        1.2999998331069946,
+        1.7999997735023499,
+        1.1799998879432678
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "bucket_body",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "bucket_bottom_band",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "bucket_handle",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        },
+        {
+          "name": "bucket_rim",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "bucket_water",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/bucket.fbx"
+    },
+    {
+      "item_id": "diamond_hammer",
+      "triangles": 252,
+      "vertices": 138,
+      "local_dimensions": [
+        1.3799998760223389,
+        2.2799997329711914,
+        0.5419999957084656
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_hammer_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_hammer_crystal_face",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_hammer_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_hammer.fbx"
+    },
+    {
+      "item_id": "diamond_pickaxe",
+      "triangles": 284,
+      "vertices": 154,
+      "local_dimensions": [
+        1.959299623966217,
+        2.3816263675689697,
+        0.5199999809265137
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_pickaxe_collar",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_pickaxe_crystal_ridge",
+          "evaluated_vertices": 14,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_pickaxe_head",
+          "evaluated_vertices": 50,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_pickaxe_pommel",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_pickaxe.fbx"
+    },
+    {
+      "item_id": "diamond_shield",
+      "triangles": 172,
+      "vertices": 100,
+      "local_dimensions": [
+        1.9800000190734863,
+        1.4800000190734863,
+        0.6000000238418579
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_shield_body",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shield_crest_crystal",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shield_dark_core",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shield_wing_left",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shield_wing_right",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_shield.fbx"
+    },
+    {
+      "item_id": "diamond_shovel",
+      "triangles": 260,
+      "vertices": 142,
+      "local_dimensions": [
+        0.9199999570846558,
+        2.459999680519104,
+        0.3199999928474426
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "diamond_shovel_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shovel_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shovel_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shovel_scoop",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "diamond_shovel_scoop_ridge",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/diamond_shovel.fbx"
+    },
+    {
+      "item_id": "gold_hammer",
+      "triangles": 120,
+      "vertices": 64,
+      "local_dimensions": [
+        1.3799998760223389,
+        2.2799997329711914,
+        0.3400000035762787
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_hammer.fbx"
+    },
+    {
+      "item_id": "gold_pickaxe",
+      "triangles": 182,
+      "vertices": 95,
+      "local_dimensions": [
+        1.9009652733802795,
+        2.3232919573783875,
+        0.26999999582767487
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pickaxe_head",
+          "evaluated_vertices": 55,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_pickaxe.fbx"
+    },
+    {
+      "item_id": "gold_pitchfork",
+      "triangles": 360,
+      "vertices": 198,
+      "local_dimensions": [
+        0.7599999904632568,
+        2.5799999237060547,
+        0.2800000011920929
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_pitchfork_fork_base",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_gold_emblem",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_socket",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_tine_1",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_tine_2",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_pitchfork_tine_3",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_pitchfork.fbx"
+    },
+    {
+      "item_id": "gold_shield",
+      "triangles": 360,
+      "vertices": 190,
+      "local_dimensions": [
+        1.6399999856948853,
+        1.3899999856948853,
+        0.5
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_shield_body",
+          "evaluated_vertices": 44,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_shield_crest",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_shield_dark_inset",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_shield_raised_rim",
+          "evaluated_vertices": 88,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_shield.fbx"
+    },
+    {
+      "item_id": "gold_shovel",
+      "triangles": 164,
+      "vertices": 86,
+      "local_dimensions": [
+        0.85999995470047,
+        2.399999737739563,
+        0.18000000715255737
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "gold_shovel_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "gold_shovel_scoop",
+          "evaluated_vertices": 54,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/gold_shovel.fbx"
+    },
+    {
+      "item_id": "machete",
+      "triangles": 212,
+      "vertices": 120,
+      "local_dimensions": [
+        0.5399999916553497,
+        2.3799999952316284,
+        0.22599999606609344
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "machete_blade",
+          "evaluated_vertices": 36,
+          "modifiers_baked": []
+        },
+        {
+          "name": "machete_guard",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "machete_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "machete_rivet_1",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "machete_rivet_2",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/machete.fbx"
+    },
+    {
+      "item_id": "pitchfork",
+      "triangles": 288,
+      "vertices": 156,
+      "local_dimensions": [
+        0.7599999904632568,
+        2.5799999237060547,
+        0.23000000417232513
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "pitchfork_fork_base",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pitchfork_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pitchfork_socket",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pitchfork_tine_1",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pitchfork_tine_2",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "pitchfork_tine_3",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/pitchfork.fbx"
+    },
+    {
+      "item_id": "reidite_hammer",
+      "triangles": 492,
+      "vertices": 266,
+      "local_dimensions": [
+        1.6599998474121094,
+        2.399999737739563,
+        0.6399999856948853
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "reidite_hammer_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_grip_band_1",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_grip_band_2",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_head_crystal",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_impact_band_1",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_impact_band_2",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_hammer_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/reidite_hammer.fbx"
+    },
+    {
+      "item_id": "reidite_pickaxe",
+      "triangles": 430,
+      "vertices": 237,
+      "local_dimensions": [
+        2.2081965804100037,
+        2.9976625442504883,
+        0.5199999809265137
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "reidite_pickaxe_collar",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_collar_gem",
+          "evaluated_vertices": 18,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_grip_band_1",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_grip_band_2",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_head",
+          "evaluated_vertices": 45,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_head_ridge",
+          "evaluated_vertices": 14,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_pommel",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_pickaxe_rear_hook",
+          "evaluated_vertices": 30,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/reidite_pickaxe.fbx"
+    },
+    {
+      "item_id": "reidite_shield",
+      "triangles": 212,
+      "vertices": 124,
+      "local_dimensions": [
+        1.9800000190734863,
+        1.590000033378601,
+        0.6000000238418579
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "reidite_shield_body",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_crest_crystal",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_dark_core",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_horn_-1",
+          "evaluated_vertices": 12,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_horn_1",
+          "evaluated_vertices": 12,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_wing_left",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        },
+        {
+          "name": "reidite_shield_wing_right",
+          "evaluated_vertices": 28,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/reidite_shield.fbx"
+    },
+    {
+      "item_id": "stone_hammer",
+      "triangles": 120,
+      "vertices": 64,
+      "local_dimensions": [
+        1.3799998760223389,
+        2.2799997329711914,
+        0.3400000035762787
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_hammer.fbx"
+    },
+    {
+      "item_id": "stone_pickaxe",
+      "triangles": 182,
+      "vertices": 95,
+      "local_dimensions": [
+        1.9009652733802795,
+        2.3232919573783875,
+        0.26999999582767487
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_pickaxe_head",
+          "evaluated_vertices": 55,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_pickaxe.fbx"
+    },
+    {
+      "item_id": "stone_shield",
+      "triangles": 360,
+      "vertices": 190,
+      "local_dimensions": [
+        1.6399999856948853,
+        1.3899999856948853,
+        0.5
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_shield_body",
+          "evaluated_vertices": 44,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_shield_crest",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_shield_dark_inset",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_shield_raised_rim",
+          "evaluated_vertices": 88,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_shield.fbx"
+    },
+    {
+      "item_id": "stone_shovel",
+      "triangles": 182,
+      "vertices": 95,
+      "local_dimensions": [
+        0.85999995470047,
+        2.399999737739563,
+        0.18000000715255737
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "stone_shovel_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "stone_shovel_scoop",
+          "evaluated_vertices": 63,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/stone_shovel.fbx"
+    },
+    {
+      "item_id": "super_hammer",
+      "triangles": 404,
+      "vertices": 222,
+      "local_dimensions": [
+        1.6599998474121094,
+        2.309999704360962,
+        0.699999988079071
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "super_hammer_collar",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_emerald_1",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_emerald_2",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_emerald_3",
+          "evaluated_vertices": 10,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_green_frame",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_head",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "super_hammer_pommel",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/super_hammer.fbx"
+    },
+    {
+      "item_id": "watering_can",
+      "triangles": 308,
+      "vertices": 160,
+      "local_dimensions": [
+        2.60101854801178,
+        1.5819034576416016,
+        1.100000023841858
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "watering_can_body",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "watering_can_handle",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "watering_can_spout",
+          "evaluated_vertices": 20,
+          "modifiers_baked": []
+        },
+        {
+          "name": "watering_can_sprinkler",
+          "evaluated_vertices": 24,
+          "modifiers_baked": []
+        },
+        {
+          "name": "watering_can_top_rim",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/watering_can.fbx"
+    },
+    {
+      "item_id": "wood_pickaxe",
+      "triangles": 182,
+      "vertices": 95,
+      "local_dimensions": [
+        1.9009652733802795,
+        2.3232919573783875,
+        0.26999999582767487
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "wood_pickaxe_handle",
+          "evaluated_vertices": 40,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_pickaxe_head",
+          "evaluated_vertices": 55,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/wood_pickaxe.fbx"
+    },
+    {
+      "item_id": "wood_shield",
+      "triangles": 580,
+      "vertices": 304,
+      "local_dimensions": [
+        1.7400000095367432,
+        1.2999999523162842,
+        0.3149999976158142
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "wood_shield_body",
+          "evaluated_vertices": 48,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_shield_central_brace",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_shield_plank_seam_1",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_shield_plank_seam_2",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wood_shield_rim",
+          "evaluated_vertices": 96,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/wood_shield.fbx"
+    },
+    {
+      "item_id": "wrench",
+      "triangles": 380,
+      "vertices": 200,
+      "local_dimensions": [
+        0.7799999713897705,
+        2.2875001430511475,
+        0.1899999976158142
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        {
+          "name": "wrench_handle",
+          "evaluated_vertices": 32,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wrench_handle_inset",
+          "evaluated_vertices": 64,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wrench_lower_jaw",
+          "evaluated_vertices": 52,
+          "modifiers_baked": []
+        },
+        {
+          "name": "wrench_upper_jaw",
+          "evaluated_vertices": 52,
+          "modifiers_baked": []
+        }
+      ],
+      "file": "individual/wrench.fbx"
+    }
+  ]
+}

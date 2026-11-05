@@ -1,0 +1,219 @@
+{
+ "regra": "livros: detalhada = outro objeto no lugar do livro ou silhueta bem diferente (sobreposição < ~0,8 com o livro padrão, ou conferido no olho); simplesComToque = livro com enfeite saindo pela borda ou capa em relevo; simples = só a capa (cor/estampa). Medida: sobreposição (IoU) da silhueta com o livro 0, todas as imagens têm 226x226.",
+ "detalhada": [
+  1,
+  2,
+  15,
+  16,
+  17,
+  24,
+  28,
+  35,
+  36,
+  40,
+  42,
+  44,
+  46,
+  49,
+  50
+ ],
+ "simplesComToque": [
+  19,
+  21,
+  22,
+  23,
+  27,
+  32,
+  33,
+  34,
+  43,
+  45,
+  47,
+  48,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56
+ ],
+ "simples": [
+  0,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  18,
+  20,
+  25,
+  26,
+  29,
+  30,
+  31,
+  37,
+  38,
+  39,
+  41
+ ],
+ "temas": {
+  "detalhada": {
+   "pergaminho": [
+    1,
+    16
+   ],
+   "folha de anotações": [
+    2
+   ],
+   "mapa rasgado": [
+    15
+   ],
+   "placa dourada": [
+    17
+   ],
+   "tábua de pedra com runas": [
+    24
+   ],
+   "paleta de pintor": [
+    28
+   ],
+   "cardápio": [
+    35
+   ],
+   "carta/envelope": [
+    36
+   ],
+   "pinheiro enfeitado": [
+    40
+   ],
+   "presente": [
+    42
+   ],
+   "pedra/orbe mágico": [
+    44
+   ],
+   "máquina (rádio/máquina de escrever)": [
+    46
+   ],
+   "bússola/medalhão": [
+    49
+   ],
+   "livro aberto": [
+    50
+   ]
+  },
+  "simplesComToque": {
+   "livro da floresta (folhas nos cantos)": [
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+   ],
+   "livro com rebites": [
+    22,
+    23
+   ],
+   "tentáculo saindo": [
+    19
+   ],
+   "fechos metálicos": [
+    21
+   ],
+   "cristais/espinhos": [
+    27
+   ],
+   "enfaixado": [
+    32
+   ],
+   "gelo": [
+    33
+   ],
+   "amarras de couro": [
+    34
+   ],
+   "cantoneiras de engrenagem": [
+    43
+   ],
+   "capa dourada com joia": [
+    45
+   ],
+   "capa com joias vermelhas": [
+    47
+   ],
+   "trepadeiras": [
+    48
+   ]
+  },
+  "simples": {
+   "marrom (padrão e variações)": [
+    0,
+    3,
+    4,
+    5,
+    6,
+    18
+   ],
+   "folha verde": [
+    7
+   ],
+   "preto": [
+    8
+   ],
+   "amarelo": [
+    9
+   ],
+   "ciano": [
+    10
+   ],
+   "roxo": [
+    11
+   ],
+   "vermelho": [
+    12
+   ],
+   "ondas": [
+    13
+   ],
+   "cogumelo": [
+    14
+   ],
+   "camuflado": [
+    20
+   ],
+   "listrado verde": [
+    25
+   ],
+   "lava": [
+    26
+   ],
+   "melancia": [
+    29
+   ],
+   "pedra": [
+    30
+   ],
+   "manchas de halloween": [
+    31,
+    37
+   ],
+   "laranja": [
+    38
+   ],
+   "branco": [
+    39
+   ],
+   "biscoitos": [
+    41
+   ]
+  }
+ }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "item_id": "wood_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  },
+  {
+    "item_id": "stone_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  },
+  {
+    "item_id": "gold_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  },
+  {
+    "item_id": "diamond_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  },
+  {
+    "item_id": "amethyst_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  },
+  {
+    "item_id": "reidite_spike_door",
+    "open_gap": 4.590000152587891,
+    "details_parented_to_leaf": true
+  }
+]

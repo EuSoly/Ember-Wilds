@@ -14,6 +14,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Defs = require(Shared:WaitForChild("Defs"))
+local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
+local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
 local CrateModel = require(Shared:WaitForChild("Models"):WaitForChild("CrateModel"))
 local Client = script.Parent.Parent.Parent
@@ -36,9 +38,9 @@ local ItemViewport = {}
 
 local cache: { [string]: Model } = {}
 
-local function bodyModel(look: Defs.BodyLook): Model
+local function bodyModel(look: Defs.BodyLook, cosmeticId: string): Model
 	local boneco = BonecoModel.build("")
-	BonecoModel.applyLook(boneco, look)
+	BonecoModel.applyLook(boneco, look, cosmeticId)
 	local tag = boneco.root:FindFirstChild("NameTag")
 	if tag then
 		tag:Destroy()
@@ -48,13 +50,12 @@ local function bodyModel(look: Defs.BodyLook): Model
 	return boneco.model
 end
 
-local function bookModel(): Model?
-	local book = BookModel.clone()
+local function bookModel(cosmeticId: string): Model?
+	local book = BookModel.clone(cosmeticId)
 	if book == nil then
 		return nil
 	end
 	local model = Instance.new("Model")
-	book.CFrame = BookModel.ROTATION
 	book.Parent = model
 	model.PrimaryPart = book
 	return model
@@ -68,13 +69,13 @@ local function buildModel(cosmeticId: string): Model?
 		return nil
 	end
 	if cosmetic.body then
-		return bodyModel(cosmetic.body)
+		return bodyModel(cosmetic.body, cosmeticId)
 	elseif cosmetic.bag then
-		return BagModel.build(cosmetic.bag)
+		return BagModel.build(cosmetic.bag, cosmeticId)
 	elseif cosmetic.crate then
 		return CrateModel.build(cosmeticId)
 	elseif cosmetic.slot == "book" then
-		return bookModel()
+		return bookModel(cosmeticId)
 	end
 	return nil
 end
@@ -89,7 +90,9 @@ function ItemViewport.clone(cosmeticId: string): Model?
 	if not built then
 		return nil -- não guarda: o livro pode chegar depois
 	end
-	cache[cosmeticId] = built
+	if SkinManifest.PARTS_BY_SKIN[cosmeticId] == nil or SkinAssets.hasSkin(cosmeticId) then
+		cache[cosmeticId] = built
+	end
 	return built:Clone()
 end
 

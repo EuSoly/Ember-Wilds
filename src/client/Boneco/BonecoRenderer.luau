@@ -23,10 +23,13 @@ local StatNames = require(Shared:WaitForChild("StatNames"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
+local BagModel = require(script.Parent.Parent:WaitForChild("Menu"):WaitForChild("Cosmetics"):WaitForChild("BagModel"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 
 local ROOT_TIMEOUT = 10
 local BODY_SLOT = "body"
+local BAG_SLOT = "bag"
+local BOOK_SLOT = "book"
 -- Evento que a expressão de dano escuta (um dos Validate.KNOWN_EVENTS).
 local HURT_EVENT = Validate.HURT_EVENT
 -- Pasta dos bonecos de teste (DevBonecoService): o nome deles é o do modelo.
@@ -48,6 +51,9 @@ type Entry = {
 	flash: string?,
 	-- Últimos valores lidos dos atributos (para só reagir quando mudam).
 	cosmeticId: string?,
+	bagCosmeticId: string?,
+	bagModel: Model?,
+	bookCosmeticId: string?,
 	equippedId: string?,
 	hurtAt: number?,
 	-- Sem raiz no personagem: o visual fica escondido até ela voltar.
@@ -118,13 +124,29 @@ local function applyCosmetic(entry: Entry, id: string?)
 	entry.cosmeticId = id
 	local cosmetic = Cosmetic.resolve(Defs, BODY_SLOT, id)
 	if cosmetic.body then
-		BonecoModel.applyLook(entry.boneco, cosmetic.body)
+		BonecoModel.applyLook(entry.boneco, cosmetic.body, cosmetic.id)
 	end
 end
 
-local function applyEquipped(entry: Entry, id: string?)
+local function applyBag(entry: Entry, id: string?)
+	entry.bagCosmeticId = id
+	if entry.bagModel then
+		entry.bagModel:Destroy()
+		entry.bagModel = nil
+	end
+	local cosmetic = Cosmetic.resolve(Defs, BAG_SLOT, id)
+	if cosmetic.bag then
+		local bag = BagModel.build(cosmetic.bag, cosmetic.id)
+		BagModel.attach(bag, entry.boneco)
+		entry.bagModel = bag
+	end
+end
+
+local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
 	entry.equippedId = id
-	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id)
+	entry.bookCosmeticId = bookCosmeticId
+	local bookResolved = Cosmetic.resolve(Defs, BOOK_SLOT, bookCosmeticId)
+	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id, bookResolved.id)
 	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
 end
 
@@ -159,9 +181,14 @@ local function syncAttributes(entry: Entry)
 	if cosmeticId ~= entry.cosmeticId then
 		applyCosmetic(entry, cosmeticId)
 	end
+	local bagCosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BAG_SLOT)
+	if bagCosmeticId ~= entry.bagCosmeticId then
+		applyBag(entry, bagCosmeticId)
+	end
 	local equippedId = stringAttribute(character, StatNames.Equipped)
-	if equippedId ~= entry.equippedId then
-		applyEquipped(entry, equippedId)
+	local bookCosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BOOK_SLOT)
+	if equippedId ~= entry.equippedId or bookCosmeticId ~= entry.bookCosmeticId then
+		applyEquipped(entry, equippedId, bookCosmeticId)
 	end
 	local hurtAt = numberAttribute(character, StatNames.HurtAt)
 	if hurtAt ~= entry.hurtAt then
@@ -185,6 +212,9 @@ local function build(character: Model, hrp: BasePart)
 		eyes = "open",
 		flash = nil,
 		cosmeticId = nil,
+		bagCosmeticId = nil,
+		bagModel = nil,
+		bookCosmeticId = nil,
 		equippedId = nil,
 		hurtAt = nil,
 		hidden = false,
@@ -196,7 +226,12 @@ local function build(character: Model, hrp: BasePart)
 
 	-- Estado inicial (a skin padrão já veio do build; o resto vem do polling).
 	applyCosmetic(entry, stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT))
-	applyEquipped(entry, stringAttribute(character, StatNames.Equipped))
+	applyBag(entry, stringAttribute(character, StatNames.CosmeticPrefix .. BAG_SLOT))
+	applyEquipped(
+		entry,
+		stringAttribute(character, StatNames.Equipped),
+		stringAttribute(character, StatNames.CosmeticPrefix .. BOOK_SLOT)
+	)
 	checkHurt(entry, numberAttribute(character, StatNames.HurtAt))
 
 	local function listen(signal: RBXScriptSignal, handler: () -> ())
@@ -378,7 +413,7 @@ function BonecoRenderer.start()
 				local function refresh()
 					for _, entry in entries do
 						if entry.equippedId == template.Name then
-							applyEquipped(entry, entry.equippedId)
+							applyEquipped(entry, entry.equippedId, entry.bookCosmeticId)
 						end
 					end
 				end

@@ -55,6 +55,7 @@ local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local CharacterService = require(script.Parent.CharacterService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
+local StatsService = require(script.Parent.StatsService)
 local StructureService = require(script.Parent.StructureService)
 
 type MobDef = Defs.MobDef
@@ -557,6 +558,7 @@ local function die(mob: Mob, killer: Player?)
 	table.insert(cooling, { id = mob.id, biome = mob.biome, untilAt = os.clock() + MobRules.RESPAWN_DELAY })
 	if killer then
 		ScoreService.add(killer, mob.stats.points)
+		StatsService.add(killer, "mobs_killed", 1, mob.id)
 	end
 	for _, listener in deathListeners do
 		local ok, err = pcall(listener :: any, mob, killer)

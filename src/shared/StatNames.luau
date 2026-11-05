@@ -59,9 +59,9 @@ return table.freeze({
 	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.
 	CosmeticPrefix = "Cosmetic_",
-	-- Pasta (Folder) no Player com a posse publicada: atributo "<id do cosmético>"
-	-- = true se possui (CosmeticService). Pasta pelo mesmo motivo do StatsFolder:
-	-- cresce a cada skin comprada.
+	-- Pasta (Folder) no Player com a posse publicada: um BoolValue por skin
+	-- possuída, Name = id do cosmético (CosmeticService). Objetos, não atributos:
+	-- com centenas de skins, atributos passariam do limite de ~1 KB da instância.
 	OwnedFolder = "OwnedCosmetics",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",

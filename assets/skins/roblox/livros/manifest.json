@@ -1,0 +1,663 @@
+{
+  "categoria": "livros",
+  "lotes": [
+    "livros1",
+    "livros2"
+  ],
+  "skin_count": 20,
+  "mesh_count": 22,
+  "total_triangles": 41530,
+  "palette_colors": 140,
+  "texture": "livros_palette.png",
+  "texture_size": 256,
+  "arquivo_geral": "skins-livros.fbx",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "skins": [
+    {
+      "id": "book_pergaminho",
+      "nome": "pergaminho",
+      "file": "individual/book_pergaminho.fbx",
+      "parts": [
+        {
+          "name": "book_pergaminho_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 3196,
+          "vertices": 1542,
+          "bounds": [
+            -1.44,
+            -1.385,
+            -0.295,
+            1.44,
+            1.385,
+            0.305
+          ],
+          "source_parts": 21
+        }
+      ]
+    },
+    {
+      "id": "book_mapa",
+      "nome": "mapa",
+      "file": "individual/book_mapa.fbx",
+      "parts": [
+        {
+          "name": "book_mapa_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1012,
+          "triangles_antes_decimate": 1012,
+          "vertices": 572,
+          "bounds": [
+            -1.379,
+            -1.259,
+            -0.245,
+            1.379,
+            1.259,
+            -0.165
+          ],
+          "source_parts": 33
+        }
+      ]
+    },
+    {
+      "id": "book_tabua",
+      "nome": "tabua",
+      "file": "individual/book_tabua.fbx",
+      "parts": [
+        {
+          "name": "book_tabua_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1772,
+          "triangles_antes_decimate": 1772,
+          "vertices": 934,
+          "bounds": [
+            -1.15,
+            -1.408,
+            -0.275,
+            1.15,
+            1.408,
+            0.085
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "book_paleta",
+      "nome": "paleta",
+      "file": "individual/book_paleta.fbx",
+      "parts": [
+        {
+          "name": "book_paleta_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 4892,
+          "vertices": 1552,
+          "bounds": [
+            -1.395,
+            -1.361,
+            -0.275,
+            1.395,
+            1.361,
+            -0.02
+          ],
+          "source_parts": 26
+        }
+      ]
+    },
+    {
+      "id": "book_presente",
+      "nome": "presente",
+      "file": "individual/book_presente.fbx",
+      "parts": [
+        {
+          "name": "book_presente_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1460,
+          "triangles_antes_decimate": 1460,
+          "vertices": 768,
+          "bounds": [
+            -1.514,
+            -1.34,
+            -0.265,
+            1.514,
+            1.34,
+            0.58
+          ],
+          "source_parts": 19
+        }
+      ]
+    },
+    {
+      "id": "book_floresta",
+      "nome": "floresta",
+      "file": "individual/book_floresta.fbx",
+      "parts": [
+        {
+          "name": "book_floresta_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2752,
+          "triangles_antes_decimate": 2752,
+          "vertices": 1430,
+          "bounds": [
+            -2.243,
+            -2.22,
+            -0.265,
+            2.282,
+            2.198,
+            0.285
+          ],
+          "source_parts": 27
+        }
+      ]
+    },
+    {
+      "id": "book_gelo",
+      "nome": "gelo",
+      "file": "individual/book_gelo.fbx",
+      "parts": [
+        {
+          "name": "book_gelo_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1340,
+          "triangles_antes_decimate": 1340,
+          "vertices": 832,
+          "bounds": [
+            -1.688,
+            -1.924,
+            -0.265,
+            1.688,
+            1.924,
+            0.32
+          ],
+          "source_parts": 81
+        }
+      ]
+    },
+    {
+      "id": "book_cristais",
+      "nome": "cristais",
+      "file": "individual/book_cristais.fbx",
+      "parts": [
+        {
+          "name": "book_cristais_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 924,
+          "triangles_antes_decimate": 924,
+          "vertices": 546,
+          "bounds": [
+            -1.773,
+            -2.207,
+            -0.265,
+            2.285,
+            2.186,
+            0.33
+          ],
+          "source_parts": 42
+        }
+      ]
+    },
+    {
+      "id": "book_lava",
+      "nome": "lava",
+      "file": "individual/book_lava.fbx",
+      "parts": [
+        {
+          "name": "book_lava_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 756,
+          "triangles_antes_decimate": 756,
+          "vertices": 404,
+          "bounds": [
+            -1.245,
+            -1.4,
+            -0.265,
+            1.245,
+            1.4,
+            0.285
+          ],
+          "source_parts": 13
+        },
+        {
+          "name": "book_lava_livro_neon",
+          "papel": "livro",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 384,
+          "triangles_antes_decimate": 384,
+          "vertices": 204,
+          "bounds": [
+            -1.105,
+            -1.26,
+            0.275,
+            1.105,
+            1.26,
+            0.297
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "book_melancia",
+      "nome": "melancia",
+      "file": "individual/book_melancia.fbx",
+      "parts": [
+        {
+          "name": "book_melancia_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 9148,
+          "vertices": 1548,
+          "bounds": [
+            -1.245,
+            -1.4,
+            -0.265,
+            1.245,
+            1.4,
+            0.285
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "book_envelope",
+      "nome": "envelope",
+      "file": "individual/book_envelope.fbx",
+      "parts": [
+        {
+          "name": "book_envelope_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 760,
+          "triangles_antes_decimate": 760,
+          "vertices": 400,
+          "bounds": [
+            -1.49,
+            -1.07,
+            -0.275,
+            1.49,
+            1.07,
+            0.01
+          ],
+          "source_parts": 10
+        }
+      ]
+    },
+    {
+      "id": "book_pinheiro",
+      "nome": "pinheiro",
+      "file": "individual/book_pinheiro.fbx",
+      "parts": [
+        {
+          "name": "book_pinheiro_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2998,
+          "triangles_antes_decimate": 4356,
+          "vertices": 1547,
+          "bounds": [
+            -1.379,
+            -1.708,
+            -0.275,
+            1.379,
+            1.708,
+            0.365
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "book_orbe",
+      "nome": "orbe",
+      "file": "individual/book_orbe.fbx",
+      "parts": [
+        {
+          "name": "book_orbe_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 448,
+          "bounds": [
+            -1.223,
+            -1.309,
+            -0.275,
+            1.223,
+            1.309,
+            0.105
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "book_orbe_livro_neon",
+          "papel": "livro",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 696,
+          "triangles_antes_decimate": 696,
+          "vertices": 356,
+          "bounds": [
+            -0.789,
+            -0.66,
+            0.075,
+            0.852,
+            1.108,
+            0.13
+          ],
+          "source_parts": 4
+        }
+      ]
+    },
+    {
+      "id": "book_bussola",
+      "nome": "bussola",
+      "file": "individual/book_bussola.fbx",
+      "parts": [
+        {
+          "name": "book_bussola_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 3384,
+          "vertices": 1540,
+          "bounds": [
+            -1.411,
+            -1.516,
+            -0.275,
+            1.411,
+            1.516,
+            0.155
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "book_aberto",
+      "nome": "aberto",
+      "file": "individual/book_aberto.fbx",
+      "parts": [
+        {
+          "name": "book_aberto_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1280,
+          "triangles_antes_decimate": 1280,
+          "vertices": 692,
+          "bounds": [
+            -1.76,
+            -1.524,
+            -0.275,
+            1.76,
+            1.524,
+            0.03
+          ],
+          "source_parts": 26
+        }
+      ]
+    },
+    {
+      "id": "book_tentaculo",
+      "nome": "tentaculo",
+      "file": "individual/book_tentaculo.fbx",
+      "parts": [
+        {
+          "name": "book_tentaculo_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 3816,
+          "vertices": 1548,
+          "bounds": [
+            -1.99,
+            -1.42,
+            -0.265,
+            1.532,
+            1.4,
+            0.367
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "book_engrenagem",
+      "nome": "engrenagem",
+      "file": "individual/book_engrenagem.fbx",
+      "parts": [
+        {
+          "name": "book_engrenagem_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 3992,
+          "vertices": 1560,
+          "bounds": [
+            -1.658,
+            -1.809,
+            -0.265,
+            1.658,
+            1.809,
+            0.382
+          ],
+          "source_parts": 30
+        }
+      ]
+    },
+    {
+      "id": "book_trepadeira",
+      "nome": "trepadeira",
+      "file": "individual/book_trepadeira.fbx",
+      "parts": [
+        {
+          "name": "book_trepadeira_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3000,
+          "triangles_antes_decimate": 6388,
+          "vertices": 1610,
+          "bounds": [
+            -1.708,
+            -1.531,
+            -0.265,
+            1.905,
+            1.708,
+            0.422
+          ],
+          "source_parts": 55
+        }
+      ]
+    },
+    {
+      "id": "book_cogumelo",
+      "nome": "cogumelo",
+      "file": "individual/book_cogumelo.fbx",
+      "parts": [
+        {
+          "name": "book_cogumelo_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2004,
+          "triangles_antes_decimate": 2004,
+          "vertices": 1040,
+          "bounds": [
+            -1.245,
+            -1.4,
+            -0.265,
+            1.245,
+            1.4,
+            0.339
+          ],
+          "source_parts": 19
+        }
+      ]
+    },
+    {
+      "id": "book_ondas",
+      "nome": "ondas",
+      "file": "individual/book_ondas.fbx",
+      "parts": [
+        {
+          "name": "book_ondas_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1512,
+          "triangles_antes_decimate": 1512,
+          "vertices": 782,
+          "bounds": [
+            -1.245,
+            -1.4,
+            -0.265,
+            1.245,
+            1.4,
+            0.331
+          ],
+          "source_parts": 13
+        }
+      ]
+    }
+  ]
+}

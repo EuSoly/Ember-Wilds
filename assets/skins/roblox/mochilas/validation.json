@@ -1,0 +1,499 @@
+{
+  "categoria": "mochilas",
+  "arquivos": 82,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-mochilas.fbx",
+      "malhas": 85,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_coelho.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_ninho_passaros.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_aquario.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_esquilo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_vulcao.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_lenha.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_minerios.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_barril.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bau.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_pote_mel.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_caranguejo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_recife_coral.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_fatia_bolo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bambu.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_peixe.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_ovo_ninho.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_abelha.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_aventureiro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espirito_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cesta_pao.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_caverna.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cubo_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_duplas.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cacto_espinhos.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_mumia.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_abobora.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_tronco_florido.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_caixote.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_garras_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cartografo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_folha_frutas.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cristais_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_robo_visor.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_radio_militar.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_nuvem_faixas.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_fornalha.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_garras_ametista.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_explorador_pa.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cofre_metal.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_camuflada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bolsa_cristal.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_rocha_magma.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_malhada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_chamas_fogo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_melancia.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_noite_estrelada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cubos_esmeralda.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_carapaca_joias.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_verde.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_azul.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_rosa.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_turquesa.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_branca.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_roxa.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_ciano.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_couro_gasto.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_escura.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_padrao_noturna.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bolsa_pedra.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bolsa_ouro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bolsa_ametista.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_bolsa_rubi.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta_pedra.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta_ouro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta_ametista.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_picareta_rubi.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_pedra.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_diamante.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_ouro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_rubi.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_espadas_ametista.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_fatia_bolo_morango.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_abobora_branca.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_nuvem_por_do_sol.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_fornalha_apagada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_carapaca_ametista.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_carapaca_dourada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_explorador_pa_couro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

@@ -1,0 +1,996 @@
+{
+  "schema_version": 1,
+  "blend_file": "C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\weapons\\armas-colecao-recuperada.blend",
+  "scene": "Scene",
+  "root_collection": "Weapons",
+  "backup": "C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\weapons\\backups\\antes-organizacao-20261102-120636.blend",
+  "validation": {
+    "assets": 18,
+    "meshes_preserved": 83,
+    "geometry_unchanged": true,
+    "materials_unchanged": true,
+    "modifiers_unchanged": true,
+    "max_world_vertex_delta": 1.1920928955078125e-07,
+    "loose_weapon_meshes": 0
+  },
+  "weapons": [
+    {
+      "item_id": "wood_sword",
+      "type": "sword",
+      "collection": "wood_sword",
+      "root": "wood_sword_root",
+      "parts": [
+        {
+          "name": "wood_sword_handle",
+          "role": "handle",
+          "mesh": "wood_sword_handle_mesh"
+        },
+        {
+          "name": "wood_sword_blade",
+          "role": "blade",
+          "mesh": "wood_sword_blade_mesh"
+        },
+        {
+          "name": "wood_sword_guard",
+          "role": "guard",
+          "mesh": "wood_sword_guard_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "stone_sword",
+      "type": "sword",
+      "collection": "stone_sword",
+      "root": "stone_sword_root",
+      "parts": [
+        {
+          "name": "stone_sword_handle",
+          "role": "handle",
+          "mesh": "stone_sword_handle_mesh"
+        },
+        {
+          "name": "stone_sword_blade",
+          "role": "blade",
+          "mesh": "stone_sword_blade_mesh"
+        },
+        {
+          "name": "stone_sword_guard",
+          "role": "guard",
+          "mesh": "stone_sword_guard_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "gold_sword",
+      "type": "sword",
+      "collection": "gold_sword",
+      "root": "gold_sword_root",
+      "parts": [
+        {
+          "name": "gold_sword_handle",
+          "role": "handle",
+          "mesh": "gold_sword_handle_mesh"
+        },
+        {
+          "name": "gold_sword_blade",
+          "role": "blade",
+          "mesh": "gold_sword_blade_mesh"
+        },
+        {
+          "name": "gold_sword_guard",
+          "role": "guard",
+          "mesh": "gold_sword_guard_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "diamond_sword",
+      "type": "sword",
+      "collection": "diamond_sword",
+      "root": "diamond_sword_root",
+      "parts": [
+        {
+          "name": "diamond_sword_handle",
+          "role": "handle",
+          "mesh": "diamond_sword_handle_mesh"
+        },
+        {
+          "name": "diamond_sword_blade",
+          "role": "blade",
+          "mesh": "diamond_sword_blade_mesh"
+        },
+        {
+          "name": "diamond_sword_guard",
+          "role": "guard",
+          "mesh": "diamond_sword_guard_mesh"
+        },
+        {
+          "name": "diamond_sword_pommel",
+          "role": "pommel",
+          "mesh": "diamond_sword_pommel_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "amethyst_sword",
+      "type": "sword",
+      "collection": "amethyst_sword",
+      "root": "amethyst_sword_root",
+      "parts": [
+        {
+          "name": "amethyst_sword_handle",
+          "role": "handle",
+          "mesh": "amethyst_sword_handle_mesh"
+        },
+        {
+          "name": "amethyst_sword_blade",
+          "role": "blade",
+          "mesh": "amethyst_sword_blade_mesh"
+        },
+        {
+          "name": "amethyst_sword_guard",
+          "role": "guard",
+          "mesh": "amethyst_sword_guard_mesh"
+        },
+        {
+          "name": "amethyst_sword_pommel",
+          "role": "pommel",
+          "mesh": "amethyst_sword_pommel_mesh"
+        },
+        {
+          "name": "amethyst_sword_collar",
+          "role": "collar",
+          "mesh": "amethyst_sword_collar_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "reidite_sword",
+      "type": "sword",
+      "collection": "reidite_sword",
+      "root": "reidite_sword_root",
+      "parts": [
+        {
+          "name": "reidite_sword_handle",
+          "role": "handle",
+          "mesh": "reidite_sword_handle_mesh"
+        },
+        {
+          "name": "reidite_sword_blade",
+          "role": "blade",
+          "mesh": "reidite_sword_blade_mesh"
+        },
+        {
+          "name": "reidite_sword_guard",
+          "role": "guard",
+          "mesh": "reidite_sword_guard_mesh"
+        },
+        {
+          "name": "reidite_sword_knuckle_guard",
+          "role": "knuckle_guard",
+          "mesh": "reidite_sword_knuckle_guard_mesh"
+        },
+        {
+          "name": "reidite_sword_handle_studs",
+          "role": "handle_studs",
+          "mesh": "reidite_sword_handle_studs_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "dragon_sword",
+      "type": "sword",
+      "collection": "dragon_sword",
+      "root": "dragon_sword_root",
+      "parts": [
+        {
+          "name": "dragon_sword_handle",
+          "role": "handle",
+          "mesh": "dragon_sword_handle_mesh"
+        },
+        {
+          "name": "dragon_sword_blade",
+          "role": "blade",
+          "mesh": "dragon_sword_blade_mesh"
+        },
+        {
+          "name": "dragon_sword_guard",
+          "role": "guard",
+          "mesh": "dragon_sword_guard_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "lava_sword",
+      "type": "sword",
+      "collection": "lava_sword",
+      "root": "lava_sword_root",
+      "parts": [
+        {
+          "name": "lava_sword_handle",
+          "role": "handle",
+          "mesh": "lava_sword_handle_mesh"
+        },
+        {
+          "name": "lava_sword_blade",
+          "role": "blade",
+          "mesh": "lava_sword_blade_mesh"
+        },
+        {
+          "name": "lava_sword_blade_detail",
+          "role": "blade_detail",
+          "mesh": "lava_sword_blade_detail_mesh"
+        },
+        {
+          "name": "lava_sword_guard",
+          "role": "guard",
+          "mesh": "lava_sword_guard_mesh"
+        },
+        {
+          "name": "lava_sword_pommel",
+          "role": "pommel",
+          "mesh": "lava_sword_pommel_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "pirate_sword",
+      "type": "sword",
+      "collection": "pirate_sword",
+      "root": "pirate_sword_root",
+      "parts": [
+        {
+          "name": "pirate_sword_handle",
+          "role": "handle",
+          "mesh": "pirate_sword_handle_mesh"
+        },
+        {
+          "name": "pirate_sword_blade",
+          "role": "blade",
+          "mesh": "pirate_sword_blade_mesh"
+        },
+        {
+          "name": "pirate_sword_guard",
+          "role": "guard",
+          "mesh": "pirate_sword_guard_mesh"
+        },
+        {
+          "name": "pirate_sword_knuckle_guard",
+          "role": "knuckle_guard",
+          "mesh": "pirate_sword_knuckle_guard_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "wood_spear",
+      "type": "spear",
+      "collection": "wood_spear",
+      "root": "wood_spear_root",
+      "parts": [
+        {
+          "name": "wood_spear_shaft",
+          "role": "shaft",
+          "mesh": "wood_spear_shaft_mesh"
+        },
+        {
+          "name": "wood_spear_tip",
+          "role": "tip",
+          "mesh": "wood_spear_tip_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "stone_spear",
+      "type": "spear",
+      "collection": "stone_spear",
+      "root": "stone_spear_root",
+      "parts": [
+        {
+          "name": "stone_spear_shaft",
+          "role": "shaft",
+          "mesh": "stone_spear_shaft_mesh"
+        },
+        {
+          "name": "stone_spear_tip",
+          "role": "tip",
+          "mesh": "stone_spear_tip_mesh"
+        },
+        {
+          "name": "stone_spear_fittings",
+          "role": "fittings",
+          "mesh": "stone_spear_fittings_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "gold_spear",
+      "type": "spear",
+      "collection": "gold_spear",
+      "root": "gold_spear_root",
+      "parts": [
+        {
+          "name": "gold_spear_shaft",
+          "role": "shaft",
+          "mesh": "gold_spear_shaft_mesh"
+        },
+        {
+          "name": "gold_spear_tip",
+          "role": "tip",
+          "mesh": "gold_spear_tip_mesh"
+        },
+        {
+          "name": "gold_spear_fittings",
+          "role": "fittings",
+          "mesh": "gold_spear_fittings_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "diamond_spear",
+      "type": "spear",
+      "collection": "diamond_spear",
+      "root": "diamond_spear_root",
+      "parts": [
+        {
+          "name": "diamond_spear_shaft",
+          "role": "shaft",
+          "mesh": "diamond_spear_shaft_mesh"
+        },
+        {
+          "name": "diamond_spear_tip",
+          "role": "tip",
+          "mesh": "diamond_spear_tip_mesh"
+        },
+        {
+          "name": "diamond_spear_fittings",
+          "role": "fittings",
+          "mesh": "diamond_spear_fittings_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "amethyst_spear",
+      "type": "spear",
+      "collection": "amethyst_spear",
+      "root": "amethyst_spear_root",
+      "parts": [
+        {
+          "name": "amethyst_spear_shaft",
+          "role": "shaft",
+          "mesh": "amethyst_spear_shaft_mesh"
+        },
+        {
+          "name": "amethyst_spear_tip",
+          "role": "tip",
+          "mesh": "amethyst_spear_tip_mesh"
+        },
+        {
+          "name": "amethyst_spear_collar",
+          "role": "collar",
+          "mesh": "amethyst_spear_collar_mesh"
+        },
+        {
+          "name": "amethyst_spear_pommel",
+          "role": "pommel",
+          "mesh": "amethyst_spear_pommel_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "reidite_spear",
+      "type": "spear",
+      "collection": "reidite_spear",
+      "root": "reidite_spear_root",
+      "parts": [
+        {
+          "name": "reidite_spear_shaft",
+          "role": "shaft",
+          "mesh": "reidite_spear_shaft_mesh"
+        },
+        {
+          "name": "reidite_spear_fittings",
+          "role": "fittings",
+          "mesh": "reidite_spear_fittings_mesh"
+        },
+        {
+          "name": "reidite_spear_tip",
+          "role": "tip",
+          "mesh": "reidite_spear_tip_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "dragon_spear",
+      "type": "spear",
+      "collection": "dragon_spear",
+      "root": "dragon_spear_root",
+      "parts": [
+        {
+          "name": "dragon_spear_shaft",
+          "role": "shaft",
+          "mesh": "dragon_spear_shaft_mesh"
+        },
+        {
+          "name": "dragon_spear_tip",
+          "role": "tip",
+          "mesh": "dragon_spear_tip_mesh"
+        },
+        {
+          "name": "dragon_spear_collar",
+          "role": "collar",
+          "mesh": "dragon_spear_collar_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "lava_spear",
+      "type": "spear",
+      "collection": "lava_spear",
+      "root": "lava_spear_root",
+      "parts": [
+        {
+          "name": "lava_spear_shaft",
+          "role": "shaft",
+          "mesh": "lava_spear_shaft_mesh"
+        },
+        {
+          "name": "lava_spear_tip",
+          "role": "tip",
+          "mesh": "lava_spear_tip_mesh"
+        },
+        {
+          "name": "lava_spear_prong_left",
+          "role": "prong_left",
+          "mesh": "lava_spear_prong_left_mesh"
+        },
+        {
+          "name": "lava_spear_prong_right",
+          "role": "prong_right",
+          "mesh": "lava_spear_prong_right_mesh"
+        },
+        {
+          "name": "lava_spear_collar",
+          "role": "collar",
+          "mesh": "lava_spear_collar_mesh"
+        }
+      ]
+    },
+    {
+      "item_id": "crab_spear",
+      "type": "spear",
+      "collection": "crab_spear",
+      "root": "crab_spear_root",
+      "parts": [
+        {
+          "name": "crab_spear_shaft",
+          "role": "shaft",
+          "mesh": "crab_spear_shaft_mesh"
+        },
+        {
+          "name": "crab_spear_claw_left",
+          "role": "claw_left",
+          "mesh": "crab_spear_claw_left_mesh"
+        },
+        {
+          "name": "crab_spear_claw_right",
+          "role": "claw_right",
+          "mesh": "crab_spear_claw_right_mesh"
+        },
+        {
+          "name": "crab_spear_collar",
+          "role": "collar",
+          "mesh": "crab_spear_collar_mesh"
+        }
+      ]
+    }
+  ],
+  "renamed": [
+    {
+      "old": "Espada_Madeira__ROOT.002",
+      "new": "wood_sword_root",
+      "collection": "wood_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Pedra__ROOT.001",
+      "new": "stone_sword_root",
+      "collection": "stone_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Ouro__ROOT.001",
+      "new": "gold_sword_root",
+      "collection": "gold_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Diamante__ROOT.001",
+      "new": "diamond_sword_root",
+      "collection": "diamond_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Ametista__ROOT.001",
+      "new": "amethyst_sword_root",
+      "collection": "amethyst_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Reidite__ROOT.001",
+      "new": "reidite_sword_root",
+      "collection": "reidite_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Dragao__ROOT.001",
+      "new": "dragon_sword_root",
+      "collection": "dragon_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Lava__ROOT.001",
+      "new": "lava_sword_root",
+      "collection": "lava_sword",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Pirata__ROOT.001",
+      "new": "pirate_sword_root",
+      "collection": "pirate_sword",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Madeira__ROOT.001",
+      "new": "wood_spear_root",
+      "collection": "wood_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Pedra__ROOT.001",
+      "new": "stone_spear_root",
+      "collection": "stone_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Ouro__ROOT.001",
+      "new": "gold_spear_root",
+      "collection": "gold_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Diamante__ROOT.001",
+      "new": "diamond_spear_root",
+      "collection": "diamond_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Ametista__ROOT.001",
+      "new": "amethyst_spear_root",
+      "collection": "amethyst_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Reidite__ROOT.001",
+      "new": "reidite_spear_root",
+      "collection": "reidite_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Dragao__ROOT.001",
+      "new": "dragon_spear_root",
+      "collection": "dragon_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Lava__ROOT.001",
+      "new": "lava_spear_root",
+      "collection": "lava_spear",
+      "role": "root"
+    },
+    {
+      "old": "Lanca_Caranguejo__ROOT.001",
+      "new": "crab_spear_root",
+      "collection": "crab_spear",
+      "role": "root"
+    },
+    {
+      "old": "Espada_Madeira__simple_handle.002",
+      "new": "wood_sword_handle",
+      "collection": "wood_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Madeira__straight_blade.002",
+      "new": "wood_sword_blade",
+      "collection": "wood_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Madeira__small_crossguard.002",
+      "new": "wood_sword_guard",
+      "collection": "wood_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Pedra__simple_handle.001",
+      "new": "stone_sword_handle",
+      "collection": "stone_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Pedra__straight_blade.001",
+      "new": "stone_sword_blade",
+      "collection": "stone_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Pedra__small_crossguard.001",
+      "new": "stone_sword_guard",
+      "collection": "stone_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Ouro__simple_handle.001",
+      "new": "gold_sword_handle",
+      "collection": "gold_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Ouro__straight_blade.001",
+      "new": "gold_sword_blade",
+      "collection": "gold_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Ouro__small_crossguard.001",
+      "new": "gold_sword_guard",
+      "collection": "gold_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Diamante__simple_handle.001",
+      "new": "diamond_sword_handle",
+      "collection": "diamond_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Diamante__straight_blade.001",
+      "new": "diamond_sword_blade",
+      "collection": "diamond_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Diamante__small_crossguard.001",
+      "new": "diamond_sword_guard",
+      "collection": "diamond_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Diamante__colored_pommel.001",
+      "new": "diamond_sword_pommel",
+      "collection": "diamond_sword",
+      "role": "pommel"
+    },
+    {
+      "old": "Espada_Ametista__simple_handle.001",
+      "new": "amethyst_sword_handle",
+      "collection": "amethyst_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Ametista__straight_blade.001",
+      "new": "amethyst_sword_blade",
+      "collection": "amethyst_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Ametista__small_crossguard.001",
+      "new": "amethyst_sword_guard",
+      "collection": "amethyst_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Ametista__colored_pommel.001",
+      "new": "amethyst_sword_pommel",
+      "collection": "amethyst_sword",
+      "role": "pommel"
+    },
+    {
+      "old": "Espada_Ametista__purple_collar.001",
+      "new": "amethyst_sword_collar",
+      "collection": "amethyst_sword",
+      "role": "collar"
+    },
+    {
+      "old": "Espada_Reidite__simple_handle.001",
+      "new": "reidite_sword_handle",
+      "collection": "reidite_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Espada_Reidite__curved_red_blade.001",
+      "new": "reidite_sword_blade",
+      "collection": "reidite_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Espada_Reidite__gray_crossguard.001",
+      "new": "reidite_sword_guard",
+      "collection": "reidite_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Espada_Reidite__open_knuckle_guard.001",
+      "new": "reidite_sword_knuckle_guard",
+      "collection": "reidite_sword",
+      "role": "knuckle_guard"
+    },
+    {
+      "old": "Espada_Reidite__simple_handle.002",
+      "new": "reidite_sword_handle_studs",
+      "collection": "reidite_sword",
+      "role": "handle_studs"
+    },
+    {
+      "old": "Dragao__Cabo.001",
+      "new": "dragon_sword_handle",
+      "collection": "dragon_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Dragao__Lamina.001",
+      "new": "dragon_sword_blade",
+      "collection": "dragon_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Dragao__Guarda.001",
+      "new": "dragon_sword_guard",
+      "collection": "dragon_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Lava__Cabo.001",
+      "new": "lava_sword_handle",
+      "collection": "lava_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Lava__Lamina.001",
+      "new": "lava_sword_blade",
+      "collection": "lava_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Lava__Detalhe_Lamina.001",
+      "new": "lava_sword_blade_detail",
+      "collection": "lava_sword",
+      "role": "blade_detail"
+    },
+    {
+      "old": "Lava__Guarda.001",
+      "new": "lava_sword_guard",
+      "collection": "lava_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Lava__Pomo.001",
+      "new": "lava_sword_pommel",
+      "collection": "lava_sword",
+      "role": "pommel"
+    },
+    {
+      "old": "Pirata__Cabo.001",
+      "new": "pirate_sword_handle",
+      "collection": "pirate_sword",
+      "role": "handle"
+    },
+    {
+      "old": "Pirata__Lamina.001",
+      "new": "pirate_sword_blade",
+      "collection": "pirate_sword",
+      "role": "blade"
+    },
+    {
+      "old": "Pirata__Guarda.001",
+      "new": "pirate_sword_guard",
+      "collection": "pirate_sword",
+      "role": "guard"
+    },
+    {
+      "old": "Pirata__Protecao_Cabo.001",
+      "new": "pirate_sword_knuckle_guard",
+      "collection": "pirate_sword",
+      "role": "knuckle_guard"
+    },
+    {
+      "old": "Madeira__Haste.001",
+      "new": "wood_spear_shaft",
+      "collection": "wood_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Madeira__Ponta.001",
+      "new": "wood_spear_tip",
+      "collection": "wood_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Pedra__Haste.001",
+      "new": "stone_spear_shaft",
+      "collection": "stone_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Pedra__Ponta.001",
+      "new": "stone_spear_tip",
+      "collection": "stone_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Pedra__Encaixe.001",
+      "new": "stone_spear_fittings",
+      "collection": "stone_spear",
+      "role": "fittings"
+    },
+    {
+      "old": "Ouro__Haste.001",
+      "new": "gold_spear_shaft",
+      "collection": "gold_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Ouro__Ponta.001",
+      "new": "gold_spear_tip",
+      "collection": "gold_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Ouro__Encaixe.002",
+      "new": "gold_spear_fittings",
+      "collection": "gold_spear",
+      "role": "fittings"
+    },
+    {
+      "old": "Diamante__Haste.001",
+      "new": "diamond_spear_shaft",
+      "collection": "diamond_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Diamante__Ponta.001",
+      "new": "diamond_spear_tip",
+      "collection": "diamond_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Diamante__Encaixe.002",
+      "new": "diamond_spear_fittings",
+      "collection": "diamond_spear",
+      "role": "fittings"
+    },
+    {
+      "old": "Ametista__Haste.001",
+      "new": "amethyst_spear_shaft",
+      "collection": "amethyst_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Ametista__Ponta.001",
+      "new": "amethyst_spear_tip",
+      "collection": "amethyst_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Ametista__Encaixe.001",
+      "new": "amethyst_spear_collar",
+      "collection": "amethyst_spear",
+      "role": "collar"
+    },
+    {
+      "old": "Ametista__Encaixe.002",
+      "new": "amethyst_spear_pommel",
+      "collection": "amethyst_spear",
+      "role": "pommel"
+    },
+    {
+      "old": "Reidite__Haste.001",
+      "new": "reidite_spear_shaft",
+      "collection": "reidite_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Reidite__Encaixe.001",
+      "new": "reidite_spear_fittings",
+      "collection": "reidite_spear",
+      "role": "fittings"
+    },
+    {
+      "old": "Cone",
+      "new": "reidite_spear_tip",
+      "collection": "reidite_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Dragao__Haste.001",
+      "new": "dragon_spear_shaft",
+      "collection": "dragon_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Dragao__Ponta.001",
+      "new": "dragon_spear_tip",
+      "collection": "dragon_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Dragao__Encaixe.001",
+      "new": "dragon_spear_collar",
+      "collection": "dragon_spear",
+      "role": "collar"
+    },
+    {
+      "old": "Lava__Haste.001",
+      "new": "lava_spear_shaft",
+      "collection": "lava_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Lava__Ponta_Central.001",
+      "new": "lava_spear_tip",
+      "collection": "lava_spear",
+      "role": "tip"
+    },
+    {
+      "old": "Lava__Espora_-1.001",
+      "new": "lava_spear_prong_left",
+      "collection": "lava_spear",
+      "role": "prong_left"
+    },
+    {
+      "old": "Lava__Espora_1.001",
+      "new": "lava_spear_prong_right",
+      "collection": "lava_spear",
+      "role": "prong_right"
+    },
+    {
+      "old": "Lava__Encaixe.001",
+      "new": "lava_spear_collar",
+      "collection": "lava_spear",
+      "role": "collar"
+    },
+    {
+      "old": "Caranguejo__Haste.001",
+      "new": "crab_spear_shaft",
+      "collection": "crab_spear",
+      "role": "shaft"
+    },
+    {
+      "old": "Caranguejo__Garra_Esquerda.001",
+      "new": "crab_spear_claw_left",
+      "collection": "crab_spear",
+      "role": "claw_left"
+    },
+    {
+      "old": "Caranguejo__Garra_Direita.001",
+      "new": "crab_spear_claw_right",
+      "collection": "crab_spear",
+      "role": "claw_right"
+    },
+    {
+      "old": "Caranguejo__Encaixe.001",
+      "new": "crab_spear_collar",
+      "collection": "crab_spear",
+      "role": "collar"
+    }
+  ],
+  "unused_controls": [
+    "stone_spear_unused_root_01",
+    "gold_spear_unused_root_01",
+    "diamond_spear_unused_root_01",
+    "amethyst_spear_unused_root_01",
+    "reidite_spear_unused_root_01",
+    "reidite_spear_unused_root_02",
+    "wood_sword_unused_root_01"
+  ]
+}

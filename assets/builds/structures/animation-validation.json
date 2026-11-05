@@ -1,0 +1,33 @@
+[
+  {
+    "model": "chest",
+    "open_angle_degrees": -105,
+    "lid_parts_follow_hinge": 5,
+    "body_independent": true
+  },
+  {
+    "model": "stone_extractor",
+    "rotor_parts": 3,
+    "rotation_axis": "local Z"
+  },
+  {
+    "model": "gold_extractor",
+    "rotor_parts": 3,
+    "rotation_axis": "local Z"
+  },
+  {
+    "model": "diamond_extractor",
+    "rotor_parts": 3,
+    "rotation_axis": "local Z"
+  },
+  {
+    "model": "amethyst_extractor",
+    "rotor_parts": 3,
+    "rotation_axis": "local Z"
+  },
+  {
+    "model": "reidite_extractor",
+    "rotor_parts": 3,
+    "rotation_axis": "local Z"
+  }
+]

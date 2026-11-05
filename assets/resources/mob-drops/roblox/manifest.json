@@ -1,0 +1,389 @@
+{
+  "format": "FBX",
+  "source": "mob-drops.blend (cópia em export-work/live-snapshot.blend)",
+  "combined_file": "mob-drops.fbx",
+  "texture": "mob_drops_palette.png",
+  "color_swatches": 65,
+  "mesh_count": 19,
+  "total_triangles": 5256,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "item deitado: no Roblox a face de cima aponta para +Y",
+  "individual_origin": "centro do item, base em Y=0",
+  "items": [
+    {
+      "item_id": "boar_fur",
+      "label": "Boar Fur",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.0365384817123413,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "boar_fur_body",
+        "boar_fur_hl",
+        "boar_fur_outline",
+        "boar_fur_shade"
+      ],
+      "file": "individual/boar_fur.fbx"
+    },
+    {
+      "item_id": "crab_claws",
+      "label": "Crab Claws",
+      "triangles": 195,
+      "vertices": 134,
+      "local_dimensions": [
+        1.0635430812835693,
+        0.9461538791656494,
+        0.11999999731779099
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "crab_claws_body",
+        "crab_claws_outline",
+        "crab_claws_part"
+      ],
+      "file": "individual/crab_claws.fbx"
+    },
+    {
+      "item_id": "crab_sticks",
+      "label": "Crab Sticks",
+      "triangles": 278,
+      "vertices": 196,
+      "local_dimensions": [
+        1.1695294380187988,
+        1.0736696124076843,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "crab_sticks_body",
+        "crab_sticks_outline",
+        "crab_sticks_part",
+        "crab_sticks_part_4"
+      ],
+      "file": "individual/crab_sticks.fbx"
+    },
+    {
+      "item_id": "dragon_heart",
+      "label": "Dragon Heart",
+      "triangles": 361,
+      "vertices": 254,
+      "local_dimensions": [
+        0.9261537194252014,
+        0.9707585871219635,
+        0.17000000178813934
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "dragon_heart_body",
+        "dragon_heart_hole",
+        "dragon_heart_outline",
+        "dragon_heart_shade",
+        "dragon_heart_tube"
+      ],
+      "file": "individual/dragon_heart.fbx"
+    },
+    {
+      "item_id": "fish",
+      "label": "Fish",
+      "triangles": 251,
+      "vertices": 174,
+      "local_dimensions": [
+        1.2472637295722961,
+        1.0833394527435303,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "fish_body",
+        "fish_eye",
+        "fish_outline",
+        "fish_part"
+      ],
+      "file": "individual/fish.fbx"
+    },
+    {
+      "item_id": "flame",
+      "label": "Flame",
+      "triangles": 242,
+      "vertices": 168,
+      "local_dimensions": [
+        1.043325424194336,
+        1.0915513634681702,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "flame_body",
+        "flame_core",
+        "flame_outline",
+        "flame_part",
+        "flame_ring"
+      ],
+      "file": "individual/flame.fbx"
+    },
+    {
+      "item_id": "hawk_feather",
+      "label": "Hawk Feather",
+      "triangles": 392,
+      "vertices": 288,
+      "local_dimensions": [
+        0.7608737647533417,
+        1.3821384906768799,
+        0.10999999940395355
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "hawk_feather_blade",
+        "hawk_feather_fluff",
+        "hawk_feather_outline",
+        "hawk_feather_stem",
+        "hawk_feather_tip"
+      ],
+      "file": "individual/hawk_feather.fbx"
+    },
+    {
+      "item_id": "kraken_skin",
+      "label": "Kraken Skin",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.0365384817123413,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "kraken_skin_body",
+        "kraken_skin_hl",
+        "kraken_skin_outline",
+        "kraken_skin_shade"
+      ],
+      "file": "individual/kraken_skin.fbx"
+    },
+    {
+      "item_id": "lava_heart",
+      "label": "Lava Heart",
+      "triangles": 355,
+      "vertices": 250,
+      "local_dimensions": [
+        0.9109278321266174,
+        1.000552922487259,
+        0.17000000178813934
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "lava_heart_body",
+        "lava_heart_hole",
+        "lava_heart_outline",
+        "lava_heart_shade",
+        "lava_heart_tube"
+      ],
+      "file": "individual/lava_heart.fbx"
+    },
+    {
+      "item_id": "mammoth_fur",
+      "label": "Mammoth Fur",
+      "triangles": 233,
+      "vertices": 162,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.1057692766189575,
+        0.11999999731779099
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "mammoth_fur_body",
+        "mammoth_fur_outline",
+        "mammoth_fur_strand"
+      ],
+      "file": "individual/mammoth_fur.fbx"
+    },
+    {
+      "item_id": "penguin_feather",
+      "label": "Penguin Feather",
+      "triangles": 364,
+      "vertices": 256,
+      "local_dimensions": [
+        0.7761971950531006,
+        1.1393840909004211,
+        0.09999999590218067
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "penguin_feather_blade",
+        "penguin_feather_fluff",
+        "penguin_feather_outline",
+        "penguin_feather_rachis",
+        "penguin_feather_rim"
+      ],
+      "file": "individual/penguin_feather.fbx"
+    },
+    {
+      "item_id": "piranha_scales",
+      "label": "Piranha Scales",
+      "triangles": 486,
+      "vertices": 348,
+      "local_dimensions": [
+        1.0909360647201538,
+        1.1480768918991089,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "piranha_scales_body",
+        "piranha_scales_dot",
+        "piranha_scales_hex",
+        "piranha_scales_outline"
+      ],
+      "file": "individual/piranha_scales.fbx"
+    },
+    {
+      "item_id": "rabbit_fur",
+      "label": "Rabbit Fur",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.0365384817123413,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "rabbit_fur_body",
+        "rabbit_fur_hl",
+        "rabbit_fur_outline",
+        "rabbit_fur_shade"
+      ],
+      "file": "individual/rabbit_fur.fbx"
+    },
+    {
+      "item_id": "raw_meat",
+      "label": "Raw Meat",
+      "triangles": 139,
+      "vertices": 98,
+      "local_dimensions": [
+        0.875,
+        0.8942307829856873,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "raw_meat_body",
+        "raw_meat_bone",
+        "raw_meat_outline",
+        "raw_meat_part"
+      ],
+      "file": "individual/raw_meat.fbx"
+    },
+    {
+      "item_id": "sandworm_juice",
+      "label": "Sandworm Juice",
+      "triangles": 276,
+      "vertices": 192,
+      "local_dimensions": [
+        1.1618950963020325,
+        1.1876887679100037,
+        0.14732268452644348
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "sandworm_juice_body",
+        "sandworm_juice_outline",
+        "sandworm_juice_part",
+        "sandworm_juice_part_2",
+        "sandworm_juice_part_3",
+        "sandworm_juice_part_4"
+      ],
+      "file": "individual/sandworm_juice.fbx"
+    },
+    {
+      "item_id": "thread",
+      "label": "Thread",
+      "triangles": 372,
+      "vertices": 256,
+      "local_dimensions": [
+        1.1796480417251587,
+        0.9272478818893433,
+        0.18000000715255737
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "thread_body",
+        "thread_hole",
+        "thread_outline",
+        "thread_part",
+        "thread_part_2"
+      ],
+      "file": "individual/thread.fbx"
+    },
+    {
+      "item_id": "vulture_feather",
+      "label": "Vulture Feather",
+      "triangles": 302,
+      "vertices": 220,
+      "local_dimensions": [
+        0.95521080493927,
+        1.3029260039329529,
+        0.12999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "vulture_feather_blade",
+        "vulture_feather_outline",
+        "vulture_feather_rachis",
+        "vulture_feather_rim",
+        "vulture_feather_stem",
+        "vulture_feather_stripe"
+      ],
+      "file": "individual/vulture_feather.fbx"
+    },
+    {
+      "item_id": "winter_fur",
+      "label": "Winter Fur",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.0365384817123413,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "winter_fur_body",
+        "winter_fur_hl",
+        "winter_fur_outline",
+        "winter_fur_shade"
+      ],
+      "file": "individual/winter_fur.fbx"
+    },
+    {
+      "item_id": "wolf_fur",
+      "label": "Wolf Fur",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.8846153616905212,
+        1.0365384817123413,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "wolf_fur_body",
+        "wolf_fur_hl",
+        "wolf_fur_outline",
+        "wolf_fur_shade"
+      ],
+      "file": "individual/wolf_fur.fbx"
+    }
+  ]
+}

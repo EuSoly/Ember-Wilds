@@ -1,10 +1,11 @@
 --!strict
 -- Desliga partes da interface padrão do Roblox que o jogo substitui:
 -- a mochila (temos hotbar e inventário próprios) e a barra de vida (temos os anéis).
--- Também desliga o botão "Reset Character" do menu do Roblox: toda morte passa
--- pela morte do jogo (DeathService); não é um jogo de se matar.
+-- O botão "Reset Character" do menu do Roblox passa pelo DeathService do jogo.
 -- O chat padrão continua ligado.
 local StarterGui = game:GetService("StarterGui")
+
+local Net = require(script.Parent.Parent:WaitForChild("Net"))
 
 local DISABLED: { Enum.CoreGuiType } = { Enum.CoreGuiType.Backpack, Enum.CoreGuiType.Health }
 local MAX_ATTEMPTS = 10
@@ -30,8 +31,12 @@ function CoreGuiController.Start(_self)
 				StarterGui:SetCoreGuiEnabled(coreGuiType, false)
 			end)
 		end
+		local resetEvent = Instance.new("BindableEvent")
+		resetEvent.Event:Connect(function()
+			Net.RequestReset.Fire()
+		end)
 		retry(function()
-			StarterGui:SetCore("ResetButtonCallback", false)
+			StarterGui:SetCore("ResetButtonCallback", resetEvent)
 		end)
 	end)
 end

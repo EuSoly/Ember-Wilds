@@ -1,0 +1,5099 @@
+{
+  "category": "crate",
+  "checkedAt": "2026-11-05T01:48:17.273Z",
+  "source": "https://starve.io/",
+  "labelSource": "https://starve.io/changelog.html",
+  "checkedRange": [
+    0,
+    250
+  ],
+  "completeness": "All accessible day/night images in checked numeric range; not verified against the live cosmetics inventory.",
+  "itemCount": 115,
+  "imageCount": 230,
+  "items": [
+    {
+      "id": 0,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 0,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate0.png",
+          "status": 200,
+          "file": "images/day-crate0.png",
+          "width": 162,
+          "height": 162,
+          "bytes": 842,
+          "sha256": "14958c7f0a4225394ba1ee8650affd73430d1b5dd3a4c91ebfefe397539e1cd2"
+        },
+        {
+          "id": 0,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate0.png",
+          "status": 200,
+          "file": "images/night-crate0.png",
+          "width": 162,
+          "height": 162,
+          "bytes": 792,
+          "sha256": "0c28cf7033114a3e6da21cd4ccdd357a65fc16a43e05d9d9c776746ad91abadc"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 1,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate1.png",
+          "status": 200,
+          "file": "images/day-crate1.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 773,
+          "sha256": "66ef58c4b1b981d14d05e2e625b91cde9b923d60e2dd694c0efc322b3541c9b3"
+        },
+        {
+          "id": 1,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate1.png",
+          "status": 200,
+          "file": "images/night-crate1.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 622,
+          "sha256": "35bfcf78ddefd3e82ec554300a4d57d12462a586c4f8bfcfee3d70601a90f74a"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 2,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate2.png",
+          "status": 200,
+          "file": "images/day-crate2.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1379,
+          "sha256": "4a08724d55957c69803e77d0eb11effbde941138ad8ff41d5fb885b4be02690c"
+        },
+        {
+          "id": 2,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate2.png",
+          "status": 200,
+          "file": "images/night-crate2.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1139,
+          "sha256": "147fe2df87aa6da12d88b58ebc228ac33729e30a36c8a4e44b511a84d7d34149"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 3,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate3.png",
+          "status": 200,
+          "file": "images/day-crate3.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 921,
+          "sha256": "efb8e59a426836e320b2fc9961f0d910de6dcd765717d670ba638376edf881da"
+        },
+        {
+          "id": 3,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate3.png",
+          "status": 200,
+          "file": "images/night-crate3.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 769,
+          "sha256": "6dc20c4317fc37f053106de3b81f84793ade5d5dec132a4200afd34990061cba"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 4,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate4.png",
+          "status": 200,
+          "file": "images/day-crate4.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2621,
+          "sha256": "3a58744d720b4a50c1f053f8473c7ade0d53616dca7faf3fb63806a375fc24b1"
+        },
+        {
+          "id": 4,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate4.png",
+          "status": 200,
+          "file": "images/night-crate4.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2005,
+          "sha256": "85649d868d2d500496954a1b139ac13765489c858ec4fcff84a1963bdd606cd0"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 5,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate5.png",
+          "status": 200,
+          "file": "images/day-crate5.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1266,
+          "sha256": "1ad97d01f9a58c1efe65b8f528e4f7a44856e0b7e68aa6c31318e985990fb79c"
+        },
+        {
+          "id": 5,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate5.png",
+          "status": 200,
+          "file": "images/night-crate5.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1022,
+          "sha256": "3929bd1f04609b4cd641b77195e551711687223ff64739c0edc5e7b58bc5d9d1"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 6,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate6.png",
+          "status": 200,
+          "file": "images/day-crate6.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2417,
+          "sha256": "205a259092c3b2b3c00162d252f704906672cff15ac6c0696e07e7eac12346ef"
+        },
+        {
+          "id": 6,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate6.png",
+          "status": 200,
+          "file": "images/night-crate6.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1695,
+          "sha256": "eb1ef7997d7a262c5ef52442120f7a0ff78a6f4d2f58d2ba4f5278a205db0c0c"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 7,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate7.png",
+          "status": 200,
+          "file": "images/day-crate7.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2011,
+          "sha256": "dec46d326f333df5c08340c4f42d1d7a0d02d5025a8a9ebd5cc7227f55b5cec0"
+        },
+        {
+          "id": 7,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate7.png",
+          "status": 200,
+          "file": "images/night-crate7.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1416,
+          "sha256": "2e54bb9a00bda803f1bb7d6c382bce67800b511e7564cf17bd83717bd53acbd5"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 8,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate8.png",
+          "status": 200,
+          "file": "images/day-crate8.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2037,
+          "sha256": "ace27bee4406b7be6eb5f4c116fb4be1b888ffa9e669c8fd3c786e234d872dea"
+        },
+        {
+          "id": 8,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate8.png",
+          "status": 200,
+          "file": "images/night-crate8.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1477,
+          "sha256": "5b4e6e12da1c5658ec036bbc9d6a95e4b21488219e3ae57b1d9fa9cb263e0f28"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 9,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate9.png",
+          "status": 200,
+          "file": "images/day-crate9.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1938,
+          "sha256": "0aee9fffd306ce2d0836dff85a9279db74e93bdad7418cc47a55bcd47ab6cb2f"
+        },
+        {
+          "id": 9,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate9.png",
+          "status": 200,
+          "file": "images/night-crate9.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1230,
+          "sha256": "0ed941feb6b068010e47efab69c1d91e7a26c7482fe8323b32452aa306688754"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 10,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate10.png",
+          "status": 200,
+          "file": "images/day-crate10.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1888,
+          "sha256": "5e0e37330d34eebacb2d414a91de64ab262c5afb2574220123b15b2490093195"
+        },
+        {
+          "id": 10,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate10.png",
+          "status": 200,
+          "file": "images/night-crate10.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1403,
+          "sha256": "a53b660097e5f4a196811801fc102b1b2edafc2695fb2ac301f02927924a13da"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 11,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate11.png",
+          "status": 200,
+          "file": "images/day-crate11.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1897,
+          "sha256": "2b4ac192950bcb6b7d98f7a9e3a9b07202188b1fb71e708af100d70bea707807"
+        },
+        {
+          "id": 11,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate11.png",
+          "status": 200,
+          "file": "images/night-crate11.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1385,
+          "sha256": "d4c0fc1fe09710111ffd31bb4945a1ac164f7f4d303e5e50c2b38c3946d56044"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 12,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate12.png",
+          "status": 200,
+          "file": "images/day-crate12.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 956,
+          "sha256": "bd2de147d6b49b39a3d7ee3cfa319e68481650ea95d92a192cb4d904be1171be"
+        },
+        {
+          "id": 12,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate12.png",
+          "status": 200,
+          "file": "images/night-crate12.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 835,
+          "sha256": "d1ee3fea109e4bbf3c1a1121cb9c2b18e8cfa93c146ebb9393fb10ebd891bd5a"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 13,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate13.png",
+          "status": 200,
+          "file": "images/day-crate13.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1163,
+          "sha256": "80e5676982182e22ab656acfa533dc0eb7d611b72a0898db58e2ce4f06f8547f"
+        },
+        {
+          "id": 13,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate13.png",
+          "status": 200,
+          "file": "images/night-crate13.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 954,
+          "sha256": "839481bb07ec708bbe3c3e19125d5ec6d651a54713a5d06411598daa3cd5ac54"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "sourceLabel": "Starve.io Dead Box",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 14,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate14.png",
+          "status": 200,
+          "file": "images/day-crate14.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1216,
+          "sha256": "112d9cdda5dc5591cbdcb7d2050d39439f26053c0559875a1e891c8d792f55ca"
+        },
+        {
+          "id": 14,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate14.png",
+          "status": 200,
+          "file": "images/night-crate14.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 993,
+          "sha256": "6225d76d13a496497b5735b4b1da3c1447660f8cb5f6436b8afb14b2ad7f52a1"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 15,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate15.png",
+          "status": 200,
+          "file": "images/day-crate15.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1458,
+          "sha256": "9c494c58718c86d10410c326aa1cf642b2a4a9ff5bb958326484db69f33a09ae"
+        },
+        {
+          "id": 15,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate15.png",
+          "status": 200,
+          "file": "images/night-crate15.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1378,
+          "sha256": "0b57cd1babdca45c5d7921b35feb6d1d35da62071597c4f3375761922dcab658"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 16,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate16.png",
+          "status": 200,
+          "file": "images/day-crate16.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1535,
+          "sha256": "0c485ccccf48cbaa2432fa3f69eae5394b9c0820e3e5efc515555639368eb41c"
+        },
+        {
+          "id": 16,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate16.png",
+          "status": 200,
+          "file": "images/night-crate16.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1267,
+          "sha256": "c80a01192922bbc24225827dab5d4a2d9fd2fe5838759f85eb696bf51bb1c0c6"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 17,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate17.png",
+          "status": 200,
+          "file": "images/day-crate17.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1354,
+          "sha256": "1de6365a1e3dd76db2fc989f3b911d4bcd102b9fff79c7bd420d48ef982b64a1"
+        },
+        {
+          "id": 17,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate17.png",
+          "status": 200,
+          "file": "images/night-crate17.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1287,
+          "sha256": "db329f38e1514592861e8f6ea02651a420d2ad99a8e51499a24c3a1dd34ad08a"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 18,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate18.png",
+          "status": 200,
+          "file": "images/day-crate18.png",
+          "width": 202,
+          "height": 140,
+          "bytes": 4182,
+          "sha256": "8701e767967912ba9eab24f0ad8a5456e7e760625895a1f1077c9b5e443da4fe"
+        },
+        {
+          "id": 18,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate18.png",
+          "status": 200,
+          "file": "images/night-crate18.png",
+          "width": 202,
+          "height": 140,
+          "bytes": 3516,
+          "sha256": "80b3245990aee5aeb6135e582472bc66b706e1f08eea77c8dbfbada1394eef83"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 19,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate19.png",
+          "status": 200,
+          "file": "images/day-crate19.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 3094,
+          "sha256": "4d000834c17cdeaabea89348b7c08521ac1e59754e27a9d428f53e38b0dff0aa"
+        },
+        {
+          "id": 19,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate19.png",
+          "status": 200,
+          "file": "images/night-crate19.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2191,
+          "sha256": "bcfb91dd81d25ecac8088204e95dafd032268ac9590a13b84241bc95b1b87cc5"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 20,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate20.png",
+          "status": 200,
+          "file": "images/day-crate20.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 3258,
+          "sha256": "ddae9f47082874a8e4b4e50abda69b26ae95c4ae178aabff32e13c41d58aa7d0"
+        },
+        {
+          "id": 20,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate20.png",
+          "status": 200,
+          "file": "images/night-crate20.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2648,
+          "sha256": "a85f9ab465f117c435a34b691954bd3aad3937856fb9fa111d2570e0d1c752b6"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 21,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate21.png",
+          "status": 200,
+          "file": "images/day-crate21.png",
+          "width": 202,
+          "height": 140,
+          "bytes": 3388,
+          "sha256": "6fad312f2a26d6d3e8fa68614b64dcaf5d9cf7468266b0c164236ac282209da8"
+        },
+        {
+          "id": 21,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate21.png",
+          "status": 200,
+          "file": "images/night-crate21.png",
+          "width": 202,
+          "height": 140,
+          "bytes": 3140,
+          "sha256": "0b2cd384a3759d070a62256255efd86bc327c8865d84889ee84691c04d955b8d"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 22,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate22.png",
+          "status": 200,
+          "file": "images/day-crate22.png",
+          "width": 142,
+          "height": 216,
+          "bytes": 2773,
+          "sha256": "aa88757f6d0e02e8cd51ef4f0c5156928eee29e3c9c54cab340d08174eee5dc8"
+        },
+        {
+          "id": 22,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate22.png",
+          "status": 200,
+          "file": "images/night-crate22.png",
+          "width": 142,
+          "height": 216,
+          "bytes": 3040,
+          "sha256": "714d1a93d3eb949990524da79cdb96d2dba92dcebe53bc73e516d42dbb5be7ff"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 23,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate23.png",
+          "status": 200,
+          "file": "images/day-crate23.png",
+          "width": 192,
+          "height": 182,
+          "bytes": 3178,
+          "sha256": "02321a9ac64bbc3b94569c73b0cfd34caad95c2f8ddd278ef46dd5de70a6e655"
+        },
+        {
+          "id": 23,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate23.png",
+          "status": 200,
+          "file": "images/night-crate23.png",
+          "width": 192,
+          "height": 182,
+          "bytes": 2791,
+          "sha256": "86e9ffa6a69e202703542028acd1dd2cd882efcace098f8c228c4e79f9b7ecd1"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "sourceLabel": "Starve.io Loot Box",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 24,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate24.png",
+          "status": 200,
+          "file": "images/day-crate24.png",
+          "width": 192,
+          "height": 182,
+          "bytes": 6146,
+          "sha256": "80938c67686c0d73e3b1b5d78f7c84006de9696721235e69073376d5d36914cf"
+        },
+        {
+          "id": 24,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate24.png",
+          "status": 200,
+          "file": "images/night-crate24.png",
+          "width": 192,
+          "height": 182,
+          "bytes": 5642,
+          "sha256": "19936ed712f1dcb19e6b7f4336503126cee474c854ba822afc6ff7b230f45815"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "sourceLabel": "Starve.io Dead Box",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 25,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate25.png",
+          "status": 200,
+          "file": "images/day-crate25.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 6414,
+          "sha256": "647bb183dfd66a26a53944379c1fa877c819a152c929af7b71daa9afa649d5af"
+        },
+        {
+          "id": 25,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate25.png",
+          "status": 200,
+          "file": "images/night-crate25.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 6129,
+          "sha256": "42bd7775931375ad5da00c1c1d7ccc491cb09869efa3e03046db25ddd1da4bf9"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 26,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate26.png",
+          "status": 200,
+          "file": "images/day-crate26.png",
+          "width": 170,
+          "height": 178,
+          "bytes": 2902,
+          "sha256": "21fd4af47220a3ca281649945c9400244999c2f1f4ca0d1e722c68555c8f93c1"
+        },
+        {
+          "id": 26,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate26.png",
+          "status": 200,
+          "file": "images/night-crate26.png",
+          "width": 170,
+          "height": 178,
+          "bytes": 3527,
+          "sha256": "55fe7ca67b76a1d1a995e84bf0cb2ed2dee75f521bcba6b1d97d995e3fdda3eb"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 27,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate27.png",
+          "status": 200,
+          "file": "images/day-crate27.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 10193,
+          "sha256": "ad374837960f9c3314bea1d43d5e0357a1364189330cd8ef99bcc91f6beca21d"
+        },
+        {
+          "id": 27,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate27.png",
+          "status": 200,
+          "file": "images/night-crate27.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 10765,
+          "sha256": "097bbeefb51ade833ca78255cd3d396420b1e2a9fde855bacc7ff6c927ad3ed6"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "sourceLabel": "Roof",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 28,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate28.png",
+          "status": 200,
+          "file": "images/day-crate28.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 4053,
+          "sha256": "a1fe7291df0a0ce4001591cda7bd09fdc1082f66f619790ac7e56212da4160ea"
+        },
+        {
+          "id": 28,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate28.png",
+          "status": 200,
+          "file": "images/night-crate28.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 3927,
+          "sha256": "c77f9011ad96f98d69c6d87a0571231b6649a15635875dbc73a4b610b9302f33"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "sourceLabel": "Starve.io Loot Box",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 29,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate29.png",
+          "status": 200,
+          "file": "images/day-crate29.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 3992,
+          "sha256": "39f376b8493596c7a4b2666ad23a428f55d7b92b70b8e5ea039f2450abdfe176"
+        },
+        {
+          "id": 29,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate29.png",
+          "status": 200,
+          "file": "images/night-crate29.png",
+          "width": 242,
+          "height": 190,
+          "bytes": 3962,
+          "sha256": "71f866ca683b78bde441ce46fd0f93ff01e5eb985163f13e77e5937706380365"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 30,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate30.png",
+          "status": 200,
+          "file": "images/day-crate30.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1722,
+          "sha256": "0be89354da6de5b78f2d50519b5eeba7035203e97477c1d8c29e71de71f098d9"
+        },
+        {
+          "id": 30,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate30.png",
+          "status": 200,
+          "file": "images/night-crate30.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 1869,
+          "sha256": "b473d681477e2f1194a7ee0dcfb3c6bbc72a648d53f0c3b1773921d01a545153"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 31,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate31.png",
+          "status": 200,
+          "file": "images/day-crate31.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2470,
+          "sha256": "53dd6bf17e3a2860e63107111541ae4766a7e52301ed98f4fb50c416e68a1c9b"
+        },
+        {
+          "id": 31,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate31.png",
+          "status": 200,
+          "file": "images/night-crate31.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 2261,
+          "sha256": "33ecae6696a1eedf1ad040f36904f80084940f76fb8eb95ef03690be11e397ab"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 32,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate32.png",
+          "status": 200,
+          "file": "images/day-crate32.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 8174,
+          "sha256": "2ca5b5d9aa6aa69ec05ac9816fc99e43dfe63271308a761d410b79d9f2c38a80"
+        },
+        {
+          "id": 32,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate32.png",
+          "status": 200,
+          "file": "images/night-crate32.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 9546,
+          "sha256": "85a3f6775a2ed6ed297891d9152815d19dcfeb063508e623ee9bc5bae7de28fe"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 33,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate33.png",
+          "status": 200,
+          "file": "images/day-crate33.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 5849,
+          "sha256": "7b010c12cce96ea1ee44df433ba042a8bd014a21b79915b7c522a4339a7da92f"
+        },
+        {
+          "id": 33,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate33.png",
+          "status": 200,
+          "file": "images/night-crate33.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 5197,
+          "sha256": "38c9d015e909d55871ccad38a59740bd5939c7e0f23aa2acdd5feae3cd7c4143"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 34,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate34.png",
+          "status": 200,
+          "file": "images/day-crate34.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 6127,
+          "sha256": "1d545f5693d271624ac29a0e85efbd3898b1349ccc16008a8aaaf6d12c23c97f"
+        },
+        {
+          "id": 34,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate34.png",
+          "status": 200,
+          "file": "images/night-crate34.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 5329,
+          "sha256": "6b4afd23932d6c8f6d2b56c118938305b85fdce7de178a6f1ead2f5f72d7b10a"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 35,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate35.png",
+          "status": 200,
+          "file": "images/day-crate35.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4339,
+          "sha256": "5ad9d9ebd7a8802c3d2014f670f7d8806fcdb0b17674bea3da2fe6b032199d4a"
+        },
+        {
+          "id": 35,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate35.png",
+          "status": 200,
+          "file": "images/night-crate35.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4336,
+          "sha256": "46013dcea13bd09a29b88f1f19475cfa7deb3ad56fff0edc2138846665ff615e"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 36,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate36.png",
+          "status": 200,
+          "file": "images/day-crate36.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 2593,
+          "sha256": "5f230bcf2ff586ee2e3af92c29a991022123d2fb0c8f9980d9bc9551b8633fb5"
+        },
+        {
+          "id": 36,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate36.png",
+          "status": 200,
+          "file": "images/night-crate36.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 2565,
+          "sha256": "fd4fa041c286dc54cde2a514a21daac2aa1dd4de07dd4235a48d141bc84739a1"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "sourceLabel": "Starve.io Skin",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 37,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate37.png",
+          "status": 200,
+          "file": "images/day-crate37.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4596,
+          "sha256": "f68543b5c3c66f541d34d96103260fefada8400a8c9dfed5bb7e3b0a95306d4f"
+        },
+        {
+          "id": 37,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate37.png",
+          "status": 200,
+          "file": "images/night-crate37.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4594,
+          "sha256": "b0226bd65de5837a9ba1687f3249c048ee8ad2d86b8acfdbeb19fea11c171a17"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 38,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate38.png",
+          "status": 200,
+          "file": "images/day-crate38.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 3958,
+          "sha256": "8238dc1010ddc90f315b0ce054b75e5e0e3db62b14353ccdddfa7061714b02ac"
+        },
+        {
+          "id": 38,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate38.png",
+          "status": 200,
+          "file": "images/night-crate38.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4010,
+          "sha256": "83d90a9e6adfaa595fba26a6efc264870b78b0b10a316e74d1d1df8a9c404d00"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 39,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate39.png",
+          "status": 200,
+          "file": "images/day-crate39.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4866,
+          "sha256": "12d324761dd77699b55ef130eae285a93aedef1d0e5b99ccb36d1084ae3a618f"
+        },
+        {
+          "id": 39,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate39.png",
+          "status": 200,
+          "file": "images/night-crate39.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 3799,
+          "sha256": "2db40ab5b050819a8b0dfd1de0b0aaf241d02033aed3e2f1fc43003a96669afc"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 40,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate40.png",
+          "status": 200,
+          "file": "images/day-crate40.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 8382,
+          "sha256": "f1940e921615445234a130cafdc42681ad148b390e50acc6ee60c21c40cdefb9"
+        },
+        {
+          "id": 40,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate40.png",
+          "status": 200,
+          "file": "images/night-crate40.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 8190,
+          "sha256": "b1316942c5a146c54724b342c9b265c0d7afd69a695175fb1584fa39b2fd97ab"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 41,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate41.png",
+          "status": 200,
+          "file": "images/day-crate41.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 6489,
+          "sha256": "2b947303c3cb52ed4a271dbd3762362dd048cfa0bf02cb016adcffb272db830b"
+        },
+        {
+          "id": 41,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate41.png",
+          "status": 200,
+          "file": "images/night-crate41.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 6591,
+          "sha256": "6797be52b3cb4e48d6ef82b0c449c36cb1644faad90775c9e66cdbd576fd3007"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 42,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate42.png",
+          "status": 200,
+          "file": "images/day-crate42.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 6873,
+          "sha256": "b7a12e1db6dc9e271c433b617a3dfacad2901a15cf97014bf6a829cad3ab759d"
+        },
+        {
+          "id": 42,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate42.png",
+          "status": 200,
+          "file": "images/night-crate42.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 4960,
+          "sha256": "45d91b79d0ee170d366cf93d1d997496b189aabdc954dea7d485a14673600b87"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 43,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate43.png",
+          "status": 200,
+          "file": "images/day-crate43.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 3537,
+          "sha256": "b8bd93faa08242fd4f5864360bcecb0aac5e8169261d955d3b747813b56eeb81"
+        },
+        {
+          "id": 43,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate43.png",
+          "status": 200,
+          "file": "images/night-crate43.png",
+          "width": 193,
+          "height": 193,
+          "bytes": 3503,
+          "sha256": "fa91980a65838cc6f71b104ed90dde65a7bf4096e40d22ac1404e5b7bf67e046"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 44,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate44.png",
+          "status": 200,
+          "file": "images/day-crate44.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 9661,
+          "sha256": "90617e1cf7cb07b5d6fce97a854380a8402c0512fcf1518123b94e844a21b2c7"
+        },
+        {
+          "id": 44,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate44.png",
+          "status": 200,
+          "file": "images/night-crate44.png",
+          "width": 148,
+          "height": 140,
+          "bytes": 9187,
+          "sha256": "fe0c9d1a9155b2d029a7fd79c290b9fe24826730f84437db9fa26542a0dc9535"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 45,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate45.png",
+          "status": 200,
+          "file": "images/day-crate45.png",
+          "width": 166,
+          "height": 164,
+          "bytes": 10461,
+          "sha256": "4a897e7165753f97d8b79aa8429edb7a1510c2e661863fa0073f011f5d234e30"
+        },
+        {
+          "id": 45,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate45.png",
+          "status": 200,
+          "file": "images/night-crate45.png",
+          "width": 166,
+          "height": 164,
+          "bytes": 9635,
+          "sha256": "c96799011deb18320a2f480212378be489efcff569054c25dbd17997e3e8093a"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 46,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate46.png",
+          "status": 200,
+          "file": "images/day-crate46.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 10712,
+          "sha256": "a9a92a773092dff20f81378c0e0a69c46b501abc4a7ea718d522c8fb0836fb87"
+        },
+        {
+          "id": 46,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate46.png",
+          "status": 200,
+          "file": "images/night-crate46.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 9838,
+          "sha256": "1b5619bdf2c2c052503b811d507312b89b9c2087d13c7a36a4528298615ff2dc"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 47,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate47.png",
+          "status": 200,
+          "file": "images/day-crate47.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 5960,
+          "sha256": "0e5059181b5377b3d63d1557af68e74b5105c20025cf4f742852e739dcd95bfa"
+        },
+        {
+          "id": 47,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate47.png",
+          "status": 200,
+          "file": "images/night-crate47.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 5465,
+          "sha256": "285ceda337e2699d299f48aea35d90e5f67070356b81a0815294790e92ea96c3"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 48,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate48.png",
+          "status": 200,
+          "file": "images/day-crate48.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 8277,
+          "sha256": "fb22b933e3efc94a10aac75f3d7f9ff192334890b6958909d61092d09a58c0d4"
+        },
+        {
+          "id": 48,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate48.png",
+          "status": 200,
+          "file": "images/night-crate48.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 8441,
+          "sha256": "b77cebc77f4a6ed80fb190ed1d31ee22039dc9b81f20e043a09cf06d007d29a3"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 49,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate49.png",
+          "status": 200,
+          "file": "images/day-crate49.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 8800,
+          "sha256": "907f45cd5ca30cf741067587d65936752139cd85a53bea84212de6ca19bcdf0a"
+        },
+        {
+          "id": 49,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate49.png",
+          "status": 200,
+          "file": "images/night-crate49.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 6915,
+          "sha256": "b404debbe20bf6cf3e545d56d997f2b38eacaae7ef17f8b09640d5fc68198f3f"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "sourceLabel": "Starve.io Skin",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 50,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate50.png",
+          "status": 200,
+          "file": "images/day-crate50.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 9106,
+          "sha256": "ed19e62c7ad224c7244f3a364e5c39579193d6be6f9f4126b2345ac0eba22824"
+        },
+        {
+          "id": 50,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate50.png",
+          "status": 200,
+          "file": "images/night-crate50.png",
+          "width": 186,
+          "height": 188,
+          "bytes": 8699,
+          "sha256": "5db6886f22ed8b3abafb5ce6280abfc8ef125d8e8f84fa7caa18568d95473e31"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 51,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate51.png",
+          "status": 200,
+          "file": "images/day-crate51.png",
+          "width": 198,
+          "height": 188,
+          "bytes": 13625,
+          "sha256": "9a96bb1127830d3c51436b6ad2b4b1b905a97a65252a394dfa7d6696612f4900"
+        },
+        {
+          "id": 51,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate51.png",
+          "status": 200,
+          "file": "images/night-crate51.png",
+          "width": 198,
+          "height": 188,
+          "bytes": 12341,
+          "sha256": "981e734320a3e78a9213bf86264577db1ed14d11afef4fe44b32a7baf36d52d5"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 52,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate52.png",
+          "status": 200,
+          "file": "images/day-crate52.png",
+          "width": 224,
+          "height": 212,
+          "bytes": 20606,
+          "sha256": "1fa2a4947b985434a0861974b020d920754ae545c331a072efc4068424523c59"
+        },
+        {
+          "id": 52,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate52.png",
+          "status": 200,
+          "file": "images/night-crate52.png",
+          "width": 224,
+          "height": 212,
+          "bytes": 20415,
+          "sha256": "af87817599fbfb895bf8b7381854e919a92f49e7df9e13ff54f1439853fd13aa"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 53,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate53.png",
+          "status": 200,
+          "file": "images/day-crate53.png",
+          "width": 244,
+          "height": 236,
+          "bytes": 13660,
+          "sha256": "2b65265bb5992123415287ade0367e2e2582b10c6b6791212688fe5160944283"
+        },
+        {
+          "id": 53,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate53.png",
+          "status": 200,
+          "file": "images/night-crate53.png",
+          "width": 244,
+          "height": 236,
+          "bytes": 11358,
+          "sha256": "0a75d6677aecd0f7dbe65ac54b6926743aa50df2f783358c6be3983654d90c0a"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 54,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate54.png",
+          "status": 200,
+          "file": "images/day-crate54.png",
+          "width": 200,
+          "height": 172,
+          "bytes": 11478,
+          "sha256": "ce0d272085c88b53c21e2337141c3277200d215b4cd10dd6a12791bb57218793"
+        },
+        {
+          "id": 54,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate54.png",
+          "status": 200,
+          "file": "images/night-crate54.png",
+          "width": 200,
+          "height": 172,
+          "bytes": 10518,
+          "sha256": "60fc747cb3755233aab5b926d5adf6b9aa6c19652243aed079d4899bab999db6"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 55,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate55.png",
+          "status": 200,
+          "file": "images/day-crate55.png",
+          "width": 206,
+          "height": 216,
+          "bytes": 12445,
+          "sha256": "24a3cf87cff94e1bda1c1086fe379bc67000ce89db778afe8e858873d20c3328"
+        },
+        {
+          "id": 55,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate55.png",
+          "status": 200,
+          "file": "images/night-crate55.png",
+          "width": 206,
+          "height": 216,
+          "bytes": 12402,
+          "sha256": "c6999e5ab96eaf27fbd3fb202d970ac5fb826a1942938005c4d25d25baceeefa"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 56,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate56.png",
+          "status": 200,
+          "file": "images/day-crate56.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 16435,
+          "sha256": "75f5f2aa7dc3a75c6f3896d4fdbf4cc388fa8b0033874812f0845a71588a0303"
+        },
+        {
+          "id": 56,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate56.png",
+          "status": 200,
+          "file": "images/night-crate56.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 13482,
+          "sha256": "7d216cf8e3b9ff1ca554fe2c9069a1e2962d0f305eb9d330ad60c75c2caf1fcb"
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 57,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate57.png",
+          "status": 200,
+          "file": "images/day-crate57.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 23188,
+          "sha256": "13a53fbf56f6d3ccbad5edd98660dc23efd77b27ea312d7363795f28813bfd98"
+        },
+        {
+          "id": 57,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate57.png",
+          "status": 200,
+          "file": "images/night-crate57.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 21108,
+          "sha256": "57fd3eb721be9709283ddabb9370867cbab40acd28e21275cf378d6e9060ff50"
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 58,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate58.png",
+          "status": 200,
+          "file": "images/day-crate58.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 19175,
+          "sha256": "99d699d3ac1201722c8d6f00d500ec5b11a371431f2611014e90e2a88aefbb66"
+        },
+        {
+          "id": 58,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate58.png",
+          "status": 200,
+          "file": "images/night-crate58.png",
+          "width": 262,
+          "height": 216,
+          "bytes": 20357,
+          "sha256": "da0fc26360d838a3f122e006c45375f8635bb5edbc41e949cbde442035089f3e"
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 59,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate59.png",
+          "status": 200,
+          "file": "images/day-crate59.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 14889,
+          "sha256": "b881f572a6c2429b84dae1719d474ab722ec5188227084d8caa1b34acc77c17e"
+        },
+        {
+          "id": 59,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate59.png",
+          "status": 200,
+          "file": "images/night-crate59.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 13718,
+          "sha256": "51d2980228605692ec6d23e27719bc6e6a26e60f65ab5c7c42106f2958ad931b"
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 60,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate60.png",
+          "status": 200,
+          "file": "images/day-crate60.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 24978,
+          "sha256": "3647f46f38ddbf36bd6c41774f4f12798af88ed4898fabd968b87502ebcb155b"
+        },
+        {
+          "id": 60,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate60.png",
+          "status": 200,
+          "file": "images/night-crate60.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 25210,
+          "sha256": "a1d55b752f1e835237c1df7be8ac9e31a5a556ab2d3db00893e668b6903ced23"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 61,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate61.png",
+          "status": 200,
+          "file": "images/day-crate61.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10493,
+          "sha256": "967390dbac790c1ced29a4b299573d2e5170f0869eedff9191d3cce6b3a29115"
+        },
+        {
+          "id": 61,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate61.png",
+          "status": 200,
+          "file": "images/night-crate61.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10280,
+          "sha256": "3b6c666984e5d2e2ab822bdba89f5ced33244c4e65322a61c81b97e4b372f3f6"
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 62,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate62.png",
+          "status": 200,
+          "file": "images/day-crate62.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10363,
+          "sha256": "e59d5b4cd42fcfbfa3ba0a28f642aa823f63b3d2b68436833fa75c60d8a73eb0"
+        },
+        {
+          "id": 62,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate62.png",
+          "status": 200,
+          "file": "images/night-crate62.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10569,
+          "sha256": "43443b96973b8b9077c454a5feb78ceb13495a4a70fa3feddf8769d702bec40d"
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 63,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate63.png",
+          "status": 200,
+          "file": "images/day-crate63.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10243,
+          "sha256": "0191b7372bc99138773412bf268e456f27f2baf38b5fd85aa243b4cee559da96"
+        },
+        {
+          "id": 63,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate63.png",
+          "status": 200,
+          "file": "images/night-crate63.png",
+          "width": 245,
+          "height": 250,
+          "bytes": 10186,
+          "sha256": "55a17df4fa3beeff9d73a4433eec2081da8a9d91a2b15995913193b28ab271e4"
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 64,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate64.png",
+          "status": 200,
+          "file": "images/day-crate64.png",
+          "width": 311,
+          "height": 211,
+          "bytes": 19009,
+          "sha256": "490f7d69d76624e755f10a8a4a2e2c2effe179155c440a6471c07813249bebbb"
+        },
+        {
+          "id": 64,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate64.png",
+          "status": 200,
+          "file": "images/night-crate64.png",
+          "width": 311,
+          "height": 211,
+          "bytes": 17631,
+          "sha256": "d0687c50ab596944cf1f11b67b0def3245e04fe48bdc8a1fea8298ab07ac102d"
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 65,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate65.png",
+          "status": 200,
+          "file": "images/day-crate65.png",
+          "width": 202,
+          "height": 163,
+          "bytes": 10508,
+          "sha256": "7a0ea16b00d7658afe064dfa6cf62cbee00aab08b9125368df8a5004376f3c25"
+        },
+        {
+          "id": 65,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate65.png",
+          "status": 200,
+          "file": "images/night-crate65.png",
+          "width": 202,
+          "height": 163,
+          "bytes": 10104,
+          "sha256": "46c04b2124afd6f9322a70971de5b4f20f235d2a45c6b2a39aa98d5c0404a126"
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 66,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate66.png",
+          "status": 200,
+          "file": "images/day-crate66.png",
+          "width": 256,
+          "height": 260,
+          "bytes": 18729,
+          "sha256": "4ed9c6dd803badf7bf82f64e10f74c3a016370c74a35b73b2076fa0ee7595f09"
+        },
+        {
+          "id": 66,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate66.png",
+          "status": 200,
+          "file": "images/night-crate66.png",
+          "width": 256,
+          "height": 260,
+          "bytes": 17851,
+          "sha256": "16384cb1fe2d21e7da78f1e79fb6d2018fb94df3c1fa82455cecd088c1945767"
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 67,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate67.png",
+          "status": 200,
+          "file": "images/day-crate67.png",
+          "width": 230,
+          "height": 248,
+          "bytes": 13932,
+          "sha256": "a7282ff5e36200a0d534a6d2ddb4f2cdbb3854e32e959d9edfc87c07fff07ac0"
+        },
+        {
+          "id": 67,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate67.png",
+          "status": 200,
+          "file": "images/night-crate67.png",
+          "width": 230,
+          "height": 248,
+          "bytes": 13008,
+          "sha256": "1e2a4f99da7d673f6029097f3619ce659b24d587280c0a64c3de48adb4c680af"
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 68,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate68.png",
+          "status": 200,
+          "file": "images/day-crate68.png",
+          "width": 157,
+          "height": 160,
+          "bytes": 12077,
+          "sha256": "0e61f947bdebe6055208b5c1bca50ad4fdf74fcc955bc97bd2540ddb58ffd168"
+        },
+        {
+          "id": 68,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate68.png",
+          "status": 200,
+          "file": "images/night-crate68.png",
+          "width": 157,
+          "height": 160,
+          "bytes": 12147,
+          "sha256": "1fc4ea877924ee122bc0abe88332840f07ddaca661be9a7a7e0596fe35abef78"
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 69,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate69.png",
+          "status": 200,
+          "file": "images/day-crate69.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 13726,
+          "sha256": "3db5b6aaa84a5914e713c0d6d652815b369f80a382fb64f3529136193fd03b6f"
+        },
+        {
+          "id": 69,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate69.png",
+          "status": 200,
+          "file": "images/night-crate69.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 13364,
+          "sha256": "66ab55a26951d7bd20543287f4375e7a2cca0afd7162d78f9ecd67dc7ea0df85"
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 70,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate70.png",
+          "status": 200,
+          "file": "images/day-crate70.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 13176,
+          "sha256": "74c6bbd29b192a3000d36bcca2772bcd3ec5da2820a93608d214246721d5bb95"
+        },
+        {
+          "id": 70,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate70.png",
+          "status": 200,
+          "file": "images/night-crate70.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 11828,
+          "sha256": "2d04a2f2a26b154e4aa88b1c7b8cb70fe80ddf0d3d4c0316ac60f0f452a1d21c"
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "sourceLabel": "Starve.io Mask",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 71,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate71.png",
+          "status": 200,
+          "file": "images/day-crate71.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 8225,
+          "sha256": "ed1948e69870fffdb6825b10a3c70aebc245997d8a1e5e6ac5b617be5f98b8a9"
+        },
+        {
+          "id": 71,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate71.png",
+          "status": 200,
+          "file": "images/night-crate71.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 7406,
+          "sha256": "f0d8735ce4d5ab22680e404bb0e821a082d166124517062eee24c8819a2009d8"
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "sourceLabel": "Starve.io Mask",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 72,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate72.png",
+          "status": 200,
+          "file": "images/day-crate72.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 10226,
+          "sha256": "3423247bc50d4307ec8613c8907b0a2ffffa7a9f8cd44d518b3b36cb216eea61"
+        },
+        {
+          "id": 72,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate72.png",
+          "status": 200,
+          "file": "images/night-crate72.png",
+          "width": 210,
+          "height": 216,
+          "bytes": 9839,
+          "sha256": "d4dac51e4fc562ae70ad10bad5ea442cd916434d6a5508b5b3e28b785ca009b7"
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 73,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate73.png",
+          "status": 200,
+          "file": "images/day-crate73.png",
+          "width": 206,
+          "height": 195,
+          "bytes": 2388,
+          "sha256": "87834d4894f57861bc7e5841c1b1f4599715cf8633adfad18435752e35bb04ba"
+        },
+        {
+          "id": 73,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate73.png",
+          "status": 200,
+          "file": "images/night-crate73.png",
+          "width": 206,
+          "height": 195,
+          "bytes": 2369,
+          "sha256": "238fec4ecb722793d196a9d165815439da6956f748861ab03a28ffff3b7d1b7a"
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 74,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate74.png",
+          "status": 200,
+          "file": "images/day-crate74.png",
+          "width": 320,
+          "height": 321,
+          "bytes": 7080,
+          "sha256": "706311626bad157344c5e179352e1dc60943bde70b245010471a3a9e25f36ca9"
+        },
+        {
+          "id": 74,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate74.png",
+          "status": 200,
+          "file": "images/night-crate74.png",
+          "width": 320,
+          "height": 321,
+          "bytes": 7290,
+          "sha256": "76a8e0e450ebf176ac9f58d36f9f0605b6fbafe38edbb79f049d39bbd2df90a9"
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 75,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate75.png",
+          "status": 200,
+          "file": "images/day-crate75.png",
+          "width": 169,
+          "height": 200,
+          "bytes": 3876,
+          "sha256": "82acb8c1c09a1b019dfcfb5b28a55c8915290bffdec95df2d76a89641de067ad"
+        },
+        {
+          "id": 75,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate75.png",
+          "status": 200,
+          "file": "images/night-crate75.png",
+          "width": 169,
+          "height": 200,
+          "bytes": 4103,
+          "sha256": "6dabd167b3cd4726bb5bb1eefe3fc123e96b37853b669991017015c3000b95a9"
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 76,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate76.png",
+          "status": 200,
+          "file": "images/day-crate76.png",
+          "width": 166,
+          "height": 166,
+          "bytes": 1679,
+          "sha256": "cc2fa93c9aa3f4daf99e4009526ee640fe0d15a8904a5dd6f81b86cab791394c"
+        },
+        {
+          "id": 76,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate76.png",
+          "status": 200,
+          "file": "images/night-crate76.png",
+          "width": 166,
+          "height": 166,
+          "bytes": 1751,
+          "sha256": "d6773cbc92f98c344e4a7371801ce9643d8f143e8c83b2226464969d9e0b20b9"
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 77,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate77.png",
+          "status": 200,
+          "file": "images/day-crate77.png",
+          "width": 221,
+          "height": 160,
+          "bytes": 3977,
+          "sha256": "a56ed8b749d72b8d6fbd328d17394b615dc8b88d629a40b2ae589ee734d56ca5"
+        },
+        {
+          "id": 77,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate77.png",
+          "status": 200,
+          "file": "images/night-crate77.png",
+          "width": 221,
+          "height": 160,
+          "bytes": 4019,
+          "sha256": "dab66c8f4bdaa8f52b180ac3622348ee5684bf50123daa6754fe041817ddb8e6"
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 78,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate78.png",
+          "status": 200,
+          "file": "images/day-crate78.png",
+          "width": 223,
+          "height": 168,
+          "bytes": 1932,
+          "sha256": "6471beba703bab2ec31d2e9da6b43ea0e2cec928398e859c2bab719aecf58510"
+        },
+        {
+          "id": 78,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate78.png",
+          "status": 200,
+          "file": "images/night-crate78.png",
+          "width": 223,
+          "height": 168,
+          "bytes": 1820,
+          "sha256": "9cf99387804289cfb680ff2c9adbac76173cafc6f9a80621b9f5efefeb16567a"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 79,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate79.png",
+          "status": 200,
+          "file": "images/day-crate79.png",
+          "width": 186,
+          "height": 172,
+          "bytes": 3679,
+          "sha256": "31527ddde1df9f700a73a8941444f69d30c6ab0d3399ae472bfaa1e5cb80e4fc"
+        },
+        {
+          "id": 79,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate79.png",
+          "status": 200,
+          "file": "images/night-crate79.png",
+          "width": 186,
+          "height": 172,
+          "bytes": 3501,
+          "sha256": "455dc8e9fc0fa3b945f678e7539adbf1786fe4a89c306fa91f4d5e0cd86b66b7"
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 80,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate80.png",
+          "status": 200,
+          "file": "images/day-crate80.png",
+          "width": 160,
+          "height": 153,
+          "bytes": 2289,
+          "sha256": "67d4e9c819773b56f669c2298884b4193b4e95c473b14df8e8eb48769fca3f3a"
+        },
+        {
+          "id": 80,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate80.png",
+          "status": 200,
+          "file": "images/night-crate80.png",
+          "width": 160,
+          "height": 153,
+          "bytes": 2284,
+          "sha256": "a0e403485519f186da61411d3e1cb7f2429ba17b93078a0b18514bde934649ba"
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 81,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate81.png",
+          "status": 200,
+          "file": "images/day-crate81.png",
+          "width": 195,
+          "height": 194,
+          "bytes": 3465,
+          "sha256": "f96ce424ff0c239bca9b102132634a58a42d258161fa0903426d433892fe84b4"
+        },
+        {
+          "id": 81,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate81.png",
+          "status": 200,
+          "file": "images/night-crate81.png",
+          "width": 195,
+          "height": 194,
+          "bytes": 3282,
+          "sha256": "ed7c6a40f3870ba8bcefba460124f5da8be653a055de22d0d856f6fba73549f5"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 82,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate82.png",
+          "status": 200,
+          "file": "images/day-crate82.png",
+          "width": 266,
+          "height": 232,
+          "bytes": 3454,
+          "sha256": "a285d4e46b80d8ecbddfbd7ccdb6d06458fc58c34fed0784f236d28fce10090d"
+        },
+        {
+          "id": 82,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate82.png",
+          "status": 200,
+          "file": "images/night-crate82.png",
+          "width": 266,
+          "height": 232,
+          "bytes": 3524,
+          "sha256": "cfe250d059e4dfb8088da6506bb7c6a0f1b58f29073f2cebe95f6280646f907d"
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 83,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate83.png",
+          "status": 200,
+          "file": "images/day-crate83.png",
+          "width": 263,
+          "height": 204,
+          "bytes": 3988,
+          "sha256": "700775098f35f1a40cf34ad6e69acb19b2acc4136b9f334f9e142380380c1d99"
+        },
+        {
+          "id": 83,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate83.png",
+          "status": 200,
+          "file": "images/night-crate83.png",
+          "width": 263,
+          "height": 204,
+          "bytes": 4108,
+          "sha256": "e4968d7abfc6b2c30fe3560d27d005e54ed717fe735a7c69ce7b3ce93f90b3c9"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 84,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate84.png",
+          "status": 200,
+          "file": "images/day-crate84.png",
+          "width": 231,
+          "height": 187,
+          "bytes": 3452,
+          "sha256": "6fcd74a4c169bcadbdf897a7261dffc1c00e569905e5bd69cb1460c804c3a3be"
+        },
+        {
+          "id": 84,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate84.png",
+          "status": 200,
+          "file": "images/night-crate84.png",
+          "width": 231,
+          "height": 187,
+          "bytes": 3546,
+          "sha256": "05550d7bc037fbd85490329c54a4583d11f8b2483350cc43cb5ee01bf88e8223"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 85,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate85.png",
+          "status": 200,
+          "file": "images/day-crate85.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3221,
+          "sha256": "b2cf69328bfb5ac34ce36880ba9c430800a1942dd9c583e9b3f31c0ee1487a38"
+        },
+        {
+          "id": 85,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate85.png",
+          "status": 200,
+          "file": "images/night-crate85.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 2993,
+          "sha256": "85777fa53a56c0650929e80591e978ce67dafa93062d77d3a7f1fa9796fb3a18"
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 86,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate86.png",
+          "status": 200,
+          "file": "images/day-crate86.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3943,
+          "sha256": "4876a15c2886a998e0387b52f4bc93a337f95dde15e1139fc41e040f92a75832"
+        },
+        {
+          "id": 86,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate86.png",
+          "status": 200,
+          "file": "images/night-crate86.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3907,
+          "sha256": "c4acdc814f6729cd8f003a5eff6e30c22b4cd0abd6705c0fbb59e9e1017bc91b"
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 87,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate87.png",
+          "status": 200,
+          "file": "images/day-crate87.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3628,
+          "sha256": "cb8ac2860d9894c24585b4feddb20f3855db8ac2d0e74b4e1a51e23d76ba5cce"
+        },
+        {
+          "id": 87,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate87.png",
+          "status": 200,
+          "file": "images/night-crate87.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3828,
+          "sha256": "2fb1ad3c2b0f4dad452cdc00cd6cc08a3a5e1b87e551f3d8e038606fd419b4e7"
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 88,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate88.png",
+          "status": 200,
+          "file": "images/day-crate88.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3822,
+          "sha256": "10f291ea92d4d75b721caff36b0e977e4b7c2ee0a786607ae80da735951144d6"
+        },
+        {
+          "id": 88,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate88.png",
+          "status": 200,
+          "file": "images/night-crate88.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3801,
+          "sha256": "9cedc01ad6ef64f99ea606d8440c283a1298710bd62aac53d4eb6258ae1d0050"
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 89,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate89.png",
+          "status": 200,
+          "file": "images/day-crate89.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3093,
+          "sha256": "c74b548e457ca6f39a41e77070b4c03f9e3724e080adc26b12703aed809bba33"
+        },
+        {
+          "id": 89,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate89.png",
+          "status": 200,
+          "file": "images/night-crate89.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2964,
+          "sha256": "42867b4ac5ccf45e7635e0ac23fce356e5a140b5d23c83ee67db1e8e87b54420"
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 90,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate90.png",
+          "status": 200,
+          "file": "images/day-crate90.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3178,
+          "sha256": "e6716731e156af3d2938fe35b6a7d1f9959b667f32e7c9a43dfabd4379a4bcf5"
+        },
+        {
+          "id": 90,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate90.png",
+          "status": 200,
+          "file": "images/night-crate90.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 2992,
+          "sha256": "ecf323c76b801b550517f21bb6d99b485832e7c4c6626a57e2076613e7f7ecf1"
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 91,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate91.png",
+          "status": 200,
+          "file": "images/day-crate91.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 4079,
+          "sha256": "20e9f3b5dccfd55dfb9227957da1d96da4c8f22d11efcb42d826cd3a8d605d8e"
+        },
+        {
+          "id": 91,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate91.png",
+          "status": 200,
+          "file": "images/night-crate91.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3862,
+          "sha256": "de49542329a1446a83e617a888d4ed39b14cffda4b8f16cb53a7513fe7c526d2"
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 92,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate92.png",
+          "status": 200,
+          "file": "images/day-crate92.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3705,
+          "sha256": "3a3a5d0413bf409e03a774cd2d0d98c88d1840b7e932c93e896be16ff062e029"
+        },
+        {
+          "id": 92,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate92.png",
+          "status": 200,
+          "file": "images/night-crate92.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3559,
+          "sha256": "5c7a8fc2ce40c873e3a652b5b816e3e06432aff1a1b2b1d553305bd8caf3dff6"
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 93,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate93.png",
+          "status": 200,
+          "file": "images/day-crate93.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3898,
+          "sha256": "7c7facc9f72136aec97ab67c38fa846c6e3ebc58faf4f34ed6b7dd89ca50038a"
+        },
+        {
+          "id": 93,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate93.png",
+          "status": 200,
+          "file": "images/night-crate93.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3672,
+          "sha256": "51b4a88058ba0ff90e7c60714be3d7db46be1b38cce40ed8540b964ebcc99446"
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 94,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate94.png",
+          "status": 200,
+          "file": "images/day-crate94.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3109,
+          "sha256": "e3be7fc8429c18add0ccc5fa2a547269dc797b27d87d02a8133ae5cc807ce1e4"
+        },
+        {
+          "id": 94,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate94.png",
+          "status": 200,
+          "file": "images/night-crate94.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2830,
+          "sha256": "b504e81d93976e1a97b79e7f497c276bb7d52e67caf4c94e5d50e397f5d6421b"
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 95,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate95.png",
+          "status": 200,
+          "file": "images/day-crate95.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3241,
+          "sha256": "eabbb2ae79aaf4b012ee406826f41867d2710938331b2f613f05c0dc73a774fc"
+        },
+        {
+          "id": 95,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate95.png",
+          "status": 200,
+          "file": "images/night-crate95.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3142,
+          "sha256": "ba8a70f63923cdf75abd864d7991abda76e8f67d4ef6d1e0bf6ea8a85c45c329"
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 96,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate96.png",
+          "status": 200,
+          "file": "images/day-crate96.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3962,
+          "sha256": "252dfdaae9860f42ac9979d3ceeb9927760a5f4998980dc2fe36317ba886db6d"
+        },
+        {
+          "id": 96,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate96.png",
+          "status": 200,
+          "file": "images/night-crate96.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3894,
+          "sha256": "885bd77450d759c58f71d44513f91e6619258be01d57ececaf66289a7751df3e"
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 97,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate97.png",
+          "status": 200,
+          "file": "images/day-crate97.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3890,
+          "sha256": "8b4a85b7a3417b8188539196372d133a2b2be5eab71cc8e5e6a0e9a31981dc6f"
+        },
+        {
+          "id": 97,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate97.png",
+          "status": 200,
+          "file": "images/night-crate97.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3738,
+          "sha256": "d08eeecc59319be51714f0f3ae456ea5ccc0b5208484a3f9b9681aa8872655c6"
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 98,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate98.png",
+          "status": 200,
+          "file": "images/day-crate98.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3949,
+          "sha256": "5c215243d4a77c163335408102cf57faed62d68f3a2a6d6933a575a542e4d91c"
+        },
+        {
+          "id": 98,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate98.png",
+          "status": 200,
+          "file": "images/night-crate98.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3826,
+          "sha256": "e7962a8b00038fb533ce76d1d5e3b59ed22ce5a43a6de7b612850a9b80fe1dfb"
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 99,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate99.png",
+          "status": 200,
+          "file": "images/day-crate99.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3053,
+          "sha256": "f3f6401715c3173162ac4c099d7b67f1a4dc3620accbb2cd4d5ee2d00d4f841f"
+        },
+        {
+          "id": 99,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate99.png",
+          "status": 200,
+          "file": "images/night-crate99.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2870,
+          "sha256": "065126484e779da983472d085f6093927d1606d35bd185c3d07309e672b01151"
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 100,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate100.png",
+          "status": 200,
+          "file": "images/day-crate100.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3150,
+          "sha256": "2d8089e36c82dc4f7092434061710e2811c9187ba4d5a4c51bd386f1fbd44b00"
+        },
+        {
+          "id": 100,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate100.png",
+          "status": 200,
+          "file": "images/night-crate100.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3107,
+          "sha256": "1654539216ea1996b8414b13b33eb57b48651b20dfdff98c5abb691e516feedc"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 101,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate101.png",
+          "status": 200,
+          "file": "images/day-crate101.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 4069,
+          "sha256": "0e5178ff2f1e37c22e18f01a52c62175e36014d0160e464dd3820cfe804928c9"
+        },
+        {
+          "id": 101,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate101.png",
+          "status": 200,
+          "file": "images/night-crate101.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3921,
+          "sha256": "e82dc1d331e3f03f35f2fef8b1f22f743c98988b2f26adfd4af285e1fc56c315"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 102,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate102.png",
+          "status": 200,
+          "file": "images/day-crate102.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3964,
+          "sha256": "320fbf8e4276571e7c22ae231e960d4f99ba0ee56ccd8c145f018e8a5a21d5e4"
+        },
+        {
+          "id": 102,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate102.png",
+          "status": 200,
+          "file": "images/night-crate102.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3936,
+          "sha256": "a9e390abae5c01b31ae2d96e35beccc224235c497854c210d60bd34aa994dec7"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 103,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate103.png",
+          "status": 200,
+          "file": "images/day-crate103.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 4062,
+          "sha256": "e6b000d8e4efcc6766eab4adb92a2fffa548ec7ab7dc078186e074b54df7134c"
+        },
+        {
+          "id": 103,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate103.png",
+          "status": 200,
+          "file": "images/night-crate103.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3711,
+          "sha256": "c0a37a288bd6a8fe023844c76e7ccd4684033fde1d0513bf7a9c980121d2983b"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 104,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate104.png",
+          "status": 200,
+          "file": "images/day-crate104.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3223,
+          "sha256": "30a5d9e43670db17fdbaf69ffce23a4363bf04b4c114b50099400f7ab63e95bc"
+        },
+        {
+          "id": 104,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate104.png",
+          "status": 200,
+          "file": "images/night-crate104.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2978,
+          "sha256": "9128a0c24d458f950b0f708f0cc70aadef16e5e9abf65d137011ce448fa8ed52"
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 105,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate105.png",
+          "status": 200,
+          "file": "images/day-crate105.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3226,
+          "sha256": "c9aa756edc683aa17f038b40ce24c44ae39b9902b8c9d17ae62c600e230435cf"
+        },
+        {
+          "id": 105,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate105.png",
+          "status": 200,
+          "file": "images/night-crate105.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3070,
+          "sha256": "a363774412ed7c6e5b8c795fffcf61464dbf0af4cca21528f58d0800affbc7ab"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 106,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate106.png",
+          "status": 200,
+          "file": "images/day-crate106.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 4024,
+          "sha256": "4402d33aa2883bbb3819ce46e55e8b17efe05a2605ed5485865e33e026b0e9e1"
+        },
+        {
+          "id": 106,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate106.png",
+          "status": 200,
+          "file": "images/night-crate106.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3807,
+          "sha256": "4b4912c9a672b7cf09c076ed098296f88cbe15ebbca9d4d202fd40c845d52b17"
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 107,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate107.png",
+          "status": 200,
+          "file": "images/day-crate107.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3700,
+          "sha256": "39fd683db76190679af37fd98fb428e0c89676fbc878107131d1ddfdda1617d7"
+        },
+        {
+          "id": 107,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate107.png",
+          "status": 200,
+          "file": "images/night-crate107.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3671,
+          "sha256": "740e8251ceaba9e1243011996b0665b8b025294d8b39baa68511b2849005dadb"
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 108,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate108.png",
+          "status": 200,
+          "file": "images/day-crate108.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3857,
+          "sha256": "81c3a6171def5f5143b7c6145d9e4e6def6e0e21e5c5571c7db91b89084f1cc5"
+        },
+        {
+          "id": 108,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate108.png",
+          "status": 200,
+          "file": "images/night-crate108.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3822,
+          "sha256": "3b8e92ff44bfa3955b43d6470c3724697967a242138f6babdae051b8c417b1fa"
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 109,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate109.png",
+          "status": 200,
+          "file": "images/day-crate109.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3009,
+          "sha256": "3dc25e7f0b7ae13ad00812945cae3858cf2d8f23bdcac713bed7247eea912476"
+        },
+        {
+          "id": 109,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate109.png",
+          "status": 200,
+          "file": "images/night-crate109.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2888,
+          "sha256": "fdaa8cd88a401e97424efc98f4e809cfe5944b502cc5d03282538ad4db5080c1"
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 110,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate110.png",
+          "status": 200,
+          "file": "images/day-crate110.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 3009,
+          "sha256": "b1ce25ca03d3f264ff8e6721fa1e27b5af4a2f4822b974b0f441223f21492dbc"
+        },
+        {
+          "id": 110,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate110.png",
+          "status": 200,
+          "file": "images/night-crate110.png",
+          "width": 167,
+          "height": 153,
+          "bytes": 2976,
+          "sha256": "4b314efb3455712f77fa4dc12768af15cb6cf9cf8f4e660d2c06e70a007643fa"
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 111,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate111.png",
+          "status": 200,
+          "file": "images/day-crate111.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 3916,
+          "sha256": "f437f1d28da00c8a26674058c7fffaecb19803f616e86e4ec8962263768a931d"
+        },
+        {
+          "id": 111,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate111.png",
+          "status": 200,
+          "file": "images/night-crate111.png",
+          "width": 184,
+          "height": 237,
+          "bytes": 4038,
+          "sha256": "d4ab0110569e335660a690e58b837a8fe06007f49bf106beece3d7d52f637ac4"
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 112,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate112.png",
+          "status": 200,
+          "file": "images/day-crate112.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3390,
+          "sha256": "3d72585d8ee339ccb72e284bc7f99e3f348f56d89b901241a9c950bc0d2be4f2"
+        },
+        {
+          "id": 112,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate112.png",
+          "status": 200,
+          "file": "images/night-crate112.png",
+          "width": 182,
+          "height": 158,
+          "bytes": 3579,
+          "sha256": "fe8c1686772e3e3999109358d6917b6da4902f3582d56aa140e28d51de1eb067"
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 113,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate113.png",
+          "status": 200,
+          "file": "images/day-crate113.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3757,
+          "sha256": "0d6f564fb717a38b4f1a68d7af2152e487c249cb44bb521f434790be6d63a340"
+        },
+        {
+          "id": 113,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate113.png",
+          "status": 200,
+          "file": "images/night-crate113.png",
+          "width": 213,
+          "height": 143,
+          "bytes": 3703,
+          "sha256": "e8ca2d2f0ba060533f151a36902897155a05c79ea7090315e59371e1dfd7be70"
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 114,
+          "variant": "day",
+          "url": "https://starve.io/img/day-crate114.png",
+          "status": 200,
+          "file": "images/day-crate114.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 3005,
+          "sha256": "0b15cc3db7f3da359a6e0a0589bd005bb1fa139134ee5cdcf81359de172569d6"
+        },
+        {
+          "id": 114,
+          "variant": "night",
+          "url": "https://starve.io/img/night-crate114.png",
+          "status": 200,
+          "file": "images/night-crate114.png",
+          "width": 179,
+          "height": 142,
+          "bytes": 2844,
+          "sha256": "9c53d8489bb10a04375d464c83d9ae722f76d2493a519dfb77c6bd768726aa78"
+        }
+      ]
+    }
+  ],
+  "unavailable": [
+    {
+      "id": 115,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate115.png",
+      "status": 404
+    },
+    {
+      "id": 115,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate115.png",
+      "status": 404
+    },
+    {
+      "id": 116,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate116.png",
+      "status": 404
+    },
+    {
+      "id": 116,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate116.png",
+      "status": 404
+    },
+    {
+      "id": 117,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate117.png",
+      "status": 404
+    },
+    {
+      "id": 117,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate117.png",
+      "status": 404
+    },
+    {
+      "id": 118,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate118.png",
+      "status": 404
+    },
+    {
+      "id": 118,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate118.png",
+      "status": 404
+    },
+    {
+      "id": 119,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate119.png",
+      "status": 404
+    },
+    {
+      "id": 119,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate119.png",
+      "status": 404
+    },
+    {
+      "id": 120,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate120.png",
+      "status": 404
+    },
+    {
+      "id": 120,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate120.png",
+      "status": 404
+    },
+    {
+      "id": 121,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate121.png",
+      "status": 404
+    },
+    {
+      "id": 121,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate121.png",
+      "status": 404
+    },
+    {
+      "id": 122,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate122.png",
+      "status": 404
+    },
+    {
+      "id": 122,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate122.png",
+      "status": 404
+    },
+    {
+      "id": 123,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate123.png",
+      "status": 404
+    },
+    {
+      "id": 123,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate123.png",
+      "status": 404
+    },
+    {
+      "id": 124,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate124.png",
+      "status": 404
+    },
+    {
+      "id": 124,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate124.png",
+      "status": 404
+    },
+    {
+      "id": 125,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate125.png",
+      "status": 404
+    },
+    {
+      "id": 125,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate125.png",
+      "status": 404
+    },
+    {
+      "id": 126,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate126.png",
+      "status": 404
+    },
+    {
+      "id": 126,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate126.png",
+      "status": 404
+    },
+    {
+      "id": 127,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate127.png",
+      "status": 404
+    },
+    {
+      "id": 127,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate127.png",
+      "status": 404
+    },
+    {
+      "id": 128,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate128.png",
+      "status": 404
+    },
+    {
+      "id": 128,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate128.png",
+      "status": 404
+    },
+    {
+      "id": 129,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate129.png",
+      "status": 404
+    },
+    {
+      "id": 129,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate129.png",
+      "status": 404
+    },
+    {
+      "id": 130,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate130.png",
+      "status": 404
+    },
+    {
+      "id": 130,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate130.png",
+      "status": 404
+    },
+    {
+      "id": 131,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate131.png",
+      "status": 404
+    },
+    {
+      "id": 131,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate131.png",
+      "status": 404
+    },
+    {
+      "id": 132,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate132.png",
+      "status": 404
+    },
+    {
+      "id": 132,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate132.png",
+      "status": 404
+    },
+    {
+      "id": 133,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate133.png",
+      "status": 404
+    },
+    {
+      "id": 133,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate133.png",
+      "status": 404
+    },
+    {
+      "id": 134,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate134.png",
+      "status": 404
+    },
+    {
+      "id": 134,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate134.png",
+      "status": 404
+    },
+    {
+      "id": 135,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate135.png",
+      "status": 404
+    },
+    {
+      "id": 135,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate135.png",
+      "status": 404
+    },
+    {
+      "id": 136,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate136.png",
+      "status": 404
+    },
+    {
+      "id": 136,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate136.png",
+      "status": 404
+    },
+    {
+      "id": 137,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate137.png",
+      "status": 404
+    },
+    {
+      "id": 137,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate137.png",
+      "status": 404
+    },
+    {
+      "id": 138,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate138.png",
+      "status": 404
+    },
+    {
+      "id": 138,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate138.png",
+      "status": 404
+    },
+    {
+      "id": 139,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate139.png",
+      "status": 404
+    },
+    {
+      "id": 139,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate139.png",
+      "status": 404
+    },
+    {
+      "id": 140,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate140.png",
+      "status": 404
+    },
+    {
+      "id": 140,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate140.png",
+      "status": 404
+    },
+    {
+      "id": 141,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate141.png",
+      "status": 404
+    },
+    {
+      "id": 141,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate141.png",
+      "status": 404
+    },
+    {
+      "id": 142,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate142.png",
+      "status": 404
+    },
+    {
+      "id": 142,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate142.png",
+      "status": 404
+    },
+    {
+      "id": 143,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate143.png",
+      "status": 404
+    },
+    {
+      "id": 143,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate143.png",
+      "status": 404
+    },
+    {
+      "id": 144,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate144.png",
+      "status": 404
+    },
+    {
+      "id": 144,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate144.png",
+      "status": 404
+    },
+    {
+      "id": 145,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate145.png",
+      "status": 404
+    },
+    {
+      "id": 145,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate145.png",
+      "status": 404
+    },
+    {
+      "id": 146,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate146.png",
+      "status": 404
+    },
+    {
+      "id": 146,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate146.png",
+      "status": 404
+    },
+    {
+      "id": 147,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate147.png",
+      "status": 404
+    },
+    {
+      "id": 147,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate147.png",
+      "status": 404
+    },
+    {
+      "id": 148,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate148.png",
+      "status": 404
+    },
+    {
+      "id": 148,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate148.png",
+      "status": 404
+    },
+    {
+      "id": 149,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate149.png",
+      "status": 404
+    },
+    {
+      "id": 149,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate149.png",
+      "status": 404
+    },
+    {
+      "id": 150,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate150.png",
+      "status": 404
+    },
+    {
+      "id": 150,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate150.png",
+      "status": 404
+    },
+    {
+      "id": 151,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate151.png",
+      "status": 404
+    },
+    {
+      "id": 151,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate151.png",
+      "status": 404
+    },
+    {
+      "id": 152,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate152.png",
+      "status": 404
+    },
+    {
+      "id": 152,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate152.png",
+      "status": 404
+    },
+    {
+      "id": 153,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate153.png",
+      "status": 404
+    },
+    {
+      "id": 153,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate153.png",
+      "status": 404
+    },
+    {
+      "id": 154,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate154.png",
+      "status": 404
+    },
+    {
+      "id": 154,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate154.png",
+      "status": 404
+    },
+    {
+      "id": 155,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate155.png",
+      "status": 404
+    },
+    {
+      "id": 155,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate155.png",
+      "status": 404
+    },
+    {
+      "id": 156,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate156.png",
+      "status": 404
+    },
+    {
+      "id": 156,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate156.png",
+      "status": 404
+    },
+    {
+      "id": 157,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate157.png",
+      "status": 404
+    },
+    {
+      "id": 157,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate157.png",
+      "status": 404
+    },
+    {
+      "id": 158,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate158.png",
+      "status": 404
+    },
+    {
+      "id": 158,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate158.png",
+      "status": 404
+    },
+    {
+      "id": 159,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate159.png",
+      "status": 404
+    },
+    {
+      "id": 159,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate159.png",
+      "status": 404
+    },
+    {
+      "id": 160,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate160.png",
+      "status": 404
+    },
+    {
+      "id": 160,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate160.png",
+      "status": 404
+    },
+    {
+      "id": 161,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate161.png",
+      "status": 404
+    },
+    {
+      "id": 161,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate161.png",
+      "status": 404
+    },
+    {
+      "id": 162,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate162.png",
+      "status": 404
+    },
+    {
+      "id": 162,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate162.png",
+      "status": 404
+    },
+    {
+      "id": 163,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate163.png",
+      "status": 404
+    },
+    {
+      "id": 163,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate163.png",
+      "status": 404
+    },
+    {
+      "id": 164,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate164.png",
+      "status": 404
+    },
+    {
+      "id": 164,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate164.png",
+      "status": 404
+    },
+    {
+      "id": 165,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate165.png",
+      "status": 404
+    },
+    {
+      "id": 165,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate165.png",
+      "status": 404
+    },
+    {
+      "id": 166,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate166.png",
+      "status": 404
+    },
+    {
+      "id": 166,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate166.png",
+      "status": 404
+    },
+    {
+      "id": 167,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate167.png",
+      "status": 404
+    },
+    {
+      "id": 167,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate167.png",
+      "status": 404
+    },
+    {
+      "id": 168,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate168.png",
+      "status": 404
+    },
+    {
+      "id": 168,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate168.png",
+      "status": 404
+    },
+    {
+      "id": 169,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate169.png",
+      "status": 404
+    },
+    {
+      "id": 169,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate169.png",
+      "status": 404
+    },
+    {
+      "id": 170,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate170.png",
+      "status": 404
+    },
+    {
+      "id": 170,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate170.png",
+      "status": 404
+    },
+    {
+      "id": 171,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate171.png",
+      "status": 404
+    },
+    {
+      "id": 171,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate171.png",
+      "status": 404
+    },
+    {
+      "id": 172,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate172.png",
+      "status": 404
+    },
+    {
+      "id": 172,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate172.png",
+      "status": 404
+    },
+    {
+      "id": 173,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate173.png",
+      "status": 404
+    },
+    {
+      "id": 173,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate173.png",
+      "status": 404
+    },
+    {
+      "id": 174,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate174.png",
+      "status": 404
+    },
+    {
+      "id": 174,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate174.png",
+      "status": 404
+    },
+    {
+      "id": 175,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate175.png",
+      "status": 404
+    },
+    {
+      "id": 175,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate175.png",
+      "status": 404
+    },
+    {
+      "id": 176,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate176.png",
+      "status": 404
+    },
+    {
+      "id": 176,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate176.png",
+      "status": 404
+    },
+    {
+      "id": 177,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate177.png",
+      "status": 404
+    },
+    {
+      "id": 177,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate177.png",
+      "status": 404
+    },
+    {
+      "id": 178,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate178.png",
+      "status": 404
+    },
+    {
+      "id": 178,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate178.png",
+      "status": 404
+    },
+    {
+      "id": 179,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate179.png",
+      "status": 404
+    },
+    {
+      "id": 179,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate179.png",
+      "status": 404
+    },
+    {
+      "id": 180,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate180.png",
+      "status": 404
+    },
+    {
+      "id": 180,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate180.png",
+      "status": 404
+    },
+    {
+      "id": 181,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate181.png",
+      "status": 404
+    },
+    {
+      "id": 181,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate181.png",
+      "status": 404
+    },
+    {
+      "id": 182,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate182.png",
+      "status": 404
+    },
+    {
+      "id": 182,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate182.png",
+      "status": 404
+    },
+    {
+      "id": 183,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate183.png",
+      "status": 404
+    },
+    {
+      "id": 183,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate183.png",
+      "status": 404
+    },
+    {
+      "id": 184,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate184.png",
+      "status": 404
+    },
+    {
+      "id": 184,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate184.png",
+      "status": 404
+    },
+    {
+      "id": 185,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate185.png",
+      "status": 404
+    },
+    {
+      "id": 185,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate185.png",
+      "status": 404
+    },
+    {
+      "id": 186,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate186.png",
+      "status": 404
+    },
+    {
+      "id": 186,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate186.png",
+      "status": 404
+    },
+    {
+      "id": 187,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate187.png",
+      "status": 404
+    },
+    {
+      "id": 187,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate187.png",
+      "status": 404
+    },
+    {
+      "id": 188,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate188.png",
+      "status": 404
+    },
+    {
+      "id": 188,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate188.png",
+      "status": 404
+    },
+    {
+      "id": 189,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate189.png",
+      "status": 404
+    },
+    {
+      "id": 189,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate189.png",
+      "status": 404
+    },
+    {
+      "id": 190,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate190.png",
+      "status": 404
+    },
+    {
+      "id": 190,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate190.png",
+      "status": 404
+    },
+    {
+      "id": 191,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate191.png",
+      "status": 404
+    },
+    {
+      "id": 191,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate191.png",
+      "status": 404
+    },
+    {
+      "id": 192,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate192.png",
+      "status": 404
+    },
+    {
+      "id": 192,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate192.png",
+      "status": 404
+    },
+    {
+      "id": 193,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate193.png",
+      "status": 404
+    },
+    {
+      "id": 193,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate193.png",
+      "status": 404
+    },
+    {
+      "id": 194,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate194.png",
+      "status": 404
+    },
+    {
+      "id": 194,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate194.png",
+      "status": 404
+    },
+    {
+      "id": 195,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate195.png",
+      "status": 404
+    },
+    {
+      "id": 195,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate195.png",
+      "status": 404
+    },
+    {
+      "id": 196,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate196.png",
+      "status": 404
+    },
+    {
+      "id": 196,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate196.png",
+      "status": 404
+    },
+    {
+      "id": 197,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate197.png",
+      "status": 404
+    },
+    {
+      "id": 197,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate197.png",
+      "status": 404
+    },
+    {
+      "id": 198,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate198.png",
+      "status": 404
+    },
+    {
+      "id": 198,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate198.png",
+      "status": 404
+    },
+    {
+      "id": 199,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate199.png",
+      "status": 404
+    },
+    {
+      "id": 199,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate199.png",
+      "status": 404
+    },
+    {
+      "id": 200,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate200.png",
+      "status": 404
+    },
+    {
+      "id": 200,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate200.png",
+      "status": 404
+    },
+    {
+      "id": 201,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate201.png",
+      "status": 404
+    },
+    {
+      "id": 201,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate201.png",
+      "status": 404
+    },
+    {
+      "id": 202,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate202.png",
+      "status": 404
+    },
+    {
+      "id": 202,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate202.png",
+      "status": 404
+    },
+    {
+      "id": 203,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate203.png",
+      "status": 404
+    },
+    {
+      "id": 203,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate203.png",
+      "status": 404
+    },
+    {
+      "id": 204,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate204.png",
+      "status": 404
+    },
+    {
+      "id": 204,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate204.png",
+      "status": 404
+    },
+    {
+      "id": 205,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate205.png",
+      "status": 404
+    },
+    {
+      "id": 205,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate205.png",
+      "status": 404
+    },
+    {
+      "id": 206,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate206.png",
+      "status": 404
+    },
+    {
+      "id": 206,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate206.png",
+      "status": 404
+    },
+    {
+      "id": 207,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate207.png",
+      "status": 404
+    },
+    {
+      "id": 207,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate207.png",
+      "status": 404
+    },
+    {
+      "id": 208,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate208.png",
+      "status": 404
+    },
+    {
+      "id": 208,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate208.png",
+      "status": 404
+    },
+    {
+      "id": 209,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate209.png",
+      "status": 404
+    },
+    {
+      "id": 209,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate209.png",
+      "status": 404
+    },
+    {
+      "id": 210,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate210.png",
+      "status": 404
+    },
+    {
+      "id": 210,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate210.png",
+      "status": 404
+    },
+    {
+      "id": 211,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate211.png",
+      "status": 404
+    },
+    {
+      "id": 211,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate211.png",
+      "status": 404
+    },
+    {
+      "id": 212,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate212.png",
+      "status": 404
+    },
+    {
+      "id": 212,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate212.png",
+      "status": 404
+    },
+    {
+      "id": 213,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate213.png",
+      "status": 404
+    },
+    {
+      "id": 213,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate213.png",
+      "status": 404
+    },
+    {
+      "id": 214,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate214.png",
+      "status": 404
+    },
+    {
+      "id": 214,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate214.png",
+      "status": 404
+    },
+    {
+      "id": 215,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate215.png",
+      "status": 404
+    },
+    {
+      "id": 215,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate215.png",
+      "status": 404
+    },
+    {
+      "id": 216,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate216.png",
+      "status": 404
+    },
+    {
+      "id": 216,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate216.png",
+      "status": 404
+    },
+    {
+      "id": 217,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate217.png",
+      "status": 404
+    },
+    {
+      "id": 217,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate217.png",
+      "status": 404
+    },
+    {
+      "id": 218,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate218.png",
+      "status": 404
+    },
+    {
+      "id": 218,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate218.png",
+      "status": 404
+    },
+    {
+      "id": 219,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate219.png",
+      "status": 404
+    },
+    {
+      "id": 219,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate219.png",
+      "status": 404
+    },
+    {
+      "id": 220,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate220.png",
+      "status": 404
+    },
+    {
+      "id": 220,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate220.png",
+      "status": 404
+    },
+    {
+      "id": 221,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate221.png",
+      "status": 404
+    },
+    {
+      "id": 221,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate221.png",
+      "status": 404
+    },
+    {
+      "id": 222,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate222.png",
+      "status": 404
+    },
+    {
+      "id": 222,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate222.png",
+      "status": 404
+    },
+    {
+      "id": 223,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate223.png",
+      "status": 404
+    },
+    {
+      "id": 223,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate223.png",
+      "status": 404
+    },
+    {
+      "id": 224,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate224.png",
+      "status": 404
+    },
+    {
+      "id": 224,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate224.png",
+      "status": 404
+    },
+    {
+      "id": 225,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate225.png",
+      "status": 404
+    },
+    {
+      "id": 225,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate225.png",
+      "status": 404
+    },
+    {
+      "id": 226,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate226.png",
+      "status": 404
+    },
+    {
+      "id": 226,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate226.png",
+      "status": 404
+    },
+    {
+      "id": 227,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate227.png",
+      "status": 404
+    },
+    {
+      "id": 227,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate227.png",
+      "status": 404
+    },
+    {
+      "id": 228,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate228.png",
+      "status": 404
+    },
+    {
+      "id": 228,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate228.png",
+      "status": 404
+    },
+    {
+      "id": 229,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate229.png",
+      "status": 404
+    },
+    {
+      "id": 229,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate229.png",
+      "status": 404
+    },
+    {
+      "id": 230,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate230.png",
+      "status": 404
+    },
+    {
+      "id": 230,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate230.png",
+      "status": 404
+    },
+    {
+      "id": 231,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate231.png",
+      "status": 404
+    },
+    {
+      "id": 231,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate231.png",
+      "status": 404
+    },
+    {
+      "id": 232,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate232.png",
+      "status": 404
+    },
+    {
+      "id": 232,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate232.png",
+      "status": 404
+    },
+    {
+      "id": 233,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate233.png",
+      "status": 404
+    },
+    {
+      "id": 233,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate233.png",
+      "status": 404
+    },
+    {
+      "id": 234,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate234.png",
+      "status": 404
+    },
+    {
+      "id": 234,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate234.png",
+      "status": 404
+    },
+    {
+      "id": 235,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate235.png",
+      "status": 404
+    },
+    {
+      "id": 235,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate235.png",
+      "status": 404
+    },
+    {
+      "id": 236,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate236.png",
+      "status": 404
+    },
+    {
+      "id": 236,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate236.png",
+      "status": 404
+    },
+    {
+      "id": 237,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate237.png",
+      "status": 404
+    },
+    {
+      "id": 237,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate237.png",
+      "status": 404
+    },
+    {
+      "id": 238,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate238.png",
+      "status": 404
+    },
+    {
+      "id": 238,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate238.png",
+      "status": 404
+    },
+    {
+      "id": 239,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate239.png",
+      "status": 404
+    },
+    {
+      "id": 239,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate239.png",
+      "status": 404
+    },
+    {
+      "id": 240,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate240.png",
+      "status": 404
+    },
+    {
+      "id": 240,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate240.png",
+      "status": 404
+    },
+    {
+      "id": 241,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate241.png",
+      "status": 404
+    },
+    {
+      "id": 241,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate241.png",
+      "status": 404
+    },
+    {
+      "id": 242,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate242.png",
+      "status": 404
+    },
+    {
+      "id": 242,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate242.png",
+      "status": 404
+    },
+    {
+      "id": 243,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate243.png",
+      "status": 404
+    },
+    {
+      "id": 243,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate243.png",
+      "status": 404
+    },
+    {
+      "id": 244,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate244.png",
+      "status": 404
+    },
+    {
+      "id": 244,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate244.png",
+      "status": 404
+    },
+    {
+      "id": 245,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate245.png",
+      "status": 404
+    },
+    {
+      "id": 245,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate245.png",
+      "status": 404
+    },
+    {
+      "id": 246,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate246.png",
+      "status": 404
+    },
+    {
+      "id": 246,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate246.png",
+      "status": 404
+    },
+    {
+      "id": 247,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate247.png",
+      "status": 404
+    },
+    {
+      "id": 247,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate247.png",
+      "status": 404
+    },
+    {
+      "id": 248,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate248.png",
+      "status": 404
+    },
+    {
+      "id": 248,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate248.png",
+      "status": 404
+    },
+    {
+      "id": 249,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate249.png",
+      "status": 404
+    },
+    {
+      "id": 249,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate249.png",
+      "status": 404
+    },
+    {
+      "id": 250,
+      "variant": "day",
+      "url": "https://starve.io/img/day-crate250.png",
+      "status": 404
+    },
+    {
+      "id": 250,
+      "variant": "night",
+      "url": "https://starve.io/img/night-crate250.png",
+      "status": 404
+    }
+  ]
+}
