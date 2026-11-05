@@ -1,0 +1,743 @@
+{
+  "reference": "https://starveiopro.fandom.com/wiki/Structures",
+  "source_file": "C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\builds\\builds-trabalho.blend",
+  "originals_unchanged": true,
+  "models": [
+    {
+      "item_id": "stone_extractor",
+      "category": "Extractors",
+      "label": "PEDRA",
+      "gallery_position": [
+        -14,
+        13,
+        0
+      ],
+      "parts": [
+        "stone_extractor_gear_foot",
+        "stone_extractor_housing",
+        "stone_extractor_upper_rim",
+        "stone_extractor_rotor_well",
+        "stone_extractor_rotor_disc",
+        "stone_extractor_spiral",
+        "stone_extractor_rotor_hub",
+        "stone_extractor_feed_port",
+        "stone_extractor_rim_bolt_1",
+        "stone_extractor_rim_bolt_2",
+        "stone_extractor_rim_bolt_3",
+        "stone_extractor_rim_bolt_4"
+      ],
+      "triangles": 1138,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5863118171691895,
+        -1.5863118171691895,
+        0.0
+      ],
+      "bounds_max": [
+        1.5863118171691895,
+        1.5863118171691895,
+        1.3215903043746948
+      ]
+    },
+    {
+      "item_id": "gold_extractor",
+      "category": "Extractors",
+      "label": "OURO",
+      "gallery_position": [
+        -7,
+        13,
+        0
+      ],
+      "parts": [
+        "gold_extractor_gear_foot",
+        "gold_extractor_housing",
+        "gold_extractor_upper_rim",
+        "gold_extractor_rotor_well",
+        "gold_extractor_rotor_disc",
+        "gold_extractor_spiral",
+        "gold_extractor_rotor_hub",
+        "gold_extractor_feed_port",
+        "gold_extractor_rim_bolt_1",
+        "gold_extractor_rim_bolt_2",
+        "gold_extractor_rim_bolt_3",
+        "gold_extractor_rim_bolt_4"
+      ],
+      "triangles": 1138,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5863118171691895,
+        -1.5863118171691895,
+        0.0
+      ],
+      "bounds_max": [
+        1.5863118171691895,
+        1.5863118171691895,
+        1.3215903043746948
+      ]
+    },
+    {
+      "item_id": "diamond_extractor",
+      "category": "Extractors",
+      "label": "DIAMANTE",
+      "gallery_position": [
+        0,
+        13,
+        0
+      ],
+      "parts": [
+        "diamond_extractor_gear_foot",
+        "diamond_extractor_housing",
+        "diamond_extractor_upper_rim",
+        "diamond_extractor_rotor_well",
+        "diamond_extractor_rotor_disc",
+        "diamond_extractor_spiral",
+        "diamond_extractor_rotor_hub",
+        "diamond_extractor_feed_port",
+        "diamond_extractor_rim_bolt_1",
+        "diamond_extractor_rim_bolt_2",
+        "diamond_extractor_rim_bolt_3",
+        "diamond_extractor_rim_bolt_4",
+        "diamond_extractor_crystal_1",
+        "diamond_extractor_crystal_2",
+        "diamond_extractor_crystal_3",
+        "diamond_extractor_crystal_4"
+      ],
+      "triangles": 1194,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5863118171691895,
+        -1.5863118171691895,
+        0.0
+      ],
+      "bounds_max": [
+        1.5863118171691895,
+        1.5863118171691895,
+        1.3215903043746948
+      ]
+    },
+    {
+      "item_id": "amethyst_extractor",
+      "category": "Extractors",
+      "label": "AMETISTA",
+      "gallery_position": [
+        7,
+        13,
+        0
+      ],
+      "parts": [
+        "amethyst_extractor_gear_foot",
+        "amethyst_extractor_housing",
+        "amethyst_extractor_upper_rim",
+        "amethyst_extractor_rotor_well",
+        "amethyst_extractor_rotor_disc",
+        "amethyst_extractor_spiral",
+        "amethyst_extractor_rotor_hub",
+        "amethyst_extractor_feed_port",
+        "amethyst_extractor_rim_bolt_1",
+        "amethyst_extractor_rim_bolt_2",
+        "amethyst_extractor_rim_bolt_3",
+        "amethyst_extractor_rim_bolt_4",
+        "amethyst_extractor_crystal_mount_1",
+        "amethyst_extractor_crystal_1",
+        "amethyst_extractor_crystal_mount_2",
+        "amethyst_extractor_crystal_2",
+        "amethyst_extractor_crystal_mount_3",
+        "amethyst_extractor_crystal_3",
+        "amethyst_extractor_crystal_mount_4",
+        "amethyst_extractor_crystal_4",
+        "amethyst_extractor_gold_band"
+      ],
+      "triangles": 1434,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5863118171691895,
+        -1.5863118171691895,
+        0.0
+      ],
+      "bounds_max": [
+        1.5863118171691895,
+        1.5863118171691895,
+        1.5399999618530273
+      ]
+    },
+    {
+      "item_id": "reidite_extractor",
+      "category": "Extractors",
+      "label": "REIDITE",
+      "gallery_position": [
+        14,
+        13,
+        0
+      ],
+      "parts": [
+        "reidite_extractor_gear_foot",
+        "reidite_extractor_housing",
+        "reidite_extractor_upper_rim",
+        "reidite_extractor_rotor_well",
+        "reidite_extractor_rotor_disc",
+        "reidite_extractor_spiral",
+        "reidite_extractor_rotor_hub",
+        "reidite_extractor_feed_port",
+        "reidite_extractor_rim_bolt_1",
+        "reidite_extractor_rim_bolt_2",
+        "reidite_extractor_rim_bolt_3",
+        "reidite_extractor_rim_bolt_4",
+        "reidite_extractor_armor_fin_1",
+        "reidite_extractor_reidite_fin_1",
+        "reidite_extractor_armor_fin_2",
+        "reidite_extractor_reidite_fin_2",
+        "reidite_extractor_armor_fin_3",
+        "reidite_extractor_reidite_fin_3",
+        "reidite_extractor_armor_fin_4",
+        "reidite_extractor_reidite_fin_4",
+        "reidite_extractor_armor_band"
+      ],
+      "triangles": 1402,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.6684800386428833,
+        -1.6684800386428833,
+        0.0
+      ],
+      "bounds_max": [
+        1.6684800386428833,
+        1.6684800386428833,
+        1.7799999713897705
+      ]
+    },
+    {
+      "item_id": "campfire",
+      "category": "Fire_Structures",
+      "label": "FOGUEIRA",
+      "gallery_position": [
+        -7,
+        5,
+        0
+      ],
+      "parts": [
+        "campfire_ember_bed",
+        "campfire_log_1",
+        "campfire_log_end_1_1",
+        "campfire_log_end_1_2",
+        "campfire_log_2",
+        "campfire_log_end_2_1",
+        "campfire_log_end_2_2",
+        "campfire_flame_1",
+        "campfire_flame_2",
+        "campfire_flame_3",
+        "campfire_flame_4",
+        "campfire_flame_core"
+      ],
+      "triangles": 330,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.0894594192504883,
+        -1.0894594192504883,
+        0
+      ],
+      "bounds_max": [
+        1.0894594192504883,
+        1.0894594192504883,
+        1.692500077188015
+      ]
+    },
+    {
+      "item_id": "big_fire",
+      "category": "Fire_Structures",
+      "label": "FOGUEIRA GRANDE",
+      "gallery_position": [
+        0,
+        5,
+        0
+      ],
+      "parts": [
+        "big_fire_ember_bed",
+        "big_fire_log_1",
+        "big_fire_log_end_1_1",
+        "big_fire_log_end_1_2",
+        "big_fire_log_2",
+        "big_fire_log_end_2_1",
+        "big_fire_log_end_2_2",
+        "big_fire_log_3",
+        "big_fire_log_end_3_1",
+        "big_fire_log_end_3_2",
+        "big_fire_flame_1",
+        "big_fire_flame_2",
+        "big_fire_flame_3",
+        "big_fire_flame_4",
+        "big_fire_flame_core"
+      ],
+      "triangles": 426,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5087186098098755,
+        -1.5144507884979248,
+        0
+      ],
+      "bounds_max": [
+        1.5087188482284546,
+        1.5144507884979248,
+        2.264800083823502
+      ]
+    },
+    {
+      "item_id": "furnace",
+      "category": "Fire_Structures",
+      "label": "FORNALHA",
+      "gallery_position": [
+        7,
+        5,
+        0
+      ],
+      "parts": [
+        "furnace_stone_body",
+        "furnace_lip",
+        "furnace_coal",
+        "furnace_grate_bar_1",
+        "furnace_grate_bar_2",
+        "furnace_grate_bar_3",
+        "furnace_foot_1",
+        "furnace_foot_2",
+        "furnace_foot_3",
+        "furnace_foot_4",
+        "furnace_foot_5",
+        "furnace_foot_6",
+        "furnace_foot_7",
+        "furnace_foot_8",
+        "furnace_front_vent",
+        "furnace_vent_slit_1",
+        "furnace_vent_slit_2",
+        "furnace_vent_slit_3",
+        "furnace_flame_1",
+        "furnace_flame_2",
+        "furnace_flame_3",
+        "furnace_flame_4",
+        "furnace_flame_core"
+      ],
+      "triangles": 718,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.3673417568206787,
+        -1.4825001955032349,
+        0.0
+      ],
+      "bounds_max": [
+        1.3673417568206787,
+        1.3673417568206787,
+        1.5750000476837158
+      ]
+    },
+    {
+      "item_id": "workbench",
+      "category": "Misc_Structures",
+      "label": "BANCADA",
+      "gallery_position": [
+        -14,
+        -3,
+        0
+      ],
+      "parts": [
+        "workbench_leg_1",
+        "workbench_leg_2",
+        "workbench_leg_3",
+        "workbench_leg_4",
+        "workbench_crossbeam_1",
+        "workbench_crossbeam_2",
+        "workbench_top_plank_1",
+        "workbench_top_plank_2",
+        "workbench_top_plank_3",
+        "workbench_stone_work_surface",
+        "workbench_mallet_handle",
+        "workbench_mallet_head",
+        "workbench_chisel"
+      ],
+      "triangles": 344,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.524999976158142,
+        -1.0250000953674316,
+        0.0
+      ],
+      "bounds_max": [
+        1.524999976158142,
+        1.0250000953674316,
+        2.0323081016540527
+      ]
+    },
+    {
+      "item_id": "chest",
+      "category": "Misc_Structures",
+      "label": "BAU",
+      "gallery_position": [
+        -7,
+        -3,
+        0
+      ],
+      "parts": [
+        "chest_bottom",
+        "chest_wall_long_1",
+        "chest_wall_long_2",
+        "chest_wall_end_1",
+        "chest_wall_end_2",
+        "chest_strap_body_1_1",
+        "chest_strap_body_1_2",
+        "chest_strap_body_2_1",
+        "chest_strap_body_2_2",
+        "chest_lid_board",
+        "chest_lid_strap_1",
+        "chest_lid_strap_2",
+        "chest_latch",
+        "chest_keyhole",
+        "chest_hinge_pin_1",
+        "chest_hinge_pin_2"
+      ],
+      "triangles": 456,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.440000057220459,
+        -1.1174999475479126,
+        0.0
+      ],
+      "bounds_max": [
+        1.440000057220459,
+        1.0700000524520874,
+        1.7149999141693115
+      ]
+    },
+    {
+      "item_id": "bridge",
+      "category": "Misc_Structures",
+      "label": "PONTE",
+      "gallery_position": [
+        0,
+        -3,
+        0
+      ],
+      "parts": [
+        "bridge_cross_tie_1",
+        "bridge_cross_tie_2",
+        "bridge_plank_1",
+        "bridge_peg_1_1",
+        "bridge_peg_1_2",
+        "bridge_plank_2",
+        "bridge_peg_2_1",
+        "bridge_peg_2_2",
+        "bridge_plank_3",
+        "bridge_peg_3_1",
+        "bridge_peg_3_2"
+      ],
+      "triangles": 284,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -2.059999942779541,
+        -2.0999999046325684,
+        0.0
+      ],
+      "bounds_max": [
+        2.059999942779541,
+        2.0999999046325684,
+        0.3799999952316284
+      ]
+    },
+    {
+      "item_id": "roof",
+      "category": "Misc_Structures",
+      "label": "TELHADO",
+      "gallery_position": [
+        7,
+        -3,
+        0
+      ],
+      "parts": [
+        "roof_batten_1",
+        "roof_batten_2",
+        "roof_roof_board_1",
+        "roof_roof_board_2",
+        "roof_roof_board_3",
+        "roof_peg_1_1",
+        "roof_peg_1_2",
+        "roof_peg_2_1",
+        "roof_peg_2_2",
+        "roof_peg_3_1",
+        "roof_peg_3_2"
+      ],
+      "triangles": 284,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -2.0999999046325684,
+        -2.115000009536743,
+        0.0
+      ],
+      "bounds_max": [
+        2.0999999046325684,
+        2.115000009536743,
+        0.44999998807907104
+      ]
+    },
+    {
+      "item_id": "sign",
+      "category": "Misc_Structures",
+      "label": "PLACA",
+      "gallery_position": [
+        14,
+        -3,
+        0
+      ],
+      "parts": [
+        "sign_post",
+        "sign_board_1",
+        "sign_board_2",
+        "sign_board_3",
+        "sign_rear_batten_1",
+        "sign_nail_1_1",
+        "sign_nail_1_2",
+        "sign_rear_batten_2",
+        "sign_nail_2_1",
+        "sign_nail_2_2"
+      ],
+      "triangles": 264,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.4500000476837158,
+        -0.12999990582466125,
+        0.0
+      ],
+      "bounds_max": [
+        1.4500000476837158,
+        0.2399999052286148,
+        2.754999876022339
+      ]
+    },
+    {
+      "item_id": "well",
+      "category": "Misc_Structures",
+      "label": "POCO",
+      "gallery_position": [
+        -14,
+        -11,
+        0
+      ],
+      "parts": [
+        "well_water",
+        "well_stone_1_01",
+        "well_stone_1_02",
+        "well_stone_1_03",
+        "well_stone_1_04",
+        "well_stone_1_05",
+        "well_stone_1_06",
+        "well_stone_1_07",
+        "well_stone_1_08",
+        "well_stone_1_09",
+        "well_stone_1_10",
+        "well_stone_1_11",
+        "well_stone_1_12",
+        "well_stone_2_01",
+        "well_stone_2_02",
+        "well_stone_2_03",
+        "well_stone_2_04",
+        "well_stone_2_05",
+        "well_stone_2_06",
+        "well_stone_2_07",
+        "well_stone_2_08",
+        "well_stone_2_09",
+        "well_stone_2_10",
+        "well_stone_2_11",
+        "well_stone_2_12",
+        "well_rim_stone_01",
+        "well_rim_stone_02",
+        "well_rim_stone_03",
+        "well_rim_stone_04",
+        "well_rim_stone_05",
+        "well_rim_stone_06",
+        "well_rim_stone_07",
+        "well_rim_stone_08",
+        "well_rim_stone_09",
+        "well_rim_stone_10",
+        "well_rim_stone_11",
+        "well_rim_stone_12"
+      ],
+      "triangles": 528,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.6859939098358154,
+        -1.6859939098358154,
+        0
+      ],
+      "bounds_max": [
+        1.6859939098358154,
+        1.6859939098358154,
+        1.2499999813735485
+      ]
+    },
+    {
+      "item_id": "bed",
+      "category": "Misc_Structures",
+      "label": "CAMA",
+      "gallery_position": [
+        -7,
+        -11,
+        0
+      ],
+      "parts": [
+        "bed_post_1_1",
+        "bed_post_1_2",
+        "bed_post_2_1",
+        "bed_post_2_2",
+        "bed_rail_1",
+        "bed_rail_2",
+        "bed_slat_base",
+        "bed_headboard",
+        "bed_footboard",
+        "bed_mattress",
+        "bed_blanket",
+        "bed_blanket_fold",
+        "bed_pillow"
+      ],
+      "triangles": 364,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.3900004625320435,
+        -1.8700000047683716,
+        0.0
+      ],
+      "bounds_max": [
+        1.3899999856948853,
+        1.8700000047683716,
+        1.590000033378601
+      ]
+    },
+    {
+      "item_id": "totem",
+      "category": "Misc_Structures",
+      "label": "TOTEM",
+      "gallery_position": [
+        0,
+        -11,
+        0
+      ],
+      "parts": [
+        "totem_base",
+        "totem_carved_body",
+        "totem_eye_socket_-1_1",
+        "totem_eye_-1_1",
+        "totem_eye_socket_-1_2",
+        "totem_eye_-1_2",
+        "totem_nose_-1",
+        "totem_mouth_-1",
+        "totem_eye_socket_1_1",
+        "totem_eye_1_1",
+        "totem_eye_socket_1_2",
+        "totem_eye_1_2",
+        "totem_nose_1",
+        "totem_mouth_1",
+        "totem_ear_1",
+        "totem_ear_2",
+        "totem_crown"
+      ],
+      "triangles": 522,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.2899999618530273,
+        -1.1799999475479126,
+        0.0
+      ],
+      "bounds_max": [
+        1.2899999618530273,
+        1.1799999475479126,
+        2.5
+      ]
+    },
+    {
+      "item_id": "resurrection_stone",
+      "category": "Misc_Structures",
+      "label": "PEDRA DE RESSURREICAO",
+      "gallery_position": [
+        7,
+        -11,
+        0
+      ],
+      "parts": [
+        "resurrection_stone_pedestal",
+        "resurrection_stone_outer_ring",
+        "resurrection_stone_recess",
+        "resurrection_stone_inner_ring",
+        "resurrection_stone_outer_crystal_1",
+        "resurrection_stone_outer_crystal_2",
+        "resurrection_stone_outer_crystal_3",
+        "resurrection_stone_outer_crystal_4",
+        "resurrection_stone_outer_crystal_5",
+        "resurrection_stone_outer_crystal_6",
+        "resurrection_stone_outer_crystal_7",
+        "resurrection_stone_outer_crystal_8",
+        "resurrection_stone_energy_core",
+        "resurrection_stone_central_crystal",
+        "resurrection_stone_rune_1",
+        "resurrection_stone_rune_2",
+        "resurrection_stone_rune_3",
+        "resurrection_stone_rune_4",
+        "resurrection_stone_rune_5",
+        "resurrection_stone_rune_6",
+        "resurrection_stone_rune_7",
+        "resurrection_stone_rune_8"
+      ],
+      "triangles": 662,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5402636528015137,
+        -1.5402636528015137,
+        0.0
+      ],
+      "bounds_max": [
+        1.5402636528015137,
+        1.5402636528015137,
+        1.25
+      ]
+    },
+    {
+      "item_id": "emerald_machine",
+      "category": "Misc_Structures",
+      "label": "MAQUINA DE ESMERALDA",
+      "gallery_position": [
+        14,
+        -11,
+        0
+      ],
+      "parts": [
+        "emerald_machine_pedestal",
+        "emerald_machine_outer_ring",
+        "emerald_machine_recess",
+        "emerald_machine_inner_ring",
+        "emerald_machine_outer_crystal_1",
+        "emerald_machine_outer_crystal_2",
+        "emerald_machine_outer_crystal_3",
+        "emerald_machine_outer_crystal_4",
+        "emerald_machine_outer_crystal_5",
+        "emerald_machine_outer_crystal_6",
+        "emerald_machine_outer_crystal_7",
+        "emerald_machine_outer_crystal_8",
+        "emerald_machine_core",
+        "emerald_machine_core_setting",
+        "emerald_machine_rune_1",
+        "emerald_machine_rune_2",
+        "emerald_machine_rune_3",
+        "emerald_machine_rune_4",
+        "emerald_machine_rune_5",
+        "emerald_machine_rune_6",
+        "emerald_machine_rune_7",
+        "emerald_machine_rune_8"
+      ],
+      "triangles": 662,
+      "non_manifold_edges": 0,
+      "bounds_min": [
+        -1.5402636528015137,
+        -1.5402636528015137,
+        0.0
+      ],
+      "bounds_max": [
+        1.5402636528015137,
+        1.5402636528015137,
+        1.6600000858306885
+      ]
+    }
+  ]
+}

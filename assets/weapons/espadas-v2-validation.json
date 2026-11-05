@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Sword_Madeira_v2",
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Sword_Pedra_v2",
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Sword_Ouro_v2",
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Sword_Diamante_v2",
+    "triangles": 140,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Sword_Ametista_v2",
+    "triangles": 160,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Sword_Vermelha_v2",
+    "triangles": 200,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  }
+]

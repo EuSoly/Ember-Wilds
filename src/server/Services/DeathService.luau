@@ -204,6 +204,11 @@ local function checkFalls()
 end
 
 function DeathService.Start(_self)
+	Net.RequestReset.On(function(player: Player)
+		if player.Character ~= nil then
+			DeathService.kill(player, "death.cause.dev")
+		end
+	end)
 	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

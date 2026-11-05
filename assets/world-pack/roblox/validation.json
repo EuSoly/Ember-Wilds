@@ -1,0 +1,610 @@
+{
+  "files": [
+    {
+      "file": "mundo-completo.fbx",
+      "assets": 55,
+      "meshes": 78,
+      "max_bounds_error": 2.86102294921875e-06,
+      "max_pivot_error": 1.1920928955078125e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "categorias/depositos.fbx",
+      "assets": 6,
+      "meshes": 6,
+      "max_bounds_error": 7.152557373046875e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "categorias/viewports.fbx",
+      "assets": 7,
+      "meshes": 7,
+      "max_bounds_error": 8.344650268554688e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "categorias/estruturas.fbx",
+      "assets": 18,
+      "meshes": 29,
+      "max_bounds_error": 1.9073486328125e-06,
+      "max_pivot_error": 1.1920928955078125e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "categorias/construcoes.fbx",
+      "assets": 24,
+      "meshes": 36,
+      "max_bounds_error": 2.86102294921875e-06,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 2.873584321605449e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.1075700235305703e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/emerald_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.150829570586211e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.184985075677105e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.461631479240168e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_deposit_icon.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.184367187714088e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 8.195638656616211e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 7.450580596923828e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/emerald_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 8.940696716308594e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 8.940696716308594e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 8.195638656616211e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 8.940696716308594e-08,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/wood_viewport.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 1.1920928955078125e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_extractor.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.9568775516963797e-07,
+      "max_pivot_error": 1.8119639085734022e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/bed.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.76837158203125e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/big_fire.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 1.4901161193847656e-07,
+      "max_pivot_error": 5.875942417337006e-08,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/bridge.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.230411150274449e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/campfire.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 1.2409644511990336e-07,
+      "max_pivot_error": 5.361934362579369e-08,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/chest.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.7817975478683366e-07,
+      "max_pivot_error": 2.9404948772759723e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_extractor.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.9568775516963797e-07,
+      "max_pivot_error": 1.8119639085734022e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/emerald_machine.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.384185791015625e-07,
+      "max_pivot_error": 1.2757704829990424e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/furnace.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.510365106900281e-07,
+      "max_pivot_error": 7.765559242267651e-08,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_extractor.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.9568775516963797e-07,
+      "max_pivot_error": 1.8119639085734022e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_extractor.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.9568775516963797e-07,
+      "max_pivot_error": 1.8119639085734022e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/resurrection_stone.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.384185791015625e-07,
+      "max_pivot_error": 1.2757704829990424e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/roof.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.763273864227813e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/sign.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.172325134277344e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_extractor.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 2.9568775516963797e-07,
+      "max_pivot_error": 1.8119639085734022e-07,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/totem.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 1.9472150825095014e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/well.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.5762786865234375e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/workbench.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 2.446817291001935e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790136702264135e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790136702264135e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/amethyst_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/diamond_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.7901358496128523e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/gold_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 4.1816792872850783e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.181680139936361e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 4.1816792872850783e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/reidite_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.181680139936361e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/stone_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 3.790135565395758e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/wood_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.6806613934459165e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/wood_spike.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.76837158203125e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/wood_spike_door.fbx",
+      "assets": 1,
+      "meshes": 2,
+      "max_bounds_error": 3.6806613934459165e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    },
+    {
+      "file": "individual/wood_wall.fbx",
+      "assets": 1,
+      "meshes": 1,
+      "max_bounds_error": 4.76837158203125e-07,
+      "max_pivot_error": 0.0,
+      "texture": true,
+      "uv": true,
+      "hierarchy": true
+    }
+  ],
+  "errors": [],
+  "tested_in": "Blender FBX round trip; not uploaded to Roblox Studio",
+  "passed": true,
+  "files_passed": 60,
+  "max_bounds_error": 2.86102294921875e-06,
+  "max_pivot_error": 2.9404948772759723e-07
+}

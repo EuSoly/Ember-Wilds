@@ -16,6 +16,8 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local Palette = require(Shared:WaitForChild("Palette"))
+local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
+local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
@@ -23,9 +25,9 @@ local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local FOLDER_NAME = "BonecoVisuals"
 local DEFAULT_EYE_COLOR = "#111111"
 local SHINE_COLOR = "#FFFFFF"
--- Olhos: disco fino logo acima do topo do corpo.
-local EYE_LIFT = 0.03
-local EYE_THICKNESS = 0.06
+-- Olhos: disco fino logo acima do topo do corpo (0.06/0.08 fica acima das camadas do topo das skins 3D).
+local EYE_LIFT = 0.06
+local EYE_THICKNESS = 0.08
 local SHINE_OFFSET = Vector3.new(-0.18, 0.02, -0.18)
 -- Barras do olho fechado e do "> <".
 local BAR_THICKNESS = 0.06
@@ -55,6 +57,8 @@ export type Boneco = {
 	eyeParts: { BasePart }, -- peças na cor do olho (sem o brilho)
 	eyeStyles: EyeParts,
 	look: Defs.BodyLook,
+	skinId: string?,
+	skinParts: { BasePart },
 	flash: string?,
 	tool: Model?,
 }
@@ -187,6 +191,10 @@ local function paint(boneco: Boneco)
 	for _, part in boneco.eyeParts do
 		part.Color = eyeColor
 	end
+	local skinTint = if boneco.flash then Theme.color(boneco.flash) else Color3.new(1, 1, 1)
+	for _, part in boneco.skinParts do
+		part.Color = skinTint
+	end
 end
 
 local function buildNameTag(root: BasePart, displayName: string): TextLabel
@@ -316,6 +324,8 @@ function BonecoModel.build(displayName: string): Boneco
 		eyeParts = eyeParts,
 		eyeStyles = eyeStyles,
 		look = defaultLook,
+		skinId = nil,
+		skinParts = {},
 		flash = nil,
 		tool = nil,
 	}
@@ -326,8 +336,97 @@ function BonecoModel.build(displayName: string): Boneco
 	return boneco
 end
 
-function BonecoModel.applyLook(boneco: Boneco, look: Defs.BodyLook)
+local function setProceduralVisible(boneco: Boneco, visible: boolean)
+	local transparency = if visible then 0 else 1
+	for _, part in boneco.bodyParts do
+		part.Transparency = transparency
+	end
+	for _, part in boneco.handParts do
+		part.Transparency = transparency
+	end
+	for _, part in boneco.outlineParts do
+		part.Transparency = transparency
+	end
+end
+
+local function applySkinMeshes(boneco: Boneco, skinId: string?)
+	local has3D = skinId ~= nil and SkinAssets.hasSkin(skinId)
+	if skinId == boneco.skinId and (not has3D or #boneco.skinParts > 0) then
+		return
+	end
+	for _, part in boneco.skinParts do
+		part:Destroy()
+	end
+	table.clear(boneco.skinParts)
+	boneco.skinId = skinId
+
+	if not has3D or skinId == nil then
+		setProceduralVisible(boneco, true)
+		return
+	end
+
+	local partNames = SkinManifest.PARTS_BY_SKIN[skinId]
+	if partNames == nil then
+		setProceduralVisible(boneco, true)
+		return
+	end
+
+	local body = boneco.bodyParts[1]
+	local leftHand = boneco.handParts[1]
+	local rightHand = boneco.handParts[2]
+
+	local hasLeftHandMesh = false
+	for _, partName in partNames do
+		local info = SkinManifest.PARTS[partName]
+		if info and info.papel == "mao_esq" and SkinAssets.findPart(skinId, partName) ~= nil then
+			hasLeftHandMesh = true
+			break
+		end
+	end
+
+	for _, partName in partNames do
+		local info = SkinManifest.PARTS[partName]
+		if info then
+			if info.papel == "corpo" then
+				local clone = SkinAssets.clonePart(skinId, partName, body.CFrame)
+				if clone then
+					clone.Parent = boneco.model
+					weld(body, clone)
+					table.insert(boneco.skinParts, clone)
+				end
+			elseif info.papel == "mao" then
+				local cloneRight = SkinAssets.clonePart(skinId, partName, rightHand.CFrame)
+				if cloneRight then
+					cloneRight.Parent = rightHand
+					weld(rightHand, cloneRight)
+					table.insert(boneco.skinParts, cloneRight)
+				end
+				if not hasLeftHandMesh then
+					local cloneLeft = SkinAssets.clonePart(skinId, partName, leftHand.CFrame)
+					if cloneLeft then
+						cloneLeft.Name = partName .. "_esq"
+						cloneLeft.Parent = leftHand
+						weld(leftHand, cloneLeft)
+						table.insert(boneco.skinParts, cloneLeft)
+					end
+				end
+			elseif info.papel == "mao_esq" then
+				local cloneLeft = SkinAssets.clonePart(skinId, partName, leftHand.CFrame)
+				if cloneLeft then
+					cloneLeft.Parent = leftHand
+					weld(leftHand, cloneLeft)
+					table.insert(boneco.skinParts, cloneLeft)
+				end
+			end
+		end
+	end
+
+	setProceduralVisible(boneco, #boneco.skinParts == 0)
+end
+
+function BonecoModel.applyLook(boneco: Boneco, look: Defs.BodyLook, skinId: string?)
 	boneco.look = look
+	applySkinMeshes(boneco, skinId)
 	paint(boneco)
 end
 
@@ -348,7 +447,7 @@ function BonecoModel.setFlash(boneco: Boneco, hex: string?)
 end
 
 -- Troca o item na mão direita. true se ficou uma ferramenta na mão.
-function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?): boolean
+function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?, cosmeticId: string?): boolean
 	if boneco.tool then
 		boneco.tool:Destroy()
 		boneco.tool = nil
@@ -356,7 +455,7 @@ function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?): boolean
 	if itemId == nil then
 		return false
 	end
-	local tool = ToolModel.build(itemId)
+	local tool = ToolModel.build(itemId, cosmeticId)
 	if tool == nil then
 		return false
 	end

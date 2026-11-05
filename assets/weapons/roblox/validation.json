@@ -1,0 +1,172 @@
+{
+  "combined": {
+    "meshes": 18,
+    "geometry_bounds_max_error": 4.76837158203125e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "amethyst_spear",
+      "triangles": 252,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 4.6193599700927734e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "amethyst_sword",
+      "triangles": 414,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.341104507446289e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "crab_spear",
+      "triangles": 150,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 4.470348358154297e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_spear",
+      "triangles": 174,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 7.450580596923828e-09,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "diamond_sword",
+      "triangles": 254,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "dragon_spear",
+      "triangles": 100,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "dragon_sword",
+      "triangles": 132,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 6.705522537231445e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_spear",
+      "triangles": 154,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "gold_sword",
+      "triangles": 126,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 8.195638656616211e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "lava_spear",
+      "triangles": 170,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.9802322387695312e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "lava_sword",
+      "triangles": 208,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 3.5762786865234375e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "pirate_sword",
+      "triangles": 208,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 4.842877388000488e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "reidite_spear",
+      "triangles": 344,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 3.725290298461914e-09,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "reidite_sword",
+      "triangles": 1098,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1175870895385742e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_spear",
+      "triangles": 174,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "stone_sword",
+      "triangles": 114,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 6.705522537231445e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wood_spear",
+      "triangles": 274,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 4.246830940246582e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wood_sword",
+      "triangles": 246,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 4.470348358154297e-08,
+      "pivot_at_origin": true
+    }
+  ],
+  "errors": []
+}

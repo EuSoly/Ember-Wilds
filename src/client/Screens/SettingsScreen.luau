@@ -483,15 +483,40 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 					create("UIPadding")({ PaddingRight = UDim.new(0, 8) }),
 					rows(),
 				}),
-				Rustic.button({
-					Name = "CloseButton",
+				create("Frame")({
+					Name = "Buttons",
 					AnchorPoint = Vector2.new(0.5, 1),
 					Position = UDim2.new(0.5, 0, 1, -14),
-					Size = UDim2.fromOffset(200, CLOSE_HEIGHT),
-					kind = "ember",
-					text = Strings.get("settings.close"),
-					maxSize = 24,
-					Activated = close,
+					Size = UDim2.new(1, -32, 0, CLOSE_HEIGHT),
+					BackgroundTransparency = 1,
+					create("UIListLayout")({
+						FillDirection = Enum.FillDirection.Horizontal,
+						HorizontalAlignment = Enum.HorizontalAlignment.Center,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+						Padding = UDim.new(0, 16),
+						SortOrder = Enum.SortOrder.LayoutOrder,
+					}),
+					Rustic.button({
+						Name = "ResetButton",
+						LayoutOrder = 1,
+						Size = UDim2.fromOffset(150, CLOSE_HEIGHT),
+						kind = "leather",
+						text = Strings.get("settings.reset"),
+						maxSize = 22,
+						Activated = function()
+							Net.RequestReset.Fire()
+							close()
+						end,
+					}),
+					Rustic.button({
+						Name = "CloseButton",
+						LayoutOrder = 2,
+						Size = UDim2.fromOffset(150, CLOSE_HEIGHT),
+						kind = "ember",
+						text = Strings.get("settings.close"),
+						maxSize = 22,
+						Activated = close,
+					}),
 				}),
 			}),
 		}),

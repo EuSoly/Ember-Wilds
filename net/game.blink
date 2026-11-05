@@ -101,6 +101,13 @@ event RequestSpawn {
 	}
 }
 
+-- Pedido de reset do personagem (botão de teste em Configurações).
+event RequestReset {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
 -- Resumo da vida que acabou, para a tela de morte (DeathService.kill).
 -- CauseKey = chave de Strings (ex. "death.cause.dev"); Days = ciclos vividos;
 -- Points = pontos da vida; Currency = Golden Ember concedida de fato (após tetos).

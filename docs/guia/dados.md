@@ -173,16 +173,39 @@ Como funciona: ao abrir o perfil, os passos que faltam rodam em ordem **antes** 
 
 Skins ficam no perfil (`Cosmetics.Owned` e `Cosmetics.Equipped`, veja o schema). O `CosmeticService` publica no **Player**:
 
-- Pasta `Player.OwnedCosmetics`, atributo `<id>` = `true` para cada skin possuída, ao carregar o perfil e a cada skin dada (`grantOwnership`). A skin **padrão** de cada slot conta como possuída sem o atributo. A tela de Cosméticos lê isto para tirar o cadeado.
+- Pasta `Player.OwnedCosmetics` com **um objeto `BoolValue` por skin possuída** (`Name` = id da skin), montada ao carregar o perfil e acrescida a cada skin dada (`grantOwnership`). A skin **padrão** de cada slot conta como possuída sem o objeto. A tela de Cosméticos lê a pasta com `Sources.childNames` para tirar o cadeado. Por que objetos e não atributos: veja "Posse das skins" abaixo.
 - `Cosmetic_<slot>` = id da skin equipada (`Cosmetic_body`, `Cosmetic_bag`, `Cosmetic_book`, `Cosmetic_crate`), também no personagem. Os slots estão em `Defs/CosmeticSlots.luau`: `body`, `crate`, `bag` (mochila) e `book` (livro, uma skin só).
 
 O cliente **pede** para equipar pelo evento `EquipCosmetic` (`{ Id }`, em `net/game.blink`). O servidor ignora em silêncio id inexistente, skin não possuída ou pedido a menos de 0,2 s do anterior; se vale, equipa e salva. Como dar uma skin para testar: `DevGrantCosmetic` (abaixo). Como criar skins: `telas.md`, "Adicionar ou mudar uma skin".
+
+### Posse das skins (pensada para ~600 skins)
+
+O jogo vai ter centenas de skins, e um jogador pode ter todas. Por isso:
+
+- **Perfil (servidor):** `data.Cosmetics.Owned` = `{ [id] = true }`. Com 600 skins de ~20 letras são ~12 KB, longe do teto de 4 MB do DataStore.
+- **Cliente:** um `BoolValue` por skin dentro de `Player.OwnedCosmetics`, **nunca atributos**. Cada instância do Roblox aguenta só ~1 KB de atributos no total (nomes + valores); com atributos, a pasta lotaria por volta de 40–50 skins e dar a próxima falharia com `Attribute total payload exceeds 1024 bytes`. Objetos filhos não têm esse limite.
+- No carregamento a pasta é **preenchida antes de ir para o Player**, para chegar ao cliente num envio só.
+- No cliente, **uma fonte para a pasta toda** (`Sources.childNames(player, StatNames.OwnedFolder)`, conjunto `{ [id] = true }`), que recalcula no máximo uma vez por quadro. Não crie uma fonte ou conexão por skin: com 600 skins seriam 600 conexões.
+- **Id da skin:** é o nome do objeto e vai no evento `EquipCosmetic` (`Id: string(1..48)`): no máximo 48 letras, e nunca muda depois de lançado (está salvo nos perfis).
+
+### Ligar a roleta de verdade (checklist para o futuro)
+
+Hoje a roleta é **toda simulada no cliente**: `SpinScreen.luau` sorteia (`SpinRules.pickItem` com um `Random` local) e só mostra o prêmio; ninguém ganha nada. Para virar de verdade, o certo é:
+
+1. **O sorteio vai para o servidor.** O cliente só **pede** o giro (evento Blink novo, ex. `RequestSpin { TypeId, Paid }`). Nunca aceite do cliente qual skin saiu.
+2. **O servidor confere e cobra:** giro normal desconta Golden Ember (`CurrencyService`); giro pago só depois do recibo do Robux (`MarketplaceService.ProcessReceipt`). Giros comprados e ainda não usados ficam no **perfil** (hoje `ShopState` guarda só na memória do cliente).
+3. **O servidor sorteia com as mesmas regras** (`SpinRules` e `CosmeticCatalog.spinItems` estão em `src/shared`, servem aos dois lados) e as chances de `MockStore.SPIN_ODDS` (levar para um Defs de verdade).
+4. **Dar a skin só por `CosmeticService.grantOwnership(player, id)`**: é o único caminho. Ele grava no perfil e cria o `BoolValue`. Não crie atributo por skin em lugar nenhum (nem no Player, nem na pasta).
+5. **Salvar:** depois de um giro pago, `DataService.save(player)`; no `ProcessReceipt`, só responda `PurchaseGranted` depois que o perfil guardou a skin.
+6. **Devolver o resultado só para o dono** (evento Blink do servidor para o cliente, ex. `SpinResult { Id }`). O cliente anima o carrossel até esse prêmio (`Reel:spinTo(prize)`) e a tela de Cosméticos tira o cadeado sozinha quando o `BoolValue` chega.
+7. **Skin repetida:** `grantOwnership` ignora a duplicata. Falta decidir o que o jogador recebe no lugar (ex.: parte da Golden Ember de volta).
+8. **Testes:** a regra do giro no servidor (cobrar, sortear, repetida) como módulo puro com teste em `tests/`, igual ao `SpinRules`.
 
 ## Estatísticas no cliente
 
 O `StatsService` publica cada estatística de `Defs.Stats` no atributo `<id>` da pasta `Player.ProfileStats`, ao carregar o perfil e a cada mudança. Counter e max vão como estão; keyed vai o **total somado** (`StatsRules.total`); o detalhe por chave fica só no servidor.
 
-> **Limite de atributos por instância (~1 KB no total, nomes + valores).** Quando o Player passou do limite (04/11), todo `SetAttribute` **novo** no Player falhava com `Attribute total payload exceeds 1024 bytes`: sumiram os pontos (`Score`), o `Rank`, a sede e o calor, e o mob morto não soltava caixa (o erro do `ScoreService.add` interrompia o `die` antes do aviso de morte). Por isso estatísticas e posse ficam em pastas próprias. Regra: lista que cresce com o conteúdo (uma entrada por estatística, por skin, por conquista...) vai numa pasta, nunca direto no Player.
+> **Limite de atributos por instância (~1 KB no total, nomes + valores).** Quando o Player passou do limite (04/11), todo `SetAttribute` **novo** no Player falhava com `Attribute total payload exceeds 1024 bytes`: sumiram os pontos (`Score`), o `Rank`, a sede e o calor, e o mob morto não soltava caixa (o erro do `ScoreService.add` interrompia o `die` antes do aviso de morte). Por isso estatísticas e posse ficam em pastas próprias. Regra: lista que cresce com o conteúdo (uma entrada por estatística, por skin, por conquista...) nunca vai direto no Player; se puder passar de umas dezenas de entradas, vira **objetos filhos** numa pasta (como a posse das skins), não atributos.
 
 ### Vida e fim de vida
 

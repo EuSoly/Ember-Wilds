@@ -1,0 +1,14 @@
+[
+  {
+    "collection": "Sword_Stone",
+    "triangles": 246,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "collection": "Spear_Stone",
+    "triangles": 264,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  }
+]

@@ -23,3 +23,8 @@ build/
 
 # Workspace das skills de execução
 .superpowers/
+
+# Arquivos gerados (Python e backups do Blender)
+__pycache__/
+*.blend1
+

@@ -1,0 +1,180 @@
+{
+  "combined": {
+    "meshes": 19,
+    "geometry_bounds_max_error": 4.76837158203125e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "boar_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.539873508704659e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "crab_claws",
+      "triangles": 195,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4633462797064567e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "crab_sticks",
+      "triangles": 278,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 9.623654761981015e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "dragon_heart",
+      "triangles": 361,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.0735274713624676e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "fish",
+      "triangles": 251,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.3048123409807886e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "flame",
+      "triangles": 242,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1326753224238928e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "hawk_feather",
+      "triangles": 392,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 8.807936069388234e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "kraken_skin",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.539873508704659e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "lava_heart",
+      "triangles": 355,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1097586138930637e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "mammoth_fur",
+      "triangles": 233,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4784733792794214e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "penguin_feather",
+      "triangles": 364,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 6.705522537231445e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "piranha_scales",
+      "triangles": 486,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.7806561913857877e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "rabbit_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.539873508704659e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "raw_meat",
+      "triangles": 139,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 9.706883474791539e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "sandworm_juice",
+      "triangles": 276,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.5557065324856012e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "thread",
+      "triangles": 372,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4840287576589617e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "vulture_feather",
+      "triangles": 302,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 8.400921558404661e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "winter_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.539873508704659e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wolf_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.539873508704659e-07,
+      "pivot_at_origin": true
+    }
+  ]
+}

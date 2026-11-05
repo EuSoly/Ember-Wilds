@@ -12,6 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
+local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local Client = script.Parent.Parent.Parent
 local BonecoModel = require(Client:WaitForChild("Boneco"):WaitForChild("BonecoModel"))
 
@@ -50,12 +52,56 @@ local function newPart(model: Model, name: string, size: Vector3, cframe: CFrame
 	return part
 end
 
--- Mochila nas cores de `look`. Peças ancoradas até o `attach`.
-function BagModel.build(look: Defs.BagLook): Model
+local function finalizeBagModel(model: Model, body: BasePart): Model
+	-- Pivô na origem da montagem (= raiz do boneco).
+	model.PrimaryPart = body
+	body.PivotOffset = body.CFrame:Inverse()
+	for _, part in model:GetChildren() do
+		if part ~= body and part:IsA("BasePart") then
+			local weld = Instance.new("WeldConstraint")
+			weld.Part0 = body
+			weld.Part1 = part
+			weld.Parent = part
+		end
+	end
+	return model
+end
+
+-- Mochila nas cores de `look` (ou malha 3D de `cosmeticId` se existir). Peças ancoradas até o `attach`.
+function BagModel.build(look: Defs.BagLook, cosmeticId: string?): Model
+	local centerZ = BACK_Z + SIZE.Z / 2
+	if cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId) then
+		local partNames = SkinManifest.PARTS_BY_SKIN[cosmeticId]
+		if partNames ~= nil then
+			local model = Instance.new("Model")
+			model.Name = "Bag"
+			local body = newPart(
+				model,
+				"BagBody",
+				Vector3.one * 0.2,
+				CFrame.new(0, BOTTOM_Y + SIZE.Y / 2, centerZ),
+				Color3.new(1, 1, 1)
+			)
+			body.Transparency = 1
+			local added = 0
+			for _, partName in partNames do
+				local clone = SkinAssets.clonePart(cosmeticId, partName, CFrame.identity)
+				if clone then
+					clone.Anchored = true
+					clone.Parent = model
+					added += 1
+				end
+			end
+			if added > 0 then
+				return finalizeBagModel(model, body)
+			end
+			model:Destroy()
+		end
+	end
+
 	local color = Color3.fromHex(look.color)
 	local strapColor = Color3.fromHex(look.strapColor)
 	local top = BOTTOM_Y + SIZE.Y
-	local centerZ = BACK_Z + SIZE.Z / 2
 	local outerZ = BACK_Z + SIZE.Z
 
 	local model = Instance.new("Model")
@@ -93,18 +139,7 @@ function BagModel.build(look: Defs.BagLook): Model
 		)
 	end
 
-	-- Pivô na origem da montagem (= raiz do boneco).
-	model.PrimaryPart = body
-	body.PivotOffset = body.CFrame:Inverse()
-	for _, part in model:GetChildren() do
-		if part ~= body and part:IsA("BasePart") then
-			local weld = Instance.new("WeldConstraint")
-			weld.Part0 = body
-			weld.Part1 = part
-			weld.Parent = part
-		end
-	end
-	return model
+	return finalizeBagModel(model, body)
 end
 
 -- Põe `model` (de BagModel.build) nas costas de `boneco`.

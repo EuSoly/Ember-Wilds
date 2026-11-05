@@ -1,0 +1,6182 @@
+[
+  {
+    "name": "Rabbit__Ear_L_lower_edge",
+    "npc": "Rabbit",
+    "material": "Rabbit | lower edge",
+    "rgb": [
+      170,
+      113,
+      143
+    ]
+  },
+  {
+    "name": "Rabbit__Ear_L_ivory",
+    "npc": "Rabbit",
+    "material": "Rabbit | warm ivory border",
+    "rgb": [
+      255,
+      244,
+      245
+    ]
+  },
+  {
+    "name": "Rabbit__Ear_L_pink",
+    "npc": "Rabbit",
+    "material": "Rabbit | ear pink",
+    "rgb": [
+      233,
+      141,
+      186
+    ]
+  },
+  {
+    "name": "Rabbit__Ear_R_lower_edge",
+    "npc": "Rabbit",
+    "material": "Rabbit | lower edge",
+    "rgb": [
+      170,
+      113,
+      143
+    ]
+  },
+  {
+    "name": "Rabbit__Ear_R_ivory",
+    "npc": "Rabbit",
+    "material": "Rabbit | warm ivory border",
+    "rgb": [
+      255,
+      244,
+      245
+    ]
+  },
+  {
+    "name": "Rabbit__Ear_R_pink",
+    "npc": "Rabbit",
+    "material": "Rabbit | ear pink",
+    "rgb": [
+      233,
+      141,
+      186
+    ]
+  },
+  {
+    "name": "Rabbit__Body_lower_edge",
+    "npc": "Rabbit",
+    "material": "Rabbit | lower edge",
+    "rgb": [
+      170,
+      113,
+      143
+    ]
+  },
+  {
+    "name": "Rabbit__Body_ivory",
+    "npc": "Rabbit",
+    "material": "Rabbit | warm ivory border",
+    "rgb": [
+      255,
+      244,
+      245
+    ]
+  },
+  {
+    "name": "Rabbit__Face_pink",
+    "npc": "Rabbit",
+    "material": "Rabbit | strawberry pink",
+    "rgb": [
+      238,
+      167,
+      205
+    ]
+  },
+  {
+    "name": "Rabbit__Eye_L",
+    "npc": "Rabbit",
+    "material": "Rabbit | eyes",
+    "rgb": [
+      23,
+      24,
+      34
+    ]
+  },
+  {
+    "name": "Rabbit__Eye_L_sparkle",
+    "npc": "Rabbit",
+    "material": "Rabbit | eye sparkle",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Rabbit__Eye_R",
+    "npc": "Rabbit",
+    "material": "Rabbit | eyes",
+    "rgb": [
+      23,
+      24,
+      34
+    ]
+  },
+  {
+    "name": "Rabbit__Eye_R_sparkle",
+    "npc": "Rabbit",
+    "material": "Rabbit | eye sparkle",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Wolf__head_rim",
+    "npc": "Wolf",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Wolf__head_color",
+    "npc": "Wolf",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Wolf__inner_ear",
+    "npc": "Wolf",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Wolf__inner_ear.001",
+    "npc": "Wolf",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Wolf__muzzle",
+    "npc": "Wolf",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Wolf__eye",
+    "npc": "Wolf",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Wolf__sparkle",
+    "npc": "Wolf",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Wolf__eye.001",
+    "npc": "Wolf",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Wolf__sparkle.001",
+    "npc": "Wolf",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Wolf__nose",
+    "npc": "Wolf",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.001",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.001",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.002",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.002",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.003",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.003",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.004",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.004",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.005",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.005",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.006",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.006",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__leg_border.007",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__leg.007",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__abdomen_rim",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__abdomen_color",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__head_rim",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__head_color",
+    "npc": "Spider",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Spider__red_mark",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__eye",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__sparkle",
+    "npc": "Spider",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Spider__eye.001",
+    "npc": "Spider",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Spider__sparkle.001",
+    "npc": "Spider",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Boar__back_rim",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__back_color",
+    "npc": "Boar",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Boar__head_rim",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__head_color",
+    "npc": "Boar",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Boar__ear_rim",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__ear_color",
+    "npc": "Boar",
+    "material": "NPC | pink",
+    "rgb": [
+      234,
+      176,
+      193
+    ]
+  },
+  {
+    "name": "Boar__tusk",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__ear_rim.001",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__ear_color.001",
+    "npc": "Boar",
+    "material": "NPC | pink",
+    "rgb": [
+      234,
+      176,
+      193
+    ]
+  },
+  {
+    "name": "Boar__tusk.001",
+    "npc": "Boar",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Boar__mane",
+    "npc": "Boar",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Boar__snout",
+    "npc": "Boar",
+    "material": "NPC | pink",
+    "rgb": [
+      234,
+      176,
+      193
+    ]
+  },
+  {
+    "name": "Boar__nostril",
+    "npc": "Boar",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Boar__nostril.001",
+    "npc": "Boar",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Boar__eye",
+    "npc": "Boar",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Boar__sparkle",
+    "npc": "Boar",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Boar__eye.001",
+    "npc": "Boar",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Boar__sparkle.001",
+    "npc": "Boar",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Hawk__body_rim",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__body_color",
+    "npc": "Hawk",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim.001",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color.001",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim.002",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color.002",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__wing_rim",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__wing_color",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim.003",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color.003",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim.004",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color.004",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__feather_rim.005",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__feather_color.005",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__wing_rim.001",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__wing_color.001",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__head_rim",
+    "npc": "Hawk",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Hawk__head_color",
+    "npc": "Hawk",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Hawk__beak",
+    "npc": "Hawk",
+    "material": "NPC | ice",
+    "rgb": [
+      170,
+      207,
+      216
+    ]
+  },
+  {
+    "name": "Hawk__eye",
+    "npc": "Hawk",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Hawk__sparkle",
+    "npc": "Hawk",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Hawk__eye.001",
+    "npc": "Hawk",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Hawk__sparkle.001",
+    "npc": "Hawk",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather.001",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather.002",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather.001",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather.002",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather.003",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather.004",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__upper_wing_feather.005",
+    "npc": "Hawk",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather.003",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather.004",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Hawk__shoulder_feather.005",
+    "npc": "Hawk",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Penguin__flipper_rim",
+    "npc": "Penguin",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Penguin__flipper_color",
+    "npc": "Penguin",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Penguin__flipper_rim.001",
+    "npc": "Penguin",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Penguin__flipper_color.001",
+    "npc": "Penguin",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Penguin__body_rim",
+    "npc": "Penguin",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Penguin__body_color",
+    "npc": "Penguin",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Penguin__face_patch",
+    "npc": "Penguin",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Penguin__face_patch.001",
+    "npc": "Penguin",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Penguin__eye",
+    "npc": "Penguin",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Penguin__sparkle",
+    "npc": "Penguin",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Penguin__eye.001",
+    "npc": "Penguin",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Penguin__sparkle.001",
+    "npc": "Penguin",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Penguin__beak",
+    "npc": "Penguin",
+    "material": "NPC | beak",
+    "rgb": [
+      244,
+      171,
+      84
+    ]
+  },
+  {
+    "name": "Arctic Fox__head_rim",
+    "npc": "Arctic Fox",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Arctic Fox__head_color",
+    "npc": "Arctic Fox",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Arctic Fox__inner_ear",
+    "npc": "Arctic Fox",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Arctic Fox__inner_ear.001",
+    "npc": "Arctic Fox",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Arctic Fox__eye",
+    "npc": "Arctic Fox",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Arctic Fox__sparkle",
+    "npc": "Arctic Fox",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Arctic Fox__eye.001",
+    "npc": "Arctic Fox",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Arctic Fox__sparkle.001",
+    "npc": "Arctic Fox",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Arctic Fox__nose",
+    "npc": "Arctic Fox",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_rim",
+    "npc": "Polar Bear",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_color",
+    "npc": "Polar Bear",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_inner",
+    "npc": "Polar Bear",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_rim.001",
+    "npc": "Polar Bear",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_color.001",
+    "npc": "Polar Bear",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Polar Bear__ear_inner.001",
+    "npc": "Polar Bear",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Polar Bear__head_rim",
+    "npc": "Polar Bear",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Polar Bear__head_color",
+    "npc": "Polar Bear",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Polar Bear__muzzle_rim",
+    "npc": "Polar Bear",
+    "material": "NPC | snow",
+    "rgb": [
+      227,
+      243,
+      244
+    ]
+  },
+  {
+    "name": "Polar Bear__muzzle_color",
+    "npc": "Polar Bear",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Polar Bear__eye",
+    "npc": "Polar Bear",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Polar Bear__sparkle",
+    "npc": "Polar Bear",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Polar Bear__eye.001",
+    "npc": "Polar Bear",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Polar Bear__sparkle.001",
+    "npc": "Polar Bear",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Polar Bear__nose",
+    "npc": "Polar Bear",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Mammoth__ear_rim",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__ear_color",
+    "npc": "Baby Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Baby Mammoth__tusk",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__ear_rim.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__ear_color.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Baby Mammoth__tusk.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__head_rim",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__head_color",
+    "npc": "Baby Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Baby Mammoth__trunk_rim",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Mammoth__trunk_color",
+    "npc": "Baby Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Baby Mammoth__trunk_crease",
+    "npc": "Baby Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Baby Mammoth__trunk_crease.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Baby Mammoth__trunk_crease.002",
+    "npc": "Baby Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Baby Mammoth__fringe",
+    "npc": "Baby Mammoth",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Baby Mammoth__eye",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Mammoth__sparkle",
+    "npc": "Baby Mammoth",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Mammoth__eye.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Mammoth__sparkle.001",
+    "npc": "Baby Mammoth",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Mammoth__ear_rim",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__ear_color",
+    "npc": "Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Mammoth__tusk",
+    "npc": "Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Mammoth__ear_rim.001",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__ear_color.001",
+    "npc": "Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Mammoth__tusk.001",
+    "npc": "Mammoth",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Mammoth__head_rim",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__head_color",
+    "npc": "Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Mammoth__trunk_rim",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__trunk_color",
+    "npc": "Mammoth",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Mammoth__trunk_crease",
+    "npc": "Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Mammoth__trunk_crease.001",
+    "npc": "Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Mammoth__trunk_crease.002",
+    "npc": "Mammoth",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Mammoth__fringe",
+    "npc": "Mammoth",
+    "material": "NPC | fur",
+    "rgb": [
+      76,
+      51,
+      46
+    ]
+  },
+  {
+    "name": "Mammoth__eye",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__sparkle",
+    "npc": "Mammoth",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Mammoth__eye.001",
+    "npc": "Mammoth",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Mammoth__sparkle.001",
+    "npc": "Mammoth",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Dragon__tail_rim",
+    "npc": "Baby Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Dragon__tail_color",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Baby Dragon__body_rim",
+    "npc": "Baby Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Dragon__body_color",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Baby Dragon__head_rim",
+    "npc": "Baby Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Dragon__head_color",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Baby Dragon__snout_rim",
+    "npc": "Baby Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Dragon__snout_color",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine_stripe",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine.001",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine.002",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine.003",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__spine.004",
+    "npc": "Baby Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Baby Dragon__nostril",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Baby Dragon__nostril.001",
+    "npc": "Baby Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Baby Dragon__eye",
+    "npc": "Baby Dragon",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Dragon__sparkle",
+    "npc": "Baby Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Dragon__eye.001",
+    "npc": "Baby Dragon",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Dragon__sparkle.001",
+    "npc": "Baby Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Dragon__extra_sparkle",
+    "npc": "Baby Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Dragon__extra_sparkle.001",
+    "npc": "Baby Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Dragon__tail_rim",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__tail_color",
+    "npc": "Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Dragon__body_rim",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__body_color",
+    "npc": "Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Dragon__wing_rim",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__wing_color",
+    "npc": "Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Dragon__wing_membrane",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__wing_rim.001",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__wing_color.001",
+    "npc": "Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Dragon__wing_membrane.001",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__head_rim",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__head_color",
+    "npc": "Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Dragon__snout_rim",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__snout_color",
+    "npc": "Dragon",
+    "material": "NPC | teal",
+    "rgb": [
+      120,
+      201,
+      203
+    ]
+  },
+  {
+    "name": "Dragon__spine_stripe",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__spine",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__spine.001",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__spine.002",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__spine.003",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__spine.004",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__nostril",
+    "npc": "Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Dragon__horn",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__tooth",
+    "npc": "Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Dragon__tooth.001",
+    "npc": "Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Dragon__nostril.001",
+    "npc": "Dragon",
+    "material": "NPC | teal_dark",
+    "rgb": [
+      46,
+      114,
+      125
+    ]
+  },
+  {
+    "name": "Dragon__horn.001",
+    "npc": "Dragon",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Dragon__tooth.002",
+    "npc": "Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Dragon__tooth.003",
+    "npc": "Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Dragon__eye",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__sparkle",
+    "npc": "Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Dragon__eye.001",
+    "npc": "Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Dragon__sparkle.001",
+    "npc": "Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Crab__leg_rim",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__leg_rim.001",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg.001",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__leg_rim.002",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg.002",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__claw_rim",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__claw_color",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__leg_rim.003",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg.003",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__leg_rim.004",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg.004",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__leg_rim.005",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__leg.005",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__claw_rim.001",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__claw_color.001",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__shell_rim",
+    "npc": "Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Crab__shell_color",
+    "npc": "Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "Crab__eye",
+    "npc": "Crab",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Crab__sparkle",
+    "npc": "Crab",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Crab__eye.001",
+    "npc": "Crab",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Crab__sparkle.001",
+    "npc": "Crab",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim.001",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg.001",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim.002",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg.002",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__claw_rim",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__claw_color",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim.003",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg.003",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim.004",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg.004",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__leg_rim.005",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__leg.005",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__claw_rim.001",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__claw_color.001",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__shell_rim",
+    "npc": "King Crab",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "King Crab__shell_color",
+    "npc": "King Crab",
+    "material": "NPC | crab",
+    "rgb": [
+      233,
+      85,
+      53
+    ]
+  },
+  {
+    "name": "King Crab__shell_crest",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike.001",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike.002",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike.003",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike.004",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__shell_spike.005",
+    "npc": "King Crab",
+    "material": "NPC | orange",
+    "rgb": [
+      239,
+      121,
+      79
+    ]
+  },
+  {
+    "name": "King Crab__eye",
+    "npc": "King Crab",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "King Crab__sparkle",
+    "npc": "King Crab",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "King Crab__eye.001",
+    "npc": "King Crab",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "King Crab__sparkle.001",
+    "npc": "King Crab",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "GMO Piranha__tail_rim",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__tail_color",
+    "npc": "GMO Piranha",
+    "material": "NPC | red",
+    "rgb": [
+      196,
+      64,
+      78
+    ]
+  },
+  {
+    "name": "GMO Piranha__fin_rim",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__fin_color",
+    "npc": "GMO Piranha",
+    "material": "NPC | red",
+    "rgb": [
+      196,
+      64,
+      78
+    ]
+  },
+  {
+    "name": "GMO Piranha__fin_rim.001",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__fin_color.001",
+    "npc": "GMO Piranha",
+    "material": "NPC | red",
+    "rgb": [
+      196,
+      64,
+      78
+    ]
+  },
+  {
+    "name": "GMO Piranha__body_rim",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__body_color",
+    "npc": "GMO Piranha",
+    "material": "NPC | red",
+    "rgb": [
+      196,
+      64,
+      78
+    ]
+  },
+  {
+    "name": "GMO Piranha__dorsal_fin",
+    "npc": "GMO Piranha",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "GMO Piranha__mouth",
+    "npc": "GMO Piranha",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.001",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.002",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.003",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.004",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.005",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__tooth.006",
+    "npc": "GMO Piranha",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "GMO Piranha__eye",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__sparkle",
+    "npc": "GMO Piranha",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "GMO Piranha__eye.001",
+    "npc": "GMO Piranha",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "GMO Piranha__sparkle.001",
+    "npc": "GMO Piranha",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.001",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.002",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.001",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.001",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.003",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.004",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.005",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.002",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.002",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.006",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.007",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.008",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.003",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.003",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.009",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.010",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.011",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.004",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.004",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.012",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.013",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.014",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.005",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.005",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.015",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.016",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.017",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.006",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.006",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.018",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.019",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.020",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__arm_rim.007",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__arm.007",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__sucker.021",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.022",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__sucker.023",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__mantle_rim",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__mantle_color",
+    "npc": "Kraken",
+    "material": "NPC | purple",
+    "rgb": [
+      68,
+      53,
+      123
+    ]
+  },
+  {
+    "name": "Kraken__mouth_rim",
+    "npc": "Kraken",
+    "material": "NPC | violet",
+    "rgb": [
+      124,
+      99,
+      196
+    ]
+  },
+  {
+    "name": "Kraken__mouth",
+    "npc": "Kraken",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Kraken__tooth",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.001",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.002",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.003",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.004",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.005",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.006",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.007",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.008",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__tooth.009",
+    "npc": "Kraken",
+    "material": "NPC | mint",
+    "rgb": [
+      186,
+      232,
+      228
+    ]
+  },
+  {
+    "name": "Kraken__eye",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__sparkle",
+    "npc": "Kraken",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Kraken__eye.001",
+    "npc": "Kraken",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Kraken__sparkle.001",
+    "npc": "Kraken",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Lava Monster__outer_flame_rim",
+    "npc": "Lava Monster",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Monster__outer_flame_color",
+    "npc": "Lava Monster",
+    "material": "NPC | flame",
+    "rgb": [
+      243,
+      147,
+      50
+    ]
+  },
+  {
+    "name": "Lava Monster__inner_flame",
+    "npc": "Lava Monster",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Lava Monster__skull",
+    "npc": "Lava Monster",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Lava Monster__eye",
+    "npc": "Lava Monster",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Monster__sparkle",
+    "npc": "Lava Monster",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Lava Monster__eye.001",
+    "npc": "Lava Monster",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Monster__sparkle.001",
+    "npc": "Lava Monster",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Lava Monster__grin",
+    "npc": "Lava Monster",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Lava Monster__grin.001",
+    "npc": "Lava Monster",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Lava Monster__grin.002",
+    "npc": "Lava Monster",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Lava Monster__grin.003",
+    "npc": "Lava Monster",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Lava Monster__grin.004",
+    "npc": "Lava Monster",
+    "material": "NPC | dark_red",
+    "rgb": [
+      121,
+      46,
+      61
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__tail_rim",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__tail_color",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__body_rim",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__body_color",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__head_rim",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__head_color",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__snout_rim",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__snout_color",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine_stripe",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine.001",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine.002",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine.003",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__spine.004",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__nostril",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__nostril.001",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__eye",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__sparkle",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__eye.001",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__sparkle.001",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__extra_sparkle",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Baby Lava Dragon__extra_sparkle.001",
+    "npc": "Baby Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Lava Dragon__tail_rim",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__tail_color",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Lava Dragon__body_rim",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__body_color",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_rim",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_color",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_membrane",
+    "npc": "Lava Dragon",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_rim.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_color.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Lava Dragon__wing_membrane.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | tan",
+    "rgb": [
+      173,
+      121,
+      81
+    ]
+  },
+  {
+    "name": "Lava Dragon__head_rim",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__head_color",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Lava Dragon__snout_rim",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__snout_color",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava",
+    "rgb": [
+      78,
+      40,
+      44
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine_stripe",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine.002",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine.003",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__spine.004",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__nostril",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Lava Dragon__horn",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__tooth",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__tooth.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__nostril.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | lava_mid",
+    "rgb": [
+      117,
+      64,
+      59
+    ]
+  },
+  {
+    "name": "Lava Dragon__horn.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__tooth.002",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__tooth.003",
+    "npc": "Lava Dragon",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Lava Dragon__eye",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__sparkle",
+    "npc": "Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Lava Dragon__eye.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Lava Dragon__sparkle.001",
+    "npc": "Lava Dragon",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Vulture__body_rim",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__body_color",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim.001",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color.001",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim.002",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color.002",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__wing_rim",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__wing_color",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim.003",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color.003",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim.004",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color.004",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__feather_rim.005",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__feather_color.005",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__wing_rim.001",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__wing_color.001",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__head_rim",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__head_color",
+    "npc": "Vulture",
+    "material": "NPC | red",
+    "rgb": [
+      196,
+      64,
+      78
+    ]
+  },
+  {
+    "name": "Vulture__beak",
+    "npc": "Vulture",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Vulture__eye",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__sparkle",
+    "npc": "Vulture",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Vulture__eye.001",
+    "npc": "Vulture",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Vulture__sparkle.001",
+    "npc": "Vulture",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather.001",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather.002",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather.001",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather.002",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather.003",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather.004",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__upper_wing_feather.005",
+    "npc": "Vulture",
+    "material": "NPC | gray",
+    "rgb": [
+      129,
+      123,
+      139
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather.003",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather.004",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Vulture__shoulder_feather.005",
+    "npc": "Vulture",
+    "material": "NPC | charcoal",
+    "rgb": [
+      52,
+      48,
+      60
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_rim",
+    "npc": "Sandworm",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_color",
+    "npc": "Sandworm",
+    "material": "NPC | sand_dark",
+    "rgb": [
+      113,
+      60,
+      54
+    ]
+  },
+  {
+    "name": "Sandworm__jaw",
+    "npc": "Sandworm",
+    "material": "NPC | sand",
+    "rgb": [
+      184,
+      117,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.001",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.002",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.003",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.004",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.005",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.006",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.007",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__scale",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.001",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.002",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_rim.001",
+    "npc": "Sandworm",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_color.001",
+    "npc": "Sandworm",
+    "material": "NPC | sand_dark",
+    "rgb": [
+      113,
+      60,
+      54
+    ]
+  },
+  {
+    "name": "Sandworm__jaw.001",
+    "npc": "Sandworm",
+    "material": "NPC | sand",
+    "rgb": [
+      184,
+      117,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.008",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.009",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.010",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.011",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.012",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.013",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.014",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.015",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__scale.003",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.004",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.005",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_rim.002",
+    "npc": "Sandworm",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_color.002",
+    "npc": "Sandworm",
+    "material": "NPC | sand_dark",
+    "rgb": [
+      113,
+      60,
+      54
+    ]
+  },
+  {
+    "name": "Sandworm__jaw.002",
+    "npc": "Sandworm",
+    "material": "NPC | sand",
+    "rgb": [
+      184,
+      117,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.016",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.017",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.018",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.019",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.020",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.021",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.022",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.023",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__scale.006",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.007",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.008",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_rim.003",
+    "npc": "Sandworm",
+    "material": "NPC | hostile",
+    "rgb": [
+      182,
+      59,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__outer_jaw_color.003",
+    "npc": "Sandworm",
+    "material": "NPC | sand_dark",
+    "rgb": [
+      113,
+      60,
+      54
+    ]
+  },
+  {
+    "name": "Sandworm__jaw.003",
+    "npc": "Sandworm",
+    "material": "NPC | sand",
+    "rgb": [
+      184,
+      117,
+      88
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.024",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.025",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.026",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.027",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.028",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.029",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.030",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__jaw_tooth.031",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__scale.009",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.010",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__scale.011",
+    "npc": "Sandworm",
+    "material": "NPC | brown",
+    "rgb": [
+      128,
+      84,
+      59
+    ]
+  },
+  {
+    "name": "Sandworm__maw_rim",
+    "npc": "Sandworm",
+    "material": "NPC | pink",
+    "rgb": [
+      234,
+      176,
+      193
+    ]
+  },
+  {
+    "name": "Sandworm__maw",
+    "npc": "Sandworm",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.001",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.002",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.003",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.004",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.005",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.006",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.007",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.008",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.009",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.010",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.011",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.012",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Sandworm__inner_tooth.013",
+    "npc": "Sandworm",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__body_rim",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__body_color",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.001",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.001",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.002",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.002",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.003",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.003",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__wing_rim",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__wing_color",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.004",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.004",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.005",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.005",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.006",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.006",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_rim.007",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__feather_color.007",
+    "npc": "Golden Hen",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Hen__wing_rim.001",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__wing_color.001",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__head_rim",
+    "npc": "Golden Hen",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Hen__head_color",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__beak",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__eye",
+    "npc": "Golden Hen",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Golden Hen__sparkle",
+    "npc": "Golden Hen",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Golden Hen__eye.001",
+    "npc": "Golden Hen",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Golden Hen__sparkle.001",
+    "npc": "Golden Hen",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather.001",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather.002",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather.001",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather.002",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather.003",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather.004",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__upper_wing_feather.005",
+    "npc": "Golden Hen",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather.003",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather.004",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Hen__shoulder_feather.005",
+    "npc": "Golden Hen",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__body_rim",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__body_color",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.001",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.001",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.002",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.002",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.003",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.003",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__wing_rim",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__wing_color",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.004",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.004",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.005",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.005",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.006",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.006",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_rim.007",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__feather_color.007",
+    "npc": "Golden Chick",
+    "material": "NPC | cream",
+    "rgb": [
+      255,
+      240,
+      173
+    ]
+  },
+  {
+    "name": "Golden Chick__wing_rim.001",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__wing_color.001",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__head_rim",
+    "npc": "Golden Chick",
+    "material": "NPC | ivory",
+    "rgb": [
+      255,
+      244,
+      236
+    ]
+  },
+  {
+    "name": "Golden Chick__head_color",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__beak",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__eye",
+    "npc": "Golden Chick",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Golden Chick__sparkle",
+    "npc": "Golden Chick",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Golden Chick__eye.001",
+    "npc": "Golden Chick",
+    "material": "NPC | ink",
+    "rgb": [
+      25,
+      28,
+      41
+    ]
+  },
+  {
+    "name": "Golden Chick__sparkle.001",
+    "npc": "Golden Chick",
+    "material": "NPC | white",
+    "rgb": [
+      255,
+      255,
+      255
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather.001",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather.002",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather.001",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather.002",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather.003",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather.004",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__upper_wing_feather.005",
+    "npc": "Golden Chick",
+    "material": "NPC | gold_dark",
+    "rgb": [
+      218,
+      164,
+      33
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather.003",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather.004",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  },
+  {
+    "name": "Golden Chick__shoulder_feather.005",
+    "npc": "Golden Chick",
+    "material": "NPC | gold",
+    "rgb": [
+      255,
+      214,
+      87
+    ]
+  }
+]

@@ -10,8 +10,10 @@
 -- possuído falha. Até a loja (F5), a posse vem do comando de dev (DevDataService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
+local SkinAssets = require(ReplicatedStorage.Shared.Models.SkinAssets)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local DataService = require(script.Parent.DataService)
 local Net = require(script.Parent.Parent.Net)
@@ -60,26 +62,38 @@ function CosmeticService.owns(player: Player, cosmeticId: string): boolean
 	return data ~= nil and data.Cosmetics.Owned[cosmeticId] == true
 end
 
--- Pasta Player.OwnedCosmetics (criada na primeira publicação).
-local function ownedFolder(player: Player): Folder
+-- Posse publicada para o cliente: pasta Player.OwnedCosmetics com UM OBJETO
+-- (BoolValue, Name = id) por skin possuída. Objeto, não atributo: o Roblox
+-- limita os atributos de cada instância a ~1 KB no total, e com centenas de
+-- skins a pasta lotaria (ver docs/guia/dados.md, "Posse das skins").
+local function ownedFolder(player: Player): Folder?
 	local folder = player:FindFirstChild(StatNames.OwnedFolder)
-	if folder and folder:IsA("Folder") then
-		return folder
+	return if folder and folder:IsA("Folder") then folder else nil
+end
+
+-- Põe a marca de posse do id na pasta (sem duplicar).
+local function markOwned(folder: Folder, cosmeticId: string)
+	if folder:FindFirstChild(cosmeticId) ~= nil then
+		return
 	end
-	local created = Instance.new("Folder")
-	created.Name = StatNames.OwnedFolder
-	created.Parent = player
-	return created
+	local flag = Instance.new("BoolValue")
+	flag.Name = cosmeticId
+	flag.Value = true
+	flag.Parent = folder
 end
 
 -- Dá a posse de um cosmético (loja/dev). false se não existe ou sem perfil.
+-- É O ÚNICO caminho para dar skin: grava no perfil e publica para o cliente.
 function CosmeticService.grantOwnership(player: Player, cosmeticId: string): boolean
 	local data = DataService.data(player)
 	if Defs.Cosmetics[cosmeticId] == nil or data == nil then
 		return false
 	end
 	data.Cosmetics.Owned[cosmeticId] = true
-	ownedFolder(player):SetAttribute(cosmeticId, true)
+	local folder = ownedFolder(player)
+	if folder then
+		markOwned(folder, cosmeticId)
+	end
 	return true
 end
 
@@ -122,13 +136,25 @@ local function loadEquipped(player: Player, data: { [string]: any })
 	end
 end
 
--- Perfil carregou: publica na pasta OwnedCosmetics um atributo <id> por cosmético possuído.
+-- Perfil carregou: monta a pasta OwnedCosmetics com uma marca por skin
+-- possuída. A pasta é preenchida ANTES de ir para o Player, para chegar ao
+-- cliente de uma vez (com centenas de skins, evita centenas de envios).
 local function publishOwned(player: Player, data: { [string]: any })
+	-- Todas as skins liberadas para teste.
+	for id in Defs.Cosmetics do
+		data.Cosmetics.Owned[id] = true
+	end
 	local folder = ownedFolder(player)
+	local fresh = folder == nil
+	local target: Folder = folder or Instance.new("Folder")
+	target.Name = StatNames.OwnedFolder
 	for id, owned in data.Cosmetics.Owned do
 		if owned == true and Defs.Cosmetics[id] ~= nil then
-			folder:SetAttribute(id, true)
+			markOwned(target, id)
 		end
+	end
+	if fresh then
+		target.Parent = player
 	end
 end
 
@@ -161,6 +187,9 @@ local function setupPlayer(player: Player)
 end
 
 function CosmeticService.Start(_self)
+	if RunService:IsStudio() then
+		SkinAssets.organizeStudioImports()
+	end
 	DataService.onLoaded(publishOwned)
 	DataService.onLoaded(loadEquipped)
 	Net.EquipCosmetic.On(onEquipRequest)

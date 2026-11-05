@@ -1,0 +1,420 @@
+{
+  "reference": "https://starveiopro.fandom.com/wiki/Resources#Emerald",
+  "source_file": "C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\builds\\structures\\structures-trabalho.blend",
+  "originals_preserved": true,
+  "models": [
+    {
+      "item_id": "stone_deposit_01",
+      "resource": "stone",
+      "variant": 1,
+      "source_collection": "pedra.001",
+      "gallery_position": [
+        -15.7,
+        6,
+        0
+      ],
+      "parts": [
+        "stone_deposit_01_main_rock",
+        "stone_deposit_01_broken_lobe",
+        "stone_deposit_01_foot_chip"
+      ],
+      "triangles": 198,
+      "bounds_min": [
+        -1.627039909362793,
+        -1.4215017557144165,
+        0.0
+      ],
+      "bounds_max": [
+        1.627039909362793,
+        1.4215017557144165,
+        1.75
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "stone_deposit_02",
+      "resource": "stone",
+      "variant": 2,
+      "source_collection": "pedra.002",
+      "gallery_position": [
+        -10.3,
+        5.5,
+        0
+      ],
+      "parts": [
+        "stone_deposit_02_left_mass",
+        "stone_deposit_02_right_mass",
+        "stone_deposit_02_front_lobe"
+      ],
+      "triangles": 198,
+      "bounds_min": [
+        -2.001725912094116,
+        -1.4880520105361938,
+        0.0
+      ],
+      "bounds_max": [
+        2.001725912094116,
+        1.4880520105361938,
+        1.7999999523162842
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "stone_deposit_03",
+      "resource": "stone",
+      "variant": 3,
+      "source_collection": "pedra.003",
+      "gallery_position": [
+        -13,
+        9.9,
+        0
+      ],
+      "parts": [
+        "stone_deposit_03_main_rock",
+        "stone_deposit_03_left_ledge",
+        "stone_deposit_03_front_ledge"
+      ],
+      "triangles": 200,
+      "bounds_min": [
+        -1.9844388961791992,
+        -1.6266412734985352,
+        0.0
+      ],
+      "bounds_max": [
+        1.9844388961791992,
+        1.6266412734985352,
+        2.0999999046325684
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "gold_deposit_01",
+      "resource": "gold",
+      "variant": 1,
+      "source_collection": "ouro.001",
+      "gallery_position": [
+        -2.7,
+        6,
+        0
+      ],
+      "parts": [
+        "gold_deposit_01_ore_mass",
+        "gold_deposit_01_gold_lobe_1",
+        "gold_deposit_01_gold_lobe_2",
+        "gold_deposit_01_gold_lobe_3"
+      ],
+      "triangles": 194,
+      "bounds_min": [
+        -1.574575424194336,
+        -1.1852025985717773,
+        0.0
+      ],
+      "bounds_max": [
+        1.574575424194336,
+        1.1852025985717773,
+        1.7000000476837158
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "gold_deposit_02",
+      "resource": "gold",
+      "variant": 2,
+      "source_collection": "ouro.002",
+      "gallery_position": [
+        2.7,
+        5.5,
+        0
+      ],
+      "parts": [
+        "gold_deposit_02_ore_mass",
+        "gold_deposit_02_gold_lobe_1",
+        "gold_deposit_02_gold_lobe_2",
+        "gold_deposit_02_gold_lobe_3",
+        "gold_deposit_02_gold_lobe_4"
+      ],
+      "triangles": 258,
+      "bounds_min": [
+        -1.9951660633087158,
+        -1.5317587852478027,
+        0.0
+      ],
+      "bounds_max": [
+        1.9951660633087158,
+        1.5317587852478027,
+        2.0199999809265137
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "diamond_deposit_01",
+      "resource": "diamond",
+      "variant": 1,
+      "source_collection": "diamante.001",
+      "gallery_position": [
+        10.3,
+        6,
+        0
+      ],
+      "parts": [
+        "diamond_deposit_01_mineral_foot",
+        "diamond_deposit_01_diamond_crystal_1",
+        "diamond_deposit_01_diamond_crystal_2",
+        "diamond_deposit_01_diamond_crystal_3"
+      ],
+      "triangles": 114,
+      "bounds_min": [
+        -1.5634205341339111,
+        -1.3710399866104126,
+        0.0
+      ],
+      "bounds_max": [
+        1.5634205341339111,
+        1.3710399866104126,
+        2.5299999713897705
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "diamond_deposit_02",
+      "resource": "diamond",
+      "variant": 2,
+      "source_collection": "diamante.002",
+      "gallery_position": [
+        15.7,
+        5.5,
+        0
+      ],
+      "parts": [
+        "diamond_deposit_02_mineral_foot",
+        "diamond_deposit_02_diamond_crystal_1",
+        "diamond_deposit_02_diamond_crystal_2",
+        "diamond_deposit_02_diamond_crystal_3",
+        "diamond_deposit_02_diamond_crystal_4"
+      ],
+      "triangles": 140,
+      "bounds_min": [
+        -1.945039987564087,
+        -1.729604721069336,
+        0.0
+      ],
+      "bounds_max": [
+        1.945039987564087,
+        1.729604721069336,
+        2.859999895095825
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "amethyst_deposit_01",
+      "resource": "amethyst",
+      "variant": 1,
+      "source_collection": "ametista.001",
+      "gallery_position": [
+        -15.7,
+        -8,
+        0
+      ],
+      "parts": [
+        "amethyst_deposit_01_mineral_foot",
+        "amethyst_deposit_01_amethyst_crystal_1",
+        "amethyst_deposit_01_amethyst_crystal_2",
+        "amethyst_deposit_01_amethyst_crystal_3",
+        "amethyst_deposit_01_amethyst_crystal_4"
+      ],
+      "triangles": 188,
+      "bounds_min": [
+        -1.6448547840118408,
+        -1.4748804569244385,
+        0.0
+      ],
+      "bounds_max": [
+        1.6448547840118408,
+        1.4748804569244385,
+        2.759999990463257
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "amethyst_deposit_02",
+      "resource": "amethyst",
+      "variant": 2,
+      "source_collection": "ametista.002",
+      "gallery_position": [
+        -10.3,
+        -8.5,
+        0
+      ],
+      "parts": [
+        "amethyst_deposit_02_mineral_foot",
+        "amethyst_deposit_02_amethyst_crystal_1",
+        "amethyst_deposit_02_amethyst_crystal_2",
+        "amethyst_deposit_02_amethyst_crystal_3",
+        "amethyst_deposit_02_amethyst_crystal_4",
+        "amethyst_deposit_02_amethyst_crystal_5"
+      ],
+      "triangles": 220,
+      "bounds_min": [
+        -2.1407854557037354,
+        -1.6671102046966553,
+        0.0
+      ],
+      "bounds_max": [
+        2.1407854557037354,
+        1.6671102046966553,
+        3.2100000381469727
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "reidite_deposit_01",
+      "resource": "reidite",
+      "variant": 1,
+      "source_collection": "reidite.001",
+      "gallery_position": [
+        -2.7,
+        -8,
+        0
+      ],
+      "parts": [
+        "reidite_deposit_01_mineral_foot",
+        "reidite_deposit_01_reidite_blade_1",
+        "reidite_deposit_01_reidite_blade_2",
+        "reidite_deposit_01_reidite_blade_3",
+        "reidite_deposit_01_reidite_blade_4",
+        "reidite_deposit_01_reidite_blade_5",
+        "reidite_deposit_01_central_blade"
+      ],
+      "triangles": 122,
+      "bounds_min": [
+        -1.8107177019119263,
+        -1.6541887521743774,
+        0.0
+      ],
+      "bounds_max": [
+        1.8107177019119263,
+        1.6541887521743774,
+        2.490000009536743
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "reidite_deposit_02",
+      "resource": "reidite",
+      "variant": 2,
+      "source_collection": "reidite.002",
+      "gallery_position": [
+        2.7,
+        -8.5,
+        0
+      ],
+      "parts": [
+        "reidite_deposit_02_mineral_foot",
+        "reidite_deposit_02_reidite_blade_1",
+        "reidite_deposit_02_reidite_blade_2",
+        "reidite_deposit_02_reidite_blade_3",
+        "reidite_deposit_02_reidite_blade_4",
+        "reidite_deposit_02_reidite_blade_5",
+        "reidite_deposit_02_reidite_blade_6",
+        "reidite_deposit_02_central_blade"
+      ],
+      "triangles": 136,
+      "bounds_min": [
+        -2.2943685054779053,
+        -2.0163848400115967,
+        0.0
+      ],
+      "bounds_max": [
+        2.2943685054779053,
+        2.0163848400115967,
+        3.0
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "emerald_deposit_01",
+      "resource": "emerald",
+      "variant": 1,
+      "source_collection": null,
+      "gallery_position": [
+        10.3,
+        -8,
+        0
+      ],
+      "parts": [
+        "emerald_deposit_01_mineral_foot",
+        "emerald_deposit_01_emerald_crystal_1",
+        "emerald_deposit_01_emerald_crystal_2",
+        "emerald_deposit_01_emerald_crystal_3"
+      ],
+      "triangles": 148,
+      "bounds_min": [
+        -1.5677697658538818,
+        -1.4425039291381836,
+        0.0
+      ],
+      "bounds_max": [
+        1.5677697658538818,
+        1.4425039291381836,
+        2.410399913787842
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    },
+    {
+      "item_id": "emerald_deposit_02",
+      "resource": "emerald",
+      "variant": 2,
+      "source_collection": null,
+      "gallery_position": [
+        15.7,
+        -8.5,
+        0
+      ],
+      "parts": [
+        "emerald_deposit_02_mineral_foot",
+        "emerald_deposit_02_emerald_crystal_1",
+        "emerald_deposit_02_emerald_crystal_2",
+        "emerald_deposit_02_emerald_crystal_3",
+        "emerald_deposit_02_emerald_crystal_4"
+      ],
+      "triangles": 180,
+      "bounds_min": [
+        -2.116422653198242,
+        -1.7092869281768799,
+        0.0
+      ],
+      "bounds_max": [
+        2.116422653198242,
+        1.7092869281768799,
+        2.868000030517578
+      ],
+      "single_resource_materials": true,
+      "closed_meshes": true,
+      "all_parts_grounded_or_intersect_connected": true
+    }
+  ]
+}

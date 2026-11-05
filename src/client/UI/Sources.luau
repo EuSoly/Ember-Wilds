@@ -75,6 +75,64 @@ function Sources.childAttribute<T>(parent: Instance, childName: string, name: st
 	end
 end
 
+-- Conjunto dos nomes dos filhos da pasta `folderName` de `parent` ({ [nome] = true }),
+-- ex.: a posse das skins em Player.OwnedCosmetics. A pasta pode chegar depois
+-- (replicação); até lá, conjunto vazio. Uma fonte para a pasta toda, não uma por
+-- item: com centenas de filhos, a chegada em lote recalcula uma vez por quadro.
+function Sources.childNames(parent: Instance, folderName: string): () -> { [string]: true }
+	local value = vide.source({} :: { [string]: true })
+	local connections: { RBXScriptConnection } = {}
+	local current: Instance? = nil
+	local pending = false
+
+	local function refresh()
+		pending = false
+		local names: { [string]: true } = {}
+		if current then
+			for _, child in current:GetChildren() do
+				names[child.Name] = true
+			end
+		end
+		value(names)
+	end
+	local function schedule()
+		if not pending then
+			pending = true
+			task.defer(refresh)
+		end
+	end
+	local function bind(folder: Instance)
+		for _, connection in connections do
+			connection:Disconnect()
+		end
+		table.clear(connections)
+		current = folder
+		refresh()
+		table.insert(connections, folder.ChildAdded:Connect(schedule))
+		table.insert(connections, folder.ChildRemoved:Connect(schedule))
+	end
+
+	local existing = parent:FindFirstChild(folderName)
+	if existing then
+		bind(existing)
+	end
+	local added = parent.ChildAdded:Connect(function(child)
+		if child.Name == folderName then
+			bind(child)
+		end
+	end)
+	vide.cleanup(function()
+		added:Disconnect()
+		for _, connection in connections do
+			connection:Disconnect()
+		end
+		current = nil
+	end)
+	return function()
+		return value()
+	end
+end
+
 -- Dispositivo preferido do jogador (teclado e mouse, toque, gamepad).
 function Sources.preferredInput(): () -> Enum.PreferredInput
 	local value = vide.source(UserInputService.PreferredInput)

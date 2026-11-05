@@ -4,7 +4,6 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 ## Atributos do Player (04/11)
 
-- **`mobs_killed` nunca sobe no jogo:** só o comando de dev (`DevStat`) soma; o `MobService.die` dá os pontos mas não chama `StatsService.add(killer, "mobs_killed", 1, mob.id)`. O Perfil mostra "Criaturas mortas" parado.
 - **Morte do mob frágil:** no `MobService.die`, o `ScoreService.add` roda fora do `pcall`; se falhar, a caixa (aviso `onDeath`) não sai. Foi assim que o limite de atributos derrubou os drops.
 - **Folga no Player:** ainda são ~23 atributos lá (`Setting_*`, `Cosmetic_*`, barras...). Se as configurações crescerem muito, levar `Setting_*` para uma pasta também.
 

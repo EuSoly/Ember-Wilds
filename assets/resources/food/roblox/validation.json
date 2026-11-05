@@ -1,0 +1,153 @@
+{
+  "combined": {
+    "meshes": 16,
+    "geometry_bounds_max_error": 4.76837158203125e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "aloe_vera",
+      "triangles": 267,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.262577313809743e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "berry",
+      "triangles": 313,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.561610929456947e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "bread",
+      "triangles": 232,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2866804866007442e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "cactus",
+      "triangles": 363,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.753257379277784e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "cake",
+      "triangles": 150,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4179154561588803e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "carrot",
+      "triangles": 216,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.6938079738793022e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "cooked_fish",
+      "triangles": 277,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.3048123409807886e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "cooked_meat",
+      "triangles": 185,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.0450715848264736e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "cookies",
+      "triangles": 306,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.450352726806159e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "flour",
+      "triangles": 145,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2661977422112614e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "garlic",
+      "triangles": 226,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2687642936271004e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "pumpkin",
+      "triangles": 239,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.0105131309501303e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "sandwich",
+      "triangles": 260,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2390149350949287e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "tomato",
+      "triangles": 184,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.6449095596726693e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "watermelon",
+      "triangles": 313,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.601537320539137e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "wheat",
+      "triangles": 371,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.55509134458498e-07,
+      "pivot_at_origin": true
+    }
+  ]
+}

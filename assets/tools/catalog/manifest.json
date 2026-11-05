@@ -1,0 +1,398 @@
+{
+  "reference": "https://starveiopro.fandom.com/wiki/Items",
+  "existing_assets_unchanged": true,
+  "models": [
+    {
+      "item_id": "stone_hammer",
+      "label": "PEDRA",
+      "group": "Hammers",
+      "row": 0,
+      "column": 0,
+      "parts": [
+        "stone_hammer_handle",
+        "stone_hammer_head"
+      ],
+      "triangles": 120,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "gold_hammer",
+      "label": "OURO",
+      "group": "Hammers",
+      "row": 0,
+      "column": 1,
+      "parts": [
+        "gold_hammer_handle",
+        "gold_hammer_head"
+      ],
+      "triangles": 120,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "diamond_hammer",
+      "label": "DIAMANTE",
+      "group": "Hammers",
+      "row": 0,
+      "column": 2,
+      "parts": [
+        "diamond_hammer_handle",
+        "diamond_hammer_head",
+        "diamond_hammer_collar",
+        "diamond_hammer_pommel",
+        "diamond_hammer_crystal_face"
+      ],
+      "triangles": 252,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "amethyst_hammer",
+      "label": "AMETISTA",
+      "group": "Hammers",
+      "row": 0,
+      "column": 3,
+      "parts": [
+        "amethyst_hammer_handle",
+        "amethyst_hammer_head",
+        "amethyst_hammer_collar",
+        "amethyst_hammer_pommel",
+        "amethyst_hammer_gold_frame",
+        "amethyst_hammer_center_crystal"
+      ],
+      "triangles": 380,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "reidite_hammer",
+      "label": "REIDITE",
+      "group": "Hammers",
+      "row": 0,
+      "column": 4,
+      "parts": [
+        "reidite_hammer_handle",
+        "reidite_hammer_head",
+        "reidite_hammer_collar",
+        "reidite_hammer_pommel",
+        "reidite_hammer_grip_band_1",
+        "reidite_hammer_grip_band_2",
+        "reidite_hammer_impact_band_1",
+        "reidite_hammer_impact_band_2",
+        "reidite_hammer_head_crystal"
+      ],
+      "triangles": 492,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "super_hammer",
+      "label": "SUPER",
+      "group": "Hammers",
+      "row": 0,
+      "column": 5,
+      "parts": [
+        "super_hammer_handle",
+        "super_hammer_head",
+        "super_hammer_collar",
+        "super_hammer_pommel",
+        "super_hammer_green_frame",
+        "super_hammer_emerald_1",
+        "super_hammer_emerald_2",
+        "super_hammer_emerald_3"
+      ],
+      "triangles": 404,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "stone_shovel",
+      "label": "PEDRA",
+      "group": "Shovels",
+      "row": 1,
+      "column": 0,
+      "parts": [
+        "stone_shovel_handle",
+        "stone_shovel_scoop"
+      ],
+      "triangles": 128,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "gold_shovel",
+      "label": "OURO",
+      "group": "Shovels",
+      "row": 1,
+      "column": 1,
+      "parts": [
+        "gold_shovel_handle",
+        "gold_shovel_scoop"
+      ],
+      "triangles": 128,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "diamond_shovel",
+      "label": "DIAMANTE",
+      "group": "Shovels",
+      "row": 1,
+      "column": 2,
+      "parts": [
+        "diamond_shovel_handle",
+        "diamond_shovel_scoop",
+        "diamond_shovel_collar",
+        "diamond_shovel_pommel",
+        "diamond_shovel_scoop_ridge"
+      ],
+      "triangles": 260,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "amethyst_shovel",
+      "label": "AMETISTA",
+      "group": "Shovels",
+      "row": 1,
+      "column": 3,
+      "parts": [
+        "amethyst_shovel_handle",
+        "amethyst_shovel_scoop",
+        "amethyst_shovel_collar",
+        "amethyst_shovel_pommel",
+        "amethyst_shovel_gold_rim",
+        "amethyst_shovel_scoop_ridge"
+      ],
+      "triangles": 404,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "pitchfork",
+      "label": "FORCADO",
+      "group": "UtilityTools",
+      "row": 1,
+      "column": 4,
+      "parts": [
+        "pitchfork_handle",
+        "pitchfork_fork_base",
+        "pitchfork_tine_1",
+        "pitchfork_tine_2",
+        "pitchfork_tine_3",
+        "pitchfork_socket"
+      ],
+      "triangles": 288,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "gold_pitchfork",
+      "label": "FORCADO DE OURO",
+      "group": "UtilityTools",
+      "row": 1,
+      "column": 5,
+      "parts": [
+        "gold_pitchfork_handle",
+        "gold_pitchfork_fork_base",
+        "gold_pitchfork_tine_1",
+        "gold_pitchfork_tine_2",
+        "gold_pitchfork_tine_3",
+        "gold_pitchfork_socket",
+        "gold_pitchfork_gold_emblem",
+        "gold_pitchfork_pommel"
+      ],
+      "triangles": 360,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "wood_shield",
+      "label": "MADEIRA",
+      "group": "Shields",
+      "row": 2,
+      "column": 0,
+      "parts": [
+        "wood_shield_body",
+        "wood_shield_rim",
+        "wood_shield_plank_seam_1",
+        "wood_shield_plank_seam_2",
+        "wood_shield_central_brace"
+      ],
+      "triangles": 580,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "stone_shield",
+      "label": "PEDRA",
+      "group": "Shields",
+      "row": 2,
+      "column": 1,
+      "parts": [
+        "stone_shield_body",
+        "stone_shield_raised_rim",
+        "stone_shield_dark_inset",
+        "stone_shield_crest"
+      ],
+      "triangles": 360,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "gold_shield",
+      "label": "OURO",
+      "group": "Shields",
+      "row": 2,
+      "column": 2,
+      "parts": [
+        "gold_shield_body",
+        "gold_shield_raised_rim",
+        "gold_shield_dark_inset",
+        "gold_shield_crest"
+      ],
+      "triangles": 360,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "diamond_shield",
+      "label": "DIAMANTE",
+      "group": "Shields",
+      "row": 2,
+      "column": 3,
+      "parts": [
+        "diamond_shield_body",
+        "diamond_shield_wing_left",
+        "diamond_shield_wing_right",
+        "diamond_shield_dark_core",
+        "diamond_shield_crest_crystal"
+      ],
+      "triangles": 172,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "amethyst_shield",
+      "label": "AMETISTA",
+      "group": "Shields",
+      "row": 2,
+      "column": 4,
+      "parts": [
+        "amethyst_shield_body",
+        "amethyst_shield_wing_left",
+        "amethyst_shield_wing_right",
+        "amethyst_shield_gold_frame",
+        "amethyst_shield_dark_core",
+        "amethyst_shield_crest_crystal"
+      ],
+      "triangles": 268,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "reidite_shield",
+      "label": "REIDITE",
+      "group": "Shields",
+      "row": 2,
+      "column": 5,
+      "parts": [
+        "reidite_shield_body",
+        "reidite_shield_wing_left",
+        "reidite_shield_wing_right",
+        "reidite_shield_horn_-1",
+        "reidite_shield_horn_1",
+        "reidite_shield_dark_core",
+        "reidite_shield_crest_crystal"
+      ],
+      "triangles": 212,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "book",
+      "label": "LIVRO",
+      "group": "UtilityTools",
+      "row": 3,
+      "column": 0,
+      "parts": [
+        "book_pages",
+        "book_covers",
+        "book_spine",
+        "book_cover_border",
+        "book_cover_emblem"
+      ],
+      "triangles": 380,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "watering_can",
+      "label": "REGADOR",
+      "group": "UtilityTools",
+      "row": 3,
+      "column": 1,
+      "parts": [
+        "watering_can_body",
+        "watering_can_handle",
+        "watering_can_spout",
+        "watering_can_sprinkler",
+        "watering_can_top_rim"
+      ],
+      "triangles": 308,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "bucket",
+      "label": "BALDE",
+      "group": "UtilityTools",
+      "row": 3,
+      "column": 2,
+      "parts": [
+        "bucket_body",
+        "bucket_rim",
+        "bucket_bottom_band",
+        "bucket_handle",
+        "bucket_water"
+      ],
+      "triangles": 384,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "wrench",
+      "label": "CHAVE INGLESA",
+      "group": "UtilityTools",
+      "row": 3,
+      "column": 3,
+      "parts": [
+        "wrench_handle",
+        "wrench_upper_jaw",
+        "wrench_lower_jaw",
+        "wrench_handle_inset"
+      ],
+      "triangles": 380,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    },
+    {
+      "item_id": "machete",
+      "label": "FACAO",
+      "group": "UtilityTools",
+      "row": 3,
+      "column": 4,
+      "parts": [
+        "machete_handle",
+        "machete_blade",
+        "machete_guard",
+        "machete_rivet_1",
+        "machete_rivet_2"
+      ],
+      "triangles": 212,
+      "non_manifold_edges": 0,
+      "two_sided_verified": true
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+[
+  {
+    "name": "Espada_Madeira",
+    "type": "Espada",
+    "tier": "Madeira",
+    "parts": [
+      "Espada_Madeira__simple_handle",
+      "Espada_Madeira__straight_blade",
+      "Espada_Madeira__small_crossguard"
+    ],
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Pedra",
+    "type": "Espada",
+    "tier": "Pedra",
+    "parts": [
+      "Espada_Pedra__simple_handle",
+      "Espada_Pedra__straight_blade",
+      "Espada_Pedra__small_crossguard"
+    ],
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Ouro",
+    "type": "Espada",
+    "tier": "Ouro",
+    "parts": [
+      "Espada_Ouro__simple_handle",
+      "Espada_Ouro__straight_blade",
+      "Espada_Ouro__small_crossguard"
+    ],
+    "triangles": 120,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Diamante",
+    "type": "Espada",
+    "tier": "Diamante",
+    "parts": [
+      "Espada_Diamante__simple_handle",
+      "Espada_Diamante__straight_blade",
+      "Espada_Diamante__small_crossguard",
+      "Espada_Diamante__colored_pommel"
+    ],
+    "triangles": 140,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Ametista",
+    "type": "Espada",
+    "tier": "Ametista",
+    "parts": [
+      "Espada_Ametista__simple_handle",
+      "Espada_Ametista__straight_blade",
+      "Espada_Ametista__small_crossguard",
+      "Espada_Ametista__colored_pommel",
+      "Espada_Ametista__purple_collar"
+    ],
+    "triangles": 160,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Reidite",
+    "type": "Espada",
+    "tier": "Reidite",
+    "parts": [
+      "Espada_Reidite__simple_handle",
+      "Espada_Reidite__curved_red_blade",
+      "Espada_Reidite__gray_crossguard",
+      "Espada_Reidite__open_knuckle_guard"
+    ],
+    "triangles": 200,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Dragao",
+    "type": "Espada",
+    "tier": "Dragao",
+    "parts": [
+      "Dragao__Cabo",
+      "Dragao__Lamina",
+      "Dragao__Guarda"
+    ],
+    "triangles": 132,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Lava",
+    "type": "Espada",
+    "tier": "Lava",
+    "parts": [
+      "Lava__Cabo",
+      "Lava__Lamina",
+      "Lava__Detalhe_Lamina",
+      "Lava__Guarda",
+      "Lava__Pomo"
+    ],
+    "triangles": 208,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Espada_Pirata",
+    "type": "Espada",
+    "tier": "Pirata",
+    "parts": [
+      "Pirata__Cabo",
+      "Pirata__Lamina",
+      "Pirata__Guarda",
+      "Pirata__Protecao_Cabo"
+    ],
+    "triangles": 164,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Madeira",
+    "type": "Lanca",
+    "tier": "Madeira",
+    "parts": [
+      "Madeira__Haste",
+      "Madeira__Ponta"
+    ],
+    "triangles": 54,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Pedra",
+    "type": "Lanca",
+    "tier": "Pedra",
+    "parts": [
+      "Pedra__Haste",
+      "Pedra__Ponta",
+      "Pedra__Encaixe"
+    ],
+    "triangles": 82,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Ouro",
+    "type": "Lanca",
+    "tier": "Ouro",
+    "parts": [
+      "Ouro__Haste",
+      "Ouro__Ponta",
+      "Ouro__Encaixe"
+    ],
+    "triangles": 82,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Diamante",
+    "type": "Lanca",
+    "tier": "Diamante",
+    "parts": [
+      "Diamante__Haste",
+      "Diamante__Ponta",
+      "Diamante__Encaixe"
+    ],
+    "triangles": 82,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Ametista",
+    "type": "Lanca",
+    "tier": "Ametista",
+    "parts": [
+      "Ametista__Haste",
+      "Ametista__Ponta",
+      "Ametista__Encaixe"
+    ],
+    "triangles": 94,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Reidite",
+    "type": "Lanca",
+    "tier": "Reidite",
+    "parts": [
+      "Reidite__Haste",
+      "Reidite__Ponta",
+      "Reidite__Encaixe"
+    ],
+    "triangles": 106,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Dragao",
+    "type": "Lanca",
+    "tier": "Dragao",
+    "parts": [
+      "Dragao__Haste",
+      "Dragao__Ponta",
+      "Dragao__Encaixe"
+    ],
+    "triangles": 100,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Lava",
+    "type": "Lanca",
+    "tier": "Lava",
+    "parts": [
+      "Lava__Haste",
+      "Lava__Ponta_Central",
+      "Lava__Espora_-1",
+      "Lava__Espora_1",
+      "Lava__Encaixe"
+    ],
+    "triangles": 170,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  },
+  {
+    "name": "Lanca_Caranguejo",
+    "type": "Lanca",
+    "tier": "Caranguejo",
+    "parts": [
+      "Caranguejo__Haste",
+      "Caranguejo__Garra_Esquerda",
+      "Caranguejo__Garra_Direita",
+      "Caranguejo__Encaixe"
+    ],
+    "triangles": 150,
+    "non_manifold_edges": 0,
+    "degenerate_faces": 0
+  }
+]

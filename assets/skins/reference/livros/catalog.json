@@ -1,0 +1,4055 @@
+{
+  "category": "book",
+  "checkedAt": "2026-11-05T01:48:06.035Z",
+  "source": "https://starve.io/",
+  "labelSource": "https://starve.io/changelog.html",
+  "checkedRange": [
+    0,
+    250
+  ],
+  "completeness": "All accessible day/night images in checked numeric range; not verified against the live cosmetics inventory.",
+  "itemCount": 57,
+  "imageCount": 114,
+  "items": [
+    {
+      "id": 0,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 0,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book0.png",
+          "status": 200,
+          "file": "images/day-book0.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3241,
+          "sha256": "b23378669eafbbbf046fd5ce05c5c48acb6f53fab343736ea0a1e1c14ec012aa"
+        },
+        {
+          "id": 0,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book0.png",
+          "status": 200,
+          "file": "images/night-book0.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2661,
+          "sha256": "6b5fe9cb09abdb4363a9d93af0138864a65eb904228e49b2c80b8bbee68fc898"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 1,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book1.png",
+          "status": 200,
+          "file": "images/day-book1.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3360,
+          "sha256": "0295882bb539dcfb9b6763f0d878c1f041ee78320e431db9f22c2432b347a320"
+        },
+        {
+          "id": 1,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book1.png",
+          "status": 200,
+          "file": "images/night-book1.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4201,
+          "sha256": "a6dc58bf5a45953ef99cfce28fae4bf02d63e2a7472ff2dde54c77e77bd92fbf"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 2,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book2.png",
+          "status": 200,
+          "file": "images/day-book2.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4091,
+          "sha256": "c6a90aae7c612b5d749aebc5eb57fb2fbe221995ef48529bb562fa139676ef51"
+        },
+        {
+          "id": 2,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book2.png",
+          "status": 200,
+          "file": "images/night-book2.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3047,
+          "sha256": "4caf522a1a800cbb2bf41c93b743db109f03bd314a7ede5becf976370f09353d"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 3,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book3.png",
+          "status": 200,
+          "file": "images/day-book3.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3513,
+          "sha256": "2adc61dc38fc4ae329ef46d4643330080a1ad9c8f59a2de95080fb9093c9984d"
+        },
+        {
+          "id": 3,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book3.png",
+          "status": 200,
+          "file": "images/night-book3.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3299,
+          "sha256": "db503ea92e9a2961a1420d6cab8435ed48fdb0ce9be4c535b186980676310b1e"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 4,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book4.png",
+          "status": 200,
+          "file": "images/day-book4.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3309,
+          "sha256": "303f2ac2f7bf045d301bf202d5805b8759e54f52e8eb74cda2137125f80b9f00"
+        },
+        {
+          "id": 4,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book4.png",
+          "status": 200,
+          "file": "images/night-book4.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3172,
+          "sha256": "14246c8ed067a8a7674c50106e84bb5d6efa2f456ea91186cee3ee85684fa394"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 5,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book5.png",
+          "status": 200,
+          "file": "images/day-book5.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3763,
+          "sha256": "c91b53f60477dde9bfcc1c46225e36b280d8b8d387338b8a71f812071ec2a67b"
+        },
+        {
+          "id": 5,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book5.png",
+          "status": 200,
+          "file": "images/night-book5.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4124,
+          "sha256": "099195104c13aebd803a2cb6504ff44da4df5ba0b4674c3893f0b01f5050fabc"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 6,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book6.png",
+          "status": 200,
+          "file": "images/day-book6.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3017,
+          "sha256": "aa6875ebc6363c9a3f3022409f1e53a15814560266929b1a28934e82e147a901"
+        },
+        {
+          "id": 6,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book6.png",
+          "status": 200,
+          "file": "images/night-book6.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3026,
+          "sha256": "9afbe40ecea9c644723b712011eba25f35b28db332d90f7f9b0dd4d57b88f6b1"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 7,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book7.png",
+          "status": 200,
+          "file": "images/day-book7.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3098,
+          "sha256": "d53a84aabc75c6267bbff9fb46d0f12299349d9f4782d7e35096daf4fb00cc5e"
+        },
+        {
+          "id": 7,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book7.png",
+          "status": 200,
+          "file": "images/night-book7.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3506,
+          "sha256": "5b80dd76e9b6568da534a43befe3dbfe925872b0a73d9dbb055700dbf4fb4807"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 8,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book8.png",
+          "status": 200,
+          "file": "images/day-book8.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2952,
+          "sha256": "b580dbd2d33f48c2e3717a5fe6e4af7e2c7153b601d23e0289c35d5de380f009"
+        },
+        {
+          "id": 8,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book8.png",
+          "status": 200,
+          "file": "images/night-book8.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3087,
+          "sha256": "2d5861f79502121f51366175698e7851575087f565981775dc0ba37ce7b03f17"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 9,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book9.png",
+          "status": 200,
+          "file": "images/day-book9.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3211,
+          "sha256": "e4fba380e24a6cdfcb0d85ad8bf0da1b85da59d0b92c2b70529fa3aa3affada7"
+        },
+        {
+          "id": 9,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book9.png",
+          "status": 200,
+          "file": "images/night-book9.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2734,
+          "sha256": "8381ca5e6cd6445278286af94dbc4231c53f3b317b90ed3b66e48e0a04f514ab"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 10,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book10.png",
+          "status": 200,
+          "file": "images/day-book10.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3296,
+          "sha256": "c342601db00dc260b436401110f475e26bd867a11012a0fb0b87299d4b791520"
+        },
+        {
+          "id": 10,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book10.png",
+          "status": 200,
+          "file": "images/night-book10.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2748,
+          "sha256": "924446ff33f07942e444d296d3a3b6b0532d408175dac680ef07887faf107c67"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 11,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book11.png",
+          "status": 200,
+          "file": "images/day-book11.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3474,
+          "sha256": "7d5eb37e0e51f230dc81de920baebb1afa25dc098e6e8260b145ba5318368596"
+        },
+        {
+          "id": 11,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book11.png",
+          "status": 200,
+          "file": "images/night-book11.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2758,
+          "sha256": "ee4c9a93517704de6068d99ee352e36ce84503675baa4bfafa6ff10e7d20ee49"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "sourceLabel": "Starve.io Book",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 12,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book12.png",
+          "status": 200,
+          "file": "images/day-book12.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3235,
+          "sha256": "d903e208fa027d6018cda0b69fac2504db112e178ef3d8c7b74be214399bb512"
+        },
+        {
+          "id": 12,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book12.png",
+          "status": 200,
+          "file": "images/night-book12.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2801,
+          "sha256": "cc2794ebcb858e5ac34603eec852f4cdb6eaa635a7035a77d32a16732cc0cb7f"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 13,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book13.png",
+          "status": 200,
+          "file": "images/day-book13.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3930,
+          "sha256": "36a766ee53885019cc0a9b2d0cb6694450bcb5bb6772bab96da60a7b1a23d88c"
+        },
+        {
+          "id": 13,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book13.png",
+          "status": 200,
+          "file": "images/night-book13.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3322,
+          "sha256": "0a78c20258557166b6e8f6f77afa24c26ea0a6084a09ef999ab230a53be8c528"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 14,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book14.png",
+          "status": 200,
+          "file": "images/day-book14.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4681,
+          "sha256": "cd9599998bae7c91167afa29ecad51cf972a685813639daed053800c2b53ed16"
+        },
+        {
+          "id": 14,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book14.png",
+          "status": 200,
+          "file": "images/night-book14.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4636,
+          "sha256": "caebcf857b147981c4a3ff19d8777b44ea0eb5af1190f1a636b82acfbe7bddf4"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 15,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book15.png",
+          "status": 200,
+          "file": "images/day-book15.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3472,
+          "sha256": "757b0bcb318424b51a47a9a4e0b27766b9cae11429144ba1f867994d0f230a97"
+        },
+        {
+          "id": 15,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book15.png",
+          "status": 200,
+          "file": "images/night-book15.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4212,
+          "sha256": "41a59da2847f905ac2c6a157cfbb398b4c1b906d221bf4a8c86dda5762cf40ff"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 16,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book16.png",
+          "status": 200,
+          "file": "images/day-book16.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4128,
+          "sha256": "69c1d10753c19c847091aa054fb347c498d3ecc0fc9100e8914736f592df3b11"
+        },
+        {
+          "id": 16,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book16.png",
+          "status": 200,
+          "file": "images/night-book16.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4101,
+          "sha256": "69797ef24589f14a401bbb3f317eff1c5ba6bfbe44bc8b6fca054b22a6ce7aa7"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 17,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book17.png",
+          "status": 200,
+          "file": "images/day-book17.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2767,
+          "sha256": "5553227b1b4c4cb9b50bc9c71a77c4d6cfb4aa5b4a0191d484cb96ffd5fe45b6"
+        },
+        {
+          "id": 17,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book17.png",
+          "status": 200,
+          "file": "images/night-book17.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2910,
+          "sha256": "39f7f7f60bdf2e9f07f2697fa7f00988bc5573a734db5f901033b8e5d151bd88"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "sourceLabel": "Starve.io Book",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 18,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book18.png",
+          "status": 200,
+          "file": "images/day-book18.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4455,
+          "sha256": "8e22d61f722c8ccef3481680c43347c1220a5036d0786a5e20f9a6bf9d025882"
+        },
+        {
+          "id": 18,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book18.png",
+          "status": 200,
+          "file": "images/night-book18.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4430,
+          "sha256": "f14a25d861ad8dedbef4b27821401772d4ab1bfc3e6094e731ad46d2b9f2c869"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 19,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book19.png",
+          "status": 200,
+          "file": "images/day-book19.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 6011,
+          "sha256": "f409a483442899ecb675d427e09c7f6655d47068404c3786716d4c25cb34c387"
+        },
+        {
+          "id": 19,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book19.png",
+          "status": 200,
+          "file": "images/night-book19.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5667,
+          "sha256": "e5b10a4bfc72a3714fa4cf7778847493923c7aa12db9b0f67cb98b5fb73480f8"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 20,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book20.png",
+          "status": 200,
+          "file": "images/day-book20.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5319,
+          "sha256": "9d38361e9ce1643e438c177d8c638180018d92130e57e750b2324f7ee7c3a895"
+        },
+        {
+          "id": 20,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book20.png",
+          "status": 200,
+          "file": "images/night-book20.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5009,
+          "sha256": "60644d57e3e0bd1f4d1853564e40a5dabe84e503159a9f53e446a89631332ea9"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 21,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book21.png",
+          "status": 200,
+          "file": "images/day-book21.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4243,
+          "sha256": "07d200c4b2b1fd69b73502cf61ad47601ba937e45d055f335de9b4710db8e56e"
+        },
+        {
+          "id": 21,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book21.png",
+          "status": 200,
+          "file": "images/night-book21.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3589,
+          "sha256": "595d7613f808046646cae4f950417210d20ed8e76e673819b78646613ecdb17b"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 22,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book22.png",
+          "status": 200,
+          "file": "images/day-book22.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4658,
+          "sha256": "00f664ecb1385eba9274b4bda45fc1b2331ca532b2376e9e865324b7f18f2056"
+        },
+        {
+          "id": 22,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book22.png",
+          "status": 200,
+          "file": "images/night-book22.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4135,
+          "sha256": "192a90a4ab077921e1ec42737d9fab8ef5aa648465bf4b9ee6a4a51df11b292c"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 23,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book23.png",
+          "status": 200,
+          "file": "images/day-book23.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4761,
+          "sha256": "364df460ec953385b5d335e4bd556a97b7db1727f879fdbc27ed6a49a74ccf17"
+        },
+        {
+          "id": 23,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book23.png",
+          "status": 200,
+          "file": "images/night-book23.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4175,
+          "sha256": "7952197efc1045e41af80ccd61c0cb579ed05662b47a0cce40e815a3116875ee"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 24,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book24.png",
+          "status": 200,
+          "file": "images/day-book24.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4840,
+          "sha256": "c8f928041bae75ab5c747ec3fb18a76ca457078c75e937f1696dd6b568ce6c76"
+        },
+        {
+          "id": 24,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book24.png",
+          "status": 200,
+          "file": "images/night-book24.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3943,
+          "sha256": "ebc29a818ffc4bb3f8e411bd157fd43817086c9bd0abd60bbe201aecac2acfb6"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 25,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book25.png",
+          "status": 200,
+          "file": "images/day-book25.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4229,
+          "sha256": "a696dbceaebab3f926de67725747b33cfe296bd64f7488f1e01c7d4ba3f56e7e"
+        },
+        {
+          "id": 25,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book25.png",
+          "status": 200,
+          "file": "images/night-book25.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3277,
+          "sha256": "dd7b805cc87cbba7078b2ada2ac4fe7762b0702be22d90cce1a9b803b2f7c8b4"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 26,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book26.png",
+          "status": 200,
+          "file": "images/day-book26.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5304,
+          "sha256": "b5f22996cb189c02de04bada814b6232130793539ea69da1f4fb000477f8e852"
+        },
+        {
+          "id": 26,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book26.png",
+          "status": 200,
+          "file": "images/night-book26.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5088,
+          "sha256": "d60a0db2910740981e339e90d196304ea480f61f95141fb0afba08afe8f3657f"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 27,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book27.png",
+          "status": 200,
+          "file": "images/day-book27.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 7966,
+          "sha256": "9cb49cf3aa868b9c9d7b811242eb80460f4bdb9bd0352cdbeda073f2a0d56ce5"
+        },
+        {
+          "id": 27,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book27.png",
+          "status": 200,
+          "file": "images/night-book27.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 6879,
+          "sha256": "a5acc67fbeac2c9579f9b5cd9dcf88a0a517f47a4e18567211ccc37b69119332"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 28,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book28.png",
+          "status": 200,
+          "file": "images/day-book28.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5087,
+          "sha256": "252612c9490a02e50c9d542a51d3a26ce0014dbd62dcf98b9674eca3dc7f45f7"
+        },
+        {
+          "id": 28,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book28.png",
+          "status": 200,
+          "file": "images/night-book28.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4546,
+          "sha256": "7edff9d50b01e2eec6654bc67d2d869b4f49544b781fb6835c2feb9c8becdac7"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 29,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book29.png",
+          "status": 200,
+          "file": "images/day-book29.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5302,
+          "sha256": "e521fc5cccd1d50402342d6b252828bf82e59b630432208d469fb540fd362e05"
+        },
+        {
+          "id": 29,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book29.png",
+          "status": 200,
+          "file": "images/night-book29.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4246,
+          "sha256": "2b530dd0addfd0f562f8212f0b2cf9a4afb3a4caf818b24f0d4c797b9233adce"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 30,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book30.png",
+          "status": 200,
+          "file": "images/day-book30.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2854,
+          "sha256": "573ac48ac00159f8edcf4658e5694dcc1ee2cc33958523e2c5e679f6e5ff56c3"
+        },
+        {
+          "id": 30,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book30.png",
+          "status": 200,
+          "file": "images/night-book30.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2656,
+          "sha256": "28d967ac02506b67b81e65ecd9ac6b12ca795f3b5b743e019555a0491db5bf77"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 31,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book31.png",
+          "status": 200,
+          "file": "images/day-book31.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5089,
+          "sha256": "5853f9047e13a083167c1cebec49583daa9a821350ff1560cc39baf11e03a88e"
+        },
+        {
+          "id": 31,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book31.png",
+          "status": 200,
+          "file": "images/night-book31.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 5005,
+          "sha256": "2905a3acc2357646408b0e8e8cdaff1b89754489f851fc2d513e8a06c2725d60"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 32,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book32.png",
+          "status": 200,
+          "file": "images/day-book32.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4615,
+          "sha256": "fdae3313ba00bc9c0ce262ca1423af8290ad63f399a4e66a47b74640800a10ba"
+        },
+        {
+          "id": 32,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book32.png",
+          "status": 200,
+          "file": "images/night-book32.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 4041,
+          "sha256": "17a55bf9802baedd63035bf9d3edbf2e2039f2638e26da06f6e7496a315a55e9"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 33,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book33.png",
+          "status": 200,
+          "file": "images/day-book33.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13482,
+          "sha256": "14fe788313303f95b2e0c6350ec0fa73035e9ef39779d867891ac9243b5033d4"
+        },
+        {
+          "id": 33,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book33.png",
+          "status": 200,
+          "file": "images/night-book33.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 11614,
+          "sha256": "108001d0f3961a1962c2638381374ab0bb72bc5c19a14a79e4c187b04ddf67c8"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 34,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book34.png",
+          "status": 200,
+          "file": "images/day-book34.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 12384,
+          "sha256": "ea77f7ff509edbe01e0313ae42f03c0ebc4fc9e1f89cfe7ed104327d997d94dc"
+        },
+        {
+          "id": 34,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book34.png",
+          "status": 200,
+          "file": "images/night-book34.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 10706,
+          "sha256": "96d17e79c9cf7abc46b9adf4b5e9d30ebe689bcca3c4ac0d5d79210114227e80"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "sourceLabel": "Starve.io Accessory",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 35,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book35.png",
+          "status": 200,
+          "file": "images/day-book35.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13746,
+          "sha256": "0307bf637ef82687fba5f9043e8ddfa53ae592c6c5917994ca3f1271b7185d31"
+        },
+        {
+          "id": 35,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book35.png",
+          "status": 200,
+          "file": "images/night-book35.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 12447,
+          "sha256": "1711ba742d7bf43c8d2dae7e410c7f02e4f45604fd3384e9a3f98e53c01ccf63"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 36,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book36.png",
+          "status": 200,
+          "file": "images/day-book36.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 8176,
+          "sha256": "7a0cceb4fca9824455caa2a111ec93a2ae7eeb702d40009727181da8bca46f91"
+        },
+        {
+          "id": 36,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book36.png",
+          "status": 200,
+          "file": "images/night-book36.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 6941,
+          "sha256": "87e0710e1bbc3359a0f643a9c55e6408fd23f868e40ee3bcd8eda8c5b0498dd2"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 37,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book37.png",
+          "status": 200,
+          "file": "images/day-book37.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 14072,
+          "sha256": "ba4cbfd7b924219b87fac1392f3e35adfa70ba91ada392b718f47019f8add407"
+        },
+        {
+          "id": 37,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book37.png",
+          "status": 200,
+          "file": "images/night-book37.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13966,
+          "sha256": "4dd6087d9893336f4d9e2ce1a73e4ad7d896c7fd3af1008c1c3974cb3f08dfb0"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 38,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book38.png",
+          "status": 200,
+          "file": "images/day-book38.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 9671,
+          "sha256": "c4f0d49cd0b98fe95c4f4eb3f9096a9ca9530a48079574f880acc2e6dc37fec8"
+        },
+        {
+          "id": 38,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book38.png",
+          "status": 200,
+          "file": "images/night-book38.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 8359,
+          "sha256": "7da8df802f62b1eccd40f096b3942393576b907b92d81c02bbf1c1d551d4e08d"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 39,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book39.png",
+          "status": 200,
+          "file": "images/day-book39.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 6735,
+          "sha256": "77cf61cefe7aaad737e4f430301f30705e7f1d08b4f6422c4e1580d4813e82aa"
+        },
+        {
+          "id": 39,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book39.png",
+          "status": 200,
+          "file": "images/night-book39.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 9403,
+          "sha256": "a83f04418758cd954aeaaa0c90fe659e53c7ab23eaca51f01e2c1a756bfe2ac9"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 40,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book40.png",
+          "status": 200,
+          "file": "images/day-book40.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13272,
+          "sha256": "ef09a0136c13348a15640cc06a63933a981f89d8ba063e21056e57770b90f763"
+        },
+        {
+          "id": 40,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book40.png",
+          "status": 200,
+          "file": "images/night-book40.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13183,
+          "sha256": "3677aca2137c42c071cc3d43dcefb74b30efe730db3cc9ac40119967905dde39"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 41,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book41.png",
+          "status": 200,
+          "file": "images/day-book41.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 13355,
+          "sha256": "8e780651d0e0019100ed10d9a1da9f2533f0d49b5e834bc88bf767925b281cfd"
+        },
+        {
+          "id": 41,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book41.png",
+          "status": 200,
+          "file": "images/night-book41.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 11994,
+          "sha256": "bb6641a1185f0298f96a639668705665dabcbf0ad56ff3fe44a969c70c7f62a8"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "sourceLabel": "Starve.io Crate",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 42,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book42.png",
+          "status": 200,
+          "file": "images/day-book42.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 9829,
+          "sha256": "d9da0e021e66c164f37d9005c30a95b6f723e1e4d73747d4f81594742ebc99cd"
+        },
+        {
+          "id": 42,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book42.png",
+          "status": 200,
+          "file": "images/night-book42.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 8954,
+          "sha256": "baa62348ec3d203fc9587f1499c2fc06c8965c85403ede6b4788b8d0e984256f"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "sourceLabel": "Starve.io Mask",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 43,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book43.png",
+          "status": 200,
+          "file": "images/day-book43.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 11227,
+          "sha256": "8328b30fb152ee81f3e0568e41c7f491285b0dc854acccb8a7628c7a5bec7d74"
+        },
+        {
+          "id": 43,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book43.png",
+          "status": 200,
+          "file": "images/night-book43.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 10816,
+          "sha256": "bf5875704795a1e7abef8c26ce8965131c38769530f664effe01dc483447a6dc"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "sourceLabel": "Starve.io Mask",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 44,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book44.png",
+          "status": 200,
+          "file": "images/day-book44.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 8400,
+          "sha256": "2a0e74d096d648f67b548befa6ed5da8f38380341f4d911eb4193053048abf26"
+        },
+        {
+          "id": 44,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book44.png",
+          "status": 200,
+          "file": "images/night-book44.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 8135,
+          "sha256": "85bc77d81273931c3cf6e5c051f69f835345ceaa15b32adcd754f50878c63a6c"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "sourceLabel": "Starve.io Mask",
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 45,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book45.png",
+          "status": 200,
+          "file": "images/day-book45.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 24917,
+          "sha256": "ed7b588d6dc7eb93ef64bdcc35e4d52cb00c717e45dac6d4642bd2e0d9f60eb2"
+        },
+        {
+          "id": 45,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book45.png",
+          "status": 200,
+          "file": "images/night-book45.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 21075,
+          "sha256": "916134308975890ab489291c897f1deb62f46eb34211b900442ed126931e6d6a"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 46,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book46.png",
+          "status": 200,
+          "file": "images/day-book46.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2127,
+          "sha256": "15a544500f6b139066473dbcab0cc64a9ba2ded34577e74bfe1b128d7a5bcd68"
+        },
+        {
+          "id": 46,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book46.png",
+          "status": 200,
+          "file": "images/night-book46.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2129,
+          "sha256": "c06a0a518af17a54c058ca5981464679a4a6c0bb5217f4d70fe90707211d8b94"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 47,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book47.png",
+          "status": 200,
+          "file": "images/day-book47.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2666,
+          "sha256": "52cb9321b674b421a2479c23b82684f6860b1eed4250aacae430da70c452a109"
+        },
+        {
+          "id": 47,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book47.png",
+          "status": 200,
+          "file": "images/night-book47.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2589,
+          "sha256": "8a6a6eb8584bdeff7e4b0d86a3b6c60329ad04e4d0c769af8bdca4341645fde5"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 48,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book48.png",
+          "status": 200,
+          "file": "images/day-book48.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2967,
+          "sha256": "bf52a09bdee6120e31b245591fa289597ed10887a2da623f20558673e69faf46"
+        },
+        {
+          "id": 48,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book48.png",
+          "status": 200,
+          "file": "images/night-book48.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 3341,
+          "sha256": "235fa0e608564ee57091bf82b3b0244e863b4474dc43e095e27ae4360ac365c9"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 49,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book49.png",
+          "status": 200,
+          "file": "images/day-book49.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2116,
+          "sha256": "af480ae5f1eea5e4843f793772d6be97fa7b00fe204f622b75c0192bccd19287"
+        },
+        {
+          "id": 49,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book49.png",
+          "status": 200,
+          "file": "images/night-book49.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2217,
+          "sha256": "0073e0cbdb62c77ac30221e6f6f92f7dc541e739073b2af135c23488a49018f9"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 50,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book50.png",
+          "status": 200,
+          "file": "images/day-book50.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2887,
+          "sha256": "6b5b36495e4e3b37c89f592debf555426d786e39da5bd4108382614d4613f197"
+        },
+        {
+          "id": 50,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book50.png",
+          "status": 200,
+          "file": "images/night-book50.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2842,
+          "sha256": "d2e6fbaa32498ea94327663fcea4b73774cba676b05b54bb50e6a2236161caa4"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 51,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book51.png",
+          "status": 200,
+          "file": "images/day-book51.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2210,
+          "sha256": "cbd1b4b12b49e2b9bb730c937f9b53d9f9e3ec40c445d42d6f70caee61b0c933"
+        },
+        {
+          "id": 51,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book51.png",
+          "status": 200,
+          "file": "images/night-book51.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2348,
+          "sha256": "923e9f96fa26c6fd20e34a27badf654836a8da5c679d11465f7c71328956c3c6"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 52,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book52.png",
+          "status": 200,
+          "file": "images/day-book52.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2205,
+          "sha256": "c8246ba4881d1b6851c9cc70b63bf08cb0ea53a1f7bdcd70166ef2b742b52c57"
+        },
+        {
+          "id": 52,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book52.png",
+          "status": 200,
+          "file": "images/night-book52.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2235,
+          "sha256": "d15ba2fbe4544ec2fa6433627e427b06174600bdca6605688310cffa044b0581"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 53,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book53.png",
+          "status": 200,
+          "file": "images/day-book53.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2319,
+          "sha256": "45331f7c7cc261819049f3591287a1694b59c4231a0dafaed446b58e489719d4"
+        },
+        {
+          "id": 53,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book53.png",
+          "status": 200,
+          "file": "images/night-book53.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2285,
+          "sha256": "36954ee6b4e2edd13f5007b2ed427aecc7ee5b38721ee4a7c91fb7634a7e8b94"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 54,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book54.png",
+          "status": 200,
+          "file": "images/day-book54.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2299,
+          "sha256": "d7d2b842d84e4de53645436f57831efd0a9faf6ff1743e7654b814281b1f3500"
+        },
+        {
+          "id": 54,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book54.png",
+          "status": 200,
+          "file": "images/night-book54.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2348,
+          "sha256": "f3f47f8acc6b144d8515a1f288de14f530a8ddcfe3a4f47b21012d4e09cbaa88"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 55,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book55.png",
+          "status": 200,
+          "file": "images/day-book55.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2264,
+          "sha256": "c0278509b778c89af6b1a3a6d80a2abb2f2bf0fb2dc75939b39f92ce3ab49af3"
+        },
+        {
+          "id": 55,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book55.png",
+          "status": 200,
+          "file": "images/night-book55.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2298,
+          "sha256": "f73ce7f0f92d2c6d71914409eec2778c883b59c74cdf7bc4271a5a92ecaba970"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "sourceLabel": null,
+      "nameVerified": false,
+      "rarity": null,
+      "assets": [
+        {
+          "id": 56,
+          "variant": "day",
+          "url": "https://starve.io/img/day-book56.png",
+          "status": 200,
+          "file": "images/day-book56.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2250,
+          "sha256": "3c9fbe5c58bf05c87aed4c49c5363d7626ede4d45b037f9bcd7404fe4fa3c245"
+        },
+        {
+          "id": 56,
+          "variant": "night",
+          "url": "https://starve.io/img/night-book56.png",
+          "status": 200,
+          "file": "images/night-book56.png",
+          "width": 226,
+          "height": 226,
+          "bytes": 2319,
+          "sha256": "3c3e9c8a2b099fc326a19a26ea584027d947e78590af00950bc9a42fe984a500"
+        }
+      ]
+    }
+  ],
+  "unavailable": [
+    {
+      "id": 57,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book57.png",
+      "status": 404
+    },
+    {
+      "id": 57,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book57.png",
+      "status": 404
+    },
+    {
+      "id": 58,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book58.png",
+      "status": 404
+    },
+    {
+      "id": 58,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book58.png",
+      "status": 404
+    },
+    {
+      "id": 59,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book59.png",
+      "status": 404
+    },
+    {
+      "id": 59,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book59.png",
+      "status": 404
+    },
+    {
+      "id": 60,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book60.png",
+      "status": 404
+    },
+    {
+      "id": 60,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book60.png",
+      "status": 404
+    },
+    {
+      "id": 61,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book61.png",
+      "status": 404
+    },
+    {
+      "id": 61,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book61.png",
+      "status": 404
+    },
+    {
+      "id": 62,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book62.png",
+      "status": 404
+    },
+    {
+      "id": 62,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book62.png",
+      "status": 404
+    },
+    {
+      "id": 63,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book63.png",
+      "status": 404
+    },
+    {
+      "id": 63,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book63.png",
+      "status": 404
+    },
+    {
+      "id": 64,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book64.png",
+      "status": 404
+    },
+    {
+      "id": 64,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book64.png",
+      "status": 404
+    },
+    {
+      "id": 65,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book65.png",
+      "status": 404
+    },
+    {
+      "id": 65,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book65.png",
+      "status": 404
+    },
+    {
+      "id": 66,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book66.png",
+      "status": 404
+    },
+    {
+      "id": 66,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book66.png",
+      "status": 404
+    },
+    {
+      "id": 67,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book67.png",
+      "status": 404
+    },
+    {
+      "id": 67,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book67.png",
+      "status": 404
+    },
+    {
+      "id": 68,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book68.png",
+      "status": 404
+    },
+    {
+      "id": 68,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book68.png",
+      "status": 404
+    },
+    {
+      "id": 69,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book69.png",
+      "status": 404
+    },
+    {
+      "id": 69,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book69.png",
+      "status": 404
+    },
+    {
+      "id": 70,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book70.png",
+      "status": 404
+    },
+    {
+      "id": 70,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book70.png",
+      "status": 404
+    },
+    {
+      "id": 71,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book71.png",
+      "status": 404
+    },
+    {
+      "id": 71,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book71.png",
+      "status": 404
+    },
+    {
+      "id": 72,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book72.png",
+      "status": 404
+    },
+    {
+      "id": 72,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book72.png",
+      "status": 404
+    },
+    {
+      "id": 73,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book73.png",
+      "status": 404
+    },
+    {
+      "id": 73,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book73.png",
+      "status": 404
+    },
+    {
+      "id": 74,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book74.png",
+      "status": 404
+    },
+    {
+      "id": 74,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book74.png",
+      "status": 404
+    },
+    {
+      "id": 75,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book75.png",
+      "status": 404
+    },
+    {
+      "id": 75,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book75.png",
+      "status": 404
+    },
+    {
+      "id": 76,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book76.png",
+      "status": 404
+    },
+    {
+      "id": 76,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book76.png",
+      "status": 404
+    },
+    {
+      "id": 77,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book77.png",
+      "status": 404
+    },
+    {
+      "id": 77,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book77.png",
+      "status": 404
+    },
+    {
+      "id": 78,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book78.png",
+      "status": 404
+    },
+    {
+      "id": 78,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book78.png",
+      "status": 404
+    },
+    {
+      "id": 79,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book79.png",
+      "status": 404
+    },
+    {
+      "id": 79,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book79.png",
+      "status": 404
+    },
+    {
+      "id": 80,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book80.png",
+      "status": 404
+    },
+    {
+      "id": 80,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book80.png",
+      "status": 404
+    },
+    {
+      "id": 81,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book81.png",
+      "status": 404
+    },
+    {
+      "id": 81,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book81.png",
+      "status": 404
+    },
+    {
+      "id": 82,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book82.png",
+      "status": 404
+    },
+    {
+      "id": 82,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book82.png",
+      "status": 404
+    },
+    {
+      "id": 83,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book83.png",
+      "status": 404
+    },
+    {
+      "id": 83,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book83.png",
+      "status": 404
+    },
+    {
+      "id": 84,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book84.png",
+      "status": 404
+    },
+    {
+      "id": 84,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book84.png",
+      "status": 404
+    },
+    {
+      "id": 85,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book85.png",
+      "status": 404
+    },
+    {
+      "id": 85,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book85.png",
+      "status": 404
+    },
+    {
+      "id": 86,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book86.png",
+      "status": 404
+    },
+    {
+      "id": 86,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book86.png",
+      "status": 404
+    },
+    {
+      "id": 87,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book87.png",
+      "status": 404
+    },
+    {
+      "id": 87,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book87.png",
+      "status": 404
+    },
+    {
+      "id": 88,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book88.png",
+      "status": 404
+    },
+    {
+      "id": 88,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book88.png",
+      "status": 404
+    },
+    {
+      "id": 89,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book89.png",
+      "status": 404
+    },
+    {
+      "id": 89,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book89.png",
+      "status": 404
+    },
+    {
+      "id": 90,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book90.png",
+      "status": 404
+    },
+    {
+      "id": 90,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book90.png",
+      "status": 404
+    },
+    {
+      "id": 91,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book91.png",
+      "status": 404
+    },
+    {
+      "id": 91,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book91.png",
+      "status": 404
+    },
+    {
+      "id": 92,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book92.png",
+      "status": 404
+    },
+    {
+      "id": 92,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book92.png",
+      "status": 404
+    },
+    {
+      "id": 93,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book93.png",
+      "status": 404
+    },
+    {
+      "id": 93,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book93.png",
+      "status": 404
+    },
+    {
+      "id": 94,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book94.png",
+      "status": 404
+    },
+    {
+      "id": 94,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book94.png",
+      "status": 404
+    },
+    {
+      "id": 95,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book95.png",
+      "status": 404
+    },
+    {
+      "id": 95,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book95.png",
+      "status": 404
+    },
+    {
+      "id": 96,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book96.png",
+      "status": 404
+    },
+    {
+      "id": 96,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book96.png",
+      "status": 404
+    },
+    {
+      "id": 97,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book97.png",
+      "status": 404
+    },
+    {
+      "id": 97,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book97.png",
+      "status": 404
+    },
+    {
+      "id": 98,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book98.png",
+      "status": 404
+    },
+    {
+      "id": 98,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book98.png",
+      "status": 404
+    },
+    {
+      "id": 99,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book99.png",
+      "status": 404
+    },
+    {
+      "id": 99,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book99.png",
+      "status": 404
+    },
+    {
+      "id": 100,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book100.png",
+      "status": 404
+    },
+    {
+      "id": 100,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book100.png",
+      "status": 404
+    },
+    {
+      "id": 101,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book101.png",
+      "status": 404
+    },
+    {
+      "id": 101,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book101.png",
+      "status": 404
+    },
+    {
+      "id": 102,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book102.png",
+      "status": 404
+    },
+    {
+      "id": 102,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book102.png",
+      "status": 404
+    },
+    {
+      "id": 103,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book103.png",
+      "status": 404
+    },
+    {
+      "id": 103,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book103.png",
+      "status": 404
+    },
+    {
+      "id": 104,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book104.png",
+      "status": 404
+    },
+    {
+      "id": 104,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book104.png",
+      "status": 404
+    },
+    {
+      "id": 105,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book105.png",
+      "status": 404
+    },
+    {
+      "id": 105,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book105.png",
+      "status": 404
+    },
+    {
+      "id": 106,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book106.png",
+      "status": 404
+    },
+    {
+      "id": 106,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book106.png",
+      "status": 404
+    },
+    {
+      "id": 107,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book107.png",
+      "status": 404
+    },
+    {
+      "id": 107,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book107.png",
+      "status": 404
+    },
+    {
+      "id": 108,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book108.png",
+      "status": 404
+    },
+    {
+      "id": 108,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book108.png",
+      "status": 404
+    },
+    {
+      "id": 109,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book109.png",
+      "status": 404
+    },
+    {
+      "id": 109,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book109.png",
+      "status": 404
+    },
+    {
+      "id": 110,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book110.png",
+      "status": 404
+    },
+    {
+      "id": 110,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book110.png",
+      "status": 404
+    },
+    {
+      "id": 111,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book111.png",
+      "status": 404
+    },
+    {
+      "id": 111,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book111.png",
+      "status": 404
+    },
+    {
+      "id": 112,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book112.png",
+      "status": 404
+    },
+    {
+      "id": 112,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book112.png",
+      "status": 404
+    },
+    {
+      "id": 113,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book113.png",
+      "status": 404
+    },
+    {
+      "id": 113,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book113.png",
+      "status": 404
+    },
+    {
+      "id": 114,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book114.png",
+      "status": 404
+    },
+    {
+      "id": 114,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book114.png",
+      "status": 404
+    },
+    {
+      "id": 115,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book115.png",
+      "status": 404
+    },
+    {
+      "id": 115,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book115.png",
+      "status": 404
+    },
+    {
+      "id": 116,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book116.png",
+      "status": 404
+    },
+    {
+      "id": 116,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book116.png",
+      "status": 404
+    },
+    {
+      "id": 117,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book117.png",
+      "status": 404
+    },
+    {
+      "id": 117,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book117.png",
+      "status": 404
+    },
+    {
+      "id": 118,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book118.png",
+      "status": 404
+    },
+    {
+      "id": 118,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book118.png",
+      "status": 404
+    },
+    {
+      "id": 119,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book119.png",
+      "status": 404
+    },
+    {
+      "id": 119,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book119.png",
+      "status": 404
+    },
+    {
+      "id": 120,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book120.png",
+      "status": 404
+    },
+    {
+      "id": 120,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book120.png",
+      "status": 404
+    },
+    {
+      "id": 121,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book121.png",
+      "status": 404
+    },
+    {
+      "id": 121,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book121.png",
+      "status": 404
+    },
+    {
+      "id": 122,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book122.png",
+      "status": 404
+    },
+    {
+      "id": 122,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book122.png",
+      "status": 404
+    },
+    {
+      "id": 123,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book123.png",
+      "status": 404
+    },
+    {
+      "id": 123,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book123.png",
+      "status": 404
+    },
+    {
+      "id": 124,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book124.png",
+      "status": 404
+    },
+    {
+      "id": 124,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book124.png",
+      "status": 404
+    },
+    {
+      "id": 125,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book125.png",
+      "status": 404
+    },
+    {
+      "id": 125,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book125.png",
+      "status": 404
+    },
+    {
+      "id": 126,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book126.png",
+      "status": 404
+    },
+    {
+      "id": 126,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book126.png",
+      "status": 404
+    },
+    {
+      "id": 127,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book127.png",
+      "status": 404
+    },
+    {
+      "id": 127,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book127.png",
+      "status": 404
+    },
+    {
+      "id": 128,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book128.png",
+      "status": 404
+    },
+    {
+      "id": 128,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book128.png",
+      "status": 404
+    },
+    {
+      "id": 129,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book129.png",
+      "status": 404
+    },
+    {
+      "id": 129,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book129.png",
+      "status": 404
+    },
+    {
+      "id": 130,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book130.png",
+      "status": 404
+    },
+    {
+      "id": 130,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book130.png",
+      "status": 404
+    },
+    {
+      "id": 131,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book131.png",
+      "status": 404
+    },
+    {
+      "id": 131,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book131.png",
+      "status": 404
+    },
+    {
+      "id": 132,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book132.png",
+      "status": 404
+    },
+    {
+      "id": 132,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book132.png",
+      "status": 404
+    },
+    {
+      "id": 133,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book133.png",
+      "status": 404
+    },
+    {
+      "id": 133,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book133.png",
+      "status": 404
+    },
+    {
+      "id": 134,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book134.png",
+      "status": 404
+    },
+    {
+      "id": 134,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book134.png",
+      "status": 404
+    },
+    {
+      "id": 135,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book135.png",
+      "status": 404
+    },
+    {
+      "id": 135,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book135.png",
+      "status": 404
+    },
+    {
+      "id": 136,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book136.png",
+      "status": 404
+    },
+    {
+      "id": 136,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book136.png",
+      "status": 404
+    },
+    {
+      "id": 137,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book137.png",
+      "status": 404
+    },
+    {
+      "id": 137,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book137.png",
+      "status": 404
+    },
+    {
+      "id": 138,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book138.png",
+      "status": 404
+    },
+    {
+      "id": 138,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book138.png",
+      "status": 404
+    },
+    {
+      "id": 139,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book139.png",
+      "status": 404
+    },
+    {
+      "id": 139,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book139.png",
+      "status": 404
+    },
+    {
+      "id": 140,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book140.png",
+      "status": 404
+    },
+    {
+      "id": 140,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book140.png",
+      "status": 404
+    },
+    {
+      "id": 141,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book141.png",
+      "status": 404
+    },
+    {
+      "id": 141,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book141.png",
+      "status": 404
+    },
+    {
+      "id": 142,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book142.png",
+      "status": 404
+    },
+    {
+      "id": 142,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book142.png",
+      "status": 404
+    },
+    {
+      "id": 143,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book143.png",
+      "status": 404
+    },
+    {
+      "id": 143,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book143.png",
+      "status": 404
+    },
+    {
+      "id": 144,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book144.png",
+      "status": 404
+    },
+    {
+      "id": 144,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book144.png",
+      "status": 404
+    },
+    {
+      "id": 145,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book145.png",
+      "status": 404
+    },
+    {
+      "id": 145,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book145.png",
+      "status": 404
+    },
+    {
+      "id": 146,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book146.png",
+      "status": 404
+    },
+    {
+      "id": 146,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book146.png",
+      "status": 404
+    },
+    {
+      "id": 147,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book147.png",
+      "status": 404
+    },
+    {
+      "id": 147,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book147.png",
+      "status": 404
+    },
+    {
+      "id": 148,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book148.png",
+      "status": 404
+    },
+    {
+      "id": 148,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book148.png",
+      "status": 404
+    },
+    {
+      "id": 149,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book149.png",
+      "status": 404
+    },
+    {
+      "id": 149,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book149.png",
+      "status": 404
+    },
+    {
+      "id": 150,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book150.png",
+      "status": 404
+    },
+    {
+      "id": 150,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book150.png",
+      "status": 404
+    },
+    {
+      "id": 151,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book151.png",
+      "status": 404
+    },
+    {
+      "id": 151,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book151.png",
+      "status": 404
+    },
+    {
+      "id": 152,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book152.png",
+      "status": 404
+    },
+    {
+      "id": 152,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book152.png",
+      "status": 404
+    },
+    {
+      "id": 153,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book153.png",
+      "status": 404
+    },
+    {
+      "id": 153,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book153.png",
+      "status": 404
+    },
+    {
+      "id": 154,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book154.png",
+      "status": 404
+    },
+    {
+      "id": 154,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book154.png",
+      "status": 404
+    },
+    {
+      "id": 155,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book155.png",
+      "status": 404
+    },
+    {
+      "id": 155,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book155.png",
+      "status": 404
+    },
+    {
+      "id": 156,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book156.png",
+      "status": 404
+    },
+    {
+      "id": 156,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book156.png",
+      "status": 404
+    },
+    {
+      "id": 157,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book157.png",
+      "status": 404
+    },
+    {
+      "id": 157,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book157.png",
+      "status": 404
+    },
+    {
+      "id": 158,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book158.png",
+      "status": 404
+    },
+    {
+      "id": 158,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book158.png",
+      "status": 404
+    },
+    {
+      "id": 159,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book159.png",
+      "status": 404
+    },
+    {
+      "id": 159,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book159.png",
+      "status": 404
+    },
+    {
+      "id": 160,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book160.png",
+      "status": 404
+    },
+    {
+      "id": 160,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book160.png",
+      "status": 404
+    },
+    {
+      "id": 161,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book161.png",
+      "status": 404
+    },
+    {
+      "id": 161,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book161.png",
+      "status": 404
+    },
+    {
+      "id": 162,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book162.png",
+      "status": 404
+    },
+    {
+      "id": 162,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book162.png",
+      "status": 404
+    },
+    {
+      "id": 163,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book163.png",
+      "status": 404
+    },
+    {
+      "id": 163,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book163.png",
+      "status": 404
+    },
+    {
+      "id": 164,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book164.png",
+      "status": 404
+    },
+    {
+      "id": 164,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book164.png",
+      "status": 404
+    },
+    {
+      "id": 165,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book165.png",
+      "status": 404
+    },
+    {
+      "id": 165,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book165.png",
+      "status": 404
+    },
+    {
+      "id": 166,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book166.png",
+      "status": 404
+    },
+    {
+      "id": 166,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book166.png",
+      "status": 404
+    },
+    {
+      "id": 167,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book167.png",
+      "status": 404
+    },
+    {
+      "id": 167,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book167.png",
+      "status": 404
+    },
+    {
+      "id": 168,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book168.png",
+      "status": 404
+    },
+    {
+      "id": 168,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book168.png",
+      "status": 404
+    },
+    {
+      "id": 169,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book169.png",
+      "status": 404
+    },
+    {
+      "id": 169,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book169.png",
+      "status": 404
+    },
+    {
+      "id": 170,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book170.png",
+      "status": 404
+    },
+    {
+      "id": 170,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book170.png",
+      "status": 404
+    },
+    {
+      "id": 171,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book171.png",
+      "status": 404
+    },
+    {
+      "id": 171,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book171.png",
+      "status": 404
+    },
+    {
+      "id": 172,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book172.png",
+      "status": 404
+    },
+    {
+      "id": 172,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book172.png",
+      "status": 404
+    },
+    {
+      "id": 173,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book173.png",
+      "status": 404
+    },
+    {
+      "id": 173,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book173.png",
+      "status": 404
+    },
+    {
+      "id": 174,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book174.png",
+      "status": 404
+    },
+    {
+      "id": 174,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book174.png",
+      "status": 404
+    },
+    {
+      "id": 175,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book175.png",
+      "status": 404
+    },
+    {
+      "id": 175,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book175.png",
+      "status": 404
+    },
+    {
+      "id": 176,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book176.png",
+      "status": 404
+    },
+    {
+      "id": 176,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book176.png",
+      "status": 404
+    },
+    {
+      "id": 177,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book177.png",
+      "status": 404
+    },
+    {
+      "id": 177,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book177.png",
+      "status": 404
+    },
+    {
+      "id": 178,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book178.png",
+      "status": 404
+    },
+    {
+      "id": 178,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book178.png",
+      "status": 404
+    },
+    {
+      "id": 179,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book179.png",
+      "status": 404
+    },
+    {
+      "id": 179,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book179.png",
+      "status": 404
+    },
+    {
+      "id": 180,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book180.png",
+      "status": 404
+    },
+    {
+      "id": 180,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book180.png",
+      "status": 404
+    },
+    {
+      "id": 181,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book181.png",
+      "status": 404
+    },
+    {
+      "id": 181,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book181.png",
+      "status": 404
+    },
+    {
+      "id": 182,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book182.png",
+      "status": 404
+    },
+    {
+      "id": 182,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book182.png",
+      "status": 404
+    },
+    {
+      "id": 183,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book183.png",
+      "status": 404
+    },
+    {
+      "id": 183,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book183.png",
+      "status": 404
+    },
+    {
+      "id": 184,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book184.png",
+      "status": 404
+    },
+    {
+      "id": 184,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book184.png",
+      "status": 404
+    },
+    {
+      "id": 185,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book185.png",
+      "status": 404
+    },
+    {
+      "id": 185,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book185.png",
+      "status": 404
+    },
+    {
+      "id": 186,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book186.png",
+      "status": 404
+    },
+    {
+      "id": 186,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book186.png",
+      "status": 404
+    },
+    {
+      "id": 187,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book187.png",
+      "status": 404
+    },
+    {
+      "id": 187,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book187.png",
+      "status": 404
+    },
+    {
+      "id": 188,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book188.png",
+      "status": 404
+    },
+    {
+      "id": 188,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book188.png",
+      "status": 404
+    },
+    {
+      "id": 189,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book189.png",
+      "status": 404
+    },
+    {
+      "id": 189,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book189.png",
+      "status": 404
+    },
+    {
+      "id": 190,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book190.png",
+      "status": 404
+    },
+    {
+      "id": 190,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book190.png",
+      "status": 404
+    },
+    {
+      "id": 191,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book191.png",
+      "status": 404
+    },
+    {
+      "id": 191,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book191.png",
+      "status": 404
+    },
+    {
+      "id": 192,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book192.png",
+      "status": 404
+    },
+    {
+      "id": 192,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book192.png",
+      "status": 404
+    },
+    {
+      "id": 193,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book193.png",
+      "status": 404
+    },
+    {
+      "id": 193,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book193.png",
+      "status": 404
+    },
+    {
+      "id": 194,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book194.png",
+      "status": 404
+    },
+    {
+      "id": 194,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book194.png",
+      "status": 404
+    },
+    {
+      "id": 195,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book195.png",
+      "status": 404
+    },
+    {
+      "id": 195,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book195.png",
+      "status": 404
+    },
+    {
+      "id": 196,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book196.png",
+      "status": 404
+    },
+    {
+      "id": 196,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book196.png",
+      "status": 404
+    },
+    {
+      "id": 197,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book197.png",
+      "status": 404
+    },
+    {
+      "id": 197,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book197.png",
+      "status": 404
+    },
+    {
+      "id": 198,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book198.png",
+      "status": 404
+    },
+    {
+      "id": 198,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book198.png",
+      "status": 404
+    },
+    {
+      "id": 199,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book199.png",
+      "status": 404
+    },
+    {
+      "id": 199,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book199.png",
+      "status": 404
+    },
+    {
+      "id": 200,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book200.png",
+      "status": 404
+    },
+    {
+      "id": 200,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book200.png",
+      "status": 404
+    },
+    {
+      "id": 201,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book201.png",
+      "status": 404
+    },
+    {
+      "id": 201,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book201.png",
+      "status": 404
+    },
+    {
+      "id": 202,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book202.png",
+      "status": 404
+    },
+    {
+      "id": 202,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book202.png",
+      "status": 404
+    },
+    {
+      "id": 203,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book203.png",
+      "status": 404
+    },
+    {
+      "id": 203,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book203.png",
+      "status": 404
+    },
+    {
+      "id": 204,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book204.png",
+      "status": 404
+    },
+    {
+      "id": 204,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book204.png",
+      "status": 404
+    },
+    {
+      "id": 205,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book205.png",
+      "status": 404
+    },
+    {
+      "id": 205,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book205.png",
+      "status": 404
+    },
+    {
+      "id": 206,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book206.png",
+      "status": 404
+    },
+    {
+      "id": 206,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book206.png",
+      "status": 404
+    },
+    {
+      "id": 207,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book207.png",
+      "status": 404
+    },
+    {
+      "id": 207,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book207.png",
+      "status": 404
+    },
+    {
+      "id": 208,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book208.png",
+      "status": 404
+    },
+    {
+      "id": 208,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book208.png",
+      "status": 404
+    },
+    {
+      "id": 209,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book209.png",
+      "status": 404
+    },
+    {
+      "id": 209,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book209.png",
+      "status": 404
+    },
+    {
+      "id": 210,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book210.png",
+      "status": 404
+    },
+    {
+      "id": 210,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book210.png",
+      "status": 404
+    },
+    {
+      "id": 211,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book211.png",
+      "status": 404
+    },
+    {
+      "id": 211,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book211.png",
+      "status": 404
+    },
+    {
+      "id": 212,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book212.png",
+      "status": 404
+    },
+    {
+      "id": 212,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book212.png",
+      "status": 404
+    },
+    {
+      "id": 213,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book213.png",
+      "status": 404
+    },
+    {
+      "id": 213,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book213.png",
+      "status": 404
+    },
+    {
+      "id": 214,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book214.png",
+      "status": 404
+    },
+    {
+      "id": 214,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book214.png",
+      "status": 404
+    },
+    {
+      "id": 215,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book215.png",
+      "status": 404
+    },
+    {
+      "id": 215,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book215.png",
+      "status": 404
+    },
+    {
+      "id": 216,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book216.png",
+      "status": 404
+    },
+    {
+      "id": 216,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book216.png",
+      "status": 404
+    },
+    {
+      "id": 217,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book217.png",
+      "status": 404
+    },
+    {
+      "id": 217,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book217.png",
+      "status": 404
+    },
+    {
+      "id": 218,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book218.png",
+      "status": 404
+    },
+    {
+      "id": 218,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book218.png",
+      "status": 404
+    },
+    {
+      "id": 219,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book219.png",
+      "status": 404
+    },
+    {
+      "id": 219,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book219.png",
+      "status": 404
+    },
+    {
+      "id": 220,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book220.png",
+      "status": 404
+    },
+    {
+      "id": 220,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book220.png",
+      "status": 404
+    },
+    {
+      "id": 221,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book221.png",
+      "status": 404
+    },
+    {
+      "id": 221,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book221.png",
+      "status": 404
+    },
+    {
+      "id": 222,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book222.png",
+      "status": 404
+    },
+    {
+      "id": 222,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book222.png",
+      "status": 404
+    },
+    {
+      "id": 223,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book223.png",
+      "status": 404
+    },
+    {
+      "id": 223,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book223.png",
+      "status": 404
+    },
+    {
+      "id": 224,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book224.png",
+      "status": 404
+    },
+    {
+      "id": 224,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book224.png",
+      "status": 404
+    },
+    {
+      "id": 225,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book225.png",
+      "status": 404
+    },
+    {
+      "id": 225,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book225.png",
+      "status": 404
+    },
+    {
+      "id": 226,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book226.png",
+      "status": 404
+    },
+    {
+      "id": 226,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book226.png",
+      "status": 404
+    },
+    {
+      "id": 227,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book227.png",
+      "status": 404
+    },
+    {
+      "id": 227,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book227.png",
+      "status": 404
+    },
+    {
+      "id": 228,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book228.png",
+      "status": 404
+    },
+    {
+      "id": 228,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book228.png",
+      "status": 404
+    },
+    {
+      "id": 229,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book229.png",
+      "status": 404
+    },
+    {
+      "id": 229,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book229.png",
+      "status": 404
+    },
+    {
+      "id": 230,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book230.png",
+      "status": 404
+    },
+    {
+      "id": 230,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book230.png",
+      "status": 404
+    },
+    {
+      "id": 231,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book231.png",
+      "status": 404
+    },
+    {
+      "id": 231,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book231.png",
+      "status": 404
+    },
+    {
+      "id": 232,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book232.png",
+      "status": 404
+    },
+    {
+      "id": 232,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book232.png",
+      "status": 404
+    },
+    {
+      "id": 233,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book233.png",
+      "status": 404
+    },
+    {
+      "id": 233,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book233.png",
+      "status": 404
+    },
+    {
+      "id": 234,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book234.png",
+      "status": 404
+    },
+    {
+      "id": 234,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book234.png",
+      "status": 404
+    },
+    {
+      "id": 235,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book235.png",
+      "status": 404
+    },
+    {
+      "id": 235,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book235.png",
+      "status": 404
+    },
+    {
+      "id": 236,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book236.png",
+      "status": 404
+    },
+    {
+      "id": 236,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book236.png",
+      "status": 404
+    },
+    {
+      "id": 237,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book237.png",
+      "status": 404
+    },
+    {
+      "id": 237,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book237.png",
+      "status": 404
+    },
+    {
+      "id": 238,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book238.png",
+      "status": 404
+    },
+    {
+      "id": 238,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book238.png",
+      "status": 404
+    },
+    {
+      "id": 239,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book239.png",
+      "status": 404
+    },
+    {
+      "id": 239,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book239.png",
+      "status": 404
+    },
+    {
+      "id": 240,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book240.png",
+      "status": 404
+    },
+    {
+      "id": 240,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book240.png",
+      "status": 404
+    },
+    {
+      "id": 241,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book241.png",
+      "status": 404
+    },
+    {
+      "id": 241,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book241.png",
+      "status": 404
+    },
+    {
+      "id": 242,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book242.png",
+      "status": 404
+    },
+    {
+      "id": 242,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book242.png",
+      "status": 404
+    },
+    {
+      "id": 243,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book243.png",
+      "status": 404
+    },
+    {
+      "id": 243,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book243.png",
+      "status": 404
+    },
+    {
+      "id": 244,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book244.png",
+      "status": 404
+    },
+    {
+      "id": 244,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book244.png",
+      "status": 404
+    },
+    {
+      "id": 245,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book245.png",
+      "status": 404
+    },
+    {
+      "id": 245,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book245.png",
+      "status": 404
+    },
+    {
+      "id": 246,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book246.png",
+      "status": 404
+    },
+    {
+      "id": 246,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book246.png",
+      "status": 404
+    },
+    {
+      "id": 247,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book247.png",
+      "status": 404
+    },
+    {
+      "id": 247,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book247.png",
+      "status": 404
+    },
+    {
+      "id": 248,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book248.png",
+      "status": 404
+    },
+    {
+      "id": 248,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book248.png",
+      "status": 404
+    },
+    {
+      "id": 249,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book249.png",
+      "status": 404
+    },
+    {
+      "id": 249,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book249.png",
+      "status": 404
+    },
+    {
+      "id": 250,
+      "variant": "day",
+      "url": "https://starve.io/img/day-book250.png",
+      "status": 404
+    },
+    {
+      "id": 250,
+      "variant": "night",
+      "url": "https://starve.io/img/night-book250.png",
+      "status": 404
+    }
+  ]
+}

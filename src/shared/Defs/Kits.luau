@@ -13,10 +13,11 @@ local Kits: { [string]: KitDef } = {
 		id = "kit_starter",
 		nameKey = "kit.kit_starter",
 		order = 1,
-		price = 1000,
+		price = 0,
 		items = {
 			{ id = "berry", count = 8 },
 			{ id = "wood", count = 20 },
+			{ id = "book", count = 1 },
 		},
 	},
 	kit_explorer = {

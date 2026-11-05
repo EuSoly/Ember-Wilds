@@ -1,0 +1,320 @@
+{
+ "source": "https://starveiopro.fandom.com/wiki/Items (secao Food/Ingredients)",
+ "note": "Raw Meat, Fish, Crab Sticks e Crab Claws estao em ../mob-drops. Uma malha por cor em cada item; faces de baixo removidas.",
+ "units": "~1 unidade = largura do icone",
+ "pivot": "centro do item, base em Z=0",
+ "total_meshes": 75,
+ "total_triangles": 4047,
+ "items": [
+  {
+   "item_id": "berry",
+   "label": "Berries",
+   "meshes": 4,
+   "triangles": 313,
+   "mesh_names": [
+    "berry_outline",
+    "berry_body",
+    "berry_part",
+    "berry_shine"
+   ],
+   "colors": [
+    "#1E2230",
+    "#118A57",
+    "#4A3A8C",
+    "#8565C4"
+   ]
+  },
+  {
+   "item_id": "flour",
+   "label": "Flour",
+   "meshes": 4,
+   "triangles": 145,
+   "mesh_names": [
+    "flour_outline",
+    "flour_body",
+    "flour_part",
+    "flour_part_2"
+   ],
+   "colors": [
+    "#1E2230",
+    "#8A8268",
+    "#B2AA90",
+    "#ECEBE4"
+   ]
+  },
+  {
+   "item_id": "bread",
+   "label": "Bread",
+   "meshes": 5,
+   "triangles": 232,
+   "mesh_names": [
+    "bread_outline",
+    "bread_body",
+    "bread_part",
+    "bread_part_2",
+    "bread_cut"
+   ],
+   "colors": [
+    "#1E2230",
+    "#7E5637",
+    "#C48F52",
+    "#EBD9C0",
+    "#8E5F35"
+   ]
+  },
+  {
+   "item_id": "cookies",
+   "label": "Cookies",
+   "meshes": 4,
+   "triangles": 306,
+   "mesh_names": [
+    "cookies_outline",
+    "cookies_body",
+    "cookies_part",
+    "cookies_chip"
+   ],
+   "colors": [
+    "#1E2230",
+    "#D2AE95",
+    "#ECD7C8",
+    "#6A4430"
+   ]
+  },
+  {
+   "item_id": "cake",
+   "label": "Cake",
+   "meshes": 6,
+   "triangles": 150,
+   "mesh_names": [
+    "cake_outline",
+    "cake_body",
+    "cake_part",
+    "cake_cream",
+    "cake_cherry",
+    "cake_cherry_hl"
+   ],
+   "colors": [
+    "#1E2230",
+    "#5A3620",
+    "#DCCDC4",
+    "#E8DCD3",
+    "#C2303A",
+    "#E88488"
+   ]
+  },
+  {
+   "item_id": "cooked_meat",
+   "label": "Cooked Meat",
+   "meshes": 5,
+   "triangles": 185,
+   "mesh_names": [
+    "cooked_meat_outline",
+    "cooked_meat_rim",
+    "cooked_meat_body",
+    "cooked_meat_bone",
+    "cooked_meat_marrow"
+   ],
+   "colors": [
+    "#1E2230",
+    "#A85A48",
+    "#6B2E22",
+    "#EDE6DA",
+    "#6A707C"
+   ]
+  },
+  {
+   "item_id": "cooked_fish",
+   "label": "Cooked Fish",
+   "meshes": 5,
+   "triangles": 277,
+   "mesh_names": [
+    "cooked_fish_outline",
+    "cooked_fish_body",
+    "cooked_fish_part",
+    "cooked_fish_grill",
+    "cooked_fish_eye"
+   ],
+   "colors": [
+    "#1E2230",
+    "#3A1C14",
+    "#5B2E1F",
+    "#24100A",
+    "#7A4A36"
+   ]
+  },
+  {
+   "item_id": "pumpkin",
+   "label": "Pumpkin",
+   "meshes": 4,
+   "triangles": 239,
+   "mesh_names": [
+    "pumpkin_outline",
+    "pumpkin_body",
+    "pumpkin_rib",
+    "pumpkin_stem"
+   ],
+   "colors": [
+    "#1E2230",
+    "#C96D38",
+    "#A9552A",
+    "#3F5A22"
+   ]
+  },
+  {
+   "item_id": "tomato",
+   "label": "Tomato",
+   "meshes": 4,
+   "triangles": 184,
+   "mesh_names": [
+    "tomato_outline",
+    "tomato_body",
+    "tomato_part",
+    "tomato_shine"
+   ],
+   "colors": [
+    "#1E2230",
+    "#D2361A",
+    "#1F7A2C",
+    "#F07A5A"
+   ]
+  },
+  {
+   "item_id": "carrot",
+   "label": "Carrot",
+   "meshes": 4,
+   "triangles": 216,
+   "mesh_names": [
+    "carrot_outline",
+    "carrot_body",
+    "carrot_part",
+    "carrot_ridge"
+   ],
+   "colors": [
+    "#1E2230",
+    "#D27000",
+    "#3A9A4A",
+    "#A85700"
+   ]
+  },
+  {
+   "item_id": "watermelon",
+   "label": "Watermelon",
+   "meshes": 5,
+   "triangles": 313,
+   "mesh_names": [
+    "watermelon_outline",
+    "watermelon_body",
+    "watermelon_part",
+    "watermelon_shine",
+    "watermelon_stem"
+   ],
+   "colors": [
+    "#1E2230",
+    "#1E5A2A",
+    "#4C9E58",
+    "#8FD07E",
+    "#12301A"
+   ]
+  },
+  {
+   "item_id": "garlic",
+   "label": "Garlic",
+   "meshes": 3,
+   "triangles": 226,
+   "mesh_names": [
+    "garlic_outline",
+    "garlic_body",
+    "garlic_line"
+   ],
+   "colors": [
+    "#1E2230",
+    "#EAE9E4",
+    "#A8A8A0"
+   ]
+  },
+  {
+   "item_id": "cactus",
+   "label": "Cactus",
+   "meshes": 4,
+   "triangles": 363,
+   "mesh_names": [
+    "cactus_outline",
+    "cactus_body",
+    "cactus_part",
+    "cactus_spine"
+   ],
+   "colors": [
+    "#1E2230",
+    "#3E6247",
+    "#93AE7E",
+    "#EDE2B8"
+   ]
+  },
+  {
+   "item_id": "wheat",
+   "label": "Wheat",
+   "meshes": 4,
+   "triangles": 371,
+   "mesh_names": [
+    "wheat_outline",
+    "wheat_body",
+    "wheat_part",
+    "wheat_stalk"
+   ],
+   "colors": [
+    "#1E2230",
+    "#B39A63",
+    "#D6C589",
+    "#8A7444"
+   ]
+  },
+  {
+   "item_id": "aloe_vera",
+   "label": "Aloe Vera",
+   "meshes": 4,
+   "triangles": 267,
+   "mesh_names": [
+    "aloe_vera_outline",
+    "aloe_vera_body",
+    "aloe_vera_front",
+    "aloe_vera_cut_b"
+   ],
+   "colors": [
+    "#1E2230",
+    "#6E9246",
+    "#7FA552",
+    "#A9C77E"
+   ]
+  },
+  {
+   "item_id": "sandwich",
+   "label": "Sandwich",
+   "meshes": 10,
+   "triangles": 260,
+   "mesh_names": [
+    "sandwich_outline",
+    "sandwich_lines",
+    "sandwich_side_shade",
+    "sandwich_strip",
+    "sandwich_filling",
+    "sandwich_filling_shade",
+    "sandwich_mayo",
+    "sandwich_crust",
+    "sandwich_crumb",
+    "sandwich_speck"
+   ],
+   "colors": [
+    "#1E2230",
+    "#5A3626",
+    "#A97845",
+    "#E6BC80",
+    "#7A302C",
+    "#62241F",
+    "#F3EFE6",
+    "#C99A5E",
+    "#ECE2C6",
+    "#D2C39B"
+   ]
+  }
+ ]
+}
