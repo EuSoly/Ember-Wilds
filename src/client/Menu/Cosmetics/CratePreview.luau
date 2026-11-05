@@ -18,6 +18,7 @@ function CratePreview.build(skinId: () -> string): ViewportFrame
 	camera.Name = "CrateCamera"
 	local viewport = create("ViewportFrame")({
 		Name = "CratePreview",
+		BackgroundColor3 = Color3.fromHex("#221912"), -- igual ao fundo da vitrine (elimina contorno branco de anti-aliasing)
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		Ambient = Color3.fromRGB(200, 200, 200),

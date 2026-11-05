@@ -124,7 +124,9 @@ function MenuBoneco.build(visible: () -> boolean, override: (() -> Override)?): 
 	local camera = Instance.new("Camera")
 	local viewport = create("ViewportFrame")({
 		Name = "MenuBoneco",
+		BackgroundColor3 = Color3.fromHex("#221912"), -- igual ao fundo da vitrine (elimina contorno branco de anti-aliasing)
 		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
 		Ambient = Color3.fromRGB(200, 200, 200),
 		LightColor = Color3.new(1, 1, 1),
 		LightDirection = Vector3.new(-1, -2, -1),

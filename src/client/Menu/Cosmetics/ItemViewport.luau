@@ -28,7 +28,7 @@ local MARGIN = 0.08 -- folga em volta do item (0.08 = 8%)
 -- De onde a câmera olha (do centro do item para a câmera), por slot.
 local DIRECTIONS: { [string]: Vector3 } = {
 	body = Vector3.new(0, 0.8, -1.1).Unit, -- de frente e de cima (vê os olhos)
-	bag = Vector3.new(0.45, 0.6, 1).Unit, -- pelo lado de fora (aba e alças)
+	bag = Vector3.new(0.4, 3, -1).Unit, -- pelo lado de fora (aba e alças)
 	crate = Vector3.new(0.6, 0.7, -1).Unit, -- quina da frente, um pouco de cima
 	book = Vector3.new(0, 0.8, -1.1).Unit, -- igual ao livro na mão do boneco
 }
@@ -136,6 +136,7 @@ function ItemViewport.build(cosmeticId: string): ViewportFrame
 	local viewport = Instance.new("ViewportFrame")
 	viewport.Name = "Item3D"
 	viewport.Size = UDim2.fromScale(1, 1)
+	viewport.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	viewport.BackgroundTransparency = 1
 	viewport.BorderSizePixel = 0
 	viewport.Ambient = Color3.fromRGB(200, 200, 200)
