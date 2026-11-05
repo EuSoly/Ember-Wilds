@@ -203,7 +203,15 @@ local function indexAvailableParts()
 	end
 end
 
+local function resolveSkinId(skinId: string): string
+	if skinId == "book_default" then
+		return "book_pergaminho"
+	end
+	return skinId
+end
+
 function SkinAssets.findPart(skinId: string, partName: string): BasePart?
+	skinId = resolveSkinId(skinId)
 	local cached = partCache[partName]
 	if cached and cached.Parent ~= nil then
 		return cached
@@ -234,6 +242,7 @@ function SkinAssets.hasSkin(skinId: string?): boolean
 	if skinId == nil then
 		return false
 	end
+	skinId = resolveSkinId(skinId)
 	local partNames = SkinManifest.PARTS_BY_SKIN[skinId]
 	if partNames == nil then
 		return false
@@ -247,6 +256,7 @@ function SkinAssets.hasSkin(skinId: string?): boolean
 end
 
 function SkinAssets.clonePart(skinId: string, partName: string, pivotCFrame: CFrame): BasePart?
+	skinId = resolveSkinId(skinId)
 	local info = SkinManifest.PARTS[partName]
 	if info == nil then
 		return nil

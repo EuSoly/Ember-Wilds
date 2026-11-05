@@ -67,26 +67,74 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 	if def == nil and not RunService:IsStudio() then
 		return nil
 	end
-	local source = template(itemId)
-	if source == nil and itemId == "book" then
-		-- Fallback se Assets.Tools.book não existir no place:
-		local fallback = Instance.new("Model")
-		local handle = Instance.new("Part")
-		handle.Name = "Handle"
-		handle.Size = Vector3.new(2.37, 0.53, 2.68)
-		handle.Color = Color3.fromRGB(130, 80, 50)
-		handle.Material = Enum.Material.SmoothPlastic
-		handle.Anchored = false
-		handle.CanCollide = false
-		handle.Massless = true
-		handle.Parent = fallback
-		fallback.PrimaryPart = handle
-		local grip = Instance.new("Attachment")
-		grip.Name = "Grip"
-		grip.CFrame = CFrame.new(0, 0, 0)
-		grip.Parent = handle
-		source = fallback
+
+	-- Livro: usa a skin 3D equipada (ou book_pergaminho como padrão) em ReplicatedStorage.Assets.Books
+	if itemId == "book" then
+		local skinId = if (cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId))
+			then cosmeticId
+			elseif SkinAssets.hasSkin("book_pergaminho") then "book_pergaminho"
+			else nil
+
+		if skinId ~= nil and SkinAssets.hasSkin(skinId) then
+			local partNames = SkinManifest.PARTS_BY_SKIN[skinId]
+			if partNames ~= nil then
+				local model = Instance.new("Model")
+				model.Name = "HeldItem"
+				model:SetAttribute("ItemId", itemId)
+
+				local handle = Instance.new("Part")
+				handle.Name = "Handle"
+				handle.Size = Vector3.new(2.37, 0.53, 2.68)
+				handle.Transparency = 1
+				handle.Anchored = false
+				handle.CanCollide = false
+				handle.CanQuery = false
+				handle.CanTouch = false
+				handle.Massless = true
+				handle.Parent = model
+				model.PrimaryPart = handle
+
+				local source = template("book")
+				local sourceHandle = source and (if source:IsA("Model") then source.PrimaryPart else (source:FindFirstChild("Handle") :: BasePart?))
+				local sourceGrip = sourceHandle and sourceHandle:FindFirstChild("Grip")
+
+				local grip = Instance.new("Attachment")
+				grip.Name = "Grip"
+				if sourceGrip and sourceGrip:IsA("Attachment") then
+					grip.CFrame = sourceGrip.CFrame
+				else
+					grip.CFrame = CFrame.new(-0.8, 0, 0)
+				end
+				grip.Parent = handle
+
+				for _, partName in partNames do
+					local clone = SkinAssets.clonePart(skinId, partName, handle.CFrame)
+					if clone then
+						clone.Parent = model
+						local weld = Instance.new("Weld")
+						weld.Name = "SkinWeld"
+						weld.Part0 = handle
+						weld.Part1 = clone
+						weld.C0 = CFrame.identity
+						weld.C1 = handle.CFrame:ToObjectSpace(clone.CFrame)
+						weld.Parent = clone
+					end
+				end
+
+				local scale = ToolModel.scaleOf(itemId)
+				if scale ~= 1 then
+					model:ScaleTo(model:GetScale() * scale)
+				end
+				local offset = ToolModel.gripOffsetOf(itemId)
+				if offset ~= 0 then
+					grip.CFrame *= CFrame.new(0, offset * scale, 0)
+				end
+				return model
+			end
+		end
 	end
+
+	local source = template(itemId)
 	if source == nil then
 		return nil
 	end
@@ -124,26 +172,6 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 		end
 	end
 
-	if itemId == "book" and handle ~= nil and cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId) then
-		local partNames = SkinManifest.PARTS_BY_SKIN[cosmeticId]
-		if partNames ~= nil then
-			local added = 0
-			for _, partName in partNames do
-				local clone = SkinAssets.clonePart(cosmeticId, partName, handle.CFrame)
-				if clone then
-					clone.Parent = model
-					local weld = Instance.new("WeldConstraint")
-					weld.Part0 = handle
-					weld.Part1 = clone
-					weld.Parent = clone
-					added += 1
-				end
-			end
-			if added > 0 then
-				handle.Transparency = 1
-			end
-		end
-	end
 	local scale = ToolModel.scaleOf(itemId)
 	if scale ~= 1 then
 		-- Escala peças e attachments (o Grip acompanha).

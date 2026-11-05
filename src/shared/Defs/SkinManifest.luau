@@ -3174,6 +3174,7 @@ local PARTS_BY_SKIN: { [string]: { string } } = {
 	["body_torradeira"] = { "body_torradeira_corpo", "body_torradeira_mao", "body_torradeira_mao_esq" },
 	["body_amanita"] = { "body_amanita_corpo", "body_amanita_mao", "body_amanita_mao_esq" },
 	["body_explorador"] = { "body_explorador_corpo", "body_explorador_mao", "body_explorador_mao_esq" },
+	["book_default"] = { "book_pergaminho_livro" },
 	["book_pergaminho"] = { "book_pergaminho_livro" },
 	["book_mapa"] = { "book_mapa_livro" },
 	["book_tabua"] = { "book_tabua_livro" },
