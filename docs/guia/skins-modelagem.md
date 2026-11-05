@@ -68,6 +68,12 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 
 `assets/skins/export_roblox.py` (rodar com `blender -b --factory-startup --python assets/skins/export_roblox.py`) gera `assets/skins/roblox/corpo/` e `assets/skins/roblox/livros/`: FBX geral + individuais, textura de paleta, `.blend` de exportação, `manifest.json`, `validation.json` e `preview.png`. Lotes incluídos na lista `LOTES` do script (acrescentar cada lote novo ali). Corpo = `body_<nome>_corpo` + `body_<nome>_mao` (mão direita, pivô no centro da mão; olhos ficam no código); livro = `book_<nome>_livro`; partes com `emit` saem em `_neon` e com `alpha` em `_translucido` (ajuste de Material/Transparency no Studio). Curvas com `RES_EXPORT = 4` e Decimate acima de 5.000 (corpo) / 1.500 (mão) / 3.000 (livro) triângulos. Detalhes no `assets/skins/roblox/LEIA-ME.md`; conferir a versão exportada com `ferramentas/previa_export.py`.
 
+### Pendente: mão esquerda (anotado em 05/11/2026)
+
+O export traz só a mão **direita** (`body_<nome>_mao`, pivô no centro da mão). A ideia era o código usar a mesma malha nas duas mãos, mas o Roblox não espelha MeshPart (não existe tamanho negativo): girar a mão direita não vira uma mão esquerda. Mãos simétricas (esfera lisa, garras para a frente, almofadinhas) ficam certas; enfeites que apontam para fora (asa do pintinho, penas do papagaio, barbatana do tubarão, faísca da chama…) ficariam apontando para dentro ou para trás.
+
+**Correção combinada:** o `export_roblox.py` passa a gerar também `body_<nome>_mao_esq`, espelhada em X no Blender a partir da direita (pivô no centro da mão esquerda), e o `manifest.json` ganha a peça. Depois: reimportar o FBX de corpo (ou só as mãos esquerdas), mover para `Assets.Skins` e fazer o `BonecoModel` usar uma malha por lado.
+
 ## Livros (triagem de 05/11/2026)
 
 O livro padrão é o modelo do Elizeu, `ReplicatedStorage.Assets.Tools.book`. As skins de livro seguem as mesmas regras das de corpo (versões nossas por tema, paleta da referência, nada de copiar texto ou arte da capa). Triagem em `assets/skins/triagem/livros/triagem.json`, com pranchas por grupo na mesma pasta:

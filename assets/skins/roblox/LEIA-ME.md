@@ -29,6 +29,8 @@ A textura de paleta (`corpo_palette.png`, `livros_palette.png`) vai embutida nos
 | `..._neon` | Partes que brilham | Mesmo pivô da peça de origem |
 | `..._translucido` | Partes semitransparentes | Mesmo pivô da peça de origem |
 
+**Pendente:** ainda não há mão esquerda. O Roblox não espelha MeshPart, então girar a direita deixa enfeites assimétricos apontando para o lado errado. O próximo export vai trazer `body_<nome>_mao_esq` já espelhada (veja `docs/guia/skins-modelagem.md`, "Pendente: mão esquerda").
+
 Os **olhos não vêm** no arquivo: continuam sendo do código (piscar, cara de dor). A mão esquerda da prévia também não vem.
 
 **Livro**, id `book_<nome>`: a malha `book_<nome>_livro`, com origem no centro do livro, e mais as peças `_neon` quando houver. Tamanho e orientação são os do `Assets.Tools.book` (2,37 × 0,53 × 2,68, capa para cima).
