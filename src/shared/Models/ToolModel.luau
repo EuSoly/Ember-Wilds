@@ -17,11 +17,11 @@ local Types = require("../Defs/Types")
 
 local ToolModel = {}
 
-local function template(itemId: string): Model?
+local function template(itemId: string): Instance?
 	local assets = ReplicatedStorage:FindFirstChild("Assets")
 	local folder = assets and assets:FindFirstChild("Tools")
 	local found = folder and folder:FindFirstChild(itemId)
-	if found == nil or not found:IsA("Model") then
+	if found == nil or not (found:IsA("Model") or found:IsA("Tool")) then
 		return nil
 	end
 	return found
@@ -59,7 +59,7 @@ end
 
 function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
-	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" then
+	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" and itemId ~= "book" then
 		return nil
 	end
 	-- Sem definição: só no Studio, para conferir modelos que ainda não são itens
@@ -68,14 +68,62 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 		return nil
 	end
 	local source = template(itemId)
+	if source == nil and itemId == "book" then
+		-- Fallback se Assets.Tools.book não existir no place:
+		local fallback = Instance.new("Model")
+		local handle = Instance.new("Part")
+		handle.Name = "Handle"
+		handle.Size = Vector3.new(2.37, 0.53, 2.68)
+		handle.Color = Color3.fromRGB(130, 80, 50)
+		handle.Material = Enum.Material.SmoothPlastic
+		handle.Anchored = false
+		handle.CanCollide = false
+		handle.Massless = true
+		handle.Parent = fallback
+		fallback.PrimaryPart = handle
+		local grip = Instance.new("Attachment")
+		grip.Name = "Grip"
+		grip.CFrame = CFrame.new(0, 0, 0)
+		grip.Parent = handle
+		source = fallback
+	end
 	if source == nil then
 		return nil
 	end
 
-	local model = source:Clone()
+	local model: Model
+	if source:IsA("Tool") then
+		local newModel = Instance.new("Model")
+		for _, child in source:GetChildren() do
+			child:Clone().Parent = newModel
+		end
+		for attrName, attrVal in source:GetAttributes() do
+			newModel:SetAttribute(attrName, attrVal)
+		end
+		local handle = newModel:FindFirstChild("Handle")
+		if handle and handle:IsA("BasePart") then
+			newModel.PrimaryPart = handle
+		end
+		model = newModel
+	else
+		model = source:Clone() :: Model
+	end
+
 	model.Name = "HeldItem"
 	model:SetAttribute("ItemId", itemId)
-	local handle = model.PrimaryPart
+	local handle = model.PrimaryPart or (model:FindFirstChild("Handle") :: BasePart?)
+	if handle and handle:IsA("BasePart") then
+		if model.PrimaryPart == nil then
+			model.PrimaryPart = handle
+		end
+		if handle:FindFirstChild("Grip") == nil then
+			local grip = Instance.new("Attachment")
+			grip.Name = "Grip"
+			grip.CFrame = CFrame.new(0, 0, 0)
+			grip.Parent = handle
+		end
+	end
+
 	if itemId == "book" and handle ~= nil and cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId) then
 		local partNames = SkinManifest.PARTS_BY_SKIN[cosmeticId]
 		if partNames ~= nil then

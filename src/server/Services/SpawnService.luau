@@ -67,6 +67,36 @@ local function giveKit(player: Player, kitId: string)
 	end
 end
 
+-- Itens que todo jogador recebe ao nascer, com ou sem kit (provisório, para
+-- testar as skins de livro). Se o kit escolhido já tem o item, não dá de novo.
+local SPAWN_ITEMS: { { id: string, count: number } } = {
+	{ id = "book", count = 1 },
+}
+
+local function kitHasItem(kitId: string?, itemId: string): boolean
+	local kit = if kitId then Defs.Kits[kitId] else nil
+	if kit == nil then
+		return false
+	end
+	for _, entry in kit.items do
+		if entry.id == itemId then
+			return true
+		end
+	end
+	return false
+end
+
+local function giveSpawnItems(player: Player, kitId: string?)
+	for _, entry in SPAWN_ITEMS do
+		if not kitHasItem(kitId, entry.id) then
+			local rest = InventoryService.give(player, entry.id, entry.count)
+			if rest > 0 then
+				warn(`[SpawnService] item inicial de {player.Name}: {rest}× {entry.id} não couberam`)
+			end
+		end
+	end
+end
+
 -- Faz o jogador nascer (com o kit, se der). Devolve true se nasceu.
 function SpawnService.spawn(player: Player, kitId: string?): boolean
 	if player.Parent ~= Players or player:GetAttribute(StatNames.DataReady) ~= true then
@@ -90,6 +120,7 @@ function SpawnService.spawn(player: Player, kitId: string?): boolean
 	if kitId ~= nil then
 		giveKit(player, kitId)
 	end
+	giveSpawnItems(player, kitId)
 	return true
 end
 
