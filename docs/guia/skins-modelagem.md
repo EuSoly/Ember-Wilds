@@ -29,7 +29,7 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 ## Montagem no Blender
 
 - Medidas do `BonecoConfig` (1 m = 1 stud; frente do boneco = +Y no Blender): corpo 3,6 × 2 × 3,6, cantos 0,9, contorno 0,2 (topo 0,1 abaixo), mão Ø 1,3 em x = ±1,95, 1,45 à frente, 1,2 de altura.
-- Nomes: `<skin>_Body`, `<skin>_Outline`, `<skin>_Hand`, `<skin>_HandOutline`, `<skin>_Hand_*` (peças da mão), `<skin>_Extra_*` (silhueta e topo). `PREVIEW_*` é só prévia (olhos e mão esquerda) e não é exportado: os olhos vêm do código (piscar, dor).
+- Nomes: `<skin>_Body`, `<skin>_Outline`, `<skin>_Hand`, `<skin>_HandOutline`, `<skin>_Hand_*` (peças da mão), `<skin>_Extra_*` (silhueta e topo). `PREVIEW_*` são os olhos de prévia e `PREVIEW_L_*` é a mão esquerda espelhada; os olhos vêm do código (piscar, dor).
 - Peças planas: contorno 2D suavizado e extrudado (0,03–0,05 no topo; silhuetas mais grossas, abaixo do topo).
 - **Nada grande e escuro logo atrás dos olhos:** de cima, uma mancha ali vira "boca". E peças compridas não podem descer dos olhos para trás (viram presas de morsa); orelhas e chifres saem das laterais de trás para fora.
 - **A metade de trás também aparece "embaixo dos olhos":** quando o boneco anda para longe da câmera, as costas ficam entre os olhos e a câmera. Por isso a vista reta de cima com a frente para cima é o teste mais duro: anel, faixa escura ou mancha nas costas vira boca ali. Auréolas e enfeites soltos ficam atrás da borda de trás.
@@ -39,11 +39,10 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 
 | Arquivo | O que é |
 |---|---|
-| `assets/skins/skin_lib.py` | Biblioteca comum: classe `Skin` com `base()`, `flat()` (peça plana com contorno), `sym()` (dos dois lados), `sphere()`, `hand_flat()` e `finish()` (mão esquerda de prévia); `build(lote)` e `render_previews(prefixo)` |
+| `assets/skins/skin_lib.py` | Biblioteca comum: classe `Skin` com `base()`, `flat()` (peça plana com contorno), `sym()` (dos dois lados), `sphere()`, `hand_flat()` e `finish()` (mão esquerda `PREVIEW_L_*`); `build(lote)` e `render_previews(prefixo)` |
 | `assets/skins/lotes/<lote>.py` | Uma função por skin + lista `LOTE` com `(nome, função, corpo, contorno, mão, contorno da mão)`. Começa com `from skin_lib import *` |
 | `assets/skins/build_skins.py` | Monta no Blender **aberto**: `LOTE_ESCOLHIDO = "lote2"` (ou um glob, `"lote3_*"`) e `exec(open(...).read())` |
 | `assets/skins/render_lote.py` | Monta e renderiza em **segundo plano**, sem mexer no Blender aberto: `blender -b --factory-startup --python assets/skins/render_lote.py -- <lote ou glob> <pasta>` → `<lote>-cima.png`, `<lote>-65.png` e `<lote>.blend`. O Blender fica em `C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe` |
-
 | `assets/skins/ferramentas/` | Levar mudanças feitas à mão no Blender para o script: `resumo_cena.py` (resumo das peças da cena aberta ou de um lote montado em segundo plano), `comparar_resumos.py` (peças apagadas, novas e mudadas, casadas pela forma e não pelo nome) e `rastrear_pecas.py` (linha do lote que cria cada peça) |
 
 ## Fluxo de trabalho (combinado em 05/11/2026)
@@ -71,13 +70,11 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 
 ## Exportação para o Roblox
 
-`assets/skins/export_roblox.py` (rodar com `blender -b --factory-startup --python assets/skins/export_roblox.py`) gera `assets/skins/roblox/corpo/` e `assets/skins/roblox/livros/`: FBX geral + individuais, textura de paleta, `.blend` de exportação, `manifest.json`, `validation.json` e `preview.png`. Lotes incluídos na lista `LOTES` do script (acrescentar cada lote novo ali). Corpo = `body_<nome>_corpo` + `body_<nome>_mao` (mão direita, pivô no centro da mão; olhos ficam no código); livro = `book_<nome>_livro`; partes com `emit` saem em `_neon` e com `alpha` em `_translucido` (ajuste de Material/Transparency no Studio). Curvas com `RES_EXPORT = 4` e Decimate acima de 5.000 (corpo) / 1.500 (mão) / 3.000 (livro) triângulos. Detalhes no `assets/skins/roblox/LEIA-ME.md`; conferir a versão exportada com `ferramentas/previa_export.py`.
-
-### Pendente: mão esquerda (anotado em 05/11/2026)
-
-O export traz só a mão **direita** (`body_<nome>_mao`, pivô no centro da mão). A ideia era o código usar a mesma malha nas duas mãos, mas o Roblox não espelha MeshPart (não existe tamanho negativo): girar a mão direita não vira uma mão esquerda. Mãos simétricas (esfera lisa, garras para a frente, almofadinhas) ficam certas; enfeites que apontam para fora (asa do pintinho, penas do papagaio, barbatana do tubarão, faísca da chama…) ficariam apontando para dentro ou para trás.
-
-**Correção combinada:** o `export_roblox.py` passa a gerar também `body_<nome>_mao_esq`, espelhada em X no Blender a partir da direita (pivô no centro da mão esquerda), e o `manifest.json` ganha a peça. Depois: reimportar o FBX de corpo (ou só as mãos esquerdas), mover para `Assets.Skins` e fazer o `BonecoModel` usar uma malha por lado.
+`assets/skins/export_roblox.py` (rodar com `blender -b --factory-startup --python assets/skins/export_roblox.py`) gera `assets/skins/roblox/corpo/`, `assets/skins/roblox/livros/` e `assets/skins/roblox/mochilas/`: FBX geral + individuais, textura de paleta, `.blend` de exportação, `manifest.json` e `validation.json`. Lotes incluídos na lista `LOTES` do script (acrescentar cada lote novo ali).
+- **Corpo (`lote1..10`, 100 skins):** `body_<nome>_corpo` + `body_<nome>_mao` (mão direita, pivô no centro da mão direita) + `body_<nome>_mao_esq` (mão esquerda já espelhada em X no Blender com normais corrigidas, pivô no centro da mão esquerda; olhos ficam no código).
+- **Livro (`livros1..2`, 20 skins):** `book_<nome>_livro` (pivô no centro do livro).
+- **Mochila (`mochilas1..5` + `mochilas_variantes`, 81 skins):** `bag_<nome>_mochila` (pivô no centro do `root` do boneco, `z = 1.0`, com a malha já deslocada nas costas para o `BagModel.attach`).
+- Partes com `emit` saem em `_neon` e com `alpha` em `_translucido` (ajuste de Material/Transparency no Studio). Curvas com `RES_EXPORT = 4` e Decimate acima de 5.000 (corpo) / 1.500 (mão) / 3.000 (livro e mochila) triângulos. Detalhes no `assets/skins/roblox/LEIA-ME.md`.
 
 ## Livros (triagem de 05/11/2026)
 
@@ -102,7 +99,7 @@ Medida usada: sobreposição (IoU) da silhueta de cada referência com a do livr
 
 ## Mochilas
 
-**Base:** `assets/skins/mochila_lib.py` — classe `Mochila` (mesma API da `Skin`) com boneco fantasma semitransparente (`PREVIEW_*`) para contexto visual e alinhamento nas costas (`BAG_Y = -2,55`, topo em `TOPO = 2,08`). Na exportação para o Roblox (`export_roblox.py`), os objetos `PREVIEW_*` do boneco fantasma são ignorados e só a mochila é exportada. Lote de mochila = arquivo em `lotes/` com `TIPO = "mochila"`.
+**Base:** `assets/skins/mochila_lib.py` — classe `Mochila` (mesma API da `Skin`) com boneco fantasma semitransparente (`PREVIEW_*`) para contexto visual e alinhamento nas costas (`BAG_Y = -2,55`, topo em `TOPO = 2,08`). Na exportação para o Roblox (`export_roblox.py`), os objetos `PREVIEW_*` do boneco fantasma são ignorados e só a mochila é exportada (com pivô no centro do `root` do boneco, `z = 1.0`, pronta para `BagModel.attach`). Lote de mochila = arquivo em `lotes/` com `TIPO = "mochila"`.
 
 | Lote | Arquivo | Mochilas |
 |---|---|---|
@@ -111,5 +108,6 @@ Medida usada: sobreposição (IoU) da silhueta de cada referência com a do livr
 | 3 | `assets/skins/mochilas-lote3.blend` + `.png` (`lotes/mochilas3.py`) | espírito de gelo (30), cesta de pão (31), caverna (33), cubo de gelo (34), espadas duplas (38), cacto com espinhos (49), múmia (52), abóbora (60), tronco florido (75), caixote de madeira (77) |
 | 4 | `assets/skins/mochilas-lote4.blend` + `.png` (`lotes/mochilas4.py`) | garras de gelo (35), cartógrafo (46), folha com frutas (47), cristais de gelo (54), robô visor (58), rádio militar (62), nuvem amarrada (64), fornalha (69), garras de ametista (74), explorador com pá (78) |
 | 5 | `assets/skins/mochilas-lote5.blend` + `.png` (`lotes/mochilas5.py`) | cofre de metal (12), camuflada (13), bolsa com cristal (19), rocha de magma (48), malhada (53), chamas de fogo (55), melancia (57), noite estrelada (61), cubos de esmeralda (68), carapaça com joias (71) |
+| Variantes | `lotes/mochilas_variantes.py` (exportado junto em `roblox/mochilas/`) | 31 variantes de cor parametrizadas: 10 bolsas padrão (verde, azul, rosa, turquesa, branca, roxa, ciano, couro gasto, escura, noturna), 4 bolsas com cristal/minério (pedra, ouro, ametista, rubi), 5 mochilas com picareta (madeira, pedra, ouro, ametista, rubi), 5 mochilas com espadas duplas (pedra, diamante, ouro, rubi, ametista), fatia de bolo de morango, abóbora branca, nuvem pôr do sol, fornalha apagada, carapaça de ametista, carapaça dourada, explorador com pá de couro |
 
-**Falta (estimativa de 05/11):** ~24 temas detalhados (2–3 lotes de 10), ~35 temas "simples com toque" e ~30 de estampa (lotes de ~20, são mais fáceis) e ~15 só de cor (só `Defs/Cosmetics`, sem Blender). Depois do corpo: acessórios, mochilas, livros e caixas (referências em `assets/skins/reference/<categoria>/`). Ainda não feito: importar as skins no Roblox (`Assets.Skins.<id>`) e o `BonecoModel` usar o modelo.
+**Falta (estimativa de 05/11):** ~24 temas detalhados de corpo (2–3 lotes de 10), ~35 temas "simples com toque" e ~30 de estampa (lotes de ~20, são mais fáceis) e ~15 só de cor (só `Defs/Cosmetics`, sem Blender). Depois: acessórios e caixas (referências em `assets/skins/reference/<categoria>/`). Ainda não feito: importar as skins no Roblox (`Assets.Skins.<id>`, `Assets.Books.<id>`, `Assets.Bags.<id>`) e o `BonecoModel` usar o modelo.

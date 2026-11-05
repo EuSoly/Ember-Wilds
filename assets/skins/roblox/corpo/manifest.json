@@ -9,12 +9,17 @@
     "lote3_d",
     "lote3_e",
     "lote4",
-    "lote5"
+    "lote5",
+    "lote6",
+    "lote7",
+    "lote8",
+    "lote9",
+    "lote10"
   ],
-  "skin_count": 50,
-  "mesh_count": 111,
-  "total_triangles": 271268,
-  "palette_colors": 287,
+  "skin_count": 100,
+  "mesh_count": 322,
+  "total_triangles": 627212,
+  "palette_colors": 601,
   "texture": "corpo_palette.png",
   "texture_size": 512,
   "arquivo_geral": "skins-corpo.fbx",
@@ -55,6 +60,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1080,
+          "triangles_antes_decimate": 1080,
+          "vertices": 550,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_lobo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -123,6 +151,29 @@
             0.65
           ],
           "source_parts": 3
+        },
+        {
+          "name": "body_raposa_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1212,
+          "triangles_antes_decimate": 1212,
+          "vertices": 612,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 3
         }
       ]
     },
@@ -161,6 +212,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1104,
+          "triangles_antes_decimate": 1104,
+          "vertices": 568,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.9,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_coruja_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -229,6 +303,29 @@
             0.65
           ],
           "source_parts": 4
+        },
+        {
+          "name": "body_polvo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1272,
+          "triangles_antes_decimate": 1272,
+          "vertices": 644,
+          "bounds": [
+            -0.831,
+            -0.999,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
         }
       ]
     },
@@ -267,6 +364,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1208,
+          "triangles_antes_decimate": 1208,
+          "vertices": 612,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.999,
+            0.65
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_caranguejo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -358,6 +478,29 @@
             0.69
           ],
           "source_parts": 3
+        },
+        {
+          "name": "body_abelha_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1068,
+          "triangles_antes_decimate": 1068,
+          "vertices": 540,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.69
+          ],
+          "source_parts": 3
         }
       ]
     },
@@ -396,6 +539,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1080,
+          "triangles_antes_decimate": 1080,
+          "vertices": 550,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.78,
+            0.65
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_dragao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -464,6 +630,29 @@
             0.68
           ],
           "source_parts": 6
+        },
+        {
+          "name": "body_coelho_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1552,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 6
         }
       ]
     },
@@ -502,6 +691,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1492,
+          "triangles_antes_decimate": 1492,
+          "vertices": 756,
+          "bounds": [
+            -0.75,
+            -0.911,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_arbusto_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -570,6 +782,29 @@
             0.65
           ],
           "source_parts": 8
+        },
+        {
+          "name": "body_nuvem_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2184,
+          "vertices": 766,
+          "bounds": [
+            -0.76,
+            -0.75,
+            -0.77,
+            0.76,
+            0.75,
+            0.65
+          ],
+          "source_parts": 8
         }
       ]
     },
@@ -623,6 +858,29 @@
             0.74
           ],
           "source_parts": 10
+        },
+        {
+          "name": "body_abobora_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2168,
+          "vertices": 770,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.74
+          ],
+          "source_parts": 10
         }
       ]
     },
@@ -661,6 +919,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1072,
+          "triangles_antes_decimate": 1072,
+          "vertices": 544,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.82,
+            0.65
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_morcego_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -775,6 +1056,52 @@
             0.69
           ],
           "source_parts": 1
+        },
+        {
+          "name": "body_chama_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1132,
+          "triangles_antes_decimate": 1132,
+          "vertices": 572,
+          "bounds": [
+            -0.75,
+            -1.05,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 3
+        },
+        {
+          "name": "body_chama_mao_esq_neon",
+          "papel": "mao_esq",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 156,
+          "triangles_antes_decimate": 156,
+          "vertices": 80,
+          "bounds": [
+            -0.28,
+            -0.289,
+            0.66,
+            0.28,
+            0.189,
+            0.69
+          ],
+          "source_parts": 1
         }
       ]
     },
@@ -813,6 +1140,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1136,
+          "triangles_antes_decimate": 1136,
+          "vertices": 592,
+          "bounds": [
+            -0.951,
+            -0.809,
+            -0.77,
+            0.951,
+            1.0,
+            0.65
+          ],
+          "source_parts": 12
+        },
+        {
+          "name": "body_estrela_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -881,6 +1231,29 @@
             0.695
           ],
           "source_parts": 4
+        },
+        {
+          "name": "body_concha_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1336,
+          "triangles_antes_decimate": 1336,
+          "vertices": 676,
+          "bounds": [
+            -0.803,
+            -0.75,
+            -0.77,
+            0.803,
+            0.75,
+            0.695
+          ],
+          "source_parts": 4
         }
       ]
     },
@@ -919,6 +1292,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1212,
+          "triangles_antes_decimate": 1212,
+          "vertices": 612,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 3
+        },
+        {
+          "name": "body_aranha_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -987,6 +1383,29 @@
             0.68
           ],
           "source_parts": 3
+        },
+        {
+          "name": "body_cervo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1068,
+          "triangles_antes_decimate": 1068,
+          "vertices": 540,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 3
         }
       ]
     },
@@ -1025,6 +1444,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1552,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.76,
+            0.65
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_axolote_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1093,6 +1535,29 @@
             0.65
           ],
           "source_parts": 8
+        },
+        {
+          "name": "body_ourico_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1104,
+          "triangles_antes_decimate": 1104,
+          "vertices": 568,
+          "bounds": [
+            -0.75,
+            -0.99,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 8
         }
       ]
     },
@@ -1131,6 +1596,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1088,
+          "triangles_antes_decimate": 1088,
+          "vertices": 556,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.69
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_morango_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1222,6 +1710,29 @@
             0.7
           ],
           "source_parts": 9
+        },
+        {
+          "name": "body_anjo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2148,
+          "vertices": 768,
+          "bounds": [
+            -1.286,
+            -0.897,
+            -0.77,
+            0.75,
+            0.75,
+            0.7
+          ],
+          "source_parts": 9
         }
       ]
     },
@@ -1260,6 +1771,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1128,
+          "triangles_antes_decimate": 1128,
+          "vertices": 582,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.92,
+            0.69
+          ],
+          "source_parts": 9
+        },
+        {
+          "name": "body_diabinho_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1328,6 +1862,29 @@
             0.66
           ],
           "source_parts": 7
+        },
+        {
+          "name": "body_gato_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1708,
+          "vertices": 764,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 7
         }
       ]
     },
@@ -1377,6 +1934,29 @@
             -0.75,
             -0.77,
             0.883,
+            1.012,
+            0.705
+          ],
+          "source_parts": 13
+        },
+        {
+          "name": "body_coala_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2948,
+          "vertices": 776,
+          "bounds": [
+            -0.883,
+            -0.75,
+            -0.77,
+            0.75,
             1.012,
             0.705
           ],
@@ -1434,6 +2014,29 @@
             0.655
           ],
           "source_parts": 10
+        },
+        {
+          "name": "body_mamute_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2112,
+          "vertices": 770,
+          "bounds": [
+            -0.806,
+            -0.799,
+            -0.77,
+            0.775,
+            0.75,
+            0.655
+          ],
+          "source_parts": 10
         }
       ]
     },
@@ -1483,6 +2086,29 @@
             -0.75,
             -0.77,
             1.4,
+            0.75,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_papagaio_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1992,
+          "vertices": 766,
+          "bounds": [
+            -1.4,
+            -0.75,
+            -0.77,
+            0.75,
             0.75,
             0.65
           ],
@@ -1540,6 +2166,29 @@
             0.76
           ],
           "source_parts": 17
+        },
+        {
+          "name": "body_cacto_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2880,
+          "vertices": 784,
+          "bounds": [
+            -0.844,
+            -0.75,
+            -0.77,
+            0.75,
+            0.882,
+            0.76
+          ],
+          "source_parts": 17
         }
       ]
     },
@@ -1578,6 +2227,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1188,
+          "triangles_antes_decimate": 1188,
+          "vertices": 604,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.71
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_maca_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1646,6 +2318,29 @@
             0.69
           ],
           "source_parts": 8
+        },
+        {
+          "name": "body_toco_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2120,
+          "vertices": 766,
+          "bounds": [
+            -0.824,
+            -0.828,
+            -0.77,
+            0.75,
+            0.75,
+            0.69
+          ],
+          "source_parts": 8
         }
       ]
     },
@@ -1684,6 +2379,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2056,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.675
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_lula_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1752,6 +2470,29 @@
             0.67
           ],
           "source_parts": 6
+        },
+        {
+          "name": "body_tartaruga_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1100,
+          "triangles_antes_decimate": 1100,
+          "vertices": 562,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.67
+          ],
+          "source_parts": 6
         }
       ]
     },
@@ -1801,6 +2542,29 @@
             -0.75,
             -0.77,
             1.196,
+            0.75,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_pintinho_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1992,
+          "vertices": 766,
+          "bounds": [
+            -1.196,
+            -0.75,
+            -0.77,
+            0.75,
             0.75,
             0.65
           ],
@@ -1858,6 +2622,29 @@
             0.65
           ],
           "source_parts": 5
+        },
+        {
+          "name": "body_peixe_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1284,
+          "triangles_antes_decimate": 1284,
+          "vertices": 652,
+          "bounds": [
+            -1.1,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 5
         }
       ]
     },
@@ -1896,6 +2683,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2000,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -1.026,
+            -0.77,
+            0.75,
+            0.75,
+            0.685
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_cenoura_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -1964,6 +2774,29 @@
             0.65
           ],
           "source_parts": 4
+        },
+        {
+          "name": "body_tubarao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1208,
+          "triangles_antes_decimate": 1208,
+          "vertices": 612,
+          "bounds": [
+            -1.145,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
         }
       ]
     },
@@ -2002,6 +2835,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1644,
+          "vertices": 764,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.04,
+            0.65
+          ],
+          "source_parts": 7
+        },
+        {
+          "name": "body_sapo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -2070,6 +2926,29 @@
             0.67
           ],
           "source_parts": 11
+        },
+        {
+          "name": "body_macaco_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2492,
+          "vertices": 772,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.789,
+            0.67
+          ],
+          "source_parts": 11
         }
       ]
     },
@@ -2123,6 +3002,29 @@
             0.65
           ],
           "source_parts": 7
+        },
+        {
+          "name": "body_leao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1740,
+          "vertices": 764,
+          "bounds": [
+            -0.842,
+            -0.849,
+            -0.77,
+            0.829,
+            0.75,
+            0.65
+          ],
+          "source_parts": 7
         }
       ]
     },
@@ -2161,6 +3063,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1580,
+          "vertices": 764,
+          "bounds": [
+            -0.886,
+            -0.95,
+            -0.77,
+            0.886,
+            0.92,
+            0.89
+          ],
+          "source_parts": 7
+        },
+        {
+          "name": "body_bolota_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -2229,6 +3154,29 @@
             0.65
           ],
           "source_parts": 5
+        },
+        {
+          "name": "body_vaca_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1220,
+          "triangles_antes_decimate": 1220,
+          "vertices": 620,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 5
         }
       ]
     },
@@ -2267,6 +3215,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2548,
+          "vertices": 776,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.78
+          ],
+          "source_parts": 13
+        },
+        {
+          "name": "body_guaxinim_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -2335,6 +3306,29 @@
             0.705
           ],
           "source_parts": 8
+        },
+        {
+          "name": "body_javali_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1728,
+          "vertices": 766,
+          "bounds": [
+            -0.913,
+            -0.915,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 8
         }
       ]
     },
@@ -2388,6 +3382,29 @@
             0.76
           ],
           "source_parts": 7
+        },
+        {
+          "name": "body_cogumelo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1868,
+          "vertices": 764,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.76
+          ],
+          "source_parts": 7
         }
       ]
     },
@@ -2426,6 +3443,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2364,
+          "vertices": 772,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.675
+          ],
+          "source_parts": 11
+        },
+        {
+          "name": "body_onca_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -2540,6 +3580,52 @@
             0.785
           ],
           "source_parts": 1
+        },
+        {
+          "name": "body_vela_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1944,
+          "vertices": 766,
+          "bounds": [
+            -0.958,
+            -0.778,
+            -0.77,
+            0.75,
+            0.75,
+            0.77
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_vela_mao_esq_neon",
+          "papel": "mao_esq",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 108,
+          "triangles_antes_decimate": 108,
+          "vertices": 56,
+          "bounds": [
+            -0.557,
+            -0.756,
+            0.7,
+            -0.045,
+            -0.19,
+            0.785
+          ],
+          "source_parts": 1
         }
       ]
     },
@@ -2639,6 +3725,52 @@
             0.64
           ],
           "source_parts": 1
+        },
+        {
+          "name": "body_bomba_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1416,
+          "triangles_antes_decimate": 1416,
+          "vertices": 720,
+          "bounds": [
+            -0.967,
+            -0.855,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_bomba_mao_esq_neon",
+          "papel": "mao_esq",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 44,
+          "triangles_antes_decimate": 44,
+          "vertices": 24,
+          "bounds": [
+            -1.26,
+            -0.945,
+            0.58,
+            -0.74,
+            -0.495,
+            0.64
+          ],
+          "source_parts": 1
         }
       ]
     },
@@ -2715,6 +3847,29 @@
             0.65
           ],
           "source_parts": 9
+        },
+        {
+          "name": "body_fenix_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1812,
+          "vertices": 768,
+          "bounds": [
+            -1.189,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 9
         }
       ]
     },
@@ -2768,6 +3923,29 @@
             0.655
           ],
           "source_parts": 10
+        },
+        {
+          "name": "body_yeti_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 736,
+          "bounds": [
+            -0.755,
+            -0.84,
+            -0.77,
+            0.75,
+            0.94,
+            0.655
+          ],
+          "source_parts": 10
         }
       ]
     },
@@ -2806,6 +3984,29 @@
           "alpha": 1.0,
           "offset_do_pivo_do_skin": [
             1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1892,
+          "vertices": 768,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.944,
+            0.69
+          ],
+          "source_parts": 9
+        },
+        {
+          "name": "body_besouro_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
             1.45,
             0.2
           ],
@@ -2920,6 +4121,4013 @@
             0.665
           ],
           "source_parts": 1
+        },
+        {
+          "name": "body_slime_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1504,
+          "vertices": 762,
+          "bounds": [
+            -0.867,
+            -0.837,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_slime_mao_esq_translucido",
+          "papel": "mao_esq",
+          "tipo": "translucido",
+          "alpha": 0.7,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 156,
+          "triangles_antes_decimate": 156,
+          "vertices": 80,
+          "bounds": [
+            -0.06,
+            -0.259,
+            0.64,
+            0.26,
+            0.059,
+            0.665
+          ],
+          "source_parts": 1
+        }
+      ]
+    },
+    {
+      "id": "body_gargula",
+      "nome": "gargula",
+      "file": "individual/body_gargula.fbx",
+      "parts": [
+        {
+          "name": "body_gargula_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4804,
+          "triangles_antes_decimate": 4804,
+          "vertices": 2512,
+          "bounds": [
+            -4.249,
+            -2.363,
+            -1.0,
+            4.249,
+            2.29,
+            1.13
+          ],
+          "source_parts": 55
+        },
+        {
+          "name": "body_gargula_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1220,
+          "triangles_antes_decimate": 1220,
+          "vertices": 628,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.97,
+            0.67
+          ],
+          "source_parts": 9
+        },
+        {
+          "name": "body_gargula_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1220,
+          "triangles_antes_decimate": 1220,
+          "vertices": 628,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.97,
+            0.67
+          ],
+          "source_parts": 9
+        }
+      ]
+    },
+    {
+      "id": "body_ourico_mar",
+      "nome": "ourico_mar",
+      "file": "individual/body_ourico_mar.fbx",
+      "parts": [
+        {
+          "name": "body_ourico_mar_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 5056,
+          "vertices": 2708,
+          "bounds": [
+            -3.425,
+            -3.522,
+            -1.0,
+            3.376,
+            3.003,
+            1.035
+          ],
+          "source_parts": 104
+        },
+        {
+          "name": "body_ourico_mar_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1296,
+          "triangles_antes_decimate": 1296,
+          "vertices": 682,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            1.064,
+            1.08,
+            0.65
+          ],
+          "source_parts": 17
+        },
+        {
+          "name": "body_ourico_mar_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1296,
+          "triangles_antes_decimate": 1296,
+          "vertices": 682,
+          "bounds": [
+            -1.064,
+            -0.75,
+            -0.77,
+            0.75,
+            1.08,
+            0.65
+          ],
+          "source_parts": 17
+        }
+      ]
+    },
+    {
+      "id": "body_carneiro",
+      "nome": "carneiro",
+      "file": "individual/body_carneiro.fbx",
+      "parts": [
+        {
+          "name": "body_carneiro_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 6512,
+          "vertices": 2588,
+          "bounds": [
+            -3.185,
+            -2.31,
+            -1.0,
+            3.185,
+            2.31,
+            1.21
+          ],
+          "source_parts": 44
+        },
+        {
+          "name": "body_carneiro_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2216,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_carneiro_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2216,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_espirito_gelo",
+      "nome": "espirito_gelo",
+      "file": "individual/body_espirito_gelo.fbx",
+      "parts": [
+        {
+          "name": "body_espirito_gelo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 6664,
+          "vertices": 2580,
+          "bounds": [
+            -3.838,
+            -3.509,
+            -1.0,
+            3.838,
+            2.211,
+            1.012
+          ],
+          "source_parts": 40
+        },
+        {
+          "name": "body_espirito_gelo_corpo_neon",
+          "papel": "corpo",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 128,
+          "triangles_antes_decimate": 128,
+          "vertices": 80,
+          "bounds": [
+            -3.713,
+            -2.793,
+            0.936,
+            3.713,
+            0.201,
+            0.964
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_espirito_gelo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1152,
+          "triangles_antes_decimate": 1152,
+          "vertices": 592,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.09,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_espirito_gelo_mao_neon",
+          "papel": "mao",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 48,
+          "triangles_antes_decimate": 48,
+          "vertices": 30,
+          "bounds": [
+            -0.479,
+            0.286,
+            0.61,
+            0.469,
+            1.028,
+            0.63
+          ],
+          "source_parts": 3
+        },
+        {
+          "name": "body_espirito_gelo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1152,
+          "triangles_antes_decimate": 1152,
+          "vertices": 592,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.09,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_espirito_gelo_mao_esq_neon",
+          "papel": "mao_esq",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 48,
+          "triangles_antes_decimate": 48,
+          "vertices": 30,
+          "bounds": [
+            -0.469,
+            0.286,
+            0.61,
+            0.479,
+            1.028,
+            0.63
+          ],
+          "source_parts": 3
+        }
+      ]
+    },
+    {
+      "id": "body_arbusto_florido",
+      "nome": "arbusto_florido",
+      "file": "individual/body_arbusto_florido.fbx",
+      "parts": [
+        {
+          "name": "body_arbusto_florido_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 22820,
+          "vertices": 2798,
+          "bounds": [
+            -2.878,
+            -3.05,
+            -1.0,
+            2.901,
+            2.598,
+            1.057
+          ],
+          "source_parts": 149
+        },
+        {
+          "name": "body_arbusto_florido_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 3016,
+          "vertices": 786,
+          "bounds": [
+            -0.787,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.71
+          ],
+          "source_parts": 18
+        },
+        {
+          "name": "body_arbusto_florido_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 3016,
+          "vertices": 786,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.787,
+            0.75,
+            0.71
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "body_wyvern_gelo",
+      "nome": "wyvern_gelo",
+      "file": "individual/body_wyvern_gelo.fbx",
+      "parts": [
+        {
+          "name": "body_wyvern_gelo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2532,
+          "triangles_antes_decimate": 2532,
+          "vertices": 1320,
+          "bounds": [
+            -4.001,
+            -4.72,
+            -1.0,
+            4.001,
+            2.51,
+            1.145
+          ],
+          "source_parts": 27
+        },
+        {
+          "name": "body_wyvern_gelo_corpo_neon",
+          "papel": "corpo",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 128,
+          "triangles_antes_decimate": 128,
+          "vertices": 76,
+          "bounds": [
+            -3.42,
+            -4.42,
+            0.83,
+            3.42,
+            2.22,
+            1.16
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_wyvern_gelo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1176,
+          "triangles_antes_decimate": 1176,
+          "vertices": 608,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.819,
+            0.91,
+            0.65
+          ],
+          "source_parts": 10
+        },
+        {
+          "name": "body_wyvern_gelo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1176,
+          "triangles_antes_decimate": 1176,
+          "vertices": 608,
+          "bounds": [
+            -0.819,
+            -0.75,
+            -0.77,
+            0.75,
+            0.91,
+            0.65
+          ],
+          "source_parts": 10
+        }
+      ]
+    },
+    {
+      "id": "body_gaio_azul",
+      "nome": "gaio_azul",
+      "file": "individual/body_gaio_azul.fbx",
+      "parts": [
+        {
+          "name": "body_gaio_azul_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 9944,
+          "vertices": 2660,
+          "bounds": [
+            -2.969,
+            -3.76,
+            -1.0,
+            2.969,
+            2.43,
+            1.175
+          ],
+          "source_parts": 80
+        },
+        {
+          "name": "body_gaio_azul_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2628,
+          "vertices": 784,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.88,
+            0.65
+          ],
+          "source_parts": 17
+        },
+        {
+          "name": "body_gaio_azul_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2628,
+          "vertices": 784,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.88,
+            0.65
+          ],
+          "source_parts": 17
+        }
+      ]
+    },
+    {
+      "id": "body_zumbi",
+      "nome": "zumbi",
+      "file": "individual/body_zumbi.fbx",
+      "parts": [
+        {
+          "name": "body_zumbi_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3196,
+          "triangles_antes_decimate": 3196,
+          "vertices": 1652,
+          "bounds": [
+            -2.53,
+            -2.0,
+            -1.0,
+            2.53,
+            2.0,
+            1.02
+          ],
+          "source_parts": 27
+        },
+        {
+          "name": "body_zumbi_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1764,
+          "vertices": 780,
+          "bounds": [
+            -0.779,
+            -0.85,
+            -0.77,
+            0.77,
+            0.96,
+            0.755
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "body_zumbi_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1764,
+          "vertices": 780,
+          "bounds": [
+            -0.77,
+            -0.85,
+            -0.77,
+            0.779,
+            0.96,
+            0.755
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "body_mago",
+      "nome": "mago",
+      "file": "individual/body_mago.fbx",
+      "parts": [
+        {
+          "name": "body_mago_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4008,
+          "triangles_antes_decimate": 4008,
+          "vertices": 2048,
+          "bounds": [
+            -2.742,
+            -2.72,
+            -1.0,
+            3.018,
+            2.0,
+            2.09
+          ],
+          "source_parts": 22
+        },
+        {
+          "name": "body_mago_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1392,
+          "triangles_antes_decimate": 1392,
+          "vertices": 708,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.212,
+            0.745
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_mago_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1392,
+          "triangles_antes_decimate": 1392,
+          "vertices": 708,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.212,
+            0.745
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_pao",
+      "nome": "pao",
+      "file": "individual/body_pao.fbx",
+      "parts": [
+        {
+          "name": "body_pao_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 8084,
+          "vertices": 2586,
+          "bounds": [
+            -2.73,
+            -2.02,
+            -1.0,
+            2.73,
+            2.02,
+            1.215
+          ],
+          "source_parts": 43
+        },
+        {
+          "name": "body_pao_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1424,
+          "triangles_antes_decimate": 1424,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_pao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1424,
+          "triangles_antes_decimate": 1424,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.705
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_dragao_lava",
+      "nome": "dragao_lava",
+      "file": "individual/body_dragao_lava.fbx",
+      "parts": [
+        {
+          "name": "body_dragao_lava_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3784,
+          "triangles_antes_decimate": 3784,
+          "vertices": 1944,
+          "bounds": [
+            -3.266,
+            -2.989,
+            -1.0,
+            3.266,
+            2.3,
+            1.135
+          ],
+          "source_parts": 26
+        },
+        {
+          "name": "body_dragao_lava_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1268,
+          "triangles_antes_decimate": 1268,
+          "vertices": 646,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.82,
+            0.66
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_dragao_lava_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1268,
+          "triangles_antes_decimate": 1268,
+          "vertices": 646,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.82,
+            0.66
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_marshmallow",
+      "nome": "marshmallow",
+      "file": "individual/body_marshmallow.fbx",
+      "parts": [
+        {
+          "name": "body_marshmallow_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1388,
+          "triangles_antes_decimate": 1388,
+          "vertices": 726,
+          "bounds": [
+            -3.531,
+            -2.0,
+            -1.0,
+            3.515,
+            2.0,
+            1.075
+          ],
+          "source_parts": 16
+        },
+        {
+          "name": "body_marshmallow_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1264,
+          "triangles_antes_decimate": 1264,
+          "vertices": 644,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.785
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_marshmallow_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1264,
+          "triangles_antes_decimate": 1264,
+          "vertices": 644,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.785
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_cthulhu",
+      "nome": "cthulhu",
+      "file": "individual/body_cthulhu.fbx",
+      "parts": [
+        {
+          "name": "body_cthulhu_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 9152,
+          "vertices": 2620,
+          "bounds": [
+            -3.34,
+            -2.0,
+            -1.0,
+            3.34,
+            2.441,
+            1.02
+          ],
+          "source_parts": 60
+        },
+        {
+          "name": "body_cthulhu_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1568,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.145,
+            0.65
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_cthulhu_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1568,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            1.145,
+            0.65
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_falcao",
+      "nome": "falcao",
+      "file": "individual/body_falcao.fbx",
+      "parts": [
+        {
+          "name": "body_falcao_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3952,
+          "triangles_antes_decimate": 3952,
+          "vertices": 2042,
+          "bounds": [
+            -2.335,
+            -3.583,
+            -1.0,
+            2.335,
+            2.47,
+            1.17
+          ],
+          "source_parts": 33
+        },
+        {
+          "name": "body_falcao_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1152,
+          "triangles_antes_decimate": 1152,
+          "vertices": 592,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.9,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_falcao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1152,
+          "triangles_antes_decimate": 1152,
+          "vertices": 592,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.9,
+            0.65
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_boneco_neve",
+      "nome": "boneco_neve",
+      "file": "individual/body_boneco_neve.fbx",
+      "parts": [
+        {
+          "name": "body_boneco_neve_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2308,
+          "triangles_antes_decimate": 2308,
+          "vertices": 1180,
+          "bounds": [
+            -3.586,
+            -2.0,
+            -1.0,
+            3.592,
+            2.45,
+            1.195
+          ],
+          "source_parts": 13
+        },
+        {
+          "name": "body_boneco_neve_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1312,
+          "triangles_antes_decimate": 1312,
+          "vertices": 668,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.87,
+            0.75,
+            0.65
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_boneco_neve_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1312,
+          "triangles_antes_decimate": 1312,
+          "vertices": 668,
+          "bounds": [
+            -0.87,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_pinha",
+      "nome": "pinha",
+      "file": "individual/body_pinha.fbx",
+      "parts": [
+        {
+          "name": "body_pinha_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4704,
+          "triangles_antes_decimate": 4704,
+          "vertices": 2416,
+          "bounds": [
+            -3.04,
+            -3.04,
+            -1.0,
+            3.04,
+            3.04,
+            1.12
+          ],
+          "source_parts": 32
+        },
+        {
+          "name": "body_pinha_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1708,
+          "vertices": 764,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.72
+          ],
+          "source_parts": 7
+        },
+        {
+          "name": "body_pinha_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1708,
+          "vertices": 764,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.72
+          ],
+          "source_parts": 7
+        }
+      ]
+    },
+    {
+      "id": "body_urso_madeira",
+      "nome": "urso_madeira",
+      "file": "individual/body_urso_madeira.fbx",
+      "parts": [
+        {
+          "name": "body_urso_madeira_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 6188,
+          "vertices": 2550,
+          "bounds": [
+            -2.55,
+            -2.52,
+            -1.0,
+            2.55,
+            2.42,
+            1.05
+          ],
+          "source_parts": 25
+        },
+        {
+          "name": "body_urso_madeira_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1620,
+          "vertices": 760,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.7
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_urso_madeira_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1620,
+          "vertices": 760,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.7
+          ],
+          "source_parts": 5
+        }
+      ]
+    },
+    {
+      "id": "body_raposa_enfaixada",
+      "nome": "raposa_enfaixada",
+      "file": "individual/body_raposa_enfaixada.fbx",
+      "parts": [
+        {
+          "name": "body_raposa_enfaixada_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4616,
+          "triangles_antes_decimate": 4616,
+          "vertices": 2392,
+          "bounds": [
+            -2.51,
+            -3.53,
+            -1.0,
+            2.51,
+            2.385,
+            1.2
+          ],
+          "source_parts": 42
+        },
+        {
+          "name": "body_raposa_enfaixada_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1824,
+          "vertices": 770,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.675
+          ],
+          "source_parts": 10
+        },
+        {
+          "name": "body_raposa_enfaixada_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1824,
+          "vertices": 770,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.675
+          ],
+          "source_parts": 10
+        }
+      ]
+    },
+    {
+      "id": "body_robo",
+      "nome": "robo",
+      "file": "individual/body_robo.fbx",
+      "parts": [
+        {
+          "name": "body_robo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 7484,
+          "vertices": 2550,
+          "bounds": [
+            -2.67,
+            -2.238,
+            -1.0,
+            2.67,
+            2.0,
+            1.13
+          ],
+          "source_parts": 25
+        },
+        {
+          "name": "body_robo_corpo_neon",
+          "papel": "corpo",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 504,
+          "triangles_antes_decimate": 504,
+          "vertices": 272,
+          "bounds": [
+            -2.36,
+            -1.68,
+            1.05,
+            2.36,
+            1.195,
+            1.085
+          ],
+          "source_parts": 10
+        },
+        {
+          "name": "body_robo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1136,
+          "triangles_antes_decimate": 1136,
+          "vertices": 580,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.914,
+            0.65
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_robo_mao_neon",
+          "papel": "mao",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 156,
+          "triangles_antes_decimate": 156,
+          "vertices": 80,
+          "bounds": [
+            -0.2,
+            -0.14,
+            0.66,
+            0.2,
+            0.14,
+            0.68
+          ],
+          "source_parts": 1
+        },
+        {
+          "name": "body_robo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1136,
+          "triangles_antes_decimate": 1136,
+          "vertices": 580,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.914,
+            0.65
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_robo_mao_esq_neon",
+          "papel": "mao_esq",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 156,
+          "triangles_antes_decimate": 156,
+          "vertices": 80,
+          "bounds": [
+            -0.2,
+            -0.14,
+            0.66,
+            0.2,
+            0.14,
+            0.68
+          ],
+          "source_parts": 1
+        }
+      ]
+    },
+    {
+      "id": "body_helicoptero",
+      "nome": "helicoptero",
+      "file": "individual/body_helicoptero.fbx",
+      "parts": [
+        {
+          "name": "body_helicoptero_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3356,
+          "triangles_antes_decimate": 3356,
+          "vertices": 1728,
+          "bounds": [
+            -2.646,
+            -2.116,
+            -1.0,
+            2.646,
+            2.003,
+            1.76
+          ],
+          "source_parts": 25
+        },
+        {
+          "name": "body_helicoptero_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1416,
+          "triangles_antes_decimate": 1416,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.755
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_helicoptero_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1416,
+          "triangles_antes_decimate": 1416,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.755
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_rei_dourado",
+      "nome": "rei_dourado",
+      "file": "individual/body_rei_dourado.fbx",
+      "parts": [
+        {
+          "name": "body_rei_dourado_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3064,
+          "triangles_antes_decimate": 3064,
+          "vertices": 1600,
+          "bounds": [
+            -2.742,
+            -2.676,
+            -1.0,
+            2.742,
+            2.02,
+            1.135
+          ],
+          "source_parts": 34
+        },
+        {
+          "name": "body_rei_dourado_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1776,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.8,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_rei_dourado_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1776,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.8,
+            0.65
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_caramujo",
+      "nome": "caramujo",
+      "file": "individual/body_caramujo.fbx",
+      "parts": [
+        {
+          "name": "body_caramujo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3620,
+          "triangles_antes_decimate": 3620,
+          "vertices": 1856,
+          "bounds": [
+            -3.637,
+            -2.386,
+            -1.0,
+            2.729,
+            2.0,
+            1.125
+          ],
+          "source_parts": 23
+        },
+        {
+          "name": "body_caramujo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1444,
+          "triangles_antes_decimate": 1444,
+          "vertices": 732,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_caramujo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1444,
+          "triangles_antes_decimate": 1444,
+          "vertices": 732,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.68
+          ],
+          "source_parts": 5
+        }
+      ]
+    },
+    {
+      "id": "body_monstro_noite",
+      "nome": "monstro_noite",
+      "file": "individual/body_monstro_noite.fbx",
+      "parts": [
+        {
+          "name": "body_monstro_noite_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 5296,
+          "vertices": 2564,
+          "bounds": [
+            -2.905,
+            -3.046,
+            -1.0,
+            2.905,
+            2.0,
+            1.09
+          ],
+          "source_parts": 32
+        },
+        {
+          "name": "body_monstro_noite_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1400,
+          "triangles_antes_decimate": 1400,
+          "vertices": 716,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.68
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_monstro_noite_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1400,
+          "triangles_antes_decimate": 1400,
+          "vertices": 716,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.68
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_urso_pardo",
+      "nome": "urso_pardo",
+      "file": "individual/body_urso_pardo.fbx",
+      "parts": [
+        {
+          "name": "body_urso_pardo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3284,
+          "triangles_antes_decimate": 3284,
+          "vertices": 1672,
+          "bounds": [
+            -2.823,
+            -2.577,
+            -1.0,
+            2.823,
+            2.327,
+            1.06
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "body_urso_pardo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1584,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_urso_pardo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1584,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_canguru",
+      "nome": "canguru",
+      "file": "individual/body_canguru.fbx",
+      "parts": [
+        {
+          "name": "body_canguru_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2376,
+          "triangles_antes_decimate": 2376,
+          "vertices": 1224,
+          "bounds": [
+            -2.338,
+            -3.065,
+            -1.0,
+            2.338,
+            2.414,
+            1.045
+          ],
+          "source_parts": 18
+        },
+        {
+          "name": "body_canguru_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1584,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 6
+        },
+        {
+          "name": "body_canguru_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1584,
+          "vertices": 762,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 6
+        }
+      ]
+    },
+    {
+      "id": "body_feneco",
+      "nome": "feneco",
+      "file": "individual/body_feneco.fbx",
+      "parts": [
+        {
+          "name": "body_feneco_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2708,
+          "triangles_antes_decimate": 2708,
+          "vertices": 1392,
+          "bounds": [
+            -3.055,
+            -3.012,
+            -1.0,
+            3.055,
+            2.465,
+            1.07
+          ],
+          "source_parts": 19
+        },
+        {
+          "name": "body_feneco_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.665
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_feneco_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.665
+          ],
+          "source_parts": 4
+        }
+      ]
+    },
+    {
+      "id": "body_peixe_abissal",
+      "nome": "peixe_abissal",
+      "file": "individual/body_peixe_abissal.fbx",
+      "parts": [
+        {
+          "name": "body_peixe_abissal_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2180,
+          "triangles_antes_decimate": 2180,
+          "vertices": 1136,
+          "bounds": [
+            -3.02,
+            -2.205,
+            -1.0,
+            3.02,
+            2.0,
+            1.12
+          ],
+          "source_parts": 23
+        },
+        {
+          "name": "body_peixe_abissal_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1088,
+          "triangles_antes_decimate": 1088,
+          "vertices": 552,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.816,
+            0.65
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_peixe_abissal_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1088,
+          "triangles_antes_decimate": 1088,
+          "vertices": 552,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.816,
+            0.65
+          ],
+          "source_parts": 4
+        }
+      ]
+    },
+    {
+      "id": "body_morcego_roxo",
+      "nome": "morcego_roxo",
+      "file": "individual/body_morcego_roxo.fbx",
+      "parts": [
+        {
+          "name": "body_morcego_roxo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2164,
+          "triangles_antes_decimate": 2164,
+          "vertices": 1118,
+          "bounds": [
+            -2.599,
+            -2.993,
+            -1.0,
+            2.599,
+            2.31,
+            1.045
+          ],
+          "source_parts": 18
+        },
+        {
+          "name": "body_morcego_roxo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1244,
+          "triangles_antes_decimate": 1244,
+          "vertices": 636,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.66
+          ],
+          "source_parts": 7
+        },
+        {
+          "name": "body_morcego_roxo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1244,
+          "triangles_antes_decimate": 1244,
+          "vertices": 636,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.86,
+            0.66
+          ],
+          "source_parts": 7
+        }
+      ]
+    },
+    {
+      "id": "body_batata",
+      "nome": "batata",
+      "file": "individual/body_batata.fbx",
+      "parts": [
+        {
+          "name": "body_batata_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2308,
+          "triangles_antes_decimate": 2308,
+          "vertices": 1176,
+          "bounds": [
+            -2.0,
+            -2.665,
+            -1.0,
+            2.0,
+            2.0,
+            1.04
+          ],
+          "source_parts": 11
+        },
+        {
+          "name": "body_batata_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1212,
+          "triangles_antes_decimate": 1212,
+          "vertices": 612,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 3
+        },
+        {
+          "name": "body_batata_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1212,
+          "triangles_antes_decimate": 1212,
+          "vertices": 612,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.66
+          ],
+          "source_parts": 3
+        }
+      ]
+    },
+    {
+      "id": "body_dragao_roxo",
+      "nome": "dragao_roxo",
+      "file": "individual/body_dragao_roxo.fbx",
+      "parts": [
+        {
+          "name": "body_dragao_roxo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3308,
+          "triangles_antes_decimate": 3308,
+          "vertices": 1724,
+          "bounds": [
+            -3.503,
+            -3.157,
+            -1.0,
+            3.503,
+            2.09,
+            1.07
+          ],
+          "source_parts": 35
+        },
+        {
+          "name": "body_dragao_roxo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1776,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.859,
+            0.65
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_dragao_roxo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 1776,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.859,
+            0.65
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "body_taco",
+      "nome": "taco",
+      "file": "individual/body_taco.fbx",
+      "parts": [
+        {
+          "name": "body_taco_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 5660,
+          "vertices": 2574,
+          "bounds": [
+            -2.496,
+            -2.475,
+            -1.0,
+            2.496,
+            2.0,
+            1.015
+          ],
+          "source_parts": 37
+        },
+        {
+          "name": "body_taco_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_taco_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 724,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
+        }
+      ]
+    },
+    {
+      "id": "body_hamburguer",
+      "nome": "hamburguer",
+      "file": "individual/body_hamburguer.fbx",
+      "parts": [
+        {
+          "name": "body_hamburguer_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3600,
+          "triangles_antes_decimate": 3600,
+          "vertices": 1848,
+          "bounds": [
+            -2.302,
+            -2.025,
+            -1.0,
+            2.302,
+            2.0,
+            1.145
+          ],
+          "source_parts": 24
+        },
+        {
+          "name": "body_hamburguer_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_hamburguer_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_panda",
+      "nome": "panda",
+      "file": "individual/body_panda.fbx",
+      "parts": [
+        {
+          "name": "body_panda_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2292,
+          "triangles_antes_decimate": 2292,
+          "vertices": 1220,
+          "bounds": [
+            -2.11,
+            -2.25,
+            -1.0,
+            2.11,
+            2.29,
+            1.04
+          ],
+          "source_parts": 37
+        },
+        {
+          "name": "body_panda_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_panda_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_frankenstein",
+      "nome": "frankenstein",
+      "file": "individual/body_frankenstein.fbx",
+      "parts": [
+        {
+          "name": "body_frankenstein_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1412,
+          "triangles_antes_decimate": 1412,
+          "vertices": 736,
+          "bounds": [
+            -2.367,
+            -2.0,
+            -1.0,
+            2.367,
+            2.0,
+            1.055
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "body_frankenstein_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_frankenstein_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_mumia",
+      "nome": "mumia",
+      "file": "individual/body_mumia.fbx",
+      "parts": [
+        {
+          "name": "body_mumia_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1384,
+          "triangles_antes_decimate": 1384,
+          "vertices": 720,
+          "bounds": [
+            -2.0,
+            -2.0,
+            -1.0,
+            2.232,
+            2.0,
+            1.092
+          ],
+          "source_parts": 14
+        },
+        {
+          "name": "body_mumia_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_mumia_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_sino",
+      "nome": "sino",
+      "file": "individual/body_sino.fbx",
+      "parts": [
+        {
+          "name": "body_sino_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2036,
+          "triangles_antes_decimate": 2036,
+          "vertices": 1048,
+          "bounds": [
+            -2.332,
+            -2.0,
+            -1.0,
+            2.332,
+            2.075,
+            1.135
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "body_sino_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_sino_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_engrenagem",
+      "nome": "engrenagem",
+      "file": "individual/body_engrenagem.fbx",
+      "parts": [
+        {
+          "name": "body_engrenagem_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2248,
+          "triangles_antes_decimate": 2248,
+          "vertices": 1192,
+          "bounds": [
+            -2.097,
+            -2.017,
+            -1.0,
+            2.0,
+            2.0,
+            1.04
+          ],
+          "source_parts": 34
+        },
+        {
+          "name": "body_engrenagem_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_engrenagem_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_caveira",
+      "nome": "caveira",
+      "file": "individual/body_caveira.fbx",
+      "parts": [
+        {
+          "name": "body_caveira_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2504,
+          "triangles_antes_decimate": 2504,
+          "vertices": 1336,
+          "bounds": [
+            -2.0,
+            -2.028,
+            -1.0,
+            2.03,
+            2.275,
+            1.024
+          ],
+          "source_parts": 42
+        },
+        {
+          "name": "body_caveira_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_caveira_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_crocodilo",
+      "nome": "crocodilo",
+      "file": "individual/body_crocodilo.fbx",
+      "parts": [
+        {
+          "name": "body_crocodilo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1744,
+          "triangles_antes_decimate": 1744,
+          "vertices": 912,
+          "bounds": [
+            -2.0,
+            -2.0,
+            -1.0,
+            2.0,
+            2.48,
+            1.025
+          ],
+          "source_parts": 20
+        },
+        {
+          "name": "body_crocodilo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_crocodilo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_donut",
+      "nome": "donut",
+      "file": "individual/body_donut.fbx",
+      "parts": [
+        {
+          "name": "body_donut_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2212,
+          "triangles_antes_decimate": 2212,
+          "vertices": 1136,
+          "bounds": [
+            -2.005,
+            -2.0,
+            -1.0,
+            2.005,
+            2.0,
+            1.095
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "body_donut_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_donut_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_tomate",
+      "nome": "tomate",
+      "file": "individual/body_tomate.fbx",
+      "parts": [
+        {
+          "name": "body_tomate_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1748,
+          "triangles_antes_decimate": 1748,
+          "vertices": 920,
+          "bounds": [
+            -2.0,
+            -2.434,
+            -1.0,
+            2.0,
+            2.0,
+            1.066
+          ],
+          "source_parts": 23
+        },
+        {
+          "name": "body_tomate_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_tomate_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_geodo",
+      "nome": "geodo",
+      "file": "individual/body_geodo.fbx",
+      "parts": [
+        {
+          "name": "body_geodo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2124,
+          "triangles_antes_decimate": 2124,
+          "vertices": 1146,
+          "bounds": [
+            -2.089,
+            -2.109,
+            -1.0,
+            2.136,
+            2.0,
+            1.06
+          ],
+          "source_parts": 42
+        },
+        {
+          "name": "body_geodo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_geodo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_cantil",
+      "nome": "cantil",
+      "file": "individual/body_cantil.fbx",
+      "parts": [
+        {
+          "name": "body_cantil_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1604,
+          "triangles_antes_decimate": 1604,
+          "vertices": 824,
+          "bounds": [
+            -2.0,
+            -2.495,
+            -1.0,
+            2.0,
+            2.0,
+            1.035
+          ],
+          "source_parts": 11
+        },
+        {
+          "name": "body_cantil_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_cantil_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_coroa_flores",
+      "nome": "coroa_flores",
+      "file": "individual/body_coroa_flores.fbx",
+      "parts": [
+        {
+          "name": "body_coroa_flores_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 5876,
+          "vertices": 2754,
+          "bounds": [
+            -2.31,
+            -1.997,
+            -1.0,
+            2.31,
+            1.997,
+            1.092
+          ],
+          "source_parts": 127
+        },
+        {
+          "name": "body_coroa_flores_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_coroa_flores_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_presente",
+      "nome": "presente",
+      "file": "individual/body_presente.fbx",
+      "parts": [
+        {
+          "name": "body_presente_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1760,
+          "triangles_antes_decimate": 1760,
+          "vertices": 912,
+          "bounds": [
+            -2.029,
+            -2.0,
+            -1.0,
+            2.029,
+            2.0,
+            1.135
+          ],
+          "source_parts": 16
+        },
+        {
+          "name": "body_presente_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_presente_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_frasco_limo",
+      "nome": "frasco_limo",
+      "file": "individual/body_frasco_limo.fbx",
+      "parts": [
+        {
+          "name": "body_frasco_limo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2360,
+          "triangles_antes_decimate": 2360,
+          "vertices": 1224,
+          "bounds": [
+            -2.0,
+            -2.473,
+            -1.0,
+            2.0,
+            2.0,
+            1.105
+          ],
+          "source_parts": 22
+        },
+        {
+          "name": "body_frasco_limo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_frasco_limo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_portal_pedra",
+      "nome": "portal_pedra",
+      "file": "individual/body_portal_pedra.fbx",
+      "parts": [
+        {
+          "name": "body_portal_pedra_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1636,
+          "triangles_antes_decimate": 1636,
+          "vertices": 864,
+          "bounds": [
+            -2.033,
+            -2.001,
+            -1.0,
+            2.033,
+            2.0,
+            1.035
+          ],
+          "source_parts": 23
+        },
+        {
+          "name": "body_portal_pedra_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_portal_pedra_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_torradeira",
+      "nome": "torradeira",
+      "file": "individual/body_torradeira.fbx",
+      "parts": [
+        {
+          "name": "body_torradeira_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2452,
+          "triangles_antes_decimate": 2452,
+          "vertices": 1268,
+          "bounds": [
+            -2.4,
+            -2.125,
+            -1.0,
+            2.0,
+            2.229,
+            1.153
+          ],
+          "source_parts": 21
+        },
+        {
+          "name": "body_torradeira_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_torradeira_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_amanita",
+      "nome": "amanita",
+      "file": "individual/body_amanita.fbx",
+      "parts": [
+        {
+          "name": "body_amanita_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2524,
+          "triangles_antes_decimate": 2524,
+          "vertices": 1304,
+          "bounds": [
+            -2.149,
+            -2.165,
+            -1.0,
+            2.149,
+            2.0,
+            1.102
+          ],
+          "source_parts": 21
+        },
+        {
+          "name": "body_amanita_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_amanita_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "body_explorador",
+      "nome": "explorador",
+      "file": "individual/body_explorador.fbx",
+      "parts": [
+        {
+          "name": "body_explorador_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2324,
+          "triangles_antes_decimate": 2324,
+          "vertices": 1344,
+          "bounds": [
+            -2.008,
+            -2.125,
+            -1.0,
+            2.267,
+            2.0,
+            1.065
+          ],
+          "source_parts": 91
+        },
+        {
+          "name": "body_explorador_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
+        },
+        {
+          "name": "body_explorador_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1056,
+          "triangles_antes_decimate": 1056,
+          "vertices": 532,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 2
         }
       ]
     }

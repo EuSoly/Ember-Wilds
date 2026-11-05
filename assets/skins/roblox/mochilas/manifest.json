@@ -1,0 +1,2543 @@
+{
+  "categoria": "mochilas",
+  "lotes": [
+    "mochilas1",
+    "mochilas2",
+    "mochilas3",
+    "mochilas4",
+    "mochilas5",
+    "mochilas_variantes"
+  ],
+  "skin_count": 81,
+  "mesh_count": 85,
+  "total_triangles": 85168,
+  "palette_colors": 413,
+  "texture": "mochilas_palette.png",
+  "texture_size": 512,
+  "arquivo_geral": "skins-mochilas.fbx",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "skins": [
+    {
+      "id": "bag_padrao",
+      "nome": "padrao",
+      "file": "individual/bag_padrao.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_coelho",
+      "nome": "coelho",
+      "file": "individual/bag_coelho.fbx",
+      "parts": [
+        {
+          "name": "bag_coelho_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1884,
+          "triangles_antes_decimate": 1884,
+          "vertices": 992,
+          "bounds": [
+            -1.425,
+            -4.657,
+            -0.73,
+            1.425,
+            -1.834,
+            1.192
+          ],
+          "source_parts": 25
+        }
+      ]
+    },
+    {
+      "id": "bag_ninho_passaros",
+      "nome": "ninho_passaros",
+      "file": "individual/bag_ninho_passaros.fbx",
+      "parts": [
+        {
+          "name": "bag_ninho_passaros_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1788,
+          "triangles_antes_decimate": 1788,
+          "vertices": 944,
+          "bounds": [
+            -1.591,
+            -3.678,
+            -0.73,
+            1.425,
+            -1.834,
+            1.178
+          ],
+          "source_parts": 25
+        }
+      ]
+    },
+    {
+      "id": "bag_aquario",
+      "nome": "aquario",
+      "file": "individual/bag_aquario.fbx",
+      "parts": [
+        {
+          "name": "bag_aquario_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 936,
+          "triangles_antes_decimate": 936,
+          "vertices": 504,
+          "bounds": [
+            -1.428,
+            -4.04,
+            -0.73,
+            1.428,
+            -1.7,
+            1.222
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_esquilo",
+      "nome": "esquilo",
+      "file": "individual/bag_esquilo.fbx",
+      "parts": [
+        {
+          "name": "bag_esquilo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1520,
+          "triangles_antes_decimate": 1520,
+          "vertices": 808,
+          "bounds": [
+            -1.606,
+            -4.56,
+            -0.73,
+            1.425,
+            -1.834,
+            1.196
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "bag_vulcao",
+      "nome": "vulcao",
+      "file": "individual/bag_vulcao.fbx",
+      "parts": [
+        {
+          "name": "bag_vulcao_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 72,
+          "triangles_antes_decimate": 72,
+          "vertices": 44,
+          "bounds": [
+            -1.513,
+            -3.443,
+            -0.73,
+            1.513,
+            -1.854,
+            1.099
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "bag_vulcao_mochila_neon",
+          "papel": "mochila",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 168,
+          "triangles_antes_decimate": 168,
+          "vertices": 94,
+          "bounds": [
+            -0.78,
+            -3.11,
+            -0.67,
+            0.72,
+            -1.93,
+            1.137
+          ],
+          "source_parts": 5
+        }
+      ]
+    },
+    {
+      "id": "bag_lenha",
+      "nome": "lenha",
+      "file": "individual/bag_lenha.fbx",
+      "parts": [
+        {
+          "name": "bag_lenha_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2264,
+          "triangles_antes_decimate": 2264,
+          "vertices": 1248,
+          "bounds": [
+            -1.391,
+            -4.443,
+            -0.73,
+            1.173,
+            -1.827,
+            1.193
+          ],
+          "source_parts": 58
+        }
+      ]
+    },
+    {
+      "id": "bag_minerios",
+      "nome": "minerios",
+      "file": "individual/bag_minerios.fbx",
+      "parts": [
+        {
+          "name": "bag_minerios_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1076,
+          "triangles_antes_decimate": 1076,
+          "vertices": 584,
+          "bounds": [
+            -1.425,
+            -3.68,
+            -0.73,
+            1.425,
+            -1.834,
+            1.245
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_barril",
+      "nome": "barril",
+      "file": "individual/bag_barril.fbx",
+      "parts": [
+        {
+          "name": "bag_barril_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 708,
+          "triangles_antes_decimate": 708,
+          "vertices": 372,
+          "bounds": [
+            -1.765,
+            -3.44,
+            -0.73,
+            1.765,
+            -1.66,
+            1.14
+          ],
+          "source_parts": 9
+        }
+      ]
+    },
+    {
+      "id": "bag_bau",
+      "nome": "bau",
+      "file": "individual/bag_bau.fbx",
+      "parts": [
+        {
+          "name": "bag_bau_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1072,
+          "triangles_antes_decimate": 1072,
+          "vertices": 588,
+          "bounds": [
+            -1.397,
+            -3.855,
+            -0.73,
+            1.397,
+            -1.765,
+            1.2
+          ],
+          "source_parts": 26
+        }
+      ]
+    },
+    {
+      "id": "bag_pote_mel",
+      "nome": "pote_mel",
+      "file": "individual/bag_pote_mel.fbx",
+      "parts": [
+        {
+          "name": "bag_pote_mel_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 948,
+          "triangles_antes_decimate": 948,
+          "vertices": 496,
+          "bounds": [
+            -1.478,
+            -3.46,
+            -0.73,
+            1.478,
+            -1.81,
+            1.154
+          ],
+          "source_parts": 11
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta",
+      "nome": "picareta",
+      "file": "individual/bag_picareta.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_caranguejo",
+      "nome": "caranguejo",
+      "file": "individual/bag_caranguejo.fbx",
+      "parts": [
+        {
+          "name": "bag_caranguejo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2048,
+          "triangles_antes_decimate": 2048,
+          "vertices": 1064,
+          "bounds": [
+            -1.92,
+            -3.962,
+            -0.73,
+            1.92,
+            -1.685,
+            1.185
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_recife_coral",
+      "nome": "recife_coral",
+      "file": "individual/bag_recife_coral.fbx",
+      "parts": [
+        {
+          "name": "bag_recife_coral_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2064,
+          "triangles_antes_decimate": 2064,
+          "vertices": 1080,
+          "bounds": [
+            -1.457,
+            -4.008,
+            -0.73,
+            1.457,
+            -1.86,
+            1.168
+          ],
+          "source_parts": 24
+        }
+      ]
+    },
+    {
+      "id": "bag_fatia_bolo",
+      "nome": "fatia_bolo",
+      "file": "individual/bag_fatia_bolo.fbx",
+      "parts": [
+        {
+          "name": "bag_fatia_bolo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 760,
+          "triangles_antes_decimate": 760,
+          "vertices": 404,
+          "bounds": [
+            -1.5,
+            -3.54,
+            -0.73,
+            1.46,
+            -1.741,
+            1.166
+          ],
+          "source_parts": 12
+        }
+      ]
+    },
+    {
+      "id": "bag_bambu",
+      "nome": "bambu",
+      "file": "individual/bag_bambu.fbx",
+      "parts": [
+        {
+          "name": "bag_bambu_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1232,
+          "triangles_antes_decimate": 1232,
+          "vertices": 688,
+          "bounds": [
+            -1.347,
+            -3.986,
+            -0.73,
+            1.347,
+            -1.833,
+            1.141
+          ],
+          "source_parts": 36
+        }
+      ]
+    },
+    {
+      "id": "bag_peixe",
+      "nome": "peixe",
+      "file": "individual/bag_peixe.fbx",
+      "parts": [
+        {
+          "name": "bag_peixe_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 800,
+          "triangles_antes_decimate": 800,
+          "vertices": 432,
+          "bounds": [
+            -1.799,
+            -3.476,
+            -0.73,
+            1.685,
+            -1.939,
+            1.119
+          ],
+          "source_parts": 16
+        }
+      ]
+    },
+    {
+      "id": "bag_ovo_ninho",
+      "nome": "ovo_ninho",
+      "file": "individual/bag_ovo_ninho.fbx",
+      "parts": [
+        {
+          "name": "bag_ovo_ninho_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1524,
+          "triangles_antes_decimate": 1524,
+          "vertices": 784,
+          "bounds": [
+            -1.511,
+            -3.887,
+            -0.73,
+            1.511,
+            -1.84,
+            1.178
+          ],
+          "source_parts": 11
+        }
+      ]
+    },
+    {
+      "id": "bag_abelha",
+      "nome": "abelha",
+      "file": "individual/bag_abelha.fbx",
+      "parts": [
+        {
+          "name": "bag_abelha_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1372,
+          "triangles_antes_decimate": 1372,
+          "vertices": 718,
+          "bounds": [
+            -1.737,
+            -3.826,
+            -0.55,
+            1.737,
+            -1.95,
+            1.173
+          ],
+          "source_parts": 16
+        }
+      ]
+    },
+    {
+      "id": "bag_aventureiro",
+      "nome": "aventureiro",
+      "file": "individual/bag_aventureiro.fbx",
+      "parts": [
+        {
+          "name": "bag_aventureiro_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1148,
+          "triangles_antes_decimate": 1148,
+          "vertices": 608,
+          "bounds": [
+            -1.471,
+            -3.706,
+            -0.73,
+            1.471,
+            -1.76,
+            1.173
+          ],
+          "source_parts": 17
+        }
+      ]
+    },
+    {
+      "id": "bag_espirito_gelo",
+      "nome": "espirito_gelo",
+      "file": "individual/bag_espirito_gelo.fbx",
+      "parts": [
+        {
+          "name": "bag_espirito_gelo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1616,
+          "triangles_antes_decimate": 1616,
+          "vertices": 852,
+          "bounds": [
+            -1.425,
+            -3.759,
+            -0.73,
+            1.425,
+            -1.834,
+            1.253
+          ],
+          "source_parts": 22
+        }
+      ]
+    },
+    {
+      "id": "bag_cesta_pao",
+      "nome": "cesta_pao",
+      "file": "individual/bag_cesta_pao.fbx",
+      "parts": [
+        {
+          "name": "bag_cesta_pao_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1152,
+          "triangles_antes_decimate": 1152,
+          "vertices": 608,
+          "bounds": [
+            -1.48,
+            -3.43,
+            -0.73,
+            1.48,
+            -1.77,
+            1.135
+          ],
+          "source_parts": 16
+        }
+      ]
+    },
+    {
+      "id": "bag_caverna",
+      "nome": "caverna",
+      "file": "individual/bag_caverna.fbx",
+      "parts": [
+        {
+          "name": "bag_caverna_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 540,
+          "triangles_antes_decimate": 540,
+          "vertices": 292,
+          "bounds": [
+            -1.414,
+            -3.684,
+            -0.73,
+            1.427,
+            -1.8,
+            1.127
+          ],
+          "source_parts": 11
+        }
+      ]
+    },
+    {
+      "id": "bag_cubo_gelo",
+      "nome": "cubo_gelo",
+      "file": "individual/bag_cubo_gelo.fbx",
+      "parts": [
+        {
+          "name": "bag_cubo_gelo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 564,
+          "triangles_antes_decimate": 564,
+          "vertices": 298,
+          "bounds": [
+            -1.346,
+            -3.471,
+            -0.73,
+            1.405,
+            -1.775,
+            1.155
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_duplas",
+      "nome": "espadas_duplas",
+      "file": "individual/bag_espadas_duplas.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_duplas_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_cacto_espinhos",
+      "nome": "cacto_espinhos",
+      "file": "individual/bag_cacto_espinhos.fbx",
+      "parts": [
+        {
+          "name": "bag_cacto_espinhos_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1492,
+          "triangles_antes_decimate": 1492,
+          "vertices": 800,
+          "bounds": [
+            -1.384,
+            -3.862,
+            -0.73,
+            1.517,
+            -1.69,
+            1.151
+          ],
+          "source_parts": 27
+        }
+      ]
+    },
+    {
+      "id": "bag_mumia",
+      "nome": "mumia",
+      "file": "individual/bag_mumia.fbx",
+      "parts": [
+        {
+          "name": "bag_mumia_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 816,
+          "triangles_antes_decimate": 816,
+          "vertices": 448,
+          "bounds": [
+            -1.355,
+            -3.408,
+            -0.73,
+            1.355,
+            -1.757,
+            1.145
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_abobora",
+      "nome": "abobora",
+      "file": "individual/bag_abobora.fbx",
+      "parts": [
+        {
+          "name": "bag_abobora_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1512,
+          "triangles_antes_decimate": 1512,
+          "vertices": 792,
+          "bounds": [
+            -1.425,
+            -3.994,
+            -0.73,
+            1.425,
+            -1.834,
+            1.183
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_tronco_florido",
+      "nome": "tronco_florido",
+      "file": "individual/bag_tronco_florido.fbx",
+      "parts": [
+        {
+          "name": "bag_tronco_florido_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1432,
+          "triangles_antes_decimate": 1432,
+          "vertices": 744,
+          "bounds": [
+            -1.419,
+            -3.617,
+            -0.73,
+            1.419,
+            -1.812,
+            1.198
+          ],
+          "source_parts": 14
+        }
+      ]
+    },
+    {
+      "id": "bag_caixote",
+      "nome": "caixote",
+      "file": "individual/bag_caixote.fbx",
+      "parts": [
+        {
+          "name": "bag_caixote_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 168,
+          "triangles_antes_decimate": 168,
+          "vertices": 112,
+          "bounds": [
+            -1.451,
+            -3.404,
+            -0.73,
+            1.451,
+            -1.799,
+            1.109
+          ],
+          "source_parts": 14
+        }
+      ]
+    },
+    {
+      "id": "bag_garras_gelo",
+      "nome": "garras_gelo",
+      "file": "individual/bag_garras_gelo.fbx",
+      "parts": [
+        {
+          "name": "bag_garras_gelo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 744,
+          "triangles_antes_decimate": 744,
+          "vertices": 404,
+          "bounds": [
+            -1.354,
+            -3.36,
+            -0.73,
+            1.354,
+            -1.82,
+            1.145
+          ],
+          "source_parts": 16
+        }
+      ]
+    },
+    {
+      "id": "bag_cartografo",
+      "nome": "cartografo",
+      "file": "individual/bag_cartografo.fbx",
+      "parts": [
+        {
+          "name": "bag_cartografo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1040,
+          "triangles_antes_decimate": 1040,
+          "vertices": 560,
+          "bounds": [
+            -1.383,
+            -3.619,
+            -0.73,
+            1.383,
+            -1.746,
+            1.227
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_folha_frutas",
+      "nome": "folha_frutas",
+      "file": "individual/bag_folha_frutas.fbx",
+      "parts": [
+        {
+          "name": "bag_folha_frutas_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1200,
+          "triangles_antes_decimate": 1200,
+          "vertices": 640,
+          "bounds": [
+            -1.413,
+            -3.514,
+            -0.73,
+            1.419,
+            -1.84,
+            1.168
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_cristais_gelo",
+      "nome": "cristais_gelo",
+      "file": "individual/bag_cristais_gelo.fbx",
+      "parts": [
+        {
+          "name": "bag_cristais_gelo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 492,
+          "triangles_antes_decimate": 492,
+          "vertices": 268,
+          "bounds": [
+            -1.354,
+            -3.56,
+            -0.73,
+            1.354,
+            -1.62,
+            1.129
+          ],
+          "source_parts": 11
+        }
+      ]
+    },
+    {
+      "id": "bag_robo_visor",
+      "nome": "robo_visor",
+      "file": "individual/bag_robo_visor.fbx",
+      "parts": [
+        {
+          "name": "bag_robo_visor_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 720,
+          "triangles_antes_decimate": 720,
+          "vertices": 384,
+          "bounds": [
+            -1.373,
+            -3.38,
+            -0.73,
+            1.373,
+            -1.769,
+            1.15
+          ],
+          "source_parts": 12
+        }
+      ]
+    },
+    {
+      "id": "bag_radio_militar",
+      "nome": "radio_militar",
+      "file": "individual/bag_radio_militar.fbx",
+      "parts": [
+        {
+          "name": "bag_radio_militar_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 628,
+          "triangles_antes_decimate": 628,
+          "vertices": 352,
+          "bounds": [
+            -1.494,
+            -3.25,
+            -0.73,
+            1.547,
+            -1.876,
+            1.114
+          ],
+          "source_parts": 19
+        }
+      ]
+    },
+    {
+      "id": "bag_nuvem_faixas",
+      "nome": "nuvem_faixas",
+      "file": "individual/bag_nuvem_faixas.fbx",
+      "parts": [
+        {
+          "name": "bag_nuvem_faixas_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1816,
+          "triangles_antes_decimate": 1816,
+          "vertices": 952,
+          "bounds": [
+            -1.48,
+            -3.802,
+            -0.73,
+            1.52,
+            -1.784,
+            1.159
+          ],
+          "source_parts": 22
+        }
+      ]
+    },
+    {
+      "id": "bag_fornalha",
+      "nome": "fornalha",
+      "file": "individual/bag_fornalha.fbx",
+      "parts": [
+        {
+          "name": "bag_fornalha_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 364,
+          "triangles_antes_decimate": 364,
+          "vertices": 200,
+          "bounds": [
+            -1.462,
+            -3.31,
+            -0.73,
+            1.462,
+            -1.78,
+            1.158
+          ],
+          "source_parts": 9
+        },
+        {
+          "name": "bag_fornalha_mochila_neon",
+          "papel": "mochila",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 188,
+          "triangles_antes_decimate": 188,
+          "vertices": 100,
+          "bounds": [
+            -0.69,
+            -2.91,
+            1.098,
+            0.69,
+            -2.23,
+            1.141
+          ],
+          "source_parts": 3
+        }
+      ]
+    },
+    {
+      "id": "bag_garras_ametista",
+      "nome": "garras_ametista",
+      "file": "individual/bag_garras_ametista.fbx",
+      "parts": [
+        {
+          "name": "bag_garras_ametista_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1236,
+          "triangles_antes_decimate": 1236,
+          "vertices": 644,
+          "bounds": [
+            -1.359,
+            -3.792,
+            -0.73,
+            1.359,
+            -1.854,
+            1.129
+          ],
+          "source_parts": 13
+        }
+      ]
+    },
+    {
+      "id": "bag_explorador_pa",
+      "nome": "explorador_pa",
+      "file": "individual/bag_explorador_pa.fbx",
+      "parts": [
+        {
+          "name": "bag_explorador_pa_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1128,
+          "triangles_antes_decimate": 1128,
+          "vertices": 600,
+          "bounds": [
+            -1.825,
+            -3.74,
+            -0.73,
+            1.832,
+            -1.73,
+            1.233
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_cofre_metal",
+      "nome": "cofre_metal",
+      "file": "individual/bag_cofre_metal.fbx",
+      "parts": [
+        {
+          "name": "bag_cofre_metal_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 412,
+          "triangles_antes_decimate": 412,
+          "vertices": 236,
+          "bounds": [
+            -1.434,
+            -3.298,
+            -0.73,
+            1.572,
+            -1.802,
+            1.108
+          ],
+          "source_parts": 15
+        },
+        {
+          "name": "bag_cofre_metal_mochila_neon",
+          "papel": "mochila",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 72,
+          "triangles_antes_decimate": 72,
+          "vertices": 40,
+          "bounds": [
+            -0.31,
+            -2.97,
+            1.075,
+            0.94,
+            -2.07,
+            1.123
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "bag_camuflada",
+      "nome": "camuflada",
+      "file": "individual/bag_camuflada.fbx",
+      "parts": [
+        {
+          "name": "bag_camuflada_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 972,
+          "triangles_antes_decimate": 972,
+          "vertices": 520,
+          "bounds": [
+            -1.364,
+            -3.37,
+            -0.73,
+            1.364,
+            -1.769,
+            1.139
+          ],
+          "source_parts": 17
+        }
+      ]
+    },
+    {
+      "id": "bag_bolsa_cristal",
+      "nome": "bolsa_cristal",
+      "file": "individual/bag_bolsa_cristal.fbx",
+      "parts": [
+        {
+          "name": "bag_bolsa_cristal_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1440,
+          "triangles_antes_decimate": 1440,
+          "vertices": 760,
+          "bounds": [
+            -1.425,
+            -3.612,
+            -0.73,
+            1.425,
+            -1.834,
+            1.252
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_rocha_magma",
+      "nome": "rocha_magma",
+      "file": "individual/bag_rocha_magma.fbx",
+      "parts": [
+        {
+          "name": "bag_rocha_magma_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 644,
+          "triangles_antes_decimate": 644,
+          "vertices": 358,
+          "bounds": [
+            -1.354,
+            -3.47,
+            -0.73,
+            1.354,
+            -1.738,
+            1.149
+          ],
+          "source_parts": 18
+        },
+        {
+          "name": "bag_rocha_magma_mochila_neon",
+          "papel": "mochila",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 72,
+          "triangles_antes_decimate": 72,
+          "vertices": 40,
+          "bounds": [
+            -1.26,
+            -2.941,
+            -0.72,
+            1.26,
+            -1.89,
+            1.094
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "bag_malhada",
+      "nome": "malhada",
+      "file": "individual/bag_malhada.fbx",
+      "parts": [
+        {
+          "name": "bag_malhada_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 808,
+          "triangles_antes_decimate": 808,
+          "vertices": 432,
+          "bounds": [
+            -1.364,
+            -3.37,
+            -0.73,
+            1.364,
+            -1.769,
+            1.141
+          ],
+          "source_parts": 14
+        }
+      ]
+    },
+    {
+      "id": "bag_chamas_fogo",
+      "nome": "chamas_fogo",
+      "file": "individual/bag_chamas_fogo.fbx",
+      "parts": [
+        {
+          "name": "bag_chamas_fogo_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 628,
+          "triangles_antes_decimate": 628,
+          "vertices": 336,
+          "bounds": [
+            -1.354,
+            -3.449,
+            -0.73,
+            1.354,
+            -1.722,
+            1.129
+          ],
+          "source_parts": 11
+        }
+      ]
+    },
+    {
+      "id": "bag_melancia",
+      "nome": "melancia",
+      "file": "individual/bag_melancia.fbx",
+      "parts": [
+        {
+          "name": "bag_melancia_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 668,
+          "triangles_antes_decimate": 668,
+          "vertices": 368,
+          "bounds": [
+            -1.364,
+            -3.37,
+            -0.73,
+            1.364,
+            -1.769,
+            1.131
+          ],
+          "source_parts": 17
+        }
+      ]
+    },
+    {
+      "id": "bag_noite_estrelada",
+      "nome": "noite_estrelada",
+      "file": "individual/bag_noite_estrelada.fbx",
+      "parts": [
+        {
+          "name": "bag_noite_estrelada_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 960,
+          "triangles_antes_decimate": 960,
+          "vertices": 516,
+          "bounds": [
+            -1.364,
+            -3.37,
+            -0.73,
+            1.364,
+            -1.769,
+            1.141
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_cubos_esmeralda",
+      "nome": "cubos_esmeralda",
+      "file": "individual/bag_cubos_esmeralda.fbx",
+      "parts": [
+        {
+          "name": "bag_cubos_esmeralda_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 528,
+          "triangles_antes_decimate": 528,
+          "vertices": 288,
+          "bounds": [
+            -1.373,
+            -3.549,
+            -0.73,
+            1.385,
+            -1.8,
+            1.138
+          ],
+          "source_parts": 12
+        }
+      ]
+    },
+    {
+      "id": "bag_carapaca_joias",
+      "nome": "carapaca_joias",
+      "file": "individual/bag_carapaca_joias.fbx",
+      "parts": [
+        {
+          "name": "bag_carapaca_joias_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 952,
+          "triangles_antes_decimate": 952,
+          "vertices": 512,
+          "bounds": [
+            -1.352,
+            -3.239,
+            -0.73,
+            1.352,
+            -1.871,
+            1.138
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_verde",
+      "nome": "padrao_verde",
+      "file": "individual/bag_padrao_verde.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_verde_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_azul",
+      "nome": "padrao_azul",
+      "file": "individual/bag_padrao_azul.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_azul_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_rosa",
+      "nome": "padrao_rosa",
+      "file": "individual/bag_padrao_rosa.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_rosa_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_turquesa",
+      "nome": "padrao_turquesa",
+      "file": "individual/bag_padrao_turquesa.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_turquesa_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_branca",
+      "nome": "padrao_branca",
+      "file": "individual/bag_padrao_branca.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_branca_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_roxa",
+      "nome": "padrao_roxa",
+      "file": "individual/bag_padrao_roxa.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_roxa_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_ciano",
+      "nome": "padrao_ciano",
+      "file": "individual/bag_padrao_ciano.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_ciano_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_couro_gasto",
+      "nome": "padrao_couro_gasto",
+      "file": "individual/bag_padrao_couro_gasto.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_couro_gasto_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_escura",
+      "nome": "padrao_escura",
+      "file": "individual/bag_padrao_escura.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_escura_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_padrao_noturna",
+      "nome": "padrao_noturna",
+      "file": "individual/bag_padrao_noturna.fbx",
+      "parts": [
+        {
+          "name": "bag_padrao_noturna_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 880,
+          "triangles_antes_decimate": 880,
+          "vertices": 456,
+          "bounds": [
+            -1.4,
+            -3.653,
+            -0.78,
+            1.4,
+            -1.81,
+            1.115
+          ],
+          "source_parts": 8
+        }
+      ]
+    },
+    {
+      "id": "bag_bolsa_pedra",
+      "nome": "bolsa_pedra",
+      "file": "individual/bag_bolsa_pedra.fbx",
+      "parts": [
+        {
+          "name": "bag_bolsa_pedra_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1440,
+          "triangles_antes_decimate": 1440,
+          "vertices": 760,
+          "bounds": [
+            -1.425,
+            -3.612,
+            -0.73,
+            1.425,
+            -1.834,
+            1.252
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_bolsa_ouro",
+      "nome": "bolsa_ouro",
+      "file": "individual/bag_bolsa_ouro.fbx",
+      "parts": [
+        {
+          "name": "bag_bolsa_ouro_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1440,
+          "triangles_antes_decimate": 1440,
+          "vertices": 760,
+          "bounds": [
+            -1.425,
+            -3.612,
+            -0.73,
+            1.425,
+            -1.834,
+            1.252
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_bolsa_ametista",
+      "nome": "bolsa_ametista",
+      "file": "individual/bag_bolsa_ametista.fbx",
+      "parts": [
+        {
+          "name": "bag_bolsa_ametista_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1440,
+          "triangles_antes_decimate": 1440,
+          "vertices": 760,
+          "bounds": [
+            -1.425,
+            -3.612,
+            -0.73,
+            1.425,
+            -1.834,
+            1.252
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_bolsa_rubi",
+      "nome": "bolsa_rubi",
+      "file": "individual/bag_bolsa_rubi.fbx",
+      "parts": [
+        {
+          "name": "bag_bolsa_rubi_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1440,
+          "triangles_antes_decimate": 1440,
+          "vertices": 760,
+          "bounds": [
+            -1.425,
+            -3.612,
+            -0.73,
+            1.425,
+            -1.834,
+            1.252
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta_madeira",
+      "nome": "picareta_madeira",
+      "file": "individual/bag_picareta_madeira.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_madeira_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta_pedra",
+      "nome": "picareta_pedra",
+      "file": "individual/bag_picareta_pedra.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_pedra_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta_ouro",
+      "nome": "picareta_ouro",
+      "file": "individual/bag_picareta_ouro.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_ouro_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta_ametista",
+      "nome": "picareta_ametista",
+      "file": "individual/bag_picareta_ametista.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_ametista_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_picareta_rubi",
+      "nome": "picareta_rubi",
+      "file": "individual/bag_picareta_rubi.fbx",
+      "parts": [
+        {
+          "name": "bag_picareta_rubi_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 884,
+          "triangles_antes_decimate": 884,
+          "vertices": 472,
+          "bounds": [
+            -1.447,
+            -4.153,
+            -0.73,
+            1.447,
+            -1.797,
+            1.181
+          ],
+          "source_parts": 15
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_pedra",
+      "nome": "espadas_pedra",
+      "file": "individual/bag_espadas_pedra.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_pedra_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_diamante",
+      "nome": "espadas_diamante",
+      "file": "individual/bag_espadas_diamante.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_diamante_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_ouro",
+      "nome": "espadas_ouro",
+      "file": "individual/bag_espadas_ouro.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_ouro_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_rubi",
+      "nome": "espadas_rubi",
+      "file": "individual/bag_espadas_rubi.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_rubi_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_espadas_ametista",
+      "nome": "espadas_ametista",
+      "file": "individual/bag_espadas_ametista.fbx",
+      "parts": [
+        {
+          "name": "bag_espadas_ametista_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1092,
+          "triangles_antes_decimate": 1092,
+          "vertices": 592,
+          "bounds": [
+            -1.355,
+            -4.128,
+            -0.73,
+            1.355,
+            -1.727,
+            1.159
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "bag_fatia_bolo_morango",
+      "nome": "fatia_bolo_morango",
+      "file": "individual/bag_fatia_bolo_morango.fbx",
+      "parts": [
+        {
+          "name": "bag_fatia_bolo_morango_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 760,
+          "triangles_antes_decimate": 760,
+          "vertices": 404,
+          "bounds": [
+            -1.5,
+            -3.54,
+            -0.73,
+            1.46,
+            -1.741,
+            1.166
+          ],
+          "source_parts": 12
+        }
+      ]
+    },
+    {
+      "id": "bag_abobora_branca",
+      "nome": "abobora_branca",
+      "file": "individual/bag_abobora_branca.fbx",
+      "parts": [
+        {
+          "name": "bag_abobora_branca_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1512,
+          "triangles_antes_decimate": 1512,
+          "vertices": 792,
+          "bounds": [
+            -1.425,
+            -3.994,
+            -0.73,
+            1.425,
+            -1.834,
+            1.183
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_nuvem_por_do_sol",
+      "nome": "nuvem_por_do_sol",
+      "file": "individual/bag_nuvem_por_do_sol.fbx",
+      "parts": [
+        {
+          "name": "bag_nuvem_por_do_sol_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1756,
+          "triangles_antes_decimate": 1756,
+          "vertices": 920,
+          "bounds": [
+            -1.48,
+            -3.802,
+            -0.73,
+            1.52,
+            -1.784,
+            1.159
+          ],
+          "source_parts": 21
+        }
+      ]
+    },
+    {
+      "id": "bag_fornalha_apagada",
+      "nome": "fornalha_apagada",
+      "file": "individual/bag_fornalha_apagada.fbx",
+      "parts": [
+        {
+          "name": "bag_fornalha_apagada_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 424,
+          "triangles_antes_decimate": 424,
+          "vertices": 232,
+          "bounds": [
+            -1.462,
+            -3.31,
+            -0.73,
+            1.462,
+            -1.78,
+            1.138
+          ],
+          "source_parts": 10
+        }
+      ]
+    },
+    {
+      "id": "bag_carapaca_ametista",
+      "nome": "carapaca_ametista",
+      "file": "individual/bag_carapaca_ametista.fbx",
+      "parts": [
+        {
+          "name": "bag_carapaca_ametista_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 952,
+          "triangles_antes_decimate": 952,
+          "vertices": 512,
+          "bounds": [
+            -1.352,
+            -3.239,
+            -0.73,
+            1.352,
+            -1.871,
+            1.138
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_carapaca_dourada",
+      "nome": "carapaca_dourada",
+      "file": "individual/bag_carapaca_dourada.fbx",
+      "parts": [
+        {
+          "name": "bag_carapaca_dourada_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 952,
+          "triangles_antes_decimate": 952,
+          "vertices": 512,
+          "bounds": [
+            -1.352,
+            -3.239,
+            -0.73,
+            1.352,
+            -1.871,
+            1.138
+          ],
+          "source_parts": 18
+        }
+      ]
+    },
+    {
+      "id": "bag_explorador_pa_couro",
+      "nome": "explorador_pa_couro",
+      "file": "individual/bag_explorador_pa_couro.fbx",
+      "parts": [
+        {
+          "name": "bag_explorador_pa_couro_mochila",
+          "papel": "mochila",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1128,
+          "triangles_antes_decimate": 1128,
+          "vertices": 600,
+          "bounds": [
+            -1.825,
+            -3.74,
+            -0.73,
+            1.832,
+            -1.73,
+            1.233
+          ],
+          "source_parts": 18
+        }
+      ]
+    }
+  ]
+}

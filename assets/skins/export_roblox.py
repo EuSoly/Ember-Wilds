@@ -1,18 +1,21 @@
-# Exporta as skins de CORPO e de LIVRO para o Roblox (FBX), no padrão dos outros pacotes do projeto
+# Exporta as skins de CORPO, LIVRO e MOCHILA para o Roblox (FBX), no padrão dos outros pacotes do projeto
 # (assets/world-pack/export_world.py): cores chapadas viram uma textura de paleta compartilhada,
 # uma malha por peça, triangulada, FBX -Z forward / Y up, arquivo geral + individuais,
 # manifest.json e validation.json (reimportação no Blender).
 #
 # Rodar em SEGUNDO PLANO (não mexe no Blender aberto), a partir da raiz do projeto:
 #   blender -b --factory-startup --python assets/skins/export_roblox.py
-# Saída: assets/skins/roblox/{corpo,livros}/
+# Saída: assets/skins/roblox/{corpo,livros,mochilas}/
 #
 # Peças por skin de corpo (id = body_<nome>):
 #   body_<nome>_corpo        corpo + contorno + enfeites; origem no centro do corpo (1 stud acima do chão)
-#   body_<nome>_mao          mão direita (esfera + contorno + enfeites da mão); origem no centro da mão
+#   body_<nome>_mao          mão direita (esfera + contorno + enfeites da mão); origem no centro da mão direita
+#   body_<nome>_mao_esq      mão esquerda espelhada em X no Blender; origem no centro da mão esquerda
 #   ..._neon / ..._translucido  partes que brilham (Material Neon) ou semitransparentes, separadas
-#   Os olhos (PREVIEW_*) e a mão esquerda de prévia NÃO são exportados: vêm do código.
+#   Os olhos (PREVIEW_*) NÃO são exportados: vêm do código.
 # Por livro (id = book_<nome>): book_<nome>_livro (+ _neon/_translucido); origem no centro do livro.
+# Por mochila (id = bag_<nome>): bag_<nome>_mochila (+ _neon/_translucido); origem no centro do corpo do boneco (root),
+#   já posicionada nas costas (+Z no Roblox) pronta para soldar no Body como no BagModel.luau.
 # Eixos: Blender +Y (frente do boneco / topo do livro) vira Roblox -Z (frente); Blender Z vira Roblox Y.
 import bpy, bmesh, os, sys, json, math, struct, zlib, glob, importlib
 from mathutils import Matrix, Vector
@@ -26,11 +29,12 @@ OUT = os.path.join(HERE, "roblox")
 LOTES = {
     "corpo": ["lote1", "lote2", "lote3_a", "lote3_b", "lote3_c", "lote3_d", "lote3_e", "lote4", "lote5", "lote6", "lote7", "lote8", "lote9", "lote10"],
     "livros": ["livros1", "livros2"],
-    "mochilas": ["mochilas1", "mochilas2", "mochilas3", "mochilas4", "mochilas5"],
+    "mochilas": ["mochilas1", "mochilas2", "mochilas3", "mochilas4", "mochilas5", "mochilas_variantes"],
 }
 PREFIXO = {"corpo": "body_", "livros": "book_", "mochilas": "bag_"}
+PAPEL_PADRAO = {"corpo": "corpo", "livros": "livro", "mochilas": "mochila"}
 RES_EXPORT = 4  # pontos por trecho de curva no export (o editável usa 8); metade dos triângulos, igual de cima
-TETO = {"corpo": 5000, "mao": 1500, "livro": 3000}  # triângulos por peça; acima disso aplica Decimate (collapse)
+TETO = {"corpo": 5000, "mao": 1500, "mao_esq": 1500, "livro": 3000, "mochila": 3500}  # triângulos por peça; acima disso aplica Decimate (collapse)
 
 def srgb(v):
     v = max(0, min(1, v)); return round(255 * (12.92 * v if v <= .0031308 else 1.055 * v ** (1 / 2.4) - .055))
@@ -41,7 +45,7 @@ def medir(categoria, res):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     montar(categoria, carregar(categoria)); skins, _ = coletar(categoria)
     tri = lambda p: sum(len(f) - 2 for f in p["faces"])
-    return sorted(((sum(tri(p) for p in s["parts"]), s["id"], {p["name"].split(s["id"])[1] or "livro": tri(p) for p in s["parts"]}) for s in skins), reverse=True)
+    return sorted(((sum(tri(p) for p in s["parts"]), s["id"], {p["name"].split(s["id"])[1] or PAPEL_PADRAO[categoria]: tri(p) for p in s["parts"]}) for s in skins), reverse=True)
 
 def carregar(categoria):
     lote = []
@@ -75,41 +79,57 @@ def coletar(categoria):
         return indice[k]
     skins = []
     for coll in list(bpy.context.scene.collection.children):
-        objs = [o for o in coll.objects if o.type == "MESH" and not o.name.startswith("PREVIEW")]
+        if categoria == "corpo":
+            # Inclui PREVIEW_L_* (mão esquerda espelhada em X) e ignora os olhos (PREVIEW_*)
+            objs = [o for o in coll.objects if o.type == "MESH" and (not o.name.startswith("PREVIEW") or o.name.startswith("PREVIEW_L_"))]
+        else:
+            objs = [o for o in coll.objects if o.type == "MESH" and not o.name.startswith("PREVIEW")]
         if not objs: continue
         nome = coll.name; sid = PREFIXO[categoria] + nome
-        # pivô: centro do corpo / centro do livro, na posição de galeria em que o lote foi montado
+        # pivô: centro do corpo / centro do livro / centro do boneco fantasma da mochila
         corpo = bpy.data.objects.get(f"{nome}_Body") or bpy.data.objects.get(f"{nome}_CapaBaixo")
+        ghost = bpy.data.objects.get(f"PREVIEW_{nome}_GhostBody")
+        pivo_mao = None
+        pivo_mao_esq = None
         if categoria == "corpo":
-            centro = Vector((corpo.matrix_world.translation.x, 0, 0))
             bb = [corpo.matrix_world @ Vector(c) for c in corpo.bound_box]
             centro = Vector(((min(v.x for v in bb) + max(v.x for v in bb)) / 2, (min(v.y for v in bb) + max(v.y for v in bb)) / 2, BH / 2))
             pivo_mao = centro + Vector((HX, HY, HZ - BH / 2))
+            pivo_mao_esq = centro + Vector((-HX, HY, HZ - BH / 2))
+        elif categoria == "mochilas" and ghost is not None:
+            bb = [ghost.matrix_world @ Vector(c) for c in ghost.bound_box]
+            centro = Vector(((min(v.x for v in bb) + max(v.x for v in bb)) / 2, (min(v.y for v in bb) + max(v.y for v in bb)) / 2, BH / 2))
         else:
             pts = [o.matrix_world @ Vector(c) for o in objs for c in o.bound_box]
-            # centro do livro = centro da base() quando existe; senão, centro da área ocupada
             if corpo is not None:
                 bb = [corpo.matrix_world @ Vector(c) for c in corpo.bound_box]
                 centro = Vector(((min(v.x for v in bb) + max(v.x for v in bb)) / 2, (min(v.y for v in bb) + max(v.y for v in bb)) / 2, LT / 2))
             else:
                 centro = Vector(((min(p.x for p in pts) + max(p.x for p in pts)) / 2, (min(p.y for p in pts) + max(p.y for p in pts)) / 2, LT / 2))
-            pivo_mao = None
         grupos = {}
         for o in objs:
             m = o.active_material
             mn = m.name if m else ""
             alpha = m.diffuse_color[3] if m else 1.0
-            papel = "mao" if (categoria == "corpo" and "_Hand" in o.name) else ("corpo" if categoria == "corpo" else "")
+            if categoria == "corpo":
+                if o.name.startswith("PREVIEW_L_"):
+                    papel = "mao_esq"
+                elif "_Hand" in o.name:
+                    papel = "mao"
+                else:
+                    papel = "corpo"
+            else:
+                papel = PAPEL_PADRAO[categoria]
             sufixo = "_neon" if mn.endswith("_neon") else ("_translucido" if mn.endswith("_a") else "")
             chave = (papel, sufixo)
             g = grupos.setdefault(chave, dict(objs=[], alpha=alpha))
             g["objs"].append(o)
         partes = []
         for (papel, sufixo), g in sorted(grupos.items()):
-            pivo = pivo_mao if papel == "mao" else centro
+            pivo = pivo_mao if papel == "mao" else (pivo_mao_esq if papel == "mao_esq" else centro)
             rel = Matrix.Translation(pivo)
-            nome_parte = sid + f"_{papel or 'livro'}" + sufixo  # nunca igual ao nome da raiz (o Blender renomearia para .001)
-            parte = dict(name=nome_parte, papel=papel or "livro", tipo=(sufixo[1:] if sufixo else "solido"),
+            nome_parte = sid + f"_{papel}" + sufixo  # nunca igual ao nome da raiz (o Blender renomearia para .001)
+            parte = dict(name=nome_parte, papel=papel, tipo=(sufixo[1:] if sufixo else "solido"),
                          alpha=round(g["alpha"], 3), relative=rel, vertices=[], faces=[], colors=[], smooth=[], source_parts=[])
             for o in g["objs"]:
                 ev = o.evaluated_get(deps); me = ev.to_mesh(preserve_all_data_layers=True, depsgraph=deps)
@@ -199,7 +219,7 @@ def exportar(categoria):
               object_types={op("object_types", "MESH"), op("object_types", "EMPTY")}, use_mesh_modifiers=True,
               mesh_smooth_type=op("mesh_smooth_type", "FACE"), bake_anim=False, add_leaf_bones=False,
               path_mode=op("path_mode", "COPY"), embed_textures=True, use_triangles=True, use_custom_props=True)
-    geral = "skins-corpo.fbx" if categoria == "corpo" else "skins-livros.fbx"
+    geral = f"skins-{categoria}.fbx"
     def exp(caminho, ids, individual=False):
         for o in cena.objects: o.select_set(False)
         for i in ids:
@@ -253,7 +273,7 @@ def validar(categoria, manifesto):
     return val
 
 resumo = {}
-for cat in ("corpo", "livros"):
+for cat in ("corpo", "livros", "mochilas"):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     man = exportar(cat)
     val = validar(cat, man)
