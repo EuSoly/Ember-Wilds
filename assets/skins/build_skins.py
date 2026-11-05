@@ -16,5 +16,8 @@ for f in sorted(glob.glob(os.path.join(_here, "lotes", _pat + ".py"))):
 if _tipo == "livro":
     import livro_lib; importlib.reload(livro_lib)
     print("livros:", len(_lote), "objetos:", livro_lib.build_livros(_lote))
+elif _tipo == "mochila":
+    import mochila_lib; importlib.reload(mochila_lib)
+    print("mochilas:", len(_lote), "objetos:", mochila_lib.build_mochilas(_lote))
 else:
     print("skins:", len(_lote), "objetos:", skin_lib.build(_lote))

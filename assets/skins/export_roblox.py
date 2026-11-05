@@ -20,14 +20,15 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 for p in (HERE, os.path.join(HERE, "lotes")):
     if p not in sys.path: sys.path.insert(0, p)
-import skin_lib, livro_lib
+import skin_lib, livro_lib, mochila_lib
 
 OUT = os.path.join(HERE, "roblox")
 LOTES = {
-    "corpo": ["lote1", "lote2", "lote3_a", "lote3_b", "lote3_c", "lote3_d", "lote3_e", "lote4", "lote5"],
+    "corpo": ["lote1", "lote2", "lote3_a", "lote3_b", "lote3_c", "lote3_d", "lote3_e", "lote4", "lote5", "lote6", "lote7", "lote8", "lote9", "lote10"],
     "livros": ["livros1", "livros2"],
+    "mochilas": ["mochilas1", "mochilas2", "mochilas3", "mochilas4", "mochilas5"],
 }
-PREFIXO = {"corpo": "body_", "livros": "book_"}
+PREFIXO = {"corpo": "body_", "livros": "book_", "mochilas": "bag_"}
 RES_EXPORT = 4  # pontos por trecho de curva no export (o editável usa 8); metade dos triângulos, igual de cima
 TETO = {"corpo": 5000, "mao": 1500, "livro": 3000}  # triângulos por peça; acima disso aplica Decimate (collapse)
 
@@ -54,6 +55,8 @@ def carregar(categoria):
 def montar(categoria, lote):
     if categoria == "livros":
         livro_lib.build_livros(lote, cols=10)
+    elif categoria == "mochilas":
+        mochila_lib.build_mochilas(lote, cols=10)
     else:
         skin_lib.build(lote, cols=10)
     bpy.context.view_layer.update()

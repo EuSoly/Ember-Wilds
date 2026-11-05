@@ -63,6 +63,11 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 | 3 | `assets/skins/skins-lote3.blend` + `.png` (5 agentes em paralelo, `lotes/lote3_a…e.py`) | anjo (172), diabinho (173), gato (187), coala (102), mamute (139), papagaio (224), cacto (119), maçã (201), toco (255), lula (249) |
 | 4 | `assets/skins/skins-lote4.blend` + `.png` (1 agente, `lotes/lote4.py`) | tartaruga (15), pintinho (8), peixe (27), cenoura (37), tubarão (96), sapo (138), macaco (140), leão (243), bolota (246), vaca (250) |
 | 5 | `assets/skins/skins-lote5.blend` + `.png` (1 agente, `lotes/lote5.py`; cogumelo, vela e slime com ajustes do Elizeu no Blender, já levados ao script) | guaxinim (43), javali (101), cogumelo (168), onça (217), vela (226), bomba (236), fênix (248), yeti (170), besouro (171), slime (195) |
+| 6 | `assets/skins/skins-lote6.blend` + `.png` (`lotes/lote6.py`) | gárgula (51), ouriço-do-mar (104), carneiro (185), espírito de gelo (235), arbusto florido (179), wyvern de gelo (182), gaio-azul (167), zumbi (117), mago (238), pão (234) |
+| 7 | `assets/skins/skins-lote7.blend` + `.png` (`lotes/lote7.py`) | dragão de lava (65), marshmallow (77), cthulhu (106), falcão (108), boneco de neve (124), pinha (151), urso de madeira (207), raposa enfaixada (213), robô (215), helicóptero (228) |
+| 8 | `assets/skins/skins-lote8.blend` + `.png` (`lotes/lote8.py`) | rei dourado (32), caramujo (56), monstro da noite (137), urso pardo (165), canguru (169), feneco (178), peixe abissal (188), morcego roxo (192), batata (194), dragão roxo (214) |
+| 9 | `assets/skins/skins-lote9.blend` + `.png` (`lotes/lote9.py`) | taco (62), hambúrguer (67), panda (92), frankenstein (112), múmia (114), sino (126), engrenagem (154), caveira fóssil (177), crocodilo (219), donut (221) |
+| 10 | `assets/skins/skins-lote10.blend` + `.png` (`lotes/lote10.py`) | tomate (25), geodo (42), cantil (53), coroa de flores (125), presente (128), frasco de limo (143), portal de pedra (231), torradeira (233), amanita (237), explorador (254) |
 
 ## Exportação para o Roblox
 
@@ -94,5 +99,17 @@ O livro padrão é o modelo do Elizeu, `ReplicatedStorage.Assets.Tools.book`. As
 `lotes/livros2.py` importa funções utilitárias de `lotes/livros1.py` (`barra`, `trilha`, `corta`, `arco`, `folha`, `losango`…); não renomear o lote 1 sem mover essas funções para a `livro_lib`. Desenho de capa em `TOPO + 0,012` (acima da lombada). Reaproveitar o mesmo agente no lote seguinte **não** saiu mais barato: o contexto acumulado dele custou mais que a leitura inicial de um agente novo.
 
 Medida usada: sobreposição (IoU) da silhueta de cada referência com a do livro 0 (todas têm 226×226); os que têm o retângulo do livro mas são outra coisa (cardápio, envelope, folha) foram corrigidos no olho. Capas com título (19, 17, 35) ficam sem o texto.
+
+## Mochilas
+
+**Base:** `assets/skins/mochila_lib.py` — classe `Mochila` (mesma API da `Skin`) com boneco fantasma semitransparente (`PREVIEW_*`) para contexto visual e alinhamento nas costas (`BAG_Y = -2,55`, topo em `TOPO = 2,08`). Na exportação para o Roblox (`export_roblox.py`), os objetos `PREVIEW_*` do boneco fantasma são ignorados e só a mochila é exportada. Lote de mochila = arquivo em `lotes/` com `TIPO = "mochila"`.
+
+| Lote | Arquivo | Mochilas |
+|---|---|---|
+| 1 | `assets/skins/mochilas-lote1.blend` + `.png` (`lotes/mochilas1.py`) | padrão (0), coelho (1), ninho de pássaros (2), aquário (3), esquilo (8), vulcão (11), cesto de lenha (16), bolsa de minérios (22), barril (63), baú do tesouro (67) |
+| 2 | `assets/skins/mochilas-lote2.blend` + `.png` (`lotes/mochilas2.py`) | pote de mel (10), mochila com picareta (26), caranguejo (29), recife de coral (32), fatia de bolo (44), feixe de bambu (50), peixe (51), ovo no ninho (56), abelha (66), mochila de aventureiro (76) |
+| 3 | `assets/skins/mochilas-lote3.blend` + `.png` (`lotes/mochilas3.py`) | espírito de gelo (30), cesta de pão (31), caverna (33), cubo de gelo (34), espadas duplas (38), cacto com espinhos (49), múmia (52), abóbora (60), tronco florido (75), caixote de madeira (77) |
+| 4 | `assets/skins/mochilas-lote4.blend` + `.png` (`lotes/mochilas4.py`) | garras de gelo (35), cartógrafo (46), folha com frutas (47), cristais de gelo (54), robô visor (58), rádio militar (62), nuvem amarrada (64), fornalha (69), garras de ametista (74), explorador com pá (78) |
+| 5 | `assets/skins/mochilas-lote5.blend` + `.png` (`lotes/mochilas5.py`) | cofre de metal (12), camuflada (13), bolsa com cristal (19), rocha de magma (48), malhada (53), chamas de fogo (55), melancia (57), noite estrelada (61), cubos de esmeralda (68), carapaça com joias (71) |
 
 **Falta (estimativa de 05/11):** ~24 temas detalhados (2–3 lotes de 10), ~35 temas "simples com toque" e ~30 de estampa (lotes de ~20, são mais fáceis) e ~15 só de cor (só `Defs/Cosmetics`, sem Blender). Depois do corpo: acessórios, mochilas, livros e caixas (referências em `assets/skins/reference/<categoria>/`). Ainda não feito: importar as skins no Roblox (`Assets.Skins.<id>`) e o `BonecoModel` usar o modelo.

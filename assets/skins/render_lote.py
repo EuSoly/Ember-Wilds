@@ -17,6 +17,8 @@ for f in sorted(glob.glob(os.path.join(here, "lotes", pat + ".py"))):
 if not lote: raise SystemExit(f"nenhum lote para {pat}")
 if tipo == "livro":
     import livro_lib; livro_lib.build_livros(lote, cols=min(5, len(lote)))
+elif tipo == "mochila":
+    import mochila_lib; mochila_lib.build_mochilas(lote, cols=min(5, len(lote)))
 else:
     skin_lib.build(lote, cols=min(5, len(lote)))
 name = pat.replace("*", "")
