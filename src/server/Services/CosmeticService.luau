@@ -10,7 +10,6 @@
 -- possuído falha. Até a loja (F5), a posse vem do comando de dev (DevDataService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local SkinAssets = require(ReplicatedStorage.Shared.Models.SkinAssets)
@@ -187,9 +186,12 @@ local function setupPlayer(player: Player)
 end
 
 function CosmeticService.Start(_self)
-	if RunService:IsStudio() then
-		SkinAssets.organizeStudioImports()
-	end
+	-- Roda também no servidor publicado: as malhas importadas ficam salvas no
+	-- Workspace/ServerStorage do place e o cliente não as enxerga lá (ServerStorage
+	-- não replica e o StreamingEnabled não entrega o Workspace inteiro). Movê-las
+	-- para ReplicatedStorage.Assets no boot as torna visíveis para todos os clientes.
+	-- TODO: organizar uma vez no Studio (Command Bar) e salvar o place já organizado.
+	SkinAssets.organizeStudioImports()
 	DataService.onLoaded(publishOwned)
 	DataService.onLoaded(loadEquipped)
 	Net.EquipCosmetic.On(onEquipRequest)
