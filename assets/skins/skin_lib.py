@@ -34,7 +34,10 @@ def _link(o, coll):
     for c in o.users_collection: c.objects.unlink(o)
     coll.objects.link(o)
 
-def catmull(pts, per=8):
+RES_CURVA = 8  # pontos por trecho das curvas suavizadas; o export para o Roblox baixa para ficar leve
+
+def catmull(pts, per=None):
+    per = per or RES_CURVA
     out = []; n = len(pts)
     for i in range(n):
         p0, p1, p2, p3 = pts[i-1], pts[i], pts[(i+1) % n], pts[(i+2) % n]
@@ -160,7 +163,7 @@ def build(lote, cols=5, dx=9.0, dy=10.0, clear=True):
         fn(s); s.finish()
     return len(bpy.data.objects)
 
-def render_previews(out_prefix, size_per_skin=360):
+def render_previews(out_prefix, size_per_skin=360, cor="MATERIAL"):
     # Duas imagens: <prefixo>-cima.png (reto de cima) e <prefixo>-65.png (câmera do jogo, de frente).
     from mathutils import Vector
     import math as _m
@@ -173,7 +176,7 @@ def render_previews(out_prefix, size_per_skin=360):
     try: sc.render.engine = "BLENDER_WORKBENCH"
     except TypeError: pass
     sh = sc.display.shading
-    sh.light = "STUDIO"; sh.color_type = "MATERIAL"; sh.show_shadows = True; sh.show_cavity = False
+    sh.light = "STUDIO"; sh.color_type = cor; sh.show_shadows = True; sh.show_cavity = False
     sc.render.film_transparent = False
     try: sc.view_settings.view_transform = "Standard"
     except TypeError: pass

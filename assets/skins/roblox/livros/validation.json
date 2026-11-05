@@ -1,0 +1,133 @@
+{
+  "categoria": "livros",
+  "arquivos": 21,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-livros.fbx",
+      "malhas": 22,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_pergaminho.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_mapa.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_tabua.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_paleta.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_presente.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_floresta.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_cristais.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_lava.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_melancia.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_envelope.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_pinheiro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_orbe.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_bussola.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_aberto.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_tentaculo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_engrenagem.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_trepadeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_cogumelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_ondas.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

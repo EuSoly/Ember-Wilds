@@ -64,4 +64,29 @@ Muitos IDs são variações do mesmo tema (tocos com folhas 253–281, raposas 1
 | 4 | `assets/skins/skins-lote4.blend` + `.png` (1 agente, `lotes/lote4.py`) | tartaruga (15), pintinho (8), peixe (27), cenoura (37), tubarão (96), sapo (138), macaco (140), leão (243), bolota (246), vaca (250) |
 | 5 | `assets/skins/skins-lote5.blend` + `.png` (1 agente, `lotes/lote5.py`; cogumelo, vela e slime com ajustes do Elizeu no Blender, já levados ao script) | guaxinim (43), javali (101), cogumelo (168), onça (217), vela (226), bomba (236), fênix (248), yeti (170), besouro (171), slime (195) |
 
+## Exportação para o Roblox
+
+`assets/skins/export_roblox.py` (rodar com `blender -b --factory-startup --python assets/skins/export_roblox.py`) gera `assets/skins/roblox/corpo/` e `assets/skins/roblox/livros/`: FBX geral + individuais, textura de paleta, `.blend` de exportação, `manifest.json`, `validation.json` e `preview.png`. Lotes incluídos na lista `LOTES` do script (acrescentar cada lote novo ali). Corpo = `body_<nome>_corpo` + `body_<nome>_mao` (mão direita, pivô no centro da mão; olhos ficam no código); livro = `book_<nome>_livro`; partes com `emit` saem em `_neon` e com `alpha` em `_translucido` (ajuste de Material/Transparency no Studio). Curvas com `RES_EXPORT = 4` e Decimate acima de 5.000 (corpo) / 1.500 (mão) / 3.000 (livro) triângulos. Detalhes no `assets/skins/roblox/LEIA-ME.md`; conferir a versão exportada com `ferramentas/previa_export.py`.
+
+## Livros (triagem de 05/11/2026)
+
+O livro padrão é o modelo do Elizeu, `ReplicatedStorage.Assets.Tools.book`. As skins de livro seguem as mesmas regras das de corpo (versões nossas por tema, paleta da referência, nada de copiar texto ou arte da capa). Triagem em `assets/skins/triagem/livros/triagem.json`, com pranchas por grupo na mesma pasta:
+
+| Grupo | IDs | Temas | Critério |
+|---|---|---|---|
+| Detalhada | 15 | 14 (pergaminho, mapa rasgado, tábua de pedra, paleta de pintor, cardápio, envelope, pinheiro, presente, orbe, bússola, livro aberto…) | outro objeto no lugar do livro, ou silhueta bem diferente |
+| Simples com toque | 18 | 12 (livro da floresta 51–56, rebites, tentáculo, fechos, cristais, enfaixado, gelo, amarras, cantoneiras, joias, trepadeiras) | livro com enfeite saindo pela borda ou capa em relevo |
+| Simples | 24 | 18 (cores lisas, ondas, cogumelo, camuflado, listrado, lava, melancia, pedra, manchas, biscoitos; os marrons 0/3/4/5/6/18 viram o padrão) | só a capa |
+
+**Base:** `assets/skins/livro_lib.py` — classe `Livro` (mesma API da `Skin`) com `base()` = livro fechado nas medidas do `Assets.Tools.book` (2,37 × 2,68 × 0,53; lombada em -X; contorno só na base para as páginas aparecerem), `build_livros(lote)` e `padrao` (o livro do jogo, referência de escala). Lote de livro = arquivo em `lotes/` com `TIPO = "livro"` e tuplas `(nome, função, capa, borda[, páginas[, lombada]])`; `build_skins.py` e `render_lote.py` reconhecem o tipo. Objetos que não são livro (pergaminho, mapa…) não usam `base()` e ocupam mais ou menos a mesma área. O livro aparece pequeno na mão: poucos elementos grandes.
+
+| Lote | Arquivo | Livros |
+|---|---|---|
+| 1 | `assets/skins/livros-lote1.blend` + `.png` (1 agente, `lotes/livros1.py`, ~148 mil tokens com a correção) | pergaminho (16), mapa (15), tábua de pedra (24), paleta de pintor (28), presente (42), floresta (53), gelo (33), cristais (27), lava (26), melancia (29) |
+| 2 | `assets/skins/livros-lote2.blend` + `.png` (mesmo agente do lote 1, `lotes/livros2.py`, ~187 mil tokens) | envelope (36), pinheiro (40), orbe (44), bússola (49), livro aberto (50), tentáculo (19), engrenagens (43), trepadeira (48), cogumelo (14), ondas (13) |
+
+`lotes/livros2.py` importa funções utilitárias de `lotes/livros1.py` (`barra`, `trilha`, `corta`, `arco`, `folha`, `losango`…); não renomear o lote 1 sem mover essas funções para a `livro_lib`. Desenho de capa em `TOPO + 0,012` (acima da lombada). Reaproveitar o mesmo agente no lote seguinte **não** saiu mais barato: o contexto acumulado dele custou mais que a leitura inicial de um agente novo.
+
+Medida usada: sobreposição (IoU) da silhueta de cada referência com a do livro 0 (todas têm 226×226); os que têm o retângulo do livro mas são outra coisa (cardápio, envelope, folha) foram corrigidos no olho. Capas com título (19, 17, 35) ficam sem o texto.
+
 **Falta (estimativa de 05/11):** ~24 temas detalhados (2–3 lotes de 10), ~35 temas "simples com toque" e ~30 de estampa (lotes de ~20, são mais fáceis) e ~15 só de cor (só `Defs/Cosmetics`, sem Blender). Depois do corpo: acessórios, mochilas, livros e caixas (referências em `assets/skins/reference/<categoria>/`). Ainda não feito: importar as skins no Roblox (`Assets.Skins.<id>`) e o `BonecoModel` usar o modelo.

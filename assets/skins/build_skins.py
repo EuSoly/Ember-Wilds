@@ -9,8 +9,12 @@ for p in (_here, os.path.join(_here, "lotes")):
     if p not in sys.path: sys.path.insert(0, p)
 import skin_lib; importlib.reload(skin_lib)
 _pat = globals().get("LOTE_ESCOLHIDO", "lote2")
-_lote = []
+_lote, _tipo = [], "corpo"
 for f in sorted(glob.glob(os.path.join(_here, "lotes", _pat + ".py"))):
     m = importlib.import_module(os.path.splitext(os.path.basename(f))[0]); importlib.reload(m)
-    _lote += m.LOTE
-print("skins:", len(_lote), "objetos:", skin_lib.build(_lote))
+    _lote += m.LOTE; _tipo = getattr(m, "TIPO", _tipo)
+if _tipo == "livro":
+    import livro_lib; importlib.reload(livro_lib)
+    print("livros:", len(_lote), "objetos:", livro_lib.build_livros(_lote))
+else:
+    print("skins:", len(_lote), "objetos:", skin_lib.build(_lote))

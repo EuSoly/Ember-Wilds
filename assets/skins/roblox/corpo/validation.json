@@ -1,0 +1,313 @@
+{
+  "categoria": "corpo",
+  "arquivos": 51,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-corpo.fbx",
+      "malhas": 111,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lobo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_raposa.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_coruja.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_polvo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_caranguejo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_abelha.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_dragao.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_coelho.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_arbusto.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_nuvem.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_abobora.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_morcego.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_chama.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estrela.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_concha.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_aranha.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cervo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_axolote.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_ourico.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_morango.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_anjo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_diabinho.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_gato.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_coala.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_mamute.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_papagaio.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cacto.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_maca.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_toco.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lula.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_tartaruga.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_pintinho.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_peixe.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cenoura.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_tubarao.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_sapo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_macaco.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_leao.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_bolota.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_vaca.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_guaxinim.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_javali.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cogumelo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_onca.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_vela.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_bomba.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_fenix.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_yeti.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_besouro.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_slime.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

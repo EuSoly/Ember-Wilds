@@ -10,11 +10,15 @@ args = sys.argv[sys.argv.index("--") + 1:]
 pat, out_dir = args[0], args[1]
 os.makedirs(out_dir, exist_ok=True)
 import bpy, skin_lib
-lote = []
+lote, tipo = [], "corpo"
 for f in sorted(glob.glob(os.path.join(here, "lotes", pat + ".py"))):
-    lote += importlib.import_module(os.path.splitext(os.path.basename(f))[0]).LOTE
+    m = importlib.import_module(os.path.splitext(os.path.basename(f))[0])
+    lote += m.LOTE; tipo = getattr(m, "TIPO", tipo)
 if not lote: raise SystemExit(f"nenhum lote para {pat}")
-skin_lib.build(lote, cols=min(5, len(lote)))
+if tipo == "livro":
+    import livro_lib; livro_lib.build_livros(lote, cols=min(5, len(lote)))
+else:
+    skin_lib.build(lote, cols=min(5, len(lote)))
 name = pat.replace("*", "")
-print("prévias:", skin_lib.render_previews(os.path.join(out_dir, name)))
+print("prévias:", skin_lib.render_previews(os.path.join(out_dir, name), size_per_skin=(800 if tipo == "livro" else 360)))
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out_dir, name + ".blend"))
