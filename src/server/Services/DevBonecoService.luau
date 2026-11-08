@@ -2,7 +2,7 @@
 -- SÓ PARA DESENVOLVIMENTO (roda apenas no Studio).
 -- Comandos para testar o boneco (use na barra de comandos do Studio, lado servidor):
 -- - ServerStorage.DevHurt:Invoke(player, 10): dano no jogador (careta + flash).
--- - ServerStorage.DevCosmetic:Invoke(player, "body_ember") -> boolean: troca a skin
+-- - ServerStorage.DevCosmetic:Invoke(player, "body_lobo") -> boolean: troca a skin
 --   (só se o jogador a possui: antes, ServerStorage.DevGrantCosmetic do DevDataService).
 -- - ServerStorage.DevCrowd:Invoke(30) -> number: cria 30 bonecos de teste andando
 --   em círculo, batendo, trocando o item na mão e levando dano (0 = só apaga).
@@ -32,7 +32,7 @@ local GALLERY_SPACING_Z = 7 -- studs entre as fileiras
 local GALLERY_SWING = "Golpear" -- atributo da pasta: true = os bonecos golpeiam
 local CROWD_CENTER = Vector3.new(0, 0, 40)
 local CROWD_RADIUS = 24
-local CROWD_SKINS = { "body_default", "body_ember" }
+local CROWD_SKINS = { "body_default", "body_lobo" }
 local TICK = 0.2 -- segundos entre atualizações da multidão
 local STEP_ANGLE = math.rad(20) -- quanto à frente no círculo cada boneco mira
 local USE_PERIOD = 3 -- Using ligado metade do tempo (1,5 s) e desligado a outra metade

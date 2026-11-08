@@ -452,8 +452,8 @@ return {
 
 	["real cosmetics and expressions load"] = function()
 		assert(Defs.CosmeticSlots.body.default == "body_default", "padrão do slot body")
-		local ember = Defs.Cosmetics.body_ember.body
-		assert(ember ~= nil and ember.outlineColor == "#5F1802", "contorno da skin brasa")
+		local lobo = Defs.Cosmetics.body_lobo.body
+		assert(lobo ~= nil and lobo.outlineColor == "#324050", "contorno da skin lobo")
 		assert(Defs.Expressions.hurt.priority == 100, "prioridade do dano")
 		assert(Defs.Expressions.blink.intervalMax == 6, "intervalo máximo do piscar")
 	end,
@@ -626,13 +626,13 @@ return {
 	["real kits load"] = function()
 		local kit = Defs.Kits.kit_survivor
 		assert(kit.price == 4000, `preço do kit_survivor: {kit.price}`)
-		local hasBag = false
+		local hasPickaxe = false
 		for _, item in kit.items do
-			if item.id == "leather_bag" then
-				hasBag = true
+			if item.id == "gold_pickaxe" then
+				hasPickaxe = true
 			end
 		end
-		assert(hasBag, "kit_survivor deveria ter leather_bag")
+		assert(hasPickaxe, "kit_survivor deveria ter gold_pickaxe")
 	end,
 
 	["valid fake kits give no errors"] = function()

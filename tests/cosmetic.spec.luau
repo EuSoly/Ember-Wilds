@@ -4,8 +4,8 @@ local Defs = require("../src/shared/Defs")
 
 return {
 	["known id returns that cosmetic"] = function()
-		local def = Cosmetic.resolve(Defs, "body", "body_ember")
-		assert(def.id == "body_ember", `esperava body_ember, veio {def.id}`)
+		local def = Cosmetic.resolve(Defs, "body", "body_lobo")
+		assert(def.id == "body_lobo", `esperava body_lobo, veio {def.id}`)
 	end,
 
 	["nil id returns the slot default"] = function()

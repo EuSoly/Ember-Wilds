@@ -28,13 +28,13 @@ local create = vide.create
 
 -- Pose ajustada no olho (em relação à raiz do boneco; a frente é -Z).
 local BOOK_OFFSET = CFrame.new(0, 0.25, -2.75)
-local HAND_X = 1.3 -- mãos nas bordas do livro
+local HAND_X = 1.4 -- mãos nas bordas do livro
 local HAND_Y = 0.2
 local HAND_Z = -2.85
 -- Câmera de frente e um pouco de cima.
-local CAMERA_DIRECTION = Vector3.new(0, 0.8, -1.1).Unit
-local CAMERA_FOV = 30
-local CAMERA_MARGIN = 0.85 -- < 1 aproxima (a caixa do modelo é maior que o desenho)
+local CAMERA_DIRECTION = Vector3.new(0, 0.8, -0.5).Unit
+local CAMERA_FOV = 60
+local CAMERA_MARGIN = 1.1 -- < 1 aproxima (a caixa do modelo é maior que o desenho)
 
 -- Skins mostradas no lugar das equipadas (campo nil = a equipada).
 export type Override = { body: string?, bag: string?, book: string? }

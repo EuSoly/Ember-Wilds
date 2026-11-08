@@ -7,6 +7,11 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Morte do mob frágil:** no `MobService.die`, o `ScoreService.add` roda fora do `pcall`; se falhar, a caixa (aviso `onDeath`) não sai. Foi assim que o limite de atributos derrubou os drops.
 - **Folga no Player:** ainda são ~23 atributos lá (`Setting_*`, `Cosmetic_*`, barras...). Se as configurações crescerem muito, levar `Setting_*` para uma pasta também.
 
+## Skins 3D (08/11)
+
+- **Raridades das skins de corpo:** as 101 skins 3D estão todas com `rarity = 1` (Comum), então o giro de Skins só sorteia Comum. O Elizeu vai definir as raridades; depois religar a checagem "body: sem item de raridade" em `tests/mockstore.spec.luau` (giro do corpo, do livro e do acessório).
+- **Kits sem mochila:** `kit_survivor` e `kit_veteran` não dão mais `leather_bag` (rebalanceio de 08/11); conferir se foi de propósito.
+
 ## Cosméticos (UI 5, 04/11)
 
 - **Aparência em 3D a conferir quando os modelos das skins chegarem:** tamanho e posição da mochila nas costas (`BagModel`), enquadramento dos itens nos quadradinhos (`ItemViewport`), nomes pequenos nas amostras dos cartões da loja no celular.

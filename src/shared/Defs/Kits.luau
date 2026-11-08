@@ -15,9 +15,11 @@ local Kits: { [string]: KitDef } = {
 		order = 1,
 		price = 0,
 		items = {
-			{ id = "berry", count = 8 },
+			{ id = "berry", count = 10 },
 			{ id = "wood", count = 20 },
-			{ id = "book", count = 1 },
+			{ id = "stone", count = 20 },
+			{ id = "wood_pickaxe", count = 1 },
+			{ id = "campfire", count = 1 },
 		},
 	},
 	kit_explorer = {
@@ -28,8 +30,9 @@ local Kits: { [string]: KitDef } = {
 		items = {
 			{ id = "berry", count = 16 },
 			{ id = "wood", count = 40 },
-			{ id = "stone", count = 20 },
-			{ id = "wood_pickaxe", count = 1 },
+			{ id = "stone", count = 40 },
+			{ id = "stone_pickaxe", count = 1 },
+			{ id = "campfire", count = 2 },
 		},
 	},
 	kit_survivor = {
@@ -41,8 +44,8 @@ local Kits: { [string]: KitDef } = {
 			{ id = "berry", count = 20 },
 			{ id = "wood", count = 140 },
 			{ id = "stone", count = 80 },
-			{ id = "stone_pickaxe", count = 1 },
-			{ id = "leather_bag", count = 1 },
+			{ id = "gold_pickaxe", count = 1 },
+			{ id = "big_campfire", count = 2 },
 		},
 	},
 	kit_veteran = {
@@ -53,10 +56,11 @@ local Kits: { [string]: KitDef } = {
 		items = {
 			{ id = "berry", count = 30 },
 			{ id = "wood", count = 200 },
-			{ id = "stone", count = 150 },
+			{ id = "stone", count = 200 },
 			{ id = "gold", count = 20 },
 			{ id = "gold_pickaxe", count = 1 },
-			{ id = "leather_bag", count = 1 },
+			{ id = "gold_sword", count = 1 },
+			{ id = "big_campfire", count = 4 },
 		},
 	},
 }

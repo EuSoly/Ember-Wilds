@@ -4,9 +4,9 @@
 -- parecida e troque os campos:
 --
 --   id        nome único, só a-z, 0-9 e _ (a chave da tabela é igual ao id).
---             Convenção: "<slot>_<nome>", ex. body_musgo.
+--             Convenção: "<slot>_<nome>", ex. body_lobo.
 --   nameKey   "cosmetic.<id>"; o texto em pt-BR vai em Strings/ptBR.luau,
---             ex. ["cosmetic.body_musgo"] = "Musgo".
+--             ex. ["cosmetic.body_lobo"] = "Lobo".
 --   slot      onde a skin se aplica: "body" (corpo), "bag" (mochila),
 --             "crate" (caixa de itens) ou "book" (livro).
 --   rarity    1 Comum, 2 Raro, 3 Épico, 4 Lendário, 5 Mítico (define a cor da
@@ -36,70 +36,6 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		rarity = 1,
 		body = { bodyColor = "#DDF3F8", outlineColor = "#1F6F7A" },
 	},
-	body_musgo = {
-		id = "body_musgo",
-		nameKey = "cosmetic.body_musgo",
-		slot = "body",
-		rarity = 1,
-		body = { bodyColor = "#A9C98B", outlineColor = "#3F5F2A" },
-	},
-	body_areia = {
-		id = "body_areia",
-		nameKey = "cosmetic.body_areia",
-		slot = "body",
-		rarity = 2,
-		body = { bodyColor = "#E8D3A2", outlineColor = "#7A5F2B" },
-	},
-	body_cobalto = {
-		id = "body_cobalto",
-		nameKey = "cosmetic.body_cobalto",
-		slot = "body",
-		rarity = 2,
-		body = { bodyColor = "#5B8FE0", outlineColor = "#1B3A73" },
-	},
-	body_ember = {
-		id = "body_ember",
-		nameKey = "cosmetic.body_ember",
-		slot = "body",
-		rarity = 3,
-		body = { bodyColor = "#D8250D", outlineColor = "#5F1802" },
-	},
-	body_orquidea = {
-		id = "body_orquidea",
-		nameKey = "cosmetic.body_orquidea",
-		slot = "body",
-		rarity = 3,
-		body = { bodyColor = "#C58BE8", outlineColor = "#58267A" },
-	},
-	body_ambar = {
-		id = "body_ambar",
-		nameKey = "cosmetic.body_ambar",
-		slot = "body",
-		rarity = 3,
-		body = { bodyColor = "#F0A92E", outlineColor = "#7A4A07" },
-	},
-	body_aurora = {
-		id = "body_aurora",
-		nameKey = "cosmetic.body_aurora",
-		slot = "body",
-		rarity = 4,
-		body = { bodyColor = "#6EE7B7", outlineColor = "#116149" },
-	},
-	body_solar = {
-		id = "body_solar",
-		nameKey = "cosmetic.body_solar",
-		slot = "body",
-		rarity = 4,
-		body = { bodyColor = "#FFE066", outlineColor = "#9A6A00" },
-	},
-	body_eclipse = {
-		id = "body_eclipse",
-		nameKey = "cosmetic.body_eclipse",
-		slot = "body",
-		rarity = 5,
-		body = { bodyColor = "#2A2540", outlineColor = "#FF4545" },
-	},
-
 	body_lobo = {
 		id = "body_lobo",
 		nameKey = "cosmetic.body_lobo",

@@ -34,7 +34,7 @@ local CORRECTION_BY_PREFIX: { [string]: CFrame } = {
 	book = CFrame.identity,
 }
 
-local partCache: { [string]: BasePart } = {}
+local partCache: { [string]: BasePart? } = {}
 
 local function correctionFor(skinId: string): CFrame
 	local prefix = prefixOf(skinId)
@@ -127,7 +127,7 @@ function SkinAssets.organizeStudioImports(): number
 				local clean = cleanMeshName(inst.Name)
 				if clean then
 					local info = SkinManifest.PARTS[clean]
-					table.insert(foundParts, { part = inst, name = clean, info = info })
+					table.insert(foundParts, { part = inst :: BasePart, name = clean, info = info })
 					-- Se veio de um Model importado no Workspace (ex. Workspace["skins-corpo"]),
 					-- marca o container raiz no Workspace para limpeza depois de mover as peças.
 					local top: Instance? = inst.Parent
@@ -162,14 +162,14 @@ function SkinAssets.organizeStudioImports(): number
 			skinModel = created
 		end
 
-		local existing = skinModel:FindFirstChild(item.name)
+		local existing = (skinModel :: Instance):FindFirstChild(item.name)
 		if existing and existing ~= item.part then
 			existing:Destroy()
 		end
 
 		item.part.Name = item.name
 		styleTemplatePart(item.part, info)
-		item.part.Parent = skinModel
+		item.part.Parent = skinModel :: Instance
 		partCache[item.name] = item.part
 		count += 1
 	end

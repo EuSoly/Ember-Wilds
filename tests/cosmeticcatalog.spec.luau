@@ -12,7 +12,7 @@ end
 return {
 	["items body starts at default and rarity never decreases"] = function()
 		local items = CosmeticCatalog.items("body")
-		assert(#items == 110, `esperava 110 skins de corpo, veio {#items}`)
+		assert(#items == 101, `esperava 101 skins de corpo, veio {#items}`)
 		assert(items[1].id == "body_default", "primeiro deve ser body_default")
 		for i = 2, #items do
 			assert(items[i].rarity >= items[i - 1].rarity, "raridade decresceu")
@@ -23,7 +23,7 @@ return {
 		for _, item in CosmeticCatalog.spinItems("body") do
 			assert(item.id ~= "body_default", "padrão não entra no giro")
 		end
-		assert(#CosmeticCatalog.spinItems("body") == 109, "109 skins no giro do corpo")
+		assert(#CosmeticCatalog.spinItems("body") == 100, "100 skins no giro do corpo")
 	end,
 
 	["spinItems book includes all book skins"] = function()

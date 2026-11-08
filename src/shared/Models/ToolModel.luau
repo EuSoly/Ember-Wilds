@@ -95,7 +95,10 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 				model.PrimaryPart = handle
 
 				local source = template("book")
-				local sourceHandle = source and (if source:IsA("Model") then source.PrimaryPart else (source:FindFirstChild("Handle") :: BasePart?))
+				local sourceHandle = source
+					and (
+						if source:IsA("Model") then source.PrimaryPart else source:FindFirstChild("Handle") :: BasePart?
+					)
 				local sourceGrip = sourceHandle and sourceHandle:FindFirstChild("Grip")
 
 				local grip = Instance.new("Attachment")

@@ -226,8 +226,8 @@ local SS = game:GetService("ServerStorage")
 local player = game.Players:GetPlayers()[1]
 
 SS.DevHurt:Invoke(player, 10) -- dano: "> <", flash vermelho e -10 de vida
-SS.DevGrantCosmetic:Invoke(player, "body_ember") -- dá a posse (DevDataService); sem isso a troca falha
-print(SS.DevCosmetic:Invoke(player, "body_ember")) -- troca a skin e salva (false se não existe ou não possui)
+SS.DevGrantCosmetic:Invoke(player, "body_lobo") -- dá a posse (DevDataService); sem isso a troca falha
+print(SS.DevCosmetic:Invoke(player, "body_lobo")) -- troca a skin e salva (false se não existe ou não possui)
 SS.DevCosmetic:Invoke(player, "body_default") -- volta à padrão (sempre possuída)
 print(SS.DevCrowd:Invoke(30)) -- 30 bonecos de teste em círculo em volta de (0, 0, 40)
 SS.DevCrowd:Invoke(0) -- apaga os bonecos de teste

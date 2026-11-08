@@ -8,7 +8,7 @@
 -- - ServerStorage.DevCurrency:Invoke(player, 100) -> number: dá (positivo) ou
 --   tira (negativo) Golden Ember, sem tetos; devolve o saldo.
 -- - ServerStorage.DevStat:Invoke(player, "mobs_killed", 10, "cow"): soma numa estatística.
--- - ServerStorage.DevGrantCosmetic:Invoke(player, "body_ember") -> boolean: dá a posse.
+-- - ServerStorage.DevGrantCosmetic:Invoke(player, "body_lobo") -> boolean: dá a posse.
 -- - ServerStorage.DevProfile:Invoke(player) -> string: o perfil atual em JSON.
 -- - ServerStorage.DevResetProfile:Invoke(player) -> boolean: apaga o perfil de
 --   dev (store Dev_) e expulsa o jogador.

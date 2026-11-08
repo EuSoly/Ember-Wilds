@@ -241,7 +241,7 @@ SS.DevEndLife:Invoke(player) -- morte de teste (+12 Golden Ember, 12345 KitPoint
 print(SS.DevCurrency:Invoke(player, 100)) -- +100 sem tetos; devolve o saldo
 print(SS.DevCurrency:Invoke(player, -30)) -- gasta 30 (não gasta se faltar saldo)
 SS.DevStat:Invoke(player, "mobs_killed", 10, "cow") -- soma numa estatística
-print(SS.DevGrantCosmetic:Invoke(player, "body_ember")) -- dá a posse da skin
+print(SS.DevGrantCosmetic:Invoke(player, "body_lobo")) -- dá a posse da skin
 print(SS.DevProfile:Invoke(player)) -- o perfil atual em JSON
 SS.DevResetProfile:Invoke(player) -- apaga o perfil de dev e expulsa
 ```

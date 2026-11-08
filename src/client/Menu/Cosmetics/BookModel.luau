@@ -24,7 +24,7 @@ local warnedMissing = false
 -- passado) com a inclinação da capa para a câmera. Para skins com partes neon,
 -- as partes extras vão como filhas soldadas na peça principal.
 function BookModel.clone(cosmeticId: string?, baseCFrame: CFrame?): BasePart?
-	local resolved = if (cosmeticId == nil or cosmeticId == "book_default") then "book_pergaminho" else cosmeticId
+	local resolved = if cosmeticId == nil or cosmeticId == "book_default" then "book_pergaminho" else cosmeticId
 	if resolved ~= nil and SkinAssets.hasSkin(resolved) then
 		local partNames = SkinManifest.PARTS_BY_SKIN[resolved]
 		if partNames ~= nil then
