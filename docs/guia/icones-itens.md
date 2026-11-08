@@ -65,7 +65,24 @@ Pasta `assets/resources/mob-drops/roblox/` (ver o `LEIA-ME.md` de lá). Segue o 
 
 `validate_roblox_export.py` reimporta todos os FBXs e confere triângulos, material, UV, textura, dimensões e origem.
 
+## No jogo (08/11)
+
+- Importação: `food.fbx` e `mob-drops.fbx` por File > Import 3D e depois `scripts/studio/import-icons.luau` (Edit), que transforma cada MeshPart em `ReplicatedStorage.Assets.Icons/<id>` (Model, pivô no centro da base, ancorado, sem colisão). Ícone antigo de mesmo nome vai para `ServerStorage.IconesAntigos`.
+- O `ItemIcon` (slot do inventário, baú, caixa, craft, kits) procura o modelo em `Assets.Icons/<id>`, depois `Assets.Tools/<id>` (ferramentas e armas: vistas pelo lado largo, na diagonal, ponta em cima à direita) e depois `Assets.Structures/<id>` (construções, de cima como os ícones). Sem modelo, mostra as iniciais (hoje: capacetes, protetor de orelha, mochila de couro, papel, balde com água).
+
+### Ajustar a vista de um item
+
+Atributos opcionais no molde (`Assets.Icons/Tools/Structures/<id>`), editados no Properties do Studio:
+
+| Atributo | Tipo | Efeito |
+|---|---|---|
+| `IconeGiro` | Vector3 (graus) | X inclina (cima/baixo), Y vira (esq./dir.), Z gira no plano da tela |
+| `IconeZoom` | número | 1 = enche o quadro; 1,3 = 30% maior; 0,8 = menor |
+| `IconeDesloca` | Vector2 | move o modelo no quadro em frações dele (0,1, 0 = 10% para a direita) |
+
+Para ver ao vivo, rode `scripts/studio/icon-bench.luau` na barra de comando (Edit): ele monta `StarterGui.BancadaIcones` com todos os ícones e o id embaixo; o ícone muda na hora em que o atributo muda. Os atributos vivem no place: salve o place. Antes de publicar, apague a bancada (`APAGAR = true` no script).
+
 ## Pendências
 
-- Importar no Studio, guardar os modelos (ex.: `ReplicatedStorage.Assets`) e montar o ViewportFrame do inventário.
+- Modelos para capacetes, protetor de orelha, mochila de couro, papel e balde com água.
 - Os outros itens da wiki que ainda não existem no jogo seguem o mesmo fluxo.
