@@ -138,6 +138,36 @@ return {
 		assert(math.abs(wait - 0.3) < 1e-9, `dentro da janela: espera o resto ({wait})`)
 	end,
 
+	["the player sees themself with the current value"] = function()
+		local top = { { UserId = 10, Name = "A", Value = 50 }, { UserId = 20, Name = "B", Value = 5 } }
+		local merged, position = RankRules.withPlayer(top, 99, "Eu", 7, 100)
+		assert(position == 2, `posição {position}`)
+		assert(merged[2].UserId == 99 and merged[2].Value == 7 and merged[3].UserId == 20, "entra no lugar certo")
+		assert(#top == 2, "não mexe na lista do cache")
+	end,
+
+	["an old entry of the player is replaced by the current value"] = function()
+		local top = { { UserId = 99, Name = "Eu", Value = 1 }, { UserId = 10, Name = "A", Value = 3 } }
+		local merged, position = RankRules.withPlayer(top, 99, "Eu", 9, 100)
+		assert(position == 1 and #merged == 2 and merged[2].UserId == 10, "uma linha só, com o valor novo")
+	end,
+
+	["empty board shows the player first; zero stays out"] = function()
+		local merged, position = RankRules.withPlayer({}, 99, "Eu", 2, 100)
+		assert(position == 1 and #merged == 1, "placar vazio: 1º")
+		local none, outside = RankRules.withPlayer({ { UserId = 10, Name = "A", Value = 3 } }, 99, "Eu", 0, 100)
+		assert(outside == 0 and #none == 1, "sem valor: fora da lista")
+	end,
+
+	["beyond the read size the player stays out"] = function()
+		local top = {}
+		for i = 1, 3 do
+			top[i] = { UserId = i, Name = "x", Value = 100 - i }
+		end
+		local merged, position = RankRules.withPlayer(top, 99, "Eu", 1, 3)
+		assert(position == 0 and #merged == 3, "abaixo do último lido: fora")
+	end,
+
 	["countdown picks the right unit"] = function()
 		local key, args = RankRules.countdown(3 * 86400 + 5 * 3600 + 10)
 		assert(key == "rank.ends.days" and args.d == 3 and args.h == 5, `{key} {args.d} {args.h}`)

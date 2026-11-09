@@ -264,17 +264,27 @@ local function answer(player: Player, index: number)
 	local week = RankRules.weekIndex(os.time())
 	local top = readTop(category, week)
 	local state = RankService.state(player)
+	local myValue = if state then math.clamp((state :: any)[category], 0, 4294967295) else 0
+	-- O top pode estar alguns minutos atrás (cache): quem pede se vê com o valor
+	-- atual, no lugar certo (a posição nunca contradiz o valor).
+	local merged, position = RankRules.withPlayer(
+		top.entries,
+		player.UserId,
+		string.sub(player.DisplayName, 1, 40),
+		myValue,
+		RankConfig.READ_SIZE
+	)
 	local list = {}
-	for i = 1, math.min(#top.entries, RankConfig.LIST_SIZE) do
-		list[i] = top.entries[i]
+	for i = 1, math.min(#merged, RankConfig.LIST_SIZE) do
+		list[i] = merged[i]
 	end
 	Net.RankingData.Fire(player, {
 		Category = index,
 		Ok = top.ok,
 		EndsAt = RankRules.weekEnd(week),
 		Entries = list,
-		MyValue = if state then math.clamp((state :: any)[category], 0, 4294967295) else 0,
-		MyPosition = math.min(RankRules.position(top.entries, player.UserId), 65535),
+		MyValue = myValue,
+		MyPosition = math.min(position, 65535),
 	})
 end
 

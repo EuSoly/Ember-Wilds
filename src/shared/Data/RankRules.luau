@@ -175,6 +175,44 @@ function RankRules.requestDelay(lastAt: number?, now: number, minInterval: numbe
 	return math.max(0, minInterval - (now - lastAt))
 end
 
+-- A lista que o jogador vê: o top lido (que pode ter até alguns minutos de
+-- cache) com ele mesmo no valor atual da semana, no lugar certo. Assim ele se
+-- vê na hora e a posição nunca contradiz o valor. Devolve uma lista nova (não
+-- mexe na do cache) e a posição dele (0 = fora dos `limit` primeiros ou sem valor).
+function RankRules.withPlayer(
+	entries: { any },
+	userId: number,
+	name: string,
+	value: number,
+	limit: number
+): ({ any }, number)
+	local merged = {}
+	for _, entry in entries do
+		if entry.UserId ~= userId then
+			table.insert(merged, entry)
+		end
+	end
+	if value <= 0 then
+		return merged, 0
+	end
+	-- Empate: quem já estava fica na frente.
+	local position = #merged + 1
+	for index, entry in merged do
+		if value > entry.Value then
+			position = index
+			break
+		end
+	end
+	if position > limit then
+		return merged, 0
+	end
+	table.insert(merged, position, { UserId = userId, Name = name, Value = value })
+	while #merged > limit do
+		table.remove(merged)
+	end
+	return merged, position
+end
+
 -- Texto do "termina em…": chave em Strings e os números dela.
 function RankRules.countdown(seconds: number): (string, { [string]: number })
 	seconds = math.max(0, math.floor(seconds))
