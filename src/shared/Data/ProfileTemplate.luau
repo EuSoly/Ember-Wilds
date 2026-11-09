@@ -2,6 +2,7 @@
 -- Template do perfil salvo (schema v1). O ProfileStore usa no Reconcile() para
 -- completar campos que faltam em perfis antigos. Nada de nomes ou chat aqui (GDPR).
 local DataConfig = require("./DataConfig")
+local RankRules = require("./RankRules")
 local SettingsRules = require("./SettingsRules")
 local Types = require("../Defs/Types")
 
@@ -18,6 +19,9 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		-- janela do teto de XP por hora. O XP em si é a estatística xp_total.
 		Xp = { Seeded = false, HourWindowStart = 0, HourEarned = 0 },
 		Settings = SettingsRules.defaults(defs.Settings),
+		-- Ranking semanal: valores da semana (RankRules.WeekState). A semana 0
+		-- nunca é a atual: o RankService troca por uma zerada na primeira leitura.
+		Ranking = RankRules.empty(0),
 		-- Reservado para as compras com Robux (F5/loja), padrão do ProfileStore.
 		PurchaseIdCache = {},
 	}

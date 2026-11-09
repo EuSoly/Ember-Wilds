@@ -39,6 +39,7 @@ local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
+local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 local ScoreService = require(script.Parent.ScoreService)
 local StructureService = require(script.Parent.StructureService)
@@ -122,6 +123,11 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	-- no menu os levaria para a próxima vida.
 	if validKiller and validKiller.Character ~= nil then
 		ScoreService.add(validKiller, CrateRules.killBonus(scoreOf(player)))
+	end
+	-- Abate de jogador (golpe final): Perfil e ranking da semana.
+	if validKiller then
+		StatsService.add(validKiller, "players_killed", 1)
+		RankService.addKill(validKiller, "players", tostring(player.UserId))
 	end
 	-- nil = sem vida ativa ou sem perfil: a tela de morte mostra zeros.
 	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0, xp = 0 }

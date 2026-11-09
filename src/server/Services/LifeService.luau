@@ -18,6 +18,7 @@ local LifeRules = require(ReplicatedStorage.Shared.Data.LifeRules)
 local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
+local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 
 local LifeService = {}
@@ -70,6 +71,7 @@ function LifeService.endLife(player: Player): LifeSummary?
 	if xp > 0 then
 		StatsService.add(player, "xp_total", xp)
 	end
+	RankService.addLife(player, { points = score, days = days, xp = xp })
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
 	return { points = score, days = days, currency = granted, xp = xp }

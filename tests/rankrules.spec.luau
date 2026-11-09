@@ -1,4 +1,6 @@
 --!strict
+local Defs = require("../src/shared/Defs")
+local ProfileTemplate = require("../src/shared/Data/ProfileTemplate")
 local RankRules = require("../src/shared/Data/RankRules")
 
 -- Instantes reais (unix) em Brasília, UTC−3.
@@ -17,6 +19,14 @@ local function sameList(got: { string }, expected: { string })
 end
 
 return {
+	["profile template has the week state"] = function()
+		local ranking = ProfileTemplate.build(Defs :: any).Ranking
+		assert(type(ranking) == "table", "perfil sem Ranking")
+		for _, category in { "points", "xp", "days", "players", "creatures" } do
+			assert(ranking[category] == 0, `{category} deveria começar em 0`)
+		end
+	end,
+
 	["week turns on monday 00:00 in Brasilia"] = function()
 		assert(RankRules.weekIndex(SUN_08_2359) == 2965, `domingo: {RankRules.weekIndex(SUN_08_2359)}`)
 		assert(RankRules.weekIndex(MON_09_0000) == 2966, `segunda: {RankRules.weekIndex(MON_09_0000)}`)

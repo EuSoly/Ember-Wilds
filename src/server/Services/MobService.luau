@@ -55,6 +55,7 @@ local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local CharacterService = require(script.Parent.CharacterService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
+local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 local StructureService = require(script.Parent.StructureService)
 
@@ -559,6 +560,7 @@ local function die(mob: Mob, killer: Player?)
 	if killer then
 		ScoreService.add(killer, mob.stats.points)
 		StatsService.add(killer, "mobs_killed", 1, mob.id)
+		RankService.addKill(killer, "creatures", nil)
 	end
 	for _, listener in deathListeners do
 		local ok, err = pcall(listener :: any, mob, killer)
