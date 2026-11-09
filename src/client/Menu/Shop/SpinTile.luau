@@ -11,6 +11,7 @@ local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
+local RarityBackground = require(Client:WaitForChild("UI"):WaitForChild("RarityBackground"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ItemViewport = require(Client:WaitForChild("Menu"):WaitForChild("Cosmetics"):WaitForChild("ItemViewport"))
 
@@ -165,18 +166,29 @@ local function art(typeId: string, color: Color3): Frame
 end
 
 local function tileFrame(content: () -> Instance, rarity: number, props: { [any]: any }): Frame
-	local rarityColor = Color3.fromHex(MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)].color)
-	local frame = create("Frame")({
-		BackgroundColor3 = Color3.new(1, 1, 1),
-		BorderSizePixel = 0,
-		create("UICorner")({ CornerRadius = UDim.new(0.1, 0) }),
-		create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
-		-- Fundo na cor da raridade, mais claro em cima.
-		create("UIGradient")({
-			Rotation = 90,
-			Color = ColorSequence.new(shade(rarityColor, 1.3), shade(rarityColor, 0.75)),
-		}),
-	}) :: Frame
+	local background = RarityBackground.build(rarity)
+	local frame: Frame
+	if background then
+		-- Arte do fundo da raridade (com contorno e brilho próprios).
+		frame = create("Frame")({
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			background,
+		}) :: Frame
+	else
+		local rarityColor = Color3.fromHex(MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)].color)
+		frame = create("Frame")({
+			BackgroundColor3 = Color3.new(1, 1, 1),
+			BorderSizePixel = 0,
+			create("UICorner")({ CornerRadius = UDim.new(0.1, 0) }),
+			create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+			-- Fundo na cor da raridade, mais claro em cima.
+			create("UIGradient")({
+				Rotation = 90,
+				Color = ColorSequence.new(shade(rarityColor, 1.3), shade(rarityColor, 0.75)),
+			}),
+		}) :: Frame
+	end
 	local holder = create("Frame")({
 		Name = "ArtBox",
 		AnchorPoint = Vector2.new(0.5, 0),

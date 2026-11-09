@@ -30,6 +30,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Menu = script.Parent.Parent
 local Client = Menu.Parent
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local RarityBackground = require(Client:WaitForChild("UI"):WaitForChild("RarityBackground"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(Menu:WaitForChild("MenuState"))
@@ -93,16 +94,27 @@ end
 local function tile(id: string, order: number): Frame
 	local def = Defs.Cosmetics[id]
 	local rarity = MockStore.RARITIES[def.rarity] or MockStore.RARITIES[1]
+	local art = RarityBackground.build(def.rarity)
 	local frame = create("Frame")({
 		Name = "Tile_" .. id,
 		LayoutOrder = order,
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = Color3.fromHex(rarity.color),
+		-- Com a arte do fundo da raridade (que tem contorno), sem fundo nem traço.
+		BackgroundTransparency = if art then 1 else 0,
 		BorderSizePixel = 0,
 		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
 		create("UICorner")({ CornerRadius = UDim.new(0, 6) }),
-		create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+		create("UIStroke")({
+			Color = R.outline,
+			Thickness = 2,
+			Transparency = if art then 1 else 0,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+		}),
 	}) :: Frame
+	if art then
+		art.Parent = frame
+	end
 	ItemViewport.build(id).Parent = frame
 	return frame
 end

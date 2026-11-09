@@ -34,6 +34,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Menu = script.Parent.Parent
 local Client = Menu.Parent
 local Net = require(Client:WaitForChild("Net"))
+local RarityBackground = require(Client:WaitForChild("UI"):WaitForChild("RarityBackground"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuBoneco = require(Menu:WaitForChild("MenuBoneco"))
@@ -168,8 +169,14 @@ local function tile(state: Slot, id: string, i: number, rect: (i: number) -> Cos
 	props.Name = "Tile_" .. id
 	props.Text = ""
 	props.AutoButtonColor = true
+	local art = RarityBackground.build(def.rarity)
 	props.BackgroundColor3 = Color3.fromHex(rarity.color)
+	-- Com a arte do fundo da raridade, o fundo do botão some (a arte cobre).
+	props.BackgroundTransparency = if art then 1 else 0
 	props.BorderSizePixel = 0
+	if art then
+		table.insert(props, art)
+	end
 	props.Activated = function()
 		if state.has(id) and vide.untrack(state.equipped) ~= id then
 			Net.EquipCosmetic.Fire({ Id = id })
@@ -185,6 +192,10 @@ local function tile(state: Slot, id: string, i: number, rect: (i: number) -> Cos
 			end,
 			Thickness = function()
 				return stroke().thickness
+			end,
+			-- A arte já tem contorno: o traço só aparece para equipada/selecionada.
+			Transparency = function()
+				return if art and stroke() == STROKE.normal then 1 else 0
 			end,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		})
