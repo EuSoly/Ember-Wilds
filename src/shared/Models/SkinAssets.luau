@@ -1,5 +1,5 @@
 --!strict
--- Localiza, organiza e clona as malhas 3D das skins de corpo, mochila e livro
+-- Localiza, organiza e clona as malhas 3D das skins de corpo, mochila, livro e caixa
 -- importadas do Blender (export_roblox.py + SkinManifest).
 --
 -- Suporta tanto os modelos já organizados em ReplicatedStorage.Assets.{Skins,Bags,Books}
@@ -18,6 +18,7 @@ local FOLDER_BY_PREFIX: { [string]: string } = {
 	body = "Skins",
 	bag = "Bags",
 	book = "Books",
+	crate = "Crates",
 }
 
 local function prefixOf(skinId: string): string?
@@ -32,7 +33,13 @@ local CORRECTION_BY_PREFIX: { [string]: CFrame } = {
 	body = CFrame.Angles(0, math.pi, 0),
 	bag = CFrame.Angles(0, math.pi, 0),
 	book = CFrame.identity,
+	crate = CFrame.Angles(0, math.pi, 0),
 }
+
+-- Caixas: o CrateModel clona Assets.Crates/<id> inteiro (sem passar pelo
+-- clonePart), então a correção de frente já fica gravada na peça. A marca
+-- evita girar de novo quando o organizador roda outra vez.
+local BAKED_ATTRIBUTE = "SkinCorrectionBaked"
 
 local partCache: { [string]: BasePart? } = {}
 
@@ -99,7 +106,13 @@ local function styleTemplatePart(part: BasePart, info: SkinManifest.PartInfo)
 	part.CastShadow = false
 	applyMaterialAndTexture(part, info)
 	local c = info.center
-	part.CFrame = part.CFrame.Rotation + Vector3.new(c[1], c[2], c[3])
+	local rotation = part.CFrame.Rotation
+	if prefixOf(info.skinId) == "crate" and part:GetAttribute(BAKED_ATTRIBUTE) ~= true then
+		-- Mesma conta do clonePart (pivô * centro * correção * rotação importada).
+		rotation = correctionFor(info.skinId) * rotation
+		part:SetAttribute(BAKED_ATTRIBUTE, true)
+	end
+	part.CFrame = CFrame.new(c[1], c[2], c[3]) * rotation
 end
 
 -- Procura em Workspace, ReplicatedStorage e ServerStorage quaisquer MeshParts
@@ -111,6 +124,7 @@ function SkinAssets.organizeStudioImports(): number
 		body = ensureFolder(assets, "Skins"),
 		bag = ensureFolder(assets, "Bags"),
 		book = ensureFolder(assets, "Books"),
+		crate = ensureFolder(assets, "Crates"),
 	}
 
 	local foundParts: { { part: BasePart, name: string, info: SkinManifest.PartInfo } } = {}

@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local CrateModel = require(Shared:WaitForChild("Models"):WaitForChild("CrateModel"))
+local CrateAnimator = require(script.Parent.Parent.Parent:WaitForChild("World"):WaitForChild("CrateAnimator"))
 local ItemViewport = require(script.Parent:WaitForChild("ItemViewport"))
 
 local create = vide.create
@@ -33,7 +34,10 @@ function CratePreview.build(skinId: () -> string): ViewportFrame
 		local model = CrateModel.build(id)
 		model.Parent = viewport
 		ItemViewport.frame(camera, model, ItemViewport.direction(id))
+		-- Peças móveis (rotor, anel, penas...) se mexem também na prévia.
+		local stop = CrateAnimator.attach(model)
 		vide.cleanup(function()
+			stop()
 			model:Destroy()
 		end)
 	end)

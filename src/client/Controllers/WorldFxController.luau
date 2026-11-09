@@ -2,8 +2,8 @@
 -- Liga os efeitos do mundo que só existem no cliente: a bolha de ar do
 -- fôlego, as copas transparentes sobre o boneco, o aviso de borda, a
 -- tremulação das luzes de fogo (o servidor só cria a luz; tremer é visual),
--- os efeitos da coleta, as frutinhas visíveis dos arbustos e o telhado
--- translúcido sobre o boneco.
+-- os efeitos da coleta, as frutinhas visíveis dos arbustos, o telhado
+-- translúcido sobre o boneco e as peças móveis das caixas 3D.
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -20,6 +20,7 @@ local GatherFx = require(World:WaitForChild("GatherFx"))
 local OxygenBubble = require(World:WaitForChild("OxygenBubble"))
 local RoofFade = require(World:WaitForChild("RoofFade"))
 local CraftBubble = require(World:WaitForChild("CraftBubble"))
+local CrateAnimator = require(World:WaitForChild("CrateAnimator"))
 local BuildGhost = require(World:WaitForChild("BuildGhost"))
 local BuildRotation = require(Client:WaitForChild("BuildRotation"))
 local StructureHealth = require(World:WaitForChild("StructureHealth"))
@@ -35,6 +36,7 @@ function WorldFxController.Start(_self)
 	GatherFx.start()
 	BerryDisplay.start()
 	CraftBubble.start()
+	CrateAnimator.start()
 	BuildRotation.start()
 	BuildGhost.start()
 	StructureHealth.start()

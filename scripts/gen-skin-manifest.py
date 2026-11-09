@@ -7,8 +7,8 @@ Lote novo: exporte, acrescente a pasta em CATEGORIAS e rode na raiz do projeto:
 
 Guarda, para cada MeshPart, o centro da caixa (bounds) em relação ao pivô da
 peça já nos eixos do Roblox (X = +X, Y = +Z do Blender, Z = -Y do Blender),
-o papel, o tipo e o alpha. As caixas (crate_*) ainda não entram: o jogo não
-tem malha 3D de caixa (só cores).
+o papel, o tipo e o alpha. Nas caixas (crate_*), o centro é relativo ao
+pivô da caixa (veja MONTADAS).
 """
 
 import json
@@ -19,7 +19,14 @@ SKINS = os.path.join(ROOT, "assets", "skins", "roblox")
 OUT = os.path.join(ROOT, "src", "shared", "Defs", "SkinManifest.luau")
 
 # Ordem do arquivo gerado (a mesma da exportação).
-CATEGORIAS = ["corpo", "corpo_lotes11_16", "livros", "mochilas"]
+CATEGORIAS = ["corpo", "corpo_lotes11_16", "livros", "mochilas", "caixas"]
+
+# Categorias montadas como um modelo só (Assets.Crates/<id>, clonado inteiro
+# pelo CrateModel): o centro de cada peça soma o deslocamento do pivô dela
+# (as peças animadas têm o pivô no centro do grupo) e fica relativo ao pivô
+# da skin (o chão, no meio da caixa). Nas outras, o centro é relativo ao pivô
+# da própria peça (a mão é posicionada pelo pivô dela, em tempo de jogo).
+MONTADAS = {"caixas"}
 
 # Skin sem malha própria que usa a de outra (entra logo antes da original).
 APELIDOS = {"book_default": "book_pergaminho"}
@@ -66,6 +73,9 @@ def main():
                 seen.add(name)
                 names.append(name)
                 cx, cy, cz = center(part["bounds"])
+                if categoria in MONTADAS:
+                    ox, oy, oz = part["offset_do_pivo_do_skin"]
+                    cx, cy, cz = round(cx + ox, 4), round(cy + oz, 4), round(cz - oy, 4)
                 parts_lines.append(
                     f'\t["{name}"] = {{\n'
                     f'\t\tskinId = "{skin["id"]}",\n'
