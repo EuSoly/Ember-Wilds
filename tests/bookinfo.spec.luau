@@ -8,6 +8,23 @@ local function has(list: { string }, id: string): boolean
 end
 
 return {
+	["buildings without recipe are not resources"] = function()
+		local resources = BookInfo.items("resources", true)
+		assert(not has(resources, "reidite_wall"), "parede de reidite não é recurso")
+		assert(not has(resources, "stone_extractor"), "extrator não é recurso")
+		assert(not has(resources, "water_bucket"), "balde não é recurso")
+		assert(has(resources, "reidite"), "o minério de reidite continua material (no Studio)")
+		assert(has(resources, "raw_meat"), "carne crua continua recurso")
+	end,
+
+	["tools stop at gold for now"] = function()
+		local tools = BookInfo.items("tools", false)
+		assert(has(tools, "gold_pickaxe"), "ouro fica")
+		for _, id in { "diamond_pickaxe", "amethyst_pickaxe", "reidite_pickaxe" } do
+			assert(not has(tools, id), id .. " fora por enquanto")
+		end
+	end,
+
 	["wolf fur comes from wolves"] = function()
 		local sources = BookInfo.sources("wolf_fur")
 		assert(#sources == 1, "um mob só")

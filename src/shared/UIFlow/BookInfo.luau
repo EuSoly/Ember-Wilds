@@ -40,8 +40,9 @@ end
 
 local function inTab(tab: string, def: Types.ItemDef): boolean
 	if tab == "resources" then
-		-- Tudo que não tem receita, mais os materiais feitos (ex. papel).
-		return def.category == "resource" or BookInfo.recipeOf(def.id) == nil
+		-- Materiais (inclusive os feitos, ex. papel) e a comida crua (sem receita).
+		-- Construção, ferramenta ou balde sem receita não é recurso.
+		return def.category == "resource" or (def.category == "food" and BookInfo.recipeOf(def.id) == nil)
 	end
 	return TAB_CATEGORIES[tab][def.category] == true
 end

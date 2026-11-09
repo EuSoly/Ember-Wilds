@@ -51,7 +51,7 @@ Um item pode aparecer em **mais de uma aba**; a ficha é a mesma nas duas.
 | Armaduras | `armor` + `bag` (mochila: é o que se veste) |
 | Comida | `food` (inclui frutinha e carne crua, que também estão em Recursos) |
 | Construções | `placeable` |
-| Recursos | todo item **sem receita** + os de categoria `resource` com receita (ex. papel), que mostram a receita na ficha |
+| Recursos | categoria `resource` (inclusive os feitos, ex. papel, que mostram a receita) + a comida crua (`food` sem receita). Construção/ferramenta sem receita não entra (ajuste de 09/11) |
 
 A pedrinha do mapa (`pebble`) é decorativa e não dá item: **não aparece** em "onde conseguir" (decisão do Claude). Se um dia ela ganhar `gather`, entra sozinha.
 

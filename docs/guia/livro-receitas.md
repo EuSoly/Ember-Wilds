@@ -28,9 +28,11 @@ Seção sem conteúdo não aparece. **Nada é escrito à mão**: item, receita, 
 | Armaduras | `armor` e `bag` |
 | Comida | `food` |
 | Construções | `placeable` |
-| Recursos | todo item sem receita e os de categoria `resource` com receita (ex. papel) |
+| Recursos | categoria `resource` (inclusive os feitos, ex. papel) e a comida crua (`food` sem receita) |
 
 Um item pode estar em mais de uma aba (a frutinha está em Comida e em Recursos). A pedrinha do mapa é só decoração (não tem `gather`) e não aparece.
+
+O livro **nunca mostra itens de teste** (`testOnly`), nem no Studio: ele mostra o que o jogador vê. No Studio dá para craftar os itens de teste pela coluna de receitas normalmente. As picaretas de diamante, ametista e reidite estão como itens de teste por enquanto (o jogo vai só até ouro); para liberar, tire o `testOnly` delas em `Defs/Items`.
 
 ### Estação nova (ex. água)
 

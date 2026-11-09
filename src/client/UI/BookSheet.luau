@@ -7,7 +7,6 @@
 -- O conteúdo só depende do item: a cada troca, é montado de novo num
 -- vide.root próprio e o anterior é desmontado (solta ícones 3D e retratos).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
@@ -31,7 +30,9 @@ local CHIP_WIDTH = 168
 local ROW_HEIGHT = 30
 local SOURCE_HEIGHT = 52
 local SECTION_COLOR = Color3.fromRGB(122, 84, 46) -- título de seção: marrom do couro
-local inStudio = RunService:IsStudio()
+-- O livro mostra o que o jogador vê: sem itens de teste, nem no Studio
+-- (decisão do Elizeu, 09/11). Craftar no Studio pela coluna continua valendo.
+local inStudio = false
 
 export type Props = {
 	item: () -> string?,

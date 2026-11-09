@@ -96,6 +96,8 @@ local Items: { [string]: ItemDef } = {
 	},
 	diamond_pickaxe = {
 		id = "diamond_pickaxe",
+		-- Fora do jogo por enquanto (decisão do Elizeu, 09/11): só até ouro.
+		testOnly = true,
 		nameKey = "item.diamond_pickaxe",
 		category = "tool",
 		tier = "diamond",
@@ -106,6 +108,8 @@ local Items: { [string]: ItemDef } = {
 	},
 	amethyst_pickaxe = {
 		id = "amethyst_pickaxe",
+		-- Fora do jogo por enquanto (decisão do Elizeu, 09/11): só até ouro.
+		testOnly = true,
 		nameKey = "item.amethyst_pickaxe",
 		category = "tool",
 		tier = "amethyst",
@@ -116,6 +120,8 @@ local Items: { [string]: ItemDef } = {
 	},
 	reidite_pickaxe = {
 		id = "reidite_pickaxe",
+		-- Fora do jogo por enquanto (decisão do Elizeu, 09/11): só até ouro.
+		testOnly = true,
 		nameKey = "item.reidite_pickaxe",
 		category = "tool",
 		tier = "reidite",

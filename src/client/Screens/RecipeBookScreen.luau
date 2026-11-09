@@ -6,7 +6,6 @@
 -- Abre pelo botão do livro (RecipeBookButton); o ScreenController liga e
 -- desliga a tela (só jogando). Reabre na última aba e no último item da sessão.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
@@ -45,7 +44,9 @@ local RecipeBookScreen = {
 	selected = vide.source(nil :: string?) :: Source<string?>,
 }
 
-local inStudio = RunService:IsStudio()
+-- O livro mostra o que o jogador vê: sem itens de teste, nem no Studio
+-- (decisão do Elizeu, 09/11). Craftar no Studio pela coluna continua valendo.
+local inStudio = false
 
 function RecipeBookScreen.toggle()
 	RecipeBookScreen.open(not vide.untrack(RecipeBookScreen.open))
