@@ -70,7 +70,7 @@ Pasta `assets/resources/mob-drops/roblox/` (ver o `LEIA-ME.md` de lá). Segue o 
 - Importação: `food.fbx` e `mob-drops.fbx` por File > Import 3D e depois `scripts/studio/import-icons.luau` (Edit), que transforma cada MeshPart em `ReplicatedStorage.Assets.Icons/<id>` (Model, pivô no centro da base, ancorado, sem colisão). Ícone antigo de mesmo nome vai para `ServerStorage.IconesAntigos`.
 - O `ItemIcon` (slot do inventário, baú, caixa, craft, kits) procura o modelo em `Assets.Icons/<id>`, depois `Assets.Tools/<id>` (ferramentas e armas: vistas pelo lado largo, na diagonal, ponta em cima à direita; livro e balde: de cima como os ícones) e depois `Assets.Structures/<id>` (construções, de cima como os ícones). O fundo do ViewportFrame é preto e transparente: com o branco padrão, aparecia um contorno branco em volta dos modelos.
 - A bancada mostra também os modelos de `Tools` e `Structures` que ainda não são item (diamante, ametista, reidite, escudos, martelos, totem...), para deixar a vista pronta antes de virarem item.
-- Livro: `IconeGiro = 30, -90, 0` no `Assets.Tools.book` (deitado, lado comprido subindo para a direita, espessura nas bordas de baixo, como o desenho do Elizeu de 09/11). Sem modelo, mostra as iniciais (hoje: capacetes, protetor de orelha, mochila de couro, papel, balde com água).
+- Backup das vistas: `scripts/studio/icon-views.luau` guarda os atributos de todos os moldes ajustados (copiados do place em 09/11; o livro ficou com `IconeGiro = -10, -120, 0`, escolha do Elizeu). Rodar na barra de comando (Edit) regrava tudo no place; depois salve o place. Sem modelo, mostra as iniciais (hoje: capacetes, protetor de orelha, mochila de couro, papel, balde com água).
 
 ### Ajustar a vista de um item
 
