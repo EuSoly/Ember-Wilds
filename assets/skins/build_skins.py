@@ -13,7 +13,10 @@ _lote, _tipo = [], "corpo"
 for f in sorted(glob.glob(os.path.join(_here, "lotes", _pat + ".py"))):
     m = importlib.import_module(os.path.splitext(os.path.basename(f))[0]); importlib.reload(m)
     _lote += m.LOTE; _tipo = getattr(m, "TIPO", _tipo)
-if _tipo == "livro":
+if _tipo == "caixa":
+    import caixa_lib; importlib.reload(caixa_lib)
+    print("caixas:", len(_lote), "objetos:", caixa_lib.build_caixas(_lote))
+elif _tipo == "livro":
     import livro_lib; importlib.reload(livro_lib)
     print("livros:", len(_lote), "objetos:", livro_lib.build_livros(_lote))
 elif _tipo == "mochila":

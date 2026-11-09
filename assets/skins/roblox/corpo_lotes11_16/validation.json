@@ -1,0 +1,493 @@
+{
+  "categoria": "corpo_lotes11_16",
+  "arquivos": 81,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-corpo_lotes11_16.fbx",
+      "malhas": 268,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_kitsune.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_ostra.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lince_roxo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_urso_polar.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_espectro.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_monstro_cristal.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_goblin.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_caracal.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_ciborgue_sombrio.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_rocha_magma.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cardeal.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_coiote.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_raposa_artica.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_gato_gelo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_toco_gelo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_toco_vulcanico.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_diabrete_gelo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_bolha_verde.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_gelo_rachado.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lobisomem.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_gato_rosa.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_pinguim.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_gato_lilas.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_coco.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lama.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_jarra_vidro.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_geleia_rubi.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_fantasminha.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_anciao.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_sombra_carmesim.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_ardosia.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_areia.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_bronze.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_laranja.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_ciano.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_vermelho.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_roxo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_dourado.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_menta.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_musgo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_camuflado.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_madeira.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_zebra.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_tigre.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_melancia.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_lua.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_biscoito.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_noite.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_diamante.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_ondas.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_terra.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_castanho.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_carvao.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_terracota.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_gelo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_creme.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_lavanda.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_obsidiana.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_celeste.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_basico_rosado.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_arco_iris.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_pirulito.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_bau.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_panqueca.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_bolo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_lava.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_vudu.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_gelo_bloco.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_pirata.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_estampa_mapa.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_bloco_perigo.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_oni_vermelho.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_runa_sombria.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_raizes_carmesim.fbx",
+      "malhas": 4,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_cristal_abissal.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_caveira_branca.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_meteoro_magma.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_travesseiro.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_fornalha_industrial.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_retalhos.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

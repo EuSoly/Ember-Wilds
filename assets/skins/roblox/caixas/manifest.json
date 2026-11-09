@@ -1,0 +1,2314 @@
+{
+  "categoria": "caixas",
+  "lotes": [
+    "caixas_catalogo"
+  ],
+  "skin_count": 64,
+  "mesh_count": 80,
+  "total_triangles": 277036,
+  "palette_colors": 389,
+  "texture": "caixas_palette.png",
+  "texture_size": 512,
+  "arquivo_geral": "skins-caixas.fbx",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "skins": [
+    {
+      "id": "crate_default",
+      "nome": "default",
+      "file": "individual/crate_default.fbx",
+      "parts": [
+        {
+          "name": "crate_default_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2452,
+          "triangles_antes_decimate": 2452,
+          "vertices": 1368,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.105
+          ],
+          "source_parts": 71
+        }
+      ]
+    },
+    {
+      "id": "crate_pinho",
+      "nome": "pinho",
+      "file": "individual/crate_pinho.fbx",
+      "parts": [
+        {
+          "name": "crate_pinho_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2452,
+          "triangles_antes_decimate": 2452,
+          "vertices": 1368,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.105
+          ],
+          "source_parts": 71
+        }
+      ]
+    },
+    {
+      "id": "crate_ferro",
+      "nome": "ferro",
+      "file": "individual/crate_ferro.fbx",
+      "parts": [
+        {
+          "name": "crate_ferro_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2180,
+          "triangles_antes_decimate": 2180,
+          "vertices": 1192,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.145
+          ],
+          "source_parts": 51
+        }
+      ]
+    },
+    {
+      "id": "crate_runica",
+      "nome": "runica",
+      "file": "individual/crate_runica.fbx",
+      "parts": [
+        {
+          "name": "crate_runica_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1484,
+          "triangles_antes_decimate": 1484,
+          "vertices": 800,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.075
+          ],
+          "source_parts": 29
+        },
+        {
+          "name": "crate_runica_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 636,
+          "triangles_antes_decimate": 636,
+          "vertices": 424,
+          "bounds": [
+            -1.255,
+            -1.255,
+            0.45,
+            1.255,
+            1.255,
+            2.165
+          ],
+          "source_parts": 53
+        }
+      ]
+    },
+    {
+      "id": "crate_ouro",
+      "nome": "ouro",
+      "file": "individual/crate_ouro.fbx",
+      "parts": [
+        {
+          "name": "crate_ouro_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1964,
+          "triangles_antes_decimate": 1964,
+          "vertices": 1078,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.18
+          ],
+          "source_parts": 48
+        }
+      ]
+    },
+    {
+      "id": "crate_cosmica",
+      "nome": "cosmica",
+      "file": "individual/crate_cosmica.fbx",
+      "parts": [
+        {
+          "name": "crate_cosmica_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1940,
+          "triangles_antes_decimate": 1940,
+          "vertices": 1060,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.175
+          ],
+          "source_parts": 45
+        }
+      ]
+    },
+    {
+      "id": "crate_aventureiro",
+      "nome": "aventureiro",
+      "file": "individual/crate_aventureiro.fbx",
+      "parts": [
+        {
+          "name": "crate_aventureiro_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2156,
+          "triangles_antes_decimate": 2156,
+          "vertices": 1216,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.215
+          ],
+          "source_parts": 69
+        }
+      ]
+    },
+    {
+      "id": "crate_ossada",
+      "nome": "ossada",
+      "file": "individual/crate_ossada.fbx",
+      "parts": [
+        {
+          "name": "crate_ossada_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2480,
+          "triangles_antes_decimate": 2480,
+          "vertices": 1376,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.195
+          ],
+          "source_parts": 68
+        }
+      ]
+    },
+    {
+      "id": "crate_espadas",
+      "nome": "espadas",
+      "file": "individual/crate_espadas.fbx",
+      "parts": [
+        {
+          "name": "crate_espadas_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2288,
+          "triangles_antes_decimate": 2288,
+          "vertices": 1280,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.185
+          ],
+          "source_parts": 68
+        }
+      ]
+    },
+    {
+      "id": "crate_rubi",
+      "nome": "rubi",
+      "file": "individual/crate_rubi.fbx",
+      "parts": [
+        {
+          "name": "crate_rubi_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1964,
+          "triangles_antes_decimate": 1964,
+          "vertices": 1078,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.18
+          ],
+          "source_parts": 48
+        }
+      ]
+    },
+    {
+      "id": "crate_diamante",
+      "nome": "diamante",
+      "file": "individual/crate_diamante.fbx",
+      "parts": [
+        {
+          "name": "crate_diamante_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2180,
+          "triangles_antes_decimate": 2180,
+          "vertices": 1192,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.368,
+            2.145
+          ],
+          "source_parts": 51
+        }
+      ]
+    },
+    {
+      "id": "crate_coelho",
+      "nome": "coelho",
+      "file": "individual/crate_coelho.fbx",
+      "parts": [
+        {
+          "name": "crate_coelho_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4860,
+          "triangles_antes_decimate": 4860,
+          "vertices": 2544,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.438
+          ],
+          "source_parts": 57
+        }
+      ]
+    },
+    {
+      "id": "crate_lobo",
+      "nome": "lobo",
+      "file": "individual/crate_lobo.fbx",
+      "parts": [
+        {
+          "name": "crate_lobo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3816,
+          "triangles_antes_decimate": 3816,
+          "vertices": 2016,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.421
+          ],
+          "source_parts": 54
+        }
+      ]
+    },
+    {
+      "id": "crate_aranha",
+      "nome": "aranha",
+      "file": "individual/crate_aranha.fbx",
+      "parts": [
+        {
+          "name": "crate_aranha_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4300,
+          "triangles_antes_decimate": 4300,
+          "vertices": 2336,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.368,
+            2.361
+          ],
+          "source_parts": 93
+        }
+      ]
+    },
+    {
+      "id": "crate_javali",
+      "nome": "javali",
+      "file": "individual/crate_javali.fbx",
+      "parts": [
+        {
+          "name": "crate_javali_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4680,
+          "triangles_antes_decimate": 4680,
+          "vertices": 2464,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.442
+          ],
+          "source_parts": 62
+        }
+      ]
+    },
+    {
+      "id": "crate_falcao",
+      "nome": "falcao",
+      "file": "individual/crate_falcao.fbx",
+      "parts": [
+        {
+          "name": "crate_falcao_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 7740,
+          "vertices": 3904,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.418
+          ],
+          "source_parts": 77
+        }
+      ]
+    },
+    {
+      "id": "crate_pinguim",
+      "nome": "pinguim",
+      "file": "individual/crate_pinguim.fbx",
+      "parts": [
+        {
+          "name": "crate_pinguim_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4124,
+          "triangles_antes_decimate": 4124,
+          "vertices": 2168,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.368,
+            2.423
+          ],
+          "source_parts": 53
+        }
+      ]
+    },
+    {
+      "id": "crate_raposa_artica",
+      "nome": "raposa_artica",
+      "file": "individual/crate_raposa_artica.fbx",
+      "parts": [
+        {
+          "name": "crate_raposa_artica_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3692,
+          "triangles_antes_decimate": 3692,
+          "vertices": 1952,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.421
+          ],
+          "source_parts": 53
+        }
+      ]
+    },
+    {
+      "id": "crate_urso_polar",
+      "nome": "urso_polar",
+      "file": "individual/crate_urso_polar.fbx",
+      "parts": [
+        {
+          "name": "crate_urso_polar_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5236,
+          "triangles_antes_decimate": 5236,
+          "vertices": 2736,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.457
+          ],
+          "source_parts": 59
+        }
+      ]
+    },
+    {
+      "id": "crate_mamute_filhote",
+      "nome": "mamute_filhote",
+      "file": "individual/crate_mamute_filhote.fbx",
+      "parts": [
+        {
+          "name": "crate_mamute_filhote_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4976,
+          "triangles_antes_decimate": 4976,
+          "vertices": 2612,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.368,
+            2.437
+          ],
+          "source_parts": 62
+        }
+      ]
+    },
+    {
+      "id": "crate_mamute",
+      "nome": "mamute",
+      "file": "individual/crate_mamute.fbx",
+      "parts": [
+        {
+          "name": "crate_mamute_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5232,
+          "triangles_antes_decimate": 5232,
+          "vertices": 2740,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.367,
+            2.522
+          ],
+          "source_parts": 62
+        }
+      ]
+    },
+    {
+      "id": "crate_dragao_filhote",
+      "nome": "dragao_filhote",
+      "file": "individual/crate_dragao_filhote.fbx",
+      "parts": [
+        {
+          "name": "crate_dragao_filhote_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4984,
+          "triangles_antes_decimate": 4984,
+          "vertices": 2632,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.448
+          ],
+          "source_parts": 70
+        }
+      ]
+    },
+    {
+      "id": "crate_dragao",
+      "nome": "dragao",
+      "file": "individual/crate_dragao.fbx",
+      "parts": [
+        {
+          "name": "crate_dragao_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5424,
+          "triangles_antes_decimate": 5424,
+          "vertices": 2872,
+          "bounds": [
+            -1.412,
+            -1.475,
+            0.0,
+            1.412,
+            1.475,
+            2.481
+          ],
+          "source_parts": 80
+        }
+      ]
+    },
+    {
+      "id": "crate_caranguejo",
+      "nome": "caranguejo",
+      "file": "individual/crate_caranguejo.fbx",
+      "parts": [
+        {
+          "name": "crate_caranguejo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4136,
+          "triangles_antes_decimate": 4136,
+          "vertices": 2208,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.367,
+            2.394
+          ],
+          "source_parts": 70
+        }
+      ]
+    },
+    {
+      "id": "crate_caranguejo_rei",
+      "nome": "caranguejo_rei",
+      "file": "individual/crate_caranguejo_rei.fbx",
+      "parts": [
+        {
+          "name": "crate_caranguejo_rei_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4444,
+          "triangles_antes_decimate": 4444,
+          "vertices": 2376,
+          "bounds": [
+            -1.475,
+            -1.335,
+            0.0,
+            1.475,
+            1.367,
+            2.485
+          ],
+          "source_parts": 77
+        }
+      ]
+    },
+    {
+      "id": "crate_piranha",
+      "nome": "piranha",
+      "file": "individual/crate_piranha.fbx",
+      "parts": [
+        {
+          "name": "crate_piranha_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3604,
+          "triangles_antes_decimate": 3604,
+          "vertices": 1940,
+          "bounds": [
+            -1.375,
+            -1.475,
+            0.0,
+            1.375,
+            1.475,
+            2.466
+          ],
+          "source_parts": 69
+        }
+      ]
+    },
+    {
+      "id": "crate_kraken",
+      "nome": "kraken",
+      "file": "individual/crate_kraken.fbx",
+      "parts": [
+        {
+          "name": "crate_kraken_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 7896,
+          "vertices": 3986,
+          "bounds": [
+            -1.475,
+            -1.475,
+            0.0,
+            1.475,
+            1.475,
+            2.43
+          ],
+          "source_parts": 118
+        }
+      ]
+    },
+    {
+      "id": "crate_monstro_lava",
+      "nome": "monstro_lava",
+      "file": "individual/crate_monstro_lava.fbx",
+      "parts": [
+        {
+          "name": "crate_monstro_lava_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3228,
+          "triangles_antes_decimate": 3228,
+          "vertices": 1696,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.485
+          ],
+          "source_parts": 41
+        },
+        {
+          "name": "crate_monstro_lava_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 240,
+          "triangles_antes_decimate": 240,
+          "vertices": 160,
+          "bounds": [
+            -1.255,
+            -1.255,
+            0.27,
+            1.255,
+            1.255,
+            1.478
+          ],
+          "source_parts": 20
+        }
+      ]
+    },
+    {
+      "id": "crate_dragao_lava_filhote",
+      "nome": "dragao_lava_filhote",
+      "file": "individual/crate_dragao_lava_filhote.fbx",
+      "parts": [
+        {
+          "name": "crate_dragao_lava_filhote_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4984,
+          "triangles_antes_decimate": 4984,
+          "vertices": 2632,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.448
+          ],
+          "source_parts": 70
+        }
+      ]
+    },
+    {
+      "id": "crate_dragao_lava",
+      "nome": "dragao_lava",
+      "file": "individual/crate_dragao_lava.fbx",
+      "parts": [
+        {
+          "name": "crate_dragao_lava_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5424,
+          "triangles_antes_decimate": 5424,
+          "vertices": 2872,
+          "bounds": [
+            -1.412,
+            -1.475,
+            0.0,
+            1.412,
+            1.475,
+            2.481
+          ],
+          "source_parts": 80
+        }
+      ]
+    },
+    {
+      "id": "crate_abutre",
+      "nome": "abutre",
+      "file": "individual/crate_abutre.fbx",
+      "parts": [
+        {
+          "name": "crate_abutre_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 7740,
+          "vertices": 3904,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.418
+          ],
+          "source_parts": 77
+        }
+      ]
+    },
+    {
+      "id": "crate_verme_areia",
+      "nome": "verme_areia",
+      "file": "individual/crate_verme_areia.fbx",
+      "parts": [
+        {
+          "name": "crate_verme_areia_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5280,
+          "triangles_antes_decimate": 5280,
+          "vertices": 2888,
+          "bounds": [
+            -1.475,
+            -1.475,
+            0.0,
+            1.475,
+            1.475,
+            2.457
+          ],
+          "source_parts": 124
+        }
+      ]
+    },
+    {
+      "id": "crate_galinha_dourada",
+      "nome": "galinha_dourada",
+      "file": "individual/crate_galinha_dourada.fbx",
+      "parts": [
+        {
+          "name": "crate_galinha_dourada_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 8364,
+          "vertices": 3912,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.418
+          ],
+          "source_parts": 81
+        }
+      ]
+    },
+    {
+      "id": "crate_pintinho_dourado",
+      "nome": "pintinho_dourado",
+      "file": "individual/crate_pintinho_dourado.fbx",
+      "parts": [
+        {
+          "name": "crate_pintinho_dourado_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 8364,
+          "vertices": 3912,
+          "bounds": [
+            -1.34,
+            -1.475,
+            0.0,
+            1.34,
+            1.475,
+            2.289
+          ],
+          "source_parts": 81
+        }
+      ]
+    },
+    {
+      "id": "crate_favo",
+      "nome": "favo",
+      "file": "individual/crate_favo.fbx",
+      "parts": [
+        {
+          "name": "crate_favo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5148,
+          "triangles_antes_decimate": 5148,
+          "vertices": 3020,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.19
+          ],
+          "source_parts": 223
+        }
+      ]
+    },
+    {
+      "id": "crate_lapide",
+      "nome": "lapide",
+      "file": "individual/crate_lapide.fbx",
+      "parts": [
+        {
+          "name": "crate_lapide_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1968,
+          "triangles_antes_decimate": 1968,
+          "vertices": 1088,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            3.531
+          ],
+          "source_parts": 52
+        }
+      ]
+    },
+    {
+      "id": "crate_aquario",
+      "nome": "aquario",
+      "file": "individual/crate_aquario.fbx",
+      "parts": [
+        {
+          "name": "crate_aquario_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4116,
+          "triangles_antes_decimate": 4116,
+          "vertices": 2228,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.47
+          ],
+          "source_parts": 85
+        }
+      ]
+    },
+    {
+      "id": "crate_recife",
+      "nome": "recife",
+      "file": "individual/crate_recife.fbx",
+      "parts": [
+        {
+          "name": "crate_recife_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5284,
+          "triangles_antes_decimate": 5284,
+          "vertices": 2864,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.46
+          ],
+          "source_parts": 111
+        }
+      ]
+    },
+    {
+      "id": "crate_presente",
+      "nome": "presente",
+      "file": "individual/crate_presente.fbx",
+      "parts": [
+        {
+          "name": "crate_presente_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1896,
+          "triangles_antes_decimate": 1896,
+          "vertices": 1040,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.32
+          ],
+          "source_parts": 46
+        }
+      ]
+    },
+    {
+      "id": "crate_jardim",
+      "nome": "jardim",
+      "file": "individual/crate_jardim.fbx",
+      "parts": [
+        {
+          "name": "crate_jardim_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4772,
+          "triangles_antes_decimate": 4772,
+          "vertices": 2612,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.225
+          ],
+          "source_parts": 113
+        }
+      ]
+    },
+    {
+      "id": "crate_vulcao",
+      "nome": "vulcao",
+      "file": "individual/crate_vulcao.fbx",
+      "parts": [
+        {
+          "name": "crate_vulcao_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1946,
+          "triangles_antes_decimate": 1946,
+          "vertices": 1059,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.755
+          ],
+          "source_parts": 43
+        },
+        {
+          "name": "crate_vulcao_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 428,
+          "triangles_antes_decimate": 428,
+          "vertices": 260,
+          "bounds": [
+            -1.255,
+            -1.255,
+            0.27,
+            1.255,
+            1.255,
+            2.475
+          ],
+          "source_parts": 23
+        }
+      ]
+    },
+    {
+      "id": "crate_minerador",
+      "nome": "minerador",
+      "file": "individual/crate_minerador.fbx",
+      "parts": [
+        {
+          "name": "crate_minerador_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3218,
+          "triangles_antes_decimate": 3218,
+          "vertices": 1771,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.67
+          ],
+          "source_parts": 81
+        }
+      ]
+    },
+    {
+      "id": "crate_bolo",
+      "nome": "bolo",
+      "file": "individual/crate_bolo.fbx",
+      "parts": [
+        {
+          "name": "crate_bolo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 16072,
+          "vertices": 4284,
+          "bounds": [
+            -1.33,
+            -1.33,
+            0.0,
+            1.33,
+            1.33,
+            2.36
+          ],
+          "source_parts": 267
+        }
+      ]
+    },
+    {
+      "id": "crate_grade",
+      "nome": "grade",
+      "file": "individual/crate_grade.fbx",
+      "parts": [
+        {
+          "name": "crate_grade_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3228,
+          "triangles_antes_decimate": 3228,
+          "vertices": 1776,
+          "bounds": [
+            -1.345,
+            -1.345,
+            0.0,
+            1.345,
+            1.367,
+            2.385
+          ],
+          "source_parts": 81
+        }
+      ]
+    },
+    {
+      "id": "crate_espinhos",
+      "nome": "espinhos",
+      "file": "individual/crate_espinhos.fbx",
+      "parts": [
+        {
+          "name": "crate_espinhos_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3512,
+          "triangles_antes_decimate": 3512,
+          "vertices": 1926,
+          "bounds": [
+            -1.345,
+            -1.345,
+            0.0,
+            1.345,
+            1.367,
+            2.764
+          ],
+          "source_parts": 85
+        }
+      ]
+    },
+    {
+      "id": "crate_melancia",
+      "nome": "melancia",
+      "file": "individual/crate_melancia.fbx",
+      "parts": [
+        {
+          "name": "crate_melancia_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2164,
+          "triangles_antes_decimate": 2164,
+          "vertices": 1162,
+          "bounds": [
+            -1.494,
+            -1.255,
+            0.0,
+            1.255,
+            1.255,
+            2.673
+          ],
+          "source_parts": 40
+        }
+      ]
+    },
+    {
+      "id": "crate_gelo",
+      "nome": "gelo",
+      "file": "individual/crate_gelo.fbx",
+      "parts": [
+        {
+          "name": "crate_gelo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2354,
+          "triangles_antes_decimate": 2354,
+          "vertices": 1379,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.85
+          ],
+          "source_parts": 101
+        }
+      ]
+    },
+    {
+      "id": "crate_outono",
+      "nome": "outono",
+      "file": "individual/crate_outono.fbx",
+      "parts": [
+        {
+          "name": "crate_outono_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 6196,
+          "triangles_antes_decimate": 6196,
+          "vertices": 3364,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.363
+          ],
+          "source_parts": 133
+        }
+      ]
+    },
+    {
+      "id": "crate_algodao",
+      "nome": "algodao",
+      "file": "individual/crate_algodao.fbx",
+      "parts": [
+        {
+          "name": "crate_algodao_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7498,
+          "triangles_antes_decimate": 24484,
+          "vertices": 4631,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.362,
+            2.61
+          ],
+          "source_parts": 441
+        }
+      ]
+    },
+    {
+      "id": "crate_calendula",
+      "nome": "calendula",
+      "file": "individual/crate_calendula.fbx",
+      "parts": [
+        {
+          "name": "crate_calendula_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 10084,
+          "vertices": 4180,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.535
+          ],
+          "source_parts": 215
+        }
+      ]
+    },
+    {
+      "id": "crate_magma",
+      "nome": "magma",
+      "file": "individual/crate_magma.fbx",
+      "parts": [
+        {
+          "name": "crate_magma_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1860,
+          "triangles_antes_decimate": 1860,
+          "vertices": 1034,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.57
+          ],
+          "source_parts": 52
+        },
+        {
+          "name": "crate_magma_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 348,
+          "triangles_antes_decimate": 348,
+          "vertices": 232,
+          "bounds": [
+            -1.255,
+            -1.255,
+            0.253,
+            1.255,
+            1.255,
+            2.105
+          ],
+          "source_parts": 29
+        }
+      ]
+    },
+    {
+      "id": "crate_vento",
+      "nome": "vento",
+      "file": "individual/crate_vento.fbx",
+      "parts": [
+        {
+          "name": "crate_vento_anim_nuvem_01",
+          "papel": "anim_nuvem_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.905,
+            0.745,
+            2.14
+          ],
+          "triangles": 504,
+          "triangles_antes_decimate": 504,
+          "vertices": 258,
+          "bounds": [
+            -0.325,
+            -0.17,
+            -0.12,
+            0.325,
+            0.17,
+            0.12
+          ],
+          "source_parts": 3,
+          "animation_group": "nuvem_01"
+        },
+        {
+          "name": "crate_vento_anim_nuvem_02",
+          "papel": "anim_nuvem_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.905,
+            -0.785,
+            2.14
+          ],
+          "triangles": 504,
+          "triangles_antes_decimate": 504,
+          "vertices": 258,
+          "bounds": [
+            -0.325,
+            -0.17,
+            -0.12,
+            0.325,
+            0.17,
+            0.12
+          ],
+          "source_parts": 3,
+          "animation_group": "nuvem_02"
+        },
+        {
+          "name": "crate_vento_anim_pena_01",
+          "papel": "anim_pena_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.741,
+            -0.765,
+            2.293
+          ],
+          "triangles": 1072,
+          "triangles_antes_decimate": 1072,
+          "vertices": 580,
+          "bounds": [
+            -0.269,
+            -0.314,
+            -0.043,
+            0.269,
+            0.314,
+            0.043
+          ],
+          "source_parts": 22,
+          "animation_group": "pena_01"
+        },
+        {
+          "name": "crate_vento_anim_pena_02",
+          "papel": "anim_pena_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.722,
+            0.734,
+            2.293
+          ],
+          "triangles": 1072,
+          "triangles_antes_decimate": 1072,
+          "vertices": 580,
+          "bounds": [
+            -0.281,
+            -0.304,
+            -0.043,
+            0.281,
+            0.304,
+            0.043
+          ],
+          "source_parts": 22,
+          "animation_group": "pena_02"
+        },
+        {
+          "name": "crate_vento_anim_rotor",
+          "papel": "anim_rotor",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            2.2
+          ],
+          "triangles": 1008,
+          "triangles_antes_decimate": 1008,
+          "vertices": 512,
+          "bounds": [
+            -0.788,
+            -0.976,
+            -0.14,
+            1.092,
+            0.927,
+            0.08
+          ],
+          "source_parts": 4,
+          "animation_group": "rotor"
+        },
+        {
+          "name": "crate_vento_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3468,
+          "triangles_antes_decimate": 3468,
+          "vertices": 2112,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.1
+          ],
+          "source_parts": 189
+        }
+      ]
+    },
+    {
+      "id": "crate_robo",
+      "nome": "robo",
+      "file": "individual/crate_robo.fbx",
+      "parts": [
+        {
+          "name": "crate_robo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3968,
+          "triangles_antes_decimate": 3968,
+          "vertices": 2174,
+          "bounds": [
+            -1.34,
+            -1.35,
+            0.0,
+            1.34,
+            1.367,
+            2.75
+          ],
+          "source_parts": 95
+        },
+        {
+          "name": "crate_robo_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 120,
+          "triangles_antes_decimate": 120,
+          "vertices": 64,
+          "bounds": [
+            -0.6,
+            -0.38,
+            2.445,
+            0.6,
+            -0.04,
+            2.49
+          ],
+          "source_parts": 2
+        }
+      ]
+    },
+    {
+      "id": "crate_fossil",
+      "nome": "fossil",
+      "file": "individual/crate_fossil.fbx",
+      "parts": [
+        {
+          "name": "crate_fossil_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 8398,
+          "vertices": 4362,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.395
+          ],
+          "source_parts": 306
+        }
+      ]
+    },
+    {
+      "id": "crate_vortice",
+      "nome": "vortice",
+      "file": "individual/crate_vortice.fbx",
+      "parts": [
+        {
+          "name": "crate_vortice_anim_anel",
+          "papel": "anim_anel",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            2.1
+          ],
+          "triangles": 240,
+          "triangles_antes_decimate": 240,
+          "vertices": 144,
+          "bounds": [
+            -1.079,
+            -1.079,
+            0.0,
+            1.079,
+            1.079,
+            0.17
+          ],
+          "source_parts": 12,
+          "animation_group": "anel"
+        },
+        {
+          "name": "crate_vortice_anim_anel_neon",
+          "papel": "anim_anel",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            2.1
+          ],
+          "triangles": 720,
+          "triangles_antes_decimate": 720,
+          "vertices": 384,
+          "bounds": [
+            -0.97,
+            -0.97,
+            0.185,
+            0.97,
+            0.97,
+            0.23
+          ],
+          "source_parts": 12,
+          "animation_group": "anel"
+        },
+        {
+          "name": "crate_vortice_anim_cristal_01",
+          "papel": "anim_cristal_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.019,
+            -1.003,
+            2.22
+          ],
+          "triangles": 22,
+          "triangles_antes_decimate": 22,
+          "vertices": 13,
+          "bounds": [
+            -0.169,
+            -0.133,
+            -0.22,
+            0.169,
+            0.133,
+            0.22
+          ],
+          "source_parts": 1,
+          "animation_group": "cristal_01"
+        },
+        {
+          "name": "crate_vortice_anim_cristal_02",
+          "papel": "anim_cristal_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.019,
+            1.003,
+            2.22
+          ],
+          "triangles": 22,
+          "triangles_antes_decimate": 22,
+          "vertices": 13,
+          "bounds": [
+            -0.169,
+            -0.133,
+            -0.22,
+            0.169,
+            0.133,
+            0.22
+          ],
+          "source_parts": 1,
+          "animation_group": "cristal_02"
+        },
+        {
+          "name": "crate_vortice_anim_espiral",
+          "papel": "anim_espiral",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            2.2
+          ],
+          "triangles": 3836,
+          "triangles_antes_decimate": 3836,
+          "vertices": 1938,
+          "bounds": [
+            -0.658,
+            -0.771,
+            -0.04,
+            0.855,
+            0.749,
+            0.016
+          ],
+          "source_parts": 10,
+          "animation_group": "espiral"
+        },
+        {
+          "name": "crate_vortice_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1736,
+          "triangles_antes_decimate": 1736,
+          "vertices": 928,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.14
+          ],
+          "source_parts": 30
+        },
+        {
+          "name": "crate_vortice_caixa_neon",
+          "papel": "caixa",
+          "tipo": "neon",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 720,
+          "triangles_antes_decimate": 720,
+          "vertices": 480,
+          "bounds": [
+            -1.255,
+            -1.255,
+            0.439,
+            1.255,
+            1.255,
+            1.37
+          ],
+          "source_parts": 60
+        }
+      ]
+    },
+    {
+      "id": "crate_tigre",
+      "nome": "tigre",
+      "file": "individual/crate_tigre.fbx",
+      "parts": [
+        {
+          "name": "crate_tigre_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 4332,
+          "triangles_antes_decimate": 4332,
+          "vertices": 2330,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.495
+          ],
+          "source_parts": 82
+        }
+      ]
+    },
+    {
+      "id": "crate_crocodilo",
+      "nome": "crocodilo",
+      "file": "individual/crate_crocodilo.fbx",
+      "parts": [
+        {
+          "name": "crate_crocodilo_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3272,
+          "triangles_antes_decimate": 3272,
+          "vertices": 1816,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.563
+          ],
+          "source_parts": 90
+        }
+      ]
+    },
+    {
+      "id": "crate_lince",
+      "nome": "lince",
+      "file": "individual/crate_lince.fbx",
+      "parts": [
+        {
+          "name": "crate_lince_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5108,
+          "triangles_antes_decimate": 5108,
+          "vertices": 2768,
+          "bounds": [
+            -1.34,
+            -1.544,
+            0.0,
+            1.34,
+            1.367,
+            2.495
+          ],
+          "source_parts": 107
+        }
+      ]
+    },
+    {
+      "id": "crate_papagaio",
+      "nome": "papagaio",
+      "file": "individual/crate_papagaio.fbx",
+      "parts": [
+        {
+          "name": "crate_papagaio_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 3716,
+          "triangles_antes_decimate": 3716,
+          "vertices": 2052,
+          "bounds": [
+            -1.34,
+            -1.45,
+            0.0,
+            1.34,
+            1.367,
+            2.655
+          ],
+          "source_parts": 97
+        }
+      ]
+    },
+    {
+      "id": "crate_sapo_madeira",
+      "nome": "sapo_madeira",
+      "file": "individual/crate_sapo_madeira.fbx",
+      "parts": [
+        {
+          "name": "crate_sapo_madeira_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 7500,
+          "triangles_antes_decimate": 11136,
+          "vertices": 4622,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.362,
+            2.513
+          ],
+          "source_parts": 436
+        }
+      ]
+    },
+    {
+      "id": "crate_cervo_madeira",
+      "nome": "cervo_madeira",
+      "file": "individual/crate_cervo_madeira.fbx",
+      "parts": [
+        {
+          "name": "crate_cervo_madeira_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2816,
+          "triangles_antes_decimate": 2816,
+          "vertices": 1568,
+          "bounds": [
+            -1.34,
+            -1.55,
+            0.0,
+            1.34,
+            1.367,
+            2.445
+          ],
+          "source_parts": 80
+        }
+      ]
+    },
+    {
+      "id": "crate_javali_madeira",
+      "nome": "javali_madeira",
+      "file": "individual/crate_javali_madeira.fbx",
+      "parts": [
+        {
+          "name": "crate_javali_madeira_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2864,
+          "triangles_antes_decimate": 2864,
+          "vertices": 1592,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.445
+          ],
+          "source_parts": 80
+        }
+      ]
+    },
+    {
+      "id": "crate_lobo_madeira",
+      "nome": "lobo_madeira",
+      "file": "individual/crate_lobo_madeira.fbx",
+      "parts": [
+        {
+          "name": "crate_lobo_madeira_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2776,
+          "triangles_antes_decimate": 2776,
+          "vertices": 1544,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.445
+          ],
+          "source_parts": 78
+        }
+      ]
+    },
+    {
+      "id": "crate_urso_madeira",
+      "nome": "urso_madeira",
+      "file": "individual/crate_urso_madeira.fbx",
+      "parts": [
+        {
+          "name": "crate_urso_madeira_caixa",
+          "papel": "caixa",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2864,
+          "triangles_antes_decimate": 2864,
+          "vertices": 1584,
+          "bounds": [
+            -1.34,
+            -1.335,
+            0.0,
+            1.34,
+            1.367,
+            2.445
+          ],
+          "source_parts": 76
+        }
+      ]
+    }
+  ]
+}

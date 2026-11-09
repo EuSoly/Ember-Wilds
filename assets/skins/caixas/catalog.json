@@ -1,0 +1,989 @@
+{
+  "count": 64,
+  "source_ids": 115,
+  "source_npc_file": "assets/npcs/rabbit/coelho-v1.blend",
+  "batches": [
+    {
+      "name": "caixas1",
+      "skins": [
+        "default",
+        "pinho",
+        "ferro",
+        "runica",
+        "ouro",
+        "cosmica",
+        "aventureiro",
+        "ossada",
+        "espadas",
+        "rubi"
+      ]
+    },
+    {
+      "name": "caixas2",
+      "skins": [
+        "diamante",
+        "coelho",
+        "lobo",
+        "aranha",
+        "javali",
+        "falcao",
+        "pinguim",
+        "raposa_artica",
+        "urso_polar",
+        "mamute_filhote"
+      ]
+    },
+    {
+      "name": "caixas3",
+      "skins": [
+        "mamute",
+        "dragao_filhote",
+        "dragao",
+        "caranguejo",
+        "caranguejo_rei",
+        "piranha",
+        "kraken",
+        "monstro_lava",
+        "dragao_lava_filhote",
+        "dragao_lava"
+      ]
+    },
+    {
+      "name": "caixas4",
+      "skins": [
+        "abutre",
+        "verme_areia",
+        "galinha_dourada",
+        "pintinho_dourado",
+        "favo",
+        "lapide",
+        "aquario",
+        "recife",
+        "presente",
+        "jardim"
+      ]
+    },
+    {
+      "name": "caixas5",
+      "skins": [
+        "vulcao",
+        "minerador",
+        "bolo",
+        "grade",
+        "espinhos",
+        "melancia",
+        "gelo",
+        "outono",
+        "algodao",
+        "calendula"
+      ]
+    },
+    {
+      "name": "caixas6",
+      "skins": [
+        "magma",
+        "vento",
+        "robo",
+        "fossil",
+        "vortice",
+        "tigre",
+        "crocodilo",
+        "lince",
+        "papagaio",
+        "sapo_madeira"
+      ]
+    },
+    {
+      "name": "caixas7",
+      "skins": [
+        "cervo_madeira",
+        "javali_madeira",
+        "lobo_madeira",
+        "urso_madeira"
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "id": "crate_default",
+      "reference_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "source_npc": null,
+      "palette": [
+        "#A67B45",
+        "#594024",
+        "#D5AF68"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_pinho",
+      "reference_ids": [
+        12
+      ],
+      "source_npc": null,
+      "palette": [
+        "#B98B55",
+        "#6B4A26",
+        "#D4AB71"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_ferro",
+      "reference_ids": [
+        13,
+        43
+      ],
+      "source_npc": null,
+      "palette": [
+        "#6B7280",
+        "#363F48",
+        "#C9CED6"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_runica",
+      "reference_ids": [
+        16
+      ],
+      "source_npc": null,
+      "palette": [
+        "#4B2E83",
+        "#28183F",
+        "#C58BE8"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_ouro",
+      "reference_ids": [
+        14,
+        30
+      ],
+      "source_npc": null,
+      "palette": [
+        "#B8861B",
+        "#6A461B",
+        "#FFE066"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_cosmica",
+      "reference_ids": [
+        19,
+        20,
+        76
+      ],
+      "source_npc": null,
+      "palette": [
+        "#1E1B3A",
+        "#111326",
+        "#FF4545"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_aventureiro",
+      "reference_ids": [
+        6,
+        39
+      ],
+      "source_npc": null,
+      "palette": [
+        "#A67B45",
+        "#594024",
+        "#D5AF68"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_ossada",
+      "reference_ids": [
+        7,
+        10,
+        11
+      ],
+      "source_npc": null,
+      "palette": [
+        "#8E6341",
+        "#493426",
+        "#E3C991"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_espadas",
+      "reference_ids": [
+        8,
+        9
+      ],
+      "source_npc": null,
+      "palette": [
+        "#A67B45",
+        "#594024",
+        "#CCD5DA"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_rubi",
+      "reference_ids": [
+        17
+      ],
+      "source_npc": null,
+      "palette": [
+        "#A94939",
+        "#592A29",
+        "#E68465"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_diamante",
+      "reference_ids": [
+        15
+      ],
+      "source_npc": null,
+      "palette": [
+        "#1E929D",
+        "#17525D",
+        "#85EAE4"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_coelho",
+      "reference_ids": [
+        44,
+        50
+      ],
+      "source_npc": "Rabbit",
+      "palette": [
+        "#EEA7CD",
+        "#AA718F",
+        "#FFF4F5"
+      ],
+      "mob_alias": "rabbit"
+    },
+    {
+      "id": "crate_lobo",
+      "reference_ids": [
+        51
+      ],
+      "source_npc": "Wolf",
+      "palette": [
+        "#34303C",
+        "#191C29",
+        "#B63B58"
+      ],
+      "mob_alias": "wolf"
+    },
+    {
+      "id": "crate_aranha",
+      "reference_ids": [
+        52
+      ],
+      "source_npc": "Spider",
+      "palette": [
+        "#191C29",
+        "#34303C",
+        "#B63B58"
+      ],
+      "mob_alias": "spider"
+    },
+    {
+      "id": "crate_javali",
+      "reference_ids": [
+        56,
+        57
+      ],
+      "source_npc": "Boar",
+      "palette": [
+        "#80543B",
+        "#4C332E",
+        "#FFF4EC"
+      ],
+      "mob_alias": "boar"
+    },
+    {
+      "id": "crate_falcao",
+      "reference_ids": [
+        53
+      ],
+      "source_npc": "Hawk",
+      "palette": [
+        "#80543B",
+        "#4C332E",
+        "#FFF4EC"
+      ],
+      "mob_alias": "hawk"
+    },
+    {
+      "id": "crate_pinguim",
+      "reference_ids": [
+        65
+      ],
+      "source_npc": "Penguin",
+      "palette": [
+        "#34303C",
+        "#191C29",
+        "#FFF4EC"
+      ],
+      "mob_alias": "penguin"
+    },
+    {
+      "id": "crate_raposa_artica",
+      "reference_ids": [
+        55
+      ],
+      "source_npc": "Arctic Fox",
+      "palette": [
+        "#E3F3F4",
+        "#34303C",
+        "#B63B58"
+      ],
+      "mob_alias": "arctic_fox"
+    },
+    {
+      "id": "crate_urso_polar",
+      "reference_ids": [
+        54
+      ],
+      "source_npc": "Polar Bear",
+      "palette": [
+        "#E3F3F4",
+        "#34303C",
+        "#B63B58"
+      ],
+      "mob_alias": "polar_bear"
+    },
+    {
+      "id": "crate_mamute_filhote",
+      "reference_ids": [],
+      "source_npc": "Baby Mammoth",
+      "palette": [
+        "#AD7951",
+        "#4C332E",
+        "#FFF4EC"
+      ],
+      "mob_alias": "baby_mammoth"
+    },
+    {
+      "id": "crate_mamute",
+      "reference_ids": [
+        61
+      ],
+      "source_npc": "Mammoth",
+      "palette": [
+        "#AD7951",
+        "#4C332E",
+        "#B63B58"
+      ],
+      "mob_alias": "mammoth"
+    },
+    {
+      "id": "crate_dragao_filhote",
+      "reference_ids": [
+        62
+      ],
+      "source_npc": "Baby Dragon",
+      "palette": [
+        "#78C9CB",
+        "#2E727D",
+        "#BAE8E4"
+      ],
+      "mob_alias": "baby_dragon"
+    },
+    {
+      "id": "crate_dragao",
+      "reference_ids": [
+        64
+      ],
+      "source_npc": "Dragon",
+      "palette": [
+        "#78C9CB",
+        "#2E727D",
+        "#B63B58"
+      ],
+      "mob_alias": "dragon"
+    },
+    {
+      "id": "crate_caranguejo",
+      "reference_ids": [
+        70
+      ],
+      "source_npc": "Crab",
+      "palette": [
+        "#EF794F",
+        "#C4404E",
+        "#FFF4EC"
+      ],
+      "mob_alias": "crab"
+    },
+    {
+      "id": "crate_caranguejo_rei",
+      "reference_ids": [
+        37,
+        69
+      ],
+      "source_npc": "King Crab",
+      "palette": [
+        "#EF794F",
+        "#C4404E",
+        "#FFF4EC"
+      ],
+      "mob_alias": "king_crab"
+    },
+    {
+      "id": "crate_piranha",
+      "reference_ids": [
+        59,
+        67
+      ],
+      "source_npc": "GMO Piranha",
+      "palette": [
+        "#C4404E",
+        "#792E3D",
+        "#EF794F"
+      ],
+      "mob_alias": "gmo_piranha"
+    },
+    {
+      "id": "crate_kraken",
+      "reference_ids": [
+        24,
+        60
+      ],
+      "source_npc": "Kraken",
+      "palette": [
+        "#44357B",
+        "#191C29",
+        "#B63B58"
+      ],
+      "mob_alias": "kraken"
+    },
+    {
+      "id": "crate_monstro_lava",
+      "reference_ids": [
+        68
+      ],
+      "source_npc": "Lava Monster",
+      "palette": [
+        "#792E3D",
+        "#4E282C",
+        "#F39332"
+      ],
+      "mob_alias": "lava_monster"
+    },
+    {
+      "id": "crate_dragao_lava_filhote",
+      "reference_ids": [
+        63
+      ],
+      "source_npc": "Baby Lava Dragon",
+      "palette": [
+        "#75403B",
+        "#4E282C",
+        "#FFF4EC"
+      ],
+      "mob_alias": "baby_lava_dragon"
+    },
+    {
+      "id": "crate_dragao_lava",
+      "reference_ids": [
+        66
+      ],
+      "source_npc": "Lava Dragon",
+      "palette": [
+        "#75403B",
+        "#4E282C",
+        "#B63B58"
+      ],
+      "mob_alias": "lava_dragon"
+    },
+    {
+      "id": "crate_abutre",
+      "reference_ids": [],
+      "source_npc": "Vulture",
+      "palette": [
+        "#34303C",
+        "#191C29",
+        "#B63B58"
+      ],
+      "mob_alias": "vulture"
+    },
+    {
+      "id": "crate_verme_areia",
+      "reference_ids": [
+        58
+      ],
+      "source_npc": "Sandworm",
+      "palette": [
+        "#B87558",
+        "#713C36",
+        "#FFF0AD"
+      ],
+      "mob_alias": "sandworm"
+    },
+    {
+      "id": "crate_galinha_dourada",
+      "reference_ids": [
+        83
+      ],
+      "source_npc": "Golden Hen",
+      "palette": [
+        "#FFD657",
+        "#DAA421",
+        "#FFF0AD"
+      ],
+      "mob_alias": "golden_hen"
+    },
+    {
+      "id": "crate_pintinho_dourado",
+      "reference_ids": [
+        84
+      ],
+      "source_npc": "Golden Chick",
+      "palette": [
+        "#FFD657",
+        "#DAA421",
+        "#FFF0AD"
+      ],
+      "mob_alias": "golden_chick"
+    },
+    {
+      "id": "crate_favo",
+      "reference_ids": [
+        21
+      ],
+      "source_npc": null,
+      "palette": [
+        "#B88323",
+        "#694518",
+        "#F4C343"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_lapide",
+      "reference_ids": [
+        22
+      ],
+      "source_npc": null,
+      "palette": [
+        "#777C7D",
+        "#45494B",
+        "#B6B8AD"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_aquario",
+      "reference_ids": [
+        25
+      ],
+      "source_npc": null,
+      "palette": [
+        "#3D9E9B",
+        "#236268",
+        "#B8EEE0"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_recife",
+      "reference_ids": [
+        27
+      ],
+      "source_npc": null,
+      "palette": [
+        "#88744C",
+        "#4D4937",
+        "#D9AC59"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_presente",
+      "reference_ids": [
+        28
+      ],
+      "source_npc": null,
+      "palette": [
+        "#BB443C",
+        "#652B2B",
+        "#E3BD3D"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_jardim",
+      "reference_ids": [
+        29,
+        75
+      ],
+      "source_npc": null,
+      "palette": [
+        "#32785A",
+        "#1D4939",
+        "#76B47B"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_vulcao",
+      "reference_ids": [
+        31,
+        38
+      ],
+      "source_npc": null,
+      "palette": [
+        "#784829",
+        "#432A24",
+        "#F8B32E"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_minerador",
+      "reference_ids": [
+        32
+      ],
+      "source_npc": null,
+      "palette": [
+        "#995932",
+        "#543827",
+        "#91D9CD"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_bolo",
+      "reference_ids": [
+        33,
+        34
+      ],
+      "source_npc": null,
+      "palette": [
+        "#B1844B",
+        "#6F492D",
+        "#EDE0BC"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_grade",
+      "reference_ids": [
+        35,
+        36
+      ],
+      "source_npc": null,
+      "palette": [
+        "#566B78",
+        "#26333B",
+        "#D0DCE2"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_espinhos",
+      "reference_ids": [
+        40
+      ],
+      "source_npc": null,
+      "palette": [
+        "#49846B",
+        "#244B43",
+        "#D3E2CF"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_melancia",
+      "reference_ids": [
+        41,
+        42
+      ],
+      "source_npc": null,
+      "palette": [
+        "#3A8B43",
+        "#21552F",
+        "#79B857"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_gelo",
+      "reference_ids": [
+        18,
+        23,
+        26,
+        45,
+        47,
+        74
+      ],
+      "source_npc": null,
+      "palette": [
+        "#6099B4",
+        "#365775",
+        "#CEF2F7"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_outono",
+      "reference_ids": [
+        46
+      ],
+      "source_npc": null,
+      "palette": [
+        "#86532F",
+        "#49351F",
+        "#E4AD56"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_algodao",
+      "reference_ids": [
+        48
+      ],
+      "source_npc": null,
+      "palette": [
+        "#B7ADA3",
+        "#68635C",
+        "#F0ECE2"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_calendula",
+      "reference_ids": [
+        49
+      ],
+      "source_npc": null,
+      "palette": [
+        "#AF762D",
+        "#6D4A28",
+        "#D99A39"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_magma",
+      "reference_ids": [
+        71
+      ],
+      "source_npc": null,
+      "palette": [
+        "#6D3943",
+        "#332231",
+        "#E9A23B"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_vento",
+      "reference_ids": [
+        72
+      ],
+      "source_npc": null,
+      "palette": [
+        "#477F7A",
+        "#284F50",
+        "#BCE8DA"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_robo",
+      "reference_ids": [
+        73
+      ],
+      "source_npc": null,
+      "palette": [
+        "#6D868D",
+        "#334953",
+        "#A7BCC0"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_fossil",
+      "reference_ids": [
+        78
+      ],
+      "source_npc": null,
+      "palette": [
+        "#806036",
+        "#483A29",
+        "#BFA873"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_vortice",
+      "reference_ids": [
+        79
+      ],
+      "source_npc": null,
+      "palette": [
+        "#5D388D",
+        "#302246",
+        "#AE69D2"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_tigre",
+      "reference_ids": [
+        77
+      ],
+      "source_npc": null,
+      "palette": [
+        "#D48539",
+        "#653D2C",
+        "#824428"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_crocodilo",
+      "reference_ids": [
+        80
+      ],
+      "source_npc": null,
+      "palette": [
+        "#568D3D",
+        "#284F30",
+        "#A8BC67"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_lince",
+      "reference_ids": [
+        81
+      ],
+      "source_npc": null,
+      "palette": [
+        "#C29467",
+        "#604333",
+        "#E4CFA6"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_papagaio",
+      "reference_ids": [
+        82
+      ],
+      "source_npc": null,
+      "palette": [
+        "#BD453C",
+        "#66302D",
+        "#63BAA7"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_sapo_madeira",
+      "reference_ids": [
+        85,
+        90,
+        95,
+        100,
+        105,
+        110
+      ],
+      "source_npc": null,
+      "palette": [
+        "#9F7346",
+        "#4C3829",
+        "#D0A674"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_cervo_madeira",
+      "reference_ids": [
+        86,
+        91,
+        96,
+        101,
+        106,
+        111
+      ],
+      "source_npc": null,
+      "palette": [
+        "#9F7346",
+        "#4C3829",
+        "#D0A674"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_javali_madeira",
+      "reference_ids": [
+        87,
+        92,
+        97,
+        102,
+        107,
+        112
+      ],
+      "source_npc": null,
+      "palette": [
+        "#9F7346",
+        "#4C3829",
+        "#D0A674"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_lobo_madeira",
+      "reference_ids": [
+        88,
+        93,
+        98,
+        103,
+        108,
+        113
+      ],
+      "source_npc": null,
+      "palette": [
+        "#9F7346",
+        "#4C3829",
+        "#D0A674"
+      ],
+      "mob_alias": null
+    },
+    {
+      "id": "crate_urso_madeira",
+      "reference_ids": [
+        89,
+        94,
+        99,
+        104,
+        109,
+        114
+      ],
+      "source_npc": null,
+      "palette": [
+        "#9F7346",
+        "#4C3829",
+        "#D0A674"
+      ],
+      "mob_alias": null
+    }
+  ]
+}

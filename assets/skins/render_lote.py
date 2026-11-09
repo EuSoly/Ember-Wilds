@@ -15,12 +15,17 @@ for f in sorted(glob.glob(os.path.join(here, "lotes", pat + ".py"))):
     m = importlib.import_module(os.path.splitext(os.path.basename(f))[0])
     lote += m.LOTE; tipo = getattr(m, "TIPO", tipo)
 if not lote: raise SystemExit(f"nenhum lote para {pat}")
-if tipo == "livro":
+if tipo == "caixa":
+    import caixa_lib; caixa_lib.build_caixas(lote, cols=min(5, len(lote)))
+elif tipo == "livro":
     import livro_lib; livro_lib.build_livros(lote, cols=min(5, len(lote)))
 elif tipo == "mochila":
     import mochila_lib; mochila_lib.build_mochilas(lote, cols=min(5, len(lote)))
 else:
     skin_lib.build(lote, cols=min(5, len(lote)))
 name = pat.replace("*", "")
-print("prévias:", skin_lib.render_previews(os.path.join(out_dir, name), size_per_skin=(800 if tipo == "livro" else 360)))
+if tipo == "caixa":
+    caixa_lib.render_caixas(os.path.join(out_dir, name))
+else:
+    print("prévias:", skin_lib.render_previews(os.path.join(out_dir, name), size_per_skin=(800 if tipo == "livro" else 360)))
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out_dir, name + ".blend"))

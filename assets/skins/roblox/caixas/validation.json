@@ -1,0 +1,397 @@
+{
+  "categoria": "caixas",
+  "arquivos": 65,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-caixas.fbx",
+      "malhas": 80,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_default.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_pinho.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_ferro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_runica.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_ouro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_cosmica.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_aventureiro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_ossada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_espadas.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_rubi.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_diamante.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_coelho.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_lobo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_aranha.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_javali.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_falcao.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_pinguim.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_raposa_artica.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_urso_polar.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_mamute_filhote.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_mamute.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_dragao_filhote.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_dragao.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_caranguejo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_caranguejo_rei.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_piranha.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_kraken.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_monstro_lava.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_dragao_lava_filhote.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_dragao_lava.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_abutre.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_verme_areia.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_galinha_dourada.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_pintinho_dourado.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_favo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_lapide.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_aquario.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_recife.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_presente.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_jardim.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_vulcao.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_minerador.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_bolo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_grade.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_espinhos.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_melancia.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_gelo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_outono.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_algodao.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_calendula.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_magma.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_vento.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_robo.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_fossil.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_vortice.fbx",
+      "malhas": 7,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_tigre.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_crocodilo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_lince.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_papagaio.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_sapo_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_cervo_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_javali_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_lobo_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_urso_madeira.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

@@ -1,0 +1,350 @@
+{
+  "date": "2026-11-09",
+  "note": "Edições manuais do Elize: altura das penas e camadas do recife; remoção de seis discos nas junções dos ramos. Aplicar após a construção para preservar na exportação.",
+  "skins": {
+    "abutre": [
+      {
+        "piece": "Mob_feather_color.001_34",
+        "translate": [
+          0.0,
+          0.0,
+          -0.01051000000000002
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.004_42",
+        "translate": [
+          0.0,
+          0.0,
+          -0.01051000000000002
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.001_58",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0021500000000003183
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.002_59",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006450000000000067
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.004_64",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0021500000000003183
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.005_65",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006450000000000067
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.001_55",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0021499999999998742
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.002_56",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006449999999999845
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.004_61",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0021499999999998742
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.005_62",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006449999999999845
+        ]
+      }
+    ],
+    "galinha_dourada": [
+      {
+        "piece": "Mob_feather_color.001_34",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0043799999999998285
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.003_38",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0043799999999998285
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.005_44",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0043799999999998285
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.007_48",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0043799999999998285
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.001_62",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003510000000000124
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.004_68",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003510000000000124
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.001_59",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003509999999999902
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.004_65",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003509999999999902
+        ]
+      }
+    ],
+    "pintinho_dourado": [
+      {
+        "piece": "Mob_feather_color.002_36",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003810000000000091
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.005_44",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003810000000000091
+        ]
+      },
+      {
+        "piece": "Mob_feather_color.007_48",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003810000000000091
+        ]
+      },
+      {
+        "piece": "Mob_feather_color_32",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003810000000000091
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.001_62",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003029999999999866
+        ]
+      },
+      {
+        "piece": "Mob_shoulder_feather.004_68",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003029999999999866
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.001_59",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003029999999999866
+        ]
+      },
+      {
+        "piece": "Mob_upper_wing_feather.004_65",
+        "translate": [
+          0.0,
+          0.0,
+          -0.003029999999999866
+        ]
+      }
+    ],
+    "recife": [
+      {
+        "piece": "BranchTip_43",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0015300000000000313
+        ]
+      },
+      {
+        "piece": "BranchTip_46",
+        "remove": true
+      },
+      {
+        "piece": "BranchTip_49",
+        "remove": true
+      },
+      {
+        "piece": "BranchTip_52",
+        "remove": true
+      },
+      {
+        "piece": "BranchTip_55",
+        "remove": true
+      },
+      {
+        "piece": "BranchTip_58",
+        "remove": true
+      },
+      {
+        "piece": "BranchTip_61",
+        "remove": true
+      },
+      {
+        "piece": "LidDetail_64",
+        "translate": [
+          0.0,
+          0.0,
+          -0.008750000000000036
+        ]
+      },
+      {
+        "piece": "LidDetail_65",
+        "translate": [
+          0.0,
+          0.0,
+          -0.008750000000000036
+        ]
+      },
+      {
+        "piece": "LidDetail_66",
+        "translate": [
+          0.0,
+          0.0,
+          -0.008750000000000036
+        ]
+      },
+      {
+        "piece": "LidDetail_67",
+        "translate": [
+          0.0,
+          0.0,
+          -0.008750000000000036
+        ]
+      },
+      {
+        "piece": "LidDetail_82",
+        "translate": [
+          0.0,
+          0.0,
+          -0.004999999999999893
+        ]
+      },
+      {
+        "piece": "LidDetail_86",
+        "translate": [
+          0.0,
+          0.0,
+          -0.004999999999999893
+        ]
+      },
+      {
+        "piece": "OrganicBranch_45",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0015300000000000313
+        ]
+      },
+      {
+        "piece": "OrganicBranch_48",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006050000000000111
+        ]
+      },
+      {
+        "piece": "OrganicBranch_51",
+        "translate": [
+          0.0,
+          0.0,
+          -0.00757999999999992
+        ]
+      },
+      {
+        "piece": "OrganicBranch_54",
+        "translate": [
+          0.0,
+          0.0,
+          -0.006050000000000111
+        ]
+      },
+      {
+        "piece": "OrganicBranch_57",
+        "translate": [
+          0.0,
+          0.0,
+          -0.007859999999999978
+        ]
+      },
+      {
+        "piece": "OrganicBranch_60",
+        "translate": [
+          0.0,
+          0.0,
+          -0.0015300000000000313
+        ]
+      }
+    ]
+  }
+}
