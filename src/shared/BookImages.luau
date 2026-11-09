@@ -7,47 +7,47 @@ local HudImages = require("./HudImages")
 local BookImages = {}
 
 -- Abas: plaquinha de madeira (normal) e laranja (selecionada), esticadas em 9 partes.
-BookImages.TAB = "" -- tab.png (256x90)
-BookImages.TAB_SELECTED = "" -- tab_selected.png (256x85)
-BookImages.PAPER = "" -- paper.png (406x512): fundo da ficha
-BookImages.CLOSE = "" -- icon_close.png: X no octógono de madeira
+BookImages.TAB = "rbxassetid://140291025564258" -- tab.png (256x90)
+BookImages.TAB_SELECTED = "rbxassetid://81579472294484" -- tab_selected.png (256x85)
+BookImages.PAPER = "rbxassetid://106048370688899" -- paper.png (406x512): fundo da ficha
+BookImages.CLOSE = "rbxassetid://106085757348850" -- icon_close.png: X no octógono de madeira
 
 -- Ícone de cada aba (BookInfo.TABS), solto, ao lado do nome.
 BookImages.TAB_ICON = {
-	tools = "", -- tab_tools.png: picareta e martelo
-	weapons = "", -- tab_weapons.png: espada
-	armor = "", -- tab_armor.png: capacete
-	food = "", -- tab_food.png: coxa
-	build = "", -- tab_build.png: fogueira
-	resources = "", -- tab_resources.png: tora e pedra
+	tools = "rbxassetid://134182101941838", -- tab_tools.png: picareta e martelo
+	weapons = "rbxassetid://79027735524138", -- tab_weapons.png: espada
+	armor = "rbxassetid://74890238268503", -- tab_armor.png: capacete
+	food = "rbxassetid://132962981168838", -- tab_food.png: coxa
+	build = "rbxassetid://79950332198866", -- tab_build.png: fogueira
+	resources = "rbxassetid://116460862607072", -- tab_resources.png: tora e pedra
 } :: { [string]: string }
 
 -- Selos do "Precisa de" (chave = BookInfo.STATIONS[*].icon) e o relógio do tempo.
 BookImages.STATION = {
-	workbench = "", -- badge_workbench.png
-	fire = "", -- badge_fire.png
-	water = "", -- badge_water.png
+	workbench = "rbxassetid://132366148642774", -- badge_workbench.png
+	fire = "rbxassetid://110597111005550", -- badge_fire.png
+	water = "rbxassetid://133998679438131", -- badge_water.png
 } :: { [string]: string }
-BookImages.CLOCK = "" -- badge_clock.png
+BookImages.CLOCK = "rbxassetid://104378375989958" -- badge_clock.png
 
 -- Recursos do mapa no "Onde conseguir" (id em Defs/Resources).
 BookImages.RESOURCE = {
-	tree = "", -- res_tree.png
-	rock = "", -- res_rock.png
-	gold_vein = "", -- res_gold_vein.png
-	berry_bush = "", -- res_berry_bush.png
+	tree = "rbxassetid://80512535381211", -- res_tree.png
+	rock = "rbxassetid://85111541897373", -- res_rock.png
+	gold_vein = "rbxassetid://137626614013390", -- res_gold_vein.png
+	berry_bush = "rbxassetid://124263605015458", -- res_berry_bush.png
 } :: { [string]: string }
 
 -- Ícone de cada linha dos dados (chave = key da linha do UIFlow/ItemInfo). As
 -- barras e a mochila usam os ícones do HUD.
 BookImages.STAT = {
-	["info.damage"] = "", -- stat_damage.png
-	["info.structureDamage"] = "", -- stat_structure.png
-	["info.speed"] = "", -- stat_speed.png
-	["info.equipLock"] = "", -- stat_equiplock.png
-	["info.defense"] = "", -- stat_defense.png
-	["info.reach"] = "", -- stat_reach.png
-	["info.pickaxe"] = "", -- stat_pickaxe.png
+	["info.damage"] = "rbxassetid://126975906160745", -- stat_damage.png
+	["info.structureDamage"] = "rbxassetid://135849070589358", -- stat_structure.png
+	["info.speed"] = "rbxassetid://135535278294058", -- stat_speed.png
+	["info.equipLock"] = "rbxassetid://101404604794158", -- stat_equiplock.png
+	["info.defense"] = "rbxassetid://126319429706875", -- stat_defense.png
+	["info.reach"] = "rbxassetid://126386316751278", -- stat_reach.png
+	["info.pickaxe"] = "rbxassetid://96524621401433", -- stat_pickaxe.png
 	["info.cold"] = HudImages.STATUS_ICON.cold,
 	["info.health"] = HudImages.STATUS_ICON.health,
 	["info.food.hunger"] = HudImages.STATUS_ICON.hunger,

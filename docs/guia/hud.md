@@ -35,7 +35,7 @@ create("TextLabel")({
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 | `src/client/UI/SettingsButton.luau` | Engrenagem (canto superior direito, abaixo do minimapa): abre e fecha as configurações |
 | `src/client/UI/CraftColumn.luau`, `src/client/CraftState.luau` | Receitas disponíveis, tooltip e progresso; clique na receita ativa cancela |
-| `src/client/UI/RecipeBookButton.luau` | Abre o livro completo de receitas |
+| `src/client/UI/RecipeBookButton.luau` | Abre o livro de receitas (veja `livro-receitas.md`) |
 | `src/client/UI/ChestPanel.luau`, `src/client/ChestState.luau` | Painel do baú sobre a hotbar quando há um baú perto (item guardado e quantidade; clicar tira). Veja `construcao.md` |
 | `src/client/UI/CratePanel.luau`, `src/client/CrateState.luau` | Painel da caixa de itens (ver abaixo) |
 | `src/client/World/BuildGhost.luau` | Fantasma verde/vermelho no chão, girado como o servidor vai construir (aproximação; o servidor decide) |
