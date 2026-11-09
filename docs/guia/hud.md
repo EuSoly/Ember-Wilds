@@ -52,12 +52,12 @@ As imagens do HUD (arte do Elizeu, 09/11) ficam em `assets/ui/hud/`, recortadas 
 | Peça | Onde aparece |
 |---|---|
 | `STATUS_FRAME` + `STATUS_ICON` | Medalhão octogonal de cada anel de status, com o ícone (o de temperatura troca entre frio e calor) |
-| `SLOT`, `SLOT_SELECTED`, `LOCK` | Slots da hotbar, mochila, caixa, baú e receitas; o selecionado ganha a borda dourada |
+| `SLOT`, `SLOT_SELECTED`, `LOCK` | Slots da hotbar, mochila, caixa, baú e receitas; o selecionado ganha a borda dourada. Com a arte, o ícone vem sem a moldura do tier (`ItemIcon({ bare = true })`) e maior, dentro da borda de madeira (`HudArt.inSlot`) |
 | `MINIMAP_FRAME` | Moldura de madeira do minimapa (o mapa fica dentro, recuado `MINIMAP_INSET`) |
 | `BUTTON_ROUND` + `ICON` | Botões redondos: configurações, livro de receitas, mochila e girar (`HudArt.roundButton`) |
 | `PANEL` | Painel de couro do `Kit.panel` (caixa, baú, interação, mochila aberta), esticado em 9 partes |
 | `TOAST` | Avisos: `info` (creme), `alert` (laranja, ex.: "A noite está chegando"), `success` (verde). `Notifications.push(chave, vars, tipo)` |
-| `TOOLTIP` + `TOOLTIP_TAIL` | Balão de papel do `Kit.tooltip` (dica do item e da receita), com a pontinha embaixo apontando para o slot |
+| `TOOLTIP` + `TOOLTIP_TAIL` | Balão de papel do `Kit.tooltip` (dica do item e da receita), com a pontinha embaixo apontando para o slot. Texto na fonte do HUD (Fredoka One), 22 px de folga dos lados e 18 em cima/embaixo; a dica do item mostra a quantidade quando o item empilha (`ItemInfo.quantity`) |
 | `JOYSTICK_BASE`, `JOYSTICK_KNOB` | Joystick de mirar do celular (`AimStick`) |
 
 As peças que esticam (painel, aviso, balão) têm em `HudImages.SLICED` o tamanho da arte e o miolo que estica; os cantos (madeira, pregos) ficam do mesmo tamanho. Para trocar uma arte: substitua o PNG, envie para o Roblox e troque o id; se o tamanho mudar, ajuste o `SLICED` dela.

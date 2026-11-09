@@ -10,6 +10,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
 local CrateState = require(script.Parent.Parent:WaitForChild("CrateState"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 
@@ -72,18 +73,23 @@ local function CratePanel(): Frame
 					Text = "",
 					AutoButtonColor = false,
 					BackgroundColor3 = Theme.ui.panel,
-					BackgroundTransparency = Theme.panelTransparency,
+					-- Com a arte, o couro do slot é o fundo e a borda.
+					BackgroundTransparency = if HudArt.HAS_SLOT then 1 else Theme.panelTransparency,
 					BorderSizePixel = 0,
 					create("UICorner")({ CornerRadius = Theme.slotCorner }),
 					create("UIStroke")({
 						ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 						Color = Theme.ui.border,
 						Thickness = Theme.strokeThickness,
+						Enabled = not HudArt.HAS_SLOT,
 					}),
+					if HudArt.HAS_SLOT then { HudArt.slotBack() } else {},
 					Activated = function()
 						CrateState.take(index)
 					end,
-					ItemIcon({ item = item }),
+					if HudArt.HAS_SLOT
+						then HudArt.inSlot(ItemIcon({ item = item, bare = true }))
+						else ItemIcon({ item = item }),
 				})
 			end),
 		}),

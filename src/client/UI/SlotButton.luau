@@ -20,6 +20,7 @@ local DragState = require(Client:WaitForChild("DragState"))
 local HotbarState = require(Client:WaitForChild("HotbarState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
 local ItemHover = require(Client:WaitForChild("ItemHover"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 
 local create = vide.create
@@ -239,19 +240,9 @@ local function SlotButton(props: Props): TextButton
 				return if locked() then nil else item()
 			end),
 			function(current)
-				local icon = ItemIcon({ item = current })
-				if not HAS_ART then
-					return icon
-				end
-				-- Dentro da borda de madeira do slot.
-				local holder = Instance.new("Frame")
-				holder.Name = "IconHolder"
-				holder.AnchorPoint = Vector2.new(0.5, 0.5)
-				holder.Position = UDim2.fromScale(0.5, 0.5)
-				holder.Size = UDim2.fromScale(1 - 2 * HudImages.SLOT_INSET, 1 - 2 * HudImages.SLOT_INSET)
-				holder.BackgroundTransparency = 1
-				icon.Parent = holder
-				return holder
+				local icon = ItemIcon({ item = current, bare = HAS_ART })
+				-- Com a arte: sem a moldura do tier, dentro da borda de madeira.
+				return if HAS_ART then HudArt.inSlot(icon) else icon
 			end
 		),
 		plus,

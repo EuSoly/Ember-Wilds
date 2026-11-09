@@ -48,6 +48,29 @@ function HudArt.image(id: string, props: { [any]: any }?): ImageLabel
 	return if props then vide.apply(image)(props) :: ImageLabel else image
 end
 
+-- Com a arte do slot (couro e madeira), os slots perdem o quadrado escuro.
+HudArt.HAS_SLOT = HudImages.has(HudImages.SLOT)
+
+-- Fundo de couro de um slot (cobre o pai, atrás do ícone). Só com a arte.
+function HudArt.slotBack(): ImageLabel
+	return HudArt.image(HudImages.SLOT, { Name = "SlotArt", ScaleType = Enum.ScaleType.Stretch, ZIndex = 0 })
+end
+
+-- Põe `icon` dentro da borda de madeira do slot (recuado SLOT_INSET de cada lado).
+function HudArt.inSlot(icon: Instance): Frame
+	local inner = 1 - 2 * HudImages.SLOT_INSET
+	local holder = create("Frame")({
+		Name = "IconHolder",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(inner, inner),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+	}) :: Frame
+	icon.Parent = holder
+	return holder
+end
+
 export type RoundProps = {
 	Name: string,
 	icon: string, -- id do ícone (HudImages.ICON[...])

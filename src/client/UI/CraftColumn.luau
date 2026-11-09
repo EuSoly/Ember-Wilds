@@ -10,6 +10,7 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
@@ -46,6 +47,20 @@ local function hoveredRecipe(): Defs.RecipeDef?
 	return if id then Defs.Recipes[id] else nil
 end
 
+-- Balão da receita: nome, ingredientes e tempo/estação, na fonte do HUD e
+-- recuados da borda do papel (mesmas medidas da dica do item).
+local TIP_WIDTH = 260
+local TIP_PAD_X = 22
+local TIP_PAD_Y = 18
+local TIP_NAME = 28
+local TIP_LINE = 22
+
+-- Altura dos ingredientes: uma linha por ingrediente.
+local function ingredientsHeight(): number
+	local recipe = hoveredRecipe()
+	return TIP_LINE * math.max(if recipe then #recipe.ingredients else 1, 1)
+end
+
 local function RecipeTooltip(): Frame
 	return Kit.tooltip({
 		Name = "RecipeTooltip",
@@ -57,14 +72,17 @@ local function RecipeTooltip(): Frame
 		-- Mantém o tooltip dentro da área segura do HUD, ao lado da grade.
 		-- Posicionar acima da lista o colocava sob a barra superior do Roblox.
 		Position = UDim2.fromOffset(GRID_WIDTH + 12, 0),
-		Size = UDim2.fromOffset(240, 112),
+		Size = function()
+			return UDim2.fromOffset(TIP_WIDTH, TIP_PAD_Y * 2 + TIP_NAME + ingredientsHeight() + TIP_LINE)
+		end,
 		Rustic.label({
 			dark = true,
 			Name = "Name",
 			ZIndex = 11,
-			Size = UDim2.new(1, -16, 0, 30),
-			Position = UDim2.fromOffset(8, 5),
+			Size = UDim2.new(1, -2 * TIP_PAD_X, 0, TIP_NAME),
+			Position = UDim2.fromOffset(TIP_PAD_X, TIP_PAD_Y),
 			TextXAlignment = Enum.TextXAlignment.Left,
+			FontFace = Theme.font.number,
 			Text = function()
 				local recipe = hoveredRecipe()
 				local def = recipe and Defs.Items[recipe.result]
@@ -76,29 +94,34 @@ local function RecipeTooltip(): Frame
 			dark = true,
 			Name = "Ingredients",
 			ZIndex = 11,
-			Size = UDim2.new(1, -16, 0, 50),
-			Position = UDim2.fromOffset(8, 34),
+			Size = function()
+				return UDim2.new(1, -2 * TIP_PAD_X, 0, ingredientsHeight())
+			end,
+			Position = UDim2.fromOffset(TIP_PAD_X, TIP_PAD_Y + TIP_NAME),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextYAlignment = Enum.TextYAlignment.Top,
+			FontFace = Theme.font.number,
 			Text = function()
 				local recipe = hoveredRecipe()
 				return if recipe then materialText(recipe) else ""
 			end,
-			FontFace = Theme.font.body,
-			maxSize = 15,
+			maxSize = 16,
 		}),
 		Rustic.label({
 			dark = true,
 			Name = "TimeAndStation",
 			ZIndex = 11,
-			Size = UDim2.new(1, -16, 0, 22),
-			Position = UDim2.fromOffset(8, 85),
+			Size = UDim2.new(1, -2 * TIP_PAD_X, 0, TIP_LINE),
+			Position = function()
+				return UDim2.fromOffset(TIP_PAD_X, TIP_PAD_Y + TIP_NAME + ingredientsHeight())
+			end,
 			TextXAlignment = Enum.TextXAlignment.Left,
+			FontFace = Theme.font.number,
 			Text = function()
 				local recipe = hoveredRecipe()
 				return if recipe then durationText(recipe) else ""
 			end,
-			maxSize = 14,
+			maxSize = 16,
 		}),
 	})
 end
@@ -121,6 +144,19 @@ local function slotArt(active: () -> boolean): { Instance }
 			ZIndex = 0,
 		}),
 	}
+end
+
+-- Ícone do resultado da receita; com a arte, sem a moldura do tier e dentro
+-- da borda de madeira do slot.
+local function recipeIcon(currentRecipe: () -> Defs.RecipeDef): Instance
+	local icon = ItemIcon({
+		item = function()
+			local recipe = currentRecipe()
+			return { id = recipe.result, count = recipe.count }
+		end,
+		bare = HudArt.HAS_SLOT,
+	})
+	return if HudArt.HAS_SLOT then HudArt.inSlot(icon) else icon
 end
 
 local function recipeButton(row: () -> CraftState.Row): TextButton
@@ -188,12 +224,7 @@ local function recipeButton(row: () -> CraftState.Row): TextButton
 		Activated = function()
 			CraftState.toggle(row().id)
 		end,
-		ItemIcon({
-			item = function()
-				local recipe = currentRecipe()
-				return { id = recipe.result, count = recipe.count }
-			end,
-		}),
+		recipeIcon(currentRecipe),
 		create("Frame")({
 			Name = "ProgressFill",
 			Visible = active,

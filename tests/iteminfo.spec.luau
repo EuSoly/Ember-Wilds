@@ -17,6 +17,21 @@ local function has(list: { string }, text: string): boolean
 end
 
 return {
+	["stackable item shows how many you have"] = function()
+		local line = ItemInfo.quantity(Defs.Items.wood, 24)
+		assert(line, "madeira empilha: precisa da quantidade")
+		assert(Strings.format(line.key, line.vars) == "Quantidade: 24", Strings.format(line.key, line.vars))
+	end,
+
+	["stackable item shows quantity even with one"] = function()
+		local line = ItemInfo.quantity(Defs.Items.stone, 1)
+		assert(line and Strings.format(line.key, line.vars) == "Quantidade: 1", "pedra com 1 também mostra")
+	end,
+
+	["tool does not show quantity"] = function()
+		assert(ItemInfo.quantity(Defs.Items.gold_sword, 1) == nil, "espada não empilha")
+	end,
+
 	["food tells what it refills"] = function()
 		local l = lines("berry")
 		assert(has(l, "Repõe 10 de fome"), table.concat(l, " | "))

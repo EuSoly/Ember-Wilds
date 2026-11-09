@@ -6,6 +6,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local DragState = require(script.Parent.Parent:WaitForChild("DragState"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 
 local create = vide.create
@@ -39,12 +40,15 @@ local function DragGhost(): Frame
 			return UDim2.fromOffset(drag.position.X - origin.X, drag.position.Y - origin.Y)
 		end,
 		BackgroundColor3 = Theme.ui.panelRaised,
-		BackgroundTransparency = 0.3,
+		BackgroundTransparency = if HudArt.HAS_SLOT then 1 else 0.3,
 		BorderSizePixel = 0,
 		ZIndex = 50,
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		if HudArt.HAS_SLOT then { HudArt.slotBack() } else {},
 		vide.show(item, function(current)
-			return ItemIcon({ item = current })
+			return if HudArt.HAS_SLOT
+				then HudArt.inSlot(ItemIcon({ item = current, bare = true }))
+				else ItemIcon({ item = current })
 		end),
 	}) :: Frame
 	return ghost

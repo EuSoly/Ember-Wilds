@@ -24,6 +24,15 @@ function ItemInfo.tier(def: Types.ItemDef): (string?, string?)
 	return tier.nameKey, tier.color
 end
 
+-- Quantidade no slot, só para o que empilha (madeira, pedra, comida); nil
+-- para ferramentas, armas e o resto que ocupa um slot por unidade.
+function ItemInfo.quantity(def: Types.ItemDef, count: number): Line?
+	if def.maxStack <= 1 then
+		return nil
+	end
+	return { key = "info.count", vars = { value = count } }
+end
+
 -- Linhas da dica, na ordem de importância (no máximo MAX_LINES).
 function ItemInfo.lines(def: Types.ItemDef): { Line }
 	local out: { Line } = {}

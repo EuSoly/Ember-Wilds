@@ -19,7 +19,8 @@
 --   IconeZoom    número: 1 = enche o quadro, 1.3 = 30% maior, 0.8 = menor.
 --   IconeDesloca Vector2: move o modelo no quadro, em frações do quadro
 --                (0.1, 0 = 10% para a direita; 0, 0.1 = 10% para cima).
--- Itens sem tier (recursos, comida) usam a moldura neutra.
+-- Itens sem tier (recursos, comida) usam a moldura neutra. Com `bare`, sem
+-- moldura nenhuma (slots com a arte de couro).
 --
 -- Recebe o item como FONTE reativa: se a quantidade ou o item do slot mudar,
 -- o ícone se atualiza sozinho (sem ser recriado).
@@ -40,11 +41,17 @@ local FRAME_BORDER = 3
 local ICON_FOV = 30 -- campo de visão vertical da câmera do ícone
 local ICON_MARGIN = 0.12 -- folga fixa em volta do modelo
 local ICON_TILT = math.rad(35) -- inclinação em relação à vista de cima
+local FRAMED_SIZE = 0.86 -- moldura do tier dentro do slot
+local FRAMED_VIEWPORT = 0.9 -- 3D dentro da moldura do tier
+local BARE_VIEWPORT = 1.08 -- sem moldura: o 3D passa um pouco do quadro (a folga do ICON_MARGIN some)
 
 export type Item = { id: string, count: number }
 
 export type Props = {
 	item: () -> Item,
+	-- Sem a moldura do tier e com o 3D enchendo o quadro: para os slots com a
+	-- arte de couro (o slot já é a moldura; quem chama recua para dentro dela).
+	bare: boolean?,
 }
 
 local function frameColor(itemId: string): Color3
@@ -246,7 +253,9 @@ local function ItemIcon(props: Props): Frame
 		Name = "Icon3D",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.9, 0.9),
+		Size = if props.bare
+			then UDim2.fromScale(BARE_VIEWPORT, BARE_VIEWPORT)
+			else UDim2.fromScale(FRAMED_VIEWPORT, FRAMED_VIEWPORT),
 		-- Preto e transparente: o fundo branco padrão vaza na borda das peças
 		-- (contorno branco em volta do modelo).
 		BackgroundColor3 = Color3.new(0, 0, 0),
@@ -304,12 +313,12 @@ local function ItemIcon(props: Props): Frame
 		Name = "ItemIcon",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.86, 0.86),
+		Size = if props.bare then UDim2.fromScale(1, 1) else UDim2.fromScale(FRAMED_SIZE, FRAMED_SIZE),
 		BackgroundColor3 = color,
-		BackgroundTransparency = 0.85, -- fundo na cor do tier a 15%
+		BackgroundTransparency = if props.bare then 1 else 0.85, -- fundo na cor do tier a 15%
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
-		create("UIStroke")({ Color = color, Thickness = FRAME_BORDER }),
+		create("UIStroke")({ Color = color, Thickness = FRAME_BORDER, Enabled = not props.bare }),
 		viewport,
 		Kit.text({
 			Name = "Initials",

@@ -25,6 +25,7 @@ return table.freeze({
 	["info.food.hunger"] = "Repõe {value} de fome",
 	["info.food.thirst"] = "Repõe {value} de sede",
 	["info.food.health"] = "Recupera {value} de vida",
+	["info.count"] = "Quantidade: {value}",
 	["info.pickaxe"] = "Picareta nível {level}",
 	["info.damage"] = "Dano: {value}",
 	["info.speed"] = "Anda {value}% da velocidade",

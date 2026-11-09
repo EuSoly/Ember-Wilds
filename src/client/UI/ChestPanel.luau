@@ -8,6 +8,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 
 local create = vide.create
@@ -27,19 +28,24 @@ local function ChestPanel(): TextButton
 		Text = "",
 		AutoButtonColor = false,
 		BackgroundColor3 = Theme.ui.panel,
-		BackgroundTransparency = Theme.panelTransparency,
+		-- Com a arte, o couro do slot é o fundo e a borda.
+		BackgroundTransparency = if HudArt.HAS_SLOT then 1 else Theme.panelTransparency,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
 		create("UIStroke")({
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Color = Theme.ui.border,
 			Thickness = Theme.strokeThickness,
+			Enabled = not HudArt.HAS_SLOT,
 		}),
+		if HudArt.HAS_SLOT then { HudArt.slotBack() } else {},
 		Activated = function()
 			ChestState.take()
 		end,
 		vide.show(ChestState.contents, function(current)
-			return ItemIcon({ item = current })
+			return if HudArt.HAS_SLOT
+				then HudArt.inSlot(ItemIcon({ item = current, bare = true }))
+				else ItemIcon({ item = current })
 		end),
 	}) :: TextButton
 end
