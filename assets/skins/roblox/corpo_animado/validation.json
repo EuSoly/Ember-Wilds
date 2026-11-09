@@ -1,0 +1,31 @@
+{
+  "categoria": "corpo_animado",
+  "arquivos": 4,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-corpo_animado.fbx",
+      "malhas": 27,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_polvo.fbx",
+      "malhas": 10,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_dragao.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_toco.fbx",
+      "malhas": 11,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

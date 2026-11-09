@@ -413,6 +413,15 @@ local function applySkinMeshes(boneco: Boneco, skinId: string?)
 					weld(body, clone)
 					table.insert(boneco.skinParts, clone)
 				end
+			elseif SkinAssets.isAnimated(partName) then
+				-- Asa, rabo, tentáculo, raiz...: presa no corpo por uma junta no
+				-- pivô dela; o SkinAnimator mexe a junta (BonecoRenderer).
+				local clone = SkinAssets.clonePart(skinId, partName, body.CFrame)
+				if clone then
+					clone.Parent = boneco.model
+					SkinAssets.attachPart(body, clone, body.CFrame)
+					table.insert(boneco.skinParts, clone)
+				end
 			elseif info.papel == "mao" then
 				local cloneRight = SkinAssets.clonePart(skinId, partName, rightHand.CFrame)
 				if cloneRight then

@@ -1,0 +1,31 @@
+{
+  "categoria": "livros_animados",
+  "arquivos": 4,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-livros_animados.fbx",
+      "malhas": 24,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_gelo.fbx",
+      "malhas": 6,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_tentaculo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_trepadeira.fbx",
+      "malhas": 15,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

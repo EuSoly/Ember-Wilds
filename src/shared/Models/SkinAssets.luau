@@ -158,6 +158,11 @@ function SkinAssets.organizeStudioImports(): number
 
 	local count = 0
 	for _, item in foundParts do
+		-- Reimportação: a peça nova (Workspace, varrido primeiro) já tomou o
+		-- lugar desta antiga e a destruiu.
+		if item.part.Parent == nil then
+			continue
+		end
 		local info = item.info
 		local prefix = prefixOf(info.skinId)
 		local categoryFolder = if prefix then folders[prefix] else nil
@@ -269,6 +274,50 @@ function SkinAssets.hasSkin(skinId: string?): boolean
 	return false
 end
 
+-- Onde fica a junta de uma peça animada (papel anim_*, com `pivot` no
+-- SkinManifest) quando a skin está em `pivotCFrame`; nil = peça sem junta.
+function SkinAssets.jointCFrame(partName: string, pivotCFrame: CFrame): CFrame?
+	local info = SkinManifest.PARTS[partName]
+	local p = info and info.pivot
+	if p == nil then
+		return nil
+	end
+	return pivotCFrame * CFrame.new(p[1], p[2], p[3])
+end
+
+-- Prende uma peça animada em `base` por um Motor6D no pivô dela (a peça já
+-- está no lugar de descanso). Quem mexe é o SkinAnimator (Motor6D.Transform).
+-- Sem pivô no manifest, solda com Weld comum.
+function SkinAssets.attachPart(base: BasePart, part: BasePart, skinPivot: CFrame): JointInstance
+	local joint = SkinAssets.jointCFrame(part.Name, skinPivot)
+	if joint == nil then
+		local weld = Instance.new("Weld")
+		weld.Name = "SkinWeld"
+		weld.Part0 = base
+		weld.Part1 = part
+		weld.C0 = base.CFrame:ToObjectSpace(part.CFrame)
+		weld.Parent = part
+		return weld
+	end
+	local motor = Instance.new("Motor6D")
+	motor.Name = SkinAssets.ANIM_JOINT
+	motor.Part0 = base
+	motor.Part1 = part
+	motor.C0 = base.CFrame:ToObjectSpace(joint)
+	motor.C1 = part.CFrame:ToObjectSpace(joint)
+	motor.Parent = part
+	return motor
+end
+
+-- Nome do Motor6D das peças animadas (o SkinAnimator procura por ele).
+SkinAssets.ANIM_JOINT = "SkinAnimJoint"
+
+-- A peça é animada (tem junta própria)?
+function SkinAssets.isAnimated(partName: string): boolean
+	local info = SkinManifest.PARTS[partName]
+	return info ~= nil and info.pivot ~= nil
+end
+
 function SkinAssets.clonePart(skinId: string, partName: string, pivotCFrame: CFrame): BasePart?
 	skinId = resolveSkinId(skinId)
 	local info = SkinManifest.PARTS[partName]
@@ -295,7 +344,9 @@ function SkinAssets.clonePart(skinId: string, partName: string, pivotCFrame: CFr
 	applyMaterialAndTexture(clone, info)
 	local c = info.center
 	local correction = correctionFor(skinId)
-	clone.CFrame = pivotCFrame * CFrame.new(c[1], c[2], c[3]) * correction * source.CFrame.Rotation
+	-- Peça animada: o centro é relativo à junta dela, não ao pivô da skin.
+	local base = SkinAssets.jointCFrame(partName, pivotCFrame) or pivotCFrame
+	clone.CFrame = base * CFrame.new(c[1], c[2], c[3]) * correction * source.CFrame.Rotation
 	return clone
 end
 

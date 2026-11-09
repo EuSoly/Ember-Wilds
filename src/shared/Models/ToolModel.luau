@@ -114,13 +114,19 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 					local clone = SkinAssets.clonePart(skinId, partName, handle.CFrame)
 					if clone then
 						clone.Parent = model
-						local weld = Instance.new("Weld")
-						weld.Name = "SkinWeld"
-						weld.Part0 = handle
-						weld.Part1 = clone
-						weld.C0 = CFrame.identity
-						weld.C1 = handle.CFrame:ToObjectSpace(clone.CFrame)
-						weld.Parent = clone
+						if SkinAssets.isAnimated(partName) then
+							-- Cristal, folha, ponta do tentáculo...: junta no pivô
+							-- (o SkinAnimator mexe enquanto o livro está na mão).
+							SkinAssets.attachPart(handle, clone, handle.CFrame)
+						else
+							local weld = Instance.new("Weld")
+							weld.Name = "SkinWeld"
+							weld.Part0 = handle
+							weld.Part1 = clone
+							weld.C0 = CFrame.identity
+							weld.C1 = handle.CFrame:ToObjectSpace(clone.CFrame)
+							weld.Parent = clone
+						end
 					end
 				end
 

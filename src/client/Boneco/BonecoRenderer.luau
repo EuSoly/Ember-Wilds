@@ -24,7 +24,9 @@ local StatNames = require(Shared:WaitForChild("StatNames"))
 local SurvivalConfig = require(Shared:WaitForChild("SurvivalConfig"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
+local BagFx = require(script.Parent:WaitForChild("BagFx"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
+local SkinAnimator = require(script.Parent:WaitForChild("SkinAnimator"))
 local BagModel = require(script.Parent.Parent:WaitForChild("Menu"):WaitForChild("Cosmetics"):WaitForChild("BagModel"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 
@@ -63,6 +65,10 @@ type Entry = {
 	cosmeticId: string?,
 	bagCosmeticId: string?,
 	bagModel: Model?,
+	bagFx: BagFx.Fx?, -- partículas da mochila (só as dos pacotes do lançamento)
+	-- Peças animadas da skin e do livro na mão (SkinAnimator); nil = recoletar
+	-- (trocou a skin ou o item na mão).
+	skinJoints: { SkinAnimator.Joint }?,
 	bookCosmeticId: string?,
 	equippedId: string?,
 	hurtAt: number?,
@@ -132,6 +138,7 @@ end
 
 local function applyCosmetic(entry: Entry, id: string?)
 	entry.cosmeticId = id
+	entry.skinJoints = nil
 	local cosmetic = Cosmetic.resolve(Defs, BODY_SLOT, id)
 	if cosmetic.body then
 		BonecoModel.applyLook(entry.boneco, cosmetic.body, cosmetic.id)
@@ -144,17 +151,20 @@ local function applyBag(entry: Entry, id: string?)
 		entry.bagModel:Destroy()
 		entry.bagModel = nil
 	end
+	entry.bagFx = nil
 	local cosmetic = Cosmetic.resolve(Defs, BAG_SLOT, id)
 	if cosmetic.bag then
 		local bag = BagModel.build(cosmetic.bag, cosmetic.id)
 		BagModel.attach(bag, entry.boneco)
 		entry.bagModel = bag
+		entry.bagFx = BagFx.attach(bag, cosmetic.id)
 	end
 end
 
 local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
 	entry.equippedId = id
 	entry.bookCosmeticId = bookCosmeticId
+	entry.skinJoints = nil
 	local bookResolved = Cosmetic.resolve(Defs, BOOK_SLOT, bookCosmeticId)
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id, bookResolved.id)
 	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
@@ -247,6 +257,8 @@ local function build(character: Model, hrp: BasePart)
 		cosmeticId = nil,
 		bagCosmeticId = nil,
 		bagModel = nil,
+		bagFx = nil,
+		skinJoints = nil,
 		bookCosmeticId = nil,
 		equippedId = nil,
 		hurtAt = nil,
@@ -349,6 +361,17 @@ local function animate(entry: Entry, dt: number, speed: number, now: number, ser
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
 	boneco.rightHandJoint.Transform = rightHandTransform(boneco.rightHandJoint.C0, pose.right)
+
+	-- Skins com peças animadas (asas, tentáculos, raízes, cristais do livro) e
+	-- partículas da mochila: seguem o mesmo passo e a mesma velocidade.
+	local joints: { SkinAnimator.Joint } = entry.skinJoints or SkinAnimator.collect(boneco.model)
+	entry.skinJoints = joints
+	if #joints > 0 then
+		SkinAnimator.step(joints, now, entry.anim.phase, entry.anim.speedFraction)
+	end
+	if entry.bagFx then
+		BagFx.update(entry.bagFx, entry.anim.speedFraction)
+	end
 
 	-- Cada boneco sorteia o próprio piscar (math.random), e só troca as peças
 	-- quando a expressão ou o flash mudam de fato.

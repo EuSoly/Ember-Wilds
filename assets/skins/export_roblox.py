@@ -23,18 +23,28 @@ from mathutils import Matrix, Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 for p in (HERE, os.path.join(HERE, "lotes")):
     if p not in sys.path: sys.path.insert(0, p)
-import skin_lib, livro_lib, mochila_lib
+import skin_lib, livro_lib, mochila_lib, caixa_lib, skin_animacao
 
 OUT = os.path.join(HERE, "roblox")
 LOTES = {
-    "corpo": ["lote1", "lote2", "lote3_a", "lote3_b", "lote3_c", "lote3_d", "lote3_e", "lote4", "lote5", "lote6", "lote7", "lote8", "lote9", "lote10"],
+    "corpo": ["lote1", "lote2", "lote3_a", "lote3_b", "lote3_c", "lote3_d", "lote3_e", "lote4", "lote5", "lote6", "lote7", "lote8", "lote9", "lote10", "lote11", "lote12", "lote13", "lote14", "lote15", "lote16"],
+    "corpo_lotes11_16": ["lote11", "lote12", "lote13", "lote14", "lote15", "lote16"],
     "livros": ["livros1", "livros2"],
     "mochilas": ["mochilas1", "mochilas2", "mochilas3", "mochilas4", "mochilas5", "mochilas_variantes"],
+    "caixas": ["caixas_catalogo"],
+    # Skins com peças animadas (skin_animacao.py): um pacote pequeno só com elas, para importar
+    # por cima das versões paradas (o gen-skin-manifest dá preferência a estas categorias).
+    "corpo_animado": ["lote1", "lote3_e"],
+    "livros_animados": ["livros1", "livros2"],
 }
-PREFIXO = {"corpo": "body_", "livros": "book_", "mochilas": "bag_"}
-PAPEL_PADRAO = {"corpo": "corpo", "livros": "livro", "mochilas": "mochila"}
+# Categorias que exportam só algumas skins dos lotes.
+FILTRO = {"corpo_animado": set(skin_animacao.ANIM) & {"dragao", "polvo", "toco"},
+          "livros_animados": set(skin_animacao.ANIM) & {"gelo", "tentaculo", "trepadeira"}}
+PREFIXO = {"corpo": "body_", "corpo_lotes11_16": "body_", "corpo_animado": "body_", "livros": "book_", "livros_animados": "book_", "mochilas": "bag_", "caixas": "crate_"}
+PAPEL_PADRAO = {"corpo": "corpo", "corpo_lotes11_16": "corpo", "corpo_animado": "corpo", "livros": "livro", "livros_animados": "livro", "mochilas": "mochila", "caixas": "caixa"}
 RES_EXPORT = 4  # pontos por trecho de curva no export (o editável usa 8); metade dos triângulos, igual de cima
 TETO = {"corpo": 5000, "mao": 1500, "mao_esq": 1500, "livro": 3000, "mochila": 3500}  # triângulos por peça; acima disso aplica Decimate (collapse)
+TETO["caixa"] = 7500  # relevo do mob + caixa acabada nos quatro lados
 
 def srgb(v):
     v = max(0, min(1, v)); return round(255 * (12.92 * v if v <= .0031308 else 1.055 * v ** (1 / 2.4) - .055))
@@ -51,18 +61,25 @@ def carregar(categoria):
     lote = []
     for nome in LOTES[categoria]:
         lote += importlib.import_module(nome).LOTE
+    if categoria in FILTRO:
+        lote = [i for i in lote if i[0] in FILTRO[categoria]]
+        assert len(lote) == len(FILTRO[categoria]), (categoria, [i[0] for i in lote])
     nomes = [i[0] for i in lote]
     dup = {n for n in nomes if nomes.count(n) > 1}
     assert not dup, f"nomes repetidos em {categoria}: {dup}"
     return lote
 
 def montar(categoria, lote):
-    if categoria == "livros":
+    if categoria == "caixas":
+        caixa_lib.build_caixas(lote, cols=10)
+    elif categoria.startswith("livros"):
         livro_lib.build_livros(lote, cols=10)
     elif categoria == "mochilas":
         mochila_lib.build_mochilas(lote, cols=10)
     else:
         skin_lib.build(lote, cols=10)
+    if categoria.startswith("corpo") or categoria.startswith("livros"):
+        skin_animacao.prepare_all()  # separa as peças animadas (asas, tentáculos...) em grupos com pivô
     bpy.context.view_layer.update()
 
 def coletar(categoria):
@@ -79,7 +96,7 @@ def coletar(categoria):
         return indice[k]
     skins = []
     for coll in list(bpy.context.scene.collection.children):
-        if categoria == "corpo":
+        if categoria.startswith("corpo"):
             # Inclui PREVIEW_L_* (mão esquerda espelhada em X) e ignora os olhos (PREVIEW_*)
             objs = [o for o in coll.objects if o.type == "MESH" and (not o.name.startswith("PREVIEW") or o.name.startswith("PREVIEW_L_"))]
         else:
@@ -91,7 +108,9 @@ def coletar(categoria):
         ghost = bpy.data.objects.get(f"PREVIEW_{nome}_GhostBody")
         pivo_mao = None
         pivo_mao_esq = None
-        if categoria == "corpo":
+        if categoria == "caixas":
+            centro = Vector(coll['pivot'])
+        elif categoria.startswith("corpo"):
             bb = [corpo.matrix_world @ Vector(c) for c in corpo.bound_box]
             centro = Vector(((min(v.x for v in bb) + max(v.x for v in bb)) / 2, (min(v.y for v in bb) + max(v.y for v in bb)) / 2, BH / 2))
             pivo_mao = centro + Vector((HX, HY, HZ - BH / 2))
@@ -111,7 +130,7 @@ def coletar(categoria):
             m = o.active_material
             mn = m.name if m else ""
             alpha = m.diffuse_color[3] if m else 1.0
-            if categoria == "corpo":
+            if categoria.startswith("corpo"):
                 if o.name.startswith("PREVIEW_L_"):
                     papel = "mao_esq"
                 elif "_Hand" in o.name:
@@ -120,6 +139,8 @@ def coletar(categoria):
                     papel = "corpo"
             else:
                 papel = PAPEL_PADRAO[categoria]
+            if o.get('animation_group'):
+                papel = 'anim_' + o['animation_group']
             sufixo = "_neon" if mn.endswith("_neon") else ("_translucido" if mn.endswith("_a") else "")
             chave = (papel, sufixo)
             g = grupos.setdefault(chave, dict(objs=[], alpha=alpha))
@@ -127,10 +148,18 @@ def coletar(categoria):
         partes = []
         for (papel, sufixo), g in sorted(grupos.items()):
             pivo = pivo_mao if papel == "mao" else (pivo_mao_esq if papel == "mao_esq" else centro)
+            animation_group = None
+            if papel.startswith('anim_'):
+                animation_group = papel[5:]
+                # caixas: pivô relativo ao centro; corpo/livro (skin_animacao): pivô no mundo
+                offsets = [Vector(o['animation_pivot_world']) - centro if 'animation_pivot_world' in o else Vector(o['animation_pivot']) for o in g['objs']]
+                assert all((v-offsets[0]).length < .00001 for v in offsets)
+                pivo = centro + offsets[0]
             rel = Matrix.Translation(pivo)
             nome_parte = sid + f"_{papel}" + sufixo  # nunca igual ao nome da raiz (o Blender renomearia para .001)
             parte = dict(name=nome_parte, papel=papel, tipo=(sufixo[1:] if sufixo else "solido"),
                          alpha=round(g["alpha"], 3), relative=rel, vertices=[], faces=[], colors=[], smooth=[], source_parts=[])
+            parte['animation_group'] = animation_group
             for o in g["objs"]:
                 ev = o.evaluated_get(deps); me = ev.to_mesh(preserve_all_data_layers=True, depsgraph=deps)
                 tr = rel.inverted() @ ev.matrix_world; off = len(parte["vertices"])
@@ -204,12 +233,16 @@ def exportar(categoria):
             assert len(me.loop_triangles) < 20000, (p["name"], len(me.loop_triangles))  # limite do Roblox por MeshPart
             o.matrix_basis = Matrix.Translation(p["relative"].translation - Vector(sk["gallery"]))
             o["item_id"] = sk["id"]; o["papel"] = p["papel"]; o["tipo"] = p["tipo"]
+            if p.get('animation_group'):
+                o['animation_group'] = p['animation_group']
             objs_por[sk["id"]].append(o)
             pts = [v.co for v in me.vertices]
             bb = [round(min(v[j] for v in pts), 3) for j in range(3)] + [round(max(v[j] for v in pts), 3) for j in range(3)]
             rec["parts"].append(dict(name=p["name"], papel=p["papel"], tipo=p["tipo"], alpha=p["alpha"],
                                      offset_do_pivo_do_skin=[round(x, 3) for x in (p["relative"].translation - Vector(sk["gallery"]))],
                                      triangles=len(me.loop_triangles), triangles_antes_decimate=p["tri_antes"], vertices=len(me.vertices), bounds=bb, source_parts=len(p["source_parts"])))
+            if p.get('animation_group'):
+                rec['parts'][-1]['animation_group'] = p['animation_group']
         registros.append(rec)
     bpy.context.view_layer.update()
     rna = bpy.ops.export_scene.fbx.get_rna_type()
@@ -273,7 +306,11 @@ def validar(categoria, manifesto):
     return val
 
 resumo = {}
-for cat in ("corpo", "livros", "mochilas"):
+# Optional category avoids rebuilding other artists' finished assets.
+# blender -b --factory-startup --python assets/skins/export_roblox.py -- caixas
+categorias = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else list(LOTES)
+for cat in categorias:
+    if cat not in LOTES: raise ValueError(f'categoria desconhecida: {cat}')
     bpy.ops.wm.read_factory_settings(use_empty=True)
     man = exportar(cat)
     val = validar(cat, man)

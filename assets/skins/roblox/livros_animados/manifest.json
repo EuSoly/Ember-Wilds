@@ -1,0 +1,611 @@
+{
+  "categoria": "livros_animados",
+  "lotes": [
+    "livros1",
+    "livros2"
+  ],
+  "skin_count": 3,
+  "mesh_count": 24,
+  "total_triangles": 11568,
+  "palette_colors": 22,
+  "texture": "livros_animados_palette.png",
+  "texture_size": 256,
+  "arquivo_geral": "skins-livros_animados.fbx",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "skins": [
+    {
+      "id": "book_gelo",
+      "nome": "gelo",
+      "file": "individual/book_gelo.fbx",
+      "parts": [
+        {
+          "name": "book_gelo_anim_cristal_01",
+          "papel": "anim_cristal_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.108,
+            1.304,
+            0.27
+          ],
+          "triangles": 104,
+          "triangles_antes_decimate": 104,
+          "vertices": 68,
+          "bounds": [
+            -0.58,
+            -0.621,
+            -0.05,
+            0.58,
+            0.621,
+            0.05
+          ],
+          "source_parts": 8,
+          "animation_group": "cristal_01"
+        },
+        {
+          "name": "book_gelo_anim_cristal_02",
+          "papel": "anim_cristal_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.108,
+            -1.304,
+            0.27
+          ],
+          "triangles": 104,
+          "triangles_antes_decimate": 104,
+          "vertices": 68,
+          "bounds": [
+            -0.58,
+            -0.621,
+            -0.05,
+            0.58,
+            0.621,
+            0.05
+          ],
+          "source_parts": 8,
+          "animation_group": "cristal_02"
+        },
+        {
+          "name": "book_gelo_anim_cristal_03",
+          "papel": "anim_cristal_03",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.108,
+            1.304,
+            0.27
+          ],
+          "triangles": 104,
+          "triangles_antes_decimate": 104,
+          "vertices": 68,
+          "bounds": [
+            -0.58,
+            -0.621,
+            -0.05,
+            0.58,
+            0.621,
+            0.05
+          ],
+          "source_parts": 8,
+          "animation_group": "cristal_03"
+        },
+        {
+          "name": "book_gelo_anim_cristal_04",
+          "papel": "anim_cristal_04",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.108,
+            -1.304,
+            0.27
+          ],
+          "triangles": 104,
+          "triangles_antes_decimate": 104,
+          "vertices": 68,
+          "bounds": [
+            -0.58,
+            -0.621,
+            -0.05,
+            0.58,
+            0.621,
+            0.05
+          ],
+          "source_parts": 8,
+          "animation_group": "cristal_04"
+        },
+        {
+          "name": "book_gelo_anim_floco",
+          "papel": "anim_floco",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.295
+          ],
+          "triangles": 544,
+          "triangles_antes_decimate": 544,
+          "vertices": 360,
+          "bounds": [
+            -0.706,
+            -0.815,
+            -0.03,
+            0.706,
+            0.815,
+            0.025
+          ],
+          "source_parts": 44,
+          "animation_group": "floco"
+        },
+        {
+          "name": "book_gelo_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 380,
+          "triangles_antes_decimate": 380,
+          "vertices": 200,
+          "bounds": [
+            -1.245,
+            -1.4,
+            -0.265,
+            1.245,
+            1.4,
+            0.277
+          ],
+          "source_parts": 5
+        }
+      ]
+    },
+    {
+      "id": "book_tentaculo",
+      "nome": "tentaculo",
+      "file": "individual/book_tentaculo.fbx",
+      "parts": [
+        {
+          "name": "book_tentaculo_anim_espiral",
+          "papel": "anim_espiral",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.35,
+            0.5,
+            0.295
+          ],
+          "triangles": 512,
+          "triangles_antes_decimate": 512,
+          "vertices": 260,
+          "bounds": [
+            -0.755,
+            -0.775,
+            -0.018,
+            0.394,
+            0.476,
+            0.002
+          ],
+          "source_parts": 2,
+          "animation_group": "espiral"
+        },
+        {
+          "name": "book_tentaculo_anim_ponta",
+          "papel": "anim_ponta",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.05,
+            -0.22,
+            0.305
+          ],
+          "triangles": 1244,
+          "triangles_antes_decimate": 1244,
+          "vertices": 638,
+          "bounds": [
+            -0.75,
+            -0.115,
+            -0.028,
+            0.482,
+            1.375,
+            0.062
+          ],
+          "source_parts": 8,
+          "animation_group": "ponta"
+        },
+        {
+          "name": "book_tentaculo_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 2084,
+          "triangles_antes_decimate": 2084,
+          "vertices": 1074,
+          "bounds": [
+            -1.99,
+            -1.42,
+            -0.265,
+            1.245,
+            1.4,
+            0.367
+          ],
+          "source_parts": 16
+        }
+      ]
+    },
+    {
+      "id": "book_trepadeira",
+      "nome": "trepadeira",
+      "file": "individual/book_trepadeira.fbx",
+      "parts": [
+        {
+          "name": "book_trepadeira_anim_flor_01",
+          "papel": "anim_flor_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.301,
+            -0.038,
+            0.395
+          ],
+          "triangles": 1364,
+          "triangles_antes_decimate": 1364,
+          "vertices": 704,
+          "bounds": [
+            -0.259,
+            -0.253,
+            -0.027,
+            0.259,
+            0.253,
+            0.027
+          ],
+          "source_parts": 11,
+          "animation_group": "flor_01"
+        },
+        {
+          "name": "book_trepadeira_anim_flor_02",
+          "papel": "anim_flor_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.199,
+            0.932,
+            0.395
+          ],
+          "triangles": 1364,
+          "triangles_antes_decimate": 1364,
+          "vertices": 704,
+          "bounds": [
+            -0.259,
+            -0.253,
+            -0.027,
+            0.259,
+            0.253,
+            0.027
+          ],
+          "source_parts": 11,
+          "animation_group": "flor_02"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_01",
+          "papel": "anim_folha_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.157,
+            -1.311,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.239,
+            -0.221,
+            -0.023,
+            0.239,
+            0.221,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_01"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_02",
+          "papel": "anim_folha_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.789,
+            -0.523,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.198,
+            -0.27,
+            -0.023,
+            0.198,
+            0.27,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_02"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_03",
+          "papel": "anim_folha_03",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.007,
+            -0.398,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.252,
+            -0.21,
+            -0.023,
+            0.252,
+            0.21,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_03"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_04",
+          "papel": "anim_folha_04",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.315,
+            0.199,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.197,
+            -0.284,
+            -0.023,
+            0.197,
+            0.284,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_04"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_05",
+          "papel": "anim_folha_05",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.015,
+            -0.059,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.23,
+            -0.231,
+            -0.023,
+            0.23,
+            0.231,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_05"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_06",
+          "papel": "anim_folha_06",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.289,
+            0.613,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.197,
+            -0.277,
+            -0.023,
+            0.197,
+            0.277,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_06"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_07",
+          "papel": "anim_folha_07",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.66,
+            0.882,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.245,
+            -0.216,
+            -0.023,
+            0.245,
+            0.216,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_07"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_08",
+          "papel": "anim_folha_08",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.221,
+            0.742,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.197,
+            -0.269,
+            -0.023,
+            0.197,
+            0.269,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_08"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_09",
+          "papel": "anim_folha_09",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.282,
+            1.107,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.197,
+            -0.277,
+            -0.023,
+            0.197,
+            0.277,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_09"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_10",
+          "papel": "anim_folha_10",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.464,
+            1.154,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.229,
+            -0.232,
+            -0.023,
+            0.229,
+            0.232,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_10"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_11",
+          "papel": "anim_folha_11",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.044,
+            0.747,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.218,
+            -0.242,
+            -0.023,
+            0.218,
+            0.242,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_11"
+        },
+        {
+          "name": "book_trepadeira_anim_folha_12",
+          "papel": "anim_folha_12",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.37,
+            1.427,
+            0.35
+          ],
+          "triangles": 184,
+          "triangles_antes_decimate": 184,
+          "vertices": 96,
+          "bounds": [
+            -0.198,
+            -0.281,
+            -0.023,
+            0.198,
+            0.281,
+            0.022
+          ],
+          "source_parts": 2,
+          "animation_group": "folha_12"
+        },
+        {
+          "name": "book_trepadeira_livro",
+          "papel": "livro",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1452,
+          "triangles_antes_decimate": 1452,
+          "vertices": 744,
+          "bounds": [
+            -1.708,
+            -1.4,
+            -0.265,
+            1.549,
+            1.682,
+            0.332
+          ],
+          "source_parts": 9
+        }
+      ]
+    }
+  ]
+}

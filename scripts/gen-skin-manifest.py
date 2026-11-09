@@ -28,6 +28,10 @@ CATEGORIAS = ["corpo", "corpo_lotes11_16", "livros", "mochilas", "caixas"]
 # da própria peça (a mão é posicionada pelo pivô dela, em tempo de jogo).
 MONTADAS = {"caixas"}
 
+# Pacotes que substituem skins das categorias acima (mesmo id, no mesmo lugar
+# da lista): as skins com peças animadas (assets/skins/skin_animacao.py).
+SUBSTITUTAS = ["corpo_animado", "livros_animados"]
+
 # Skin sem malha própria que usa a de outra (entra logo antes da original).
 APELIDOS = {"book_default": "book_pergaminho"}
 
@@ -44,6 +48,10 @@ export type PartInfo = {
 \ttipo: string,
 \talpha: number,
 \tcenter: { number },
+\t-- Só nas peças animadas (papel anim_*) de corpo e livro: onde fica o pivô
+\t-- (a junta) em relação ao pivô da skin, nos eixos do Roblox. O `center`
+\t-- dessas peças é relativo a este pivô.
+\tpivot: { number }?,
 }
 """
 
@@ -61,10 +69,19 @@ def main():
     parts_lines = []
     by_skin_lines = []
     seen = set()
+    substitutas = {}
+    for categoria in SUBSTITUTAS:
+        with open(os.path.join(SKINS, categoria, "manifest.json"), encoding="utf-8") as f:
+            for skin in json.load(f)["skins"]:
+                substitutas[skin["id"]] = skin
+    usadas = set()
     for categoria in CATEGORIAS:
         with open(os.path.join(SKINS, categoria, "manifest.json"), encoding="utf-8") as f:
             manifest = json.load(f)
         for skin in manifest["skins"]:
+            if skin["id"] in substitutas:
+                skin = substitutas[skin["id"]]
+                usadas.add(skin["id"])
             names = []
             for part in skin["parts"]:
                 name = part["name"]
@@ -76,20 +93,27 @@ def main():
                 if categoria in MONTADAS:
                     ox, oy, oz = part["offset_do_pivo_do_skin"]
                     cx, cy, cz = round(cx + ox, 4), round(cy + oz, 4), round(cz - oy, 4)
+                pivot = ""
+                if part.get("animation_group") and categoria not in MONTADAS:
+                    ox, oy, oz = part["offset_do_pivo_do_skin"]
+                    pivot = f"\t\tpivot = {{ {round(ox, 4)}, {round(oz, 4)}, {round(-oy, 4)} }},\n"
                 parts_lines.append(
                     f'\t["{name}"] = {{\n'
                     f'\t\tskinId = "{skin["id"]}",\n'
                     f'\t\tpapel = "{part["papel"]}",\n'
                     f'\t\ttipo = "{part["tipo"]}",\n'
                     f'\t\talpha = {float(part["alpha"])},\n'
-                    f"\t\tcenter = {{ {cx}, {cy}, {cz} }},\n"
-                    "\t},"
+                    f"\t\tcenter = {{ {cx}, {cy}, {cz} }},\n" + pivot + "\t},"
                 )
             quoted = ", ".join(f'"{n}"' for n in names)
             for alias, original in APELIDOS.items():
                 if original == skin["id"]:
                     by_skin_lines.append(f'\t["{alias}"] = {{ {quoted} }},')
             by_skin_lines.append(f'\t["{skin["id"]}"] = {{ {quoted} }},')
+
+    sobrando = set(substitutas) - usadas
+    if sobrando:
+        raise SystemExit(f"skins substitutas sem original: {sorted(sobrando)}")
 
     text = (
         HEADER

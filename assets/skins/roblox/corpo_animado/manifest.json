@@ -1,0 +1,677 @@
+{
+  "categoria": "corpo_animado",
+  "lotes": [
+    "lote1",
+    "lote3_e"
+  ],
+  "skin_count": 3,
+  "mesh_count": 27,
+  "total_triangles": 27864,
+  "palette_colors": 17,
+  "texture": "corpo_animado_palette.png",
+  "texture_size": 256,
+  "arquivo_geral": "skins-corpo_animado.fbx",
+  "eixos": "Blender Z-up; FBX forward -Z, up Y (Blender +Y = Roblox -Z = frente; Blender +X = Roblox +X). Bounds em coordenadas do Blender, relativas ao pivô da peça.",
+  "skins": [
+    {
+      "id": "body_polvo",
+      "nome": "polvo",
+      "file": "individual/body_polvo.fbx",
+      "parts": [
+        {
+          "name": "body_polvo_anim_tentaculo_01",
+          "papel": "anim_tentaculo_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.18,
+            0.21,
+            0.35
+          ],
+          "triangles": 816,
+          "triangles_antes_decimate": 816,
+          "vertices": 416,
+          "bounds": [
+            -0.509,
+            -0.508,
+            -0.51,
+            0.577,
+            2.596,
+            0.56
+          ],
+          "source_parts": 4,
+          "animation_group": "tentaculo_01"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_02",
+          "papel": "anim_tentaculo_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.13,
+            -0.41,
+            0.35
+          ],
+          "triangles": 816,
+          "triangles_antes_decimate": 816,
+          "vertices": 416,
+          "bounds": [
+            -0.231,
+            -0.519,
+            -0.51,
+            1.49,
+            2.446,
+            0.56
+          ],
+          "source_parts": 4,
+          "animation_group": "tentaculo_02"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_03",
+          "papel": "anim_tentaculo_03",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.6,
+            -1.04,
+            0.35
+          ],
+          "triangles": 940,
+          "triangles_antes_decimate": 940,
+          "vertices": 480,
+          "bounds": [
+            -0.448,
+            -0.587,
+            -0.51,
+            2.896,
+            0.689,
+            0.56
+          ],
+          "source_parts": 5,
+          "animation_group": "tentaculo_03"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_04",
+          "papel": "anim_tentaculo_04",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            -1.2,
+            0.35
+          ],
+          "triangles": 940,
+          "triangles_antes_decimate": 940,
+          "vertices": 480,
+          "bounds": [
+            -2.809,
+            -1.55,
+            -0.51,
+            0.535,
+            0.128,
+            0.56
+          ],
+          "source_parts": 5,
+          "animation_group": "tentaculo_04"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_05",
+          "papel": "anim_tentaculo_05",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.6,
+            -1.04,
+            0.35
+          ],
+          "triangles": 940,
+          "triangles_antes_decimate": 940,
+          "vertices": 480,
+          "bounds": [
+            -2.896,
+            -0.587,
+            -0.51,
+            0.448,
+            0.689,
+            0.56
+          ],
+          "source_parts": 5,
+          "animation_group": "tentaculo_05"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_06",
+          "papel": "anim_tentaculo_06",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.13,
+            -0.41,
+            0.35
+          ],
+          "triangles": 816,
+          "triangles_antes_decimate": 816,
+          "vertices": 416,
+          "bounds": [
+            -1.49,
+            -0.519,
+            -0.51,
+            0.231,
+            2.446,
+            0.56
+          ],
+          "source_parts": 4,
+          "animation_group": "tentaculo_06"
+        },
+        {
+          "name": "body_polvo_anim_tentaculo_07",
+          "papel": "anim_tentaculo_07",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.18,
+            0.21,
+            0.35
+          ],
+          "triangles": 816,
+          "triangles_antes_decimate": 816,
+          "vertices": 416,
+          "bounds": [
+            -0.577,
+            -0.508,
+            -0.51,
+            0.509,
+            2.596,
+            0.56
+          ],
+          "source_parts": 4,
+          "animation_group": "tentaculo_07"
+        },
+        {
+          "name": "body_polvo_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1984,
+          "triangles_antes_decimate": 1984,
+          "vertices": 1008,
+          "bounds": [
+            -2.0,
+            -2.0,
+            -1.0,
+            2.0,
+            2.0,
+            1.05
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_polvo_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1272,
+          "triangles_antes_decimate": 1272,
+          "vertices": 644,
+          "bounds": [
+            -0.75,
+            -0.999,
+            -0.77,
+            0.831,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
+        },
+        {
+          "name": "body_polvo_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1272,
+          "triangles_antes_decimate": 1272,
+          "vertices": 644,
+          "bounds": [
+            -0.831,
+            -0.999,
+            -0.77,
+            0.75,
+            0.75,
+            0.65
+          ],
+          "source_parts": 4
+        }
+      ]
+    },
+    {
+      "id": "body_dragao",
+      "nome": "dragao",
+      "file": "individual/body_dragao.fbx",
+      "parts": [
+        {
+          "name": "body_dragao_anim_asa_dir",
+          "papel": "anim_asa_dir",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.55,
+            -0.3,
+            0.5
+          ],
+          "triangles": 88,
+          "triangles_antes_decimate": 88,
+          "vertices": 54,
+          "bounds": [
+            -0.131,
+            -1.533,
+            -0.36,
+            2.13,
+            0.888,
+            0.39
+          ],
+          "source_parts": 5,
+          "animation_group": "asa_dir"
+        },
+        {
+          "name": "body_dragao_anim_asa_esq",
+          "papel": "anim_asa_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.55,
+            -0.3,
+            0.5
+          ],
+          "triangles": 88,
+          "triangles_antes_decimate": 88,
+          "vertices": 54,
+          "bounds": [
+            -2.13,
+            -1.533,
+            -0.36,
+            0.131,
+            0.888,
+            0.39
+          ],
+          "source_parts": 5,
+          "animation_group": "asa_esq"
+        },
+        {
+          "name": "body_dragao_anim_rabo",
+          "papel": "anim_rabo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            -1.75,
+            0.4
+          ],
+          "triangles": 60,
+          "triangles_antes_decimate": 60,
+          "vertices": 36,
+          "bounds": [
+            -0.739,
+            -1.94,
+            -0.51,
+            0.739,
+            0.108,
+            0.56
+          ],
+          "source_parts": 3,
+          "animation_group": "rabo"
+        },
+        {
+          "name": "body_dragao_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 1948,
+          "triangles_antes_decimate": 1948,
+          "vertices": 1008,
+          "bounds": [
+            -2.987,
+            -2.0,
+            -1.0,
+            2.987,
+            2.0,
+            1.125
+          ],
+          "source_parts": 17
+        },
+        {
+          "name": "body_dragao_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1080,
+          "triangles_antes_decimate": 1080,
+          "vertices": 550,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.78,
+            0.65
+          ],
+          "source_parts": 5
+        },
+        {
+          "name": "body_dragao_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1080,
+          "triangles_antes_decimate": 1080,
+          "vertices": 550,
+          "bounds": [
+            -0.75,
+            -0.75,
+            -0.77,
+            0.75,
+            0.78,
+            0.65
+          ],
+          "source_parts": 5
+        }
+      ]
+    },
+    {
+      "id": "body_toco",
+      "nome": "toco",
+      "file": "individual/body_toco.fbx",
+      "parts": [
+        {
+          "name": "body_toco_anim_broto_dir",
+          "papel": "anim_broto_dir",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.35,
+            -1.4,
+            0.85
+          ],
+          "triangles": 1344,
+          "triangles_antes_decimate": 1344,
+          "vertices": 688,
+          "bounds": [
+            -0.635,
+            -1.958,
+            -0.11,
+            1.207,
+            0.131,
+            0.155
+          ],
+          "source_parts": 8,
+          "animation_group": "broto_dir"
+        },
+        {
+          "name": "body_toco_anim_broto_esq",
+          "papel": "anim_broto_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.55,
+            -1.35,
+            0.85
+          ],
+          "triangles": 1408,
+          "triangles_antes_decimate": 1408,
+          "vertices": 720,
+          "bounds": [
+            -1.59,
+            -2.453,
+            -0.11,
+            0.265,
+            0.135,
+            0.155
+          ],
+          "source_parts": 8,
+          "animation_group": "broto_esq"
+        },
+        {
+          "name": "body_toco_anim_raiz_01",
+          "papel": "anim_raiz_01",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.3,
+            -0.1,
+            0.3
+          ],
+          "triangles": 388,
+          "triangles_antes_decimate": 388,
+          "vertices": 200,
+          "bounds": [
+            -0.18,
+            -0.556,
+            -0.53,
+            2.039,
+            0.533,
+            0.5
+          ],
+          "source_parts": 3,
+          "animation_group": "raiz_01"
+        },
+        {
+          "name": "body_toco_anim_raiz_02",
+          "papel": "anim_raiz_02",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.0,
+            -1.0,
+            0.3
+          ],
+          "triangles": 388,
+          "triangles_antes_decimate": 388,
+          "vertices": 200,
+          "bounds": [
+            -0.375,
+            -2.042,
+            -0.53,
+            1.791,
+            0.418,
+            0.5
+          ],
+          "source_parts": 3,
+          "animation_group": "raiz_02"
+        },
+        {
+          "name": "body_toco_anim_raiz_03",
+          "papel": "anim_raiz_03",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.3,
+            -0.4,
+            0.3
+          ],
+          "triangles": 388,
+          "triangles_antes_decimate": 388,
+          "vertices": 200,
+          "bounds": [
+            -1.835,
+            -1.083,
+            -0.53,
+            0.201,
+            0.512,
+            0.5
+          ],
+          "source_parts": 3,
+          "animation_group": "raiz_03"
+        },
+        {
+          "name": "body_toco_anim_raiz_04",
+          "papel": "anim_raiz_04",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.1,
+            -1.1,
+            0.3
+          ],
+          "triangles": 388,
+          "triangles_antes_decimate": 388,
+          "vertices": 200,
+          "bounds": [
+            -1.278,
+            -2.083,
+            -0.53,
+            0.366,
+            0.412,
+            0.5
+          ],
+          "source_parts": 3,
+          "animation_group": "raiz_04"
+        },
+        {
+          "name": "body_toco_anim_raiz_05",
+          "papel": "anim_raiz_05",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -0.3,
+            1.3,
+            0.3
+          ],
+          "triangles": 388,
+          "triangles_antes_decimate": 388,
+          "vertices": 200,
+          "bounds": [
+            -0.919,
+            -0.177,
+            -0.53,
+            0.5,
+            1.671,
+            0.5
+          ],
+          "source_parts": 3,
+          "animation_group": "raiz_05"
+        },
+        {
+          "name": "body_toco_anim_raiz_06",
+          "papel": "anim_raiz_06",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.35,
+            1.3,
+            0.3
+          ],
+          "triangles": 216,
+          "triangles_antes_decimate": 216,
+          "vertices": 112,
+          "bounds": [
+            -0.43,
+            -0.195,
+            -0.53,
+            0.514,
+            1.355,
+            0.485
+          ],
+          "source_parts": 2,
+          "animation_group": "raiz_06"
+        },
+        {
+          "name": "body_toco_corpo",
+          "papel": "corpo",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "triangles": 5000,
+          "triangles_antes_decimate": 5404,
+          "vertices": 2552,
+          "bounds": [
+            -2.262,
+            -2.249,
+            -1.0,
+            2.262,
+            2.264,
+            1.11
+          ],
+          "source_parts": 26
+        },
+        {
+          "name": "body_toco_mao",
+          "papel": "mao",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2120,
+          "vertices": 766,
+          "bounds": [
+            -0.75,
+            -0.828,
+            -0.77,
+            0.824,
+            0.75,
+            0.69
+          ],
+          "source_parts": 8
+        },
+        {
+          "name": "body_toco_mao_esq",
+          "papel": "mao_esq",
+          "tipo": "solido",
+          "alpha": 1.0,
+          "offset_do_pivo_do_skin": [
+            -1.95,
+            1.45,
+            0.2
+          ],
+          "triangles": 1500,
+          "triangles_antes_decimate": 2120,
+          "vertices": 766,
+          "bounds": [
+            -0.824,
+            -0.828,
+            -0.77,
+            0.75,
+            0.75,
+            0.69
+          ],
+          "source_parts": 8
+        }
+      ]
+    }
+  ]
+}
