@@ -139,6 +139,42 @@ function RankRules.position(entries: { any }, userId: number): number
 	return 0
 end
 
+export type Owed = { week: number, values: { [string]: number } }
+
+-- Virada da semana: o estado da semana `week` e, se o guardado é de outra
+-- semana e ainda tinha categorias por gravar (`pending`), os valores que essa
+-- semana velha ainda deve ao placar (para gravar no escopo dela antes de zerar).
+function RankRules.rollover(state: any, week: number, pending: { [string]: boolean }?): (WeekState, Owed?)
+	if type(state) == "table" and state.Week == week then
+		return RankRules.current(state, week), nil
+	end
+	local owed: Owed? = nil
+	if type(state) == "table" and type(state.Week) == "number" and pending and next(pending) ~= nil then
+		local old = RankRules.current(state, state.Week)
+		local values = {}
+		for category in pending do
+			values[category] = (old :: any)[category]
+		end
+		owed = { week = old.Week, values = values }
+	end
+	return RankRules.empty(week), owed
+end
+
+-- O ranking conta neste servidor? Servidor VIP (com dono) não conta: nem soma
+-- no valor da semana nem grava no placar (senão daria para farmar no VIP).
+function RankRules.counts(privateServerOwnerId: number): boolean
+	return privateServerOwnerId == 0
+end
+
+-- Segundos até poder atender um pedido do cliente (0 = já). Pedido dentro do
+-- intervalo espera o resto, em vez de ser jogado fora (a aba ficaria presa).
+function RankRules.requestDelay(lastAt: number?, now: number, minInterval: number): number
+	if lastAt == nil then
+		return 0
+	end
+	return math.max(0, minInterval - (now - lastAt))
+end
+
 -- Texto do "termina em…": chave em Strings e os números dela.
 function RankRules.countdown(seconds: number): (string, { [string]: number })
 	seconds = math.max(0, math.floor(seconds))

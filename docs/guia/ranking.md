@@ -18,8 +18,8 @@ Uma vida conta na semana em que **termina**. Abates contam na hora.
 
 1. **Perfil:** o valor da semana de cada jogador fica no perfil (campo `Ranking`, regras em `src/shared/Data/RankRules.luau`). Ao virar a semana, zera sozinho na próxima leitura.
 2. **Fontes:** `LifeService.endLife` (pontos, dias, XP da vida), `DeathService.kill` (golpe final em jogador; também soma o "Jogadores mortos" do Perfil) e `MobService` (mob morto) chamam o `RankService`.
-3. **Placar:** `RankService` copia os valores para um DataStore ordenado por categoria (`Rank_<categoria>`, escopo `W<semana>`; no Studio `Dev_Rank_<categoria>`). Grava a cada minuto, no fim da vida e ao sair; servidor VIP não grava. Semanas antigas ficam guardadas (a premiação lê de lá).
-4. **Tela:** ao abrir o Ranking ou trocar de aba, o cliente pede (`Net.RequestRanking`) e o servidor responde (`Net.RankingData`) com o top 50 (lido do top 100 em cache de 3 min), o seu valor e a sua posição (até o 100º; depois "100+").
+3. **Placar:** `RankService` copia os valores para um DataStore ordenado por categoria (`Rank_<categoria>`, escopo `W<semana>`; no Studio `Dev_Rank_<categoria>`). Grava a cada minuto, no fim da vida e ao sair; uma gravação por jogador de cada vez, lendo o valor do perfil na hora (nada contado durante a espera se perde). Na virada da semana, o que a semana velha ainda devia é gravado no escopo dela antes de zerar. Servidor VIP não conta: nem soma nem grava. Semanas antigas ficam guardadas (a premiação lê de lá).
+4. **Tela:** ao abrir o Ranking ou trocar de aba, o cliente pede (`Net.RequestRanking`) e o servidor responde (`Net.RankingData`) com o top 50 (lido do top 100 em cache de 3 min), o seu valor e a sua posição (até o 100º; depois "100+"). Pedidos rápidos demais (troca rápida de aba) esperam a vez e o servidor responde o último. Em janela compacta (largura < 900 ou altura < 500) as abas sobem para a linha do título e o "termina em…" vai para o canto do pódio.
 
 ## Onde mudar
 
@@ -51,3 +51,4 @@ Para ver a tela cheia no Studio, dá para gravar valores de teste direto no plac
 - Gravar e ler de verdade: 4321 pontos voltaram no top com o nome e a posição 1; `DevRankRemove` tirou.
 - Tela com 14 jogadores de teste: pódio alinhado (avatares nos tampos, "1º/2º/3º" nas plaquinhas), abas trocando (Pontos → XP), linha "você" com "—" e 0, "termina em 6d 11h".
 - Escala de interface 1,25 (área de ~680 px lógicos): continua lado a lado e alinhado.
+- Depois da revisão final: troca rápida de aba (Pontos → XP → Dias em 0,2 s) carrega a última; janela compacta 537×379 (escala 1,6) com as abas na linha do título, pódio alinhado e a linha "você" à vista; gravação com a lógica nova (7777 no placar).

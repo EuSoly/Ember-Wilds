@@ -58,13 +58,35 @@ return {
 	["narrow window stacks the podium over the list"] = function()
 		local l = RankingLayout.compute(560, 700, 1)
 		assert(l.stacked, "estreita: pódio em cima")
-		assert(l.listWidth == 560 and l.podiumWidth <= 560, "lista na largura toda")
+		assert(l.listWidth == l.bodyWidth and l.podiumWidth <= l.bodyWidth, "lista na largura toda do corpo")
 	end,
 
 	["short landscape window keeps podium and list side by side"] = function()
 		local l = RankingLayout.compute(678, 508, 1.25)
 		assert(not l.stacked, "deitada e baixa (escala 1,25): lado a lado")
 		assert(l.podiumWidth + l.listWidth + l.gap <= 678, "cabe na largura")
+	end,
+
+	["compact window keeps two rows and the 'você' row visible"] = function()
+		local l = RankingLayout.compute(600, 310, 1)
+		assert(l.compact and l.inlineTabs, "compacto: abas na linha do título")
+		local need = 2 * l.rowHeight + RankingLayout.ME_SCALE * l.rowHeight + 16
+		assert(l.bodyHeight >= need, `corpo {l.bodyHeight} < {need}`)
+	end,
+
+	["phone at scale 1.25 still shows a row and the 'você' row"] = function()
+		local l = RankingLayout.compute(480, 248, 1.25)
+		local need = l.rowHeight + RankingLayout.ME_SCALE * l.rowHeight + 12
+		assert(l.bodyHeight >= need, `corpo {l.bodyHeight} < {need}`)
+		assert(l.rowHeight * 1.25 >= 44, "toque ainda >= 44")
+	end,
+
+	["body fits inside the window"] = function()
+		for _, size in { { 1500, 800 }, { 844, 390 }, { 600, 310 } } do
+			local l = RankingLayout.compute(size[1], size[2], 1)
+			assert(l.bodyTop + l.bodyHeight + l.inset <= size[2] + 1e-6, "altura")
+			assert(l.bodyWidth + 2 * l.inset <= size[1] + 1e-6, "largura")
+		end
 	end,
 
 	["spot sits the avatar on the step and the number on the plaque"] = function()

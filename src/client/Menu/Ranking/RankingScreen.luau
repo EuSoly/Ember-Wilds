@@ -2,7 +2,9 @@
 -- Tela do Ranking semanal (UI 6), no painel "ranking" do menu (à direita da
 -- coluna). Quadro de papel com moldura, taça + título, "termina em…", as 5
 -- abas e o corpo: pódio (top 3) e lista (4º em diante + a sua linha), lado a
--- lado ou empilhados conforme o espaço (RankingLayout).
+-- lado ou empilhados conforme o espaço. As medidas vêm do RankingLayout, a
+-- partir do tamanho da janela: no compacto (celular deitado) as abas sobem
+-- para a linha do título e o "termina em…" vai para o canto do pódio.
 -- Spec: docs/superpowers/specs/2026-11-09-ranking-semanal-design.md.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -27,8 +29,8 @@ local create = vide.create
 local R = Theme.rustic
 
 local BORDER = 40 -- px lógicos da moldura do quadro (a arte é esticada em 9 partes)
-local INSET = 30 -- conteúdo para dentro da moldura
-local HEADER = 58
+local BORDER_COMPACT = 24
+local HEADER_TOP = 14 -- linha do título, a partir do topo da janela
 local TROPHY = 64
 local CLOSE = 44
 local TICK = 20 -- segundos entre atualizações do "termina em…"
@@ -104,11 +106,11 @@ local function tab(index: number, height: () -> number): TextButton
 end
 
 function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
-	-- Tamanho do corpo (px lógicos) e a conta do layout a partir dele.
-	local bodySize = vide.source(Vector2.new(1000, 500))
+	-- Tamanho da janela (px lógicos) e a conta do layout a partir dela.
+	local windowSize = vide.source(Vector2.new(1000, 600))
 	local scale = vide.source(1)
 	local sizes = vide.derive(function()
-		local size = bodySize()
+		local size = windowSize()
 		return RankingLayout.compute(size.X, size.Y, scale())
 	end)
 	local function rowHeight(): number
@@ -116,6 +118,9 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 	end
 	local function tabHeight(): number
 		return sizes().tabHeight
+	end
+	local function compact(): boolean
+		return sizes().inlineTabs
 	end
 
 	-- "termina em…": relógio do servidor, atualizado de tempos em tempos.
@@ -176,6 +181,18 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 			}),
 			RankingPodium.build(),
 		}),
+		-- Compacto: o "termina em…" fica no canto de cima do pódio (espaço livre).
+		Rustic.label({
+			Name = "EndsInCompact",
+			Size = UDim2.new(1, 0, 0, 22),
+			FontFace = Theme.font.number,
+			dark = true,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			Text = countdown,
+			Visible = compact,
+			maxSize = 16,
+			ZIndex = 4,
+		}),
 	})
 
 	local listHolder = create("Frame")({
@@ -206,33 +223,19 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		Name = "Body",
 		BackgroundTransparency = 1,
 		Position = function()
-			return UDim2.fromOffset(INSET, HEADER + tabHeight() + 14)
+			local s = sizes()
+			return UDim2.fromOffset(s.inset, s.bodyTop)
 		end,
 		Size = function()
-			return UDim2.new(1, -2 * INSET, 1, -(HEADER + tabHeight() + 14 + INSET))
+			local s = sizes()
+			return UDim2.new(1, -2 * s.inset, 1, -(s.bodyTop + s.inset))
 		end,
 		podiumHolder,
 		listHolder,
 	}) :: Frame
 
-	local function measure()
-		local s = uiScale(body)
-		scale(s)
-		bodySize(body.AbsoluteSize / s)
-	end
-	body:GetPropertyChangedSignal("AbsoluteSize"):Connect(measure)
-	body.AncestryChanged:Connect(measure)
-
-	-- Ao abrir a tela: pede a aba atual (o servidor guarda em cache).
-	vide.effect(function()
-		if MenuState.panel() == "ranking" then
-			RankingState.select(vide.untrack(RankingState.category))
-			task.defer(measure)
-		end
-	end)
-
 	local frameArt = RankingImages.has(RankingImages.FRAME)
-	return create("Frame")({
+	local window = create("Frame")({
 		Name = "Ranking",
 		Visible = function()
 			return MenuState.panel() == "ranking"
@@ -256,15 +259,26 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 			Image = RankingImages.FRAME,
 			ScaleType = Enum.ScaleType.Slice,
 			SliceCenter = RankingImages.FRAME_SLICE,
-			SliceScale = BORDER / RankingImages.FRAME_SLICE.Min.X,
+			SliceScale = function()
+				return (if compact() then BORDER_COMPACT else BORDER) / RankingImages.FRAME_SLICE.Min.X
+			end,
 			Visible = frameArt,
 			ZIndex = 0,
 		}),
+		-- Linha do título (some no compacto: as abas ficam no lugar dela).
 		create("Frame")({
 			Name = "Header",
 			BackgroundTransparency = 1,
-			Position = UDim2.fromOffset(INSET, 14),
-			Size = UDim2.new(1, -2 * INSET, 0, HEADER),
+			Visible = function()
+				return not compact()
+			end,
+			Position = function()
+				return UDim2.fromOffset(sizes().inset, HEADER_TOP)
+			end,
+			Size = function()
+				local s = sizes()
+				return UDim2.new(1, -2 * s.inset, 0, s.headerHeight)
+			end,
 			create("ImageLabel")({
 				Name = "Trophy",
 				AnchorPoint = Vector2.new(0, 0.5),
@@ -295,30 +309,64 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 				Text = countdown,
 				maxSize = 20,
 			}),
-			Rustic.button({
-				Name = "Close",
-				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.fromScale(1, 0.5),
-				Size = UDim2.fromOffset(CLOSE, CLOSE),
-				kind = "ember",
-				text = "X",
-				maxSize = 24,
-				Activated = function()
-					MenuState.open("play")
-				end,
-			}),
+		}),
+		Rustic.button({
+			Name = "Close",
+			AnchorPoint = function()
+				return if compact() then Vector2.new(1, 0) else Vector2.new(1, 0.5)
+			end,
+			Position = function()
+				local s = sizes()
+				if compact() then
+					return UDim2.new(1, -s.inset, 0, s.tabTop)
+				end
+				return UDim2.new(1, -s.inset, 0, HEADER_TOP + s.headerHeight / 2)
+			end,
+			Size = function()
+				return UDim2.fromOffset(CLOSE, if compact() then tabHeight() else CLOSE)
+			end,
+			kind = "ember",
+			text = "X",
+			maxSize = 24,
+			Activated = function()
+				MenuState.open("play")
+			end,
 		}),
 		create("Frame")({
 			Name = "Tabs",
 			BackgroundTransparency = 1,
-			Position = UDim2.fromOffset(INSET, HEADER + 10),
+			Position = function()
+				local s = sizes()
+				return UDim2.fromOffset(s.inset, s.tabTop)
+			end,
 			Size = function()
-				return UDim2.new(1, -2 * INSET, 0, tabHeight())
+				local s = sizes()
+				-- Compacto: as abas dividem a linha com o botão de fechar.
+				local reserve = if compact() then CLOSE + 8 else 0
+				return UDim2.new(1, -(2 * s.inset + reserve), 0, s.tabHeight)
 			end,
 			tabs,
 		}),
 		body,
 	}) :: Frame
+
+	local function measure()
+		local s = uiScale(window)
+		scale(s)
+		windowSize(window.AbsoluteSize / s)
+	end
+	window:GetPropertyChangedSignal("AbsoluteSize"):Connect(measure)
+	window.AncestryChanged:Connect(measure)
+
+	-- Ao abrir a tela: pede a aba atual (o servidor guarda em cache).
+	vide.effect(function()
+		if MenuState.panel() == "ranking" then
+			RankingState.select(vide.untrack(RankingState.category))
+			task.defer(measure)
+		end
+	end)
+
+	return window
 end
 
 return RankingScreen

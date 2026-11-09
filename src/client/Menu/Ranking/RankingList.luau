@@ -10,6 +10,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local RankConfig = require(Shared:WaitForChild("Data"):WaitForChild("RankConfig"))
 local RankingImages = require(Shared:WaitForChild("RankingImages"))
+local RankingLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("RankingLayout"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
@@ -25,7 +26,7 @@ local FIRST = 4 -- o pódio mostra 1º a 3º
 local ROW_GAP = 4
 local ME_GAP = 8
 local ARROW_SHARE = 0.62 -- altura da seta, fração da linha "você"
-local ME_SCALE = 1.25 -- a linha "você" é um pouco mais alta que as outras
+local ME_SCALE = RankingLayout.ME_SCALE -- a linha "você" é um pouco mais alta que as outras
 
 export type Props = {
 	rowHeight: () -> number, -- px lógicos (RankingLayout)
@@ -223,12 +224,15 @@ local function meRow(height: () -> number, showArrow: () -> boolean): Frame
 	}) :: Frame
 end
 
--- Aviso no meio da lista: carregando, erro ou ninguém na semana.
-local function notice(): TextLabel
+-- Aviso no meio da área das linhas (acima da linha "você"): carregando, erro
+-- ou ninguém na semana.
+local function notice(height: () -> number): TextLabel
 	return Rustic.label({
 		Name = "Notice",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.4),
+		Position = function()
+			return UDim2.new(0.5, 0, 0.5, -RankingList.meSpace(height()) / 2)
+		end,
 		Size = UDim2.fromScale(0.9, 0.12),
 		dark = true,
 		Text = function()
@@ -275,7 +279,7 @@ function RankingList.build(props: Props): Frame
 			ScrollingDirection = Enum.ScrollingDirection.Y,
 			rows,
 		}),
-		notice(),
+		notice(props.rowHeight),
 		meRow(props.rowHeight, props.showArrow),
 	}) :: Frame
 end

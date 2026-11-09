@@ -11,6 +11,8 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 - **Abates no ranking não vistos no Studio:** a aba Criaturas (mob morto) e Jogadores (golpe final; também o "Jogadores mortos" do Perfil, que antes nunca somava) só foram conferidas pelo código. Testar jogando: matar um mob e abrir o Ranking (a gravação leva até 1 min; o cache do top, 3 min — ou `DevRankRefresh`). Jogadores precisa de 2 jogadores (teste multiplayer do Studio).
 - **Tela empilhada (pódio em cima):** só em área estreita e em pé; coberta pelos testes do `RankingLayout`, não vista no Studio (o jogo é deitado).
+- **Moderação só no Studio e desfeita no próximo abate:** `DevRankRemove` zera o perfil só se o jogador está online no mesmo servidor; offline, ele volta ao placar na próxima gravação. Antes da versão para o jogo publicado (painel de admin), guardar um marcador de banido por semana num DataStore comum e conferir antes de gravar.
+- **Arestas da revisão (menores):** cache não guarda leitura que falhou (instabilidade lê de novo a cada troca de aba); nome "@id" fica para sempre se a busca de nomes falhar uma vez; posição ("100+") e valor da linha "você" podem se contradizer por até 3 min (cache); resposta enviada a quem saiu no meio da leitura; nome cortado por bytes (`string.sub`) pode partir acento; `DevRankRemove` não valida a semana; Studio sem acesso às APIs avisa a cada minuto; tela aberta na virada mostra a semana velha até trocar de aba; comentário antigo em `ptBR.luau` (bloco mock) ainda cita o ranking.
 - **Faixa clara da lista quase some no papel:** é a arte (`row_light.png`); se quiser mais contraste, pedir uma faixa um pouco mais escura ou com borda.
 
 ## Skins 3D (08/11)

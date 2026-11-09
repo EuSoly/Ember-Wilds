@@ -107,6 +107,37 @@ return {
 		assert(RankRules.position({}, 10) == 0, "lista vazia = 0")
 	end,
 
+	["rollover keeps what the old week still owes the board"] = function()
+		local old = RankRules.empty(2965)
+		old.creatures = 40
+		old.points = 900
+		local new, owed = RankRules.rollover(old, 2966, { creatures = true })
+		assert(new.Week == 2966 and new.creatures == 0, "semana nova zerada")
+		assert(owed ~= nil and owed.week == 2965, "sobra da semana velha")
+		assert(owed.values.creatures == 40 and owed.values.points == nil, "só as categorias que faltava gravar")
+	end,
+
+	["rollover in the same week owes nothing"] = function()
+		local state = RankRules.empty(2966)
+		state.xp = 10
+		local same, owed = RankRules.rollover(state, 2966, { xp = true })
+		assert(same.xp == 10 and owed == nil, "mesma semana: nada a dever")
+		local _, nothing = RankRules.rollover(RankRules.empty(2965), 2966, nil)
+		assert(nothing == nil, "sem pendência: nada a dever")
+	end,
+
+	["private servers do not count"] = function()
+		assert(RankRules.counts(0), "servidor público conta")
+		assert(not RankRules.counts(123456), "servidor VIP não conta")
+	end,
+
+	["requests inside the interval wait instead of being dropped"] = function()
+		assert(RankRules.requestDelay(nil, 10, 0.5) == 0, "primeiro pedido: na hora")
+		assert(RankRules.requestDelay(9, 10, 0.5) == 0, "fora da janela: na hora")
+		local wait = RankRules.requestDelay(9.8, 10, 0.5)
+		assert(math.abs(wait - 0.3) < 1e-9, `dentro da janela: espera o resto ({wait})`)
+	end,
+
 	["countdown picks the right unit"] = function()
 		local key, args = RankRules.countdown(3 * 86400 + 5 * 3600 + 10)
 		assert(key == "rank.ends.days" and args.d == 3 and args.h == 5, `{key} {args.d} {args.h}`)
