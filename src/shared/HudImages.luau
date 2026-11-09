@@ -7,48 +7,48 @@
 local HudImages = {}
 
 -- Anéis de status: medalhão octogonal (furo no meio) e o ícone de cada barra.
-HudImages.STATUS_FRAME = "" -- status_frame.png (251x256)
+HudImages.STATUS_FRAME = "rbxassetid://96840384898561" -- status_frame.png (251x256)
 HudImages.STATUS_HOLE = 0.66 -- diâmetro do furo do medalhão, fração da largura
 HudImages.STATUS_ICON = {
-	health = "", -- status_health.png: coração
-	hunger = "", -- status_hunger.png: coxa
-	cold = "", -- status_cold.png: floco de neve
-	thirst = "", -- status_thirst.png: gota
-	heat = "", -- status_heat.png: sol com ondas
-	oxygen = "", -- status_oxygen.png: bolha
+	health = "rbxassetid://101471319366323", -- status_health.png: coração
+	hunger = "rbxassetid://101700219337160", -- status_hunger.png: coxa
+	cold = "rbxassetid://101822307034280", -- status_cold.png: floco de neve
+	thirst = "rbxassetid://125655482884120", -- status_thirst.png: gota
+	heat = "rbxassetid://107291382617283", -- status_heat.png: sol com ondas
+	oxygen = "rbxassetid://127287609063098", -- status_oxygen.png: bolha
 } :: { [string]: string }
 
 -- Slots (hotbar, mochila, receitas): couro com borda de madeira.
-HudImages.SLOT = "" -- slot.png (126x128)
-HudImages.SLOT_SELECTED = "" -- slot_selected.png (128x128): borda dourada e marquinha
-HudImages.LOCK = "" -- lock.png (54x64)
+HudImages.SLOT = "rbxassetid://100921853880593" -- slot.png (126x128)
+HudImages.SLOT_SELECTED = "rbxassetid://87113190427046" -- slot_selected.png (128x128): borda dourada e marquinha
+HudImages.LOCK = "rbxassetid://88163751817232" -- lock.png (54x64)
 HudImages.SLOT_INSET = 0.13 -- borda do slot, fração do lado (o item fica dentro)
 
 -- Minimapa e botões redondos.
-HudImages.MINIMAP_FRAME = "" -- minimap_frame.png (499x512)
+HudImages.MINIMAP_FRAME = "rbxassetid://88379313684631" -- minimap_frame.png (499x512)
 HudImages.MINIMAP_INSET = 0.11 -- borda da moldura, fração do lado
-HudImages.BUTTON_ROUND = "" -- button_round.png (181x192)
+HudImages.BUTTON_ROUND = "rbxassetid://111290622168382" -- button_round.png (181x192)
 HudImages.ICON = {
-	settings = "", -- icon_settings.png: engrenagem
-	book = "", -- icon_book.png: livro com chama
-	backpack = "", -- icon_backpack.png: mochila
-	rotate = "", -- icon_rotate.png: setas de girar
+	settings = "rbxassetid://122138656270963", -- icon_settings.png: engrenagem
+	book = "rbxassetid://119455236689691", -- icon_book.png: livro com chama
+	backpack = "rbxassetid://97302070461860", -- icon_backpack.png: mochila
+	rotate = "rbxassetid://77337730452030", -- icon_rotate.png: setas de girar
 } :: { [string]: string }
 
 -- Painel de couro (baú, caixa, interação, mochila aberta), avisos e dica.
-HudImages.PANEL = "" -- panel.png (512x504)
+HudImages.PANEL = "rbxassetid://129459129031189" -- panel.png (512x504)
 HudImages.TOAST = {
-	info = "", -- toast_cream.png: aviso normal
-	alert = "", -- toast_orange.png: alerta ("A noite está chegando")
-	success = "", -- toast_green.png: deu certo ("Item criado")
+	info = "rbxassetid://76955393724766", -- toast_cream.png: aviso normal
+	alert = "rbxassetid://95326375963549", -- toast_orange.png: alerta ("A noite está chegando")
+	success = "rbxassetid://106336406497806", -- toast_green.png: deu certo ("Item criado")
 } :: { [string]: string }
-HudImages.TOOLTIP = "" -- tooltip_body.png (400x186): balão de papel
-HudImages.TOOLTIP_TAIL = "" -- tooltip_tail.png (80x40): pontinha de baixo
+HudImages.TOOLTIP = "rbxassetid://101908708502443" -- tooltip_body.png (400x186): balão de papel
+HudImages.TOOLTIP_TAIL = "rbxassetid://118047862657931" -- tooltip_tail.png (80x40): pontinha de baixo
 HudImages.TOOLTIP_TAIL_SIZE = { 80, 40 }
 
 -- Joystick do celular (andar e mirar).
-HudImages.JOYSTICK_BASE = "" -- joystick_base.png (250x256)
-HudImages.JOYSTICK_KNOB = "" -- joystick_knob.png (123x128)
+HudImages.JOYSTICK_BASE = "rbxassetid://81977662615817" -- joystick_base.png (250x256)
+HudImages.JOYSTICK_KNOB = "rbxassetid://109220113444721" -- joystick_knob.png (123x128)
 
 -- Peças esticadas em 9 partes: tamanho da arte e o miolo que estica
 -- ({ min.x, min.y, max.x, max.y }); os cantos (madeira, pregos, chanfros) não esticam.

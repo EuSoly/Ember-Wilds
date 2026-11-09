@@ -34,10 +34,10 @@ local function CratePanel(): Frame
 			return CrateState.near() ~= nil
 		end,
 		create("UIPadding")({
-			PaddingTop = UDim.new(0, GAP),
-			PaddingBottom = UDim.new(0, GAP),
-			PaddingLeft = UDim.new(0, GAP),
-			PaddingRight = UDim.new(0, GAP),
+			PaddingTop = UDim.new(0, Kit.panelPadding(GAP)),
+			PaddingBottom = UDim.new(0, Kit.panelPadding(GAP)),
+			PaddingLeft = UDim.new(0, Kit.panelPadding(GAP)),
+			PaddingRight = UDim.new(0, Kit.panelPadding(GAP)),
 		}),
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Vertical,

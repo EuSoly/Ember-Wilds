@@ -21,37 +21,35 @@ local MIN_TEXT_SIZE = 12
 local PANEL_CORNER = 26 -- px lógicos da moldura de madeira do painel
 local TOOLTIP_CORNER = 22
 
-local function sliced(kind: string, id: string, corner: number): ImageLabel?
+-- Moldura esticada em 9 partes como o PRÓPRIO quadro (ImageLabel), não como
+-- filho: painéis com AutomaticSize e UIPadding cresceriam sem parar com um
+-- filho de 100% do tamanho deles.
+local function slicedFrame(kind: string, id: string, corner: number): ImageLabel?
 	local art = HudImages.SLICED[kind]
 	if art == nil or not HudImages.has(id) then
 		return nil
 	end
 	local slice = art.slice
 	return create("ImageLabel")({
-		Name = "Art",
-		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
 		Image = id,
 		ScaleType = Enum.ScaleType.Slice,
 		SliceCenter = Rect.new(slice[1], slice[2], slice[3], slice[4]),
 		SliceScale = corner / slice[1],
-		ZIndex = 0,
 	}) :: ImageLabel
 end
 
 -- Painel padrão: o couro escuro com moldura de madeira (HudImages.PANEL); sem
 -- a arte, fundo escuro a 85% com canto arredondado e borda fina.
--- `props` vai direto para o Frame (Size, Position, filhos etc.).
+-- `props` vai direto para o quadro (Size, Position, filhos etc.).
 function Kit.panel(props: { [any]: any }): Frame
-	local art = sliced("panel", HudImages.PANEL, PANEL_CORNER)
-	if art then
+	local framed = slicedFrame("panel", HudImages.PANEL, PANEL_CORNER)
+	if framed then
 		props.CornerRadius = nil
-		local framed = create("Frame")({
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			art,
-		}) :: Frame
-		return vide.apply(framed)(props) :: Frame
+		props.BackgroundColor3 = nil
+		props.BackgroundTransparency = nil
+		return (vide.apply(framed)(props) :: any) :: Frame
 	end
 	local frame = create("Frame")({
 		BackgroundColor3 = Theme.ui.panel,
@@ -68,32 +66,37 @@ function Kit.panel(props: { [any]: any }): Frame
 	return vide.apply(frame)(props) :: Frame
 end
 
+-- Margem interna de um painel: com a moldura de madeira da arte, pelo menos
+-- PANEL_PADDING px para o conteúdo não encostar nela.
+local PANEL_PADDING = 16
+function Kit.panelPadding(base: number): number
+	return if HudImages.has(HudImages.PANEL) then math.max(base, PANEL_PADDING) else base
+end
+
 -- Balão de papel (dicas): o papel esticado em 9 partes com a pontinha embaixo,
 -- no meio. Texto em cima dele deve ser escuro (Theme.rustic.charcoal). Sem a
 -- arte, cai no painel padrão.
 function Kit.tooltip(props: { [any]: any }): Frame
-	local art = sliced("tooltip", HudImages.TOOLTIP, TOOLTIP_CORNER)
-	if art == nil then
+	local framed = slicedFrame("tooltip", HudImages.TOOLTIP, TOOLTIP_CORNER)
+	if framed == nil then
 		return Kit.panel(props)
 	end
 	local tail = HudImages.TOOLTIP_TAIL_SIZE
 	local scale = TOOLTIP_CORNER / HudImages.SLICED.tooltip.slice[1]
-	local frame = create("Frame")({
+	create("ImageLabel")({
+		Name = "Tail",
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 1, -math.floor(8 * scale)),
+		Size = UDim2.fromOffset(tail[1] * scale, tail[2] * scale),
 		BackgroundTransparency = 1,
-		BorderSizePixel = 0,
-		art,
-		create("ImageLabel")({
-			Name = "Tail",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.new(0.5, 0, 1, -math.floor(8 * scale)),
-			Size = UDim2.fromOffset(tail[1] * scale, tail[2] * scale),
-			BackgroundTransparency = 1,
-			Image = HudImages.TOOLTIP_TAIL,
-			Visible = HudImages.has(HudImages.TOOLTIP_TAIL),
-			ZIndex = 0,
-		}),
-	}) :: Frame
-	return vide.apply(frame)(props) :: Frame
+		Image = HudImages.TOOLTIP_TAIL,
+		Visible = HudImages.has(HudImages.TOOLTIP_TAIL),
+		Parent = framed,
+	})
+	props.CornerRadius = nil
+	props.BackgroundColor3 = nil
+	props.BackgroundTransparency = nil
+	return (vide.apply(framed)(props) :: any) :: Frame
 end
 
 -- Texto padrão: escala com a tela (com tamanho mínimo legível) e contorno

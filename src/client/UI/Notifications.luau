@@ -106,7 +106,7 @@ function Notifications.Component(): Frame
 	return create("Frame")({
 		Name = "Notifications",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.fromScale(0.98, 0.3),
+		Position = UDim2.fromScale(0.98, 0.4), -- abaixo dos botões redondos (0,25 + tamanho)
 		Size = UDim2.fromScale(0.26, 0.16),
 		BackgroundTransparency = 1,
 		create("UIListLayout")({

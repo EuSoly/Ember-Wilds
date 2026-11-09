@@ -139,7 +139,8 @@ local function ItemTooltip(): Frame
 					local _, tierColor = ItemInfo.tier(current)
 					color = tierColor
 				end
-				return if color then Theme.color(color) else Theme.ui.text
+				-- Escurecida: a cor pura do tier (ouro, madeira) some no papel claro.
+				return if color then Theme.color(color):Lerp(Color3.new(0, 0, 0), 0.35) else Theme.rustic.charcoal
 			end,
 			Text = function()
 				local key = tierKey()
