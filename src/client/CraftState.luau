@@ -12,7 +12,9 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local CraftRules = require(Shared:WaitForChild("Craft"):WaitForChild("CraftRules"))
 local ItemAccess = require(Shared:WaitForChild("ItemAccess"))
+local Inventory = require(Shared:WaitForChild("Inventory"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
+local HotbarState = require(script.Parent:WaitForChild("HotbarState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Net = require(script.Parent:WaitForChild("Net"))
 local Notifications = require(script.Parent:WaitForChild("UI"):WaitForChild("Notifications"))
@@ -112,6 +114,59 @@ local function updateRows()
 	end
 end
 
+-- Auto-equipar o livro ao craftar: se há um livro na hotbar, o cliente o
+-- seleciona antes de pedir o craft (o livro dá craftSpeed e o servidor lê o
+-- slot selecionado na hora) e, ao terminar/cancelar, volta ao slot anterior.
+local BOOK_ID = "book"
+-- Craft recusado pelo servidor não manda CraftProgress; se depois disso não
+-- houver craft ativo, restaura o slot como rede de segurança.
+local REJECT_GRACE = 0.5
+
+type BookRestore = { prev: number, bookSlot: number, requestedAt: number, confirmed: boolean }
+local bookRestore: BookRestore? = nil
+
+-- Primeiro slot do livro dentro da hotbar (ignora a mochila), ou nil.
+local function findBookSlot(): number?
+	local slots = InventoryState.slots()
+	return Inventory.findSlot({ capacity = HotbarState.SLOT_COUNT, slots = slots }, BOOK_ID)
+end
+
+-- Volta ao slot de antes do craft — só se o jogador ainda está no livro (uma
+-- troca manual no meio do craft é respeitada: não força a volta).
+local function restoreBook()
+	local pending = bookRestore
+	if pending == nil then
+		return
+	end
+	bookRestore = nil
+	if vide.untrack(HotbarState.selected) == pending.bookSlot then
+		HotbarState.select(pending.prev)
+	end
+end
+
+-- Antes de pedir um craft novo: seleciona o livro da hotbar (se houver e não for
+-- já o selecionado) e guarda o slot atual para restaurar depois.
+local function equipBookForCraft()
+	if bookRestore ~= nil then
+		return
+	end
+	local bookSlot = findBookSlot()
+	if bookSlot == nil then
+		return
+	end
+	local selected = vide.untrack(HotbarState.selected)
+	if selected == bookSlot or HotbarState.isLocked() then
+		return
+	end
+	bookRestore = {
+		prev = selected,
+		bookSlot = bookSlot,
+		requestedAt = Workspace:GetServerTimeNow(),
+		confirmed = false,
+	}
+	HotbarState.select(bookSlot)
+end
+
 function CraftState.isCrafting(): boolean
 	return CraftState.current() ~= nil
 end
@@ -121,6 +176,11 @@ function CraftState.start(id: string)
 	if current and current.id == id then
 		Net.CancelCraft.Fire()
 	else
+		-- Só equipa o livro ao começar do zero (não no meio de outro craft, que
+		-- o servidor recusa de qualquer jeito).
+		if current == nil then
+			equipBookForCraft()
+		end
 		Net.RequestCraft.Fire(id)
 	end
 end
@@ -154,6 +214,13 @@ function CraftState.Start(_self)
 		local recipe = data.Recipe
 		CraftState.current(if recipe then { id = recipe, start = data.Start, finish = data.Finish } else nil)
 		currentChanged = true
+		if recipe then
+			if bookRestore then
+				bookRestore.confirmed = true
+			end
+		else
+			restoreBook()
+		end
 	end)
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if not processed and input.UserInputType == Enum.UserInputType.MouseButton2 then
@@ -172,6 +239,17 @@ function CraftState.Start(_self)
 				CraftState.equipped(equippedId)
 			end
 			CraftState.now(Workspace:GetServerTimeNow())
+			-- Rede de segurança: craft recusado não manda CraftProgress; se o
+			-- livro foi equipado e nenhum craft começou até o prazo, restaura.
+			local pending = bookRestore
+			if
+				pending
+				and not pending.confirmed
+				and CraftState.current() == nil
+				and Workspace:GetServerTimeNow() - pending.requestedAt > REJECT_GRACE
+			then
+				restoreBook()
+			end
 			local slots = InventoryState.slots()
 			if not initialized or nearChanged or currentChanged or slots ~= previousSlots then
 				updateRows()

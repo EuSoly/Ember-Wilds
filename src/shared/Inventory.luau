@@ -163,6 +163,19 @@ function Inventory.move(inv: Inventory, from: number, to: number, maxStackOf: (s
 	return { from, to }
 end
 
+-- Primeiro slot (1..maxIndex, ou até a capacidade) com o item `id`, ou nil.
+-- maxIndex limita a busca — ex.: achar o livro só entre os slots da hotbar.
+function Inventory.findSlot(inv: Inventory, id: string, maxIndex: number?): number?
+	local last = math.min(maxIndex or inv.capacity, inv.capacity)
+	for index = 1, last do
+		local slot = inv.slots[index]
+		if slot and slot.id == id then
+			return index
+		end
+	end
+	return nil
+end
+
 -- Capacidade para um jogador com uma mochila de `bagSlots` e `bonusSlots` de
 -- gamepass: base + mochila + bônus, entre BASE_SLOTS e MAX_SLOTS.
 function Inventory.capacityFor(bagSlots: number, bonusSlots: number): number

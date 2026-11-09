@@ -66,6 +66,12 @@ return table.freeze({
 	FOOD_HAND_SIZE = 1.5, -- studs; maior lado da comida na mão
 	FOOD_HAND_OFFSET = { 0, 0.55, -0.35 }, -- studs; comida em relação à mão (em cima, à frente)
 
+	-- Suavização da posição dos outros jogadores (o local fica 1:1, sem lag).
+	-- A raiz replicada anda em passos de rede; o mostrado a segue com suavização
+	-- exponencial (igual aos mobs). Maior = segue mais rápido (menos deslize).
+	ROOT_SMOOTHING = 15, -- 1/s
+	TELEPORT_DISTANCE = 30, -- studs; salto maior que isso não desliza (renasceu/teleporte)
+
 	-- Desempenho e expressões.
 	ANIM_RANGE = 120, -- studs da câmera; mais longe só segue a posição, sem animar
 	HURT_RECENT = 1, -- segundos; HurtAt mais antigo que isso não mostra a careta

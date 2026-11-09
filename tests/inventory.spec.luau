@@ -209,4 +209,37 @@ return {
 		assert(Inventory.capacityFor(100, 100) == 40, "limite de 40 slots")
 		assert(Inventory.capacityFor(-5, 0) == 10, "nunca abaixo da base")
 	end,
+
+	["findSlot finds the item inside the range"] = function()
+		local inv = Inventory.new(10)
+		Inventory.add(inv, "wood", 5, 10)
+		inv.slots[3] = { id = "book", count = 1 }
+		assert(Inventory.findSlot(inv, "book", 10) == 3, "livro no slot 3")
+	end,
+
+	["findSlot returns nil when the item is absent"] = function()
+		local inv = Inventory.new(10)
+		Inventory.add(inv, "wood", 5, 10)
+		assert(Inventory.findSlot(inv, "book", 10) == nil, "sem livro deveria dar nil")
+	end,
+
+	["findSlot ignores matches past maxIndex"] = function()
+		local inv = Inventory.new(40)
+		inv.slots[15] = { id = "book", count = 1 }
+		assert(Inventory.findSlot(inv, "book", 10) == nil, "livro na mochila (fora da hotbar) não conta")
+		assert(Inventory.findSlot(inv, "book", 40) == 15, "sem limitar, acha o livro no slot 15")
+	end,
+
+	["findSlot returns the first matching slot"] = function()
+		local inv = Inventory.new(10)
+		inv.slots[2] = { id = "book", count = 1 }
+		inv.slots[5] = { id = "book", count = 1 }
+		assert(Inventory.findSlot(inv, "book", 10) == 2, "deve achar o primeiro livro")
+	end,
+
+	["findSlot defaults maxIndex to capacity"] = function()
+		local inv = Inventory.new(10)
+		inv.slots[7] = { id = "book", count = 1 }
+		assert(Inventory.findSlot(inv, "book") == 7, "sem maxIndex varre até a capacidade")
+	end,
 }

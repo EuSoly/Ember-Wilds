@@ -58,6 +58,9 @@ type Entry = {
 	crumbColor: string?,
 	eatUntil: number?,
 	eatProgress: number?, -- progresso da mordida no quadro anterior (farelos)
+	-- Posição mostrada, que segue a raiz replicada com suavização (outros
+	-- jogadores). O jogador local não usa: fica 1:1 com a própria raiz.
+	displayed: CFrame,
 	lastPosition: Vector3,
 	eyes: Defs.EyeStyle,
 	flash: string?,
@@ -251,6 +254,7 @@ local function build(character: Model, hrp: BasePart)
 		crumbColor = nil,
 		eatUntil = nil,
 		eatProgress = nil,
+		displayed = hrp.CFrame,
 		lastPosition = hrp.Position,
 		eyes = "open",
 		flash = nil,
@@ -398,8 +402,10 @@ local function refreshRoot(entry: Entry): boolean
 	local found = entry.character:FindFirstChild("HumanoidRootPart")
 	if found and found:IsA("BasePart") then
 		entry.hrp = found
-		-- Recomeça a medir a velocidade daqui (sem pulo de velocidade falsa).
+		-- Recomeça a medir a velocidade daqui (sem pulo de velocidade falsa) e
+		-- cola o mostrado na raiz nova (não desliza do lugar antigo).
 		entry.lastPosition = found.Position
+		entry.displayed = found.CFrame
 		return true
 	end
 	return false
@@ -410,6 +416,10 @@ local function update(dt: number)
 	local cameraPosition = if camera then camera.CFrame.Position else nil
 	local now = os.clock()
 	local serverNow = Workspace:GetServerTimeNow()
+	-- O próprio personagem segue a raiz 1:1 (previsto/network-owned); suavizar
+	-- adicionaria lag no próprio movimento. Só os outros jogadores são suavizados.
+	local localCharacter = Players.LocalPlayer.Character
+	local alpha = 1 - math.exp(-C.ROOT_SMOOTHING * math.clamp(dt, 0, C.MAX_DT))
 
 	local roots: { BasePart } = {}
 	local cframes: { CFrame } = {}
@@ -428,17 +438,27 @@ local function update(dt: number)
 			BonecoModel.setVisible(entry.boneco, hasRoot)
 			if hasRoot then
 				entry.lastPosition = entry.hrp.Position
+				entry.displayed = entry.hrp.CFrame
 			end
 		end
 		if not hasRoot then
 			continue
 		end
 
-		local target = entry.hrp.CFrame
+		-- A raiz replicada anda em passos de rede; o mostrado a segue com
+		-- suavização exponencial (corte em salto grande: renasceu/teletransporte).
+		-- O jogador local fica colado na própria raiz.
+		local goal = entry.hrp.CFrame
+		-- Local 1:1, ou salto grande (renasceu/teleporte): não desliza.
+		local snap = entry.character == localCharacter
+			or (goal.Position - entry.displayed.Position).Magnitude > C.TELEPORT_DISTANCE
+		local target = if snap then goal else entry.displayed:Lerp(goal, alpha)
+		entry.displayed = target
 		table.insert(roots, entry.boneco.root)
 		table.insert(cframes, target)
 
-		-- Velocidade no plano, pela distância andada desde o quadro anterior.
+		-- Velocidade no plano, pela distância andada desde o quadro anterior
+		-- (do mostrado, para a animação de andar casar com o que se vê).
 		local delta = target.Position - entry.lastPosition
 		entry.lastPosition = target.Position
 		local speed = if dt > 0 then Vector2.new(delta.X, delta.Z).Magnitude / dt else 0

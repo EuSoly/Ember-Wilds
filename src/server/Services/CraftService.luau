@@ -119,8 +119,12 @@ local function start(player: Player, recipeId: string)
 		end
 		table.insert(removed, part)
 	end
-	local equipped = character:GetAttribute(StatNames.Equipped)
-	local held = if type(equipped) == "string" then Defs.Items[equipped] else nil
+	-- Item na mão pelo slot selecionado (síncrono): um livro recém-escolhido no
+	-- mesmo quadro já conta para a velocidade. O atributo Equipped é gravado um
+	-- quadro depois (task.defer no EquipService), então ler o atributo aqui
+	-- perderia o livro que o cliente acabou de selecionar antes de pedir o craft.
+	local heldSlot = inv.slots[InventoryService.selectedSlot(player)]
+	local held = if heldSlot then Defs.Items[heldSlot.id] else nil
 	local now = Workspace:GetServerTimeNow()
 	local duration = CraftRules.duration(recipe, held)
 	local token = {}
