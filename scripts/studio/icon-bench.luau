@@ -75,6 +75,7 @@ return function(apagar: boolean?): string
 	local gui = Instance.new("ScreenGui")
 	gui.Name = NAME
 	gui.ResetOnSpawn = false
+	gui.Archivable = false -- não salva com o place nem vai para o Play
 	local frame = Instance.new("ScrollingFrame")
 	frame.Size = UDim2.new(1, -40, 1, -40)
 	frame.Position = UDim2.fromOffset(20, 20)

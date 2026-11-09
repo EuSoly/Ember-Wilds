@@ -87,7 +87,7 @@ require(game.ServerStorage.BancadaIcones)()      -- monta a bancada
 require(game.ServerStorage.BancadaIcones)(true)  -- apaga a bancada
 ```
 
-Ela monta `StarterGui.BancadaIcones` com todos os ícones e o id embaixo; o ícone muda na hora em que o atributo muda. A barra de comando roda código Luau, não caminho de arquivo. Os atributos vivem no place: salve o place. Antes de publicar, apague a bancada.
+Ela monta `StarterGui.BancadaIcones` com todos os ícones e o id embaixo; o ícone muda na hora em que o atributo muda. A barra de comando roda código Luau, não caminho de arquivo. A bancada não é salva com o place nem vai para o Play (`Archivable = false`): ao reabrir o Studio, rode a linha de novo. Os atributos vivem no place: salve o place. Antes de publicar, apague a bancada.
 
 ## Pendências
 
