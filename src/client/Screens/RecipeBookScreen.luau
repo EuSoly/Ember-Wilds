@@ -122,6 +122,8 @@ local function TabButton(tab: Tab): TextButton
 			Size = UDim2.new(1, -textLeft - 8, 1, -12),
 			FontFace = Theme.font.number,
 			Text = Strings.get("book.tab." .. tab),
+			-- Uma linha só: em tela estreita o nome encolhe em vez de quebrar a palavra.
+			TextWrapped = false,
 			maxSize = 18,
 			ZIndex = 2,
 		})

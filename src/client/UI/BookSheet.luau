@@ -89,13 +89,17 @@ local function row(order: number, iconId: string?, label: string): Frame
 		children,
 		text({
 			LayoutOrder = 1,
+			-- Altura mínima de uma linha; texto comprido quebra e a fileira cresce.
 			Size = UDim2.new(1, if icon then -(ROW_HEIGHT + 8) else 0, 0, ROW_HEIGHT),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			TextYAlignment = Enum.TextYAlignment.Center,
 			Text = label,
 		})
 	)
 	return create("Frame")({
 		LayoutOrder = order,
 		Size = UDim2.new(1, 0, 0, ROW_HEIGHT),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
 		children,
 	}) :: Frame
@@ -162,7 +166,9 @@ local function chip(id: string, label: string, onShow: (string) -> ()): TextButt
 			Position = UDim2.fromOffset(CHIP_HEIGHT + 6, 0),
 			Size = UDim2.new(1, -CHIP_HEIGHT - 6, 1, 0),
 			Text = label,
-			size = 15,
+			-- Célula de tamanho fixo: o texto comprido encolhe (até 10) em vez de vazar.
+			TextScaled = true,
+			create("UITextSizeConstraint")({ MinTextSize = 10, MaxTextSize = 15 }),
 		}),
 	}) :: TextButton
 end
@@ -216,19 +222,30 @@ local function sourceRow(order: number, source: BookInfo.Source): Frame
 	return create("Frame")({
 		LayoutOrder = order,
 		Size = UDim2.new(1, 0, 0, SOURCE_HEIGHT),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
-		picture,
-		text({
+		picture :: Instance,
+		create("Frame")({
+			Name = "Texts",
 			Position = UDim2.fromOffset(SOURCE_HEIGHT + 8, 4),
-			Size = UDim2.new(1, -SOURCE_HEIGHT - 8, 0, 22),
-			Text = title,
-			size = 17,
-		}),
-		text({
-			Position = UDim2.fromOffset(SOURCE_HEIGHT + 8, 26),
-			Size = UDim2.new(1, -SOURCE_HEIGHT - 8, 0, 22),
-			Text = detail,
-			size = 14,
+			Size = UDim2.new(1, -SOURCE_HEIGHT - 8, 0, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			BackgroundTransparency = 1,
+			create("UIListLayout")({ Padding = UDim.new(0, 2), SortOrder = Enum.SortOrder.LayoutOrder }),
+			text({
+				LayoutOrder = 1,
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+				Text = title,
+				size = 17,
+			}),
+			text({
+				LayoutOrder = 2,
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+				Text = detail,
+				size = 14,
+			}),
 		}),
 	}) :: Frame
 end
@@ -246,7 +263,14 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 		end
 	end
 
-	add(text({ Name = "ItemName", LayoutOrder = 1, Size = UDim2.new(1, 0, 0, 30), Text = itemName(id), size = 24 }))
+	add(text({
+		Name = "ItemName",
+		LayoutOrder = 1,
+		Size = UDim2.fromScale(1, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
+		Text = itemName(id),
+		size = 24,
+	}))
 	local tierKey, tierColor = ItemInfo.tier(def)
 	local subtitle = Strings.get("book.category." .. def.category)
 	if tierKey then
@@ -255,7 +279,8 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 	add(text({
 		Name = "Subtitle",
 		LayoutOrder = 2,
-		Size = UDim2.new(1, 0, 0, 22),
+		Size = UDim2.fromScale(1, 0),
+		AutomaticSize = Enum.AutomaticSize.Y,
 		Text = subtitle,
 		TextColor3 = if tierColor
 			then Theme.color(tierColor):Lerp(Color3.new(0, 0, 0), 0.35)
