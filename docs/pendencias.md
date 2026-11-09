@@ -2,6 +2,23 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Antes de lançar (09/11)
+
+- **Todas as skins liberadas para teste, e gravadas no perfil:** `CosmeticService.publishOwned` (comentário "Todas as skins liberadas para teste") marca todos os cosméticos como possuídos **também no jogo publicado**, e isso é salvo no `PlayerData` (`Cosmetics.Owned`). Visto em 09/11 no perfil do luizExtreme1346: mais de 250 skins sem ter comprado nada. Antes de lançar: (1) liberar só no Studio ou para uma lista de testadores; (2) limpar quem já entrou (elizeullll, JoaoSilvaBR_1346, luizExtreme1346, Candy_love6829 e quem mais testar) com uma migração que deixa só os padrões e o que foi comprado de verdade. Decisão do Elizeu: mexer depois.
+- **Picaretas acima de ouro fora do jogo:** diamante, ametista e reidite estão `testOnly` desde 09/11 (o jogo vai só até ouro). Para liberar, tirar o `testOnly` delas em `Defs/Items.luau`.
+
+## Livro de receitas (09/11)
+
+Menores da revisão final (nenhum quebra o jogo hoje):
+
+- Ingrediente `testOnly` numa receita normal apareceria no livro fora do Studio (`BookInfo.craft`, `RecipeBookScreen.show`). Latente: nenhum dado atual faz isso; dá para barrar no `Validate`.
+- Clicar num item de outra aba monta a ficha duas vezes: em `RecipeBookScreen.show`, chamar `selected` antes de `tab`.
+- A linha "Espinhos" das paredes de espinho não tem ícone (`BookImages.STAT` sem `info.spikes`).
+- A aba selecionada usa o `SLICED` da aba normal: a borda de cima e de baixo perde 2–3 px.
+- A grade recalcula a contagem do inventário uma vez por slot; fazer um `vide.derive` só no `Book()`.
+- A ficha não mostra quantos itens a receita faz (`Craft.count`); hoje todas fazem 1.
+- O papel aparece como "Pa" na grade: falta o modelo `Assets.Icons/paper`.
+
 ## Atributos do Player (04/11)
 
 - **Morte do mob frágil:** no `MobService.die`, o `ScoreService.add` roda fora do `pcall`; se falhar, a caixa (aviso `onDeath`) não sai. Foi assim que o limite de atributos derrubou os drops.
