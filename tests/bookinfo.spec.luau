@@ -8,6 +8,66 @@ local function has(list: { string }, id: string): boolean
 end
 
 return {
+	["wolf fur comes from wolves"] = function()
+		local sources = BookInfo.sources("wolf_fur")
+		assert(#sources == 1, "um mob só")
+		local source = sources[1] :: any
+		assert(source.kind == "mob" and source.id == "wolf" and source.count == 1, "lobo deixa 1")
+	end,
+
+	["stone comes from rocks with a pickaxe"] = function()
+		local found = false
+		for _, source in BookInfo.sources("stone") do
+			local s = source :: any
+			if s.kind == "resource" and s.id == "rock" then
+				found = s.hardness == 1
+			end
+		end
+		assert(found, "rocha, picareta nível 1")
+	end,
+
+	["berry bush gives berries with anything in hand"] = function()
+		local s = BookInfo.sources("berry")[1] :: any
+		assert(s and s.kind == "resource" and s.id == "berry_bush" and s.hardness == nil, "arbusto, qualquer coisa")
+	end,
+
+	["decorative pebble is never a source"] = function()
+		for id in Defs.Items do
+			for _, source in BookInfo.sources(id) do
+				assert((source :: any).id ~= "pebble", id)
+			end
+		end
+	end,
+
+	["crafted material has craft and does not break sources"] = function()
+		assert(BookInfo.craft("paper") ~= nil, "papel tem receita")
+		assert(type(BookInfo.sources("paper")) == "table", "fontes do papel")
+	end,
+
+	["item with no source returns empty list"] = function()
+		assert(#BookInfo.sources("gold_sword") == 0, "espada não cai de nada")
+	end,
+
+	["wood is used in many recipes"] = function()
+		local used = BookInfo.usedIn("wood", false)
+		assert(has(used, "wood_pickaxe") and has(used, "campfire"), "madeira faz picareta e fogueira")
+	end,
+
+	["test-only results hide from used-in"] = function()
+		for _, id in BookInfo.usedIn("wood", false) do
+			assert(not Defs.Items[id].testOnly, id)
+		end
+	end,
+
+	["craftable now needs items and station"] = function()
+		assert(BookInfo.craftableNow("wood_pickaxe", { wood = 10 }, {}) == true, "tem madeira")
+		assert(BookInfo.craftableNow("wood_pickaxe", { wood = 9 }, {}) == false, "falta madeira")
+		local kit = { wood = 60, stone = 50, gold = 40, stone_sword = 1 }
+		assert(BookInfo.craftableNow("gold_sword", kit, {}) == false, "sem bancada perto")
+		assert(BookInfo.craftableNow("gold_sword", kit, { workbench = true }) == true, "com bancada")
+		assert(BookInfo.craftableNow("wood", {}, {}) == true, "recurso nunca fica apagado")
+	end,
+
 	["sword craft lists ingredients, workbench and time"] = function()
 		local craft = BookInfo.craft("gold_sword")
 		assert(craft and craft.station == "workbench" and craft.seconds > 0, "bancada e tempo")

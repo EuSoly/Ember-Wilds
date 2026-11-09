@@ -123,4 +123,76 @@ function BookInfo.stats(itemId: string): { ItemInfo.Line }
 	return if def then ItemInfo.lines(def, math.huge) else {}
 end
 
+-- De onde vem um item: mob que deixa ao morrer, ou recurso do mapa que dá na
+-- coleta. hardness: nil = rende com qualquer coisa na mão (ex. frutinha);
+-- 0 = mão; N = picareta nível N. Recurso sem `gather` (pedrinha) nunca entra.
+export type Source = { kind: "mob", id: string, count: number } | { kind: "resource", id: string, hardness: number? }
+
+function BookInfo.sources(itemId: string): { Source }
+	local mobs: { Source } = {}
+	for mobId, mob in Defs.Mobs do
+		local loots: { Types.MobLoot } = mob.loot or {}
+		for _, loot in loots do
+			if loot.id == itemId then
+				table.insert(mobs, { kind = "mob", id = mobId, count = loot.count })
+			end
+		end
+	end
+	table.sort(mobs, function(a, b)
+		return a.id < b.id
+	end)
+	local resources: { Source } = {}
+	for resourceId, resource in Defs.Resources do
+		local gather = resource.gather
+		if gather and gather.item == itemId then
+			table.insert(resources, { kind = "resource", id = resourceId, hardness = gather.hardness })
+		end
+	end
+	table.sort(resources, function(a, b)
+		return a.id < b.id
+	end)
+	for _, source in resources do
+		table.insert(mobs, source)
+	end
+	return mobs
+end
+
+-- Itens cujas receitas usam este (pela ordem das receitas).
+function BookInfo.usedIn(itemId: string, inStudio: boolean): { string }
+	local found: { Types.RecipeDef } = {}
+	for _, recipe in Defs.Recipes do
+		if ItemAccess.recipeAvailable(recipe, inStudio) then
+			for _, ingredient in recipe.ingredients do
+				if ingredient.id == itemId then
+					table.insert(found, recipe)
+					break
+				end
+			end
+		end
+	end
+	table.sort(found, function(a, b)
+		return a.order < b.order
+	end)
+	local out: { string } = {}
+	for _, recipe in found do
+		table.insert(out, recipe.result)
+	end
+	return out
+end
+
+-- Dá para fazer agora? (todos os ingredientes e a estação por perto). Item
+-- sem receita: sempre true (recurso nunca fica apagado no livro).
+function BookInfo.craftableNow(itemId: string, counts: { [string]: number }, near: { [string]: boolean }): boolean
+	local recipe = BookInfo.recipeOf(itemId)
+	if recipe == nil then
+		return true
+	end
+	for _, ingredient in recipe.ingredients do
+		if (counts[ingredient.id] or 0) < ingredient.count then
+			return false
+		end
+	end
+	return recipe.station == nil or near[recipe.station] == true
+end
+
 return BookInfo
