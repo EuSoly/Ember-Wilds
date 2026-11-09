@@ -8,6 +8,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
 local InputNames = require(Shared:WaitForChild("InputNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -20,6 +21,7 @@ local Kit = require(script.Parent:WaitForChild("Kit"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 
 local TITLE_HEIGHT = 48 -- pixels
+local PAD = Kit.panelPadding(12) -- da borda do painel (com a arte, passa da madeira)
 
 local Backpack = {}
 
@@ -64,17 +66,17 @@ function Backpack.Panel(): Frame
 		-- Tamanho em pixels a partir da grade: título + linhas de slots.
 		Size = function()
 			local gridHeight = InventoryGrid.height(InventoryState.capacity())
-			return UDim2.fromOffset(InventoryGrid.WIDTH + 44, TITLE_HEIGHT + gridHeight + 24)
+			return UDim2.fromOffset(InventoryGrid.WIDTH + 10 + 2 * PAD, TITLE_HEIGHT + gridHeight + 2 * PAD)
 		end,
 		Kit.text({
 			Name = "Title",
-			Size = UDim2.new(1, -24, 0, TITLE_HEIGHT - 16),
-			Position = UDim2.fromOffset(12, 10),
-			FontFace = Theme.font.title,
+			Size = UDim2.new(1, -2 * PAD, 0, TITLE_HEIGHT - 16),
+			Position = UDim2.fromOffset(PAD, PAD),
+			FontFace = Theme.font.number, -- a fonte das placas do topo
 			Text = Strings.get("hud.backpack"),
-			maxSize = 32,
+			maxSize = 28,
 		}),
-		InventoryGrid.Component(),
+		vide.apply(InventoryGrid.Component())({ Position = UDim2.new(0.5, 0, 1, -PAD) }),
 	})
 end
 

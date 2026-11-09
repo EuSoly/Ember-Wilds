@@ -50,6 +50,18 @@ HudImages.TOOLTIP_TAIL_SIZE = { 80, 40 }
 HudImages.JOYSTICK_BASE = "rbxassetid://81977662615817" -- joystick_base.png (250x256)
 HudImages.JOYSTICK_KNOB = "rbxassetid://109220113444721" -- joystick_knob.png (123x128)
 
+-- Bordas da tela quando o jogador sofre (UI/StatusVignette): imagem branca
+-- ou já colorida cobrindo a tela inteira, transparente no meio. Vazio = a
+-- borda em degradê feita por código, na cor de cada efeito.
+HudImages.FX = {
+	damage = "", -- golpe: clarão vermelho
+	cold = "", -- frio zerando: gelo nas bordas
+	heat = "", -- calor alto
+	hunger = "", -- fome
+	thirst = "", -- sede
+	oxygen = "", -- sem fôlego
+} :: { [string]: string }
+
 -- Peças esticadas em 9 partes: tamanho da arte e o miolo que estica
 -- ({ min.x, min.y, max.x, max.y }); os cantos (madeira, pregos, chanfros) não esticam.
 HudImages.SLICED = {

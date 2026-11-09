@@ -49,9 +49,10 @@ local function CratePanel(): Frame
 		Kit.text({
 			Name = "Title",
 			LayoutOrder = 1,
-			Size = UDim2.fromOffset(COLUMNS * CELL + (COLUMNS - 1) * GAP, 20),
+			Size = UDim2.fromOffset(COLUMNS * CELL + (COLUMNS - 1) * GAP, 24),
+			FontFace = Theme.font.number, -- a fonte das placas do topo
 			Text = Strings.get("hud.crate"),
-			maxSize = 18,
+			maxSize = 22,
 		}),
 		create("Frame")({
 			Name = "Slots",

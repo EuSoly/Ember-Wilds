@@ -68,7 +68,7 @@ end
 
 -- Margem interna de um painel: com a moldura de madeira da arte, pelo menos
 -- PANEL_PADDING px para o conteúdo não encostar nela.
-local PANEL_PADDING = 16
+local PANEL_PADDING = 26 -- passa da borda de madeira (~18 px) com folga
 function Kit.panelPadding(base: number): number
 	return if HudImages.has(HudImages.PANEL) then math.max(base, PANEL_PADDING) else base
 end

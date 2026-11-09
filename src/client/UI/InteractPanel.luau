@@ -207,7 +207,8 @@ local function InteractPanel(): Frame
 		Kit.text({
 			Name = "Title",
 			LayoutOrder = 1,
-			Size = UDim2.fromOffset(WIDTH, 20),
+			Size = UDim2.fromOffset(WIDTH, 24),
+			FontFace = Theme.font.number, -- a fonte das placas do topo
 			Text = function()
 				local model = InteractState.near()
 				local def = model and InteractState.itemOf(model)

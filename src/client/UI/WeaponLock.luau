@@ -1,8 +1,8 @@
 --!strict
 -- Relógio da arma presa: depois de equipar espada ou lança (item com
--- equipLock), um círculo no canto inferior esquerdo da hotbar mostra quantos
--- segundos faltam para poder trocar de slot. O disco de dentro encolhe até
--- sumir. Lido por polling: atributo do personagem previsto não avisa quando muda.
+-- equipLock), um medalhão (o mesmo dos anéis de status) à esquerda da hotbar
+-- mostra quantos segundos faltam para poder trocar de slot, com o arco
+-- esvaziando até sumir. Lido por polling: atributo do personagem previsto não avisa quando muda.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -14,8 +14,13 @@ local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
+local StatusRing = require(script.Parent:WaitForChild("StatusRing"))
 
 local create = vide.create
+
+local function never(): boolean
+	return false
+end
 
 local function WeaponLock(): Frame
 	local left = vide.source(0) -- segundos que faltam (0 = solta)
@@ -46,37 +51,31 @@ local function WeaponLock(): Frame
 		end,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.3, 0.86),
-		Size = UDim2.fromScale(0.07, 0.07),
+		Size = UDim2.fromScale(0.08, 0.08),
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
-		BackgroundColor3 = Theme.ui.panel,
-		BackgroundTransparency = Theme.panelTransparency,
-		BorderSizePixel = 0,
-		create("UISizeConstraint")({ MinSize = Vector2.new(36, 36), MaxSize = Vector2.new(64, 64) }),
-		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-		create("UIStroke")({ Color = Theme.ui.border, Thickness = Theme.strokeThickness }),
-		-- Disco que encolhe com o tempo.
-		create("Frame")({
-			Name = "Fill",
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = function()
-				local size = 0.85 * fraction()
-				return UDim2.fromScale(size, size)
+		BackgroundTransparency = 1,
+		create("UISizeConstraint")({ MinSize = Vector2.new(40, 40), MaxSize = Vector2.new(72, 72) }),
+		-- Medalhão dos anéis de status com o arco esvaziando (sem pulso: não é alerta).
+		StatusRing({
+			name = "Ring",
+			value = function()
+				return fraction() * StatNames.StatusMax
 			end,
-			BackgroundColor3 = Theme.ui.action,
-			BackgroundTransparency = 0.35,
-			BorderSizePixel = 0,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			color = Theme.ui.action,
+			warning = never,
+			critical = never,
 		}),
 		Kit.text({
-			Size = UDim2.fromScale(0.7, 0.5),
+			Name = "Seconds",
+			Size = UDim2.fromScale(0.4, 0.34),
 			Position = UDim2.fromScale(0.5, 0.5),
 			AnchorPoint = Vector2.new(0.5, 0.5),
-			ZIndex = 2,
+			FontFace = Theme.font.number,
+			ZIndex = 7,
 			Text = function()
 				return tostring(math.ceil(left()))
 			end,
-			maxSize = 20,
+			maxSize = 22,
 		}),
 	}) :: Frame
 end

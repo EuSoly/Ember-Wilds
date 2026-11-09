@@ -26,7 +26,8 @@ create("TextLabel")({
 | `src/client/UI/StatusRing(s).luau` | Anéis de vida, fome, frio e sede |
 | `src/client/UI/ScorePill.luau`, `Clock.luau`, `Minimap.luau` | Topo da tela |
 | `src/client/UI/Minimap.luau` | Mapa inteiro esquemático (os quatro biomas a partir do `WorldConfig`, regiões fechadas escurecidas) e o ponto do jogador |
-| `src/client/World/OxygenBubble.luau` | Bolha de ar ao lado do próprio boneco (no mundo, não na HUD): aparece na água ou com o fôlego abaixo do cheio, pisca abaixo de 25% |
+| `src/client/World/OxygenBubble.luau` | Fôlego ao lado do próprio boneco (no mundo, não na HUD): o medalhão dos anéis com o ícone de bolha; aparece na água ou com o fôlego abaixo do cheio, pulsa abaixo de 25% |
+| `src/client/UI/StatusVignette.luau`, `src/shared/UIFlow/ScreenFx.luau` | Bordas da tela quando o jogador sofre (ver abaixo) |
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
 | `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
 | `src/client/UI/AimStick.luau` | Joystick direito do celular |
@@ -39,9 +40,9 @@ create("TextLabel")({
 | `src/client/UI/CratePanel.luau`, `src/client/CrateState.luau` | Painel da caixa de itens (ver abaixo) |
 | `src/client/World/BuildGhost.luau` | Fantasma verde/vermelho no chão, girado como o servidor vai construir (aproximação; o servidor decide) |
 | `src/client/BuildRotation.luau`, `src/client/UI/RotateButton.luau` | Giro da peça: tecla R (ignorada no chat) e botão "Girar", visível só no toque com uma peça na mão; 45° por vez, vale até trocar de item |
-| `src/client/UI/WeaponLock.luau` | Relógio da arma presa: círculo ao lado da hotbar com os segundos que faltam para poder trocar de slot depois de equipar espada ou lança (`equipLock`) |
+| `src/client/UI/WeaponLock.luau` | Relógio da arma presa: medalhão ao lado da hotbar com o arco esvaziando e os segundos que faltam para poder trocar de slot depois de equipar espada ou lança (`equipLock`) |
 | `src/client/World/StructureHealth.luau` | Barrinha de vida da peça por 3 s depois de levar dano |
-| `src/client/World/CraftBubble.luau` | Engrenagem girando e anel de progresso acima do **próprio** boneco enquanto crafta (os outros jogadores não veem) |
+| `src/client/World/CraftBubble.luau` | Medalhão acima do **próprio** boneco enquanto crafta: arco enchendo e a engrenagem da arte girando (os outros jogadores não veem) |
 | `src/client/UI/InteractPanel.luau`, `src/client/InteractState.luau` | Painel de interação com estruturas (ver abaixo) |
 | `src/client/UI/ItemIcon.luau` | Ícone do slot: moldura na cor do tier com as iniciais; se existe modelo em `Assets.Icons/<id>`, mostra o 3D (ver abaixo) |
 
@@ -63,6 +64,22 @@ As imagens do HUD (arte do Elizeu, 09/11) ficam em `assets/ui/hud/`, recortadas 
 As peças que esticam (painel, aviso, balão) têm em `HudImages.SLICED` o tamanho da arte e o miolo que estica; os cantos (madeira, pregos) ficam do mesmo tamanho. Para trocar uma arte: substitua o PNG, envie para o Roblox e troque o id; se o tamanho mudar, ajuste o `SLICED` dela.
 
 Ainda sem arte: o joystick de **andar** do celular (é o padrão do Roblox, do PlayerModule).
+
+Os painéis com a moldura de couro (caixa, baú, interação, mochila) recuam o conteúdo `Kit.panelPadding` (26 px com a arte) para os slots ficarem dentro da madeira; os títulos usam a fonte das placas do topo (`Theme.font.number`).
+
+## Bordas de sofrimento
+
+O `StatusVignette` é um ScreenGui próprio, atrás do HUD, cobrindo a tela toda. Ele pinta as bordas da tela conforme `UIFlow/ScreenFx` (puro, testado):
+
+| Efeito | Quando | Cor |
+|---|---|---|
+| `damage` | A vida caiu (golpe, fome, frio...): clarão que some em 0,6 s | Vermelho |
+| `cold` | Frio abaixo da linha de alerta dos anéis (35%); some com calor | Gelo (azul bem claro) |
+| `heat` | Calor acima de 65% | Laranja |
+| `hunger`, `thirst` | Abaixo de 35% | Marrom / verde-água |
+| `oxygen` | Fôlego abaixo de 35% | Azul-escuro (a vista escurece) |
+
+A força cresce até 60% perto do zero; zerada (quando a barra começa a machucar), a borda fica cheia e pulsa. Sem arte, cada borda são quatro faixas em degradê feitas por código. Com uma imagem em `HudImages.FX[efeito]` (tela inteira, transparente no meio), a imagem entra no lugar dela.
 
 ## Painel da caixa
 

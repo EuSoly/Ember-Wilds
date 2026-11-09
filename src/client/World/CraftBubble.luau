@@ -1,5 +1,7 @@
 --!strict
--- Engrenagem e progresso do craft acima do PRÓPRIO boneco. Só o dono vê: os
+-- Engrenagem e progresso do craft acima do PRÓPRIO boneco: o medalhão dos
+-- anéis de status com o arco enchendo e a engrenagem (HudImages.ICON.settings)
+-- girando no meio. Só o dono vê: os
 -- outros jogadores não podem saber que alguém está craftando (o servidor manda
 -- o estado só para o dono, via CraftState).
 local Players = game:GetService("Players")
@@ -10,19 +12,20 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local CraftRules = require(Shared:WaitForChild("Craft"):WaitForChild("CraftRules"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 local StatusRing = require(script.Parent.Parent:WaitForChild("UI"):WaitForChild("StatusRing"))
 
 local OFFSET = Vector3.new(0, 4.5, 0)
-local SIZE = UDim2.fromOffset(54, 54)
+local SIZE = UDim2.fromOffset(60, 60)
 -- Graus por segundo da engrenagem.
 local SPIN_SPEED = 240
 
 local CraftBubble = {}
 
-type Bubble = { gui: BillboardGui, gear: TextLabel, progress: (number) -> (), cleanup: () -> () }
+type Bubble = { gui: BillboardGui, gear: GuiObject, progress: (number) -> (), cleanup: () -> () }
 
 local function build(adornee: BasePart): Bubble
 	local gui = Instance.new("BillboardGui")
@@ -46,19 +49,36 @@ local function build(adornee: BasePart): Bubble
 			end,
 			color = Theme.ui.action,
 			name = "CraftProgress",
+			-- Enchendo não é alerta: sem pulso.
+			warning = function()
+				return false
+			end,
+			critical = function()
+				return false
+			end,
 		})
 	end, root)
-	local gear = Instance.new("TextLabel")
+	local gear: GuiObject
+	if HudImages.has(HudImages.ICON.settings) then
+		local image = Instance.new("ImageLabel")
+		image.Image = HudImages.ICON.settings
+		image.ScaleType = Enum.ScaleType.Fit
+		image.Size = UDim2.fromScale(0.42, 0.42)
+		gear = image
+	else
+		local text = Instance.new("TextLabel")
+		text.FontFace = Theme.font.number
+		text.Text = "⚙"
+		text.TextColor3 = Theme.ui.text
+		text.TextScaled = true
+		text.Size = UDim2.fromScale(0.58, 0.58)
+		gear = text
+	end
 	gear.Name = "Gear"
 	gear.BackgroundTransparency = 1
 	gear.AnchorPoint = Vector2.new(0.5, 0.5)
 	gear.Position = UDim2.fromScale(0.5, 0.5)
-	gear.Size = UDim2.fromScale(0.58, 0.58)
-	gear.FontFace = Theme.font.number
-	gear.Text = "⚙"
-	gear.TextColor3 = Theme.ui.text
-	gear.TextScaled = true
-	gear.ZIndex = 4
+	gear.ZIndex = 7 -- acima do medalhão (5)
 	gear.Parent = root
 	-- No PlayerGui (local, não replica), preso ao personagem pelo Adornee.
 	gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
