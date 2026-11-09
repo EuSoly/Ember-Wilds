@@ -80,7 +80,14 @@ Atributos opcionais no molde (`Assets.Icons/Tools/Structures/<id>`), editados no
 | `IconeZoom` | número | 1 = enche o quadro; 1,3 = 30% maior; 0,8 = menor |
 | `IconeDesloca` | Vector2 | move o modelo no quadro em frações dele (0,1, 0 = 10% para a direita) |
 
-Para ver ao vivo, rode `scripts/studio/icon-bench.luau` na barra de comando (Edit): ele monta `StarterGui.BancadaIcones` com todos os ícones e o id embaixo; o ícone muda na hora em que o atributo muda. Os atributos vivem no place: salve o place. Antes de publicar, apague a bancada (`APAGAR = true` no script).
+Para ver ao vivo, use a bancada (ModuleScript `ServerStorage.BancadaIcones`, cópia de `scripts/studio/icon-bench.luau`). Na barra de comando do Studio (Edit), cole:
+
+```lua
+require(game.ServerStorage.BancadaIcones)()      -- monta a bancada
+require(game.ServerStorage.BancadaIcones)(true)  -- apaga a bancada
+```
+
+Ela monta `StarterGui.BancadaIcones` com todos os ícones e o id embaixo; o ícone muda na hora em que o atributo muda. A barra de comando roda código Luau, não caminho de arquivo. Os atributos vivem no place: salve o place. Antes de publicar, apague a bancada.
 
 ## Pendências
 
