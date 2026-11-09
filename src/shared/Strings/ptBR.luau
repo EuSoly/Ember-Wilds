@@ -22,6 +22,7 @@ return table.freeze({
 
 	-- HUD
 	["hud.day"] = "Dia {day}",
+	["hud.dayEnglish"] = "Day {day}", -- relógio com o Roblox em inglês
 	["hud.points"] = "{points} pts",
 	["hud.rank"] = "#{rank}",
 	["hud.nightComing"] = "A noite está chegando",

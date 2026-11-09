@@ -8,6 +8,9 @@ export type CycleState = {
 	isNight: boolean,
 	secondsLeft: number, -- até a próxima troca (anoitecer ou amanhecer)
 	nightSoon: boolean, -- de dia e faltando WARNING_SECONDS ou menos para a noite
+	-- Hora do relógio do jogo (0 a 24): o dia vai das 06:00 às 18:00 e a noite
+	-- das 18:00 às 06:00 (o número do dia sobe no amanhecer, 06:00).
+	hours: number,
 }
 
 local DayCycle = {}
@@ -24,11 +27,15 @@ function DayCycle.at(elapsed: number): CycleState
 	local inCycle = t % CYCLE_SECONDS
 	local isNight = inCycle >= DayCycle.DAY_SECONDS
 	local secondsLeft = if isNight then CYCLE_SECONDS - inCycle else DayCycle.DAY_SECONDS - inCycle
+	local hours = if isNight
+		then (18 + 12 * (inCycle - DayCycle.DAY_SECONDS) / DayCycle.NIGHT_SECONDS) % 24
+		else 6 + 12 * inCycle / DayCycle.DAY_SECONDS
 	return {
 		day = math.floor(t / CYCLE_SECONDS) + 1,
 		isNight = isNight,
 		secondsLeft = secondsLeft,
 		nightSoon = not isNight and secondsLeft <= DayCycle.WARNING_SECONDS,
+		hours = hours,
 	}
 end
 
