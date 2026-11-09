@@ -26,6 +26,7 @@ return table.freeze({
 	["info.food.thirst"] = "Repõe {value} de sede",
 	["info.food.health"] = "Recupera {value} de vida",
 	-- Livro de receitas
+	["book.title"] = "Livro de receitas",
 	["book.tab.tools"] = "Ferramentas",
 	["book.tab.weapons"] = "Armas",
 	["book.tab.armor"] = "Armaduras",

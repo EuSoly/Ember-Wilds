@@ -9,7 +9,9 @@ local ItemAccess = require("../ItemAccess")
 local ItemInfo = require("./ItemInfo")
 local Types = require("../Defs/Types")
 
-export type Tab = "tools" | "weapons" | "armor" | "food" | "build" | "resources"
+-- "tools", "weapons", "armor", "food", "build" ou "resources" (string: o
+-- verificador de tipos alarga os literais e a união só atrapalhava).
+export type Tab = string
 
 local BookInfo = {}
 
@@ -81,7 +83,7 @@ function BookInfo.firstTab(itemId: string, inStudio: boolean): Tab?
 	end
 	for _, tab in TABS do
 		if inTab(tab, def) then
-			return tab :: any
+			return tab
 		end
 	end
 	return nil
