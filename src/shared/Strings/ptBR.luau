@@ -25,6 +25,13 @@ return table.freeze({
 	["info.food.hunger"] = "Repõe {value} de fome",
 	["info.food.thirst"] = "Repõe {value} de sede",
 	["info.food.health"] = "Recupera {value} de vida",
+	-- Livro de receitas
+	["book.tab.tools"] = "Ferramentas",
+	["book.tab.weapons"] = "Armas",
+	["book.tab.armor"] = "Armaduras",
+	["book.tab.food"] = "Comida",
+	["book.tab.build"] = "Construções",
+	["book.tab.resources"] = "Recursos",
 	["info.count"] = "Quantidade: {value}",
 	["info.pickaxe"] = "Picareta nível {level}",
 	["info.damage"] = "Dano: {value}",
