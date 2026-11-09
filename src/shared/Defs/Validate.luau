@@ -29,7 +29,7 @@ local Validate = {}
 
 -- Lista única de estilos de olho: usada aqui e pelo boneco visual (que monta
 -- uma variação de olho para cada um).
-local EYE_STYLES: { Types.EyeStyle } = { "open", "closed", "squeeze" }
+local EYE_STYLES: { Types.EyeStyle } = { "open", "closed", "squeeze", "happy" }
 table.freeze(EYE_STYLES)
 Validate.EYE_STYLES = EYE_STYLES
 
@@ -37,7 +37,8 @@ Validate.EYE_STYLES = EYE_STYLES
 -- evento com outro nome nunca apareceria, então é erro: evento novo precisa de
 -- código no renderer e de entrar nesta lista.
 Validate.HURT_EVENT = "hurt" -- dano (atributo HurtAt)
-Validate.KNOWN_EVENTS = table.freeze({ Validate.HURT_EVENT })
+Validate.EAT_EVENT = "eat" -- mordida (atributo EatUntil)
+Validate.KNOWN_EVENTS = table.freeze({ Validate.HURT_EVENT, Validate.EAT_EVENT })
 
 local TRIGGERS = table.freeze({ "always", "periodic", "event", "condition" })
 local STAT_KINDS = table.freeze({ "counter", "max", "keyed" })
@@ -703,6 +704,9 @@ local function validateFood(errors: { string }, key: string, item: Types.ItemDef
 	end
 	if count == 0 then
 		table.insert(errors, `Item "{key}": food precisa repor ao menos uma barra`)
+	end
+	if food.crumbColor ~= nil and not isHex(food.crumbColor) then
+		table.insert(errors, `Item "{key}": food.crumbColor deve ser "#RRGGBB"`)
 	end
 end
 

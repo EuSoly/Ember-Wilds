@@ -1,6 +1,7 @@
 --!strict
 -- Boneco visual (só no cliente): corpo de cantos arredondados com contorno,
--- olhos no topo, duas mãos soltas, ferramenta na mão direita e o nome em cima.
+-- olhos no topo, duas mãos soltas, ferramenta ou comida na mão direita e o
+-- nome em cima. A comida na mão é o ícone em relevo dela (Assets.Icons/<id>).
 -- Medidas em BonecoConfig (valores do spike aprovado); cores vêm da skin.
 --
 -- Montagem: uma raiz invisível e ancorada (quem move é o BonecoRenderer, com
@@ -34,6 +35,12 @@ local BAR_THICKNESS = 0.06
 local BAR_WIDTH = 0.14
 local SQUEEZE_LENGTH = 0.55
 local SQUEEZE_ANGLE = math.rad(30)
+-- "^ ^" (contente, comendo): duas barras que se encontram na ponta da frente.
+local HAPPY_WIDTH = 0.62
+local HAPPY_DEPTH = 0.32
+-- Farelos da mordida.
+local DEFAULT_CRUMB_COLOR = "#D9B27C"
+local CRUMB_TEXTURE = "rbxasset://textures/particles/SquareParticle.png" -- quadradinho liso: pega a cor
 -- Etiqueta do nome.
 local NAME_SIZE = UDim2.fromOffset(200, 28)
 local NAME_STROKE = 1.5
@@ -61,6 +68,7 @@ export type Boneco = {
 	skinParts: { BasePart },
 	flash: string?,
 	tool: Model?,
+	crumbs: ParticleEmitter?,
 }
 
 local BonecoModel = {}
@@ -168,7 +176,18 @@ local function buildEye(model: Model, eye: CFrame, inward: number): (EyeParts, B
 		table.insert(squeeze, newPart(model, "EyeSqueeze", barSize, eye * offset * yaw))
 	end
 
-	local styles: EyeParts = { open = { disc, shine }, closed = { closed }, squeeze = squeeze }
+	-- "^": ponta para a frente (-Z), as duas pontas soltas para trás.
+	local happy: { BasePart } = {}
+	local apex = Vector3.new(0, 0, -HAPPY_DEPTH / 2)
+	for _, side in { -1, 1 } do
+		local tip = Vector3.new(side * HAPPY_WIDTH / 2, 0, HAPPY_DEPTH / 2)
+		local middle = (apex + tip) / 2
+		local length = (tip - apex).Magnitude + BAR_THICKNESS
+		local bar = eye * CFrame.lookAt(middle, tip)
+		table.insert(happy, newPart(model, "EyeHappy", Vector3.new(BAR_WIDTH, BAR_THICKNESS, length), bar))
+	end
+
+	local styles: EyeParts = { open = { disc, shine }, closed = { closed }, squeeze = squeeze, happy = happy }
 	return styles, shine
 end
 
@@ -446,13 +465,85 @@ function BonecoModel.setFlash(boneco: Boneco, hex: string?)
 	paint(boneco)
 end
 
--- Troca o item na mão direita. true se ficou uma ferramenta na mão.
+-- Comida na mão: o ícone em relevo (Assets.Icons/<id>) deitado em cima da mão,
+-- do tamanho FOOD_HAND_SIZE, para ler de cima o que o jogador vai comer.
+local function holdFood(boneco: Boneco, itemId: string)
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local icons = assets and assets:FindFirstChild("Icons")
+	local template = icons and icons:FindFirstChild(itemId)
+	if template == nil or not template:IsA("Model") then
+		return
+	end
+	local food = template:Clone()
+	local _, size = food:GetBoundingBox()
+	local biggest = math.max(size.X, size.Z)
+	if biggest > 0 then
+		food:ScaleTo(food:GetScale() * C.FOOD_HAND_SIZE / biggest)
+	end
+	local pivot = food:GetPivot()
+	local offset = C.FOOD_HAND_OFFSET
+	for _, part in food:GetDescendants() do
+		if part:IsA("BasePart") then
+			styleVisualPart(part)
+			-- Weld com C0/C1 (como a ferramenta): não depende da pose da mão agora.
+			local joint = Instance.new("Weld")
+			joint.Name = "FoodWeld"
+			joint.Part0 = boneco.rightHand
+			joint.Part1 = part
+			joint.C0 = CFrame.new(offset[1], offset[2], offset[3])
+			joint.C1 = part.CFrame:Inverse() * pivot
+			joint.Parent = part
+		end
+	end
+	food.Parent = boneco.model
+	boneco.tool = food
+end
+
+-- Farelos que saem da comida a cada mordida (cor do item ou cor de pão).
+function BonecoModel.emitCrumbs(boneco: Boneco, hex: string?, count: number)
+	local emitter = boneco.crumbs
+	if emitter == nil then
+		local offset = C.FOOD_HAND_OFFSET
+		local attachment = Instance.new("Attachment")
+		attachment.Name = "Crumbs"
+		attachment.Position = Vector3.new(offset[1], offset[2], offset[3])
+		attachment.Parent = boneco.rightHand
+		local created = Instance.new("ParticleEmitter")
+		created.Texture = CRUMB_TEXTURE
+		created.Rate = 0
+		created.Lifetime = NumberRange.new(0.35, 0.6)
+		created.Speed = NumberRange.new(4, 7)
+		created.SpreadAngle = Vector2.new(70, 70)
+		created.Acceleration = Vector3.new(0, -35, 0)
+		created.Size = NumberSequence.new({
+			NumberSequenceKeypoint.new(0, 0.35),
+			NumberSequenceKeypoint.new(1, 0.1),
+		})
+		created.Rotation = NumberRange.new(0, 360)
+		created.LightInfluence = 0
+		created.Parent = attachment
+		boneco.crumbs = created
+		emitter = created
+	end
+	local color = Theme.color(hex or DEFAULT_CRUMB_COLOR)
+	local crumbs = emitter :: ParticleEmitter
+	crumbs.Color = ColorSequence.new(color, color:Lerp(Color3.new(0, 0, 0), 0.25))
+	crumbs:Emit(count)
+end
+
+-- Troca o item na mão direita. true se ficou uma ferramenta na mão (a comida
+-- aparece na mão, mas não conta como ferramenta: não golpeia).
 function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?, cosmeticId: string?): boolean
 	if boneco.tool then
 		boneco.tool:Destroy()
 		boneco.tool = nil
 	end
 	if itemId == nil then
+		return false
+	end
+	local def = Defs.Items[itemId]
+	if def and def.food then
+		holdFood(boneco, itemId)
 		return false
 	end
 	local tool = ToolModel.build(itemId, cosmeticId)

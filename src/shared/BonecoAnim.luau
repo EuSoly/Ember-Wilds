@@ -1,7 +1,8 @@
 --!strict
 -- Matemática das animações do boneco: parado (respira), andar (quique e
 -- balanço das mãos), golpe com ferramenta (arco de lado, ou estocada para a
--- frente nas lanças, attackAnim "thrust") e soco alternado de mão vazia.
+-- frente nas lanças, attackAnim "thrust"), soco alternado de mão vazia e a
+-- mordida (mão com a comida até a boca).
 -- Pura (sem APIs do Roblox): o renderer do cliente transforma a Pose em
 -- CFrames, e os testes do Lune verificam as curvas.
 local C = require("./BonecoConfig")
@@ -11,7 +12,9 @@ local C = require("./BonecoConfig")
 export type HandPose = { x: number, y: number, z: number, yaw: number }
 export type Pose = { bodyY: number, left: HandPose, right: HandPose }
 -- speed = studs/s no plano. thrust = o item na mão golpeia com estocada.
-export type Input = { speed: number, using: boolean, hasTool: boolean, thrust: boolean? }
+-- eat = progresso da mordida (0 a 1, EatRules.progress) ou nil sem comer;
+-- comendo, a mão direita leva a comida à boca e o golpe não acontece.
+export type Input = { speed: number, using: boolean, hasTool: boolean, thrust: boolean?, eat: number? }
 
 -- Estado interno de um boneco. Quem usa só passa adiante (não mexa nos campos).
 export type State = {
@@ -54,6 +57,34 @@ function BonecoAnim.swingCurve(p: number): number
 	return 0.5 + 0.5 * math.cos(math.pi * t)
 end
 
+-- Curva da mordida: `reach` 0→1 levando a mão à boca, 1 enquanto morde e
+-- 1→0 voltando; `chew` 0→1→0 a cada mordida (o empurrão da comida na boca).
+function BonecoAnim.eatCurve(p: number): (number, number)
+	p = math.clamp(p, 0, 1)
+	local bring, back = C.EAT_BRING_FRACTION, C.EAT_RETURN_FRACTION
+	if p < bring then
+		local t = p / bring
+		return 1 - (1 - t) * (1 - t), 0
+	end
+	if p > 1 - back then
+		local t = (p - (1 - back)) / back
+		return 0.5 + 0.5 * math.cos(math.pi * t), 0
+	end
+	local t = (p - bring) / (1 - bring - back)
+	return 1, math.abs(math.sin(math.pi * C.EAT_BITES * t))
+end
+
+-- Progresso (0 a 1) do fundo de cada mordida, quando caem os farelos.
+function BonecoAnim.eatBites(): { number }
+	local bring, back = C.EAT_BRING_FRACTION, C.EAT_RETURN_FRACTION
+	local span = 1 - bring - back
+	local list = {}
+	for k = 1, C.EAT_BITES do
+		table.insert(list, bring + span * (k - 0.5) / C.EAT_BITES)
+	end
+	return list
+end
+
 -- Avança o golpe. Um ciclo começado sempre termina (mesmo soltando o clique);
 -- segurando, o próximo começa na hora, carregando a sobra do tempo.
 local function advanceSwing(state: State, dt: number, using: boolean)
@@ -87,7 +118,8 @@ function BonecoAnim.step(state: State, dt: number, input: Input): Pose
 	state.speedFraction += (target - state.speedFraction) * (1 - math.exp(-C.SPEED_SMOOTHING * dt))
 	-- A fase fica em [0, 2π) para não perder precisão com o tempo.
 	state.phase = (state.phase + speed * dt * C.STEP_RATE) % TWO_PI
-	advanceSwing(state, dt, input.using)
+	local eating = input.eat ~= nil
+	advanceSwing(state, dt, input.using and not eating)
 
 	local walk = state.speedFraction
 	local bodyY = C.BOB_HEIGHT * math.abs(math.sin(state.phase)) * walk
@@ -112,6 +144,14 @@ function BonecoAnim.step(state: State, dt: number, input: Input): Pose
 		else
 			left.z = -C.PUNCH_DISTANCE * c
 		end
+	end
+
+	if eating then
+		local reach, chew = BonecoAnim.eatCurve(input.eat :: number)
+		right.x += (C.EAT_HAND_X - C.HAND_X) * reach
+		right.y += C.EAT_HAND_Y * reach - 0.4 * C.EAT_CHEW * chew
+		right.z += (C.EAT_HAND_Z - C.HAND_Z) * reach + C.EAT_CHEW * chew
+		right.yaw = 0
 	end
 
 	return { bodyY = bodyY, left = left, right = right }

@@ -14,7 +14,8 @@ export type TierDef = {
 export type ItemCategory = "resource" | "food" | "tool" | "weapon" | "armor" | "bag" | "placeable" | "misc"
 
 -- O que uma comida repõe ao ser comida (pontos de barra, 0 a 100).
-export type FoodEffect = { hunger: number?, thirst: number?, health: number? }
+-- crumbColor (só visual): cor "#RRGGBB" dos farelos da mordida; ausente = cor de pão.
+export type FoodEffect = { hunger: number?, thirst: number?, health: number?, crumbColor: string? }
 
 -- Armadura vestida (uma por vez, como o item de cabeça do Starve).
 -- defense: fração do dano de COMBATE cortada (0 a 0,9).
@@ -126,7 +127,7 @@ export type RecipeDef = {
 }
 
 -- Estilos de olho do boneco (a lista para validar fica em Validate.EYE_STYLES).
-export type EyeStyle = "open" | "closed" | "squeeze"
+export type EyeStyle = "open" | "closed" | "squeeze" | "happy"
 
 -- Como uma expressão fica ativa: sempre (a base), de tempos em tempos,
 -- quando um evento acontece (ex. dano) ou enquanto um atributo passa de um limiar.

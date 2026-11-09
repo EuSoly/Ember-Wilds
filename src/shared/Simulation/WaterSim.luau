@@ -12,7 +12,8 @@
 -- Ponte (G8): em cima dela é chão (sem perder fôlego nem ficar lento). As pontes
 -- vêm pela tag StatNames.BridgeTag + raio PieceRadius (TaggedCircles), lidas
 -- aqui nos dois lados; WaterSim.isWaterAt dá a água bruta, sem contar ponte.
--- Também segura quem está preso na teia de aranha (velocidade 0).
+-- Também segura quem está preso na teia de aranha (velocidade 0) e deixa mais
+-- lento quem está comendo (atributo EatUntil).
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -23,6 +24,8 @@ local Defs = require("../Defs")
 local HeldItem = require("../HeldItem")
 local MobRules = require("../Mobs/MobRules")
 local StatNames = require("../StatNames")
+local EatRules = require("../Survival/EatRules")
+local SurvivalConfig = require("../SurvivalConfig")
 local MapShapes = require("../World/MapShapes")
 local Shapes = require("../World/Shapes")
 local WorldConfig = require("../WorldConfig")
@@ -130,6 +133,10 @@ function WaterSim.start(getPlayers: () -> { Player }): RBXScriptConnection
 			-- Arma na mão (espada, lança) deixa mais lento: moveSpeed do item.
 			local equipped = character and character:GetAttribute(StatNames.Equipped)
 			speed *= HeldItem.speedFactor(if type(equipped) == "string" then Defs.Items[equipped] else nil)
+			-- Comendo (mordida com tempo, FoodService): anda mais devagar.
+			if character and EatRules.isEating(character:GetAttribute(StatNames.EatUntil), now) then
+				speed *= SurvivalConfig.EAT_SPEED_FACTOR
+			end
 			-- Teia (aranha): preso até o instante gravado no personagem. Lido a
 			-- cada passo (AttributeChanged não dispara no personagem previsto).
 			if character and MobRules.isWebbed(character:GetAttribute(StatNames.WebbedUntil), now) then

@@ -22,6 +22,7 @@ Por que dois: é o jeito oficial de fazer visual com Server Authority. O visual 
 | `Using` | `true` enquanto segura o botão de bater | `UseSim` (simulação) |
 | `Equipped` | id do item na mão, ou nada | `EquipService` |
 | `HurtAt` | instante (`GetServerTimeNow`) do último dano | `CharacterService.hurt` |
+| `EatUntil` | instante (`GetServerTimeNow`) em que a mordida atual termina; nada = não está comendo | `FoodService` |
 | `Cosmetic_<slot>` (`Cosmetic_body`, `Cosmetic_bag`, `Cosmetic_book`, `Cosmetic_crate`) | id da skin equipada no slot (também gravado no **Player**, para o boneco do menu, que não tem personagem) | `CosmeticService` |
 
 Os nomes ficam em `src/shared/StatNames.luau`. A tag `Boneco` (CollectionService) marca os personagens que ganham um boneco visual (`CharacterService.prepare`).
@@ -199,7 +200,7 @@ Uma entrada em `src/shared/Defs/Expressions.luau`. Fica ativa a de **maior prior
 | `"event"` | por `duration` segundos depois do evento | `event`, `duration` |
 | `"condition"` | enquanto um atributo está abaixo/acima de um limiar | `condition = { attribute, below?, above? }` |
 
-Estilos de olho (`eyes`): `"open"`, `"closed"`, `"squeeze"` ("> <"). Opcional: `flash = { color = "#RRGGBB", duration = s }` pinta corpo e mãos nessa cor.
+Estilos de olho (`eyes`): `"open"`, `"closed"`, `"squeeze"` ("> <"), `"happy"` ("^ ^", usado ao comer). Eventos que o renderer dispara: `"hurt"` (dano) e `"eat"` (mordida). Opcional: `flash = { color = "#RRGGBB", duration = s }` pinta corpo e mãos nessa cor.
 
 Exemplo: olhos fechados quando o frio fica abaixo de 35:
 

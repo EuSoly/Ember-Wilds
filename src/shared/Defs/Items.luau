@@ -13,16 +13,28 @@ local Items: { [string]: ItemDef } = {
 	gold = { id = "gold", nameKey = "item.gold", category = "resource", maxStack = 255 },
 
 	-- Comida
-	berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255, food = { hunger = 10 } },
+	berry = {
+		id = "berry",
+		nameKey = "item.berry",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 10, crumbColor = "#7B3FA6" },
+	},
 
 	-- Carne dos mobs (crua vem do loot; assada na fogueira)
-	raw_meat = { id = "raw_meat", nameKey = "item.raw_meat", category = "food", maxStack = 255, food = { hunger = 15 } },
+	raw_meat = {
+		id = "raw_meat",
+		nameKey = "item.raw_meat",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 15, crumbColor = "#D9534F" },
+	},
 	cooked_meat = {
 		id = "cooked_meat",
 		nameKey = "item.cooked_meat",
 		category = "food",
 		maxStack = 255,
-		food = { hunger = 35 },
+		food = { hunger = 35, crumbColor = "#8B4A2B" },
 	},
 
 	-- Peles, pena e linha (loot dos mobs)

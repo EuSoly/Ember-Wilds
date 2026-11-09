@@ -55,6 +55,10 @@ return table.freeze({
 	EquipLockUntil = "EquipLockUntil",
 	-- Instante (GetServerTimeNow) do último dano (escrito por CharacterService.hurt).
 	HurtAt = "HurtAt",
+	-- Instante (GetServerTimeNow) em que a mordida atual termina e a comida faz
+	-- efeito; nil = não está comendo (escrito pelo FoodService). O boneco anima a
+	-- mordida e a simulação deixa o jogador mais lento enquanto vale.
+	EatUntil = "EatUntil",
 	-- true enquanto o personagem dorme numa cama (escrito pelo BedService; olhos fechados).
 	Sleeping = "Sleeping",
 	-- Prefixo do id do cosmético equipado por slot: "Cosmetic_body" = skin do corpo.

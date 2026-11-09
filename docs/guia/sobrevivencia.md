@@ -39,9 +39,19 @@ Qualquer modelo com a tag **`HeatSource`** e o atributo **`HeatRadius`** (em stu
 
 ## Comida
 
-Com uma comida na mão (slot selecionado), **clique** (ou segure o joystick direito no celular) para comer uma. Segurando, continua comendo a cada meio segundo. Se tudo o que a comida repõe já estiver cheio, ela **não é gasta**.
+Com uma comida na mão (slot selecionado), **clique** (ou segure o joystick direito no celular) para comer. A comida aparece na mão do boneco (o ícone em relevo de `Assets.Icons/<id>`).
 
-Comida nova: um item com `category = "food"` e o bloco `food = { hunger = ?, thirst = ?, health = ? }` (pelo menos um) em `src/shared/Defs/Items.luau`. Veja `adicionar-item.md`.
+Comer leva tempo (decisões do Elizeu, 09/11):
+- Cada mordida dura **1,2 s** (`SurvivalConfig.EAT_DURATION`). A comida só sai do inventário e repõe as barras **no fim** da mordida.
+- Segurando o botão, a próxima mordida emenda na hora. Uma mordida começada termina mesmo soltando o botão.
+- Dá para andar comendo, a **70%** da velocidade (`EAT_SPEED_FACTOR`, aplicado no `WaterSim`).
+- **Trocar de item** no meio (ou morrer) cancela sem gastar a comida. Levar dano **não** interrompe.
+- Se tudo o que a comida repõe já estiver cheio, a mordida nem começa.
+- O boneco leva a comida à boca, dá duas mordidas com farelos na cor da comida e fecha os olhos "^ ^". Números da animação em `BonecoConfig` (`EAT_*`, `FOOD_HAND_*`).
+
+Por dentro: o `FoodService` grava no personagem o atributo `EatUntil` (instante do servidor em que a mordida termina); o boneco anima por ele (`EatRules.progress` + `BonecoAnim.eatCurve`) e a simulação deixa mais lento enquanto vale.
+
+Comida nova: um item com `category = "food"` e o bloco `food = { hunger = ?, thirst = ?, health = ? }` (pelo menos um) em `src/shared/Defs/Items.luau`; opcional `crumbColor = "#RRGGBB"` (cor dos farelos; sem ela, cor de pão). Para aparecer na mão, precisa do ícone em `Assets.Icons/<id>`. Veja `adicionar-item.md`.
 
 ## Armaduras (preparadas)
 

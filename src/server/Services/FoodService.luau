@@ -1,12 +1,19 @@
 --!strict
--- Comer (G1): com uma comida na mão (atributo Equipped do personagem), apertar
--- o botão de usar (o mesmo de bater, atributo Using) come uma unidade;
--- segurando, continua comendo a cada SurvivalConfig.EAT_INTERVAL.
+-- Comer (G1, com tempo desde 09/11): com uma comida na mão (atributo Equipped
+-- do personagem), apertar o botão de usar (o mesmo de bater, atributo Using)
+-- começa uma mordida de SurvivalConfig.EAT_DURATION segundos. Só no fim dela a
+-- comida sai do inventário e repõe as barras; segurando o botão, a próxima
+-- mordida emenda na hora.
+-- O atributo EatUntil do personagem guarda quando a mordida termina: o boneco
+-- anima por ele (todos veem) e a simulação deixa o jogador mais lento
+-- (SurvivalConfig.EAT_SPEED_FACTOR, no WaterSim).
+-- Trocar o item da mão (ou morrer) no meio cancela sem gastar a comida.
+-- Levar dano não interrompe. Barras cheias não começam a mordida.
 -- O que a comida repõe vem do bloco `food` do item em Defs/Items.
--- Só come se a comida repõe alguma barra (barras cheias não gastam comida).
--- Para a fase de combate/coleta: com comida na mão, o golpe deve ser ignorado.
+-- Com comida na mão o golpe é ignorado (GatherService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -14,43 +21,95 @@ local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
 local InventoryService = require(script.Parent.InventoryService)
 local SurvivalService = require(script.Parent.SurvivalService)
 
-local REPEAT_CHECK = 0.1 -- segundos entre conferências de quem está segurando
+local CHECK_EVERY = 0.05 -- segundos entre conferências (fim da mordida, cancelar, segurar)
 
 local FoodService = {}
 
-local lastEat: { [Player]: number } = {}
+type Bite = { character: Model, itemId: string, finishAt: number }
 
-local function tryEat(player: Player)
+-- Mordida em andamento de cada jogador.
+local bites: { [Player]: Bite } = {}
+
+local function equippedFood(character: Model): (string?, Defs.FoodEffect?)
+	local itemId = character:GetAttribute(StatNames.Equipped)
+	local def = if type(itemId) == "string" then Defs.Items[itemId] else nil
+	if def == nil or def.food == nil then
+		return nil, nil
+	end
+	return def.id, def.food
+end
+
+local function stop(player: Player)
+	local bite = bites[player]
+	if bite == nil then
+		return
+	end
+	bites[player] = nil
+	if bite.character.Parent ~= nil then
+		bite.character:SetAttribute(StatNames.EatUntil, nil)
+	end
+end
+
+-- Começa uma mordida se der: personagem vivo, comida na mão (o Equipped vem do
+-- slot selecionado, então o item está no inventário) e alguma barra a repor.
+local function tryStart(player: Player)
+	if bites[player] then
+		return
+	end
 	local character = player.Character
 	if character == nil or character:FindFirstChildOfClass("Humanoid") == nil then
 		return
 	end
-	local now = os.clock()
-	local last = lastEat[player]
-	if last and now - last < SurvivalConfig.EAT_INTERVAL then
+	local itemId, food = equippedFood(character)
+	if itemId == nil or food == nil then
 		return
 	end
-	local itemId = character:GetAttribute(StatNames.Equipped)
-	local def = if type(itemId) == "string" then Defs.Items[itemId] else nil
-	local food = def and def.food
-	if def == nil or food == nil then
-		return
-	end
-	-- Confere antes de tirar o item: barras cheias não gastam comida.
 	if not SurvivalService.canEat(player, food) then
 		return
 	end
-	if not InventoryService.take(player, def.id, 1) then
+	local finishAt = Workspace:GetServerTimeNow() + SurvivalConfig.EAT_DURATION
+	bites[player] = { character = character, itemId = itemId, finishAt = finishAt }
+	character:SetAttribute(StatNames.EatUntil, finishAt)
+end
+
+-- Fim da mordida: tira a comida e repõe as barras (se ainda fizer sentido).
+local function finish(player: Player, bite: Bite)
+	stop(player)
+	local def = Defs.Items[bite.itemId]
+	local food = def and def.food
+	if food == nil or not SurvivalService.canEat(player, food) then
 		return
 	end
-	lastEat[player] = now
-	SurvivalService.applyFood(player, food)
+	if InventoryService.take(player, bite.itemId, 1) then
+		SurvivalService.applyFood(player, food)
+	end
+end
+
+local function step()
+	local now = Workspace:GetServerTimeNow()
+	for player, bite in bites do
+		local character = player.Character
+		local itemId = if character ~= nil and character == bite.character then (equippedFood(character)) else nil
+		if itemId ~= bite.itemId then
+			-- Trocou de item, morreu ou trocou de personagem: cancela sem gastar.
+			stop(player)
+		elseif now >= bite.finishAt then
+			finish(player, bite)
+		end
+	end
+	-- Segurando o botão: começa (ou emenda) a próxima mordida.
+	for _, player in Players:GetPlayers() do
+		local character = player.Character
+		if character and character:GetAttribute(StatNames.Using) == true then
+			tryStart(player)
+		end
+	end
 end
 
 local function setupCharacter(player: Player, character: Model)
 	character:GetAttributeChangedSignal(StatNames.Using):Connect(function()
 		if character:GetAttribute(StatNames.Using) == true and player.Character == character then
-			tryEat(player)
+			tryStart(player)
 		end
 	end)
 end
@@ -67,22 +126,16 @@ end
 function FoodService.Start(_self)
 	Players.PlayerAdded:Connect(setupPlayer)
 	Players.PlayerRemoving:Connect(function(player)
-		lastEat[player] = nil
+		bites[player] = nil
 	end)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)
 	end
 
-	-- Segurar o botão continua comendo (o sinal acima só pega o aperto).
 	task.spawn(function()
 		while true do
-			task.wait(REPEAT_CHECK)
-			for _, player in Players:GetPlayers() do
-				local character = player.Character
-				if character and character:GetAttribute(StatNames.Using) == true then
-					tryEat(player)
-				end
-			end
+			task.wait(CHECK_EVERY)
+			step()
 		end
 	end)
 end

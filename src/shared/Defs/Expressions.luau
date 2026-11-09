@@ -30,6 +30,15 @@ local Expressions: { [string]: ExpressionDef } = {
 		trigger = "condition",
 		condition = { attribute = StatNames.Sleeping, equals = true },
 	},
+	-- Comendo (atributo EatUntil): olhos "^ ^" contentes durante a mordida.
+	eat = {
+		id = "eat",
+		priority = 60,
+		eyes = "happy",
+		trigger = "event",
+		event = "eat",
+		duration = 1.2, -- igual a SurvivalConfig.EAT_DURATION (o renderer limpa se cancelar)
+	},
 	-- Levou dano: olhos "> <" e o corpo pisca em vermelho.
 	hurt = {
 		id = "hurt",

@@ -33,7 +33,12 @@ return table.freeze({
 	OXYGEN_EMPTY_DAMAGE = 1, -- vida por segundo sem fôlego
 	HURT_FLASH_EVERY = 2, -- segundos mínimos entre caretas do dano de sobrevivência
 
-	EAT_INTERVAL = 0.5, -- segurando o botão de usar, come uma comida a cada isso (segundos)
+	-- Comer leva EAT_DURATION segundos: a comida sai do inventário e faz efeito no
+	-- fim da mordida (trocar de item no meio cancela sem gastar). Segurando o
+	-- botão, emenda uma mordida na outra. Comendo, anda a EAT_SPEED_FACTOR da
+	-- velocidade (decisão do Elizeu, 09/11).
+	EAT_DURATION = 1.2,
+	EAT_SPEED_FACTOR = 0.7,
 
 	MAX_DEFENSE = 0.9, -- teto do armor.defense (fração do dano de combate cortada)
 	MAX_FACTOR = 2, -- teto dos fatores de barra da armadura (coldFactor etc.)

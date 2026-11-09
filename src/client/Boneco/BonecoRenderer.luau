@@ -3,7 +3,7 @@
 -- dos outros). Um único loop, antes do render, faz cada boneco seguir o
 -- HumanoidRootPart, anima (BonecoAnim) e troca a expressão (ExpressionState).
 -- Tudo o que o visual precisa vem de atributos replicados no personagem
--- (Using, Equipped, HurtAt, Cosmetic_body): todos veem a mesma coisa.
+-- (Using, Equipped, HurtAt, EatUntil, Cosmetic_body): todos veem a mesma coisa.
 -- Esses atributos são lidos a cada quadro (polling), não por sinal: veja
 -- syncAttributes. O visual nunca entra na simulação: fica numa pasta local e
 -- não replica.
@@ -18,8 +18,10 @@ local BonecoAnim = require(Shared:WaitForChild("BonecoAnim"))
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local EatRules = require(Shared:WaitForChild("Survival"):WaitForChild("EatRules"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local SurvivalConfig = require(Shared:WaitForChild("SurvivalConfig"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
@@ -32,6 +34,10 @@ local BAG_SLOT = "bag"
 local BOOK_SLOT = "book"
 -- Evento que a expressão de dano escuta (um dos Validate.KNOWN_EVENTS).
 local HURT_EVENT = Validate.HURT_EVENT
+local EAT_EVENT = Validate.EAT_EVENT
+local CRUMBS_PER_BITE = 7
+-- Progresso (0 a 1) de cada mordida, quando caem os farelos.
+local BITES = BonecoAnim.eatBites()
 -- Pasta dos bonecos de teste (DevBonecoService): o nome deles é o do modelo.
 local DEV_CROWD_FOLDER = "DevCrowd"
 local RENDER_NAME = "Boneco"
@@ -46,6 +52,10 @@ type Entry = {
 	expression: ExpressionState.State,
 	hasTool: boolean,
 	thrust: boolean, -- o item na mão golpeia com estocada (attackAnim "thrust")
+	food: boolean, -- o item na mão é comida (o botão come, não golpeia)
+	crumbColor: string?,
+	eatUntil: number?,
+	eatProgress: number?, -- progresso da mordida no quadro anterior (farelos)
 	lastPosition: Vector3,
 	eyes: Defs.EyeStyle,
 	flash: string?,
@@ -148,6 +158,21 @@ local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
 	local bookResolved = Cosmetic.resolve(Defs, BOOK_SLOT, bookCosmeticId)
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id, bookResolved.id)
 	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
+	local def = if id then Defs.Items[id] else nil
+	local food = def and def.food
+	entry.food = food ~= nil
+	entry.crumbColor = if food then food.crumbColor else nil
+end
+
+-- Mordida nova (EatUntil no futuro): olhos "^ ^". Sem mordida (terminou ou foi
+-- cancelada): limpa a expressão na hora.
+local function checkEat(entry: Entry, eatUntil: number?)
+	entry.eatUntil = eatUntil
+	if EatRules.isEating(eatUntil, Workspace:GetServerTimeNow()) then
+		ExpressionState.trigger(entry.expression, EAT_EVENT, os.clock())
+	else
+		ExpressionState.clear(entry.expression, EAT_EVENT)
+	end
 end
 
 -- Só mostra a careta se o dano for recente: um HurtAt antigo chega quando o
@@ -194,6 +219,10 @@ local function syncAttributes(entry: Entry)
 	if hurtAt ~= entry.hurtAt then
 		checkHurt(entry, hurtAt)
 	end
+	local eatUntil = numberAttribute(character, StatNames.EatUntil)
+	if eatUntil ~= entry.eatUntil then
+		checkEat(entry, eatUntil)
+	end
 end
 
 local function build(character: Model, hrp: BasePart)
@@ -208,6 +237,10 @@ local function build(character: Model, hrp: BasePart)
 		expression = ExpressionState.new(),
 		hasTool = false,
 		thrust = false,
+		food = false,
+		crumbColor = nil,
+		eatUntil = nil,
+		eatProgress = nil,
 		lastPosition = hrp.Position,
 		eyes = "open",
 		flash = nil,
@@ -283,16 +316,35 @@ local function rightHandTransform(c0: CFrame, hand: BonecoAnim.HandPose): CFrame
 	return c0:Inverse() * swing * c0 * CFrame.new(hand.x, hand.y, hand.z)
 end
 
-local function animate(entry: Entry, dt: number, speed: number, now: number)
+-- Farelos quando a mordida passa do fundo de uma mordida neste quadro.
+local function dropCrumbs(entry: Entry, progress: number?)
+	local before = entry.eatProgress
+	entry.eatProgress = progress
+	if progress == nil or before == nil or progress < before then
+		return
+	end
+	for _, bite in BITES do
+		if before < bite and progress >= bite then
+			BonecoModel.emitCrumbs(entry.boneco, entry.crumbColor, CRUMBS_PER_BITE)
+		end
+	end
+end
+
+local function animate(entry: Entry, dt: number, speed: number, now: number, serverNow: number)
 	local boneco = entry.boneco
 	local character = entry.character
+	local eat = EatRules.progress(entry.eatUntil, serverNow, SurvivalConfig.EAT_DURATION)
+	dropCrumbs(entry, eat)
 	local pose = BonecoAnim.step(entry.anim, dt, {
 		speed = speed,
-		-- Craftando, o próprio braço não bate (só o dono sabe do craft).
+		-- Craftando, o próprio braço não bate (só o dono sabe do craft). Com
+		-- comida na mão o botão come: nada de soco.
 		using = character:GetAttribute(StatNames.Using) == true
+			and not entry.food
 			and not (character == Players.LocalPlayer.Character and CraftState.isCrafting()),
 		hasTool = entry.hasTool,
 		thrust = entry.thrust,
+		eat = eat,
 	})
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
@@ -334,6 +386,7 @@ local function update(dt: number)
 	local camera = Workspace.CurrentCamera
 	local cameraPosition = if camera then camera.CFrame.Position else nil
 	local now = os.clock()
+	local serverNow = Workspace:GetServerTimeNow()
 
 	local roots: { BasePart } = {}
 	local cframes: { CFrame } = {}
@@ -379,7 +432,7 @@ local function update(dt: number)
 		Workspace:BulkMoveTo(roots, cframes, Enum.BulkMoveMode.FireCFrameChanged)
 	end
 	for i, entry in toAnimate do
-		animate(entry, dt, speeds[i], now)
+		animate(entry, dt, speeds[i], now, serverNow)
 	end
 end
 

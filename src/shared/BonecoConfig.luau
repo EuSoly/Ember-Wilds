@@ -54,6 +54,18 @@ return table.freeze({
 	THRUST_DISTANCE = 1.9, -- studs; quanto a mão avança na estocada
 	THRUST_REST_ANGLE = -8, -- graus; negativo = a ponta um pouco para dentro
 
+	-- Comer (mordida de SurvivalConfig.EAT_DURATION): a mão direita leva a
+	-- comida até a boca (frente do corpo, no centro), dá EAT_BITES mordidas e volta.
+	EAT_HAND_X = 0.45, -- studs; x da mão na boca (repouso = HAND_X)
+	EAT_HAND_Y = 0.6, -- studs; quanto a mão sobe até a boca
+	EAT_HAND_Z = -2.05, -- studs; z da mão na boca (repouso = HAND_Z; frente do corpo = -1,8)
+	EAT_BITES = 2, -- mordidas por comida
+	EAT_CHEW = 0.3, -- studs; quanto a mão empurra a comida na boca a cada mordida
+	EAT_BRING_FRACTION = 0.25, -- fração da mordida gasta levando a mão à boca
+	EAT_RETURN_FRACTION = 0.2, -- fração gasta voltando ao repouso
+	FOOD_HAND_SIZE = 1.5, -- studs; maior lado da comida na mão
+	FOOD_HAND_OFFSET = { 0, 0.55, -0.35 }, -- studs; comida em relação à mão (em cima, à frente)
+
 	-- Desempenho e expressões.
 	ANIM_RANGE = 120, -- studs da câmera; mais longe só segue a posição, sem animar
 	HURT_RECENT = 1, -- segundos; HurtAt mais antigo que isso não mostra a careta

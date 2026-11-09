@@ -29,6 +29,11 @@ function ExpressionState.trigger(state: State, event: string, now: number)
 	state.events[event] = now
 end
 
+-- Esquece o evento (ex. "eat" quando a mordida é cancelada antes do fim).
+function ExpressionState.clear(state: State, event: string)
+	state.events[event] = nil
+end
+
 -- O evento disparou há menos de `window` segundos?
 local function eventWithin(state: State, event: string?, now: number, window: number?): boolean
 	if event == nil or window == nil then
