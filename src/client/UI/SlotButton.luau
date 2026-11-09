@@ -12,6 +12,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local ChestState = require(Client:WaitForChild("ChestState"))
@@ -47,6 +48,10 @@ local function pressedOn(target: GuiObject, input: InputObject): boolean
 	local from, to = target.AbsolutePosition, target.AbsolutePosition + target.AbsoluteSize
 	return at.X >= from.X and at.X <= to.X and at.Y >= from.Y and at.Y <= to.Y
 end
+
+-- Com a arte do slot (couro e madeira), o ícone fica dentro da borda dela.
+local HAS_ART = HudImages.has(HudImages.SLOT)
+local LOCK_SIZE = 0.42
 
 local function SlotButton(props: Props): TextButton
 	local index = props.index
@@ -113,6 +118,45 @@ local function SlotButton(props: Props): TextButton
 		end,
 	}) :: TextButton
 
+	-- Arte do slot: couro com madeira; dourada no selecionado; apagada se
+	-- trancado (com o cadeado por cima). Lista vazia sem a arte.
+	local artChildren: { Instance } = {}
+	if HAS_ART then
+		table.insert(
+			artChildren,
+			create("ImageLabel")({
+				Name = "Art",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				ScaleType = Enum.ScaleType.Stretch,
+				Image = function()
+					return if isSelected() then HudImages.SLOT_SELECTED else HudImages.SLOT
+				end,
+				ImageTransparency = function()
+					return if isDragOrigin() then DRAG_ORIGIN_TRANSPARENCY else 0
+				end,
+				ImageColor3 = function()
+					return if locked() then Color3.fromRGB(120, 120, 120) else Color3.new(1, 1, 1)
+				end,
+				ZIndex = 0,
+			})
+		)
+		table.insert(
+			artChildren,
+			create("ImageLabel")({
+				Name = "Lock",
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(LOCK_SIZE, LOCK_SIZE),
+				BackgroundTransparency = 1,
+				Image = HudImages.LOCK,
+				ScaleType = Enum.ScaleType.Fit,
+				Visible = locked,
+				ZIndex = 2,
+			})
+		)
+	end
+
 	local button: TextButton
 	button = create("TextButton")({
 		Name = `Slot{index}`,
@@ -127,6 +171,9 @@ local function SlotButton(props: Props): TextButton
 			return if isSelected() then Theme.ui.panelRaised else Theme.ui.panel
 		end,
 		BackgroundTransparency = function()
+			if HAS_ART then
+				return 1
+			end
 			return if locked()
 				then LOCKED_TRANSPARENCY
 				elseif isDragOrigin() then DRAG_ORIGIN_TRANSPARENCY
@@ -137,8 +184,13 @@ local function SlotButton(props: Props): TextButton
 		-- Escala com a tela, mas nunca menor que o mínimo de toque nem gigante em 1080p.
 		create("UISizeConstraint")({ MinSize = Theme.slotMinSize, MaxSize = Theme.slotMaxSize }),
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		artChildren,
 		create("UIStroke")({
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			-- Com a arte, o traço só aparece no slot onde o item arrastado vai cair.
+			Transparency = function()
+				return if HAS_ART and not isDropTarget() then 1 else 0
+			end,
 			Color = function()
 				return if isDropTarget()
 					then Theme.ui.warning
@@ -187,7 +239,19 @@ local function SlotButton(props: Props): TextButton
 				return if locked() then nil else item()
 			end),
 			function(current)
-				return ItemIcon({ item = current })
+				local icon = ItemIcon({ item = current })
+				if not HAS_ART then
+					return icon
+				end
+				-- Dentro da borda de madeira do slot.
+				local holder = Instance.new("Frame")
+				holder.Name = "IconHolder"
+				holder.AnchorPoint = Vector2.new(0.5, 0.5)
+				holder.Position = UDim2.fromScale(0.5, 0.5)
+				holder.Size = UDim2.fromScale(1 - 2 * HudImages.SLOT_INSET, 1 - 2 * HudImages.SLOT_INSET)
+				holder.BackgroundTransparency = 1
+				icon.Parent = holder
+				return holder
 			end
 		),
 		plus,

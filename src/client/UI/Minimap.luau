@@ -11,6 +11,8 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Palette = require(Shared:WaitForChild("Palette"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local WorldConfig = require(Shared:WaitForChild("WorldConfig"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 
 local create = vide.create
@@ -76,38 +78,51 @@ local function Minimap(): Frame
 		end
 	end))
 
-	return Kit.panel({
+	local framed = HudImages.has(HudImages.MINIMAP_FRAME)
+	-- Com a moldura de madeira, o mapa fica dentro do furo dela.
+	local inner = if framed then 1 - 2 * HudImages.MINIMAP_INSET else 0.88
+	local ground = create("Frame")({
+		Name = "Ground",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(inner, inner),
+		-- Fundo = oceano; os biomas por cima.
+		BackgroundColor3 = Theme.color(Palette.biome.ocean[3]),
+		BorderSizePixel = 0,
+		ClipsDescendants = true,
+		create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		Biome("forest", WorldConfig.BIOMES.forest),
+		Biome("winter", WorldConfig.BIOMES.winter),
+		Biome("lava", WorldConfig.BIOMES.lava),
+		Biome("desert", WorldConfig.BIOMES.desert),
+		create("Frame")({
+			Name = "PlayerDot",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = dot,
+			Size = UDim2.fromScale(0.07, 0.07),
+			BackgroundColor3 = Theme.ui.text,
+			BorderSizePixel = 0,
+			ZIndex = 2,
+			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		}),
+	})
+	local children: { Instance } = { create("UIAspectRatioConstraint")({ AspectRatio = 1 }), ground }
+	if framed then
+		table.insert(
+			children,
+			HudArt.image(HudImages.MINIMAP_FRAME, { Name = "Frame", ScaleType = Enum.ScaleType.Stretch, ZIndex = 5 })
+		)
+	end
+	local frame: Frame = if framed
+		then create("Frame")({ BackgroundTransparency = 1, BorderSizePixel = 0 }) :: Frame
+		else Kit.panel({})
+	return vide.apply(frame)({
 		Name = "Minimap",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.fromScale(0.98, 0.02),
 		Size = UDim2.fromScale(0.15, 0.2),
-		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
-		create("Frame")({
-			Name = "Ground",
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.fromScale(0.88, 0.88),
-			-- Fundo = oceano; os biomas por cima.
-			BackgroundColor3 = Theme.color(Palette.biome.ocean[3]),
-			BorderSizePixel = 0,
-			ClipsDescendants = true,
-			create("UICorner")({ CornerRadius = Theme.slotCorner }),
-			Biome("forest", WorldConfig.BIOMES.forest),
-			Biome("winter", WorldConfig.BIOMES.winter),
-			Biome("lava", WorldConfig.BIOMES.lava),
-			Biome("desert", WorldConfig.BIOMES.desert),
-			create("Frame")({
-				Name = "PlayerDot",
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = dot,
-				Size = UDim2.fromScale(0.07, 0.07),
-				BackgroundColor3 = Theme.ui.text,
-				BorderSizePixel = 0,
-				ZIndex = 2,
-				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-			}),
-		}),
-	})
+		children,
+	}) :: Frame
 end
 
 return Minimap

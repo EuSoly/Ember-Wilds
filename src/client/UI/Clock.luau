@@ -50,7 +50,9 @@ local function Clock(): Frame
 		local soon = nightSoon()
 		if soon and not warned then
 			warned = true
-			task.defer(Notifications.push, "hud.nightComing")
+			task.defer(function()
+				Notifications.push("hud.nightComing", nil, "alert")
+			end)
 		elseif not soon then
 			warned = false
 		end

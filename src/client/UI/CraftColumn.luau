@@ -6,11 +6,13 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local CraftRules = require(Shared:WaitForChild("Craft"):WaitForChild("CraftRules"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
+local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local create = vide.create
 local ICON_SIZE = 52
@@ -45,7 +47,7 @@ local function hoveredRecipe(): Defs.RecipeDef?
 end
 
 local function RecipeTooltip(): Frame
-	return Kit.panel({
+	return Kit.tooltip({
 		Name = "RecipeTooltip",
 		Visible = function()
 			return hoveredRecipe() ~= nil
@@ -56,7 +58,8 @@ local function RecipeTooltip(): Frame
 		-- Posicionar acima da lista o colocava sob a barra superior do Roblox.
 		Position = UDim2.fromOffset(GRID_WIDTH + 12, 0),
 		Size = UDim2.fromOffset(240, 112),
-		Kit.text({
+		Rustic.label({
+			dark = true,
 			Name = "Name",
 			ZIndex = 11,
 			Size = UDim2.new(1, -16, 0, 30),
@@ -69,7 +72,8 @@ local function RecipeTooltip(): Frame
 			end,
 			maxSize = 20,
 		}),
-		Kit.text({
+		Rustic.label({
+			dark = true,
 			Name = "Ingredients",
 			ZIndex = 11,
 			Size = UDim2.new(1, -16, 0, 50),
@@ -83,7 +87,8 @@ local function RecipeTooltip(): Frame
 			FontFace = Theme.font.body,
 			maxSize = 15,
 		}),
-		Kit.text({
+		Rustic.label({
+			dark = true,
 			Name = "TimeAndStation",
 			ZIndex = 11,
 			Size = UDim2.new(1, -16, 0, 22),
@@ -96,6 +101,26 @@ local function RecipeTooltip(): Frame
 			maxSize = 14,
 		}),
 	})
+end
+
+-- Arte do slot atrás do ícone da receita (dourada na receita sendo feita).
+-- Lista vazia sem a arte.
+local function slotArt(active: () -> boolean): { Instance }
+	if not HudImages.has(HudImages.SLOT) then
+		return {}
+	end
+	return {
+		create("ImageLabel")({
+			Name = "Art",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ScaleType = Enum.ScaleType.Stretch,
+			Image = function()
+				return if active() then HudImages.SLOT_SELECTED else HudImages.SLOT
+			end,
+			ZIndex = 0,
+		}),
+	}
 end
 
 local function recipeButton(row: () -> CraftState.Row): TextButton
@@ -124,10 +149,13 @@ local function recipeButton(row: () -> CraftState.Row): TextButton
 		Text = "",
 		AutoButtonColor = false,
 		BackgroundColor3 = Theme.ui.panel,
-		BackgroundTransparency = Theme.panelTransparency,
+		-- Com a arte do slot, o couro e a madeira fazem o fundo e a borda.
+		BackgroundTransparency = if HudImages.has(HudImages.SLOT) then 1 else Theme.panelTransparency,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		slotArt(active),
 		create("UIStroke")({
+			Transparency = if HudImages.has(HudImages.SLOT) then 1 else 0,
 			Color = function()
 				return if active() then Theme.ui.action else Theme.ui.border
 			end,

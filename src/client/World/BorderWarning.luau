@@ -34,7 +34,7 @@ function BorderWarning.start()
 				local near = distanceToEdge(root.Position.X, root.Position.Z) < WorldConfig.BORDER_WARNING_DISTANCE
 				if near and now - lastWarning >= COOLDOWN then
 					lastWarning = now
-					Notifications.push(TEXT_KEY)
+					Notifications.push(TEXT_KEY, nil, "alert")
 				end
 			end
 		end

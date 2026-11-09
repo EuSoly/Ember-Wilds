@@ -13,6 +13,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
@@ -35,6 +36,9 @@ export type Props = {
 	max: number?, -- valor cheio; padrão StatNames.StatusMax (a vida usa HealthMax)
 	color: Color3 | () -> Color3, -- fixa ou reativa (o anel de temperatura troca de cor)
 	name: string,
+	-- Ícone no meio (HudImages.STATUS_ICON[...]). Com a arte do medalhão
+	-- (HudImages.STATUS_FRAME), o anel fica dentro do furo do medalhão.
+	icon: (string | () -> string)?,
 	-- Alerta (pulso) e crítico (trilho piscando). Padrão: abaixo de 35% / zerado.
 	-- O anel de temperatura em modo quente inverte (calor alto é o perigo).
 	warning: (() -> boolean)?,
@@ -118,12 +122,16 @@ local function StatusRing(props: Props): Frame
 	end)
 	local scale = vide.spring(targetScale, 0.25)
 
-	return create("Frame")({
-		Name = props.name,
+	local framed = HudImages.has(HudImages.STATUS_FRAME)
+	local ring = create("Frame")({
+		Name = "Ring",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		-- Com o medalhão: um pouco maior que o furo (a borda dele cobre a emenda).
+		Size = if framed
+			then UDim2.fromScale(HudImages.STATUS_HOLE * 1.04, HudImages.STATUS_HOLE * 1.04)
+			else UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
-		Size = UDim2.fromScale(1, 1),
-		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
-		create("UIScale")({ Scale = scale }),
 
 		-- Trilho: o anel vazio por baixo da barra.
 		disc({
@@ -173,8 +181,55 @@ local function StatusRing(props: Props): Frame
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(CORE_SIZE, CORE_SIZE),
 			ZIndex = 3,
-			BackgroundColor3 = Theme.ui.panel,
+			BackgroundColor3 = if framed then Theme.rustic.charcoal else Theme.ui.panel,
 		}),
+	})
+
+	local children: { Instance } = {
+		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
+		create("UIScale")({ Scale = scale }),
+		ring,
+	}
+	if framed then
+		table.insert(
+			children,
+			create("ImageLabel")({
+				Name = "Medallion",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				Image = HudImages.STATUS_FRAME,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 5,
+			})
+		)
+	end
+	local icon = props.icon
+	if icon then
+		local function iconId(): string
+			return if type(icon) == "function" then icon() else icon :: string
+		end
+		table.insert(
+			children,
+			create("ImageLabel")({
+				Name = "Icon",
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(0.4, 0.4),
+				BackgroundTransparency = 1,
+				Image = iconId,
+				Visible = function()
+					return HudImages.has(iconId())
+				end,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 6,
+			})
+		)
+	end
+	return create("Frame")({
+		Name = props.name,
+		BackgroundTransparency = 1,
+		Size = UDim2.fromScale(1, 1),
+		children,
 	}) :: Frame
 end
 

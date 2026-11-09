@@ -13,6 +13,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local InputNames = require(Shared:WaitForChild("InputNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
@@ -22,6 +23,7 @@ local create = vide.create
 
 local DEADZONE = 12 -- pixels
 local KNOB_SIZE = 0.42 -- fração da base
+local HAS_ART = HudImages.has(HudImages.JOYSTICK_BASE)
 
 -- Bindings scriptable criados pelo servidor (InputContextService).
 local function findBindings(): (InputBinding?, InputBinding?)
@@ -110,11 +112,21 @@ local function AimStick(): Frame
 		Size = UDim2.fromScale(0.22, 0.22),
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		BackgroundColor3 = Theme.ui.panel,
-		BackgroundTransparency = 0.4,
+		-- Com a arte: aro de madeira com couro costurado (base) e o pino de couro.
+		BackgroundTransparency = if HAS_ART then 1 else 0.4,
 		BorderSizePixel = 0,
 		create("UISizeConstraint")({ MinSize = Vector2.new(110, 110), MaxSize = Vector2.new(170, 170) }),
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-		create("UIStroke")({ Color = Theme.ui.border, Thickness = 2 }),
+		create("UIStroke")({ Color = Theme.ui.border, Thickness = 2, Transparency = if HAS_ART then 1 else 0 }),
+		create("ImageLabel")({
+			Name = "Art",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Image = HudImages.JOYSTICK_BASE,
+			ScaleType = Enum.ScaleType.Fit,
+			Visible = HAS_ART,
+			ZIndex = 0,
+		}),
 		InputBegan = function(input: InputObject)
 			if input.UserInputType == Enum.UserInputType.Touch and trackedTouch == nil then
 				trackedTouch = input
@@ -130,8 +142,17 @@ local function AimStick(): Frame
 			end,
 			Size = UDim2.fromScale(KNOB_SIZE, KNOB_SIZE),
 			BackgroundColor3 = Theme.ui.action,
+			BackgroundTransparency = if HAS_ART then 1 else 0,
 			BorderSizePixel = 0,
 			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			create("ImageLabel")({
+				Name = "Art",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				Image = HudImages.JOYSTICK_KNOB,
+				ScaleType = Enum.ScaleType.Fit,
+				Visible = HAS_ART,
+			}),
 		}),
 	}) :: Frame
 	return base

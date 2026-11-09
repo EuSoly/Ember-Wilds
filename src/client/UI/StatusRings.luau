@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
@@ -18,10 +19,10 @@ local create = vide.create
 
 -- Ordem e cor de cada anel (cores das barras na identidade visual).
 local RINGS = {
-	{ stat = StatNames.Health, color = Theme.status.health, max = StatNames.HealthMax },
-	{ stat = StatNames.Hunger, color = Theme.status.hunger, max = StatNames.StatusMax },
-	{ stat = StatNames.Cold, color = Theme.status.cold, max = StatNames.StatusMax },
-	{ stat = StatNames.Thirst, color = Theme.status.thirst, max = StatNames.StatusMax },
+	{ stat = StatNames.Health, color = Theme.status.health, max = StatNames.HealthMax, icon = "health" },
+	{ stat = StatNames.Hunger, color = Theme.status.hunger, max = StatNames.StatusMax, icon = "hunger" },
+	{ stat = StatNames.Cold, color = Theme.status.cold, max = StatNames.StatusMax, icon = "cold" },
+	{ stat = StatNames.Thirst, color = Theme.status.thirst, max = StatNames.StatusMax, icon = "thirst" },
 }
 
 -- O anel do frio vira anel de temperatura (frio + calor por cima).
@@ -34,6 +35,10 @@ local function temperatureProps(player: Player): { [string]: any }
 	end)
 	local hotWarning = (1 - StatNames.WarningFraction) * StatNames.StatusMax
 	return {
+		-- Com calor, o ícone do floco vira o sol com ondas.
+		icon = function()
+			return if hot() then HudImages.STATUS_ICON.heat else HudImages.STATUS_ICON.cold
+		end,
 		value = function()
 			local value = UIMath.temperatureRing(cold(), heat())
 			return value
@@ -77,6 +82,7 @@ local function StatusRings(): Frame
 					color = props.color,
 					warning = props.warning,
 					critical = props.critical,
+					icon = props.icon or HudImages.STATUS_ICON[ring.icon],
 				}),
 			})
 		)

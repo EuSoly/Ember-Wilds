@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 
 local create = vide.create
@@ -17,9 +18,41 @@ local Kit = {}
 
 local MIN_TEXT_SIZE = 12
 
--- Painel padrão: fundo escuro a 85%, canto arredondado e borda fina.
+local PANEL_CORNER = 26 -- px lógicos da moldura de madeira do painel
+local TOOLTIP_CORNER = 22
+
+local function sliced(kind: string, id: string, corner: number): ImageLabel?
+	local art = HudImages.SLICED[kind]
+	if art == nil or not HudImages.has(id) then
+		return nil
+	end
+	local slice = art.slice
+	return create("ImageLabel")({
+		Name = "Art",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Image = id,
+		ScaleType = Enum.ScaleType.Slice,
+		SliceCenter = Rect.new(slice[1], slice[2], slice[3], slice[4]),
+		SliceScale = corner / slice[1],
+		ZIndex = 0,
+	}) :: ImageLabel
+end
+
+-- Painel padrão: o couro escuro com moldura de madeira (HudImages.PANEL); sem
+-- a arte, fundo escuro a 85% com canto arredondado e borda fina.
 -- `props` vai direto para o Frame (Size, Position, filhos etc.).
 function Kit.panel(props: { [any]: any }): Frame
+	local art = sliced("panel", HudImages.PANEL, PANEL_CORNER)
+	if art then
+		props.CornerRadius = nil
+		local framed = create("Frame")({
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			art,
+		}) :: Frame
+		return vide.apply(framed)(props) :: Frame
+	end
 	local frame = create("Frame")({
 		BackgroundColor3 = Theme.ui.panel,
 		BackgroundTransparency = Theme.panelTransparency,
@@ -32,6 +65,34 @@ function Kit.panel(props: { [any]: any }): Frame
 		}),
 	}) :: Frame
 	props.CornerRadius = nil
+	return vide.apply(frame)(props) :: Frame
+end
+
+-- Balão de papel (dicas): o papel esticado em 9 partes com a pontinha embaixo,
+-- no meio. Texto em cima dele deve ser escuro (Theme.rustic.charcoal). Sem a
+-- arte, cai no painel padrão.
+function Kit.tooltip(props: { [any]: any }): Frame
+	local art = sliced("tooltip", HudImages.TOOLTIP, TOOLTIP_CORNER)
+	if art == nil then
+		return Kit.panel(props)
+	end
+	local tail = HudImages.TOOLTIP_TAIL_SIZE
+	local scale = TOOLTIP_CORNER / HudImages.SLICED.tooltip.slice[1]
+	local frame = create("Frame")({
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		art,
+		create("ImageLabel")({
+			Name = "Tail",
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 1, -math.floor(8 * scale)),
+			Size = UDim2.fromOffset(tail[1] * scale, tail[2] * scale),
+			BackgroundTransparency = 1,
+			Image = HudImages.TOOLTIP_TAIL,
+			Visible = HudImages.has(HudImages.TOOLTIP_TAIL),
+			ZIndex = 0,
+		}),
+	}) :: Frame
 	return vide.apply(frame)(props) :: Frame
 end
 

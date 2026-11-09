@@ -1,40 +1,26 @@
 --!strict
--- Botão do livro de receitas, ao lado da engrenagem de configurações.
+-- Botão do livro de receitas (ao lado do de configurações): o botão redondo
+-- de madeira com o livro verde; abre e fecha o livro completo.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
-local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local RecipeBookScreen = require(script.Parent.Parent:WaitForChild("Screens"):WaitForChild("RecipeBookScreen"))
-local Kit = require(script.Parent:WaitForChild("Kit"))
-
-local create = vide.create
+local HudArt = require(script.Parent:WaitForChild("HudArt"))
 
 local function RecipeBookButton(): TextButton
-	return create("TextButton")({
+	return HudArt.roundButton({
 		Name = "RecipeBookButton",
-		Text = "",
-		AutoButtonColor = true,
+		icon = HudImages.ICON.book,
+		fallback = "▤",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.fromScale(0.89, 0.25),
-		Size = UDim2.fromScale(0.08, 0.08),
-		SizeConstraint = Enum.SizeConstraint.RelativeYY,
-		BackgroundColor3 = Theme.ui.panel,
-		BackgroundTransparency = Theme.panelTransparency,
-		BorderSizePixel = 0,
-		create("UISizeConstraint")({ MinSize = Theme.touchMinSize, MaxSize = Vector2.new(64, 64) }),
-		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
-		create("UIStroke")({ Color = Theme.ui.border, Thickness = Theme.strokeThickness }),
+		Position = UDim2.fromScale(0.885, 0.25),
+		Size = UDim2.fromScale(0.09, 0.09),
+		minSize = Theme.touchMinSize,
+		maxSize = Vector2.new(68, 68),
 		Activated = RecipeBookScreen.toggle,
-		Kit.text({
-			Size = UDim2.fromScale(0.7, 0.7),
-			Position = UDim2.fromScale(0.5, 0.5),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Text = "▤",
-			FontFace = Theme.font.number,
-			maxSize = 28,
-		}),
-	}) :: TextButton
+	})
 end
 
 return RecipeBookButton

@@ -16,13 +16,14 @@ local DragState = require(Client:WaitForChild("DragState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
 local ItemHover = require(Client:WaitForChild("ItemHover"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
+local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local WIDTH = 240
 local NAME_HEIGHT = 28
 local TIER_HEIGHT = 18
 local LINE_HEIGHT = 20
 local PAD = 8
-local GAP = 8 -- distância entre a dica e o slot
+local GAP = 20 -- distância entre a dica e o slot (a pontinha do balão fica nela)
 local EDGE = 8 -- folga até a borda da tela
 
 local function uiScale(instance: Instance): number
@@ -60,7 +61,8 @@ local function ItemTooltip(): Frame
 	for i = 1, ItemInfo.MAX_LINES do
 		table.insert(
 			rows,
-			Kit.text({
+			Rustic.label({
+				dark = true,
 				Name = "Line" .. i,
 				Position = function()
 					local top = PAD + NAME_HEIGHT + (if tierKey() then TIER_HEIGHT else 0)
@@ -83,7 +85,7 @@ local function ItemTooltip(): Frame
 	end
 
 	local panel: Frame? = nil
-	panel = Kit.panel({
+	panel = Kit.tooltip({
 		Name = "ItemTooltip",
 		AnchorPoint = Vector2.new(0.5, 1),
 		Visible = function()
@@ -110,7 +112,8 @@ local function ItemTooltip(): Frame
 			return UDim2.fromOffset(WIDTH, height())
 		end,
 		ZIndex = 20,
-		Kit.text({
+		Rustic.label({
+			dark = true,
 			Name = "ItemName",
 			Position = UDim2.fromOffset(PAD, PAD),
 			Size = UDim2.new(1, -2 * PAD, 0, NAME_HEIGHT),
@@ -122,7 +125,8 @@ local function ItemTooltip(): Frame
 			maxSize = 20,
 			ZIndex = 21,
 		}),
-		Kit.text({
+		Rustic.label({
+			dark = true,
 			Name = "Tier",
 			Position = UDim2.fromOffset(PAD, PAD + NAME_HEIGHT),
 			Size = UDim2.new(1, -2 * PAD, 0, TIER_HEIGHT),
