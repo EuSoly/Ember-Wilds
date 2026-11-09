@@ -33,6 +33,7 @@ HudImages.ICON = {
 	book = "rbxassetid://119455236689691", -- icon_book.png: livro com chama
 	backpack = "rbxassetid://97302070461860", -- icon_backpack.png: mochila
 	rotate = "rbxassetid://77337730452030", -- icon_rotate.png: setas de girar
+	weapon_lock = "rbxassetid://129728310019742", -- icon_weapon_lock.png: espada, machado e picareta (relógio da arma presa)
 } :: { [string]: string }
 
 -- Painel de couro (baú, caixa, interação, mochila aberta), avisos e dica.
@@ -54,12 +55,12 @@ HudImages.JOYSTICK_KNOB = "rbxassetid://109220113444721" -- joystick_knob.png (1
 -- ou já colorida cobrindo a tela inteira, transparente no meio. Vazio = a
 -- borda em degradê feita por código, na cor de cada efeito.
 HudImages.FX = {
-	damage = "", -- golpe: clarão vermelho
-	cold = "", -- frio zerando: gelo nas bordas
-	heat = "", -- calor alto
-	hunger = "", -- fome
-	thirst = "", -- sede
-	oxygen = "", -- sem fôlego
+	damage = "rbxassetid://138774314848335", -- fx_damage.png: golpe, vermelho
+	cold = "rbxassetid://129399250486551", -- fx_cold.png: cristais de gelo
+	heat = "rbxassetid://128636899006562", -- fx_heat.png: brasas e lava
+	hunger = "rbxassetid://82206372108794", -- fx_hunger.png: terra e coxinhas
+	thirst = "rbxassetid://115630801477028", -- fx_thirst.png: gotas nos cantos
+	oxygen = "rbxassetid://135574904661131", -- fx_oxygen.png: ondas e bolhas
 } :: { [string]: string }
 
 -- Peças esticadas em 9 partes: tamanho da arte e o miolo que estica

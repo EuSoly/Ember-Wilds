@@ -11,12 +11,15 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local StatusRing = require(script.Parent:WaitForChild("StatusRing"))
 
 local create = vide.create
+
+local HAS_ICON = HudImages.has(HudImages.ICON.weapon_lock)
 
 local function never(): boolean
 	return false
@@ -64,12 +67,14 @@ local function WeaponLock(): Frame
 			color = Theme.ui.action,
 			warning = never,
 			critical = never,
+			icon = HudImages.ICON.weapon_lock,
 		}),
+		-- Com o ícone no meio, os segundos descem para um selo embaixo.
 		Kit.text({
 			Name = "Seconds",
-			Size = UDim2.fromScale(0.4, 0.34),
-			Position = UDim2.fromScale(0.5, 0.5),
-			AnchorPoint = Vector2.new(0.5, 0.5),
+			Size = if HAS_ICON then UDim2.fromScale(0.5, 0.36) else UDim2.fromScale(0.4, 0.34),
+			Position = if HAS_ICON then UDim2.fromScale(0.5, 1.02) else UDim2.fromScale(0.5, 0.5),
+			AnchorPoint = if HAS_ICON then Vector2.new(0.5, 1) else Vector2.new(0.5, 0.5),
 			FontFace = Theme.font.number,
 			ZIndex = 7,
 			Text = function()

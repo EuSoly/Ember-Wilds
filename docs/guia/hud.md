@@ -81,6 +81,8 @@ O `StatusVignette` é um ScreenGui próprio, atrás do HUD, cobrindo a tela toda
 
 A força cresce até 60% perto do zero; zerada (quando a barra começa a machucar), a borda fica cheia e pulsa. Sem arte, cada borda são quatro faixas em degradê feitas por código. Com uma imagem em `HudImages.FX[efeito]` (tela inteira, transparente no meio), a imagem entra no lugar dela.
 
+As seis bordas têm arte do Elizeu (`assets/ui/hud/fx_*.png`, preparadas por `prepare_fx.py`, 1024×576, esticadas na tela). O relógio da arma presa mostra o ícone `ICON.weapon_lock` no medalhão, com os segundos num selo embaixo.
+
 ## Painel da caixa
 
 Com uma caixa de itens (de jogador ou de mob morto) a até 8 studs, o `CratePanel` aparece sozinho **logo acima da hotbar**, com os itens da caixa em **8 colunas**. Se também há um baú perto, ele sobe a altura do painel do baú para não sobrepor. Clicar (ou tocar) num slot pega o item para o inventário (o que couber) e o painel se reorganiza; a caixa vazia some e o painel também.
