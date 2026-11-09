@@ -56,15 +56,18 @@ local function tab(index: number, height: () -> number): TextButton
 		LayoutOrder = index,
 		Text = "",
 		AutoButtonColor = true,
+		-- Escolhida: laranja com borda clara; as outras: madeira.
 		BackgroundColor3 = function()
-			return if selected() then R.emberShadow else R.walnut
+			return if selected() then R.ember else R.walnut
 		end,
 		Size = function()
 			return UDim2.new(1 / #RankConfig.CATEGORIES, -6, 0, height())
 		end,
 		create("UICorner")({ CornerRadius = UDim.new(0, 10) }),
 		create("UIStroke")({
-			Color = R.woodShadow,
+			Color = function()
+				return if selected() then R.emberLight else R.woodShadow
+			end,
 			Thickness = 3,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		}),
@@ -76,7 +79,11 @@ local function tab(index: number, height: () -> number): TextButton
 			BackgroundTransparency = 1,
 			Image = RankingImages.TAB[id] or "",
 			ScaleType = Enum.ScaleType.Fit,
-			create("UIAspectRatioConstraint")({ AspectRatio = 1, DominantAxis = Enum.DominantAxis.Height }),
+			create("UIAspectRatioConstraint")({
+				AspectRatio = 1,
+				DominantAxis = Enum.DominantAxis.Height,
+				AspectType = Enum.AspectType.ScaleWithParentSize,
+			}),
 		}),
 		outlined({
 			Name = "Label",
@@ -142,10 +149,10 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		Name = "PodiumHolder",
 		BackgroundTransparency = 1,
 		AnchorPoint = function()
-			return if sizes().stacked then Vector2.new(0.5, 0) else Vector2.new(0, 1)
+			return if sizes().stacked then Vector2.new(0.5, 0) else Vector2.new(0, 0)
 		end,
 		Position = function()
-			return if sizes().stacked then UDim2.fromScale(0.5, 0) else UDim2.fromScale(0, 1)
+			return if sizes().stacked then UDim2.fromScale(0.5, 0) else UDim2.fromScale(0, 0)
 		end,
 		Size = function()
 			local s = sizes()
@@ -153,7 +160,9 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 				-- Empilhado: o pódio fica com até 42% da altura do corpo.
 				return UDim2.new(0, s.podiumWidth, 0.42, 0)
 			end
-			return UDim2.new(0, s.podiumWidth, 1, 0)
+			-- Lado a lado: termina na altura do fim da lista (embaixo fica a linha
+			-- "você", com a seta à esquerda dela).
+			return UDim2.new(0, s.podiumWidth, 1, -RankingList.meSpace(s.rowHeight))
 		end,
 		create("Frame")({
 			Name = "Bottom",
@@ -185,7 +194,12 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 			end
 			return UDim2.new(0, s.listWidth, 1, 0)
 		end,
-		RankingList.build({ rowHeight = rowHeight }),
+		RankingList.build({
+			rowHeight = rowHeight,
+			showArrow = function()
+				return not sizes().stacked
+			end,
+		}),
 	})
 
 	local body = create("Frame")({

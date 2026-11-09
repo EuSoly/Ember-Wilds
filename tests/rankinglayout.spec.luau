@@ -61,6 +61,12 @@ return {
 		assert(l.listWidth == 560 and l.podiumWidth <= 560, "lista na largura toda")
 	end,
 
+	["short landscape window keeps podium and list side by side"] = function()
+		local l = RankingLayout.compute(678, 508, 1.25)
+		assert(not l.stacked, "deitada e baixa (escala 1,25): lado a lado")
+		assert(l.podiumWidth + l.listWidth + l.gap <= 678, "cabe na largura")
+	end,
+
 	["spot sits the avatar on the step and the number on the plaque"] = function()
 		local seatX, seatY, plaqueX, plaqueY = RankingLayout.spot(SECOND, 1024, 576)
 		assert(near(seatX, 0.22 * 1024) and near(plaqueX, seatX), "mesma coluna do degrau")

@@ -19,16 +19,23 @@ local RankingState = require(script.Parent:WaitForChild("RankingState"))
 local create = vide.create
 local R = Theme.rustic
 
+local RankingList = {}
+
 local FIRST = 4 -- o pódio mostra 1º a 3º
 local ROW_GAP = 4
 local ME_GAP = 8
 local ARROW_SHARE = 0.62 -- altura da seta, fração da linha "você"
+local ME_SCALE = 1.25 -- a linha "você" é um pouco mais alta que as outras
 
 export type Props = {
 	rowHeight: () -> number, -- px lógicos (RankingLayout)
+	showArrow: () -> boolean, -- a seta fica à esquerda da linha "você" (fora da lista)
 }
 
-local RankingList = {}
+-- Altura da linha "você" mais o espaço acima dela (o pódio termina aqui).
+function RankingList.meSpace(rowHeight: number): number
+	return rowHeight * ME_SCALE + ME_GAP
+end
 
 -- Faixa esticada em 9 partes, com as pontas na escala certa para a altura.
 local function strip(image: string, size: Vector2, slice: Rect, fallback: Color3, height: () -> number): Instance
@@ -65,7 +72,11 @@ local function avatar(userId: () -> number?, xScale: number): Instance
 			return if id then RankingState.headshot(id) else ""
 		end,
 		ZIndex = 2,
-		create("UIAspectRatioConstraint")({ AspectRatio = 1, DominantAxis = Enum.DominantAxis.Height }),
+		create("UIAspectRatioConstraint")({
+			AspectRatio = 1,
+			DominantAxis = Enum.DominantAxis.Height,
+			AspectType = Enum.AspectType.ScaleWithParentSize,
+		}),
 		create("UICorner")({ CornerRadius = UDim.new(0.5, 0) }),
 		create("UIStroke")({ Color = R.woodShadow, Thickness = 2 }),
 	})
@@ -106,11 +117,11 @@ local function row(position: number, height: () -> number): Frame
 		avatar(function()
 			local e = entry()
 			return e and e.UserId
-		end, 0.15),
+		end, 0.13),
 		cell({
 			Name = "PlayerName",
-			Position = UDim2.fromScale(0.25, 0.2),
-			Size = UDim2.fromScale(0.43, 0.6),
+			Position = UDim2.fromScale(0.27, 0.2),
+			Size = UDim2.fromScale(0.41, 0.6),
 			Text = function()
 				local e = entry()
 				return if e then e.Name else ""
@@ -135,7 +146,7 @@ local function row(position: number, height: () -> number): Frame
 end
 
 -- Linha de quem está jogando: posição (ou "100+"/"—"), avatar, nome e valor.
-local function meRow(height: () -> number): Frame
+local function meRow(height: () -> number, showArrow: () -> boolean): Frame
 	local function positionText(): string
 		local data = RankingState.data()
 		if data == nil or data.MyValue <= 0 then
@@ -151,10 +162,10 @@ local function meRow(height: () -> number): Frame
 		Position = UDim2.fromScale(0, 1),
 		BackgroundTransparency = 1,
 		Size = function()
-			return UDim2.new(1, 0, 0, height() * 1.25)
+			return UDim2.new(1, 0, 0, height() * ME_SCALE)
 		end,
 		strip(RankingImages.ROW_ME, RankingImages.ROW_ME_SIZE, RankingImages.ROW_ME_SLICE, R.emberShadow, function()
-			return height() * 1.25
+			return height() * ME_SCALE
 		end),
 		create("ImageLabel")({
 			Name = "Arrow",
@@ -164,11 +175,14 @@ local function meRow(height: () -> number): Frame
 			BackgroundTransparency = 1,
 			Image = RankingImages.ARROW,
 			Rotation = 180, -- a arte aponta para a esquerda; aqui aponta para a linha
-			Visible = RankingImages.has(RankingImages.ARROW),
+			Visible = function()
+				return RankingImages.has(RankingImages.ARROW) and showArrow()
+			end,
 			ZIndex = 3,
 			create("UIAspectRatioConstraint")({
 				AspectRatio = RankingImages.ARROW_RATIO,
 				DominantAxis = Enum.DominantAxis.Height,
+				AspectType = Enum.AspectType.ScaleWithParentSize,
 			}),
 		}),
 		cell({
@@ -252,7 +266,7 @@ function RankingList.build(props: Props): Frame
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			Size = function()
-				return UDim2.new(1, 0, 1, -(props.rowHeight() * 1.25 + ME_GAP))
+				return UDim2.new(1, 0, 1, -RankingList.meSpace(props.rowHeight()))
 			end,
 			AutomaticCanvasSize = Enum.AutomaticSize.Y,
 			CanvasSize = UDim2.new(),
@@ -262,7 +276,7 @@ function RankingList.build(props: Props): Frame
 			rows,
 		}),
 		notice(),
-		meRow(props.rowHeight),
+		meRow(props.rowHeight, props.showArrow),
 	}) :: Frame
 end
 

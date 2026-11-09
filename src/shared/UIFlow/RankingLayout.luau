@@ -16,7 +16,8 @@ export type Layout = {
 }
 
 local TOUCH = 44
-local STACK_BELOW = 700 -- abaixo desta largura, pódio em cima da lista
+local STACK_BELOW = 700 -- abaixo desta largura (e em pé), pódio em cima da lista
+local PORTRAIT = 0.75 -- "em pé" = altura maior que isto vezes a largura
 local GAP = 16
 -- Assento: o avatar fica um pouco para dentro do tampo (fração da altura do pódio).
 RankingLayout.SEAT = 0.06
@@ -26,7 +27,9 @@ function RankingLayout.compute(width: number, height: number, scale: number): La
 	local minTouch = TOUCH / math.max(scale, 0.01)
 	local rowHeight = math.max(if compact then 40 else 48, minTouch)
 	local tabHeight = math.max(if compact then 44 else 52, minTouch)
-	if width < STACK_BELOW then
+	-- Empilha só em área estreita E em pé: deitada e baixa (celular, escala de
+	-- interface grande) fica lado a lado, com o pódio menor.
+	if width < STACK_BELOW and height > width * PORTRAIT then
 		return {
 			compact = compact,
 			stacked = true,
@@ -37,7 +40,7 @@ function RankingLayout.compute(width: number, height: number, scale: number): La
 			tabHeight = tabHeight,
 		}
 	end
-	local podiumWidth = math.clamp(width * 0.42, 260, 560)
+	local podiumWidth = math.clamp(width * 0.45, 260, 600)
 	return {
 		compact = compact,
 		stacked = false,

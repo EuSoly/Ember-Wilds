@@ -25,12 +25,14 @@ RankingImages.ROW_ME_SLICE = Rect.new(110, 70, 914, 158) -- tampas com corda nã
 
 RankingImages.PODIUM = "rbxassetid://120116045773813" -- podium.png (1024x576)
 RankingImages.PODIUM_RATIO = 1024 / 576
--- Por posição, em frações da imagem do pódio (medidas pelo prepare_ranking.py):
--- x = centro do degrau, top = topo do tampo, plaqueY = centro da plaquinha.
+-- Por posição, em frações da imagem do pódio: x = centro do degrau, top =
+-- topo do tampo, plaqueY = centro da plaquinha. O prepare_ranking.py dá uma
+-- primeira medida; estas foram conferidas com uma régua sobre a imagem (a
+-- automática errou a plaquinha do 1º).
 RankingImages.PODIUM_SPOTS = {
-	{ x = 0.5, top = 0.002, plaqueY = 0.483 },
-	{ x = 0.22, top = 0.274, plaqueY = 0.616 },
-	{ x = 0.78, top = 0.366, plaqueY = 0.681 },
+	{ x = 0.5, top = 0.002, plaqueY = 0.33 },
+	{ x = 0.2, top = 0.274, plaqueY = 0.605 },
+	{ x = 0.8, top = 0.366, plaqueY = 0.665 },
 } :: { { x: number, top: number, plaqueY: number } }
 
 RankingImages.AVATAR_RING = "rbxassetid://136474449449220" -- avatar_ring.png (246x256)

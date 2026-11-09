@@ -228,7 +228,7 @@ O menu é todo feito em código (Vide), no visual do [design system rústico](..
 | `src/client/UI/Rustic.luau` | Peças do design system: placa de madeira, papel e botões (`wood`, `leather`, `ember`, `green`, `success`, `disabled`). `wood` e `leather` usam a **imagem da placa** (veio e pregos) em 9 partes: as pontas não esticam (`UiImages.PLANK_SLICE`); `leather` é a mesma placa um pouco mais escura; `ember` (JOGAR, "+", botão selecionado) usa a imagem do botão laranja chanfrado (`UiImages.BUTTON_EMBER`); `green` (preços em Robux da loja) usa o mesmo botão em verde (`ShopImages.BUTTON_GREEN`). Sem a imagem, caem num degradê. Cores em `Palette.rustic` |
 | `src/shared/UIFlow/MenuLayout.luau` | Todas as medidas em pixels lógicos: coluna (200 no PC, 144 no compacto), botões, boneco, Kits/JOGAR e painel de kits. **Compacto** = largura < 900 ou altura < 500. Teste: `tests/menulayout.spec.luau` (de 568×320 a 1920×1080) |
 
-O `MenuShell` tem uma tabela `CONTENT` (painel do mockup → função que monta o conteúdo). É nela que cada painel é ligado.
+O Ranking é montado pelo `RankingScreen` (`src/client/Menu/Ranking/`), ligado no `MenuShell` como o Perfil e os Cosméticos (não há mais painéis de mockup).
 
 ### Loja (UI 2)
 
@@ -341,48 +341,21 @@ Abra Cosméticos: a skin aparece na grade, na posição da raridade, e o cadeado
 
 ### Mockups do menu (G7a)
 
-O painel Ranking é um **mockup**: só para ver e testar o visual e o fluxo. **Nada é de verdade:** não compra, não salva, não muda o saldo. As fases seguintes tornam cada painel real, uma de cada vez. (Os Cosméticos já são de verdade: veja "Cosméticos (UI 5)".)
-
-| Arquivo (`src/client/Menu/`) | O que é |
-|---|---|
-| `RankingPanel.luau` | Ranking |
+Não sobrou nenhum painel de mockup no menu: o último, o Ranking, virou de verdade na UI 6 (veja `docs/guia/ranking.md`). O que ainda é simulado fica na Loja e nos kits por Robux (veja "Loja (UI 2)").
 
 ### O que é falso e o que é de verdade
 
-- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo).
-- **Falso:** todo o resto. Nenhum evento de rede, nenhuma escrita em atributo e nenhuma chamada a `MarketplaceService` em lugar nenhum dos mockups. Comprar só mostra o aviso "compra simulada" e **nunca** muda o saldo.
+- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo), os Cosméticos, o Perfil e o Ranking.
+- **Falso:** as compras da Loja e dos kits. Comprar só mostra o aviso "compra simulada" e **nunca** muda o saldo; nenhuma chamada a `MarketplaceService`.
 
 ### Onde ficam os números e nomes falsos
 
-Tudo em `src/shared/UIFlow/MockStore.luau`:
-
-- os dados da Loja (veja "Loja (UI 2)");
-- `RANKING`.
-
-Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
+Tudo em `src/shared/UIFlow/MockStore.luau` (os dados da Loja; veja "Loja (UI 2)"). Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
 
 ### Como mexer nos valores
 
 - **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. As chances dos giros são em % e têm de somar 100, com 5 valores (um por raridade); o teste confere. Todo tipo de giro precisa de pelo menos um item de cada raridade.
 - **Texto:** edite a chave `mock.*` ou `shop.*` correspondente em `ptBR.luau`.
 - Rode `bash scripts/check.sh` depois.
-
-### Como trocar um mockup por algo real (ou por um molde)
-
-Dois caminhos, por painel:
-
-1. **Trocar a função do painel.** Em `CONTENT` (no `MenuShell`), aponte o painel para uma função nova (a versão real). O resto da casca não muda.
-2. **Virar molde do Studio**, como as outras telas: crie o molde em `assets/ui/` com nomes combinados, ligue pelo nome (`Template.find` / `Template.bind`, veja acima) e, na `CONTENT`, devolva o molde ligado no lugar da função do Vide. Documente os nomes combinados na tabela da seção "Nomes combinados de cada molde".
-
-Quando um painel ficar real, apague o que ele usava do `MockStore` (e as chaves `mock.*` dele).
-
-### Como apagar um mockup
-
-O menu (coluna, boneco, Kits, JOGAR) é de verdade e fica. Para tirar um painel do mockup (ex. Ranking):
-
-1. Em `src/client/Menu/MenuShell.luau`, tire o id do painel de `NAV` e de `PANELS`, a entrada dele em `CONTENT` e o `require` do arquivo do painel.
-2. Apague o arquivo do painel em `src/client/Menu/` e o que só ele usava no `MockStore` (e o teste correspondente em `tests/mockstore.spec.luau`).
-3. Em `src/shared/Strings/ptBR.luau`, apague as chaves `menu.nav.<painel>`, `menu.panel.<painel>` e as `mock.*` dele. Se o painel sair de vez, tire também o id do tipo `Panel` em `MenuState.luau`.
-4. Rode `bash scripts/check.sh`.
 
 Quando a compra de kits com Robux ficar real, apague `KIT_ROBUX` e `KIT_STARTS_OWNED` do `MockStore` (os preços vão para `Defs.Kits`) e troque o estado local do `KitShop` pelo que vier do servidor.

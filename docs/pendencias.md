@@ -7,6 +7,12 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Morte do mob frágil:** no `MobService.die`, o `ScoreService.add` roda fora do `pcall`; se falhar, a caixa (aviso `onDeath`) não sai. Foi assim que o limite de atributos derrubou os drops.
 - **Folga no Player:** ainda são ~23 atributos lá (`Setting_*`, `Cosmetic_*`, barras...). Se as configurações crescerem muito, levar `Setting_*` para uma pasta também.
 
+## Ranking semanal (UI 6, 09/11)
+
+- **Abates no ranking não vistos no Studio:** a aba Criaturas (mob morto) e Jogadores (golpe final; também o "Jogadores mortos" do Perfil, que antes nunca somava) só foram conferidas pelo código. Testar jogando: matar um mob e abrir o Ranking (a gravação leva até 1 min; o cache do top, 3 min — ou `DevRankRefresh`). Jogadores precisa de 2 jogadores (teste multiplayer do Studio).
+- **Tela empilhada (pódio em cima):** só em área estreita e em pé; coberta pelos testes do `RankingLayout`, não vista no Studio (o jogo é deitado).
+- **Faixa clara da lista quase some no papel:** é a arte (`row_light.png`); se quiser mais contraste, pedir uma faixa um pouco mais escura ou com borda.
+
 ## Skins 3D (08/11)
 
 - **Raridades das skins de corpo:** as 101 skins 3D estão todas com `rarity = 1` (Comum), então o giro de Skins só sorteia Comum. O Elizeu vai definir as raridades; depois religar a checagem "body: sem item de raridade" em `tests/mockstore.spec.luau` (giro do corpo, do livro e do acessório).
