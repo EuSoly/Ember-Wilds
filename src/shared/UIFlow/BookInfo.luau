@@ -12,7 +12,8 @@ export type Tab = "tools" | "weapons" | "armor" | "food" | "build" | "resources"
 local BookInfo = {}
 
 -- Ordem das abas no livro; o nome de cada uma é "book.tab.<aba>".
-BookInfo.TABS = { "tools", "weapons", "armor", "food", "build", "resources" } :: { Tab }
+local TABS: { Tab } = { "tools", "weapons", "armor", "food", "build", "resources" }
+BookInfo.TABS = TABS
 
 -- Categorias de item de cada aba (a de recursos tem regra própria).
 local TAB_CATEGORIES: { [string]: { [string]: boolean } } = {
@@ -33,7 +34,7 @@ function BookInfo.recipeOf(itemId: string): Types.RecipeDef?
 	return nil
 end
 
-local function inTab(tab: Tab, def: Types.ItemDef): boolean
+local function inTab(tab: string, def: Types.ItemDef): boolean
 	if tab == "resources" then
 		-- Tudo que não tem receita, mais os materiais feitos (ex. papel).
 		return def.category == "resource" or BookInfo.recipeOf(def.id) == nil
@@ -76,9 +77,9 @@ function BookInfo.firstTab(itemId: string, inStudio: boolean): Tab?
 	if def == nil or not ItemAccess.isAvailable(itemId, inStudio) then
 		return nil
 	end
-	for _, tab in BookInfo.TABS do
+	for _, tab in TABS do
 		if inTab(tab, def) then
-			return tab
+			return tab :: any
 		end
 	end
 	return nil
