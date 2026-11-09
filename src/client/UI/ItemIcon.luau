@@ -8,8 +8,9 @@
 --   Structures/<id> construção, vista de cima como os ícones.
 -- Sem modelo, o ícone mostra as iniciais do nome.
 --
--- Ajuste por item (atributos opcionais no molde, editáveis no Studio; o ícone
--- muda ao vivo, ver scripts/studio/icon-bench.luau):
+-- Ajuste por item (atributos opcionais no molde OU numa peça direta dele, ex.
+-- a MeshPart de dentro ou o Handle; editáveis no Studio e o ícone muda ao vivo,
+-- ver scripts/studio/icon-bench.luau):
 --   IconeGiro    Vector3, graus: X inclina (cima/baixo), Y vira (esq./dir.),
 --                Z gira no plano da tela; a câmera orbita o centro do modelo.
 --   IconeZoom    número: 1 = enche o quadro, 1.3 = 30% maior, 0.8 = menor.
@@ -117,8 +118,30 @@ end
 -- Base da câmera antes do ajuste por item: centro e eixos direita/cima da tela.
 type View = { center: Vector3, right: Vector3, up: Vector3 }
 
+-- Onde o ajuste pode morar: o molde e as peças diretas dele (quem seleciona a
+-- peça no Explorer e cria o atributo nela também acerta).
+local function attributeHolders(source: Instance): { Instance }
+	local holders = { source }
+	for _, child in source:GetChildren() do
+		if child:IsA("BasePart") then
+			table.insert(holders, child)
+		end
+	end
+	return holders
+end
+
+local function readAttribute(source: Instance, name: string): any
+	for _, holder in attributeHolders(source) do
+		local value = holder:GetAttribute(name)
+		if value ~= nil then
+			return value
+		end
+	end
+	return nil
+end
+
 local function vectorAttribute(source: Instance, name: string): Vector3
-	local value = source:GetAttribute(name)
+	local value = readAttribute(source, name)
 	return if typeof(value) == "Vector3" then value else Vector3.zero
 end
 
@@ -126,8 +149,8 @@ end
 -- enche o quadro.
 local function placeCamera(camera: Camera, model: Model, view: View, source: Instance)
 	local giro = vectorAttribute(source, "IconeGiro")
-	local zoom = source:GetAttribute("IconeZoom")
-	local desloca = source:GetAttribute("IconeDesloca")
+	local zoom = readAttribute(source, "IconeZoom")
+	local desloca = readAttribute(source, "IconeDesloca")
 	local basis = CFrame.fromMatrix(Vector3.zero, view.right, view.up)
 		* CFrame.Angles(math.rad(giro.X), math.rad(giro.Y), math.rad(giro.Z))
 	local right, up = basis.RightVector, basis.UpVector
@@ -240,13 +263,21 @@ local function ItemIcon(props: Props): Frame
 		local view = if source.kind == "tool" then toolView(model) else flatView(model)
 		placeCamera(camera, model, view, source.instance)
 		-- Ajuste ao vivo: mexer nos atributos do molde no Studio reenquadra.
-		local connection = source.instance.AttributeChanged:Connect(function(name)
-			if name == "IconeGiro" or name == "IconeZoom" or name == "IconeDesloca" then
-				placeCamera(camera, model, view, source.instance)
-			end
-		end)
+		local connections = {}
+		for _, holder in attributeHolders(source.instance) do
+			table.insert(
+				connections,
+				holder.AttributeChanged:Connect(function(name)
+					if name == "IconeGiro" or name == "IconeZoom" or name == "IconeDesloca" then
+						placeCamera(camera, model, view, source.instance)
+					end
+				end)
+			)
+		end
 		vide.cleanup(function()
-			connection:Disconnect()
+			for _, connection in connections do
+				connection:Disconnect()
+			end
 			model:Destroy()
 		end)
 	end)

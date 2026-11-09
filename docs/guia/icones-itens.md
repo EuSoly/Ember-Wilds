@@ -72,7 +72,7 @@ Pasta `assets/resources/mob-drops/roblox/` (ver o `LEIA-ME.md` de lá). Segue o 
 
 ### Ajustar a vista de um item
 
-Atributos opcionais no molde (`Assets.Icons/Tools/Structures/<id>`), editados no Properties do Studio:
+Atributos opcionais no molde (`Assets.Icons/Tools/Structures/<id>`) ou numa peça direta dele (a MeshPart de dentro, o Handle), editados no Properties do Studio:
 
 | Atributo | Tipo | Efeito |
 |---|---|---|
