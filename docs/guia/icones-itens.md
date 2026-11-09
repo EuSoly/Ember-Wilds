@@ -68,7 +68,9 @@ Pasta `assets/resources/mob-drops/roblox/` (ver o `LEIA-ME.md` de lá). Segue o 
 ## No jogo (08/11)
 
 - Importação: `food.fbx` e `mob-drops.fbx` por File > Import 3D e depois `scripts/studio/import-icons.luau` (Edit), que transforma cada MeshPart em `ReplicatedStorage.Assets.Icons/<id>` (Model, pivô no centro da base, ancorado, sem colisão). Ícone antigo de mesmo nome vai para `ServerStorage.IconesAntigos`.
-- O `ItemIcon` (slot do inventário, baú, caixa, craft, kits) procura o modelo em `Assets.Icons/<id>`, depois `Assets.Tools/<id>` (ferramentas e armas: vistas pelo lado largo, na diagonal, ponta em cima à direita) e depois `Assets.Structures/<id>` (construções, de cima como os ícones). Sem modelo, mostra as iniciais (hoje: capacetes, protetor de orelha, mochila de couro, papel, balde com água).
+- O `ItemIcon` (slot do inventário, baú, caixa, craft, kits) procura o modelo em `Assets.Icons/<id>`, depois `Assets.Tools/<id>` (ferramentas e armas: vistas pelo lado largo, na diagonal, ponta em cima à direita; livro e balde: de cima como os ícones) e depois `Assets.Structures/<id>` (construções, de cima como os ícones). O fundo do ViewportFrame é preto e transparente: com o branco padrão, aparecia um contorno branco em volta dos modelos.
+- A bancada mostra também os modelos de `Tools` e `Structures` que ainda não são item (diamante, ametista, reidite, escudos, martelos, totem...), para deixar a vista pronta antes de virarem item.
+- Livro: `IconeGiro = 30, -90, 0` no `Assets.Tools.book` (deitado, lado comprido subindo para a direita, espessura nas bordas de baixo, como o desenho do Elizeu de 09/11). Sem modelo, mostra as iniciais (hoje: capacetes, protetor de orelha, mochila de couro, papel, balde com água).
 
 ### Ajustar a vista de um item
 
@@ -76,7 +78,7 @@ Atributos opcionais no molde (`Assets.Icons/Tools/Structures/<id>`) ou numa peç
 
 | Atributo | Tipo | Efeito |
 |---|---|---|
-| `IconeGiro` | Vector3 (graus) | X inclina (cima/baixo), Y vira (esq./dir.), Z gira no plano da tela |
+| `IconeGiro` | Vector3 (graus) | X inclina a câmera (cima/baixo), Y gira o item em volta do eixo vertical (como girar em cima da mesa), Z gira no plano da tela |
 | `IconeZoom` | número | 1 = enche o quadro; 1,3 = 30% maior; 0,8 = menor |
 | `IconeDesloca` | Vector2 | move o modelo no quadro em frações dele (0,1, 0 = 10% para a direita) |
 

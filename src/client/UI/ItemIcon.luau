@@ -4,15 +4,18 @@
 -- O modelo vem do primeiro que existir em ReplicatedStorage.Assets:
 --   Icons/<id>      ícone em relevo (comidas, drops, recursos), visto de cima;
 --   Tools/<id>      ferramenta/arma de mão, deitada na diagonal (ponta em cima
---                   à direita), vista pelo lado largo;
+--                   à direita), vista pelo lado largo; itens de mão que não são
+--                   ferramenta nem arma (livro, balde) são vistos como os ícones;
 --   Structures/<id> construção, vista de cima como os ícones.
 -- Sem modelo, o ícone mostra as iniciais do nome.
 --
 -- Ajuste por item (atributos opcionais no molde OU numa peça direta dele, ex.
 -- a MeshPart de dentro ou o Handle; editáveis no Studio e o ícone muda ao vivo,
 -- ver scripts/studio/icon-bench.luau):
---   IconeGiro    Vector3, graus: X inclina (cima/baixo), Y vira (esq./dir.),
---                Z gira no plano da tela; a câmera orbita o centro do modelo.
+--   IconeGiro    Vector3, graus: X inclina a câmera (cima/baixo), Y gira o
+--                item em volta do eixo vertical do mundo (como girar um
+--                objeto em cima da mesa), Z gira no plano da tela; a câmera
+--                orbita o centro do modelo.
 --   IconeZoom    número: 1 = enche o quadro, 1.3 = 30% maior, 0.8 = menor.
 --   IconeDesloca Vector2: move o modelo no quadro, em frações do quadro
 --                (0.1, 0 = 10% para a direita; 0, 0.1 = 10% para cima).
@@ -76,7 +79,13 @@ local function iconSource(itemId: string): Source?
 		local folder = assets:FindFirstChild(entry.folder)
 		local found = folder and folder:FindFirstChild(itemId)
 		if found and (found:IsA("Model") or found:IsA("Tool")) then
-			return { instance = found, kind = entry.kind }
+			local kind: Kind = entry.kind
+			-- Livro, balde...: de cima como os ícones (a diagonal é das armas).
+			local def = Defs.Items[itemId]
+			if kind == "tool" and def and def.category ~= "tool" and def.category ~= "weapon" then
+				kind = "flat"
+			end
+			return { instance = found, kind = kind }
 		end
 	end
 	return nil
@@ -151,8 +160,10 @@ local function placeCamera(camera: Camera, model: Model, view: View, source: Ins
 	local giro = vectorAttribute(source, "IconeGiro")
 	local zoom = readAttribute(source, "IconeZoom")
 	local desloca = readAttribute(source, "IconeDesloca")
-	local basis = CFrame.fromMatrix(Vector3.zero, view.right, view.up)
-		* CFrame.Angles(math.rad(giro.X), math.rad(giro.Y), math.rad(giro.Z))
+	-- Y: gira em volta do eixo vertical do mundo; X e Z: nos eixos da câmera.
+	local basis = CFrame.Angles(0, math.rad(giro.Y), 0)
+		* CFrame.fromMatrix(Vector3.zero, view.right, view.up)
+		* CFrame.Angles(math.rad(giro.X), 0, math.rad(giro.Z))
 	local right, up = basis.RightVector, basis.UpVector
 	local look = up:Cross(right) -- para onde a câmera olha
 	local points = {}
@@ -236,6 +247,9 @@ local function ItemIcon(props: Props): Frame
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromScale(0.9, 0.9),
+		-- Preto e transparente: o fundo branco padrão vaza na borda das peças
+		-- (contorno branco em volta do modelo).
+		BackgroundColor3 = Color3.new(0, 0, 0),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		Ambient = Color3.fromRGB(190, 190, 190),

@@ -7,11 +7,11 @@
 -- Para instalar/atualizar o ModuleScript, copie este arquivo para o Source dele.
 --
 -- Monta StarterGui.BancadaIcones: uma grade com o ícone de TODOS os itens
--- (Defs.Items) e de todo modelo em Assets.Icons que ainda não é item, com o id
--- embaixo. Para ajustar a vista de um item, selecione o molde dele
+-- (Defs.Items) e de todo modelo em Assets.Icons, Tools e Structures que ainda
+-- não é item (outros tiers), com o id embaixo. Para ajustar a vista de um item, selecione o molde dele
 -- (ReplicatedStorage.Assets.Icons/<id>, Tools/<id> ou Structures/<id>) e crie
 -- ou edite no Properties os atributos (o ícone da grade muda ao vivo):
---   IconeGiro    Vector3 em graus (X inclina, Y vira, Z gira na tela)
+--   IconeGiro    Vector3 em graus (X inclina, Y gira em volta da vertical, Z gira na tela)
 --   IconeZoom    número (1 = enche o quadro; maior = mais perto)
 --   IconeDesloca Vector2 em frações do quadro (X direita, Y cima)
 -- Os atributos vivem no place: salve o place depois de ajustar.
@@ -60,15 +60,19 @@ return function(apagar: boolean?): string
 		table.insert(ids, item.id)
 		seen[item.id] = true
 	end
-	local extra = {}
-	for _, model in ReplicatedStorage.Assets.Icons:GetChildren() do
-		if not seen[model.Name] then
-			table.insert(extra, model.Name)
+	-- Modelos que ainda não são item (outros tiers, ícones novos), por pasta.
+	for _, folderName in { "Icons", "Tools", "Structures" } do
+		local extra = {}
+		for _, model in ReplicatedStorage.Assets[folderName]:GetChildren() do
+			if not seen[model.Name] then
+				table.insert(extra, model.Name)
+				seen[model.Name] = true
+			end
 		end
-	end
-	table.sort(extra)
-	for _, id in extra do
-		table.insert(ids, id)
+		table.sort(extra)
+		for _, id in extra do
+			table.insert(ids, id)
+		end
 	end
 
 	local CELL = 84
