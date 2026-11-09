@@ -1,11 +1,35 @@
 --!strict
 local BookInfo = require("../src/shared/UIFlow/BookInfo")
+local Defs = require("../src/shared/Defs")
+local Strings = require("../src/shared/Strings")
 
 local function has(list: { string }, id: string): boolean
 	return table.find(list, id) ~= nil
 end
 
 return {
+	["sword craft lists ingredients, workbench and time"] = function()
+		local craft = BookInfo.craft("gold_sword")
+		assert(craft and craft.station == "workbench" and craft.seconds > 0, "bancada e tempo")
+		assert(#craft.ingredients == 4 and craft.count == 1, "quatro ingredientes")
+	end,
+
+	["raw item has no craft"] = function()
+		assert(BookInfo.craft("wood") == nil, "madeira não se crafta")
+	end,
+
+	["every station used by a recipe is in the table"] = function()
+		for _, recipe in Defs.Recipes do
+			assert(recipe.station == nil or BookInfo.STATIONS[recipe.station], recipe.id)
+		end
+		assert(BookInfo.STATIONS.water, "água já prevista para receitas futuras")
+		assert(Strings.get(BookInfo.STATIONS.water.key) == "Perto da água", "texto da água")
+	end,
+
+	["sheet shows every stat, not just three"] = function()
+		assert(#BookInfo.stats("gold_sword") >= 4, "todos os dados da espada")
+	end,
+
 	["tabs come in the book order"] = function()
 		assert(table.concat(BookInfo.TABS, ",") == "tools,weapons,armor,food,build,resources", "ordem das abas")
 	end,

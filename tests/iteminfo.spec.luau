@@ -17,6 +17,18 @@ local function has(list: { string }, text: string): boolean
 end
 
 return {
+	["weapon tells how long it stays in the hand"] = function()
+		local l = {}
+		for _, line in ItemInfo.lines(Defs.Items.gold_sword, math.huge) do
+			table.insert(l, Strings.format(line.key, line.vars))
+		end
+		assert(has(l, "Presa na mão: 4 s"), table.concat(l, " | "))
+	end,
+
+	["tooltip still caps at three lines"] = function()
+		assert(#ItemInfo.lines(Defs.Items.gold_sword) <= ItemInfo.MAX_LINES, "dica com no máximo 3 linhas")
+	end,
+
 	["stackable item shows how many you have"] = function()
 		local line = ItemInfo.quantity(Defs.Items.wood, 24)
 		assert(line, "madeira empilha: precisa da quantidade")

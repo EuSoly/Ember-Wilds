@@ -33,11 +33,13 @@ function ItemInfo.quantity(def: Types.ItemDef, count: number): Line?
 	return { key = "info.count", vars = { value = count } }
 end
 
--- Linhas da dica, na ordem de importância (no máximo MAX_LINES).
-function ItemInfo.lines(def: Types.ItemDef): { Line }
+-- Linhas do que o item faz, na ordem de importância: no máximo `max`
+-- (padrão MAX_LINES, o da dica; a ficha do livro pede todas com math.huge).
+function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
+	local limit = max or ItemInfo.MAX_LINES
 	local out: { Line } = {}
 	local function add(key: string, value: number?)
-		if value ~= nil and #out < ItemInfo.MAX_LINES then
+		if value ~= nil and #out < limit then
 			table.insert(out, { key = key, vars = { value = value } })
 		end
 	end
@@ -48,7 +50,7 @@ function ItemInfo.lines(def: Types.ItemDef): { Line }
 		add("info.food.thirst", food.thirst)
 		add("info.food.health", food.health)
 	end
-	if def.pickaxe then
+	if def.pickaxe and #out < limit then
 		table.insert(out, { key = "info.pickaxe", vars = { level = def.pickaxe.level } })
 	end
 	add("info.damage", def.mobDamage)
@@ -57,6 +59,7 @@ function ItemInfo.lines(def: Types.ItemDef): { Line }
 	end
 	add("info.structureDamage", def.structureDamage)
 	add("info.reach", def.reach)
+	add("info.equipLock", def.equipLock)
 	local armor = def.armor
 	if armor then
 		if armor.defense and armor.defense > 0 then

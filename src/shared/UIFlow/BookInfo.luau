@@ -4,7 +4,9 @@
 -- Defs: item novo, receita, mob ou recurso entra no livro sozinho.
 -- Veja docs/superpowers/specs/2026-11-09-livro-receitas-design.md.
 local Defs = require("../Defs")
+local CraftRules = require("../Craft/CraftRules")
 local ItemAccess = require("../ItemAccess")
+local ItemInfo = require("./ItemInfo")
 local Types = require("../Defs/Types")
 
 export type Tab = "tools" | "weapons" | "armor" | "food" | "build" | "resources"
@@ -83,6 +85,42 @@ function BookInfo.firstTab(itemId: string, inStudio: boolean): Tab?
 		end
 	end
 	return nil
+end
+
+-- Estações de craft: texto e ícone (BookImages.STATION[icon]). A ficha monta
+-- "Precisa de" só por esta tabela: a água ainda não existe nas receitas, mas
+-- quando a primeira receita com station = "water" chegar, aparece sozinha.
+BookInfo.STATIONS = {
+	workbench = { key = "book.station.workbench", icon = "workbench" },
+	fire = { key = "book.station.fire", icon = "fire" },
+	water = { key = "book.station.water", icon = "water" },
+} :: { [string]: { key: string, icon: string } }
+
+export type Craft = {
+	ingredients: { Types.RecipeIngredient },
+	count: number, -- quantos a receita faz
+	station: string?,
+	seconds: number, -- tempo sem item na mão
+}
+
+-- Como fazer o item; nil para item primário.
+function BookInfo.craft(itemId: string): Craft?
+	local recipe = BookInfo.recipeOf(itemId)
+	if recipe == nil then
+		return nil
+	end
+	return {
+		ingredients = recipe.ingredients,
+		count = recipe.count,
+		station = recipe.station :: string?,
+		seconds = CraftRules.duration(recipe, nil),
+	}
+end
+
+-- Todos os dados do item (a dica mostra só os 3 primeiros).
+function BookInfo.stats(itemId: string): { ItemInfo.Line }
+	local def = Defs.Items[itemId]
+	return if def then ItemInfo.lines(def, math.huge) else {}
 end
 
 return BookInfo
