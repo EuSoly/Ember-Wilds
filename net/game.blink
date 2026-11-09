@@ -288,3 +288,38 @@ event SetBuildRotation {
 	Call: SingleAsync,
 	Data: u8
 }
+
+-- Ranking semanal (UI 6). O cliente pede uma categoria (índice em
+-- RankConfig.CATEGORIES); o servidor (RankService) ignora pedidos rápidos
+-- demais e responde com RankingData.
+event RequestRanking {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: u8(1..5)
+}
+
+-- Uma linha do placar (DisplayName; "@<id>" se o Roblox não devolveu o nome).
+struct RankEntry {
+	UserId: f64,
+	Name: string(0..40),
+	Value: u32
+}
+
+-- Top da categoria (até RankConfig.LIST_SIZE linhas). Ok = false: a leitura do
+-- placar falhou (a tela mostra "indisponível"). EndsAt = fim da semana (unix).
+-- MyValue = valor da semana de quem pediu (do perfil, sempre atual);
+-- MyPosition = posição no top lido (RankConfig.READ_SIZE), 0 = fora dele.
+event RankingData {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Category: u8,
+		Ok: boolean,
+		EndsAt: f64,
+		Entries: RankEntry[],
+		MyValue: u32,
+		MyPosition: u16
+	}
+}

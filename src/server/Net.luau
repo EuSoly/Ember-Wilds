@@ -176,8 +176,10 @@ Queue.Reliable[18] = table.create(256)
 Queue.Reliable[19] = table.create(256)
 Queue.Reliable[21] = table.create(256)
 Queue.Reliable[22] = table.create(256)
+Queue.Reliable[23] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
+export type RankEntry = { UserId: number, Name: string, Value: number }
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
 	-- Allocate BLOCK: 4 bytes
 	local BLOCK_START = Allocate(4)
@@ -514,6 +516,49 @@ function SerdesFunctions.ReadEVENT_SetBuildRotation(): (number)
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_RequestRanking(): (number)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	if Value < 1 then error(`Expected "Value" to be larger than or equal to 1, got {Value} instead.`) end
+	if Value > 5 then error(`Expected "Value" to be smaller than or equal to 5, got {Value} instead.`) end
+	return Value
+end
+
+function SerdesFunctions.WriteEVENT_RankingData(Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }): ()
+	-- Allocate BLOCK: 19 bytes
+	local BLOCK_START = Allocate(19)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 24)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Category)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Ok and 1 or 0)
+	buffer.writef64(SendBuffer, BLOCK_START + 3, Value.EndsAt)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 11, #Value.Entries)
+		-- Allocate BLOCK: 13 bytes
+	local ARRAY_START_1 = Allocate(13 * #Value.Entries)
+	for Index = 1, #Value.Entries do
+		local Item_1 = Value.Entries[Index]
+		-- Allocate 8
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		buffer.writef64(SendBuffer, OPERATION_OFFSET_0, Item_1.UserId)
+		local Length = #Item_1.Name
+		-- Allocate 1
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_1, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Name, Length)
+		-- Allocate 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_2, Item_1.Value)
+	end
+	-- END ARRAY
+	buffer.writeu32(SendBuffer, BLOCK_START + 13, Value.MyValue)
+	buffer.writeu16(SendBuffer, BLOCK_START + 17, Value.MyPosition)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -615,6 +660,15 @@ if not RunService:IsRunning() then
 	},
 	SetBuildRotation = {
 		On = NOOP
+	},
+	RequestRanking = {
+		On = NOOP
+	},
+	RankingData = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -827,6 +881,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"SetBuildRotation\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[22], {Player, Value} :: {any})
+			end
+		elseif Index == 23 then
+			local Value: number = SerdesFunctions.ReadEVENT_RequestRanking()
+			if Events.Reliable[23] ~= nil then
+				task.spawn(Events.Reliable[23], Player, Value)
+			else
+				if #Queue.Reliable[23] > 256 then
+					warn("[Blink]: Event queue of \"RequestRanking\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[23], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1467,6 +1531,66 @@ local Returns = table.freeze({
 				end
 			end
 		end
+	},
+	RequestRanking = {
+		On = function(Listener: (Player: Player, Value: number) -> ()): () -> ()
+			Events.Reliable[23] = Listener
+			for Index, Arguments in Queue.Reliable[23] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[23] = {}
+			return function (): ()
+				if Events.Reliable[23] == Listener then
+					Events.Reliable[23] = nil
+				end
+			end
+		end
+	},
+	RankingData = {
+		Fire = function(Player: Player, Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_RankingData(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_RankingData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_RankingData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_RankingData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
 	},
 })
 type BLINK_EVENTS_SYMBOL = typeof(Returns)

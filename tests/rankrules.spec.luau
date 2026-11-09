@@ -94,6 +94,19 @@ return {
 		assert(s.creatures == 5, `creatures {s.creatures}`)
 	end,
 
+	["store names use the dev prefix only in Studio"] = function()
+		assert(RankRules.storeName("points", false) == "Rank_points", RankRules.storeName("points", false))
+		assert(RankRules.storeName("creatures", true) == "Dev_Rank_creatures", RankRules.storeName("creatures", true))
+		assert(RankRules.weekScope(2966) == "W2966", RankRules.weekScope(2966))
+	end,
+
+	["position finds the player in the top or 0"] = function()
+		local top = { { UserId = 10, Value = 50 }, { UserId = 20, Value = 40 }, { UserId = 30, Value = 30 } }
+		assert(RankRules.position(top, 20) == 2, "segundo")
+		assert(RankRules.position(top, 99) == 0, "fora do top = 0")
+		assert(RankRules.position({}, 10) == 0, "lista vazia = 0")
+	end,
+
 	["countdown picks the right unit"] = function()
 		local key, args = RankRules.countdown(3 * 86400 + 5 * 3600 + 10)
 		assert(key == "rank.ends.days" and args.d == 3 and args.h == 5, `{key} {args.d} {args.h}`)

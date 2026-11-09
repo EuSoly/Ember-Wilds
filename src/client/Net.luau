@@ -169,8 +169,10 @@ Queue.Reliable[11] = table.create(256)
 Queue.Reliable[14] = table.create(256)
 Queue.Reliable[15] = table.create(256)
 Queue.Reliable[20] = table.create(256)
+Queue.Reliable[24] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
+export type RankEntry = { UserId: number, Name: string, Value: number }
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
 	-- Read BLOCK: 3 bytes
 	local BLOCK_START = Read(3)
@@ -512,6 +514,52 @@ function SerdesFunctions.WriteEVENT_SetBuildRotation(Value: number): ()
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
 end
 
+function SerdesFunctions.WriteEVENT_RequestRanking(Value: number): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 23)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value)
+end
+
+function SerdesFunctions.ReadEVENT_RankingData(): ({ Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number })
+	-- Read BLOCK: 18 bytes
+	local BLOCK_START = Read(18)
+	local Value = {} :: any
+	Value.Category = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Ok = (buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1)
+	Value.EndsAt = buffer.readf64(RecieveBuffer, BLOCK_START + 2)
+	-- START ARRAY
+	local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 10)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Entries = table.create(Length)
+		-- Read BLOCK: 13 bytes
+	local ARRAY_START_1 = Read(13 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 8
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		Item_1.UserId = buffer.readf64(RecieveBuffer, OPERATION_OFFSET_0)
+		-- Read 1
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_1)
+		Item_1.Name = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Name < 0 then error(`Expected length of "Item_1.Name" to be larger than or equal to 0, got {#Item_1.Name} instead.`) end
+		if #Item_1.Name > 40 then error(`Expected length of "Item_1.Name" to be smaller than or equal to  40, got {#Item_1.Name} instead.`) end
+		-- Read 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Value = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_2)
+		table.insert(Value.Entries, Item_1)
+	end
+	-- END ARRAY
+	Value.MyValue = buffer.readu32(RecieveBuffer, BLOCK_START + 12)
+	Value.MyPosition = buffer.readu16(RecieveBuffer, BLOCK_START + 16)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -586,6 +634,12 @@ if not RunService:IsRunning() then
 	},
 	SetBuildRotation = {
 		Fire = NOOP
+	},
+	RequestRanking = {
+		Fire = NOOP
+	},
+	RankingData = {
+		On = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -708,6 +762,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"CrateContents\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[20], {Value} :: {any})
+			end
+		elseif Index == 24 then
+			local Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number } = SerdesFunctions.ReadEVENT_RankingData()
+			if Events.Reliable[24] ~= nil then
+				task.spawn(Events.Reliable[24], Value)
+			else
+				if #Queue.Reliable[24] > 256 then
+					warn("[Blink]: Event queue of \"RankingData\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[24], {Value} :: {any})
 			end
 		end
 	end
@@ -935,6 +999,25 @@ local Returns = table.freeze({
 	SetBuildRotation = {
 		Fire = function(Value: number): ()
 			SerdesFunctions.WriteEVENT_SetBuildRotation(Value)
+		end
+	},
+	RequestRanking = {
+		Fire = function(Value: number): ()
+			SerdesFunctions.WriteEVENT_RequestRanking(Value)
+		end
+	},
+	RankingData = {
+		On = function(Listener: (Value: { Category: number, Ok: boolean, EndsAt: number, Entries: { { UserId: number, Name: string, Value: number } }, MyValue: number, MyPosition: number }) -> ()): () -> ()
+			Events.Reliable[24] = Listener
+			for Index, Arguments in Queue.Reliable[24] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[24] = {}
+			return function (): ()
+				if Events.Reliable[24] == Listener then
+					Events.Reliable[24] = nil
+				end
+			end
 		end
 	},
 })

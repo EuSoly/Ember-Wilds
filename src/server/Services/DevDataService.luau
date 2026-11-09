@@ -19,6 +19,9 @@
 -- - ServerStorage.DevGive:Invoke(player, { reidite_wall = 50, ... }) -> string:
 --   põe os itens no inventário (vale item testOnly; o que não couber é avisado).
 --   Atalho: DevGive:Invoke(player, "reidite") = 50 de cada build de reidite.
+-- - ServerStorage.DevRankRemove:Invoke(userId, semana?) -> string: moderação do
+--   ranking semanal: tira o jogador do placar da semana (padrão: a atual).
+-- - ServerStorage.DevRankRefresh:Invoke(): esquece o cache do top (teste).
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -32,6 +35,7 @@ local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
 local InventoryService = require(script.Parent.InventoryService)
+local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 
 -- Pacotes prontos do DevGive (nome -> itens).
@@ -104,6 +108,17 @@ function DevDataService.Start(_self)
 
 	newCommand("DevArmor", function(player: Player, itemId: string?): boolean
 		return ArmorService.wear(player, itemId)
+	end)
+
+	newCommand("DevRankRemove", function(userId: number, week: number?): string
+		if type(userId) ~= "number" then
+			return "[DevRankRemove] use o UserId (número) e, se quiser, a semana"
+		end
+		return RankService.removeFromWeek(userId, week)
+	end)
+
+	newCommand("DevRankRefresh", function()
+		RankService.clearCache()
 	end)
 
 	newCommand("DevGive", function(player: Player, what: any): string

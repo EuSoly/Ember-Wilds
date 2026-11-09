@@ -3,6 +3,7 @@
 -- ela termina, o valor da semana de cada jogador (guardado no perfil) e o
 -- texto do "termina em…". Quem grava e lê o placar é o RankService.
 local C = require("./RankConfig")
+local DataConfig = require("./DataConfig")
 
 export type Category = "points" | "xp" | "days" | "players" | "creatures"
 
@@ -114,6 +115,28 @@ function RankRules.applyKill(
 	end
 	(state :: any)[category] += 1
 	return true
+end
+
+-- Nome do DataStore ordenado da categoria (no Studio, com o prefixo de dev,
+-- para testes nunca sujarem o placar do jogo).
+function RankRules.storeName(category: string, inStudio: boolean): string
+	local name = C.STORE_PREFIX .. category
+	return if inStudio then DataConfig.DEV_STORE_PREFIX .. name else name
+end
+
+-- Escopo do DataStore: um placar separado por semana (as antigas ficam).
+function RankRules.weekScope(week: number): string
+	return "W" .. tostring(week)
+end
+
+-- Posição (1 = primeiro) de `userId` na lista lida do placar, ou 0 se não está.
+function RankRules.position(entries: { any }, userId: number): number
+	for index, entry in entries do
+		if entry.UserId == userId then
+			return index
+		end
+	end
+	return 0
 end
 
 -- Texto do "termina em…": chave em Strings e os números dela.
