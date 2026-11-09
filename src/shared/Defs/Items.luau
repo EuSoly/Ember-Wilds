@@ -11,6 +11,15 @@ local Items: { [string]: ItemDef } = {
 	wood = { id = "wood", nameKey = "item.wood", category = "resource", maxStack = 255 },
 	stone = { id = "stone", nameKey = "item.stone", category = "resource", maxStack = 255 },
 	gold = { id = "gold", nameKey = "item.gold", category = "resource", maxStack = 255 },
+	-- Só para teste (sai do extrator de reidite; o minério ainda não está no mapa).
+	reidite = {
+		id = "reidite",
+		testOnly = true,
+		nameKey = "item.reidite",
+		category = "resource",
+		tier = "reidite",
+		maxStack = 255,
+	},
 
 	-- Comida
 	berry = {
@@ -396,6 +405,65 @@ local Items: { [string]: ItemDef } = {
 			-- cycleSeconds: wiki; o resto provisório
 			extractor = {
 				output = "gold",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 100,
+				maxStock = 100,
+			},
+		},
+	},
+	-- Builds de reidite (09/11): só para teste (testOnly), para ver os modelos no
+	-- jogo. Números provisórios, na escada dos outros tiers (vida +500 por tier
+	-- nas paredes/portas; espinho dobra a vida e soma 10 de dano por tier).
+	reidite_wall = {
+		id = "reidite_wall",
+		testOnly = true,
+		nameKey = "item.reidite_wall",
+		category = "placeable",
+		tier = "reidite",
+		maxStack = 255,
+		structure = { kind = "wall", health = 3500, radius = 3 },
+	},
+	reidite_door = {
+		id = "reidite_door",
+		testOnly = true,
+		nameKey = "item.reidite_door",
+		category = "placeable",
+		tier = "reidite",
+		maxStack = 255,
+		structure = { kind = "door", health = 3500, radius = 3 },
+	},
+	reidite_spike = {
+		id = "reidite_spike",
+		testOnly = true,
+		nameKey = "item.reidite_spike",
+		category = "placeable",
+		tier = "reidite",
+		maxStack = 255,
+		structure = { kind = "spike", health = 4800, radius = 3, spikeDamage = 60 },
+	},
+	reidite_spike_door = {
+		id = "reidite_spike_door",
+		testOnly = true,
+		nameKey = "item.reidite_spike_door",
+		category = "placeable",
+		tier = "reidite",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 3500, radius = 3, spikeDamage = 60 },
+	},
+	reidite_extractor = {
+		id = "reidite_extractor",
+		testOnly = true,
+		nameKey = "item.reidite_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.7, -- mesmo modelo-base dos outros extratores
+			kind = "extractor",
+			health = 300, -- provisório
+			extractor = {
+				output = "reidite",
 				woodPerCycle = 2,
 				cycleSeconds = 10,
 				yield = 1,

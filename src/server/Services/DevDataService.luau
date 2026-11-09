@@ -16,18 +16,34 @@
 --   Hunger, Cold, Thirst ou Heat), de 0 a 100, para testar a sobrevivência.
 -- - ServerStorage.DevArmor:Invoke(player, "helmet") -> boolean: veste uma
 --   armadura (category "armor"); nil tira.
+-- - ServerStorage.DevGive:Invoke(player, { reidite_wall = 50, ... }) -> string:
+--   põe os itens no inventário (vale item testOnly; o que não couber é avisado).
+--   Atalho: DevGive:Invoke(player, "reidite") = 50 de cada build de reidite.
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local ArmorService = require(script.Parent.ArmorService)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
+local InventoryService = require(script.Parent.InventoryService)
 local StatsService = require(script.Parent.StatsService)
+
+-- Pacotes prontos do DevGive (nome -> itens).
+local GIVE_PRESETS: { [string]: { [string]: number } } = {
+	reidite = {
+		reidite_wall = 50,
+		reidite_door = 50,
+		reidite_spike = 50,
+		reidite_spike_door = 50,
+		reidite_extractor = 50,
+	},
+}
 
 local DevDataService = {}
 
@@ -88,6 +104,24 @@ function DevDataService.Start(_self)
 
 	newCommand("DevArmor", function(player: Player, itemId: string?): boolean
 		return ArmorService.wear(player, itemId)
+	end)
+
+	newCommand("DevGive", function(player: Player, what: any): string
+		local items = if type(what) == "string" then GIVE_PRESETS[what] else what
+		if type(items) ~= "table" then
+			return `[DevGive] use uma tabela {"{"} id = quantidade {"}"} ou um pacote pronto`
+		end
+		local report = {}
+		for id, count in items do
+			if Defs.Items[id] == nil or type(count) ~= "number" or count < 1 then
+				table.insert(report, `{id}: não existe`)
+				continue
+			end
+			local left = InventoryService.give(player, id, math.floor(count))
+			table.insert(report, if left > 0 then `{id}: sobraram {left}` else `{id}: {count}`)
+		end
+		table.sort(report)
+		return table.concat(report, ", ")
 	end)
 end
 
