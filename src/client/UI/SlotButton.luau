@@ -18,6 +18,7 @@ local ChestState = require(Client:WaitForChild("ChestState"))
 local DragState = require(Client:WaitForChild("DragState"))
 local HotbarState = require(Client:WaitForChild("HotbarState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
+local ItemHover = require(Client:WaitForChild("ItemHover"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 
 local create = vide.create
@@ -112,7 +113,8 @@ local function SlotButton(props: Props): TextButton
 		end,
 	}) :: TextButton
 
-	local button = create("TextButton")({
+	local button: TextButton
+	button = create("TextButton")({
 		Name = `Slot{index}`,
 		LayoutOrder = props.LayoutOrder or index,
 		Text = "",
@@ -147,8 +149,20 @@ local function SlotButton(props: Props): TextButton
 				return if isDropTarget() or isSelected() then SELECTED_STROKE else Theme.strokeThickness
 			end,
 		}),
+		-- Dica do item (UI/ItemTooltip): mouse em cima, ou o dedo no celular.
+		MouseEnter = function()
+			if not vide.untrack(locked) then
+				ItemHover.enter(index, button)
+			end
+		end,
+		MouseLeave = function()
+			ItemHover.leave(index)
+		end,
 		InputBegan = function(input: InputObject)
 			local kind = input.UserInputType
+			if kind == Enum.UserInputType.Touch and not vide.untrack(locked) then
+				ItemHover.touch(index, button)
+			end
 			-- Apertou o "+": é do baú, não começa arrasto.
 			if vide.untrack(plusVisible) and pressedOn(plus, input) then
 				return

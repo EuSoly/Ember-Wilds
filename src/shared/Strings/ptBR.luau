@@ -21,6 +21,20 @@ return table.freeze({
 	["tier.emerald"] = "Esmeralda",
 
 	-- HUD
+	-- Dica dos itens (passar o mouse ou segurar o dedo no slot): UIFlow/ItemInfo
+	["info.food.hunger"] = "Repõe {value} de fome",
+	["info.food.thirst"] = "Repõe {value} de sede",
+	["info.food.health"] = "Recupera {value} de vida",
+	["info.pickaxe"] = "Picareta nível {level}",
+	["info.damage"] = "Dano: {value}",
+	["info.speed"] = "Anda {value}% da velocidade",
+	["info.structureDamage"] = "Dano em construções: {value}",
+	["info.reach"] = "Alcance +{value}",
+	["info.defense"] = "Defesa: {value}%",
+	["info.cold"] = "Frio cai {value}% mais devagar",
+	["info.bag"] = "+{value} espaços na mochila",
+	["info.health"] = "Vida: {value}",
+	["info.spikes"] = "Espinhos: {value} de dano",
 	["hud.day"] = "Dia {day}",
 	["hud.dayEnglish"] = "Day {day}", -- relógio com o Roblox em inglês
 	["hud.points"] = "{points} pts",

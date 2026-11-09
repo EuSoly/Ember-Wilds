@@ -16,6 +16,7 @@ local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local InteractPanel = require(script.Parent:WaitForChild("InteractPanel"))
+local ItemTooltip = require(script.Parent:WaitForChild("ItemTooltip"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local RecipeBookButton = require(script.Parent:WaitForChild("RecipeBookButton"))
@@ -47,6 +48,7 @@ local function App(): ScreenGui
 		WeaponLock(),
 		Backpack.Button(),
 		Backpack.Panel(),
+		ItemTooltip(),
 		DragGhost(), -- por último: o item arrastado fica por cima de tudo
 	}
 
