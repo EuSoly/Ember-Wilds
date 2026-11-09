@@ -1,5 +1,5 @@
 --!strict
--- Dados falsos do mockup de loja, ranking e perfil (G7a e UI 2).
+-- Dados falsos do mockup de loja e perfil (G7a e UI 2).
 -- Tudo que é número ou nome inventado fica aqui, num lugar só, para apagar
 -- quando a loja de verdade existir. Nada daqui compra, grava ou sorteia de
 -- verdade: o sorteio da loja (SpinRules) só escolhe o que a animação mostra.
@@ -8,7 +8,6 @@ local CosmeticCatalog = require("./CosmeticCatalog")
 local MockStore = {}
 
 export type Pack = { amount: number, robux: number, tag: string? }
-export type RankRow = { name: string, points: number }
 
 -- Pacotes de moeda (quantidade ↔ preço em Robux).
 MockStore.PACKS = {
@@ -32,20 +31,6 @@ MockStore.KIT_ROBUX = {
 
 -- Kits que o mockup já começa tendo para sempre (para mostrar o botão "Usar").
 MockStore.KIT_STARTS_OWNED = { "kit_starter" } :: { string }
-
--- Ranking falso, do maior para o menor.
-MockStore.RANKING = {
-	{ name = "Cinzas", points = 48210 },
-	{ name = "LoboSolitario", points = 41377 },
-	{ name = "Brasa_77", points = 36902 },
-	{ name = "Musgo", points = 30455 },
-	{ name = "NoiteLonga", points = 27118 },
-	{ name = "Ferrugem", points = 22640 },
-	{ name = "ZéDoFogo", points = 19873 },
-	{ name = "Geada", points = 15204 },
-	{ name = "Pedregulho", points = 11986 },
-	{ name = "Fagulha", points = 8421 },
-} :: { RankRow }
 
 -- ================= Loja (UI 2) =================
 

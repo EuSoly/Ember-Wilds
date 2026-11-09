@@ -46,7 +46,7 @@ local SpinFx = require(ShopFolder:WaitForChild("SpinFx"))
 local SpinSounds = require(ShopFolder:WaitForChild("SpinSounds"))
 local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
-local RankingPanel = require(script.Parent:WaitForChild("RankingPanel"))
+local RankingScreen = require(script.Parent:WaitForChild("Ranking"):WaitForChild("RankingScreen"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
 
@@ -56,11 +56,8 @@ local R = Theme.rustic
 -- Botões da coluna, de cima para baixo (ids de MenuState.Panel). "settings"
 -- não é painel: abre a janela de Configurações de sempre.
 local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" }
--- Painéis do mockup com conteúdo próprio (abrem à direita da coluna).
-local PANELS = { "ranking" } :: { MenuState.Panel }
 
 local MARGIN = MenuLayout.MARGIN
-local TITLE_ROW = MenuLayout.TITLE_ROW
 local TOUCH = Theme.touchMinSize.Y
 local SHADOW_SHARE = Vector2.new(0.7, 0.12) -- sombra no chão, fração do lado do boneco
 
@@ -435,58 +432,6 @@ local function kitsPanel(layout: () -> Layout): Frame
 	return panel
 end
 
--- Conteúdo de cada painel do mockup, abaixo do título. Os builders rodam uma
--- vez, dentro do root Vide.
-local CONTENT: { [MenuState.Panel]: () -> Instance } = {
-	ranking = RankingPanel.build,
-}
-
--- Painel do mockup: título, botão de fechar (volta a "play") e o conteúdo.
--- O visual destes painéis é o antigo: o redesenho deles é outra fase.
-local function panelFrame(panel: MenuState.Panel, layout: () -> Layout): Frame
-	local builder = CONTENT[panel]
-	local content = if builder then builder() :: GuiObject else nil
-	if content then
-		content.Position = UDim2.new(0.02, 0, 0, TITLE_ROW)
-		content.Size = UDim2.new(0.96, 0, 1, -(TITLE_ROW + MARGIN))
-	end
-	return Kit.panel({
-		Name = "Panel_" .. panel,
-		Visible = function()
-			return MenuState.panel() == panel
-		end,
-		Position = function()
-			local l = layout()
-			return UDim2.fromOffset(l.panelX, l.bodyTop)
-		end,
-		Size = function()
-			local l = layout()
-			return UDim2.fromOffset(l.panelWidth, l.panelBottom - l.bodyTop)
-		end,
-		Kit.text({
-			Name = "Title",
-			Position = UDim2.fromOffset(12, 4),
-			Size = UDim2.new(0.6, 0, 0, TOUCH),
-			FontFace = Theme.font.title,
-			Text = Strings.get("menu.panel." .. panel),
-			TextXAlignment = Enum.TextXAlignment.Left,
-			maxSize = 36,
-		}),
-		Rustic.button({
-			Name = "CloseButton",
-			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, -8, 0, 4),
-			Size = UDim2.new(0.15, 0, 0, TOUCH),
-			kind = "wood",
-			text = Strings.get("menu.close"),
-			Activated = function()
-				MenuState.open("play")
-			end,
-		}),
-		content,
-	})
-end
-
 -- Aviso de compra simulada: faixa no alto, abaixo dos pods; só enquanto há texto.
 local function noticeBanner(layout: () -> Layout): Frame
 	return Kit.pill({
@@ -598,9 +543,8 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		table.insert(children, instance)
 	end
 	table.insert(children, kitsPanel(layout))
-	for i = 1, #PANELS do
-		table.insert(children, panelFrame(PANELS[i], layout))
-	end
+	-- Ranking semanal (UI 6): à direita da coluna.
+	table.insert(children, RankingScreen.build(layout))
 	-- Perfil e Cosméticos: janelas no centro, por cima do menu (sem escurecer).
 	table.insert(children, ProfilePanel.build())
 	table.insert(

@@ -221,13 +221,6 @@ return {
 		)
 	end,
 
-	["ranking tem 10 linhas em ordem decrescente"] = function()
-		assert(#MockStore.RANKING == 10, `veio {#MockStore.RANKING}`)
-		for i = 2, #MockStore.RANKING do
-			assert(MockStore.RANKING[i - 1].points >= MockStore.RANKING[i].points, `linha {i} fora de ordem`)
-		end
-	end,
-
 	["toda nameKey do mockup existe em Strings"] = function()
 		for _, t in MockStore.SPIN_TYPES do
 			checkKey(t.nameKey)
