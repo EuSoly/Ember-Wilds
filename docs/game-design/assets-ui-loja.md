@@ -10,7 +10,9 @@ Anel de madeira com gemas laranja, folhas embaixo e o ponteiro triangular já pr
 - **Preparo:** recortar no quadrado da caixa útil (x 108–1132, y 55–1149) e reduzir para 1024. A abertura mede ~690 px de largura (x 274–964) com o centro em y ≈ 628 na imagem original; o disco (`WHEEL_DISC`) é centrado e redimensionado para essa abertura, como foi feito na roleta antiga (que era um pouco oval).
 - O ponteiro avança para dentro do anel (ponta em y ≈ 348): o disco fica embaixo dele.
 
-## 2. Fundos das raridades (`fundos das raridades.png`, 1983×793)
+## 2. Fundos das raridades (`fundos das raridades.png`, 1983×793) — FEITO (09/11)
+
+No jogo desde 09/11: `assets/ui/rarity/` (recorte por `prepare_rarity.py`), ids em `src/shared/RarityImages.luau`, montagem em `src/client/UI/RarityBackground.luau` (9 partes, cantos em 16% do lado). Usado na grade e nas amostras dos Cosméticos e nos quadradinhos da Loja (roleta, prêmio, prévia dos pacotes). A legenda das chances e o selo de raridade continuam em cor lisa.
 
 Cinco quadrados arredondados com brilho, na ordem das raridades da tabela do Elizeu: cinza = Comum, azul = Raro, roxo = Épico, amarelo = Lendário, vermelho = Mítico.
 

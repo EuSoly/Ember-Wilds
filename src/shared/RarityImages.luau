@@ -8,7 +8,13 @@
 -- Puro (sem Rect/Vector2): o cliente monta o 9 partes com SLICE.
 local RarityImages = {}
 
-RarityImages.BACKGROUND = { "", "", "", "", "" } :: { string } -- rarity_1..5.png
+RarityImages.BACKGROUND = {
+	"rbxassetid://94940242033685", -- rarity_1.png: Comum
+	"rbxassetid://96613162113425", -- rarity_2.png: Raro
+	"rbxassetid://140676752204319", -- rarity_3.png: Épico
+	"rbxassetid://87614583588173", -- rarity_4.png: Lendário
+	"rbxassetid://87537973912466", -- rarity_5.png: Mítico
+} :: { string }
 RarityImages.SIZE = 256 -- lado da arte (px)
 -- 9 partes: os cantos (com o contorno e o brilho) não esticam.
 RarityImages.CORNER = 48
