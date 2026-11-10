@@ -8,6 +8,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local PinState = require(script.Parent.Parent:WaitForChild("PinState"))
+local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
 local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 
 local HudColumnState = {}
@@ -23,12 +24,12 @@ function HudColumnState.tutorialHeight(): number
 	if TutorialState.step() <= 0 then
 		return 0
 	end
-	return if #HudColumnState.tutorialNeeds() > 0 then HudColumn.TUTORIAL_HEIGHT_NEEDS else HudColumn.TUTORIAL_HEIGHT
+	return HudColumn.tutorialHeight(#HudColumnState.tutorialNeeds() > 0, ScreenMetrics.guiHeight())
 end
 
 -- Altura do painel da receita fixada (0 = nenhuma fixada).
 function HudColumnState.pinnedHeight(): number
-	return HudColumn.pinnedHeight(#PinState.lines())
+	return HudColumn.pinnedHeight(#PinState.lines(), ScreenMetrics.guiHeight())
 end
 
 -- Função comum (não derive): pode ser lida fora de um escopo do Vide; a conta é barata.

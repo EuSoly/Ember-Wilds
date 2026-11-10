@@ -112,8 +112,7 @@ local function TutorialPanel(): Frame
 			return UDim2.fromScale(0.98, HudColumnState.column().tutorialY)
 		end,
 		Size = function()
-			local height = if hasNeeds() then HudColumn.TUTORIAL_HEIGHT_NEEDS else HudColumn.TUTORIAL_HEIGHT
-			return UDim2.fromScale(HudColumn.WIDTH, height)
+			return UDim2.fromScale(HudColumn.WIDTH, HudColumnState.tutorialHeight())
 		end,
 		Visible = function()
 			return TutorialState.step() > 0

@@ -3,6 +3,7 @@
 -- (celular deitado). As janelas (Perfil, Cosméticos, Configurações) usam quase
 -- toda a altura e trocam o Fechar de baixo por um X no canto (10/11/2026). O
 -- limite é o mesmo do CosmeticsLayout.SHORT_HEIGHT.
+local GuiService = game:GetService("GuiService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
@@ -34,6 +35,17 @@ end)
 
 function ScreenMetrics.size(): Vector2
 	return size()
+end
+
+-- Altura da área das telas com ScreenInsets = CoreUISafeInsets (HUD, livro):
+-- a tela sem a barra do Roblox em cima.
+local topbar = vide.source(GuiService.TopbarInset.Height)
+GuiService:GetPropertyChangedSignal("TopbarInset"):Connect(function()
+	topbar(GuiService.TopbarInset.Height)
+end)
+
+function ScreenMetrics.guiHeight(): number
+	return math.max(size().Y - topbar(), 1)
 end
 
 function ScreenMetrics.short(): boolean
