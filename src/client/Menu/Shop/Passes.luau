@@ -98,8 +98,12 @@ local function icon(pass: Pass): GuiObject
 end
 
 local function card(pass: Pass, order: number): Frame
+	-- Comprado aqui ou ganho por outro caminho (ex. o kit veio num pacote).
 	local function owned(): boolean
-		return ShopData.purchased(pass.product.id)
+		if ShopData.purchased(pass.product.id) then
+			return true
+		end
+		return if pass.kitId then ShopData.kitOwned(pass.kitId) else ShopData.hasPass(pass.artId)
 	end
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",

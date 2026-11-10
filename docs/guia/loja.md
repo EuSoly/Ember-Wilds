@@ -74,7 +74,7 @@ A loja mostra só os pacotes **dentro da data**, com o contador até o fim. Cada
 
 Hoje existem `cosmetic`, `ember`, `spins`, `kit`, `kitOnce` e `pass`. Para criar outro (um título, um item de jogo…), mexa em **três lugares**:
 
-1. **`src/shared/Shop/Rewards.luau`**, em `KINDS`: os campos válidos (a função `validate` devolve a mensagem de erro, ou `nil`). Roda no boot e nos testes.
+1. **`src/shared/Shop/Rewards.luau`**, em `KINDS`: os campos válidos (a função `validate` devolve a mensagem de erro, ou `nil`). Roda no boot e nos testes. Se for algo "para sempre", acrescente também `owned` (o jogador já tem?): assim a loja não vende de novo o que ele ganhou por outro caminho.
 2. **`src/server/Services/ShopService.luau`**, em `GRANTS`: como entregar (recebe o jogador, os dados da loja do perfil e a recompensa).
 3. **`src/client/Menu/Shop/RewardView.luau`**: o texto na lista do card (`text`) e, se tiver figura, a peça da prévia (`tile`).
 

@@ -6,6 +6,7 @@
 --   "bought"  produto "once" que o jogador já comprou
 --   "balance" Golden Ember insuficiente
 -- Preço em Robux ainda não é cobrado: nunca recusa por saldo de Robux.
+local Rewards = require("./Rewards")
 local ShopData = require("./ShopData")
 local ShopDates = require("./ShopDates")
 local ShopTypes = require("./Types")
@@ -27,6 +28,11 @@ function PurchaseRules.check(
 		return "closed"
 	end
 	if product.once and d.Purchased[product.id] == true then
+		return "bought"
+	end
+	-- Kit ou passe para sempre que já veio por outro caminho (ex. num pacote).
+	-- Pacotes não entram: o que falta dentro deles ainda é entregue.
+	if product.kind ~= "bundle" and Rewards.allOwned(product.rewards, d) then
 		return "bought"
 	end
 	if product.price.currency == "ember" then

@@ -19,6 +19,7 @@ local Products = require(Shared.Shop.Products)
 local PurchaseRules = require(Shared.Shop.PurchaseRules)
 local ShopData = require(Shared.Shop.ShopData)
 local ShopTypes = require(Shared.Shop.Types)
+local Throttle = require(Shared.Shop.Throttle)
 local SpinRoll = require(Shared.Shop.SpinRoll)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
@@ -29,28 +30,18 @@ local Net = require(script.Parent.Parent.Net)
 type Reward = ShopTypes.Reward
 type Price = ShopTypes.Price
 
--- Intervalo mínimo entre pedidos do mesmo jogador (clique duplo, rajada).
+-- Intervalo mínimo entre pedidos do mesmo tipo do mesmo jogador (clique
+-- duplo, rajada). Por tipo: comprar "+1" e girar logo depois não se atrapalham.
 local REQUEST_COOLDOWN = 0.3
 
 local ShopService = {}
 
-local lastRequest: { [Player]: number } = {}
+local throttle = Throttle.new(REQUEST_COOLDOWN)
 local rng = Random.new()
 
 local function shopOf(player: Player): ShopData.ShopData?
 	local data = DataService.data(player)
 	return if data then data.Shop :: ShopData.ShopData else nil
-end
-
--- true se o pedido pode seguir (e marca a hora); false se veio rápido demais.
-local function throttle(player: Player): boolean
-	local now = os.clock()
-	local last = lastRequest[player]
-	if last ~= nil and now - last < REQUEST_COOLDOWN then
-		return false
-	end
-	lastRequest[player] = now
-	return true
 end
 
 -- ===== Publicação para o cliente (pasta Player.Shop) =====
@@ -266,7 +257,7 @@ end
 -- ===== Pedidos do cliente =====
 
 local function onPurchase(player: Player, request: { ProductId: string })
-	if not throttle(player) then
+	if not Throttle.allow(throttle, player, "purchase", os.clock()) then
 		return
 	end
 	local ok, reason = ShopService.purchase(player, request.ProductId)
@@ -274,7 +265,12 @@ local function onPurchase(player: Player, request: { ProductId: string })
 end
 
 local function onSpin(player: Player, request: { TypeId: string, Paid: boolean })
-	if not throttle(player) then
+	if not Throttle.allow(throttle, player, "spin", os.clock()) then
+		-- Responde mesmo descartando: a tela do giro espera a resposta para destravar.
+		Net.SpinResult.Fire(
+			player,
+			{ TypeId = request.TypeId, Paid = request.Paid, Ok = false, Duplicate = false, Refund = 0 }
+		)
 		return
 	end
 	local kind: ShopTypes.SpinKind = if request.Paid then "paid" else "normal"
@@ -290,7 +286,7 @@ local function onSpin(player: Player, request: { TypeId: string, Paid: boolean }
 end
 
 local function onSetActive(player: Player, request: { KitId: string? })
-	if not throttle(player) then
+	if not Throttle.allow(throttle, player, "kit", os.clock()) then
 		return
 	end
 	local d = shopOf(player)
@@ -312,7 +308,7 @@ function ShopService.Start(_self)
 	Net.RequestSpin.On(onSpin)
 	Net.SetActiveKit.On(onSetActive)
 	Players.PlayerRemoving:Connect(function(player)
-		lastRequest[player] = nil
+		Throttle.forget(throttle, player)
 	end)
 end
 

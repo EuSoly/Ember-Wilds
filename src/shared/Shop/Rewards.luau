@@ -10,11 +10,18 @@
 local Types = require("../Defs/Types")
 local ShopTypes = require("./Types")
 local ShopConfig = require("./ShopConfig")
+local ShopData = require("./ShopData")
 
 export type Reward = ShopTypes.Reward
 
 type Defs = Types.DefsTables
-export type KindDef = { validate: (reward: Reward, defs: Defs) -> string? }
+-- `owned` (opcional): o jogador já tem o que esta recompensa dá? Usado para
+-- não vender de novo um kit ou passe para sempre que ele ganhou por outro
+-- caminho (ex. num pacote). Sem `owned`, nunca conta como possuída.
+export type KindDef = {
+	validate: (reward: Reward, defs: Defs) -> string?,
+	owned: ((reward: Reward, d: ShopData.ShopData) -> boolean)?,
+}
 
 local function positiveInt(value: number?): boolean
 	return type(value) == "number" and value >= 1 and value % 1 == 0
@@ -22,7 +29,7 @@ end
 
 local Rewards = {}
 
-Rewards.KINDS = table.freeze({
+local KINDS: { [string]: KindDef } = {
 	-- Skin do catálogo (corpo, livro, mochila, caixa...). Já possuída = ignorada.
 	cosmetic = {
 		validate = function(reward: Reward, defs: Defs): string?
@@ -61,6 +68,9 @@ Rewards.KINDS = table.freeze({
 			end
 			return nil
 		end,
+		owned = function(reward: Reward, d: ShopData.ShopData): boolean
+			return reward.id ~= nil and d.KitsOwned[reward.id] == true
+		end,
 	},
 	-- Saldo de kit de 1 vida (cada vida com ele gasta 1).
 	kitOnce = {
@@ -82,8 +92,27 @@ Rewards.KINDS = table.freeze({
 			end
 			return nil
 		end,
+		owned = function(reward: Reward, d: ShopData.ShopData): boolean
+			return reward.id ~= nil and d.Passes[reward.id] == true
+		end,
 	},
-}) :: { [string]: KindDef }
+}
+Rewards.KINDS = table.freeze(KINDS)
+
+-- O jogador já tem tudo o que `rewards` dá? (lista vazia ou tipo sem `owned` = não)
+function Rewards.allOwned(rewards: { Reward }, d: ShopData.ShopData): boolean
+	if #rewards == 0 then
+		return false
+	end
+	for _, reward in rewards do
+		local kind = Rewards.KINDS[reward.kind]
+		local owned = kind and kind.owned
+		if owned == nil or not owned(reward, d) then
+			return false
+		end
+	end
+	return true
+end
 
 -- Erro da recompensa (nil = válida). Tipo desconhecido também é erro.
 function Rewards.validate(reward: Reward, defs: Defs): string?

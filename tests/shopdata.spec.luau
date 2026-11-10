@@ -69,6 +69,26 @@ return {
 		assert(PurchaseRules.check(once, d, 0, 0) == nil, "1 vida compra quantas vezes quiser")
 	end,
 
+	["forever kit already owned by another path is refused"] = function()
+		local d = ShopData.empty()
+		ShopData.ownKit(d, "kit_explorer") -- veio de um pacote, por exemplo
+		assert(PurchaseRules.check(product("kit_kit_explorer"), d, 0, 0) == "bought", "já tem o kit para sempre")
+		assert(PurchaseRules.check(product("kit_kit_veteran"), d, 0, 0) == nil, "outro kit continua comprável")
+	end,
+
+	["pass already owned by another path is refused"] = function()
+		local d = ShopData.empty()
+		ShopData.setPass(d, "vip")
+		assert(PurchaseRules.check(product("pass_vip"), d, 0, 0) == "bought", "já tem o VIP")
+	end,
+
+	["bundle is not refused because part of it is owned"] = function()
+		local musgo = product("bundle_musgo")
+		local d = ShopData.empty()
+		ShopData.ownKit(d, "kit_explorer")
+		assert(PurchaseRules.check(musgo, d, musgo.startsAt :: number, 0) == nil, "o resto do pacote ainda entra")
+	end,
+
 	["ember price needs enough balance"] = function()
 		local spins = product("spins_normal_3")
 		local d = ShopData.empty()

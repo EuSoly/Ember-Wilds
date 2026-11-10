@@ -38,6 +38,7 @@ local R = Theme.rustic
 local BOX_MAX_WIDTH = 980
 local TILE_GAP = 8
 local WON_TILE = 170
+local RESULT_TIMEOUT = 8 -- s esperando o resultado do giro antes de destravar
 local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
 
@@ -407,6 +408,7 @@ function SpinScreen.build(
 	end
 
 	-- GIRAR: pede o giro ao servidor e trava até a resposta (SpinResult).
+	local waitingSince: number? = nil -- os.clock() do pedido sem resposta
 	local function spin(kind: SpinRules.Kind)
 		local id = vide.untrack(ShopState.spinType)
 		local spinType = if id then typeOf(id) else nil
@@ -419,10 +421,20 @@ function SpinScreen.build(
 			return
 		end
 		ShopState.spinning(true)
+		waitingSince = os.clock()
 		Net.RequestSpin.Fire({ TypeId = spinType.id, Paid = kind == "paid" })
+		-- Rede de segurança: sem resposta do servidor, destrava a tela.
+		local mine = waitingSince
+		task.delay(RESULT_TIMEOUT, function()
+			if waitingSince == mine then
+				waitingSince = nil
+				ShopState.spinning(false)
+			end
+		end)
 	end
 
 	Net.SpinResult.On(function(result)
+		waitingSince = nil
 		local spinType = typeOf(result.TypeId)
 		local prize: MockStore.SpinItem? = nil
 		if spinType and result.Ok and result.ItemId then
