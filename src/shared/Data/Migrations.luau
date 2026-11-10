@@ -9,10 +9,17 @@ export type Step = (data: { [string]: any }) -> ()
 
 local Migrations = {}
 
--- STEPS[n] leva da versão n para n+1. Vazio na v1.
--- Exemplo (v1 → v2):
---   [1] = function(data) data.Pets = { Owned = {} } end,
-Migrations.STEPS = table.freeze({}) :: { [number]: Step }
+-- STEPS[n] leva da versão n para n+1.
+Migrations.STEPS = table.freeze({
+	-- v1 → v2 (loja de verdade): até aqui todas as skins eram liberadas para
+	-- teste e gravadas no perfil. Zera a posse; o equipado fica salvo e o
+	-- CosmeticService volta à skin padrão do slot se ela não é mais possuída.
+	[1] = function(data)
+		if type(data.Cosmetics) == "table" then
+			data.Cosmetics.Owned = {}
+		end
+	end,
+}) :: { [number]: Step }
 
 local function deepCopy(value: any): any
 	if type(value) ~= "table" then

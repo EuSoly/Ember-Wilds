@@ -4,6 +4,7 @@
 local DataConfig = require("./DataConfig")
 local RankRules = require("./RankRules")
 local SettingsRules = require("./SettingsRules")
+local ShopData = require("../Shop/ShopData")
 local Types = require("../Defs/Types")
 
 local ProfileTemplate = {}
@@ -22,6 +23,8 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		-- Ranking semanal: valores da semana (RankRules.WeekState). A semana 0
 		-- nunca é a atual: o RankService troca por uma zerada na primeira leitura.
 		Ranking = RankRules.empty(0),
+		-- Loja (Shop/ShopData): saldos de giros e de kits, kits e passes, compras.
+		Shop = ShopData.empty(),
 		-- Reservado para as compras com Robux (F5/loja), padrão do ProfileStore.
 		PurchaseIdCache = {},
 	}

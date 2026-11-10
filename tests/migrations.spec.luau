@@ -94,13 +94,24 @@ return {
 		assert(data.Pets == nil, "perfil novo não roda migrações")
 	end,
 
-	["real steps are empty on v1"] = function()
-		assert(next(Migrations.STEPS) == nil, "v1 não tem migração")
+	["v1 to v2 clears the test skins and keeps the equipped ids"] = function()
+		local data: { [string]: any } = {
+			SchemaVersion = 1,
+			Cosmetics = { Owned = { body_lobo = true, bag_lona = true }, Equipped = { body = "body_lobo" } },
+			Currency = { Balance = 40 },
+		}
+		local ok, reason = Migrations.run(data, Migrations.STEPS, 2)
+		assert(ok, reason)
+		assert(data.SchemaVersion == 2, `versão {data.SchemaVersion}`)
+		assert(next(data.Cosmetics.Owned) == nil, "posse das skins de teste deveria sumir")
+		assert(data.Cosmetics.Equipped.body == "body_lobo", "o equipado fica (o CosmeticService volta ao padrão)")
+		assert(data.Currency.Balance == 40, "o resto do perfil não muda")
 	end,
 
-	["template has the v1 schema"] = function()
+	["template has the v2 schema with the shop"] = function()
 		local template = ProfileTemplate.build(Defs)
-		assert(template.SchemaVersion == 1, `versão {template.SchemaVersion}`)
+		assert(template.SchemaVersion == 2, `versão {template.SchemaVersion}`)
+		assert(type(template.Shop) == "table" and template.Shop.Spins.normal == 0, "loja no perfil")
 		assert(template.Settings.music_volume == 0.8, "música padrão")
 		assert(template.Currency.Balance == 0, "saldo inicial")
 		assert(type(template.Cosmetics.Owned) == "table", "cosméticos possuídos")

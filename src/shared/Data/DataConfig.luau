@@ -9,7 +9,8 @@ return table.freeze({
 	-- Chave = KEY_PREFIX .. UserId (padrão para o template de deleção do GDPR).
 	KEY_PREFIX = "Player_",
 	-- Versão atual do formato do perfil; subir junto com um passo em Migrations.STEPS.
-	SCHEMA_VERSION = 1,
+	-- v2 (09/11/2026): limpa as skins liberadas para teste (Migrations.STEPS[1]).
+	SCHEMA_VERSION = 2,
 	-- Intervalo mínimo (s) entre saves pedidos por jogador (DataService.save).
 	-- Pedidos no meio da espera viram um único save no fim dela (limites do DataStore).
 	MIN_SAVE_INTERVAL = 8,
