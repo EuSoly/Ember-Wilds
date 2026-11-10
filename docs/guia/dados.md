@@ -6,16 +6,17 @@ O perfil usa o [ProfileStore](https://madstudioroblox.github.io/ProfileStore/) (
 
 O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos do Player (`Currency`, `Setting_<id>`, `Cosmetic_<slot>`) e em duas pastas dentro dele (`ProfileStats`, `OwnedCosmetics`) e só pode **pedir** mudança de configuração ou de skin equipada, que o servidor valida.
 
-## O perfil (schema v1)
+## O perfil (schema v2)
 
 | Campo | O que é |
 |---|---|
-| `SchemaVersion` | Versão do formato (hoje `1`). Veja "Migrações" |
+| `SchemaVersion` | Versão do formato (hoje `2`). Veja "Migrações" |
 | `Currency` | `{ Balance, HourWindowStart, HourEarned }`: saldo e janela do teto por hora |
 | `Cosmetics` | `{ Owned = { [id] = true }, Equipped = { [slot] = id } }` |
 | `Stats` | `{ [statId] = número }` ou, nas keyed, `{ [statId] = { [chave] = número } }` |
 | `Settings` | `{ [settingId] = número, booleano ou texto }` |
 | `Xp` | `{ Seeded, HourWindowStart, HourEarned }`: XP inicial já copiado do total de pontos? e a janela do teto de XP por hora. O XP em si é a estatística `xp_total` |
+| `Shop` | `{ Spins = { normal, paid }, Purchased, KitsOwned, KitBalance, KitActive, Passes }`: saldos de giros, produtos "once" comprados, kits para sempre, saldo de 1 vida por kit, kit ativo (`""` = nenhum) e passes. Veja `loja.md` |
 | `PurchaseIdCache` | Reservado para as compras com Robux (F5) |
 
 O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat no perfil (GDPR).
@@ -132,14 +133,15 @@ A linha da configuração aparece sozinha na tela de configurações, na posiç�
 
 Estatística ou configuração nova **não** precisa de migração. Migração é para quando um campo existente muda de forma, é renomeado ou precisa ser calculado a partir de outro.
 
-Exemplo v1 → v2 (os cosméticos possuídos passam a guardar a data da compra):
+Hoje existe o passo v1 → v2 (zera as skins de teste; veja "Roleta de verdade"). Exemplo de um passo novo, v2 → v3 (os cosméticos possuídos passam a guardar a data da compra):
 
-1. Em `src/shared/Data/DataConfig.luau`: `SCHEMA_VERSION = 2`.
-2. Em `src/shared/Data/Migrations.luau`, adicione o passo `[1]` (leva da v1 para a v2):
+1. Em `src/shared/Data/DataConfig.luau`: `SCHEMA_VERSION = 3`.
+2. Em `src/shared/Data/Migrations.luau`, adicione o passo `[2]` (leva da v2 para a v3):
 
 ```lua
 Migrations.STEPS = table.freeze({
-	[1] = function(data)
+	[1] = function(data) ... end, -- o que já existe
+	[2] = function(data)
 		local owned = {}
 		for id in data.Cosmetics.Owned do
 			owned[id] = { at = 0 }
@@ -188,18 +190,11 @@ O jogo vai ter centenas de skins, e um jogador pode ter todas. Por isso:
 - No cliente, **uma fonte para a pasta toda** (`Sources.childNames(player, StatNames.OwnedFolder)`, conjunto `{ [id] = true }`), que recalcula no máximo uma vez por quadro. Não crie uma fonte ou conexão por skin: com 600 skins seriam 600 conexões.
 - **Id da skin:** é o nome do objeto e vai no evento `EquipCosmetic` (`Id: string(1..48)`): no máximo 48 letras, e nunca muda depois de lançado (está salvo nos perfis).
 
-### Ligar a roleta de verdade (checklist para o futuro)
+### Roleta de verdade (desde 09/11)
 
-Hoje a roleta é **toda simulada no cliente**: `SpinScreen.luau` sorteia (`SpinRules.pickItem` com um `Random` local) e só mostra o prêmio; ninguém ganha nada. Para virar de verdade, o certo é:
+O sorteio é do **servidor** (`ShopService.spin` com `Shop/SpinRoll`); o cliente só pede (`Net.RequestSpin`) e anima até o prêmio que recebe (`Net.SpinResult`). Os giros são dois saldos no perfil (`Shop.Spins.normal` e `.paid`), que servem em qualquer roleta. A skin entra só por `CosmeticService.grantOwnership`; repetida devolve Golden Ember (`ShopConfig.DUPLICATE_REFUND`). Detalhes em `loja.md`.
 
-1. **O sorteio vai para o servidor.** O cliente só **pede** o giro (evento Blink novo, ex. `RequestSpin { TypeId, Paid }`). Nunca aceite do cliente qual skin saiu.
-2. **O servidor confere e cobra:** giro normal desconta Golden Ember (`CurrencyService`); giro pago só depois do recibo do Robux (`MarketplaceService.ProcessReceipt`). Giros comprados e ainda não usados ficam no **perfil** (hoje `ShopState` guarda só na memória do cliente).
-3. **O servidor sorteia com as mesmas regras** (`SpinRules` e `CosmeticCatalog.spinItems` estão em `src/shared`, servem aos dois lados) e as chances de `MockStore.SPIN_ODDS` (levar para um Defs de verdade).
-4. **Dar a skin só por `CosmeticService.grantOwnership(player, id)`**: é o único caminho. Ele grava no perfil e cria o `BoolValue`. Não crie atributo por skin em lugar nenhum (nem no Player, nem na pasta).
-5. **Salvar:** depois de um giro pago, `DataService.save(player)`; no `ProcessReceipt`, só responda `PurchaseGranted` depois que o perfil guardou a skin.
-6. **Devolver o resultado só para o dono** (evento Blink do servidor para o cliente, ex. `SpinResult { Id }`). O cliente anima o carrossel até esse prêmio (`Reel:spinTo(prize)`) e a tela de Cosméticos tira o cadeado sozinha quando o `BoolValue` chega.
-7. **Skin repetida:** `grantOwnership` ignora a duplicata. Falta decidir o que o jogador recebe no lugar (ex.: parte da Golden Ember de volta).
-8. **Testes:** a regra do giro no servidor (cobrar, sortear, repetida) como módulo puro com teste em `tests/`, igual ao `SpinRules`.
+**Skins de teste:** até 08/11 o `CosmeticService` liberava (e gravava) todas as skins para todo mundo. A migração v1 → v2 zerou `Cosmetics.Owned`; quem estava com uma skin que perdeu volta à padrão do slot. No Studio, `DevGrantCosmetic` continua dando skins para testar.
 
 ## Estatísticas no cliente
 

@@ -4,7 +4,7 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 ## Antes de lançar (09/11)
 
-- **Todas as skins liberadas para teste, e gravadas no perfil:** `CosmeticService.publishOwned` (comentário "Todas as skins liberadas para teste") marca todos os cosméticos como possuídos **também no jogo publicado**, e isso é salvo no `PlayerData` (`Cosmetics.Owned`). Visto em 09/11 no perfil do luizExtreme1346: mais de 250 skins sem ter comprado nada. Antes de lançar: (1) liberar só no Studio ou para uma lista de testadores; (2) limpar quem já entrou (elizeullll, JoaoSilvaBR_1346, luizExtreme1346, Candy_love6829 e quem mais testar) com uma migração que deixa só os padrões e o que foi comprado de verdade. Decisão do Elizeu: mexer depois.
+- **Loja entregando de graça (desde 09/11):** tudo com preço em Robux (pacotes, giros especiais, kits, VIP, Golden Ember) é entregue sem cobrar, no jogo aberto (`ShopService.charge`). Antes de ligar o Robux de verdade: **zerar todos os perfis** (decisão do Elizeu) e trocar o `charge` pelo `MarketplaceService` (veja `docs/guia/loja.md`, "Ligar o Robux de verdade").
 - **Picaretas acima de ouro fora do jogo:** diamante, ametista e reidite estão `testOnly` desde 09/11 (o jogo vai só até ouro). Para liberar, tirar o `testOnly` delas em `Defs/Items.luau`.
 
 ## Livro de receitas (09/11)

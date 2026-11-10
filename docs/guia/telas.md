@@ -36,7 +36,7 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 | `src/client/Controllers/ScreenController.luau` | Monta as telas e mostra/esconde conforme o estado |
 | `src/client/ScreenState.luau` | O estado de tela |
 | `src/client/AudioSettings.luau` | Grupos de som e volumes |
-| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `KitOffer`, `MenuLayout`, `DeathLayout`, `CountUp`, `SettingsFormat` |
+| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `MenuLayout`, `DeathLayout`, `KitChoice`, `CountUp`, `SettingsFormat` |
 | `src/shared/UiImages.luau` | Ids das imagens da interface num lugar só: logo, sol, lua, árvore, galho, moeda e placa de madeira. Para trocar uma: envie o PNG novo, cole o id aqui (a árvore, o galho e a placa têm a proporção/corte anotados ao lado) |
 | `assets/ui/brand/` | PNGs da marca (logo, sol, lua), fonte das imagens enviadas ao Roblox |
 
@@ -120,13 +120,13 @@ O servidor (`SpawnService`) confere o kit e os pontos, desconta e dá os itens d
 
 No menu, o botão **Kits** (embaixo do boneco) abre o painel "ESCOLHA SEU KIT". Cada kit pode ir de três jeitos:
 
-1. **Pontos, 1 vida**: o de verdade, descrito acima. A escolha fica em `KitList.selected` (a mesma da tela de morte).
-2. **Robux, 1 vida** (mockup).
-3. **Robux, para sempre** (mockup): depois de comprado, o botão vira **Usar**; ativado, o kit vem sozinho em toda vida (botão **Ativo**; clicar de novo desativa). Só um permanente ativo por vez.
+1. **Pontos, 1 vida**: descrito acima.
+2. **Robux, 1 vida**: cada compra soma 1 no **saldo do kit** ("3 guardados"); o botão **Usar 1** ao lado do nome escolhe o kit gastando 1 desse saldo.
+3. **Robux, para sempre**: depois de comprado, o botão vira **Usar**; ativado, o kit vem sozinho em toda vida (botão **Ativo**; clicar de novo desativa). Só um permanente ativo por vez.
 
-Vai **um kit por vida**. Quem vale: escolha de pontos → compra de 1 vida com Robux → permanente ativo → nenhum. Escolher de pontos limpa a compra de 1 vida com Robux e vice-versa. Ao nascer, a compra de 1 vida é gasta; o permanente continua. O botão Kits mostra embaixo o kit desta vida.
+Vai **um kit por vida**. A escolha é o kit **e de onde ele sai** (`KitList.selected` + `KitList.source`: `"points"` ou `"balance"`), a mesma no menu e na tela de morte (lá a origem é automática: pontos se der, senão o saldo). Sem escolha, vem o kit para sempre ativo; sem ativo, nenhum. Quem decide é o servidor, ao nascer (`UIFlow/KitChoice`, igual no cliente). O botão Kits mostra embaixo o kit desta vida.
 
-**Robux ainda é mockup:** comprar só mostra o aviso "compra simulada" e muda um estado local (`src/client/Menu/KitShop.luau`), que volta ao início ao sair do jogo. O JOGAR só leva ao servidor o kit de **pontos**; por isso um kit de Robux aparece como "Explorador (simulado)". As regras puras ficam em `src/shared/UIFlow/KitOffer.luau` (teste `tests/kitoffer.spec.luau`). Os preços provisórios (`KIT_ROBUX`) e o kit que já começa permanente (`KIT_STARTS_OWNED`, hoje o Iniciante) ficam no `MockStore`. Kit novo em `Defs.Kits` precisa de preço em `KIT_ROBUX` (o teste avisa).
+**Robux ainda não é cobrado:** as compras são de verdade (o servidor entrega e salva), mas de graça. Preços em `src/shared/Shop/ShopConfig.luau` (`KIT_ROBUX`; kit novo em `Defs.Kits` precisa de preço lá, a checagem avisa). Veja `loja.md`.
 
 ### Como adicionar um kit
 
@@ -220,11 +220,11 @@ O Ranking é montado pelo `RankingScreen` (`src/client/Menu/Ranking/`), ligado n
 
 ### Loja (UI 2)
 
-Loja em tela cheia, toda **simulada** (visual e fluxo completos; comprar só mostra o aviso e nunca cobra nem salva). Design: `docs/superpowers/specs/2026-11-04-loja-design.md`. Quatro seções, com abas no topo que rolam até cada uma (a aba da seção visível fica destacada):
+Loja em tela cheia, **de verdade** desde 09/11: o servidor entrega e salva tudo, mas **o Robux ainda não é cobrado** (veja `loja.md`). Design: `docs/superpowers/specs/2026-11-04-loja-design.md`. Quatro seções, com abas no topo que rolam até cada uma (a aba da seção visível fica destacada):
 
-1. **Pacotes em destaque**: um pacote por vez, com setas, bolinhas, contador e lista do que vem; troca sozinho a cada 6 s.
+1. **Pacotes em destaque** (`Shop/Bundles.luau`): um pacote por vez, com setas, bolinhas, contador até o fim da oferta, as skins em 3D e a lista do que vem; troca sozinho a cada 6 s. Só aparecem os pacotes dentro da data; cada um compra uma vez ("Comprado").
 2. **Gamepasses**: os 4 kits para sempre (o mesmo estado do painel de kits: comprar aqui libera o "Usar" lá) e o VIP.
-3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando e **uma skin em destaque** em 3D: uma Mítica do tipo sorteada a cada vez que a loja abre (sem Mítica, a mais rara que houver; `SpinRules.featuredItem`). **As skins do carrossel são as de verdade** (`Defs/Cosmetics.luau`): skin nova entra sozinha (veja "Adicionar ou mudar uma skin"). Acessórios ainda não tem skins (slot futuro), então o cartão não tem o que girar; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember exige saldo, mas não desconta), contador "Você tem N giros" e **GIRAR**. O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
+3. **Giros**: um cartão por tipo de skin (Skins, Acessórios, Mochila, Livro, Caixa) com a roleta girando e **uma skin em destaque** em 3D: uma Mítica do tipo sorteada a cada vez que a loja abre (sem Mítica, a mais rara que houver; `SpinRules.featuredItem`). **As skins do carrossel são as de verdade** (`Defs/Cosmetics.luau`): skin nova entra sozinha (veja "Adicionar ou mudar uma skin"). Acessórios ainda não tem skins (slot futuro), então o cartão não tem o que girar; **Escolher** abre a **tela do giro**: carrossel passando devagar, giro com Golden Ember × giro especial (Robux), chances visíveis, comprar +1/+3/+10 (o giro com Golden Ember desconta o saldo), contador "Você tem N giros" (saldo único: serve em qualquer roleta) e **GIRAR** (o servidor sorteia e entrega a skin; repetida devolve Golden Ember). O carrossel freia e para no prêmio (5,2 s) e abre a janelinha "VOCÊ GANHOU!". O giro pago tem efeitos (raios, brilho, borda colorida, faíscas, clarão, tremida e confete).
    **Sons da roleta**: um tique a cada quadradinho que passa pelo marcador (vai espaçando conforme freia); no fim, um chiado e um rufar de tambores sobem de volume **na medida da raridade que vai sair** (Comum: nada; Raro: quase nada; Épico: um pouco; Lendário: chiado forte + tambor baixo; Mítico: tudo no máximo, e os tiques ficam mais agudos); ao parar, um som de revelação por raridade (do "ding" do Comum à orquestra do Mítico). O giro pago começa com um "vupt".
 4. **Golden Ember**: os 5 pacotes de moeda (3 em cima, 2 largos embaixo).
 
@@ -237,7 +237,8 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 | `SpinScreen.luau`, `Reel.luau`, `SpinTile.luau` | Tela do giro, carrossel e o quadradinho de cada skin (`SpinTile`, com o item em 3D pelo `ItemViewport` dos Cosméticos) |
 | `SpinFx.luau` | Efeitos do giro pago e a comemoração do prêmio |
 | `SpinSounds.luau` | Sons da roleta (tique, suspense, revelação), no grupo `Effects` |
-| `ShopState.luau` | Giros comprados (por tipo e normal/pago), tela do giro aberta, girando |
+| `ShopState.luau` | Tela do giro aberta e girando (os saldos de giros vêm do servidor: `src/client/ShopData.luau`) |
+| `RewardView.luau` | Como cada tipo de recompensa aparece no card de pacote |
 | `ShopParts.luau` | Peças repetidas: título de seção, cartão (fundo de arte `ShopImages.CARD` ou degradê), botão de preço, fita, selo, grade |
 
 | Regras e dados | O que é |
@@ -245,10 +246,11 @@ Raridades (tabela do Elizeu): Comum, Raro, Épico, Lendário e Mítico (o mais r
 | `src/shared/UIFlow/SpinRules.luau` | Sorteio por peso, item pela raridade (desce se faltar), contadores de giros, saldo suficiente, confete, curva do suspense (`tensionRamp`) e quadradinho sob o marcador (`markerTile`). Teste: `tests/spinrules.spec.luau` |
 | `src/shared/SpinSoundConfig.luau` | **Ids e volumes dos sons da roleta** (para trocar um som, troque o número) e quanto suspense cada raridade tem (`tension`). Teste: `tests/spinsoundconfig.spec.luau` |
 | `src/shared/UIFlow/ShopLayout.luau` | Medidas da loja e colunas das grades (menos no celular). Teste: `tests/shoplayout.spec.luau` |
-| `src/shared/UIFlow/MockStore.luau` | `RARITIES`, `SPIN_ODDS` (normal 30/40/23/6/1; especial 5/25/40/25/5), `SHOWCASE_WEIGHTS`, `SPIN_TYPES` (os itens vêm de `CosmeticCatalog.spinItems`, as skins de verdade), `SPIN_PRICES`, `BUNDLES`, `PASSES`, `PACKS`. Teste: `tests/mockstore.spec.luau` |
+| `src/shared/UIFlow/MockStore.luau` | Só exibição: `RARITIES`, `SHOWCASE_WEIGHTS` e `SPIN_TYPES` (as roletas, com as skins de verdade de `CosmeticCatalog.spinItems`). Teste: `tests/mockstore.spec.luau` |
+| `src/shared/Shop/` | Produtos, pacotes, preços, chances e regras da compra e do giro. Veja `loja.md` |
 | `src/shared/ShopImages.luau` | Ids das artes da loja (fontes em `assets/ui/shop/`): roleta em 3 camadas, fundos de cartão, ícone do Robux, botão verde, fita, pilhas de moedas e ícones. Id vazio = desenho feito por código |
 
-Para ligar à cobrança real depois: cada compra passa por `ShopState.buySpins`, `KitShop.buyForever` ou pelo `onClick` dos cartões (`Featured`, `Passes`, `EmberPacks`); é aí que entra o `MarketplaceService`.
+Para ligar a cobrança real depois: toda compra passa por `ShopService.charge` (servidor). Veja `loja.md`, "Ligar o Robux de verdade".
 
 ### Perfil (UI 4)
 
@@ -329,21 +331,10 @@ Abra Cosméticos: a skin aparece na grade, na posição da raridade, e o cadeado
 
 ### Mockups do menu (G7a)
 
-Não sobrou nenhum painel de mockup no menu: o último, o Ranking, virou de verdade na UI 6 (veja `docs/guia/ranking.md`). O que ainda é simulado fica na Loja e nos kits por Robux (veja "Loja (UI 2)").
+Não sobrou nenhum painel de mockup no menu: o último, o Ranking, virou de verdade na UI 6 (veja `docs/guia/ranking.md`). A Loja e os kits por Robux viraram de verdade em 09/11 (sem cobrar Robux; veja `loja.md`).
 
-### O que é falso e o que é de verdade
+### O que ainda não é de verdade
 
-- **De verdade:** o saldo (só leitura do atributo `Currency` do Player, ao vivo), os Cosméticos, o Perfil e o Ranking.
-- **Falso:** as compras da Loja e dos kits. Comprar só mostra o aviso "compra simulada" e **nunca** muda o saldo; nenhuma chamada a `MarketplaceService`.
+**Só a cobrança de Robux.** Tudo o mais é real: o saldo, os Cosméticos, o Perfil, o Ranking, a Loja e os kits. O que custa Robux é entregue de graça (no jogo aberto) até a cobrança ser ligada; antes disso, os perfis serão zerados (`docs/pendencias.md`).
 
-### Onde ficam os números e nomes falsos
-
-Tudo em `src/shared/UIFlow/MockStore.luau` (os dados da Loja; veja "Loja (UI 2)"). Teste: `tests/mockstore.spec.luau`. Os textos ficam nos blocos `mock.*` e `shop.*` de `src/shared/Strings/ptBR.luau`.
-
-### Como mexer nos valores
-
-- **Preço, chance, quantidade, nome de item:** edite `MockStore.luau`. As chances dos giros são em % e têm de somar 100, com 5 valores (um por raridade); o teste confere. Todo tipo de giro precisa de pelo menos um item de cada raridade.
-- **Texto:** edite a chave `mock.*` ou `shop.*` correspondente em `ptBR.luau`.
-- Rode `bash scripts/check.sh` depois.
-
-Quando a compra de kits com Robux ficar real, apague `KIT_ROBUX` e `KIT_STARTS_OWNED` do `MockStore` (os preços vão para `Defs.Kits`) e troque o estado local do `KitShop` pelo que vier do servidor.
+Preços, chances e pacotes: `src/shared/Shop/` (veja `loja.md`). Textos: blocos `shop.*` e `kit.*` de `src/shared/Strings/ptBR.luau`.
