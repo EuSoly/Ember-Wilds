@@ -1306,49 +1306,6 @@ local Cosmetics: { [string]: CosmeticDef } = {
 	},
 
 	---------------------------------------------------------------- Mochila
-	bag_default = {
-		id = "bag_default",
-		nameKey = "cosmetic.bag_default",
-		slot = "bag",
-		rarity = 1,
-		bag = { color = "#95603D", strapColor = "#59402D" },
-	},
-	bag_trilha = {
-		id = "bag_trilha",
-		nameKey = "cosmetic.bag_trilha",
-		slot = "bag",
-		rarity = 1,
-		bag = { color = "#7A8B4A", strapColor = "#434F25" },
-	},
-	bag_lona = {
-		id = "bag_lona",
-		nameKey = "cosmetic.bag_lona",
-		slot = "bag",
-		rarity = 2,
-		bag = { color = "#4A78B8", strapColor = "#26416B" },
-	},
-	bag_veludo = {
-		id = "bag_veludo",
-		nameKey = "cosmetic.bag_veludo",
-		slot = "bag",
-		rarity = 3,
-		bag = { color = "#8A3FC4", strapColor = "#4B1F70" },
-	},
-	bag_dourada = {
-		id = "bag_dourada",
-		nameKey = "cosmetic.bag_dourada",
-		slot = "bag",
-		rarity = 4,
-		bag = { color = "#E9B13A", strapColor = "#8A5F12" },
-	},
-	bag_estelar = {
-		id = "bag_estelar",
-		nameKey = "cosmetic.bag_estelar",
-		slot = "bag",
-		rarity = 5,
-		bag = { color = "#2B2250", strapColor = "#FF4545" },
-	},
-
 	bag_padrao = {
 		id = "bag_padrao",
 		nameKey = "cosmetic.bag_padrao",

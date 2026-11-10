@@ -33,7 +33,8 @@ MONTADAS = {"caixas"}
 SUBSTITUTAS = ["corpo_animado", "livros_animados"]
 
 # Skin sem malha própria que usa a de outra (entra logo antes da original).
-APELIDOS = {"book_default": "book_pergaminho"}
+# O livro padrão (book_default) é o Assets.Tools.book do Elizeu: sem apelido.
+APELIDOS = {}
 
 HEADER = """--!strict
 -- Gerado por scripts/gen-skin-manifest.py a partir de assets/skins/roblox/<categoria>/manifest.json

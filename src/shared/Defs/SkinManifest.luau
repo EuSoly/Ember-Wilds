@@ -6169,7 +6169,6 @@ local PARTS_BY_SKIN: { [string]: { string } } = {
 		"body_fornalha_industrial_mao_esq_neon",
 	},
 	["body_retalhos"] = { "body_retalhos_corpo", "body_retalhos_mao", "body_retalhos_mao_esq" },
-	["book_default"] = { "book_pergaminho_livro" },
 	["book_pergaminho"] = { "book_pergaminho_livro" },
 	["book_mapa"] = { "book_mapa_livro" },
 	["book_tabua"] = { "book_tabua_livro" },

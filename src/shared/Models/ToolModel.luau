@@ -68,11 +68,14 @@ function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 		return nil
 	end
 
-	-- Livro: usa a skin 3D equipada (ou book_pergaminho como padrão) em ReplicatedStorage.Assets.Books
+	-- Livro: a skin 3D equipada (ReplicatedStorage.Assets.Books). O padrão
+	-- (book_default, ou sem skin) é o modelo do Elizeu, Assets.Tools.book,
+	-- o mesmo do ícone do inventário: cai no caminho comum logo abaixo.
 	if itemId == "book" then
-		local skinId = if (cosmeticId ~= nil and SkinAssets.hasSkin(cosmeticId))
+		local skinId = if cosmeticId ~= nil
+				and cosmeticId ~= "book_default"
+				and SkinAssets.hasSkin(cosmeticId)
 			then cosmeticId
-			elseif SkinAssets.hasSkin("book_pergaminho") then "book_pergaminho"
 			else nil
 
 		if skinId ~= nil and SkinAssets.hasSkin(skinId) then

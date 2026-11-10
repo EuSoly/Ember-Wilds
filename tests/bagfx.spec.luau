@@ -8,7 +8,7 @@ return {
 			local list = BagFxConfig.of(id)
 			assert(list and #list > 0, id .. " com efeito")
 		end
-		assert(BagFxConfig.of("bag_default") == nil, "mochila comum sem efeito")
+		assert(BagFxConfig.of("bag_padrao") == nil, "mochila comum sem efeito")
 		assert(BagFxConfig.of(nil) == nil, "sem mochila")
 	end,
 

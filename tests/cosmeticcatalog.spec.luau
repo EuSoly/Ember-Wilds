@@ -34,20 +34,21 @@ return {
 		)
 	end,
 
-	["spinItems bag covers rarities 1 to 5"] = function()
-		local seen: { [number]: boolean } = {}
-		for _, item in CosmeticCatalog.spinItems("bag") do
-			seen[item.rarity] = true
-		end
-		for r = 1, 5 do
-			assert(seen[r] == true, `faltou raridade {r} na mochila`)
+	["spinItems bag has no default"] = function()
+		-- A Bolsa Clássica (bag_padrao) é a padrão: fica fora do giro. As
+		-- raridades das mochilas 3D (todas Comum por enquanto) voltam a ser
+		-- conferidas quando o Elizeu definir (como as de corpo).
+		local items = CosmeticCatalog.spinItems("bag")
+		assert(#items > 0, "mochila tem skins no giro")
+		for _, item in items do
+			assert(item.id ~= "bag_padrao", "a padrão não entra no giro")
 		end
 	end,
 
 	["colorOf per slot"] = function()
 		local Cosmetics = require("../src/shared/Defs/Cosmetics")
 		assert(CosmeticCatalog.colorOf(Cosmetics.body_default) == "#DDF3F8", "body usa bodyColor")
-		assert(CosmeticCatalog.colorOf(Cosmetics.bag_default) == "#95603D", "bag usa color")
+		assert(CosmeticCatalog.colorOf(Cosmetics.bag_padrao) == "#842C08", "bag usa color")
 		assert(CosmeticCatalog.colorOf(Cosmetics.crate_default) == "#F2B632", "crate usa bandColor")
 		assert(CosmeticCatalog.colorOf(Cosmetics.book_default) == "#8B5A2B", "outros usam madeira")
 	end,
