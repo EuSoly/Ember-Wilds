@@ -68,7 +68,7 @@ Na barra de comandos, na vista do **servidor**, com o boneco vivo:
 
 ```lua
 local p = game.Players:GetPlayers()[1]
-game.ServerStorage.DevGive:Invoke(p, "hood", 1)          -- dá a peça (testOnly também funciona no Studio)
+game.ServerStorage.DevGive:Invoke(p, { hood = 1, lava_helmet = 1 }) -- dá peças (testOnly também funciona no Studio)
 game.ServerStorage.DevArmor:Invoke(p, "lava_helmet")     -- veste direto, sem trava
 game.ServerStorage.DevArmor:Invoke(p, nil)               -- tira
 ```
