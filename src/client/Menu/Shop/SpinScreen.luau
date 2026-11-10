@@ -480,7 +480,7 @@ function SpinScreen.build(
 		Name = "WonPopup",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(340, 340),
+		Size = UDim2.fromOffset(340, 392), -- espaço para a linha da devolução acima do Pegar
 		BackgroundColor3 = Color3.fromHex("#2B2018"),
 		BorderSizePixel = 0,
 		ZIndex = 30,
