@@ -29,6 +29,7 @@ local StructureFx = require(World:WaitForChild("StructureFx"))
 local WebVisual = require(World:WaitForChild("WebVisual"))
 local WaterRipples = require(World:WaitForChild("WaterRipples"))
 local WaterGlints = require(World:WaitForChild("WaterGlints"))
+local TutorialTrail = require(World:WaitForChild("TutorialTrail"))
 
 local WorldFxController = {}
 
@@ -48,6 +49,7 @@ function WorldFxController.Start(_self)
 	RoofFade.start()
 	WaterRipples.start()
 	WaterGlints.start()
+	TutorialTrail.start()
 
 	-- Fogueiras chegam aos poucos (streaming): liga cada uma quando aparece.
 	local function flicker(instance: Instance)
