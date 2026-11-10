@@ -796,6 +796,7 @@ return table.freeze({
 	["tutorial.badge"] = "Tutorial",
 	["hud.pinned.title"] = "Fixado: {item}",
 	["book.pin"] = "Fixar",
+	["menu.assets.downloading"] = "Baixando artes {loaded}/{total}",
 	["book.unpin"] = "Desafixar",
 	["tutorial.popup.title"] = "Você tem {spins} giros!",
 	["tutorial.popup.body"] = "Gire na roleta para ganhar cosméticos.",

@@ -7,9 +7,11 @@
 --   tools     ferramentas e ícones (livro, hotbar)
 --   world     estruturas e bichos
 --   bags, books, crates, skins   cosméticos
--- A tela de carregamento (ReplicatedFirst/Loading) liga isto e mostra a contagem;
--- se passar do tempo (ou o jogador apertar Pular), o resto continua em segundo
--- plano. Quem abre uma tela pode pedir prioridade para um grupo (prioritize),
+-- A tela de carregamento (ReplicatedFirst/Loading) liga isto e espera só os
+-- grupos que bloqueiam (BLOCKING: interface, ferramentas e ícones; decisão do
+-- Elizeu, 10/11/2026, para não perder jogador no carregamento), com a contagem
+-- deles na barra; o resto continua em segundo plano (o menu mostra a contagem
+-- e os quadradinhos das skins piscam até a arte chegar). Quem abre uma tela pode pedir prioridade para um grupo (prioritize),
 -- que passa na frente da fila. O mesmo módulo é usado pela tela de carregamento
 -- e pelo resto do cliente (mesmo require), então o estado é um só.
 --
@@ -34,12 +36,17 @@ local FOLDERS: { { name: string, folders: { string } } } = {
 	{ name = "skins", folders = { "Skins" } },
 }
 
--- Um grupo da fila: peças com malha e ids de imagem, juntos.
-type Entry = { name: string, items: { any } }
+-- Grupos que a tela de carregamento espera (o resto vai em segundo plano).
+local BLOCKING: { [string]: true } = { ui = true, tools = true }
+
+-- Um grupo: peças com malha e ids de imagem ainda na fila, quantos tinha e
+-- quantos já baixaram.
+type Entry = { name: string, items: { any }, count: number, done: number }
 
 local AssetPreloader = {}
 
 local queue: { Entry } = {}
+local all: { Entry } = {} -- todos os grupos (a fila vai esvaziando)
 local loaded = 0
 local total = 0
 local started = false
@@ -117,24 +124,24 @@ local function build(): { Entry }
 		for _, id in group.ids do
 			table.insert(items, id)
 		end
-		table.insert(out, { name = group.name, items = items })
+		table.insert(out, { name = group.name, items = items, count = #items, done = 0 })
 	end
 	return out
 end
 
-local function nextBatch(): { any }?
+local function nextBatch(): ({ any }?, Entry?)
 	while queue[1] and #queue[1].items == 0 do
 		table.remove(queue, 1)
 	end
 	local group = queue[1]
 	if group == nil then
-		return nil
+		return nil, nil
 	end
 	local batch: { any } = {}
 	while #batch < BATCH and #group.items > 0 do
 		table.insert(batch, table.remove(group.items))
 	end
-	return batch
+	return batch, group
 end
 
 -- Começa a baixar tudo (uma vez só); roda numa thread própria.
@@ -150,12 +157,13 @@ function AssetPreloader.start()
 			game.Loaded:Wait()
 		end
 		queue = build()
+		all = table.clone(queue)
 		for _, group in queue do
 			total += #group.items
 		end
 		while true do
-			local batch = nextBatch()
-			if batch == nil then
+			local batch, group = nextBatch()
+			if batch == nil or group == nil then
 				break
 			end
 			-- O lote conta quando termina, deu certo ou não (um id quebrado não
@@ -165,6 +173,7 @@ function AssetPreloader.start()
 				ContentProvider:PreloadAsync(batch)
 			end)
 			loaded = math.min(loaded + #batch, total)
+			group.done += #batch
 		end
 		loaded = total
 		finished = true
@@ -199,6 +208,42 @@ end
 
 function AssetPreloader.finished(): boolean
 	return finished
+end
+
+local function blockingSums(): (number, number)
+	local done, count = 0, 0
+	for _, group in all do
+		if BLOCKING[group.name] then
+			done += group.done
+			count += group.count
+		end
+	end
+	return done, count
+end
+
+-- Quantas artes dos grupos que bloqueiam já baixaram, e de quantas.
+function AssetPreloader.blockingLoaded(): number
+	return (blockingSums())
+end
+
+function AssetPreloader.blockingTotal(): number
+	local _, count = blockingSums()
+	return count
+end
+
+-- true enquanto a lista dos que bloqueiam está montada e ainda falta baixar.
+function AssetPreloader.blockingCounting(): boolean
+	local done, count = blockingSums()
+	return count > 0 and done < count
+end
+
+-- true quando os grupos que bloqueiam já baixaram (a tela de carregamento pode sair).
+function AssetPreloader.blockingFinished(): boolean
+	if finished then
+		return true
+	end
+	local done, count = blockingSums()
+	return #all > 0 and done >= count
 end
 
 return AssetPreloader

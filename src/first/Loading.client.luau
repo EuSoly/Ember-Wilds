@@ -2,8 +2,9 @@
 -- Tela de carregamento (LocalScript em ReplicatedFirst: roda antes de tudo).
 -- Tira o carregamento padrão do Roblox, mostra o molde LoadingScreen (irmão
 -- deste script) e espera o jogo carregar, o servidor marcar o perfil como
--- pronto (atributo DataReady do Player) e as artes baixarem (AssetPreload:
--- a barra mostra "Carregando artes 312/1.730"). Então some com fade e se destrói.
+-- pronto (atributo DataReady do Player) e as artes da interface, das
+-- ferramentas e dos ícones baixarem (AssetPreload: a barra mostra "Carregando
+-- artes 120/250"; o mundo e os cosméticos vão em segundo plano). Então some com fade e se destrói.
 -- As artes esperam no máximo ASSET_WAIT_MAX; com o perfil pronto, aparece o
 -- botão Pular. Em qualquer dos dois casos o resto continua baixando em
 -- segundo plano.
@@ -114,9 +115,9 @@ local function render(progress: number)
 	setNight(LoadingMath.isNight(progress))
 	if status then
 		status.Text = if preloader
-				and preloader.counting()
+				and preloader.blockingCounting()
 				and progress < 1
-			then LoadingMath.assetStatus(preloader.loaded(), preloader.total())
+			then LoadingMath.assetStatus(preloader.blockingLoaded(), preloader.blockingTotal())
 			else LoadingMath.status(progress)
 	end
 end
@@ -157,8 +158,8 @@ task.spawn(function()
 	local progress = 0
 	render(progress)
 	while progress < 1 do
-		local target = if preloader and preloader.counting()
-			then LoadingMath.assetTarget(preloader.loaded(), preloader.total())
+		local target = if preloader and preloader.blockingCounting()
+			then LoadingMath.assetTarget(preloader.blockingLoaded(), preloader.blockingTotal())
 			else nil
 		progress = LoadingMath.step(progress, task.wait(), ready, target)
 		render(progress)
@@ -180,7 +181,7 @@ while player:GetAttribute(StatNames.DataReady) ~= true do
 end
 
 -- Perfil pronto: espera as artes (com Pular e o tempo máximo).
-while not preloader.finished() and not skipped and os.clock() - assetsStarted < ASSET_WAIT_MAX do
+while not preloader.blockingFinished() and not skipped and os.clock() - assetsStarted < ASSET_WAIT_MAX do
 	skip.Visible = true
 	task.wait(0.1)
 end

@@ -20,6 +20,7 @@ local UIMath = require(Shared:WaitForChild("UIMath"))
 local CrateModel = require(Shared:WaitForChild("Models"):WaitForChild("CrateModel"))
 local Client = script.Parent.Parent.Parent
 local BonecoModel = require(Client:WaitForChild("Boneco"):WaitForChild("BonecoModel"))
+local LoadingShimmer = require(Client:WaitForChild("UI"):WaitForChild("LoadingShimmer"))
 local BagModel = require(script.Parent:WaitForChild("BagModel"))
 local BookModel = require(script.Parent:WaitForChild("BookModel"))
 
@@ -149,6 +150,8 @@ function ItemViewport.build(cosmeticId: string): ViewportFrame
 	if model then
 		model.Parent = viewport
 		ItemViewport.frame(camera, model, ItemViewport.direction(cosmeticId))
+		-- Arte ainda baixando (segundo plano, AssetPreload): brilho até chegar.
+		LoadingShimmer.watch(viewport, model)
 	end
 	return viewport
 end

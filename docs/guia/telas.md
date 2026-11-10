@@ -116,8 +116,11 @@ As malhas e as imagens só baixam na primeira vez que aparecem na tela, e era is
 
 - **Ordem:** imagens da interface (`Shared/*Images`), depois ferramentas e ícones (`Assets.Tools`, `Assets.Icons`), depois mundo (`Structures`, `Mobs`) e por fim os cosméticos (`Bags`, `Books`, `Crates`, `Skins`). São cerca de 1.700 itens.
 - **Malhas vão pela peça e imagens pelo id.** A lista guarda uma peça por malha diferente, porque o `PreloadAsync` trata um id solto como imagem e falha nas malhas ("Asset type does not match").
-- **A barra mostra a contagem** ("Carregando artes 312/1.730", contas em `LoadingMath.assetTarget`/`assetStatus`).
+- **A tela de carregamento espera só a interface, as ferramentas e os ícones** (`BLOCKING` no `AssetPreloader`), umas 250 artes, para não perder jogador no carregamento (decisão do Elizeu, 10/11/2026). O mundo e os cosméticos vão em segundo plano.
+- **A barra mostra a contagem** dessa parte ("Carregando artes 120/250", contas em `LoadingMath.assetTarget`/`assetStatus`).
 - **Espera no máximo 60 s** (`ASSET_WAIT_MAX`). Com o perfil pronto, aparece o botão **Pular**. Nos dois casos o resto continua baixando em segundo plano.
+- **No menu,** enquanto o segundo plano não termina, um indicador pequeno no canto mostra "Baixando artes 812/1.706" (`Menu/AssetProgress`).
+- **Nos quadradinhos 3D** (Cosméticos e loja), um brilho de "carregando" fica por cima até a malha e a textura do item chegarem (`UI/LoadingShimmer`, no `ItemViewport`).
 - **Prioridade:** abrir os Cosméticos (a categoria aberta), a Loja (skins) ou o livro (ferramentas e mundo) passa aquela parte na frente da fila (`AssetPreloader.prioritize`).
 - **No Studio** tudo já está no PC e passa rápido. O tempo de verdade só aparece no jogo publicado, principalmente no celular.
 

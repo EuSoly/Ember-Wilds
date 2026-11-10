@@ -50,6 +50,7 @@ local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local RankingScreen = require(script.Parent:WaitForChild("Ranking"):WaitForChild("RankingScreen"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local TutorialSpinPopup = require(script.Parent:WaitForChild("TutorialSpinPopup"))
+local AssetProgress = require(script.Parent:WaitForChild("AssetProgress"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
 
 local create = vide.create
@@ -573,6 +574,8 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	)
 	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
+	-- Artes ainda baixando em segundo plano: contagem pequena no canto.
+	table.insert(children, AssetProgress.build())
 
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
