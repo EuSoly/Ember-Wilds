@@ -48,9 +48,11 @@ return {
 		local pc, phone = ShopLayout.compute(1280, 720), ShopLayout.compute(667, 375)
 		assert(not pc.compact and phone.compact, "compacto errado")
 		assert(
-			pc.passColumns == 5 and pc.spinColumns == 5 and pc.emberTop == 3 and pc.emberBottom == 2,
+			pc.passColumns == 5 and pc.spinColumns == 4 and pc.emberTop == 3 and pc.emberBottom == 2,
 			"colunas do PC"
 		)
+		-- 4 tipos de giro (sem Acessórios desde 10/11/2026): uma fileira no PC, 2x2 no celular.
+		assert(phone.spinColumns == 2, "giros 2x2 no celular")
 		assert(
 			phone.passColumns < pc.passColumns and phone.spinColumns < pc.spinColumns,
 			"celular devia ter menos colunas"

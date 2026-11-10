@@ -5,13 +5,14 @@
 -- loja volta ao desenho feito por código.
 local ShopImages = {}
 
--- Roleta em 3 camadas no mesmo quadro (320x320): o disco gira, moldura e
--- ponteiro ficam parados por cima. A moldura da arte é um pouco oval e o disco
--- ficava acima do centro: no preparo a moldura foi achatada até a abertura
--- virar círculo, e o disco foi centrado e ajustado a ela.
-ShopImages.WHEEL_DISC = "rbxassetid://110052848988843"
-ShopImages.WHEEL_FRAME = "rbxassetid://105254591878902"
-ShopImages.WHEEL_POINTER = "rbxassetid://139105883979322"
+-- Roleta em camadas no mesmo quadro (640x640): o disco gira e a moldura fica
+-- parada por cima. Desde 10/11/2026 a moldura é a "borda da roleta com o
+-- ponteiro" (o ponteiro já vem preso no topo), então não há camada de ponteiro
+-- (WHEEL_POINTER vazio). A abertura da moldura (690 px na arte, centro em
+-- 619, 628) foi centrada no quadro, e o disco centrado e ajustado a ela.
+ShopImages.WHEEL_DISC = "rbxassetid://83568099234052"
+ShopImages.WHEEL_FRAME = "rbxassetid://77314801478540"
+ShopImages.WHEEL_POINTER = ""
 
 -- Fundos dos cartões (com raios de luz), por cor.
 ShopImages.CARD = {

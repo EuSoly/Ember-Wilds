@@ -56,9 +56,18 @@ return {
 			assert(l.heroBottom - l.heroSize >= l.bodyTop, `{w}x{h}: hero under the pods`)
 			assert(l.actionsY + l.actionsHeight <= h - MenuLayout.MARGIN, `{w}x{h}: buttons off the bottom`)
 			assert(l.actionsHeight >= 44, `{w}x{h}: buttons below touch min`)
-			assert(l.heroCenterX - l.actionsWidth / 2 >= left, `{w}x{h}: buttons over the column`)
-			assert(l.heroCenterX + l.actionsWidth / 2 <= w - MenuLayout.MARGIN, `{w}x{h}: buttons off the right`)
+			assert(l.actionsX >= left, `{w}x{h}: buttons over the column`)
+			assert(l.actionsX + l.actionsWidth <= w - MenuLayout.MARGIN, `{w}x{h}: buttons off the right`)
 		end)
+	end,
+	["hero and play button are centered on the screen when there is room"] = function()
+		for _, size in { { 1920, 1080 }, { 1280, 720 }, { 1128, 793 } } do
+			local w = size[1]
+			local l = MenuLayout.compute(w, size[2])
+			assert(l.heroCenterX == w / 2, `{w}: boneco no centro ({l.heroCenterX})`)
+			local playCenter = l.actionsX + l.kitsButtonWidth + l.actionsGap + l.playButtonWidth / 2
+			assert(math.abs(playCenter - w / 2) < 1e-6, `{w}: JOGAR no centro ({playCenter})`)
+		end
 	end,
 	["kits panel never overlaps the column and fits"] = function()
 		eachSize(function(w, h, l)
@@ -72,7 +81,7 @@ return {
 			local l = MenuLayout.compute(size[1], size[2], true)
 			assert(not l.kitsCoverHero, `{size[1]}: kits should not cover the hero`)
 			assert(l.heroCenterX + l.heroSize / 2 <= l.kitPanelX, `{size[1]}: hero under the kits`)
-			assert(l.heroCenterX + l.actionsWidth / 2 <= l.kitPanelX, `{size[1]}: buttons under the kits`)
+			assert(l.actionsX + l.actionsWidth <= l.kitPanelX, `{size[1]}: buttons under the kits`)
 		end
 	end,
 	["notice never covers the kits header"] = function()

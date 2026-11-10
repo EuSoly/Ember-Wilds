@@ -13,11 +13,12 @@ local DEFAULT_COLOR = "#8B5A2B"
 
 local CosmeticCatalog = {}
 
--- Ordem e lado (esquerda/direita) das categorias da tela. "accessory" ainda
--- não tem slot: aparece como "em breve".
+-- Ordem e lado (esquerda/direita) das categorias da tela. Os acessórios saíram
+-- até terem skins (decisão do Elizeu, 10/11/2026); para voltar, é esta linha
+-- (sem slot, o cartão aparece como "em breve"):
+--   { id = "accessory", side = "left", slot = nil },
 CosmeticCatalog.CATEGORIES = {
 	{ id = "body", side = "left", slot = "body" },
-	{ id = "accessory", side = "left", slot = nil },
 	{ id = "crate", side = "left", slot = "crate" },
 	{ id = "bag", side = "right", slot = "bag" },
 	{ id = "book", side = "right", slot = "book" },

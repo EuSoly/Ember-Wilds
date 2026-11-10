@@ -90,7 +90,8 @@ function ShopLayout.compute(width: number, height: number): Layout
 		contentWidth = contentWidth,
 		contentTop = top + topHeight + m,
 		passColumns = if compact then 3 else 5,
-		spinColumns = if compact then 3 else 5,
+		-- 4 tipos de giro (MockStore.SPIN_TYPES): uma fileira no PC, 2x2 no celular.
+		spinColumns = if compact then 2 else 4,
 		emberTop = if compact then 2 else 3,
 		emberBottom = 2,
 		bannerHeight = if compact then math.clamp(height * 0.42, 120, 200) else math.clamp(width * 0.2, 180, 300),

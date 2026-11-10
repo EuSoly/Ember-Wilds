@@ -2,7 +2,9 @@
 
 O Elizeu gerou por IA e mandou em `Downloads/UI Assets` (08–09/11). Este documento é o plano de uso. **Nada disso entra agora** (decisão do Elizeu, 09/11): o foco é a UI do Ranking; estes assets ficam guardados para depois. As fontes recortadas vão para `assets/ui/shop/` e os ids para `src/shared/ShopImages.luau` (envio na conta do Elizeu, com confirmação dele).
 
-## 1. Borda da roleta com o ponteiro (`borda da roleta com o ponteiro.png`, 1254×1254)
+## 1. Borda da roleta com o ponteiro (`borda da roleta com o ponteiro.png`, 1254×1254) — FEITO (10/11)
+
+No jogo desde 10/11: moldura e disco num quadro de 640×640 (`assets/ui/shop/wheel-frame.png` e `wheel-disc.png`), com a abertura do anel (690 px na arte, centro em 619, 628) centrada e o disco ajustado a ela. A camada de ponteiro saiu (`ShopImages.WHEEL_POINTER = ""`), porque o ponteiro já vem na moldura. Os cartões de giro passaram a ser 4 (sem Acessórios), em 4 colunas no PC e 2 no celular.
 
 Anel de madeira com gemas laranja, folhas embaixo e o ponteiro triangular já preso no topo.
 

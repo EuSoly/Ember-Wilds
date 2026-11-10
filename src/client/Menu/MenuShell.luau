@@ -380,10 +380,10 @@ local function home(layout: () -> Layout): { Instance }
 		Name = "Actions",
 		Visible = homeVisible,
 		BackgroundTransparency = 1,
-		AnchorPoint = Vector2.new(0.5, 0),
+		-- O JOGAR (à direita do grupo) fica embaixo do boneco; os kits, à esquerda.
 		Position = function()
 			local l = layout()
-			return UDim2.fromOffset(l.heroCenterX, l.actionsY)
+			return UDim2.fromOffset(l.actionsX, l.actionsY)
 		end,
 		Size = function()
 			local l = layout()
@@ -408,13 +408,8 @@ local function home(layout: () -> Layout): { Instance }
 		}),
 		Rustic.button({
 			Name = "PlayButton",
-			-- Sem o botão de kits (tutorial pendente), o JOGAR fica no centro.
-			AnchorPoint = function()
-				return if TutorialState.pending() then Vector2.new(0.5, 0) else Vector2.new(1, 0)
-			end,
-			Position = function()
-				return if TutorialState.pending() then UDim2.fromScale(0.5, 0) else UDim2.fromScale(1, 0)
-			end,
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.fromScale(1, 0),
 			Size = function()
 				local l = layout()
 				return UDim2.fromOffset(l.playButtonWidth, l.actionsHeight)

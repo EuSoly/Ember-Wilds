@@ -25,7 +25,8 @@ export type SpinType = { id: string, nameKey: string, theme: string, items: { Sp
 
 -- Um tipo de giro por categoria de skin (a caixa de saque e a de morte usam
 -- as mesmas skins: um tipo só). Os itens são as skins reais do catálogo; tipo
--- sem skins (acessório, por enquanto) fica com a lista vazia: "Em breve".
+-- sem skins fica com a lista vazia: "Em breve". Os acessórios saíram até terem
+-- skins (decisão do Elizeu, 10/11/2026); para voltar, é o bloco comentado.
 MockStore.SPIN_TYPES = {
 	{
 		id = "body",
@@ -33,12 +34,12 @@ MockStore.SPIN_TYPES = {
 		theme = "#D8452B",
 		items = CosmeticCatalog.spinItems("body"),
 	},
-	{
-		id = "accessory",
-		nameKey = "shop.type.accessory",
-		theme = "#7A4FD8",
-		items = CosmeticCatalog.spinItems("accessory"),
-	},
+	-- {
+	-- 	id = "accessory",
+	-- 	nameKey = "shop.type.accessory",
+	-- 	theme = "#7A4FD8",
+	-- 	items = CosmeticCatalog.spinItems("accessory"),
+	-- },
 	{
 		id = "bag",
 		nameKey = "shop.type.bag",

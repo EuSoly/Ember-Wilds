@@ -86,11 +86,15 @@ local function layer(name: string, image: string, zIndex: number): ImageLabel
 	}) :: ImageLabel
 end
 
--- Roleta: com a arte, disco (gira) + moldura + ponteiro; sem ela, o desenho
+-- Roleta: com a arte, disco (gira) + moldura (+ ponteiro, se houver camada à
+-- parte; a moldura atual já traz o ponteiro); sem ela, o desenho
 -- feito por código com um pino de texto. Devolve a roleta e o que gira.
 local function roulette(): (Frame, GuiObject)
 	if ShopImages.has(ShopImages.WHEEL_DISC) then
 		local disc = layer("Disc", ShopImages.WHEEL_DISC, 3)
+		local pointer: Instance? = if ShopImages.has(ShopImages.WHEEL_POINTER)
+			then layer("Pointer", ShopImages.WHEEL_POINTER, 5)
+			else nil
 		local box = create("Frame")({
 			Name = "WheelBox",
 			-- Embaixo, logo acima do botão: em cima ficam as skins de amostra.
@@ -107,7 +111,7 @@ local function roulette(): (Frame, GuiObject)
 			}),
 			disc,
 			layer("Frame", ShopImages.WHEEL_FRAME, 4),
-			layer("Pointer", ShopImages.WHEEL_POINTER, 5),
+			pointer,
 		}) :: Frame
 		return box, disc
 	end

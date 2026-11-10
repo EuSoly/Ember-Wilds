@@ -81,7 +81,7 @@ O `StatusVignette` é um ScreenGui próprio, atrás do HUD, cobrindo a tela toda
 
 A força cresce até 60% perto do zero; zerada (quando a barra começa a machucar), a borda fica cheia e pulsa. Sem arte, cada borda são quatro faixas em degradê feitas por código. Com uma imagem em `HudImages.FX[efeito]` (tela inteira, transparente no meio), a imagem entra no lugar dela.
 
-As seis bordas têm arte do Elizeu (`assets/ui/hud/fx_*.png`, preparadas por `prepare_fx.py`, 1024×576, esticadas na tela). O relógio da arma presa mostra o ícone `ICON.weapon_lock` no medalhão, com os segundos num selo embaixo.
+As seis bordas têm arte do Elizeu (`assets/ui/hud/fx_*.png`, preparadas por `prepare_fx.py`, 1024×576, esticadas na tela). Em 10/11/2026 entraram as novas de dano, frio, calor, fome (terra rachada) e fôlego (água e bolhas), da pasta "Indicadores de dano"; a sede continua com a de 09/11. O relógio da arma presa mostra o ícone `ICON.weapon_lock` no medalhão, com os segundos num selo embaixo.
 
 ## Painel da caixa
 

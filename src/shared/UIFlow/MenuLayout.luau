@@ -81,6 +81,7 @@ export type Layout = {
 	actionsY: number,
 	actionsHeight: number,
 	actionsWidth: number,
+	actionsX: number, -- borda esquerda dos botões Kits + JOGAR (o JOGAR fica embaixo do boneco)
 	kitsButtonWidth: number,
 	playButtonWidth: number,
 	actionsGap: number,
@@ -136,6 +137,16 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 	local heroBottom = actionsY - MenuLayout.HERO_GAP
 	local heroSize = math.min(heroBottom - bodyTop, heroAreaWidth * MenuLayout.HERO_WIDTH_SHARE, MenuLayout.HERO_MAX)
 
+	-- Boneco e JOGAR no meio da tela (pedido do Elizeu, 10/11/2026); com os kits
+	-- abertos ao lado, no meio da área livre. O JOGAR fica embaixo do boneco e o
+	-- botão de kits à esquerda dele; perto da coluna ou dos kits, o centro anda
+	-- só o necessário para nada passar por cima.
+	local playLeftReach = kitsWidth + gap + playWidth / 2 -- do centro do JOGAR até a borda esquerda dos botões
+	local wantedCenter = if kitsOpen and not kitsCover then areaLeft + heroAreaWidth / 2 else width / 2
+	local lowest = areaLeft + math.max(heroSize / 2, playLeftReach)
+	local highest = heroRight - math.max(heroSize / 2, playWidth / 2)
+	local heroCenterX = clamp(wantedCenter, lowest, math.max(lowest, highest))
+
 	-- Aviso de compra simulada: no alto da área do boneco; com os kits cobrindo
 	-- tudo (celular), dentro do painel, logo abaixo do título e do fechar.
 	-- Logo: o maior que couber entre os pods.
@@ -173,12 +184,13 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		panelWidth = areaRight - areaLeft,
 		panelBottom = bottom,
 		contentTop = bodyTop + MenuLayout.TITLE_ROW,
-		heroCenterX = areaLeft + heroAreaWidth / 2,
+		heroCenterX = heroCenterX,
 		heroBottom = heroBottom,
 		heroSize = math.max(heroSize, 0),
 		actionsY = actionsY,
 		actionsHeight = actionsHeight,
 		actionsWidth = actionsWidth,
+		actionsX = heroCenterX - playLeftReach,
 		kitsButtonWidth = kitsWidth,
 		playButtonWidth = playWidth,
 		actionsGap = gap,

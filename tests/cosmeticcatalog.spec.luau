@@ -68,20 +68,19 @@ return {
 	end,
 
 	["CATEGORIES order and sides"] = function()
+		-- Acessórios fora da tela até terem skins (decisão do Elizeu, 10/11/2026).
 		local expected = {
 			{ "body", "left" },
-			{ "accessory", "left" },
 			{ "crate", "left" },
 			{ "bag", "right" },
 			{ "book", "right" },
 		}
-		assert(#CosmeticCatalog.CATEGORIES == 5, "5 categorias")
+		assert(#CosmeticCatalog.CATEGORIES == 4, "4 categorias")
 		for i, pair in expected do
 			local category = CosmeticCatalog.CATEGORIES[i]
 			assert(category.id == pair[1] and category.side == pair[2], `categoria {i} errada`)
+			assert(category.slot ~= nil, `{category.id} com slot`)
 		end
-		assert(CosmeticCatalog.CATEGORIES[2].slot == nil, "accessory sem slot")
-		assert(CosmeticCatalog.CATEGORIES[1].slot == "body", "body com slot")
 	end,
 	["pageOf finds the page of an id"] = function()
 		local items = CosmeticCatalog.items("body")

@@ -46,13 +46,13 @@ return {
 				assert(item.rarity >= 1 and item.rarity <= 5, `{item.id}: raridade {item.rarity}`)
 				assert(string.match(item.color, "^#%x%x%x%x%x%x$"), `{item.id}: cor {item.color}`)
 			end
-			-- Só o acessório (sem slot ainda) fica vazio.
-			assert((#t.items == 0) == (t.id == "accessory"), `{t.id}: {#t.items} itens`)
+			assert(#t.items > 0, `{t.id}: sem itens`)
 		end
-		assert(table.concat(ids, ",") == "body,accessory,bag,book,crate", table.concat(ids, ","))
+		-- Acessórios fora da loja até terem skins (decisão do Elizeu, 10/11/2026).
+		assert(table.concat(ids, ",") == "body,bag,book,crate", table.concat(ids, ","))
 	end,
 
-	["giro do corpo, do livro e do acessório"] = function()
+	["giro do corpo e do livro"] = function()
 		local byId = {}
 		for _, t in MockStore.SPIN_TYPES do
 			byId[t.id] = t
@@ -66,7 +66,7 @@ return {
 			table.insert(got, item.id)
 		end
 		assert(table.concat(got, ",") == table.concat(bodyIds, ","), table.concat(got, ","))
-		assert(#byId.accessory.items == 0, "acessório deveria estar vazio")
+		assert(byId.accessory == nil, "acessório fora da loja")
 		assert(
 			#byId.book.items == 21 and byId.book.items[1].id == "book_default",
 			"21 livros começando por book_default"

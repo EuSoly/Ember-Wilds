@@ -55,12 +55,14 @@ HudImages.JOYSTICK_KNOB = "rbxassetid://109220113444721" -- joystick_knob.png (1
 -- ou já colorida cobrindo a tela inteira, transparente no meio. Vazio = a
 -- borda em degradê feita por código, na cor de cada efeito.
 HudImages.FX = {
-	damage = "rbxassetid://138774314848335", -- fx_damage.png: golpe, vermelho
-	cold = "rbxassetid://129399250486551", -- fx_cold.png: cristais de gelo
-	heat = "rbxassetid://128636899006562", -- fx_heat.png: brasas e lava
-	hunger = "rbxassetid://82206372108794", -- fx_hunger.png: terra e coxinhas
+	-- Arte nova de 10/11/2026 (Downloads/UI Assets/Hud do jogo/Indicadores de
+	-- dano), reduzida para 1024x576; a sede continua com a anterior.
+	damage = "rbxassetid://134791102070208", -- fx_damage.png: bordas vermelhas
+	cold = "rbxassetid://94858225269423", -- fx_cold.png: neve e cristais de gelo
+	heat = "rbxassetid://87821623873428", -- fx_heat.png: fogo
+	hunger = "rbxassetid://82797138078675", -- fx_hunger.png: terra rachada
 	thirst = "rbxassetid://115630801477028", -- fx_thirst.png: gotas nos cantos
-	oxygen = "rbxassetid://135574904661131", -- fx_oxygen.png: ondas e bolhas
+	oxygen = "rbxassetid://135673245855383", -- fx_oxygen.png: água e bolhas
 } :: { [string]: string }
 
 -- Peças esticadas em 9 partes: tamanho da arte e o miolo que estica
