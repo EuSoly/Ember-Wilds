@@ -20,6 +20,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
 local RankingList = require(script.Parent:WaitForChild("RankingList"))
 local RankingPodium = require(script.Parent:WaitForChild("RankingPodium"))
@@ -252,6 +253,9 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		BackgroundColor3 = R.paper,
 		Active = true,
 		ZIndex = 2,
+		PopIn.scale(function()
+			return MenuState.panel() == "ranking"
+		end) :: Instance,
 		create("ImageLabel")({
 			Name = "Frame",
 			Size = UDim2.fromScale(1, 1),

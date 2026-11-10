@@ -33,6 +33,7 @@ local Client = Menu.Parent
 local ScreenState = require(Client:WaitForChild("ScreenState"))
 local RarityBackground = require(Client:WaitForChild("UI"):WaitForChild("RarityBackground"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(Menu:WaitForChild("MenuState"))
 local MenuBoneco = require(Menu:WaitForChild("MenuBoneco"))
@@ -327,6 +328,9 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 		BorderSizePixel = 0,
 		Active = true,
 		ZIndex = 8, -- acima das placas do topo (o saldo usa 6)
+		PopIn.scale(function()
+			return MenuState.panel() == "cosmetics"
+		end) :: Instance,
 		create("UICorner")({ CornerRadius = UDim.new(0, 12) }),
 		create("UIStroke")({
 			Color = R.woodShadow,

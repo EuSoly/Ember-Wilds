@@ -21,6 +21,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
@@ -245,6 +246,9 @@ function ProfilePanel.build(): Frame
 		Active = true,
 		ZIndex = 8, -- acima das placas do topo (o saldo usa 6)
 		create("UISizeConstraint")({ MaxSize = WINDOW_MAX }),
+		PopIn.scale(function()
+			return MenuState.panel() == "profile"
+		end) :: Instance,
 		create("UICorner")({ CornerRadius = UDim.new(0, 12) }),
 		create("UIStroke")({
 			Color = R.woodShadow,

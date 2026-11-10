@@ -104,14 +104,19 @@ local function navButton(id: string, layout: () -> Layout): TextButton
 			return UDim2.new(1, -6, 0, layout().buttonHeight)
 		end,
 		kind = function()
-			return if MenuState.panel() == id then "ember" else "wood"
+			local active = if id == "settings" then SettingsScreen.open() else MenuState.panel() == id
+			return if active then "ember" else "wood"
 		end,
 		text = Strings.get("menu.nav." .. id),
 		maxSize = 20,
+		-- Uma janela por vez: as Configurações abrem no mesmo lugar do Perfil e
+		-- dos Cosméticos, sem fundo escuro, então abrir uma fecha a outra.
 		Activated = function()
 			if id == "settings" then
+				MenuState.open("play")
 				SettingsScreen.open(true)
 			else
+				SettingsScreen.open(false)
 				MenuState.open((id :: any) :: MenuState.Panel)
 			end
 		end,
@@ -317,7 +322,8 @@ local function logo(layout: () -> Layout): ImageLabel
 		Size = function()
 			local panel = MenuState.panel()
 			local height = layout().logoHeight
-			if panel ~= "play" and panel ~= "kits" then
+			-- As Configurações contam como janela aberta (abrem no mesmo lugar).
+			if (panel ~= "play" and panel ~= "kits") or SettingsScreen.open() then
 				height = math.min(height, PANEL_LOGO_HEIGHT)
 			end
 			return UDim2.fromOffset(height * MenuLayout.LOGO_ASPECT, height)
@@ -333,7 +339,11 @@ end
 local function home(layout: () -> Layout): { Instance }
 	local function homeVisible(): boolean
 		local panel = MenuState.panel()
-		return ScreenState.current() == "menu" and (panel == "play" or panel == "kits") and not layout().kitsCoverHero
+		-- As Configurações também escondem (abrem no lugar das outras janelas).
+		return ScreenState.current() == "menu"
+			and (panel == "play" or panel == "kits")
+			and not layout().kitsCoverHero
+			and not SettingsScreen.open()
 	end
 
 	local shadow = create("Frame")({

@@ -414,23 +414,18 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 		ResetOnSpawn = false,
 		Enabled = false,
 		DisplayOrder = 20, -- acima do menu e da HUD
-		IgnoreGuiInset = true,
-		ScreenInsets = Enum.ScreenInsets.None,
+		-- A mesma área do menu (abaixo da barra do Roblox), para a janela ficar
+		-- no mesmo lugar do Perfil e dos Cosméticos (antes ocupava a tela toda e
+		-- ficava mais alta; 10/11/2026).
+		IgnoreGuiInset = false,
+		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 		create("CanvasGroup")({
 			Name = "Root",
 			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
-			-- Fundo escuro: o menu (ou o jogo) aparece atrás; tocar aqui fecha.
-			create("TextButton")({
-				Name = "Dim",
-				Size = UDim2.fromScale(1, 1),
-				Text = "",
-				AutoButtonColor = false,
-				BackgroundColor3 = Color3.new(0, 0, 0),
-				BackgroundTransparency = 0.45,
-				Activated = close,
-			}),
+			-- Sem fundo escuro, como o Perfil e os Cosméticos (pedido do Elizeu,
+			-- 10/11/2026): fecha pelo botão Fechar.
 			create("Frame")({
 				Name = "Window",
 				AnchorPoint = Vector2.new(0.5, 0.5),
