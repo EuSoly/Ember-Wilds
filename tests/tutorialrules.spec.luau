@@ -83,6 +83,27 @@ return {
 		assert(not TutorialRules.protected(100, 700), "aos 600 s acaba")
 	end,
 
+	["highlights_follow_the_step"] = function()
+		local closed = { bookOpen = false, tab = "tools", counts = {} }
+		local h = TutorialRules.highlights(step("pickaxe"), { bookOpen = false, tab = "tools", counts = { wood = 10 } })
+		assert(h.recipe == "wood_pickaxe", "picareta pisca com 10 madeiras")
+		h = TutorialRules.highlights(step("pickaxe"), { bookOpen = false, tab = "tools", counts = { wood = 9 } })
+		assert(h.recipe == nil, "com 9 não pisca")
+		h = TutorialRules.highlights(step("book"), closed)
+		assert(h.bookButton and h.tab == nil and h.cell == nil, "livro fechado: o botão")
+		h = TutorialRules.highlights(step("book"), { bookOpen = true, tab = "tools", counts = {} })
+		assert(not h.bookButton and h.tab == "build" and h.cell == nil, "aberto em outra aba: a aba Construções")
+		h = TutorialRules.highlights(step("book"), { bookOpen = true, tab = "build", counts = {} })
+		assert(h.tab == nil and h.cell == "campfire", "na aba Construções: a Fogueira")
+		h = TutorialRules.highlights(
+			step("campfire"),
+			{ bookOpen = false, tab = "tools", counts = { wood = 25, stone = 5 } }
+		)
+		assert(h.recipe == "campfire", "fogueira pisca com os ingredientes")
+		h = TutorialRules.highlights(nil, closed)
+		assert(h.recipe == nil and not h.bookButton and h.tab == nil and h.cell == nil, "fora do tutorial: nada")
+	end,
+
 	["restart_from_zero"] = function()
 		assert(TutorialRules.advance(1, facts()) == 1, "sem nada, fica na 1")
 	end,

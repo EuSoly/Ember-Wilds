@@ -14,6 +14,8 @@ local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
+local TutorialGlow = require(script.Parent:WaitForChild("TutorialGlow"))
+local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 
 local create = vide.create
 local ICON_SIZE = 52
@@ -225,6 +227,10 @@ local function recipeButton(row: () -> CraftState.Row): TextButton
 			CraftState.toggle(row().id)
 		end,
 		recipeIcon(currentRecipe),
+		-- Tutorial: a receita da etapa pisca quando dá para fazer.
+		TutorialGlow(function()
+			return TutorialState.highlights(false, "tools").recipe == row().id
+		end),
 		create("Frame")({
 			Name = "ProgressFill",
 			Visible = active,

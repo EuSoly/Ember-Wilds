@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local TutorialSteps = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialSteps"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 
@@ -49,6 +50,16 @@ function TutorialState.counts(): { [string]: number }
 		counts[item.id] = (counts[item.id] or 0) + item.count
 	end
 	return counts
+end
+
+-- O que pisca agora (TutorialRules.highlights), com o estado do livro passado
+-- por quem pergunta (o livro não é lido daqui, para não haver ciclo de require).
+function TutorialState.highlights(bookOpen: boolean, tab: string): TutorialRules.Highlights
+	return TutorialRules.highlights(TutorialState.current(), {
+		bookOpen = bookOpen,
+		tab = tab,
+		counts = TutorialState.counts(),
+	})
 end
 
 return TutorialState

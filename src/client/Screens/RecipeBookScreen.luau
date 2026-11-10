@@ -17,12 +17,15 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local CraftState = require(Client:WaitForChild("CraftState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
+local Net = require(Client:WaitForChild("Net"))
+local TutorialState = require(Client:WaitForChild("TutorialState"))
 local UI = Client:WaitForChild("UI")
 local BookSheet = require(UI:WaitForChild("BookSheet"))
 local HudArt = require(UI:WaitForChild("HudArt"))
 local ItemIcon = require(UI:WaitForChild("ItemIcon"))
 local Kit = require(UI:WaitForChild("Kit"))
 local Rustic = require(UI:WaitForChild("Rustic"))
+local TutorialGlow = require(UI:WaitForChild("TutorialGlow"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 
 local create = vide.create
@@ -59,6 +62,11 @@ function RecipeBookScreen.show(itemId: string)
 		RecipeBookScreen.tab(tab)
 	end
 	RecipeBookScreen.selected(itemId)
+end
+
+-- O que pisca no livro na etapa do tutorial de ver uma receita (a aba e o item).
+local function tutorialHighlights()
+	return TutorialState.highlights(RecipeBookScreen.open(), RecipeBookScreen.tab())
 end
 
 local function counts(): { [string]: number }
@@ -128,6 +136,13 @@ local function TabButton(tab: Tab): TextButton
 			maxSize = 18,
 			ZIndex = 2,
 		})
+	)
+	-- Tutorial: pisca a aba que tem a Fogueira.
+	table.insert(
+		children,
+		TutorialGlow(function()
+			return tutorialHighlights().tab == tab
+		end)
 	)
 	return create("TextButton")({
 		Name = "Tab_" .. tab,
@@ -204,6 +219,13 @@ local function Cell(item: () -> string, index: number): TextButton
 			create("UICorner")({ CornerRadius = Theme.slotCorner }),
 		})
 	)
+	-- Tutorial: pisca o item da etapa (a Fogueira) na grade.
+	table.insert(
+		children,
+		TutorialGlow(function()
+			return tutorialHighlights().cell == item()
+		end)
+	)
 	return create("TextButton")({
 		Name = "Cell",
 		LayoutOrder = index,
@@ -260,6 +282,21 @@ local function Book(): Frame
 		local current = vide.untrack(RecipeBookScreen.selected)
 		if current == nil or table.find(list, current) == nil then
 			RecipeBookScreen.selected(list[1])
+		end
+	end)
+
+	-- Tutorial: a ficha do item da etapa aberta no livro conta como "vista".
+	-- Avisa uma vez por etapa (o servidor só conta se for a etapa certa).
+	local sentForStep = 0
+	vide.effect(function()
+		local step = TutorialState.current()
+		local stepIndex = TutorialState.step()
+		if step == nil or step.goal.kind ~= "view" or sentForStep == stepIndex then
+			return
+		end
+		if RecipeBookScreen.open() and RecipeBookScreen.selected() == step.goal.item then
+			sentForStep = stepIndex
+			Net.TutorialBookViewed.Fire({ ItemId = step.goal.item :: string })
 		end
 	end)
 

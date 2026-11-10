@@ -7,10 +7,12 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local RecipeBookScreen = require(script.Parent.Parent:WaitForChild("Screens"):WaitForChild("RecipeBookScreen"))
+local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
+local TutorialGlow = require(script.Parent:WaitForChild("TutorialGlow"))
 
 local function RecipeBookButton(): TextButton
-	return HudArt.roundButton({
+	local button = HudArt.roundButton({
 		Name = "RecipeBookButton",
 		icon = HudImages.ICON.book,
 		fallback = "▤",
@@ -21,6 +23,13 @@ local function RecipeBookButton(): TextButton
 		maxSize = Vector2.new(68, 68),
 		Activated = RecipeBookScreen.toggle,
 	})
+	-- Tutorial: pisca na etapa de ver a receita da Fogueira. (O roundButton não
+	-- recebe filhos nas props: o destaque entra depois.)
+	local glow = TutorialGlow(function()
+		return TutorialState.highlights(RecipeBookScreen.open(), RecipeBookScreen.tab()).bookButton
+	end, UDim.new(1, 0))
+	glow.Parent = button
+	return button
 end
 
 return RecipeBookButton

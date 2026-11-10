@@ -115,6 +115,32 @@ function TutorialRules.canCraft(recipeId: string, counts: { [string]: number }):
 	return true
 end
 
+export type UiState = { bookOpen: boolean, tab: string, counts: { [string]: number } }
+export type Highlights = { recipe: string?, bookButton: boolean, tab: string?, cell: string? }
+
+-- O que pisca na interface agora: a receita da etapa na coluna de receitas
+-- (só quando dá para fazer) e, na etapa do livro, o botão do livro → a aba
+-- Construções ("build") → o item na grade.
+function TutorialRules.highlights(step: Step?, ui: UiState): Highlights
+	local out: Highlights = { recipe = nil, bookButton = false, tab = nil, cell = nil }
+	if step == nil then
+		return out
+	end
+	if step.recipe and TutorialRules.canCraft(step.recipe, ui.counts) then
+		out.recipe = step.recipe
+	end
+	if step.goal.kind == "view" then
+		if not ui.bookOpen then
+			out.bookButton = true
+		elseif ui.tab ~= "build" then
+			out.tab = "build"
+		else
+			out.cell = step.goal.item
+		end
+	end
+	return out
+end
+
 -- true enquanto a proteção vale (desde `startedAt`, em segundos).
 function TutorialRules.protected(startedAt: number, now: number): boolean
 	return now - startedAt < TutorialRules.PROTECTION_SECONDS
