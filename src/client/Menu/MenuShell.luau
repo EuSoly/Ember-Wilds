@@ -59,7 +59,10 @@ local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" 
 
 local MARGIN = MenuLayout.MARGIN
 local TOUCH = Theme.touchMinSize.Y
-local SHADOW_SHARE = Vector2.new(0.7, 0.12) -- sombra no chão, fração do lado do boneco
+local SHADOW_SHARE = Vector2.new(0.62, 0.11) -- sombra no chão, fração do lado do boneco
+-- Altura do centro da sombra acima da base da área do boneco (fração do lado):
+-- os pés do boneco ficam acima da base, por causa do enquadramento da câmera.
+local SHADOW_LIFT = 0.25
 
 type Layout = MenuLayout.Layout
 
@@ -336,16 +339,25 @@ local function home(layout: () -> Layout): { Instance }
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = function()
 			local l = layout()
-			return UDim2.fromOffset(l.heroCenterX, l.heroBottom - l.heroSize * 0.08)
+			return UDim2.fromOffset(l.heroCenterX, l.heroBottom - l.heroSize * SHADOW_LIFT)
 		end,
 		Size = function()
 			local side = layout().heroSize
 			return UDim2.fromOffset(side * SHADOW_SHARE.X, side * SHADOW_SHARE.Y)
 		end,
 		BackgroundColor3 = R.outline,
-		BackgroundTransparency = 0.55,
+		BackgroundTransparency = 0.5,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		-- Some nas pontas, para parecer sombra e não uma barra.
+		create("UIGradient")({
+			Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 1),
+				NumberSequenceKeypoint.new(0.25, 0.2),
+				NumberSequenceKeypoint.new(0.75, 0.2),
+				NumberSequenceKeypoint.new(1, 1),
+			}),
+		}),
 	}) :: Frame
 
 	local boneco = MenuBoneco.build(homeVisible)
