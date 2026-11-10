@@ -404,8 +404,12 @@ local function home(layout: () -> Layout): { Instance }
 			text = Strings.get("menu.play.big"),
 			maxSize = 30,
 			Activated = function()
-				-- Só o kit de pontos vai ao servidor (os de Robux são mockup).
-				Net.RequestSpawn.Fire({ KitId = vide.untrack(KitList.selected) })
+				-- O kit escolhido e a origem (pontos ou saldo); sem escolha, o
+				-- servidor usa o kit para sempre ativo.
+				Net.RequestSpawn.Fire({
+					KitId = vide.untrack(KitList.selected),
+					Source = vide.untrack(KitList.source),
+				})
 			end,
 		}),
 	}) :: Frame

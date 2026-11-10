@@ -23,6 +23,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local CountUp = require(Shared:WaitForChild("UIFlow"):WaitForChild("CountUp"))
 local DeathLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("DeathLayout"))
+local KitChoice = require(Shared:WaitForChild("UIFlow"):WaitForChild("KitChoice"))
 local KitRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("KitRules"))
 local LevelRules = require(Shared:WaitForChild("Data"):WaitForChild("LevelRules"))
 local ProfileFormat = require(Shared:WaitForChild("UIFlow"):WaitForChild("ProfileFormat"))
@@ -32,6 +33,7 @@ local UiImages = require(Shared:WaitForChild("UiImages"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local ShopData = require(Client:WaitForChild("ShopData"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local KitList = require(script.Parent:WaitForChild("KitList"))
@@ -264,8 +266,12 @@ local function summary(shown: Shown, rect: () -> DeathLayout.Rect): Frame
 end
 
 local function kitRow(kit: Defs.KitDef): TextButton
+	-- Dá para escolher com pontos ou com o saldo de 1 vida comprado na loja.
 	local function canBuy(): boolean
-		return KitRules.canBuy(kit, KitList.points())
+		return KitChoice.auto(kit.id, KitList.points(), ShopData.balances(), Defs.Kits) ~= nil
+	end
+	local function balance(): number
+		return ShopData.kitBalance(kit.id)
 	end
 	local function isSelected(): boolean
 		return KitList.selected() == kit.id
@@ -308,7 +314,11 @@ local function kitRow(kit: Defs.KitDef): TextButton
 			FontFace = Theme.font.number,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextTransparency = fade,
-			Text = Strings.get(kit.nameKey),
+			Text = function()
+				local name = Strings.get(kit.nameKey)
+				local n = balance()
+				return if n > 0 then `{name} · {Strings.format("kit.balance", { n = n })}` else name
+			end,
 			maxSize = 19,
 		}),
 		Rustic.label({
@@ -525,7 +535,10 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 						text = Strings.get("death.playAgain"),
 						maxSize = 26,
 						Activated = function()
-							Net.RequestSpawn.Fire({ KitId = vide.untrack(KitList.selected) })
+							Net.RequestSpawn.Fire({
+								KitId = vide.untrack(KitList.selected),
+								Source = vide.untrack(KitList.source),
+							})
 						end,
 					}),
 				}),

@@ -635,6 +635,7 @@ return table.freeze({
 	["kit.kit_survivor"] = "Sobrevivente",
 	["kit.kit_veteran"] = "Veterano",
 	["kit.price"] = "{price} pts",
+	["kit.balance"] = "{n} guardados", -- saldo de 1 vida comprado na loja
 	["kit.points"] = "Pontos para kit: {points}",
 	-- Painel de kits do menu (UI 1)
 	["kit.panel.title"] = "ESCOLHA SEU KIT",

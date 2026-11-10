@@ -9,14 +9,18 @@
 -- - o jogador já está nascendo (marca por jogador: dois pedidos rápidos não
 --   passam juntos, porque LoadCharacterAsync espera);
 -- - o jogador já tem personagem vivo (Humanoid com vida > 0).
--- Kit inexistente ou caro demais = nasce sem kit e sem descontar nada (KitRules).
+-- Kit da vida (um só, KitChoice): o pedido (pontos ou saldo de 1 vida da loja)
+-- se der; senão o kit para sempre ativo; senão nenhum. Pedido que não dá não
+-- desconta nada (KitRules / ShopService.useKitBalance).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local KitChoice = require(ReplicatedStorage.Shared.UIFlow.KitChoice)
 local KitRules = require(ReplicatedStorage.Shared.UIFlow.KitRules)
 local InventoryService = require(script.Parent.InventoryService)
+local ShopService = require(script.Parent.ShopService)
 local Net = require(script.Parent.Parent.Net)
 
 local SpawnService = {}
@@ -38,16 +42,10 @@ local function kitPointsOf(player: Player): number
 	return points
 end
 
--- Cobra e dá o kit. Chamado depois de nascer: o inventário já foi zerado na
+-- Dá os itens do kit. Chamado depois de nascer: o inventário já foi zerado na
 -- morte (DeathService) e os itens entram por cima dele. A mochila é vestida
 -- primeiro, para os itens poderem usar os slots dela.
-local function giveKit(player: Player, kitId: string)
-	local kit = Defs.Kits[kitId]
-	local bought, left = KitRules.buy(kit, kitPointsOf(player))
-	if not bought or kit == nil then
-		return
-	end
-	player:SetAttribute(StatNames.KitPoints, left)
+local function deliverKit(player: Player, kit: Defs.KitDef)
 	for _, entry in kit.items do
 		local def = Defs.Items[entry.id]
 		if def and def.category == "bag" then
@@ -65,6 +63,40 @@ local function giveKit(player: Player, kitId: string)
 			end
 		end
 	end
+end
+
+-- Cobra pela origem e dá o kit. Devolve o id entregue (nil = nenhum).
+local function giveKit(player: Player, kitId: string, source: KitChoice.Source): string?
+	local kit = Defs.Kits[kitId]
+	if kit == nil then
+		return nil
+	end
+	if source == "points" then
+		local bought, left = KitRules.buy(kit, kitPointsOf(player))
+		if not bought then
+			return nil
+		end
+		player:SetAttribute(StatNames.KitPoints, left)
+	elseif source == "balance" then
+		-- O saldo pode ter mudado durante o LoadCharacterAsync: confere de novo.
+		if not ShopService.useKitBalance(player, kitId) then
+			return nil
+		end
+	end
+	deliverKit(player, kit)
+	return kitId
+end
+
+-- Kit e origem desta vida (KitChoice) a partir do pedido do cliente.
+local function chooseKit(player: Player, kitId: string?, source: string?): (string?, KitChoice.Source?)
+	local state = ShopService.kitState(player)
+	local requested: KitChoice.Source? = if source == "points" or source == "balance" then source else nil
+	return KitChoice.resolve({ kitId = kitId, source = requested }, {
+		points = kitPointsOf(player),
+		balance = if state then state.balance else {},
+		owned = if state then state.owned else {},
+		active = if state then state.active else nil,
+	}, Defs.Kits)
 end
 
 -- Itens que todo jogador recebe ao nascer, com ou sem kit (provisório, para
@@ -97,8 +129,9 @@ local function giveSpawnItems(player: Player, kitId: string?)
 	end
 end
 
--- Faz o jogador nascer (com o kit, se der). Devolve true se nasceu.
-function SpawnService.spawn(player: Player, kitId: string?): boolean
+-- Faz o jogador nascer com o kit da vida (pedido `kitId` pela origem
+-- `source`, "points" ou "balance"; ou o permanente ativo). Devolve true se nasceu.
+function SpawnService.spawn(player: Player, kitId: string?, source: string?): boolean
 	if player.Parent ~= Players or player:GetAttribute(StatNames.DataReady) ~= true then
 		return false
 	end
@@ -117,16 +150,15 @@ function SpawnService.spawn(player: Player, kitId: string?): boolean
 	if player.Parent ~= Players then
 		return false
 	end
-	if kitId ~= nil then
-		giveKit(player, kitId)
-	end
-	giveSpawnItems(player, kitId)
+	local chosen, from = chooseKit(player, kitId, source)
+	local given = if chosen ~= nil and from ~= nil then giveKit(player, chosen, from :: KitChoice.Source) else nil
+	giveSpawnItems(player, given)
 	return true
 end
 
 function SpawnService.Start(_self)
-	Net.RequestSpawn.On(function(player: Player, request: { KitId: string? })
-		SpawnService.spawn(player, request.KitId)
+	Net.RequestSpawn.On(function(player: Player, request: { KitId: string?, Source: string? })
+		SpawnService.spawn(player, request.KitId, request.Source)
 	end)
 
 	-- Na primeira entrada no servidor não há pontos para kit (só em memória).
