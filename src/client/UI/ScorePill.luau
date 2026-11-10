@@ -26,6 +26,8 @@ local function ScorePill(): Frame
 		Position = UDim2.fromScale(0.02, 0.02),
 		Size = UDim2.fromScale(0.21, 0.075),
 		create("UIAspectRatioConstraint")({ AspectRatio = 4 }),
+		-- Celular deitado: a escala dava 25 px e o texto sumia (10/11/2026).
+		create("UISizeConstraint")({ MinSize = Theme.hudPillMinSize }),
 		create("ImageLabel")({
 			Name = "Trophy",
 			AnchorPoint = Vector2.new(0, 0.5),

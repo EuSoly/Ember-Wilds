@@ -54,5 +54,8 @@ Theme.strokeThickness = 1
 Theme.touchMinSize = Vector2.new(44, 44)
 Theme.slotMinSize = Vector2.new(44, 44)
 Theme.slotMaxSize = Vector2.new(56, 56)
+-- Altura mínima das placas do topo do HUD (pontos e relógio): a largura sai do
+-- UIAspectRatioConstraint, que é aplicado depois deste mínimo.
+Theme.hudPillMinSize = Vector2.new(0, 38)
 
 return table.freeze(Theme)

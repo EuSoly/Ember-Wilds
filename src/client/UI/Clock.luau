@@ -112,6 +112,8 @@ local function Clock(): Frame
 		Position = UDim2.fromScale(0.5, 0.02),
 		Size = UDim2.fromScale(0.24, 0.075),
 		create("UIAspectRatioConstraint")({ AspectRatio = 4.6 }),
+		-- Celular deitado: a escala dava 25 px e cortava "Dia 1 · 10:00" (10/11/2026).
+		create("UISizeConstraint")({ MinSize = Theme.hudPillMinSize }),
 		-- Janelinha do céu.
 		create("Frame")({
 			Name = "Sky",
