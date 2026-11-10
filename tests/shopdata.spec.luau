@@ -47,25 +47,23 @@ return {
 		assert(d.Passes.vip == true and d.Purchased.bundle_brasa == true, "guardados")
 	end,
 
-	["loading restores forever kits and passes of purchased products"] = function()
+	["cleaning drops false marks and never grants from purchases"] = function()
 		local d = ShopData.empty()
-		-- Perfil visto em 10/11: compras gravadas, mas a posse com false.
-		d.KitsOwned = { kit_veteran = false, kit_starter = false }
-		d.Purchased = { kit_kit_veteran = true, bundle_musgo = true, pass_vip = true }
-		ShopData.restoreOwned(d, Products.all())
-		assert(d.KitsOwned.kit_veteran == true, "kit comprado para sempre volta")
-		assert(d.KitsOwned.kit_explorer == true, "kit que veio no pacote volta")
-		assert(d.Passes.vip == true, "passe comprado volta")
-		assert(d.KitsOwned.kit_starter == nil, "false sem compra some (nada inventado)")
+		-- A posse do perfil é a verdade: tirada à mão (false), não volta pela compra.
+		d.KitsOwned = { kit_veteran = false, kit_starter = true }
+		d.Purchased = { kit_kit_veteran = true, bundle_musgo = true }
+		d.Passes = { vip = false }
+		ShopData.clean(d)
+		assert(d.KitsOwned.kit_veteran == nil, "false some")
+		assert(d.KitsOwned.kit_starter == true, "true fica")
+		assert(d.KitsOwned.kit_explorer == nil, "o pacote comprado não devolve o kit")
+		assert(d.Passes.vip == nil, "passe tirado não volta")
 	end,
 
-	["restoring keeps balances and active kit untouched"] = function()
+	["a forever kit taken away can be bought again"] = function()
 		local d = ShopData.empty()
-		ShopData.addKitBalance(d, "kit_survivor", 2)
-		ShopData.ownKit(d, "kit_veteran")
-		ShopData.setActive(d, "kit_veteran")
-		ShopData.restoreOwned(d, Products.all())
-		assert(d.KitBalance.kit_survivor == 2 and d.KitActive == "kit_veteran", "nada mais muda")
+		ShopData.markPurchased(d, "kit_kit_veteran") -- comprou um dia...
+		assert(PurchaseRules.check(product("kit_kit_veteran"), d, 0, 0) == nil, "...mas não tem mais: pode comprar")
 	end,
 
 	["unknown product is refused"] = function()
@@ -81,10 +79,10 @@ return {
 	end,
 
 	["once products cannot be bought twice"] = function()
-		local vip = product("pass_vip")
+		local brasa = product("bundle_brasa")
 		local d = ShopData.empty()
-		ShopData.markPurchased(d, "pass_vip")
-		assert(PurchaseRules.check(vip, d, 0, 0) == "bought", "VIP já comprado")
+		ShopData.markPurchased(d, "bundle_brasa")
+		assert(PurchaseRules.check(brasa, d, brasa.startsAt :: number, 0) == "bought", "pacote já comprado")
 		local once = product("kitonce_kit_explorer")
 		ShopData.markPurchased(d, "kitonce_kit_explorer")
 		assert(PurchaseRules.check(once, d, 0, 0) == nil, "1 vida compra quantas vezes quiser")

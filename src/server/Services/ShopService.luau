@@ -11,11 +11,14 @@
 -- por kit possuído, saldo de kit, produto "once" comprado e passe.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Shared = ReplicatedStorage.Shared
 local InventoryConfig = require(Shared.InventoryConfig)
 local StatNames = require(Shared.StatNames)
+local Defs = require(Shared.Defs)
 local Products = require(Shared.Shop.Products)
+local Rewards = require(Shared.Shop.Rewards)
 local PurchaseRules = require(Shared.Shop.PurchaseRules)
 local ShopData = require(Shared.Shop.ShopData)
 local ShopTypes = require(Shared.Shop.Types)
@@ -174,6 +177,41 @@ function ShopService.grant(player: Player, reward: Reward, reason: string): bool
 	return true
 end
 
+-- Dá uma recompensa fora da compra (presente, código de resgate, Studio):
+-- valida, entrega, publica e salva. Devolve (false, mensagem) se inválida.
+function ShopService.give(player: Player, reward: Reward, reason: string): (boolean, string?)
+	local problem = Rewards.validate(reward, Defs)
+	if problem ~= nil then
+		return false, problem
+	end
+	if not ShopService.grant(player, reward, reason) then
+		return false, "sem perfil"
+	end
+	publish(player)
+	DataService.save(player)
+	return true, nil
+end
+
+-- Tira um kit ou passe para sempre (a posse no perfil é a verdade). O kit
+-- ativo, se for o tirado, desativa. Os +3 do VIP somem na próxima entrada.
+function ShopService.revoke(player: Player, kind: "kit" | "pass", id: string): boolean
+	local d = shopOf(player)
+	if d == nil then
+		return false
+	end
+	if kind == "kit" then
+		d.KitsOwned[id] = nil
+		if d.KitActive == id then
+			d.KitActive = ""
+		end
+	else
+		d.Passes[id] = nil
+	end
+	publish(player)
+	DataService.save(player)
+	return true
+end
+
 -- Compra um produto. Devolve (true) ou (false, motivo de PurchaseRules ou "error").
 function ShopService.purchase(player: Player, productId: string): (boolean, string?)
 	local d = shopOf(player)
@@ -254,6 +292,18 @@ function ShopService.useKitBalance(player: Player, kitId: string): boolean
 	return true
 end
 
+-- SÓ Studio (DevShopReset): zera a loja do perfil e republica.
+function ShopService.resetForDev(player: Player): boolean
+	local data = DataService.data(player)
+	if not RunService:IsStudio() or data == nil then
+		return false
+	end
+	data.Shop = ShopData.empty()
+	publish(player)
+	DataService.save(player)
+	return true
+end
+
 -- ===== Pedidos do cliente =====
 
 local function onPurchase(player: Player, request: { ProductId: string })
@@ -299,8 +349,8 @@ end
 function ShopService.Start(_self)
 	DataService.onLoaded(function(player: Player, data: { [string]: any })
 		local d = data.Shop :: ShopData.ShopData
-		-- O que foi comprado para sempre (kit, passe) sempre vale (ShopData.restoreOwned).
-		ShopData.restoreOwned(d, Products.all())
+		-- Posse no perfil é a verdade; só limpa marcas false (ShopData.clean).
+		ShopData.clean(d)
 		publish(player)
 		if d.Passes.vip == true then
 			InventoryService.setPassBonus(player, InventoryConfig.vipPass.bonusSlots)

@@ -41,7 +41,7 @@ local BUTTONS_HEIGHT = 48
 local BUTTON_GAP = 6
 local SELECTED_STROKE = 3
 local CORNER_WIDTH = 92 -- canto do saldo: "×N" e o botão "+"
-local CORNER_HEIGHT = 28
+local CORNER_HEIGHT = 24
 
 local KitsPanel = {}
 
@@ -109,25 +109,33 @@ local function buyButtons(kit: Defs.KitDef, points: () -> number, visible: () ->
 				KitShop.buyOnce(kit.id)
 			end,
 		}),
+		-- Já tem o kit para sempre (o "+" abriu as compras para mais saldo): "Comprado".
 		third(3, {
 			Name = "RobuxForever",
-			kind = "wood",
-			text = Strings.format("kit.robux", { price = if robux then robux.forever else 0 }),
+			kind = function()
+				return if ShopData.kitOwned(kit.id) then "disabled" else "wood"
+			end,
+			text = function()
+				if ShopData.kitOwned(kit.id) then
+					return Strings.get("shop.bundle.bought")
+				end
+				return Strings.format("kit.robux", { price = if robux then robux.forever else 0 })
+			end,
 			subtext = Strings.get("kit.forever"),
 			Activated = function()
-				KitShop.buyForever(kit.id)
+				if not ShopData.kitOwned(kit.id) then
+					KitShop.buyForever(kit.id)
+				end
 			end,
 		}),
 	}) :: Frame
 end
 
-local function useButton(kit: Defs.KitDef): TextButton
+local function useButton(kit: Defs.KitDef, visible: () -> boolean): TextButton
 	return Rustic.button({
 		Name = "Use",
 		Size = UDim2.fromScale(1, 1),
-		Visible = function()
-			return ShopData.kitOwned(kit.id)
-		end,
+		Visible = visible,
 		kind = "success",
 		text = function()
 			return Strings.get(if ShopData.kitActive() == kit.id then "kit.active" else "kit.use")
@@ -163,7 +171,7 @@ local function balanceCorner(kit: Defs.KitDef, expanded: (() -> boolean) & ((boo
 	return create("Frame")({
 		Name = "Balance",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -10, 0, 6),
+		Position = UDim2.new(1, -10, 0, 8),
 		Size = UDim2.fromOffset(CORNER_WIDTH, CORNER_HEIGHT),
 		BackgroundTransparency = 1,
 		Visible = function()
@@ -176,32 +184,23 @@ local function balanceCorner(kit: Defs.KitDef, expanded: (() -> boolean) & ((boo
 			Padding = UDim.new(0, 6),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
+		-- Só o número, sem fundo (não cobre a descrição do kit).
 		Rustic.label({
 			Name = "Count",
+			dark = true,
 			LayoutOrder = 1,
 			Size = UDim2.new(0, CORNER_WIDTH - CORNER_HEIGHT - 6, 1, 0),
-			BackgroundTransparency = 0,
-			BackgroundColor3 = R.leather,
 			FontFace = Theme.font.number,
+			TextXAlignment = Enum.TextXAlignment.Right,
 			Text = function()
 				return Strings.format("kit.uses", { n = balance() })
 			end,
-			maxSize = 16,
-			create("UICorner")({ CornerRadius = UDim.new(0, 4) }),
-			create("UIStroke")({
-				Color = R.outline,
-				Thickness = 2,
-				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			}),
+			maxSize = 18,
 		}),
-		-- Com o kit para sempre não há o que comprar: sem o "+".
 		Rustic.button({
 			Name = "More",
 			LayoutOrder = 2,
 			Size = UDim2.fromOffset(CORNER_HEIGHT, CORNER_HEIGHT),
-			Visible = function()
-				return not ShopData.kitOwned(kit.id)
-			end,
 			kind = function()
 				return if expanded() then "ember" else "wood"
 			end,
@@ -235,8 +234,12 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 			expanded(false)
 		end
 	end)
+	-- Compras: sem nada para usar, ou quando o "+" (que só existe com saldo) abre.
 	local function showBuy(): boolean
-		return not owned() and (not hasBalance() or expanded())
+		return expanded() or (not owned() and not hasBalance())
+	end
+	local function showUse(): boolean
+		return owned() and not expanded()
 	end
 	local function showBalanceUse(): boolean
 		return not owned() and hasBalance() and not expanded()
@@ -299,7 +302,7 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 			Size = UDim2.new(1, -20, 0, BUTTONS_HEIGHT),
 			BackgroundTransparency = 1,
 			buyButtons(kit, points, showBuy) :: Instance,
-			useButton(kit) :: Instance,
+			useButton(kit, showUse) :: Instance,
 			balanceUseButton(kit, showBalanceUse) :: Instance,
 		}),
 	}) :: Frame

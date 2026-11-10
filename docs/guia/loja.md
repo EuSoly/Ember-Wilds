@@ -29,9 +29,26 @@ Os giros são **dois saldos**, `normal` e `paid` (especial), que servem em **qua
 ### Kits
 
 - **Pontos** (como antes): os pontos da última vida pagam o kit.
-- **1 vida (Robux):** cada compra soma 1 no **saldo daquele kit** ("3 guardados"). Nascer com ele gasta 1.
+- **1 vida (Robux):** cada compra soma 1 no **saldo daquele kit**. Com saldo, o painel mostra **Usar** (como o do kit para sempre), o número de usos no canto ("×3") e um **+** que troca o Usar pelas opções de compra. Nascer com ele gasta 1.
 - **Para sempre (Robux):** a posse fica salva; **Usar** ativa (vem em toda vida), **Ativo** desativa.
 - **Qual vai:** o jogador escolhe o kit e de onde ele sai (pontos ou saldo). Sem escolha, vem o kit para sempre ativo. Um kit por vida (`UIFlow/KitChoice`, igual no cliente e no servidor).
+
+### Posse: a verdade é o perfil
+
+Kits para sempre e passes valem pelo que está **no perfil** (`Shop.KitsOwned`, `Shop.Passes`), não pelo histórico de compras. Comprou, ganhou num pacote ou de presente: está lá. Tiraram: some, e o kit volta a poder ser comprado. `Shop.Purchased` só serve para os pacotes (cada jogador compra uma vez). Ao carregar, `ShopData.clean` apaga marcas que não sejam `true`.
+
+**Dar ou tirar (Studio, barra de comandos do servidor):**
+
+```lua
+local SS, p = game.ServerStorage, game.Players:GetPlayers()[1]
+SS.DevShopGrant:Invoke(p, { kind = "kit", id = "kit_veteran" })          -- kit para sempre
+SS.DevShopGrant:Invoke(p, { kind = "kitOnce", id = "kit_starter", count = 3 }) -- 3 usos de 1 vida
+SS.DevShopGrant:Invoke(p, { kind = "spins", spin = "paid", count = 5 })    -- giros especiais
+SS.DevShopRevoke:Invoke(p, "kit", "kit_veteran")                            -- tira o kit para sempre
+SS.DevShopReset:Invoke(p)                                                    -- zera a loja do perfil
+```
+
+No jogo, presentes e códigos de resgate devem entregar por `ShopService.give(player, recompensa, motivo)` (valida, entrega, publica e salva).
 
 ### VIP
 

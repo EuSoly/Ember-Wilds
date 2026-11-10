@@ -27,12 +27,15 @@ function PurchaseRules.check(
 	if not ShopDates.isOpen(product.startsAt, product.endsAt, now) then
 		return "closed"
 	end
-	if product.once and d.Purchased[product.id] == true then
-		return "bought"
-	end
-	-- Kit ou passe para sempre que já veio por outro caminho (ex. num pacote).
-	-- Pacotes não entram: o que falta dentro deles ainda é entregue.
-	if product.kind ~= "bundle" and Rewards.allOwned(product.rewards, d) then
+	-- Kit ou passe para sempre: vale a POSSE no perfil (KitsOwned/Passes), não o
+	-- histórico de compras. Já tem (comprou, veio num pacote, ganhou de
+	-- presente) = recusa; tiraram dele = pode comprar de novo.
+	if product.kind == "kit" or product.kind == "pass" then
+		if Rewards.allOwned(product.rewards, d) then
+			return "bought"
+		end
+	elseif product.once and d.Purchased[product.id] == true then
+		-- Pacotes: cada jogador compra uma vez (o que tiver dentro já possuído é pulado).
 		return "bought"
 	end
 	if product.price.currency == "ember" then

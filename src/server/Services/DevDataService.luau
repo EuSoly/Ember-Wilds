@@ -12,6 +12,14 @@
 -- - ServerStorage.DevProfile:Invoke(player) -> string: o perfil atual em JSON.
 -- - ServerStorage.DevResetProfile:Invoke(player) -> boolean: apaga o perfil de
 --   dev (store Dev_) e expulsa o jogador.
+-- - ServerStorage.DevShopReset:Invoke(player) -> boolean: zera só a loja do
+--   perfil (giros, kits para sempre, saldos de kit, compras, passes). Os +3
+--   espaços do VIP somem na próxima entrada.
+-- - ServerStorage.DevShopGrant:Invoke(player, { kind = "kit", id = "kit_veteran" })
+--   -> "ok" ou o erro: dá qualquer recompensa da loja (kit, kitOnce com count,
+--   spins, ember, cosmetic, pass), pelo mesmo caminho dos presentes/códigos.
+-- - ServerStorage.DevShopRevoke:Invoke(player, "kit", "kit_veteran") -> boolean:
+--   tira um kit ou passe para sempre ("kit" ou "pass").
 -- - ServerStorage.DevBar:Invoke(player, "Hunger", 0): grava uma barra (Health,
 --   Hunger, Cold, Thirst ou Heat), de 0 a 100, para testar a sobrevivência.
 -- - ServerStorage.DevArmor:Invoke(player, "helmet") -> boolean: veste uma
@@ -36,6 +44,7 @@ local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
 local InventoryService = require(script.Parent.InventoryService)
 local RankService = require(script.Parent.RankService)
+local ShopService = require(script.Parent.ShopService)
 local StatsService = require(script.Parent.StatsService)
 
 -- Pacotes prontos do DevGive (nome -> itens).
@@ -94,6 +103,22 @@ function DevDataService.Start(_self)
 
 	newCommand("DevResetProfile", function(player: Player): boolean
 		return DataService.resetForDev(player)
+	end)
+
+	newCommand("DevShopReset", function(player: Player): boolean
+		return ShopService.resetForDev(player)
+	end)
+
+	newCommand("DevShopGrant", function(player: Player, reward: { [string]: any }): string
+		local ok, problem = ShopService.give(player, reward :: any, "dev")
+		return if ok then "ok" else tostring(problem)
+	end)
+
+	newCommand("DevShopRevoke", function(player: Player, kind: string, id: string): boolean
+		if kind ~= "kit" and kind ~= "pass" then
+			return false
+		end
+		return ShopService.revoke(player, kind, id)
 	end)
 
 	local bars = { StatNames.Health, StatNames.Hunger, StatNames.Cold, StatNames.Thirst, StatNames.Heat }
