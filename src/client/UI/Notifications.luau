@@ -15,6 +15,7 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
+local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 
 local create = vide.create
 
@@ -106,7 +107,11 @@ function Notifications.Component(): Frame
 	return create("Frame")({
 		Name = "Notifications",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.fromScale(0.98, 0.4), -- abaixo dos botões redondos (0,25 + tamanho)
+		-- Abaixo dos botões redondos (0,25 + tamanho); no tutorial, abaixo do
+		-- quadrinho da missão (UI/TutorialPanel).
+		Position = function()
+			return UDim2.fromScale(0.98, if TutorialState.step() > 0 then 0.47 else 0.4)
+		end,
 		Size = UDim2.fromScale(0.26, 0.16),
 		BackgroundTransparency = 1,
 		create("UIListLayout")({

@@ -791,4 +791,6 @@ return table.freeze({
 	["tutorial.step.book"] = "Abra o livro e veja a receita da Fogueira",
 	["tutorial.step.campfire"] = "Faça uma Fogueira e coloque no chão",
 	["tutorial.step.water"] = "Vá até a água e beba",
+	["tutorial.header"] = "Tutorial {step}/{total}",
+	["tutorial.done"] = "Tutorial completo! Você ganhou {spins} giros",
 })
