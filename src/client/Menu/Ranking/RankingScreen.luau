@@ -31,6 +31,7 @@ local R = Theme.rustic
 
 local BORDER = 40 -- px lógicos da moldura do quadro (a arte é esticada em 9 partes)
 local BORDER_COMPACT = 24
+local ENDS_COMPACT = 20 -- altura da legenda "termina em" embaixo do pódio (compacto)
 local TAB_TALL = 50 -- aba desta altura para cima: ícone grande (PC)
 local HEADER_TOP = 14 -- linha do título, a partir do topo da janela
 local TROPHY = 64
@@ -174,6 +175,11 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 				-- Empilhado: o pódio fica com até 42% da altura do corpo.
 				return UDim2.new(0, s.podiumWidth, 0.42, 0)
 			end
+			if compact() then
+				-- Compacto: sem a seta, o pódio usa a altura toda (com a legenda
+				-- "termina em" embaixo, na altura da linha "você").
+				return UDim2.new(0, s.podiumWidth, 1, 0)
+			end
 			-- Lado a lado: termina na altura do fim da lista (embaixo fica a linha
 			-- "você", com a seta à esquerda dela).
 			return UDim2.new(0, s.podiumWidth, 1, -RankingList.meSpace(s.rowHeight))
@@ -181,22 +187,27 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		create("Frame")({
 			Name = "Bottom",
 			BackgroundTransparency = 1,
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 1),
-			Size = UDim2.fromScale(1, 1),
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.fromScale(0.5, 0),
+			Size = function()
+				return if compact() then UDim2.new(1, 0, 1, -(ENDS_COMPACT + 4)) else UDim2.fromScale(1, 1)
+			end,
 			create("UIListLayout")({
 				VerticalAlignment = Enum.VerticalAlignment.Bottom,
 				HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			}),
 			RankingPodium.build(),
 		}),
-		-- Compacto: o "termina em…" fica no canto de cima do pódio (espaço livre).
+		-- Compacto: o "termina em…" é a legenda embaixo do pódio (no canto de
+		-- cima ele batia no nome do 1º lugar).
 		Rustic.label({
 			Name = "EndsInCompact",
-			Size = UDim2.new(1, 0, 0, 22),
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.fromScale(0.5, 1),
+			Size = UDim2.new(1, 0, 0, ENDS_COMPACT),
 			FontFace = Theme.font.number,
 			dark = true,
-			TextXAlignment = Enum.TextXAlignment.Left,
+			TextXAlignment = Enum.TextXAlignment.Center,
 			Text = countdown,
 			Visible = compact,
 			maxSize = 16,
@@ -223,7 +234,7 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		RankingList.build({
 			rowHeight = rowHeight,
 			showArrow = function()
-				return not sizes().stacked
+				return not sizes().stacked and not compact()
 			end,
 		}),
 	})

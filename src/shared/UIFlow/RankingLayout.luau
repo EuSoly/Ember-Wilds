@@ -43,7 +43,9 @@ function RankingLayout.compute(width: number, height: number, scale: number): La
 	-- 16 o "termina em" e a linha "você" ficavam por cima da madeira (10/11/2026).
 	local inset = if compact then 24 else 30
 	local headerHeight = if compact then 0 else 58
-	local tabTop = if compact then 12 else 14 + headerHeight - 4
+	-- Compacto: as abas (e o X) começam dentro da moldura; com 12 ficavam por
+	-- cima da madeira de cima (10/11/2026).
+	local tabTop = if compact then inset - 2 else 14 + headerHeight - 4
 	local bodyTop = tabTop + tabHeight + (if compact then 8 else 10)
 	local bodyWidth = math.max(width - 2 * inset, 0)
 	local bodyHeight = math.max(height - bodyTop - inset, 0)
