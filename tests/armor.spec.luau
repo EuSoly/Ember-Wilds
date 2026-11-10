@@ -1,5 +1,7 @@
 --!strict
 local ArmorRules = require("../src/shared/Survival/ArmorRules")
+local MobRules = require("../src/shared/Mobs/MobRules")
+local SurvivalConfig = require("../src/shared/SurvivalConfig")
 
 local function helmet(armor: any): any
 	return { id = "helmet", nameKey = "item.helmet", category = "armor", maxStack = 1, armor = armor }
@@ -81,6 +83,22 @@ return {
 		assert(not ArmorRules.isStealthy(m, 20, 15), "bateu há pouco: visível")
 		assert(ArmorRules.isStealthy(m, 20, 20), "passou o tempo: escondido de novo")
 		assert(not ArmorRules.isStealthy(ArmorRules.NONE, nil, 5), "sem explorador: visível")
+	end,
+
+	["explorer stays off after hitting without it"] = function()
+		-- Bateu sem o chapéu (no instante 100) e vestiu logo depois: o mob que
+		-- apanhou continua vendo o jogador até o tempo passar.
+		local offUntil = ArmorRules.hitOffUntil(100)
+		local m = ArmorRules.modifiers(helmet({ explorer = true }))
+		assert(not ArmorRules.isStealthy(m, offUntil, 101), "vestir depois de bater não esconde na hora")
+		assert(ArmorRules.isStealthy(m, offUntil, 100 + SurvivalConfig.EXPLORER_OFF), "esconde depois do tempo")
+	end,
+
+	["mobs give up no later than the explorer comes back"] = function()
+		-- O mob que apanhou persegue até GIVE_UP sem novo golpe; o explorador só
+		-- volta a esconder depois de EXPLORER_OFF. Se GIVE_UP passar de
+		-- EXPLORER_OFF, a vingança seria cortada antes da hora.
+		assert(MobRules.GIVE_UP <= SurvivalConfig.EXPLORER_OFF, "GIVE_UP precisa caber em EXPLORER_OFF")
 	end,
 
 	["item without armor block is neutral"] = function()

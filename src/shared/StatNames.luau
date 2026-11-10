@@ -164,12 +164,6 @@ return table.freeze({
 	-- Id do item de armadura vestido (category "armor"), ou nil; atributo no
 	-- Player (escrito pelo ArmorService).
 	Armor = "Armor",
-	-- Instante (relógio do servidor) até o qual não dá para vestir outra peça
-	-- (SurvivalConfig.ARMOR_SWAP_LOCK), atributo no Player.
-	ArmorLockUntil = "ArmorLockUntil",
-	-- Instante em que o Chapéu de Explorador volta a esconder o dono depois de
-	-- ele bater em algo (SurvivalConfig.EXPLORER_OFF), atributo no Player.
-	ExplorerOffUntil = "ExplorerOffUntil",
 	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
 	-- o frio sobe (SurvivalService).
 	HeatSourceTag = "HeatSource",

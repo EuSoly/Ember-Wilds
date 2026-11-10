@@ -138,6 +138,13 @@ function ArmorRules.canSwap(lockUntil: number?, now: number): boolean
 	return lockUntil == nil or now >= lockUntil
 end
 
+-- Instante em que o explorador volta a esconder quem bateu em algo agora.
+-- Vale com QUALQUER peça (bater sem o chapéu e vestir logo depois não esconde
+-- de quem apanhou).
+function ArmorRules.hitOffUntil(now: number): number
+	return now + C.EXPLORER_OFF
+end
+
 -- Explorador ligado: a peça tem `explorer` e o dono não bateu em nada há
 -- pouco (`offUntil` = instante em que o efeito volta; nil = nunca bateu).
 function ArmorRules.isStealthy(mods: Modifiers, offUntil: number?, now: number): boolean

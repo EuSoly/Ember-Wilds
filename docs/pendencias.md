@@ -9,7 +9,9 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Peças sem receita:** os gorros de Natal e de elfo (no Starve saem do presente de Natal).
 - **Itens de quest sem modelo:** gemas, cubos, óculos de piloto, peles de lobo negro e branco, vaga-lume (a grade mostra a sigla).
 - **Chapéu de pele esquentando:** de dia na floresta ele enche o frio, mas não passa para a barra de calor (o calor só vem do fogo e do bioma).
+- **Conferir no Studio antes de liberar (não deu para ver no dia: o Rojo não estava conectado):** a peça no boneco (pivô no centro do corpo, frente para onde o boneco olha, solda acompanhando andar e golpe, peça some ao trocar/morrer), o nick escondido pelo capuz para o outro jogador (Test → 2 Players) e os ícones na aba Armaduras do livro.
 - **Ícone das peças:** ângulo `ARMOR_TILT` (60°) escolhido sem ver todas; ajustar com `IconeGiro` nas que saírem estranhas.
+- **Estações com água:** só receitas `testOnly` usam (coroas, capacetes de dragão e lava). No cliente, `WaterSim.isNearWater` depende de as peças de `Map.Water` já terem chegado pelo streaming; longe da água grande, o livro pode mostrar "perto da água" apagado até carregar.
 - **Workspace.armaduras-32:** o import original continua no Workspace do place; pode apagar (as cópias usadas estão em `Assets.Armor`).
 
 ## Antes de lançar (09/11)
