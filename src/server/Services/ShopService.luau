@@ -298,8 +298,10 @@ end
 
 function ShopService.Start(_self)
 	DataService.onLoaded(function(player: Player, data: { [string]: any })
-		publish(player)
 		local d = data.Shop :: ShopData.ShopData
+		-- O que foi comprado para sempre (kit, passe) sempre vale (ShopData.restoreOwned).
+		ShopData.restoreOwned(d, Products.all())
+		publish(player)
 		if d.Passes.vip == true then
 			InventoryService.setPassBonus(player, InventoryConfig.vipPass.bonusSlots)
 		end

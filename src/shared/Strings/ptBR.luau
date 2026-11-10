@@ -629,7 +629,7 @@ return table.freeze({
 	["kit.kit_veteran"] = "Veterano",
 	["kit.price"] = "{price} pts",
 	["kit.balance"] = "{n} guardado(s)", -- saldo de 1 vida comprado na loja
-	["kit.useOne"] = "Usar 1 · {n} guardado(s)",
+	["kit.uses"] = "×{n}", -- usos guardados (saldo de 1 vida), no canto da linha do kit
 	["kit.points"] = "Pontos para kit: {points}",
 	-- Painel de kits do menu (UI 1)
 	["kit.panel.title"] = "ESCOLHA SEU KIT",

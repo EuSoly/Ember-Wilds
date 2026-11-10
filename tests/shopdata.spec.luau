@@ -47,6 +47,27 @@ return {
 		assert(d.Passes.vip == true and d.Purchased.bundle_brasa == true, "guardados")
 	end,
 
+	["loading restores forever kits and passes of purchased products"] = function()
+		local d = ShopData.empty()
+		-- Perfil visto em 10/11: compras gravadas, mas a posse com false.
+		d.KitsOwned = { kit_veteran = false, kit_starter = false }
+		d.Purchased = { kit_kit_veteran = true, bundle_musgo = true, pass_vip = true }
+		ShopData.restoreOwned(d, Products.all())
+		assert(d.KitsOwned.kit_veteran == true, "kit comprado para sempre volta")
+		assert(d.KitsOwned.kit_explorer == true, "kit que veio no pacote volta")
+		assert(d.Passes.vip == true, "passe comprado volta")
+		assert(d.KitsOwned.kit_starter == nil, "false sem compra some (nada inventado)")
+	end,
+
+	["restoring keeps balances and active kit untouched"] = function()
+		local d = ShopData.empty()
+		ShopData.addKitBalance(d, "kit_survivor", 2)
+		ShopData.ownKit(d, "kit_veteran")
+		ShopData.setActive(d, "kit_veteran")
+		ShopData.restoreOwned(d, Products.all())
+		assert(d.KitBalance.kit_survivor == 2 and d.KitActive == "kit_veteran", "nada mais muda")
+	end,
+
 	["unknown product is refused"] = function()
 		assert(PurchaseRules.check(nil, ShopData.empty(), 0, 0) == "unknown", "produto inexistente")
 	end,

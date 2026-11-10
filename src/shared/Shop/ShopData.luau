@@ -84,4 +84,30 @@ function ShopData.markPurchased(d: ShopData, productId: string)
 	d.Purchased[productId] = true
 end
 
+-- Ao carregar o perfil: o que os produtos comprados dão para sempre (kit,
+-- passe) volta a valer, e marcas `false` (não deveriam existir) somem.
+-- Rede de segurança: em 10/11 um perfil de teste apareceu com os kits para
+-- sempre gravados como false, com as compras certas em Purchased; a causa
+-- não foi achada. Idempotente: não mexe em saldos nem no kit ativo.
+function ShopData.restoreOwned(d: ShopData, products: { ShopTypes.Product })
+	for _, set in { d.KitsOwned, d.Passes, d.Purchased } :: { { [string]: boolean } } do
+		for key, value in set do
+			if value ~= true then
+				set[key] = nil
+			end
+		end
+	end
+	for _, product in products do
+		if d.Purchased[product.id] == true then
+			for _, reward in product.rewards do
+				if reward.kind == "kit" and reward.id then
+					d.KitsOwned[reward.id] = true
+				elseif reward.kind == "pass" and reward.id then
+					d.Passes[reward.id] = true
+				end
+			end
+		end
+	end
+end
+
 return ShopData

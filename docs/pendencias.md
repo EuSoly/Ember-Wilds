@@ -5,6 +5,7 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 ## Antes de lançar (09/11)
 
 - **Loja entregando de graça (desde 09/11):** tudo com preço em Robux (pacotes, giros especiais, kits, VIP, Golden Ember) é entregue sem cobrar, no jogo aberto (`ShopService.charge`). Antes de ligar o Robux de verdade: **zerar todos os perfis** (decisão do Elizeu) e trocar o `charge` pelo `MarketplaceService` (veja `docs/guia/loja.md`, "Ligar o Robux de verdade").
+- **Kits para sempre gravados como `false` (10/11, causa não achada):** o perfil de teste apareceu com `Shop.KitsOwned` todo `false`, com as compras certas em `Shop.Purchased`. Nenhum código escreve `false` ali; comprar, ativar, nascer, morrer, sair e entrar foram testados e gravam certo. Rede de segurança: `ShopData.restoreOwned` (ao carregar) devolve o que foi comprado para sempre. Se voltar a acontecer, anotar o que foi feito antes (e olhar o `Dev_PlayerData`).
 - **Picaretas acima de ouro fora do jogo:** diamante, ametista e reidite estão `testOnly` desde 09/11 (o jogo vai só até ouro). Para liberar, tirar o `testOnly` delas em `Defs/Items.luau`.
 
 ## Livro de receitas (09/11)
