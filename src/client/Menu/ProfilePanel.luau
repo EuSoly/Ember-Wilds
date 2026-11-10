@@ -22,6 +22,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
+local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
@@ -240,7 +241,10 @@ function ProfilePanel.build(): Frame
 		end,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4),
-		Size = UDim2.new(0.92, 0, 0.86, -TITLE_HEIGHT / 2),
+		-- Tela baixa (celular deitado): quase toda a altura e o X no canto.
+		Size = function()
+			return UDim2.new(0.92, 0, ScreenMetrics.windowShare(), -TITLE_HEIGHT / 2)
+		end,
 		BackgroundColor3 = BODY,
 		BorderSizePixel = 0,
 		Active = true,
@@ -275,7 +279,10 @@ function ProfilePanel.build(): Frame
 		create("ScrollingFrame")({
 			Name = "List",
 			Position = UDim2.fromOffset(16, TITLE_HEIGHT / 2 + 12),
-			Size = UDim2.new(1, -32, 1, -(TITLE_HEIGHT / 2 + 12 + CLOSE_HEIGHT + 28)),
+			Size = function()
+				local bottom = if ScreenMetrics.short() then 16 else CLOSE_HEIGHT + 28
+				return UDim2.new(1, -32, 1, -(TITLE_HEIGHT / 2 + 12 + bottom))
+			end,
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			AutomaticCanvasSize = Enum.AutomaticSize.Y,
@@ -292,11 +299,20 @@ function ProfilePanel.build(): Frame
 		}),
 		Rustic.button({
 			Name = "CloseButton",
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -14),
-			Size = UDim2.fromOffset(200, CLOSE_HEIGHT),
+			AnchorPoint = function()
+				return if ScreenMetrics.short() then Vector2.new(1, 0.5) else Vector2.new(0.5, 1)
+			end,
+			Position = function()
+				return if ScreenMetrics.short() then UDim2.new(1, -12, 0, 0) else UDim2.new(0.5, 0, 1, -14)
+			end,
+			Size = function()
+				return if ScreenMetrics.short() then UDim2.fromOffset(44, 44) else UDim2.fromOffset(200, CLOSE_HEIGHT)
+			end,
+			ZIndex = 4,
 			kind = "ember",
-			text = Strings.get("menu.close"),
+			text = function()
+				return if ScreenMetrics.short() then "X" else Strings.get("menu.close")
+			end,
 			maxSize = 24,
 			Activated = function()
 				MenuState.open("play")
