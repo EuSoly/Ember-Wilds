@@ -86,7 +86,7 @@ local function runCrowd()
 			setIfChanged(member.model, StatNames.Using, using)
 			setIfChanged(member.model, StatNames.Equipped, equipped)
 			if now >= member.nextHurt then
-				CharacterService.hurt(member.model, 5, "death.cause.dev", "combat")
+				CharacterService.hurt(member.model, 5, "death.cause.dev", "mob")
 				member.nextHurt = now + HURT_PERIOD + (math.random() - 0.5)
 			end
 		end
@@ -234,7 +234,7 @@ function DevBonecoService.Start(_self)
 
 	newCommand("DevHurt", function(player: Player, amount: number)
 		if player.Character then
-			CharacterService.hurt(player.Character, amount, "death.cause.dev", "combat")
+			CharacterService.hurt(player.Character, amount, "death.cause.dev", "mob")
 		end
 	end)
 

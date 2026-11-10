@@ -119,7 +119,8 @@ local function step()
 				continue
 			end
 			hits[victim] = now
-			CharacterService.hurt(character, damage, SPIKE_CAUSE, "combat")
+			-- Espinho é construção de jogador: vale a defesa contra jogador.
+			CharacterService.hurt(character, damage, SPIKE_CAUSE, "player")
 			-- Morreu: o personagem já foi removido, os outros espinhos param aqui.
 			if victim.Character ~= character then
 				break

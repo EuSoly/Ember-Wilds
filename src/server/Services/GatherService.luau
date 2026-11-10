@@ -202,7 +202,7 @@ local function hit(player: Player, character: Model, root: BasePart)
 		return
 	end
 	if target.character then
-		CharacterService.hurt(target.character, MobRules.damageOf(tool), PLAYER_CAUSE, "combat", player)
+		CharacterService.hurt(target.character, MobRules.damageOf(tool), PLAYER_CAUSE, "player", player)
 		return
 	end
 	local entry = target.resource

@@ -25,10 +25,12 @@ local TutorialService = require(script.Parent.TutorialService)
 
 local CharacterService = {}
 
--- "combat": golpes de jogadores e mobs (a armadura corta; careta sempre).
+-- "player" e "mob": golpes (combate). A peça de cabeça tira a defesa dela
+-- contra jogador ou contra mob (Starve: golpe − defesa, nunca abaixo de 0);
+-- golpe zerado pela defesa não faz nada. Careta sempre que o golpe passa.
 -- "survival": barras vazias (a armadura não protege; careta no máximo a cada
 -- SurvivalConfig.HURT_FLASH_EVERY, senão o boneco piscaria sem parar).
-export type HurtKind = "combat" | "survival"
+export type HurtKind = "player" | "mob" | "survival"
 
 -- Configuração comum a jogadores e bonecos de teste (DevBonecoService):
 -- a tag faz o cliente montar o boneco visual, e o nome padrão do Roblox some
@@ -57,13 +59,16 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	if player and TutorialService.isProtected(player) then
 		return
 	end
-	if player and kind == "combat" then
-		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player), "player")
+	if player and kind ~= "survival" then
+		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player), kind)
+		if amount <= 0 then
+			return
+		end
 	end
 
 	local now = Workspace:GetServerTimeNow()
 	local lastHurt = character:GetAttribute(StatNames.HurtAt)
-	if kind == "combat" or type(lastHurt) ~= "number" or now - lastHurt >= SurvivalConfig.HURT_FLASH_EVERY then
+	if kind ~= "survival" or type(lastHurt) ~= "number" or now - lastHurt >= SurvivalConfig.HURT_FLASH_EVERY then
 		character:SetAttribute(StatNames.HurtAt, now)
 	end
 

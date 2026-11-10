@@ -452,7 +452,7 @@ local function bite(mob: Mob, character: Model, web: boolean)
 	if web and webStats then
 		character:SetAttribute(StatNames.WebbedUntil, Workspace:GetServerTimeNow() + webStats.duration)
 	end
-	CharacterService.hurt(character, amount, mob.def.nameKey, "combat")
+	CharacterService.hurt(character, amount, mob.def.nameKey, "mob")
 end
 
 -- Anda o que a intenção pede; devolve a nova CFrame da raiz, ou nil se nada mudou.
