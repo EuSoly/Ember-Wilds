@@ -84,6 +84,23 @@ function TutorialRules.needs(step: Step, counts: { [string]: number }): { Need }
 	return {}
 end
 
+export type NeedProgress = { item: string, have: number, need: number, done: boolean }
+
+-- Lista "o que pegar" do quadrinho na etapa de construir (ex. Fogueira):
+-- os ingredientes da receita com quanto tem (até a meta) e se já completou.
+-- Vazia nas outras etapas e depois que o item já foi feito.
+function TutorialRules.needsProgress(step: Step, counts: { [string]: number }): { NeedProgress }
+	local out: { NeedProgress } = {}
+	if step.goal.kind ~= "place" then
+		return out
+	end
+	for _, need in TutorialRules.needs(step, counts) do
+		local got = math.min(have(counts, need.item), need.count)
+		table.insert(out, { item = need.item, have = got, need = need.count, done = got >= need.count })
+	end
+	return out
+end
+
 -- Para onde o rastro aponta: um ResourceId do mapa, "water" ou nil (sem rastro).
 function TutorialRules.trailTarget(step: Step, counts: { [string]: number }): string?
 	if step.goal.kind == "drink" then

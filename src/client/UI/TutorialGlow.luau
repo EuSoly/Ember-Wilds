@@ -12,6 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local PointerRules =
+	require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Tutorial"):WaitForChild("PointerRules"))
 
 local create = vide.create
 
@@ -31,9 +33,30 @@ local function pulse(): number
 	return 0.5 + 0.5 * math.sin(clock() * PULSE_SPEED)
 end
 
+-- Destaques montados agora e de que lado a seta fica (UI/TutorialPointer
+-- aponta para o que estiver aceso).
+local glows: { [Frame]: PointerRules.Side } = {}
+
+-- true se `gui` está mesmo na tela: ele e todos acima visíveis, e o ScreenGui ligado.
+local function onScreen(gui: GuiObject): boolean
+	local node: Instance? = gui
+	while node do
+		if node:IsA("GuiObject") then
+			if not node.Visible then
+				return false
+			end
+		elseif node:IsA("LayerCollector") then
+			return node.Enabled
+		end
+		node = node.Parent
+	end
+	return false
+end
+
 -- `corner` = arredondado do anel (padrão: o do slot; UDim.new(1, 0) = redondo).
-local function TutorialGlow(active: () -> boolean, corner: UDim?): Frame
-	return create("Frame")({
+-- `side` = de que lado a seta fica (padrão: embaixo; ver PointerRules).
+local function TutorialGlow(active: () -> boolean, corner: UDim?, side: PointerRules.Side?): Frame
+	local frame = create("Frame")({
 		Name = "TutorialGlow",
 		Visible = active,
 		Position = UDim2.fromOffset(THICKNESS, THICKNESS),
@@ -55,6 +78,27 @@ local function TutorialGlow(active: () -> boolean, corner: UDim?): Frame
 			end,
 		}),
 	}) :: Frame
+	glows[frame] = side or "below"
+	frame.Destroying:Connect(function()
+		glows[frame] = nil
+	end)
+	return frame
 end
 
-return TutorialGlow
+-- O botão destacado que está na tela agora (o pai do destaque aceso) e o lado
+-- da seta, ou nil.
+local function activeTarget(): (GuiObject?, PointerRules.Side)
+	for frame, side in glows do
+		local parent = frame.Parent
+		if parent and parent:IsA("GuiObject") and onScreen(frame) then
+			return parent, side :: PointerRules.Side
+		end
+	end
+	return nil, "below" :: PointerRules.Side
+end
+
+return setmetatable({ activeTarget = activeTarget }, {
+	__call = function(_, active: () -> boolean, corner: UDim?, side: PointerRules.Side?): Frame
+		return TutorialGlow(active, corner, side)
+	end,
+}) :: any

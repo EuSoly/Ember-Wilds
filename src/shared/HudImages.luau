@@ -65,6 +65,13 @@ HudImages.FX = {
 	oxygen = "rbxassetid://135673245855383", -- fx_oxygen.png: água e bolhas
 } :: { [string]: string }
 
+-- Seta do tutorial (UI/TutorialPointer): o ponteiro dourado da roleta antiga
+-- (assets/ui/shop/wheel-pointer.png, quadro 320x320), recortado na ponta.
+-- Aponta para baixo; a seta gira para apontar para o alvo.
+HudImages.TUTORIAL_ARROW = "rbxassetid://139105883979322"
+-- Recorte em px (números soltos: este módulo também roda nos testes do Lune).
+HudImages.TUTORIAL_ARROW_RECT = { x = 129, y = 4, width = 70, height = 78 }
+
 -- Peças esticadas em 9 partes: tamanho da arte e o miolo que estica
 -- ({ min.x, min.y, max.x, max.y }); os cantos (madeira, pregos, chanfros) não esticam.
 HudImages.SLICED = {

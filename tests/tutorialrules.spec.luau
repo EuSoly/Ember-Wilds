@@ -130,6 +130,20 @@ return {
 		assert(not TutorialRules.blocksHit("resource", false), "recurso")
 	end,
 
+	["campfire_step_lists_what_to_gather"] = function()
+		local list = TutorialRules.needsProgress(step("campfire"), { wood = 12 })
+		assert(#list == 2, "madeira e pedra")
+		assert(
+			list[1].item == "wood" and list[1].have == 12 and list[1].need == 25 and not list[1].done,
+			"madeira 12/25"
+		)
+		assert(list[2].item == "stone" and list[2].have == 0 and list[2].need == 5 and not list[2].done, "pedra 0/5")
+		local full = TutorialRules.needsProgress(step("campfire"), { wood = 40, stone = 5 })
+		assert(full[1].have == 25 and full[1].done and full[2].done, "não passa da meta e marca feito")
+		assert(#TutorialRules.needsProgress(step("campfire"), { campfire = 1 }) == 0, "já fez: nada a pegar")
+		assert(#TutorialRules.needsProgress(step("wood"), { wood = 3 }) == 0, "etapa sem receita: sem lista")
+	end,
+
 	["restart_from_zero"] = function()
 		assert(TutorialRules.advance(1, facts()) == 1, "sem nada, fica na 1")
 	end,

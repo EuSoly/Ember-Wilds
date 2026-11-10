@@ -25,6 +25,12 @@ Tipos de meta (`goal.kind`):
 
 Em `sources` fica de onde sai cada item (o `ResourceId` do mapa), e é para lá que o rastro aponta; em `recipe`, a receita que pisca quando dá para fazer. As regras puras estão em `TutorialRules` (e `TrailRules` para os pontos do rastro), testadas em `tests/tutorialrules.spec.luau` e `tests/trailrules.spec.luau`.
 
+## O que o jogador vê
+
+- **Quadrinho** embaixo dos botões redondos: "Tutorial N/6", o que fazer e o contador. Na etapa da Fogueira, uma linha com o que falta pegar ("Madeira 12/25", "Pedra 0/5", com ícone), que fica verde ao completar (`TutorialRules.needsProgress`).
+- **Destaque e seta** no que é para clicar: anel âmbar pulsando por dentro do botão e uma seta dourada balançando ao lado. Depois do teste de 10/11/2026, só o brilho não chamava a atenção. Quem põe o destaque diz de que lado fica a seta: na receita, à direita; no botão do livro, à esquerda; nas abas e nos itens do livro, embaixo. A arte da seta é o ponteiro da roleta antiga (`HudImages.TUTORIAL_ARROW`).
+- **Rastro** de pontinhos no chão até a árvore, o arbusto, a rocha ou a água.
+
 ## Proteção (10 minutos)
 
 Enquanto está protegido, o jogador:
@@ -57,7 +63,8 @@ A proteção acaba ao completar a etapa 6 ou `TutorialRules.PROTECTION_SECONDS` 
 | Estado no cliente | `src/client/TutorialState.luau` |
 | Quadrinho da missão (embaixo dos botões redondos) | `src/client/UI/TutorialPanel.luau` |
 | Rastro no chão | `src/client/World/TutorialTrail.luau` |
-| Destaque dourado (receita, livro, aba, item) | `src/client/UI/TutorialGlow.luau` |
+| Destaque âmbar (receita, livro, aba, item) | `src/client/UI/TutorialGlow.luau` |
+| Seta balançando ao lado do destaque aceso | `src/client/UI/TutorialPointer.luau` (lado e balanço em `Shared/Tutorial/PointerRules`) |
 | Selo no nome | `Boneco/BonecoModel` (`TutorialBadge`) + `Boneco/BonecoRenderer` |
 | Pop-up da roleta | `src/client/Menu/TutorialSpinPopup.luau` |
 | Rede | `net/game.blink`: `TutorialBookViewed`, `TutorialPopupSeen`, `TutorialDone` |

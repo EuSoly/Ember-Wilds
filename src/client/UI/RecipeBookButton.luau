@@ -27,7 +27,7 @@ local function RecipeBookButton(): TextButton
 	-- recebe filhos nas props: o destaque entra depois.)
 	local glow = TutorialGlow(function()
 		return TutorialState.highlights(RecipeBookScreen.open(), RecipeBookScreen.tab()).bookButton
-	end, UDim.new(1, 0))
+	end, UDim.new(1, 0), "left")
 	glow.Parent = button
 	return button
 end

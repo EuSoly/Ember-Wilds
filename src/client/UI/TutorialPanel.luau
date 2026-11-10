@@ -1,12 +1,15 @@
 --!strict
 -- Quadrinho da missão do tutorial, embaixo do minimapa e dos botões redondos:
 -- "Tutorial N/6" e o que fazer agora, com o contador ("3/10") quando a etapa
--- conta itens. Pisca dourado quando muda de etapa. No fim, o aviso de
--- parabéns com os giros ganhos (Net.TutorialDone).
+-- conta itens. Na etapa de construir (Fogueira), uma linha com os itens que
+-- faltam pegar, com ícone e "Madeira 12/25" (verde quando completa). Pisca dourado
+-- quando muda de etapa. No fim, o aviso de parabéns com os giros ganhos
+-- (Net.TutorialDone).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local Defs = require(Shared:WaitForChild("Defs"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
@@ -14,6 +17,7 @@ local TutorialSteps = require(Shared:WaitForChild("Tutorial"):WaitForChild("Tuto
 local Net = require(script.Parent.Parent:WaitForChild("Net"))
 local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
+local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local create = vide.create
@@ -22,7 +26,49 @@ local R = Theme.rustic
 -- Logo abaixo dos botões redondos (livro e configurações vão até ~0,34).
 local POSITION = UDim2.fromScale(0.98, 0.355)
 local SIZE = UDim2.fromScale(0.24, 0.1)
+local SIZE_WITH_NEEDS = UDim2.fromScale(0.24, 0.155) -- mais alto com a linha dos itens
 local FLASH_TIME = 0.6
+local DONE_COLOR = Color3.fromRGB(46, 140, 52) -- verde do "já tem tudo"
+
+-- Um item da linha "o que pegar": ícone e "tem/precisa".
+local function NeedEntry(entry: () -> TutorialRules.NeedProgress, index: number): Frame
+	return create("Frame")({
+		Name = "Need",
+		LayoutOrder = index,
+		Size = UDim2.fromScale(0.48, 1),
+		BackgroundTransparency = 1,
+		create("Frame")({
+			Name = "IconBox",
+			Size = UDim2.fromScale(1, 1),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+			BackgroundTransparency = 1,
+			ItemIcon({
+				item = function()
+					return { id = entry().item, count = 1 }
+				end,
+				bare = true,
+			}),
+		}),
+		Rustic.label({
+			Name = "Count",
+			dark = true,
+			maxSize = 14, -- teto igual para os itens (nome curto não fica maior)
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.fromScale(1, 0.12),
+			Size = UDim2.fromScale(0.74, 0.76),
+			TextXAlignment = Enum.TextXAlignment.Left,
+			TextColor3 = function()
+				return if entry().done then DONE_COLOR else R.charcoal
+			end,
+			Text = function()
+				local e = entry()
+				local def = Defs.Items[e.item]
+				local name = if def then Strings.get(def.nameKey) else e.item
+				return `{name} {e.have}/{e.need}`
+			end,
+		}),
+	}) :: Frame
+end
 
 local function stepText(): string
 	local step = TutorialState.current()
@@ -55,11 +101,21 @@ local function TutorialPanel(): Frame
 		end)
 	end)
 
+	local needs = vide.derive(function(): { TutorialRules.NeedProgress }
+		local step = TutorialState.current()
+		return if step then TutorialRules.needsProgress(step, TutorialState.counts()) else {}
+	end)
+	local hasNeeds = function()
+		return #needs() > 0
+	end
+
 	return Rustic.paper({
 		Name = "TutorialPanel",
 		AnchorPoint = Vector2.new(1, 0),
 		Position = POSITION,
-		Size = SIZE,
+		Size = function()
+			return if hasNeeds() then SIZE_WITH_NEEDS else SIZE
+		end,
 		Visible = function()
 			return TutorialState.step() > 0
 		end,
@@ -78,7 +134,9 @@ local function TutorialPanel(): Frame
 		}),
 		Rustic.label({
 			Name = "Header",
-			Size = UDim2.fromScale(1, 0.38),
+			Size = function()
+				return UDim2.fromScale(1, if hasNeeds() then 0.26 else 0.38)
+			end,
 			TextColor3 = R.emberShadow,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = function()
@@ -88,10 +146,28 @@ local function TutorialPanel(): Frame
 		Rustic.label({
 			Name = "Step",
 			dark = true,
-			Position = UDim2.fromScale(0, 0.42),
-			Size = UDim2.fromScale(1, 0.58),
+			Position = function()
+				return UDim2.fromScale(0, if hasNeeds() then 0.29 else 0.42)
+			end,
+			Size = function()
+				return UDim2.fromScale(1, if hasNeeds() then 0.33 else 0.58)
+			end,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = stepText,
+		}),
+		create("Frame")({
+			Name = "Needs",
+			Visible = hasNeeds,
+			Position = UDim2.fromScale(0, 0.66),
+			Size = UDim2.fromScale(1, 0.34),
+			BackgroundTransparency = 1,
+			create("UIListLayout")({
+				FillDirection = Enum.FillDirection.Horizontal,
+				Padding = UDim.new(0.04, 0),
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+			}),
+			vide.indexes(needs, NeedEntry),
 		}),
 	}) :: Frame
 end
