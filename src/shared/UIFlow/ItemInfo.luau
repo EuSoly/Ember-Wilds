@@ -63,10 +63,10 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 	local armor = def.armor
 	if armor then
 		if armor.defense and armor.defense > 0 then
-			add("info.defense", percent(armor.defense))
+			add("info.defensePlayer", armor.defense)
 		end
-		if armor.coldFactor and armor.coldFactor < 1 then
-			add("info.cold", percent(1 - armor.coldFactor))
+		if armor.mobDefense and armor.mobDefense > 0 then
+			add("info.defenseMob", armor.mobDefense)
 		end
 	end
 	add("info.bag", def.bagSlots)

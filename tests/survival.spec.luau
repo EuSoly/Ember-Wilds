@@ -60,7 +60,7 @@ return {
 			HURT_FLASH_EVERY = 2,
 			EAT_DURATION = 1.2,
 			EAT_SPEED_FACTOR = 0.7,
-			MAX_DEFENSE = 0.9,
+			MAX_ARMOR_DEFENSE = 100,
 			MAX_FACTOR = 2,
 			BURN_RADIUS = 3,
 			ON_FIRE_HEAT = 20,
@@ -102,7 +102,13 @@ return {
 	end,
 
 	["armor factors slow the drain"] = function()
-		local mods = { defense = 0, coldFactor = 0.5, hungerFactor = 0.5, thirstFactor = 1 }
+		local mods = ArmorRules.modifiers({
+			id = "h",
+			nameKey = "h",
+			category = "armor",
+			maxStack = 1,
+			armor = { warm = { day = 1 }, hungerFactor = 0.5 },
+		})
 		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ mods = mods }), 10)
 		expect("frio", r.bars.cold, 98)
 		expect("fome", r.bars.hunger, 97)
@@ -223,7 +229,13 @@ return {
 	end,
 
 	["armor heat factor slows the heat"] = function()
-		local mods = { defense = 0, coldFactor = 1, hungerFactor = 1, thirstFactor = 1, heatFactor = 0.5 }
+		local mods = ArmorRules.modifiers({
+			id = "h",
+			nameKey = "h",
+			category = "armor",
+			maxStack = 1,
+			armor = { fireHeatFactor = 0.5 },
+		})
 		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ nearFire = true, onFire = true, mods = mods }), 1)
 		expect("calor", r.bars.heat, 10)
 	end,

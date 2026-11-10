@@ -209,14 +209,14 @@ local Items: { [string]: ItemDef } = {
 		reach = 3,
 		knockback = 4,
 	},
-	-- Proteção provisória, ajustada quando o combate for implementado.
+	-- Itens de cabeça: números do Starve (config oficial), veja docs/guia/armaduras.md.
 	wood_helmet = {
 		id = "wood_helmet",
 		nameKey = "item.wood_helmet",
 		category = "armor",
 		tier = "wood",
 		maxStack = 1,
-		armor = { defense = 0.1 },
+		armor = { defense = 1, mobDefense = 4 },
 	},
 	stone_helmet = {
 		id = "stone_helmet",
@@ -224,7 +224,7 @@ local Items: { [string]: ItemDef } = {
 		category = "armor",
 		tier = "stone",
 		maxStack = 1,
-		armor = { defense = 0.2 },
+		armor = { defense = 2, mobDefense = 8 },
 	},
 	gold_helmet = {
 		id = "gold_helmet",
@@ -232,14 +232,17 @@ local Items: { [string]: ItemDef } = {
 		category = "armor",
 		tier = "gold",
 		maxStack = 1,
-		armor = { defense = 0.3 },
+		armor = { defense = 4, mobDefense = 13 },
 	},
 	earmuffs = {
 		id = "earmuffs",
 		nameKey = "item.earmuffs",
 		category = "armor",
 		maxStack = 1,
-		armor = { coldFactor = 0.7 },
+		armor = {
+			warm = { day = 1, night = 10, winterDay = 4, winterNight = 10, lavaDay = -4, lavaNight = -10 },
+			blizzard = 8,
+		},
 	},
 	-- Peças de base: o bloco structure define a vida e o comportamento da peça colocada.
 	workbench = {

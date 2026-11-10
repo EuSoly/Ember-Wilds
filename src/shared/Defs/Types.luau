@@ -17,15 +17,47 @@ export type ItemCategory = "resource" | "food" | "tool" | "weapon" | "armor" | "
 -- crumbColor (só visual): cor "#RRGGBB" dos farelos da mordida; ausente = cor de pão.
 export type FoodEffect = { hunger: number?, thirst: number?, health: number?, crumbColor: string? }
 
--- Armadura vestida (uma por vez, como o item de cabeça do Starve).
--- defense: fração do dano de COMBATE cortada (0 a 0,9).
--- *Factor: multiplica quanto a barra cai (0,5 = metade da velocidade; até 2).
+-- Quanto a peça soma na variação do frio por tick do Starve, por lugar e hora
+-- (config oficial `<item>_warm_<lugar>`; positivo = esquenta). Ausente = 0.
+-- A conversão para o nosso jogo fica em ArmorRules.coldMultiplier.
+export type ArmorWarm = {
+	day: number?,
+	night: number?,
+	waterDay: number?,
+	waterNight: number?,
+	winterDay: number?, -- inverno (bioma futuro)
+	winterNight: number?,
+	lavaDay: number?, -- lava (bioma futuro): subtrai do calor da lava
+	lavaNight: number?,
+}
+
+-- Item de cabeça vestido (um por vez, como no Starve). Números em UNIDADES DO
+-- STARVE (config oficial; veja docs/game-design/armaduras-starve.md); quem
+-- converte é Survival/ArmorRules.
 export type ArmorStats = {
-	defense: number?,
-	coldFactor: number?,
-	hungerFactor: number?,
-	thirstFactor: number?,
-	heatFactor: number?, -- multiplica quanto o calor sobe (proteções de calor, N4)
+	defense: number?, -- tirado do golpe de JOGADOR (`<item>_defense`)
+	mobDefense: number?, -- tirado da mordida de MOB (`<item>_mob_defense`)
+	warm: ArmorWarm?,
+	fireHeatFactor: number?, -- multiplica o calor que o fogo põe na barra de calor (proteções = 0)
+	oxygenLoss: number?, -- tirado da perda de fôlego na água (base 25 por tick)
+	swimSpeed: number?, -- multiplica a velocidade nadando (mergulho 1,2)
+	regenHeal: number?, -- cura por ciclo de regen (base 12; Coroa da Vida 40)
+	hidesName: boolean?, -- capuzes: o nick some para os outros
+	explorer: boolean?, -- mobs agressivos ignoram; bater em algo desliga por um tempo
+	hungerFactor: number?, -- multiplica a queda da fome (nenhuma peça do Starve usa)
+	thirstFactor: number?, -- multiplica a queda da sede (nenhuma peça do Starve usa)
+	-- Só dado, para sistemas futuros (nada no jogo lê ainda):
+	blizzard: number?, -- tirado do dano da nevasca (base 26 a cada 4 s)
+	sand: { damage: number, every: number }?, -- dano da tempestade de areia com a peça
+	cropGrowth: number?, -- multiplica o crescimento das plantas (túnicas)
+	stealImmune: ("hood" | "all")?, -- imune ao roubo do capuz comum / de todos
+	tameLuck: number?, -- multiplica a chance de domar (Coroa da Sorte)
+	digLuck: number?, -- sorte da pá (Coroa da Sorte)
+	resurrect: boolean?, -- vira fantasma e ressuscita na pedra (Coroa do Anjo)
+	crabFriend: boolean?, -- caranguejos seguem e não atacam
+	spiderImmune: boolean?, -- aranha não dá dano
+	pilotAcceleration: number?, -- aceleração da decolagem do avião
+	gearSet: string?, -- bônus com as armas do mesmo conjunto (dragão, lava)
 }
 
 export type StructureKind =

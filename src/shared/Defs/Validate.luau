@@ -710,15 +710,26 @@ local function validateFood(errors: { string }, key: string, item: Types.ItemDef
 	end
 end
 
--- Armadura: precisa do bloco armor (e só ela pode ter); defense em
--- [0, MAX_DEFENSE], fatores em [0, MAX_FACTOR].
+-- Armadura: precisa do bloco armor (e só ela pode ter). Números em unidades
+-- do Starve: defesas em [0, MAX_ARMOR_DEFENSE], warm em [-200, 200], fatores
+-- em [0, MAX_FACTOR], oxygenLoss em [0, STARVE_OXYGEN_LOSS].
 local ARMOR_LIMITS = {
-	{ field = "defense", max = SurvivalConfig.MAX_DEFENSE },
-	{ field = "coldFactor", max = SurvivalConfig.MAX_FACTOR },
-	{ field = "hungerFactor", max = SurvivalConfig.MAX_FACTOR },
-	{ field = "thirstFactor", max = SurvivalConfig.MAX_FACTOR },
-	{ field = "heatFactor", max = SurvivalConfig.MAX_FACTOR },
+	{ field = "defense", min = 0, max = SurvivalConfig.MAX_ARMOR_DEFENSE },
+	{ field = "mobDefense", min = 0, max = SurvivalConfig.MAX_ARMOR_DEFENSE },
+	{ field = "fireHeatFactor", min = 0, max = SurvivalConfig.MAX_FACTOR },
+	{ field = "swimSpeed", min = 0, max = SurvivalConfig.MAX_FACTOR },
+	{ field = "hungerFactor", min = 0, max = SurvivalConfig.MAX_FACTOR },
+	{ field = "thirstFactor", min = 0, max = SurvivalConfig.MAX_FACTOR },
+	{ field = "oxygenLoss", min = 0, max = SurvivalConfig.STARVE_OXYGEN_LOSS },
+	{ field = "regenHeal", min = 0, max = 200 },
+	{ field = "blizzard", min = 0, max = 200 },
+	{ field = "cropGrowth", min = 0, max = 10 },
+	{ field = "tameLuck", min = 0, max = 20 },
+	{ field = "digLuck", min = 0, max = 20 },
+	{ field = "pilotAcceleration", min = 0, max = 10 },
 }
+local WARM_FIELDS = { "day", "night", "waterDay", "waterNight", "winterDay", "winterNight", "lavaDay", "lavaNight" }
+local ARMOR_FLAGS = { "hidesName", "explorer", "resurrect", "crabFriend", "spiderImmune" }
 local function validateArmor(errors: { string }, key: string, item: Types.ItemDef)
 	local armor = item.armor
 	if item.category ~= "armor" then
@@ -733,9 +744,38 @@ local function validateArmor(errors: { string }, key: string, item: Types.ItemDe
 	end
 	for _, limit in ARMOR_LIMITS do
 		local value = (armor :: any)[limit.field]
-		if value ~= nil and (not isFiniteNumber(value) or value < 0 or value > limit.max) then
-			table.insert(errors, `Item "{key}": armor.{limit.field} deve ficar entre 0 e {limit.max}`)
+		if value ~= nil and (not isFiniteNumber(value) or value < limit.min or value > limit.max) then
+			table.insert(errors, `Item "{key}": armor.{limit.field} deve ficar entre {limit.min} e {limit.max}`)
 		end
+	end
+	local warm = armor.warm
+	if warm ~= nil then
+		if type(warm) ~= "table" then
+			table.insert(errors, `Item "{key}": armor.warm deve ser uma tabela`)
+		else
+			for _, field in WARM_FIELDS do
+				local value = (warm :: any)[field]
+				if value ~= nil and (not isFiniteNumber(value) or value < -200 or value > 200) then
+					table.insert(errors, `Item "{key}": armor.warm.{field} deve ficar entre -200 e 200`)
+				end
+			end
+		end
+	end
+	for _, field in ARMOR_FLAGS do
+		local value = (armor :: any)[field]
+		if value ~= nil and type(value) ~= "boolean" then
+			table.insert(errors, `Item "{key}": armor.{field} deve ser true ou false`)
+		end
+	end
+	local sand = armor.sand
+	if sand ~= nil and (type(sand) ~= "table" or not isFiniteNumber(sand.damage) or not isFiniteNumber(sand.every)) then
+		table.insert(errors, `Item "{key}": armor.sand precisa de damage e every`)
+	end
+	if armor.stealImmune ~= nil and armor.stealImmune ~= "hood" and armor.stealImmune ~= "all" then
+		table.insert(errors, `Item "{key}": armor.stealImmune deve ser "hood" ou "all"`)
+	end
+	if armor.gearSet ~= nil and type(armor.gearSet) ~= "string" then
+		table.insert(errors, `Item "{key}": armor.gearSet deve ser texto`)
 	end
 end
 

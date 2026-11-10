@@ -40,8 +40,20 @@ return table.freeze({
 	EAT_DURATION = 1.2,
 	EAT_SPEED_FACTOR = 0.7,
 
-	MAX_DEFENSE = 0.9, -- teto do armor.defense (fração do dano de combate cortada)
-	MAX_FACTOR = 2, -- teto dos fatores de barra da armadura (coldFactor etc.)
+	-- Armaduras (números da peça em unidades do Starve; veja docs/guia/armaduras.md).
+	MAX_ARMOR_DEFENSE = 100, -- teto de armor.defense e armor.mobDefense
+	MAX_FACTOR = 2, -- teto dos fatores da armadura (fireHeatFactor, swimSpeed, hungerFactor...)
+	-- Perda de frio por tick do Starve sem peça, por lugar (`reduce_cold_*`):
+	-- a peça muda a NOSSA perda na proporção (base − warm) / base.
+	STARVE_COLD_LOSS = table.freeze({
+		forest = table.freeze({ day = 2, night = 18 }),
+		water = table.freeze({ day = 5, night = 25 }),
+		winter = table.freeze({ day = 25, night = 50 }),
+	}),
+	STARVE_OXYGEN_LOSS = 25, -- perda de fôlego por tick do Starve (`reduce_oxygen`)
+	STARVE_REGEN_HEAL = 12, -- cura por ciclo de regen do Starve (`heal`)
+	ARMOR_SWAP_LOCK = 5, -- segundos depois de vestir até poder trocar (`helmet_delay`)
+	EXPLORER_OFF = 10, -- segundos sem o efeito do explorador depois de bater em algo
 
 	-- Multiplica a queda do frio por bioma. Reservado para o inverno (N2): hoje
 	-- só a floresta é jogável.

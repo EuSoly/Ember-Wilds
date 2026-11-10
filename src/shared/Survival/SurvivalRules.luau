@@ -95,7 +95,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		-- Esquentando: enche o frio e o que passa do topo enche o calor.
 		local warmed = cold + heating * dt
 		cold = clamp(warmed)
-		heat = clamp(heat + math.max(warmed - MAX, 0) * mods.heatFactor)
+		heat = clamp(heat + math.max(warmed - MAX, 0) * mods.fireHeatFactor)
 	elseif heat > 0 then
 		-- Saiu do calor: esfria primeiro o calor; o frio só cai depois.
 		heat = clamp(heat - C.HEAT_COOL * dt)
@@ -104,7 +104,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 	else
 		local drain = (if ctx.isNight then C.COLD_DRAIN_NIGHT else C.COLD_DRAIN_DAY)
 			* ctx.biomeColdFactor
-			* mods.coldFactor
+			* ArmorRules.coldMultiplier(mods, "forest", ctx.isNight)
 			* drainFactor
 		if ctx.inWater then
 			drain *= C.WATER_COLD_FACTOR

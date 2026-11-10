@@ -390,12 +390,18 @@ return {
 
 	["armor stats out of range is an error"] = function()
 		local cases = {
-			{ stats = { defense = 0.95 }, field = "defense" },
-			{ stats = { coldFactor = 3 }, field = "coldFactor" },
-			{ stats = { coldFactor = -1 }, field = "coldFactor" },
+			{ stats = { defense = 101 }, field = "defense" },
+			{ stats = { defense = -1 }, field = "defense" },
+			{ stats = { mobDefense = 0 / 0 }, field = "mobDefense" },
+			{ stats = { warm = { night = 300 } }, field = "warm.night" },
+			{ stats = { warm = 5 }, field = "warm" },
+			{ stats = { fireHeatFactor = 3 }, field = "fireHeatFactor" },
+			{ stats = { oxygenLoss = 26 }, field = "oxygenLoss" },
 			{ stats = { hungerFactor = 0 / 0 }, field = "hungerFactor" },
 			{ stats = { thirstFactor = 2.5 }, field = "thirstFactor" },
-			{ stats = { heatFactor = 3 }, field = "heatFactor" },
+			{ stats = { hidesName = 1 }, field = "hidesName" },
+			{ stats = { stealImmune = "everyone" }, field = "stealImmune" },
+			{ stats = { sand = { damage = 7 } }, field = "sand" },
 		}
 		for _, case in cases do
 			local item = validItem("helmet")
@@ -411,7 +417,7 @@ return {
 		local item = validItem("helmet")
 		item.category = "armor"
 		item.maxStack = 1
-		item.armor = { defense = 0.25, coldFactor = 0.5 }
+		item.armor = { defense = 4, mobDefense = 13, warm = { day = 2, night = 13, lavaDay = -8 } }
 		local errors = Validate.all({ Tiers = {}, Items = { helmet = item } }, alwaysHas)
 		assert(#errors == 0, `armadura válida deu erro: {table.concat(errors, "; ")}`)
 	end,

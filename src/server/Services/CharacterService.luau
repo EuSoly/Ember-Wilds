@@ -58,7 +58,7 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		return
 	end
 	if player and kind == "combat" then
-		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player))
+		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player), "player")
 	end
 
 	local now = Workspace:GetServerTimeNow()

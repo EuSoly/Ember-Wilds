@@ -60,9 +60,10 @@ return {
 		assert(has(l, "Picareta nível 3"), table.concat(l, " | "))
 	end,
 
-	["armor shows defense in percent"] = function()
-		local l = lines("wood_helmet")
-		assert(has(l, "Defesa: 10%"), table.concat(l, " | "))
+	["armor shows defense against players and creatures"] = function()
+		local l = lines("gold_helmet")
+		assert(has(l, "Defesa contra jogadores: 4"), table.concat(l, " | "))
+		assert(has(l, "Defesa contra criaturas: 13"), table.concat(l, " | "))
 	end,
 
 	["bag shows extra slots"] = function()
