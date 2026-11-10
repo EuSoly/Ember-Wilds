@@ -12,21 +12,20 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local TutorialSteps = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialSteps"))
 local Net = require(script.Parent.Parent:WaitForChild("Net"))
 local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
+local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local create = vide.create
 local R = Theme.rustic
 
--- Logo abaixo dos botões redondos (livro e configurações vão até ~0,34).
-local POSITION = UDim2.fromScale(0.98, 0.355)
-local SIZE = UDim2.fromScale(0.24, 0.1)
-local SIZE_WITH_NEEDS = UDim2.fromScale(0.24, 0.155) -- mais alto com a linha dos itens
+-- Na coluna da direita (UI/HudColumnState): logo abaixo dos botões redondos.
 local FLASH_TIME = 0.6
 local DONE_COLOR = Color3.fromRGB(46, 140, 52) -- verde do "já tem tudo"
 
@@ -101,10 +100,7 @@ local function TutorialPanel(): Frame
 		end)
 	end)
 
-	local needs = vide.derive(function(): { TutorialRules.NeedProgress }
-		local step = TutorialState.current()
-		return if step then TutorialRules.needsProgress(step, TutorialState.counts()) else {}
-	end)
+	local needs = vide.derive(HudColumnState.tutorialNeeds)
 	local hasNeeds = function()
 		return #needs() > 0
 	end
@@ -112,9 +108,12 @@ local function TutorialPanel(): Frame
 	return Rustic.paper({
 		Name = "TutorialPanel",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = POSITION,
+		Position = function()
+			return UDim2.fromScale(0.98, HudColumnState.column().tutorialY)
+		end,
 		Size = function()
-			return if hasNeeds() then SIZE_WITH_NEEDS else SIZE
+			local height = if hasNeeds() then HudColumn.TUTORIAL_HEIGHT_NEEDS else HudColumn.TUTORIAL_HEIGHT
+			return UDim2.fromScale(HudColumn.WIDTH, height)
 		end,
 		Visible = function()
 			return TutorialState.step() > 0

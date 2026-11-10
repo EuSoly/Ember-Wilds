@@ -28,7 +28,7 @@ Em `sources` fica de onde sai cada item (o `ResourceId` do mapa), e é para lá 
 ## O que o jogador vê
 
 - **Quadrinho** embaixo dos botões redondos: "Tutorial N/6", o que fazer e o contador. Na etapa da Fogueira, uma linha com o que falta pegar ("Madeira 12/25", "Pedra 0/5", com ícone), que fica verde ao completar (`TutorialRules.needsProgress`).
-- **Destaque e seta** no que é para clicar: anel âmbar pulsando por dentro do botão e uma seta dourada balançando ao lado. Depois do teste de 10/11/2026, só o brilho não chamava a atenção. Quem põe o destaque diz de que lado fica a seta: na receita, à direita; no botão do livro, à esquerda; nas abas e nos itens do livro, embaixo. A arte da seta é o ponteiro da roleta antiga (`HudImages.TUTORIAL_ARROW`).
+- **Destaque e seta** no que é para clicar: anel âmbar pulsando por dentro do botão e uma seta dourada balançando ao lado. Depois do teste de 10/11/2026, só o brilho não chamava a atenção. Quem põe o destaque diz de que lado fica a seta: no botão do livro, à esquerda; na receita da coluna e nas abas e itens do livro, embaixo (à direita da receita, ela cobria a receita vizinha). A arte da seta é o ponteiro da roleta antiga (`HudImages.TUTORIAL_ARROW`).
 - **Rastro** de pontinhos no chão até a árvore, o arbusto, a rocha ou a água.
 
 ## Proteção (10 minutos)

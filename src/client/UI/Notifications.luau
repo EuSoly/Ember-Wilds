@@ -15,7 +15,8 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
-local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
+local Rustic = require(script.Parent:WaitForChild("Rustic"))
+local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
 
 local create = vide.create
 
@@ -81,17 +82,21 @@ local function Toast(entry: () -> Entry, id: number): Frame
 		Position = function()
 			return UDim2.fromScale(x(), 0)
 		end,
-		Kit.text({
+		-- Rustic.label, sem o contorno grosso do Kit.text: texto escuro com
+		-- contorno escuro sobre o creme embolava as letras (visto em 10/11/2026).
+		-- No verde, texto claro com um contorno fino para destacar.
+		Rustic.label({
 			Size = UDim2.fromScale(0.82, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			AnchorPoint = Vector2.new(0.5, 0.5),
-			-- Texto escuro no creme e no laranja; claro no verde.
-			TextColor3 = if kind == "success" then Theme.rustic.cream else Theme.rustic.charcoal,
+			FontFace = Theme.font.number,
+			dark = kind ~= "success",
 			Text = function()
 				return entry().text
 			end,
 			maxSize = 22,
 			ZIndex = 2,
+			if kind == "success" then create("UIStroke")({ Color = Theme.rustic.outline, Thickness = 1 }) else nil,
 		}),
 	}
 	if art then
@@ -107,10 +112,10 @@ function Notifications.Component(): Frame
 	return create("Frame")({
 		Name = "Notifications",
 		AnchorPoint = Vector2.new(1, 0),
-		-- Abaixo dos botões redondos (0,25 + tamanho); no tutorial, abaixo do
-		-- quadrinho da missão (UI/TutorialPanel).
+		-- Abaixo dos botões redondos; com o quadrinho do tutorial ou a receita
+		-- fixada, abaixo deles (UI/HudColumnState).
 		Position = function()
-			return UDim2.fromScale(0.98, if TutorialState.step() > 0 then 0.47 else 0.4)
+			return UDim2.fromScale(0.98, HudColumnState.column().notificationsY)
 		end,
 		Size = UDim2.fromScale(0.26, 0.16),
 		BackgroundTransparency = 1,

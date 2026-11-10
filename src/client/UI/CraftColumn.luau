@@ -230,7 +230,7 @@ local function recipeButton(row: () -> CraftState.Row): TextButton
 		-- Tutorial: a receita da etapa pisca quando dá para fazer.
 		TutorialGlow(function()
 			return TutorialState.highlights(false, "tools").recipe == row().id
-		end, nil, "right"),
+		end, nil, "below"), -- embaixo: à direita, a seta cobria a receita vizinha
 		create("Frame")({
 			Name = "ProgressFill",
 			Visible = active,

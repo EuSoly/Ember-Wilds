@@ -25,6 +25,7 @@ local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
 local SettingsButton = require(script.Parent:WaitForChild("SettingsButton"))
 local StatusRings = require(script.Parent:WaitForChild("StatusRings"))
 local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
+local PinnedRecipe = require(script.Parent:WaitForChild("PinnedRecipe"))
 local Template = require(script.Parent.Parent:WaitForChild("UITemplates"):WaitForChild("Template"))
 local WeaponLock = require(script.Parent:WaitForChild("WeaponLock"))
 
@@ -40,6 +41,7 @@ local function App(): ScreenGui
 		SettingsButton(),
 		RecipeBookButton(),
 		TutorialPanel(),
+		PinnedRecipe(),
 		Notifications.Component(),
 		ChestPanel(),
 		CratePanel(),

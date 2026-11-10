@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local BookImages = require(Shared:WaitForChild("BookImages"))
+local Defs = require(Shared:WaitForChild("Defs"))
 local BookInfo = require(Shared:WaitForChild("UIFlow"):WaitForChild("BookInfo"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
@@ -20,6 +21,7 @@ local CraftState = require(Client:WaitForChild("CraftState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
 local Net = require(Client:WaitForChild("Net"))
 local TutorialState = require(Client:WaitForChild("TutorialState"))
+local PinState = require(Client:WaitForChild("PinState"))
 local UI = Client:WaitForChild("UI")
 local BookSheet = require(UI:WaitForChild("BookSheet"))
 local HudArt = require(UI:WaitForChild("HudArt"))
@@ -367,6 +369,34 @@ local function Book(): Frame
 				onShow = RecipeBookScreen.show,
 				Position = UDim2.new(GRID_SHARE, GAP, 0, TAB_HEIGHT + GAP + 4),
 				Size = UDim2.new(1 - GRID_SHARE, -GAP, 1, -TAB_HEIGHT - GAP - 4),
+			}),
+			-- Fixar a receita no HUD (UI/PinnedRecipe), no canto da ficha; só
+			-- para itens com receita. Fixado: vira "Desafixar".
+			Rustic.button({
+				Name = "PinButton",
+				Visible = function()
+					local id = RecipeBookScreen.selected()
+					return id ~= nil and Defs.Recipes[id] ~= nil
+				end,
+				AnchorPoint = Vector2.new(1, 0),
+				Position = UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18),
+				Size = UDim2.fromOffset(120, 38),
+				ZIndex = 6,
+				kind = function()
+					return if PinState.pinned() == RecipeBookScreen.selected() then "leather" else "ember"
+				end,
+				text = function()
+					return Strings.get(
+						if PinState.pinned() == RecipeBookScreen.selected() then "book.unpin" else "book.pin"
+					)
+				end,
+				maxSize = 18,
+				Activated = function()
+					local id = vide.untrack(RecipeBookScreen.selected)
+					if id then
+						PinState.toggle(id)
+					end
+				end,
 			}),
 		}),
 	})
