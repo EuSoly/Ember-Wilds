@@ -17,6 +17,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local Palette = require(Shared:WaitForChild("Palette"))
+local Strings = require(Shared:WaitForChild("Strings"))
 local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
 local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -43,6 +44,8 @@ local DEFAULT_CRUMB_COLOR = "#D9B27C"
 local CRUMB_TEXTURE = "rbxasset://textures/particles/SquareParticle.png" -- quadradinho liso: pega a cor
 -- Etiqueta do nome.
 local NAME_SIZE = UDim2.fromOffset(200, 28)
+local NAME_HEIGHT_PX = 28 -- o nome; o selo "Tutorial" vai logo acima
+local BADGE_HEIGHT_PX = 18
 local NAME_STROKE = 1.5
 -- Cilindro em pé: o cilindro do Roblox tem o eixo em X, então gira 90° em Z.
 local UPRIGHT = CFrame.Angles(0, 0, math.rad(90))
@@ -57,6 +60,8 @@ export type Boneco = {
 	rightHandJoint: Motor6D, -- Root → mão direita
 	rightHand: BasePart,
 	nameLabel: TextLabel,
+	-- Selo "Tutorial" embaixo do nome (BonecoRenderer liga com TutorialProtected).
+	tutorialBadge: TextLabel,
 	-- Internos (cor, olhos, ferramenta).
 	bodyParts: { BasePart },
 	handParts: { BasePart },
@@ -216,17 +221,21 @@ local function paint(boneco: Boneco)
 	end
 end
 
-local function buildNameTag(root: BasePart, displayName: string): TextLabel
+local function buildNameTag(root: BasePart, displayName: string): (TextLabel, TextLabel)
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "NameTag"
-	billboard.Size = NAME_SIZE
+	-- Mais alto que o nome, para caber o selo em cima (embaixo, a cabeça cobre).
+	-- O SizeOffset sobe a etiqueta meio selo, para o nome ficar onde sempre esteve.
+	billboard.Size = NAME_SIZE + UDim2.fromOffset(0, BADGE_HEIGHT_PX)
+	billboard.SizeOffset = Vector2.new(0, (BADGE_HEIGHT_PX / 2) / (NAME_HEIGHT_PX + BADGE_HEIGHT_PX))
 	billboard.StudsOffset = Vector3.new(0, C.NAME_HEIGHT, 0)
 	billboard.MaxDistance = C.ANIM_RANGE
 	billboard.LightInfluence = 0
 
 	local label = Instance.new("TextLabel")
 	label.Name = "Name"
-	label.Size = UDim2.fromScale(1, 1)
+	label.Position = UDim2.fromOffset(0, BADGE_HEIGHT_PX)
+	label.Size = UDim2.new(1, 0, 0, NAME_HEIGHT_PX)
 	label.BackgroundTransparency = 1
 	label.Text = displayName
 	label.FontFace = Theme.font.label
@@ -239,8 +248,25 @@ local function buildNameTag(root: BasePart, displayName: string): TextLabel
 	stroke.Parent = label
 
 	label.Parent = billboard
+
+	local badge = Instance.new("TextLabel")
+	badge.Name = "TutorialBadge"
+	badge.Visible = false
+	badge.Position = UDim2.fromOffset(0, 0)
+	badge.Size = UDim2.new(1, 0, 0, BADGE_HEIGHT_PX)
+	badge.BackgroundTransparency = 1
+	badge.Text = Strings.get("tutorial.badge")
+	badge.FontFace = Theme.font.label
+	badge.TextColor3 = Theme.rustic.emberLight
+	badge.TextScaled = true
+	local badgeStroke = Instance.new("UIStroke")
+	badgeStroke.Color = Theme.color(Palette.ui.panel)
+	badgeStroke.Thickness = NAME_STROKE
+	badgeStroke.Parent = badge
+	badge.Parent = billboard
+
 	billboard.Parent = root
-	return label
+	return label, badge
 end
 
 -- Mão em `c0` (posição em relação à raiz) e o contorno soldado a ela, mais baixo.
@@ -329,6 +355,7 @@ function BonecoModel.build(displayName: string): Boneco
 	local defaultLook = Defs.Cosmetics[Defs.CosmeticSlots.body.default].body
 	assert(defaultLook ~= nil, "[BonecoModel] skin padrão do corpo sem cores")
 
+	local nameLabel, tutorialBadge = buildNameTag(root, displayName)
 	local boneco: Boneco = {
 		model = model,
 		root = root,
@@ -336,7 +363,8 @@ function BonecoModel.build(displayName: string): Boneco
 		leftHandJoint = newMotor("LeftHandJoint", root, leftHand, leftC0),
 		rightHandJoint = newMotor("RightHandJoint", root, rightHand, rightC0),
 		rightHand = rightHand,
-		nameLabel = buildNameTag(root, displayName),
+		nameLabel = nameLabel,
+		tutorialBadge = tutorialBadge,
 		bodyParts = bodyParts,
 		handParts = { leftHand, rightHand },
 		outlineParts = outlineParts,

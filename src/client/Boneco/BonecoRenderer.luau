@@ -79,6 +79,9 @@ type Entry = {
 	hidden: boolean,
 	-- false enquanto o nome mostrado ainda não é o DisplayName do jogador.
 	nameResolved: boolean,
+	-- Dono do personagem (nil em boneco de teste) e o selo "Tutorial" mostrado.
+	player: Player?,
+	tutorialBadge: boolean,
 	connections: { RBXScriptConnection },
 }
 
@@ -213,7 +216,16 @@ local function syncAttributes(entry: Entry)
 		if player then
 			entry.boneco.nameLabel.Text = player.DisplayName
 			entry.nameResolved = true
+			entry.player = player
 		end
+	end
+	-- Selo "Tutorial": atributo do Player (não do personagem), então dá para ler
+	-- de qualquer jeito; lido aqui junto com o resto.
+	local owner = entry.player
+	local badge = owner ~= nil and owner:GetAttribute(StatNames.TutorialProtected) == true
+	if badge ~= entry.tutorialBadge then
+		entry.tutorialBadge = badge
+		entry.boneco.tutorialBadge.Visible = badge
 	end
 	local cosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT)
 	if cosmeticId ~= entry.cosmeticId then
@@ -269,6 +281,8 @@ local function build(character: Model, hrp: BasePart)
 		hidden = false,
 		-- Bonecos de teste não têm Player: o nome do modelo já é o certo.
 		nameResolved = player ~= nil or isDevCrowd(character),
+		player = player,
+		tutorialBadge = false,
 		connections = {},
 	}
 	entries[character] = entry

@@ -793,4 +793,9 @@ return table.freeze({
 	["tutorial.step.water"] = "Vá até a água e beba",
 	["tutorial.header"] = "Tutorial {step}/{total}",
 	["tutorial.done"] = "Tutorial completo! Você ganhou {spins} giros",
+	["tutorial.badge"] = "Tutorial",
+	["tutorial.popup.title"] = "Você tem {spins} giros!",
+	["tutorial.popup.body"] = "Gire na roleta para ganhar cosméticos.",
+	["tutorial.popup.go"] = "Ir para a roleta",
+	["tutorial.popup.later"] = "Depois",
 })

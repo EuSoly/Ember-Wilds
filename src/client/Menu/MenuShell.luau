@@ -26,6 +26,7 @@ local UiImages = require(Shared:WaitForChild("UiImages"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local SettingsScreen = require(Client:WaitForChild("Screens"):WaitForChild("SettingsScreen"))
 local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
@@ -48,6 +49,7 @@ local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local RankingScreen = require(script.Parent:WaitForChild("Ranking"):WaitForChild("RankingScreen"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
+local TutorialSpinPopup = require(script.Parent:WaitForChild("TutorialSpinPopup"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
 
 local create = vide.create
@@ -389,6 +391,10 @@ local function home(layout: () -> Layout): { Instance }
 		end,
 		Rustic.button({
 			Name = "KitsButton",
+			-- Tutorial pendente: a próxima vida é de tutorial, sem kit.
+			Visible = function()
+				return not TutorialState.pending()
+			end,
 			Size = function()
 				local l = layout()
 				return UDim2.fromOffset(l.kitsButtonWidth, l.actionsHeight)
@@ -402,8 +408,13 @@ local function home(layout: () -> Layout): { Instance }
 		}),
 		Rustic.button({
 			Name = "PlayButton",
-			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.fromScale(1, 0),
+			-- Sem o botão de kits (tutorial pendente), o JOGAR fica no centro.
+			AnchorPoint = function()
+				return if TutorialState.pending() then Vector2.new(0.5, 0) else Vector2.new(1, 0)
+			end,
+			Position = function()
+				return if TutorialState.pending() then UDim2.fromScale(0.5, 0) else UDim2.fromScale(1, 0)
+			end,
 			Size = function()
 				local l = layout()
 				return UDim2.fromOffset(l.playButtonWidth, l.actionsHeight)
@@ -567,6 +578,8 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	)
 	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
+	-- Pop-up da roleta depois do tutorial (uma vez), por cima de tudo.
+	table.insert(children, TutorialSpinPopup.build())
 
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",

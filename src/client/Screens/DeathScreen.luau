@@ -34,6 +34,7 @@ local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local KitList = require(script.Parent:WaitForChild("KitList"))
@@ -352,6 +353,10 @@ local function kitsColumn(layout: () -> DeathLayout.Layout, rect: () -> DeathLay
 	end
 	local column = create("Frame")({
 		Name = "Kits",
+		-- Tutorial pendente: a próxima vida é de tutorial, sem kit.
+		Visible = function()
+			return not TutorialState.pending()
+		end,
 		BackgroundColor3 = WELL,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = UDim.new(0, 6) }),
