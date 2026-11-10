@@ -125,4 +125,12 @@ return {
 		assert(SpinRules.markerTile(-101, 100, 400) == 3, "passou um")
 		assert(SpinRules.markerTile(-1000, 100, 400) == 12, "longe")
 	end,
+	["spin button only while idle, with spins and no prize open"] = function()
+		assert(SpinRules.canPress(1, false, false), "parado, com giro: pode")
+		assert(not SpinRules.canPress(0, false, false), "sem giro: não")
+		assert(not SpinRules.canPress(3, true, false), "girando: não")
+		-- O bug de 10/11/2026: girar com o prêmio aberto, e o Pegar cortava o
+		-- segundo giro no meio (a tela travava girando).
+		assert(not SpinRules.canPress(3, false, true), "prêmio na tela: não")
+	end,
 }

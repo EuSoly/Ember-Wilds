@@ -119,6 +119,11 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 
 	-- Volta a andar devagar (depois de fechar a janelinha do prêmio).
 	function self.idle(_: Reel)
+		-- No meio de um giro não muda: o fim do giro (Completed) só avisa quem
+		-- pediu se ainda estiver girando, e a tela ficaria travada esperando.
+		if mode == "spinning" then
+			return
+		end
 		mode = "idle"
 	end
 

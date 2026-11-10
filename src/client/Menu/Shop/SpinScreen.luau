@@ -128,6 +128,7 @@ local function side(
 	_typeId: () -> string?,
 	currency: () -> number,
 	onSpin: (SpinRules.Kind) -> (),
+	prizeOpen: () -> boolean,
 	order: number,
 	layout: () -> ShopLayout.Layout
 ): Frame
@@ -187,7 +188,7 @@ local function side(
 	end
 
 	local function spinKind(): Rustic.Kind
-		return if count() > 0 and not ShopState.spinning() then "ember" else "disabled"
+		return if SpinRules.canPress(count(), ShopState.spinning(), prizeOpen()) then "ember" else "disabled"
 	end
 	-- GIRAR dentro da linha de compra (só no compacto), com o contador no texto.
 	table.insert(
@@ -412,12 +413,13 @@ function SpinScreen.build(
 	local function spin(kind: SpinRules.Kind)
 		local id = vide.untrack(ShopState.spinType)
 		local spinType = if id then typeOf(id) else nil
-		if spinType == nil or reel == nil or vide.untrack(ShopState.spinning) then
+		if spinType == nil or reel == nil then
 			return
 		end
-		if vide.untrack(function()
-			return ShopData.spins(kind)
-		end) < 1 then
+		local allowed = vide.untrack(function()
+			return SpinRules.canPress(ShopData.spins(kind), ShopState.spinning(), won() ~= nil)
+		end)
+		if not allowed then
 			return
 		end
 		ShopState.spinning(true)
@@ -506,7 +508,9 @@ function SpinScreen.build(
 			text = Strings.get("shop.spin.take"),
 			Activated = function()
 				won(nil)
-				if reel then
+				-- Só volta a andar devagar se não houver giro em andamento (o
+				-- idle no meio do giro cortava o fim dele e a tela travava).
+				if reel and not vide.untrack(ShopState.spinning) then
 					reel:idle()
 				end
 			end,
@@ -545,8 +549,11 @@ function SpinScreen.build(
 	local function sideSize(): UDim2
 		return UDim2.new(0.5, -6, 0, layout().spinSideHeight)
 	end
-	local normalSide = side("normal", ShopState.spinType, currency, spin, 1, layout)
-	local paidSide = side("paid", ShopState.spinType, currency, spin, 2, layout)
+	local function prizeOpen(): boolean
+		return won() ~= nil
+	end
+	local normalSide = side("normal", ShopState.spinType, currency, spin, prizeOpen, 1, layout)
+	local paidSide = side("paid", ShopState.spinType, currency, spin, prizeOpen, 2, layout)
 	vide.apply(normalSide)({ Size = sideSize })
 	vide.apply(paidSide)({ Size = sideSize })
 

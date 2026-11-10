@@ -118,6 +118,14 @@ function SpinRules.useSpin(counts: Counts, typeId: string, kind: Kind): Counts
 end
 
 -- O saldo (atributo) paga o preço? NaN/infinito contam como inválidos.
+-- O botão GIRAR da tela de roleta pode ser apertado: tem giro, não está
+-- girando e a janelinha do prêmio já foi fechada (com o prêmio aberto, um
+-- segundo giro começava por trás e o Pegar o cortava no meio: a tela travava
+-- girando, sem fechar; visto em 10/11/2026).
+function SpinRules.canPress(spins: number, spinning: boolean, prizeOpen: boolean): boolean
+	return spins > 0 and not spinning and not prizeOpen
+end
+
 function SpinRules.canAfford(balance: number, price: number): boolean
 	if type(balance) ~= "number" or balance ~= balance or balance == math.huge or balance == -math.huge then
 		return false
