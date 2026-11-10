@@ -31,6 +31,7 @@ local R = Theme.rustic
 
 local BORDER = 40 -- px lógicos da moldura do quadro (a arte é esticada em 9 partes)
 local BORDER_COMPACT = 24
+local TAB_TALL = 50 -- aba desta altura para cima: ícone grande (PC)
 local HEADER_TOP = 14 -- linha do título, a partir do topo da janela
 local TROPHY = 64
 local CLOSE = 44
@@ -53,6 +54,11 @@ local function tab(index: number, height: () -> number): TextButton
 	local id = RankConfig.CATEGORIES[index]
 	local function selected(): boolean
 		return RankingState.category() == index
+	end
+	-- Ícone: fração da altura da aba. Na aba baixa do celular, menor, para o nome
+	-- caber ("Jogadores" quebrava em duas linhas, 10/11/2026).
+	local function iconShare(): number
+		return if height() < TAB_TALL then 0.6 else 0.86
 	end
 	return create("TextButton")({
 		Name = "Tab_" .. id,
@@ -78,7 +84,9 @@ local function tab(index: number, height: () -> number): TextButton
 			Name = "Icon",
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, 4, 0.5, 0),
-			Size = UDim2.fromScale(0, 0.86),
+			Size = function()
+				return UDim2.fromScale(0, iconShare())
+			end,
 			BackgroundTransparency = 1,
 			Image = RankingImages.TAB[id] or "",
 			ScaleType = Enum.ScaleType.Fit,
@@ -93,7 +101,7 @@ local function tab(index: number, height: () -> number): TextButton
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -6, 0.5, 0),
 			Size = function()
-				return UDim2.new(1, -(height() * 0.86 + 12), 0.6, 0)
+				return UDim2.new(1, -(height() * iconShare() + 12), 0.6, 0)
 			end,
 			Text = Strings.get("rank.tab." .. id),
 			maxSize = 20,

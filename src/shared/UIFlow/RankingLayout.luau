@@ -39,7 +39,9 @@ function RankingLayout.compute(width: number, height: number, scale: number): La
 	local rowHeight = math.max(if compact then 40 else 48, minTouch)
 	local tabHeight = math.max(if compact then 44 else 52, minTouch)
 
-	local inset = if compact then 16 else 30
+	-- No compacto, a mesma largura da moldura (RankingScreen BORDER_COMPACT): com
+	-- 16 o "termina em" e a linha "você" ficavam por cima da madeira (10/11/2026).
+	local inset = if compact then 24 else 30
 	local headerHeight = if compact then 0 else 58
 	local tabTop = if compact then 12 else 14 + headerHeight - 4
 	local bodyTop = tabTop + tabHeight + (if compact then 8 else 10)
