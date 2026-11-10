@@ -1,0 +1,981 @@
+{
+  "source": "approved-snapshot.blend",
+  "count": 32,
+  "mesh_count": 34,
+  "format": "FBX",
+  "combined_file": "armaduras-32.fbx",
+  "textures": [
+    "armaduras_palette.png",
+    "armaduras_roughness.png",
+    "armaduras_metalness.png"
+  ],
+  "texture_size": 256,
+  "palette_swatches": 98,
+  "axis_forward": "-Z",
+  "axis_up": "Y",
+  "scale": 1,
+  "import_scale_unit": "Stud",
+  "origin": "Body centre; Blender +Y front / +Z up; Roblox front -Z / up +Y",
+  "assets": [
+    {
+      "id": "wood_helmet",
+      "title": "Sete tabuas curvas, cintas de couro e pinos.",
+      "revision": "approved",
+      "file": "individual/wood_helmet.fbx",
+      "gallery": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "wood_helmet_armor",
+          "kind": "body",
+          "triangles": 11852,
+          "vertices": 6116,
+          "bounds": [
+            -2.0399999618530273,
+            -1.9850000143051147,
+            0.029999999329447746,
+            2.0399999618530273,
+            1.1399999856948853,
+            1.9228731393814087
+          ],
+          "source_parts": 62,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "stone_helmet",
+      "title": "Elmo baixo de rocha facetada; chifres curtos de pedra; placas grossas.",
+      "revision": "approved",
+      "file": "individual/stone_helmet.fbx",
+      "gallery": [
+        7.5,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "stone_helmet_armor",
+          "kind": "body",
+          "triangles": 1596,
+          "vertices": 832,
+          "bounds": [
+            -2.6578054428100586,
+            -1.9299999475479126,
+            0.1599999964237213,
+            2.6578054428100586,
+            1.154199481010437,
+            2.424250841140747
+          ],
+          "source_parts": 17,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "gold_helmet",
+      "title": "Elmo real reforcado; calota segmentada, bordas douradas, guardas duplas articuladas e gravuras.",
+      "revision": "v02 reinforced",
+      "file": "individual/gold_helmet.fbx",
+      "gallery": [
+        15.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "gold_helmet_armor",
+          "kind": "body",
+          "triangles": 4084,
+          "vertices": 2106,
+          "bounds": [
+            -2.256467819213867,
+            -1.9299999475479126,
+            0.1599999964237213,
+            2.256467819213867,
+            1.309619665145874,
+            2.7500269412994385
+          ],
+          "source_parts": 32,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "diamond_helmet",
+      "title": "Coroa glacial com placas espessas facetadas, cristais engastados e guardas duplas.",
+      "revision": "v02 reinforced",
+      "file": "individual/diamond_helmet.fbx",
+      "gallery": [
+        22.5,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "diamond_helmet_armor",
+          "kind": "body",
+          "triangles": 4072,
+          "vertices": 2094,
+          "bounds": [
+            -2.256467819213867,
+            -2.17765736579895,
+            0.1599999964237213,
+            2.256467819213867,
+            1.309619665145874,
+            2.8837952613830566
+          ],
+          "source_parts": 29,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "amethyst_helmet",
+      "title": "Elmo imperial de ametista; aletas grossas laminadas com engastes escuros, cristal alto e calota reforcada.",
+      "revision": "v02 reinforced",
+      "file": "individual/amethyst_helmet.fbx",
+      "gallery": [
+        30.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "amethyst_helmet_armor",
+          "kind": "body",
+          "triangles": 6440,
+          "vertices": 3312,
+          "bounds": [
+            -2.4574368000030518,
+            -2.182539939880371,
+            0.1599999964237213,
+            2.4574368000030518,
+            1.309619665145874,
+            3.1668448448181152
+          ],
+          "source_parts": 46,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "reidite_helmet",
+      "title": "Bastiao pesado de reidite; placas hexagonais sobrepostas, estruturas laterais macicas, juntas escuras e vertebras centrais.",
+      "revision": "v02 reinforced",
+      "file": "individual/reidite_helmet.fbx",
+      "gallery": [
+        37.5,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "reidite_helmet_armor",
+          "kind": "body",
+          "triangles": 7322,
+          "vertices": 3775,
+          "bounds": [
+            -2.4230496883392334,
+            -2.1150970458984375,
+            0.1599999964237213,
+            2.4230496883392334,
+            1.309619665145874,
+            2.520724058151245
+          ],
+          "source_parts": 57,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "dragon_helmet",
+      "title": "Cranio ancestral com escamas macicas sobrepostas, chifres espessos anelados, crista e esporas mandibulares.",
+      "revision": "v02 reinforced",
+      "file": "individual/dragon_helmet.fbx",
+      "gallery": [
+        45.0,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "dragon_helmet_armor",
+          "kind": "body",
+          "triangles": 9874,
+          "vertices": 5041,
+          "bounds": [
+            -2.577617645263672,
+            -2.4495580196380615,
+            0.1599999964237213,
+            2.57761812210083,
+            1.309619665145874,
+            3.677804470062256
+          ],
+          "source_parts": 52,
+          "roblox_material": "SmoothPlastic"
+        },
+        {
+          "name": "dragon_helmet_neon",
+          "kind": "neon",
+          "triangles": 216,
+          "vertices": 112,
+          "bounds": [
+            -1.2934021949768066,
+            -0.3274814784526825,
+            1.5530877113342285,
+            1.2934021949768066,
+            -0.12099654227495193,
+            1.7813706398010254
+          ],
+          "source_parts": 2,
+          "roblox_material": "Neon"
+        }
+      ]
+    },
+    {
+      "id": "crab_helmet",
+      "title": "Carapaca espessa segmentada, espinhos laterais e articulacoes reforcadas das pincas.",
+      "revision": "v02 reinforced",
+      "file": "individual/crab_helmet.fbx",
+      "gallery": [
+        52.5,
+        0.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "crab_helmet_armor",
+          "kind": "body",
+          "triangles": 5756,
+          "vertices": 2970,
+          "bounds": [
+            -3.1884055137634277,
+            -2.147395372390747,
+            0.1599999964237213,
+            3.1737518310546875,
+            0.6966503858566284,
+            2.6700000762939453
+          ],
+          "source_parts": 46,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "lava_helmet",
+      "title": "Elmo de obsidiana macico, placas separadas por magma, cornos grossos fraturados e nucleo preso por garras.",
+      "revision": "v02 reinforced",
+      "file": "individual/lava_helmet.fbx",
+      "gallery": [
+        0.0,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "lava_helmet_armor",
+          "kind": "body",
+          "triangles": 6630,
+          "vertices": 3405,
+          "bounds": [
+            -2.7543787956237793,
+            -2.316774606704712,
+            0.1599999964237213,
+            2.7463526725769043,
+            1.309619665145874,
+            3.7460854053497314
+          ],
+          "source_parts": 45,
+          "roblox_material": "SmoothPlastic"
+        },
+        {
+          "name": "lava_helmet_neon",
+          "kind": "neon",
+          "triangles": 846,
+          "vertices": 445,
+          "bounds": [
+            -2.6846301555633545,
+            -1.6719495058059692,
+            1.4437041282653809,
+            2.6600728034973145,
+            0.044862233102321625,
+            2.9404945373535156
+          ],
+          "source_parts": 11,
+          "roblox_material": "Neon"
+        }
+      ]
+    },
+    {
+      "id": "earmuffs",
+      "title": "Arco turquesa fino e duas conchas de pelucia creme.",
+      "revision": "approved",
+      "file": "individual/earmuffs.fbx",
+      "gallery": [
+        7.5,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "earmuffs_armor",
+          "kind": "body",
+          "triangles": 2880,
+          "vertices": 1474,
+          "bounds": [
+            -2.430000066757202,
+            -0.7749999761581421,
+            0.5487752556800842,
+            2.430000066757202,
+            0.5300000309944153,
+            2.2309327125549316
+          ],
+          "source_parts": 17,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "coat",
+      "title": "Casaco castanho com gola e capuz de pele, cordoes e fechos.",
+      "revision": "approved",
+      "file": "individual/coat.fbx",
+      "gallery": [
+        15.0,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "coat_armor",
+          "kind": "body",
+          "triangles": 5420,
+          "vertices": 2768,
+          "bounds": [
+            -2.260000467300415,
+            -2.1018035411834717,
+            -0.7200000286102295,
+            2.259999990463257,
+            2.134073257446289,
+            1.8799999952316284
+          ],
+          "source_parts": 29,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "winter_hat",
+      "title": "Gorro azul com trama, pompom branco e cachecol vermelho com franjas.",
+      "revision": "approved",
+      "file": "individual/winter_hat.fbx",
+      "gallery": [
+        22.5,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "winter_hat_armor",
+          "kind": "body",
+          "triangles": 1120,
+          "vertices": 594,
+          "bounds": [
+            -2.0364203453063965,
+            -2.010093927383423,
+            0.13179107010364532,
+            2.0778658390045166,
+            2.536367177963257,
+            2.75
+          ],
+          "source_parts": 17,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "fur_hat",
+      "title": "Chapeu de pele tipo ushanka, abas longas e faixa espessa de pelo.",
+      "revision": "approved",
+      "file": "individual/fur_hat.fbx",
+      "gallery": [
+        30.0,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "fur_hat_armor",
+          "kind": "body",
+          "triangles": 4012,
+          "vertices": 2068,
+          "bounds": [
+            -2.2599995136260986,
+            -2.010093927383423,
+            0.2999999523162842,
+            2.2599995136260986,
+            0.7623950242996216,
+            2.0203921794891357
+          ],
+          "source_parts": 31,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "turban",
+      "title": "Turbante de linho com voltas sobrepostas, broche e cauda de tecido.",
+      "revision": "approved",
+      "file": "individual/turban.fbx",
+      "gallery": [
+        37.5,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "turban_armor",
+          "kind": "body",
+          "triangles": 814,
+          "vertices": 421,
+          "bounds": [
+            -1.932897686958313,
+            -2.255671262741089,
+            0.2229333519935608,
+            2.4140660762786865,
+            0.08846871554851532,
+            2.27722430229187
+          ],
+          "source_parts": 7,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "ninja",
+      "title": "Capuz ninja com mascara de pano envolvente, ponte central e duas dobras suaves.",
+      "revision": "v02 mouth wrap",
+      "file": "individual/ninja.fbx",
+      "gallery": [
+        45.0,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "ninja_armor",
+          "kind": "body",
+          "triangles": 7616,
+          "vertices": 3832,
+          "bounds": [
+            -2.1018035411834717,
+            -2.6927196979522705,
+            -0.7200000286102295,
+            2.603853464126587,
+            2.134073257446289,
+            1.9600000381469727
+          ],
+          "source_parts": 12,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "pilot",
+      "title": "Touca de couro com abas, costura central e oculos de aviador na testa.",
+      "revision": "approved",
+      "file": "individual/pilot.fbx",
+      "gallery": [
+        52.5,
+        8.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "pilot_armor",
+          "kind": "body",
+          "triangles": 2284,
+          "vertices": 1180,
+          "bounds": [
+            -2.2599995136260986,
+            -2.010093927383423,
+            0.2999999523162842,
+            2.2599995136260986,
+            0.5899995565414429,
+            2.0936121940612793
+          ],
+          "source_parts": 19,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "diamond_protection",
+      "title": "Capuz refletor ciano, paineis prateados e oculos protetores.",
+      "revision": "approved",
+      "file": "individual/diamond_protection.fbx",
+      "gallery": [
+        0.0,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "diamond_protection_armor",
+          "kind": "body",
+          "triangles": 3408,
+          "vertices": 1744,
+          "bounds": [
+            -2.2599995136260986,
+            -2.1018035411834717,
+            -0.7200000286102295,
+            2.2599995136260986,
+            2.536367177963257,
+            2.0799999237060547
+          ],
+          "source_parts": 20,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "amethyst_protection",
+      "title": "Manto violeta, quatro defletores de calor e oculos dourados.",
+      "revision": "approved",
+      "file": "individual/amethyst_protection.fbx",
+      "gallery": [
+        7.5,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "amethyst_protection_armor",
+          "kind": "body",
+          "triangles": 3376,
+          "vertices": 1720,
+          "bounds": [
+            -2.259999990463257,
+            -2.1018035411834717,
+            -0.7200000286102295,
+            2.259999990463257,
+            2.134073257446289,
+            2.1849846839904785
+          ],
+          "source_parts": 16,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "reidite_protection",
+      "title": "Traje termico magenta com respirador, filtros e canais isolantes.",
+      "revision": "approved",
+      "file": "individual/reidite_protection.fbx",
+      "gallery": [
+        15.0,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "reidite_protection_armor",
+          "kind": "body",
+          "triangles": 3556,
+          "vertices": 1822,
+          "bounds": [
+            -2.260000467300415,
+            -2.1018035411834717,
+            -0.7200000286102295,
+            2.259999990463257,
+            2.134073257446289,
+            2.1718878746032715
+          ],
+          "source_parts": 22,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "explorer",
+      "title": "Chapeu caqui de aba larga, costuras, faixa de couro e pena verde.",
+      "revision": "approved",
+      "file": "individual/explorer.fbx",
+      "gallery": [
+        22.5,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "explorer_armor",
+          "kind": "body",
+          "triangles": 1220,
+          "vertices": 640,
+          "bounds": [
+            -2.4000000953674316,
+            -2.259999990463257,
+            1.2497814893722534,
+            2.4000000953674316,
+            0.1244189515709877,
+            2.190000057220459
+          ],
+          "source_parts": 15,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "hood",
+      "title": "Capuz verde pontudo com manto e laco de corda.",
+      "revision": "approved",
+      "file": "individual/hood.fbx",
+      "gallery": [
+        30.0,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "hood_armor",
+          "kind": "body",
+          "triangles": 1880,
+          "vertices": 958,
+          "bounds": [
+            -2.1023964881896973,
+            -2.484142303466797,
+            -0.8399999737739563,
+            2.1023964881896973,
+            2.1503565311431885,
+            2.59725022315979
+          ],
+          "source_parts": 9,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "winter_hood",
+      "title": "Capuz azul com borda de pelo e cachecol claro.",
+      "revision": "approved",
+      "file": "individual/winter_hood.fbx",
+      "gallery": [
+        37.5,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "winter_hood_armor",
+          "kind": "body",
+          "triangles": 5620,
+          "vertices": 2876,
+          "bounds": [
+            -2.2599995136260986,
+            -2.484142303466797,
+            -0.8399999737739563,
+            2.2599995136260986,
+            2.536367177963257,
+            2.59725022315979
+          ],
+          "source_parts": 33,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "peasant",
+      "title": "Chapeu de palha trancada, espiga e tunica verde.",
+      "revision": "approved",
+      "file": "individual/peasant.fbx",
+      "gallery": [
+        45.0,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "peasant_armor",
+          "kind": "body",
+          "triangles": 2784,
+          "vertices": 1452,
+          "bounds": [
+            -2.640000104904175,
+            -2.440000057220459,
+            -0.7200000286102295,
+            2.640000104904175,
+            2.134073257446289,
+            1.9834566116333008
+          ],
+          "source_parts": 30,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "winter_peasant",
+      "title": "Chapeu de palha com remendo, forro de pelo e tunica azul.",
+      "revision": "approved",
+      "file": "individual/winter_peasant.fbx",
+      "gallery": [
+        52.5,
+        16.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "winter_peasant_armor",
+          "kind": "body",
+          "triangles": 6248,
+          "vertices": 3230,
+          "bounds": [
+            -2.640000104904175,
+            -2.440000057220459,
+            -0.7200000286102295,
+            2.640000104904175,
+            2.536367177963257,
+            2.026944875717163
+          ],
+          "source_parts": 53,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "diving_mask",
+      "title": "Mascara turquesa com aros abertos, correia e snorkel lateral.",
+      "revision": "approved",
+      "file": "individual/diving_mask.fbx",
+      "gallery": [
+        0.0,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "diving_mask_armor",
+          "kind": "body",
+          "triangles": 1084,
+          "vertices": 558,
+          "bounds": [
+            -1.9740315675735474,
+            -2.0299999713897705,
+            1.0211542844772339,
+            2.3598952293395996,
+            1.3606834411621094,
+            2.34948992729187
+          ],
+          "source_parts": 8,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "diving_suit",
+      "title": "Roupa azul escura, oculos de latão, cilindros e mangueiras.",
+      "revision": "approved",
+      "file": "individual/diving_suit.fbx",
+      "gallery": [
+        7.5,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "diving_suit_armor",
+          "kind": "body",
+          "triangles": 3084,
+          "vertices": 1572,
+          "bounds": [
+            -2.1477224826812744,
+            -2.369999885559082,
+            -0.7200000286102295,
+            2.1477224826812744,
+            2.134073257446289,
+            1.909999966621399
+          ],
+          "source_parts": 15,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "witch",
+      "title": "Chapeu de bruxa de aba oval ondulada, copa alta com ponta curva e faixa vinho com fivela vazada.",
+      "revision": "v02 fluid brim and crown",
+      "file": "individual/witch.fbx",
+      "gallery": [
+        15.0,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "witch_armor",
+          "kind": "body",
+          "triangles": 4766,
+          "vertices": 2395,
+          "bounds": [
+            -2.5829999446868896,
+            -2.743000030517578,
+            1.2626501321792603,
+            2.5829193592071533,
+            -0.08699999749660492,
+            3.700000047683716
+          ],
+          "source_parts": 8,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "santa",
+      "title": "Gorro vermelho tombado para o lado, faixa branca e pompom.",
+      "revision": "approved",
+      "file": "individual/santa.fbx",
+      "gallery": [
+        22.5,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "santa_armor",
+          "kind": "body",
+          "triangles": 3404,
+          "vertices": 1742,
+          "bounds": [
+            -2.0799999237060547,
+            -2.010093927383423,
+            1.25,
+            1.9275280237197876,
+            0.19120091199874878,
+            3.147038459777832
+          ],
+          "source_parts": 20,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "elf",
+      "title": "Gorro verde curvo com guizo, faixa dentada vermelha e orelhas pontudas.",
+      "revision": "approved",
+      "file": "individual/elf.fbx",
+      "gallery": [
+        30.0,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "elf_armor",
+          "kind": "body",
+          "triangles": 1352,
+          "vertices": 698,
+          "bounds": [
+            -2.3912196159362793,
+            -2.010093927383423,
+            0.8141977787017822,
+            2.3912196159362793,
+            0.6392942667007446,
+            3.1954517364501953
+          ],
+          "source_parts": 11,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "life_crown",
+      "title": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Ramos cinzelados e esmeraldas.",
+      "revision": "v02 aligned crowns",
+      "file": "individual/life_crown.fbx",
+      "gallery": [
+        37.5,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "life_crown_armor",
+          "kind": "body",
+          "triangles": 11544,
+          "vertices": 5928,
+          "bounds": [
+            -1.937999963760376,
+            -2.0980000495910645,
+            1.3484307527542114,
+            1.937999963760376,
+            0.23800000548362732,
+            2.5450000762939453
+          ],
+          "source_parts": 79,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "angel_crown",
+      "title": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Asas espelhadas com penas curvas em duas camadas e aureola apoiada.",
+      "revision": "v02 aligned crowns",
+      "file": "individual/angel_crown.fbx",
+      "gallery": [
+        45.0,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "angel_crown_armor",
+          "kind": "body",
+          "triangles": 16392,
+          "vertices": 8408,
+          "bounds": [
+            -3.1235618591308594,
+            -2.0980000495910645,
+            1.3484307527542114,
+            3.1235618591308594,
+            0.23800000548362732,
+            3.58689022064209
+          ],
+          "source_parts": 107,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    },
+    {
+      "id": "luck_crown",
+      "title": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Topazios alinhados e trevo montado na coroa.",
+      "revision": "v02 aligned crowns",
+      "file": "individual/luck_crown.fbx",
+      "gallery": [
+        52.5,
+        24.0,
+        0.0
+      ],
+      "parts": [
+        {
+          "name": "luck_crown_armor",
+          "kind": "body",
+          "triangles": 11956,
+          "vertices": 6108,
+          "bounds": [
+            -1.937999963760376,
+            -2.0980000495910645,
+            1.3484307527542114,
+            1.937999963760376,
+            0.23800000548362732,
+            2.615000009536743
+          ],
+          "source_parts": 66,
+          "roblox_material": "SmoothPlastic"
+        }
+      ]
+    }
+  ]
+}

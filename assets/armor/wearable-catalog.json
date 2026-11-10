@@ -1,0 +1,485 @@
+[
+  {
+    "id": "earmuffs",
+    "title": "PROTETOR DE ORELHA",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Arco turquesa fino e duas conchas de pelucia creme.",
+    "preview_triangles": 2880,
+    "bounds_local": [
+      [
+        -2.430000066757202,
+        -0.7749999761581421,
+        0.5487752556800842
+      ],
+      [
+        2.430000066757202,
+        0.5300000309944153,
+        2.2309327125549316
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "coat",
+    "title": "CASACO",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Casaco castanho com gola e capuz de pele, cordoes e fechos.",
+    "preview_triangles": 5420,
+    "bounds_local": [
+      [
+        -2.260000467300415,
+        -2.1018035411834717,
+        -0.7200000286102295
+      ],
+      [
+        2.259999990463257,
+        2.134073257446289,
+        1.8799999952316284
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "winter_hat",
+    "title": "GORRO E CACHECOL",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Gorro azul com trama, pompom branco e cachecol vermelho com franjas.",
+    "preview_triangles": 1120,
+    "bounds_local": [
+      [
+        -2.0364203453063965,
+        -2.010093927383423,
+        0.13179107010364532
+      ],
+      [
+        2.0778658390045166,
+        2.536367177963257,
+        2.75
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "fur_hat",
+    "title": "CHAPEU DE PELE",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Chapeu de pele tipo ushanka, abas longas e faixa espessa de pelo.",
+    "preview_triangles": 4012,
+    "bounds_local": [
+      [
+        -2.2599995136260986,
+        -2.010093927383423,
+        0.2999999523162842
+      ],
+      [
+        2.2599995136260986,
+        0.7623950242996216,
+        2.0203921794891357
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "turban",
+    "title": "TURBANTE",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Turbante de linho com voltas sobrepostas, broche e cauda de tecido.",
+    "preview_triangles": 814,
+    "bounds_local": [
+      [
+        -1.932897686958313,
+        -2.255671262741089,
+        0.2229333519935608
+      ],
+      [
+        2.4140660762786865,
+        0.08846871554851532,
+        2.27722430229187
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "ninja",
+    "title": "ROUPA NINJA",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Capuz ninja com mascara de pano envolvente, ponte central e duas dobras suaves.",
+    "preview_triangles": 7616,
+    "bounds_local": [
+      [
+        -2.1018035411834717,
+        -2.6927196979522705,
+        -0.7200000286102295
+      ],
+      [
+        2.603853464126587,
+        2.134073257446289,
+        1.9600000381469727
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 mouth wrap"
+  },
+  {
+    "id": "pilot",
+    "title": "CHAPEU DE PILOTO",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Touca de couro com abas, costura central e oculos de aviador na testa.",
+    "preview_triangles": 2284,
+    "bounds_local": [
+      [
+        -2.2599995136260986,
+        -2.010093927383423,
+        0.2999999523162842
+      ],
+      [
+        2.2599995136260986,
+        0.5899995565414429,
+        2.0936121940612793
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "diamond_protection",
+    "title": "PROTECAO DE DIAMANTE",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Capuz refletor ciano, paineis prateados e oculos protetores.",
+    "preview_triangles": 3408,
+    "bounds_local": [
+      [
+        -2.2599995136260986,
+        -2.1018035411834717,
+        -0.7200000286102295
+      ],
+      [
+        2.2599995136260986,
+        2.536367177963257,
+        2.0799999237060547
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "amethyst_protection",
+    "title": "PROTECAO DE AMETISTA",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Manto violeta, quatro defletores de calor e oculos dourados.",
+    "preview_triangles": 3376,
+    "bounds_local": [
+      [
+        -2.259999990463257,
+        -2.1018035411834717,
+        -0.7200000286102295
+      ],
+      [
+        2.259999990463257,
+        2.134073257446289,
+        2.1849846839904785
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "reidite_protection",
+    "title": "PROTECAO DE REIDITE",
+    "scene": "Armaduras - 01 Frio e calor",
+    "design": "Traje termico magenta com respirador, filtros e canais isolantes.",
+    "preview_triangles": 3556,
+    "bounds_local": [
+      [
+        -2.260000467300415,
+        -2.1018035411834717,
+        -0.7200000286102295
+      ],
+      [
+        2.259999990463257,
+        2.134073257446289,
+        2.1718878746032715
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "explorer",
+    "title": "EXPLORADOR",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Chapeu caqui de aba larga, costuras, faixa de couro e pena verde.",
+    "preview_triangles": 1220,
+    "bounds_local": [
+      [
+        -2.4000000953674316,
+        -2.259999990463257,
+        1.2497814893722534
+      ],
+      [
+        2.4000000953674316,
+        0.1244189515709877,
+        2.190000057220459
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "hood",
+    "title": "CAPUZ",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Capuz verde pontudo com manto e laco de corda.",
+    "preview_triangles": 1880,
+    "bounds_local": [
+      [
+        -2.1023964881896973,
+        -2.484142303466797,
+        -0.8399999737739563
+      ],
+      [
+        2.1023964881896973,
+        2.1503565311431885,
+        2.59725022315979
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "winter_hood",
+    "title": "CAPUZ DE INVERNO",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Capuz azul com borda de pelo e cachecol claro.",
+    "preview_triangles": 5620,
+    "bounds_local": [
+      [
+        -2.2599995136260986,
+        -2.484142303466797,
+        -0.8399999737739563
+      ],
+      [
+        2.2599995136260986,
+        2.536367177963257,
+        2.59725022315979
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "peasant",
+    "title": "TUNICA DE CAMPONES",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Chapeu de palha trancada, espiga e tunica verde.",
+    "preview_triangles": 2784,
+    "bounds_local": [
+      [
+        -2.640000104904175,
+        -2.440000057220459,
+        -0.7200000286102295
+      ],
+      [
+        2.640000104904175,
+        2.134073257446289,
+        1.9834566116333008
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "winter_peasant",
+    "title": "CAMPONES DE INVERNO",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Chapeu de palha com remendo, forro de pelo e tunica azul.",
+    "preview_triangles": 6248,
+    "bounds_local": [
+      [
+        -2.640000104904175,
+        -2.440000057220459,
+        -0.7200000286102295
+      ],
+      [
+        2.640000104904175,
+        2.536367177963257,
+        2.026944875717163
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "diving_mask",
+    "title": "MASCARA DE MERGULHO",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Mascara turquesa com aros abertos, correia e snorkel lateral.",
+    "preview_triangles": 1084,
+    "bounds_local": [
+      [
+        -1.9740315675735474,
+        -2.0299999713897705,
+        1.0211542844772339
+      ],
+      [
+        2.3598952293395996,
+        1.3606834411621094,
+        2.34948992729187
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "diving_suit",
+    "title": "ROUPA DE MERGULHO",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Roupa azul escura, oculos de latão, cilindros e mangueiras.",
+    "preview_triangles": 3084,
+    "bounds_local": [
+      [
+        -2.1477224826812744,
+        -2.369999885559082,
+        -0.7200000286102295
+      ],
+      [
+        2.1477224826812744,
+        2.134073257446289,
+        1.909999966621399
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "witch",
+    "title": "CHAPEU DE BRUXA",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Chapeu de bruxa de aba oval ondulada, copa alta com ponta curva e faixa vinho com fivela vazada.",
+    "preview_triangles": 4766,
+    "bounds_local": [
+      [
+        -2.5829999446868896,
+        -2.743000030517578,
+        1.2626501321792603
+      ],
+      [
+        2.5829193592071533,
+        -0.08699999749660492,
+        3.700000047683716
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 fluid brim and crown"
+  },
+  {
+    "id": "santa",
+    "title": "GORRO DE NATAL",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Gorro vermelho tombado para o lado, faixa branca e pompom.",
+    "preview_triangles": 3404,
+    "bounds_local": [
+      [
+        -2.0799999237060547,
+        -2.010093927383423,
+        1.25
+      ],
+      [
+        1.9275280237197876,
+        0.19120091199874878,
+        3.147038459777832
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "elf",
+    "title": "GORRO DE ELFO",
+    "scene": "Armaduras - 02 Especiais",
+    "design": "Gorro verde curvo com guizo, faixa dentada vermelha e orelhas pontudas.",
+    "preview_triangles": 1352,
+    "bounds_local": [
+      [
+        -2.3912196159362793,
+        -2.010093927383423,
+        0.8141977787017822
+      ],
+      [
+        2.3912196159362793,
+        0.6392942667007446,
+        3.1954517364501953
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "life_crown",
+    "title": "COROA DA VIDA",
+    "scene": "Armaduras - 03 Coroas",
+    "design": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Ramos cinzelados e esmeraldas.",
+    "preview_triangles": 11544,
+    "bounds_local": [
+      [
+        -1.937999963760376,
+        -2.0980000495910645,
+        1.3484307527542114
+      ],
+      [
+        1.937999963760376,
+        0.23800000548362732,
+        2.5450000762939453
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 aligned crowns"
+  },
+  {
+    "id": "angel_crown",
+    "title": "COROA DO ANJO",
+    "scene": "Armaduras - 03 Coroas",
+    "design": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Asas espelhadas com penas curvas em duas camadas e aureola apoiada.",
+    "preview_triangles": 16392,
+    "bounds_local": [
+      [
+        -3.1235618591308594,
+        -2.0980000495910645,
+        1.3484307527542114
+      ],
+      [
+        3.1235618591308594,
+        0.23800000548362732,
+        3.58689022064209
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 aligned crowns"
+  },
+  {
+    "id": "luck_crown",
+    "title": "COROA DA SORTE",
+    "scene": "Armaduras - 03 Coroas",
+    "design": "Oito dentes simetricos; gemas lapidadas assentadas em engastes radiais; frisos e arabescos. Topazios alinhados e trevo montado na coroa.",
+    "preview_triangles": 11956,
+    "bounds_local": [
+      [
+        -1.937999963760376,
+        -2.0980000495910645,
+        1.3484307527542114
+      ],
+      [
+        1.937999963760376,
+        0.23800000548362732,
+        2.615000009536743
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 aligned crowns"
+  }
+]

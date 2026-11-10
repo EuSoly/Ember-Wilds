@@ -1,0 +1,989 @@
+{
+  "ok": true,
+  "files": [
+    {
+      "file": "armaduras-32.fbx",
+      "ok": true,
+      "meshes": 34,
+      "max_geometry_error": 1.7881393432617188e-06,
+      "checks": [
+        {
+          "mesh": "amethyst_helmet_armor",
+          "triangles": 6440,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "amethyst_protection_armor",
+          "triangles": 3376,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "angel_crown_armor",
+          "triangles": 16392,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "coat_armor",
+          "triangles": 5420,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "crab_helmet_armor",
+          "triangles": 5756,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "diamond_helmet_armor",
+          "triangles": 4072,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "diamond_protection_armor",
+          "triangles": 3408,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "diving_mask_armor",
+          "triangles": 1084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "diving_suit_armor",
+          "triangles": 3084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "dragon_helmet_armor",
+          "triangles": 9874,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "dragon_helmet_neon",
+          "triangles": 216,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.002"
+          ]
+        },
+        {
+          "mesh": "earmuffs_armor",
+          "triangles": 2880,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "elf_armor",
+          "triangles": 1352,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "explorer_armor",
+          "triangles": 1220,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "fur_hat_armor",
+          "triangles": 4012,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "gold_helmet_armor",
+          "triangles": 4084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "hood_armor",
+          "triangles": 1880,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "lava_helmet_armor",
+          "triangles": 6630,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "lava_helmet_neon",
+          "triangles": 846,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.002"
+          ]
+        },
+        {
+          "mesh": "life_crown_armor",
+          "triangles": 11544,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "luck_crown_armor",
+          "triangles": 11956,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "ninja_armor",
+          "triangles": 7616,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "peasant_armor",
+          "triangles": 2784,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "pilot_armor",
+          "triangles": 2284,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "reidite_helmet_armor",
+          "triangles": 7322,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "reidite_protection_armor",
+          "triangles": 3556,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "santa_armor",
+          "triangles": 3404,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "stone_helmet_armor",
+          "triangles": 1596,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "turban_armor",
+          "triangles": 814,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "winter_hat_armor",
+          "triangles": 1120,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "winter_hood_armor",
+          "triangles": 5620,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "winter_peasant_armor",
+          "triangles": 6248,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "witch_armor",
+          "triangles": 4766,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "wood_helmet_armor",
+          "triangles": 11852,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/wood_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 1.6205012798309326e-07,
+      "checks": [
+        {
+          "mesh": "wood_helmet_armor",
+          "triangles": 11852,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/stone_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "stone_helmet_armor",
+          "triangles": 1596,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/gold_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 1.1920928955078125e-07,
+      "checks": [
+        {
+          "mesh": "gold_helmet_armor",
+          "triangles": 4084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/diamond_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "diamond_helmet_armor",
+          "triangles": 4072,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/amethyst_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 4.76837158203125e-07,
+      "checks": [
+        {
+          "mesh": "amethyst_helmet_armor",
+          "triangles": 6440,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/reidite_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "reidite_helmet_armor",
+          "triangles": 7322,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/dragon_helmet.fbx",
+      "ok": true,
+      "meshes": 2,
+      "max_geometry_error": 7.152557373046875e-07,
+      "checks": [
+        {
+          "mesh": "dragon_helmet_armor",
+          "triangles": 9874,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "dragon_helmet_neon",
+          "triangles": 216,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.002"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/crab_helmet.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "crab_helmet_armor",
+          "triangles": 5756,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/lava_helmet.fbx",
+      "ok": true,
+      "meshes": 2,
+      "max_geometry_error": 7.152557373046875e-07,
+      "checks": [
+        {
+          "mesh": "lava_helmet_armor",
+          "triangles": 6630,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        },
+        {
+          "mesh": "lava_helmet_neon",
+          "triangles": 846,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.002"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/earmuffs.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "earmuffs_armor",
+          "triangles": 2880,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/coat.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "coat_armor",
+          "triangles": 5420,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/winter_hat.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.8743019104003906e-07,
+      "checks": [
+        {
+          "mesh": "winter_hat_armor",
+          "triangles": 1120,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/fur_hat.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "fur_hat_armor",
+          "triangles": 4012,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/turban.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "turban_armor",
+          "triangles": 814,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/ninja.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "ninja_armor",
+          "triangles": 7616,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/pilot.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "pilot_armor",
+          "triangles": 2284,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/diamond_protection.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "diamond_protection_armor",
+          "triangles": 3408,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/amethyst_protection.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "amethyst_protection_armor",
+          "triangles": 3376,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/reidite_protection.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "reidite_protection_armor",
+          "triangles": 3556,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/explorer.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "explorer_armor",
+          "triangles": 1220,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/hood.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "hood_armor",
+          "triangles": 1880,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/winter_hood.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "winter_hood_armor",
+          "triangles": 5620,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/peasant.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "peasant_armor",
+          "triangles": 2784,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/winter_peasant.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "winter_peasant_armor",
+          "triangles": 6248,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/diving_mask.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "diving_mask_armor",
+          "triangles": 1084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/diving_suit.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "diving_suit_armor",
+          "triangles": 3084,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/witch.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "witch_armor",
+          "triangles": 4766,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/santa.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "santa_armor",
+          "triangles": 3404,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/elf.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 2.384185791015625e-07,
+      "checks": [
+        {
+          "mesh": "elf_armor",
+          "triangles": 1352,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/life_crown.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "life_crown_armor",
+          "triangles": 11544,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/angel_crown.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "angel_crown_armor",
+          "triangles": 16392,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "individual/luck_crown.fbx",
+      "ok": true,
+      "meshes": 1,
+      "max_geometry_error": 3.5762786865234375e-07,
+      "checks": [
+        {
+          "mesh": "luck_crown_armor",
+          "triangles": 11956,
+          "texture_files": [
+            "armaduras_palette.png",
+            "armaduras_roughness.png",
+            "armaduras_metalness.png",
+            "armaduras_palette.png.001"
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "sha256": {
+    "armaduras-32.fbx": "9cce5308b50fb0f98973dd43e2142e117bd4a7f11c6528d65b9f96579b07fb9d",
+    "individual\\wood_helmet.fbx": "487088367a894928f7ad91a65640df9002a66d89305a1ff98e4f6f80363ed4d6",
+    "individual\\stone_helmet.fbx": "6ebb500ad2a7d8e041d9d86645c0bb9477204ef680836cd172579103ed6e991c",
+    "individual\\gold_helmet.fbx": "70f7966a0cf51d0915d69896874d1f015c9d4f2dfb41c4ba293cafa8e81ea430",
+    "individual\\diamond_helmet.fbx": "e91b4269f86b19121a00273264a4991bcf0056e8dec26bb27bbf6d68fdae0aa8",
+    "individual\\amethyst_helmet.fbx": "d3fbc9a3b622b7b31fce8ef8c515b89acfa9f826dac68921dedecb28ca281779",
+    "individual\\reidite_helmet.fbx": "c7965c8d913a5ccf6f19dad35df4db78a44e6dcaa7dfc67a2b4a7aef344c043a",
+    "individual\\dragon_helmet.fbx": "bd47c5902640c620c60513618f893d0454bf398a5a319ef7454257056b8d42f7",
+    "individual\\crab_helmet.fbx": "46fa9f7b0cc249a2c7137710170a9205e52dde2539c1411e125d27631aa64459",
+    "individual\\lava_helmet.fbx": "04b42f0f812422e1611d7f5c3cbb6dc833126bf0626bbdcfd4f7e84596b6b26f",
+    "individual\\earmuffs.fbx": "3fdd637c1b9504cbaf979ce043d54d39b035acc7980f2f213953aeea36812d6b",
+    "individual\\coat.fbx": "790195e0e90cac32755bd90af1119d4fddfed9ccda8ae78e2bf0a3b4803b5e4a",
+    "individual\\winter_hat.fbx": "3e8e70f56d7f5f610bccfdd9561d7677cd85e9b9cdeddfc15ec1879628df107c",
+    "individual\\fur_hat.fbx": "64b58a881fcbf9c198deef3d8503a1b7c9d364b93212afcce72a1aa4d780a61b",
+    "individual\\turban.fbx": "9f3336e27e88cbc9188d94848557197fef71c2659b4f58a416f04c0bfee9e386",
+    "individual\\ninja.fbx": "e107799798c7cf4951efbc591b3f04177e40bccc8ba7661b054936d2bcf9823a",
+    "individual\\pilot.fbx": "a0791d6f554ae5242c14b911775b9f941a368ee59a2f8d6cb95810b5a7053527",
+    "individual\\diamond_protection.fbx": "b713333e19b821e695d3d9883b03654d2047a05ba644a147c0ff7fef615d3069",
+    "individual\\amethyst_protection.fbx": "6fdde7646909aef5d025171903b553080fe059a1784f2b1645c41bbb4f846e58",
+    "individual\\reidite_protection.fbx": "b931ed1c71326210ab7419be778c044392a08216cf3e1ba44de02c83d763adbc",
+    "individual\\explorer.fbx": "e844b3a3ae691af2f70fcce1ce25163546b35e8de53c39da1fc27eaa98ecd9bb",
+    "individual\\hood.fbx": "bcdbc6cb9cfda3bab5acaeaeea4abb6ccbe245c71fca198a07e0fe1ecd349c4b",
+    "individual\\winter_hood.fbx": "abd845dd0909117d6a3a7be4a884f9f08991fb25a1a9de1b97c84c118a6800a2",
+    "individual\\peasant.fbx": "80372c24858ba3f15362a970bc6754bf60be35e5841e04831bc2afa13bb0040b",
+    "individual\\winter_peasant.fbx": "f0017397340982a02993122ef7017138d698054b39f6570d527642aee245a011",
+    "individual\\diving_mask.fbx": "f51f94d6fd9ac9918eb9d569ed7eea30f4ddeaf6acad3b904938a9dfb953990b",
+    "individual\\diving_suit.fbx": "2cdd7123a46f7e251d2e24db17894da62cbec5fd5797f99dd525aad3f59d8d0d",
+    "individual\\witch.fbx": "f27f8db2bb76ca4203e4b8e59ccb6c9a3baf1ffb07c998f4900e02e6f683605a",
+    "individual\\santa.fbx": "a2492782b25b86991ef44a141bb4788707c7126fba2a6045b30ae7cf2710e699",
+    "individual\\elf.fbx": "123a1eda761d1d3fbe74b657838d855928d9894267eb0e6b545e0caabcd99d8c",
+    "individual\\life_crown.fbx": "57946643adf35817973f248f1f4b3aee55fcba7e3796078b33c4a936434dcfac",
+    "individual\\angel_crown.fbx": "c245aec3f8eab27aaa3939c283752033fa90fe39ea7c0ba2fe421bd1aa1c5b11",
+    "individual\\luck_crown.fbx": "8456d26f41e078da96a593305c4327bb74a32ce46c6bddafce35a745849f5809"
+  }
+}

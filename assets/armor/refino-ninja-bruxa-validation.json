@@ -1,0 +1,26 @@
+[
+  {
+    "item": "ninja",
+    "eye": "ninja_REF_EyeOpen",
+    "first_hit": "ninja_REF_EyeOpen",
+    "visible": true
+  },
+  {
+    "item": "ninja",
+    "eye": "ninja_REF_EyeOpen.001",
+    "first_hit": "ninja_REF_EyeOpen.001",
+    "visible": true
+  },
+  {
+    "item": "witch",
+    "eye": "witch_REF_EyeOpen",
+    "first_hit": "witch_REF_EyeOpen",
+    "visible": true
+  },
+  {
+    "item": "witch",
+    "eye": "witch_REF_EyeOpen.001",
+    "first_hit": "witch_REF_EyeOpen.001",
+    "visible": true
+  }
+]

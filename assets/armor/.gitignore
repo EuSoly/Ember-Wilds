@@ -1,0 +1,7 @@
+# Referências, backups de refino e área de trabalho do export ficam só na máquina
+reference/
+backups/
+export-work/
+# Cópia do pacote extraída do ZIP (igual a roblox/) e o próprio ZIP
+armaduras-roblox/
+armaduras-roblox.zip

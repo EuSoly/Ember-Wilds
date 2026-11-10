@@ -1,0 +1,173 @@
+[
+  {
+    "id": "wood_helmet",
+    "preview_triangles": 11852,
+    "design": "Sete tabuas curvas, cintas de couro e pinos.",
+    "bounds_local": [
+      [
+        -2.0399999618530273,
+        -1.9850000143051147,
+        0.029999999329447746
+      ],
+      [
+        2.0399999618530273,
+        1.1399999856948853,
+        1.9228731393814087
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "stone_helmet",
+    "preview_triangles": 1596,
+    "design": "Elmo baixo de rocha facetada; chifres curtos de pedra; placas grossas.",
+    "bounds_local": [
+      [
+        -2.6578054428100586,
+        -1.9299999475479126,
+        0.1599999964237213
+      ],
+      [
+        2.6578054428100586,
+        1.154199481010437,
+        2.424250841140747
+      ]
+    ],
+    "integrated": false,
+    "revision": "approved"
+  },
+  {
+    "id": "gold_helmet",
+    "preview_triangles": 4084,
+    "design": "Elmo real reforcado; calota segmentada, bordas douradas, guardas duplas articuladas e gravuras.",
+    "bounds_local": [
+      [
+        -2.256467819213867,
+        -1.9299999475479126,
+        0.1599999964237213
+      ],
+      [
+        2.256467819213867,
+        1.309619665145874,
+        2.7500269412994385
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "diamond_helmet",
+    "preview_triangles": 4072,
+    "design": "Coroa glacial com placas espessas facetadas, cristais engastados e guardas duplas.",
+    "bounds_local": [
+      [
+        -2.256467819213867,
+        -2.17765736579895,
+        0.1599999964237213
+      ],
+      [
+        2.256467819213867,
+        1.309619665145874,
+        2.8837952613830566
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "amethyst_helmet",
+    "preview_triangles": 6440,
+    "design": "Elmo imperial de ametista; aletas grossas laminadas com engastes escuros, cristal alto e calota reforcada.",
+    "bounds_local": [
+      [
+        -2.4574368000030518,
+        -2.182539939880371,
+        0.1599999964237213
+      ],
+      [
+        2.4574368000030518,
+        1.309619665145874,
+        3.1668448448181152
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "reidite_helmet",
+    "preview_triangles": 7322,
+    "design": "Bastiao pesado de reidite; placas hexagonais sobrepostas, estruturas laterais macicas, juntas escuras e vertebras centrais.",
+    "bounds_local": [
+      [
+        -2.4230496883392334,
+        -2.1150970458984375,
+        0.1599999964237213
+      ],
+      [
+        2.4230496883392334,
+        1.309619665145874,
+        2.520724058151245
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "dragon_helmet",
+    "preview_triangles": 10090,
+    "design": "Cranio ancestral com escamas macicas sobrepostas, chifres espessos anelados, crista e esporas mandibulares.",
+    "bounds_local": [
+      [
+        -2.577617645263672,
+        -2.4495580196380615,
+        0.1599999964237213
+      ],
+      [
+        2.57761812210083,
+        1.309619665145874,
+        3.677804470062256
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "crab_helmet",
+    "preview_triangles": 5756,
+    "design": "Carapaca espessa segmentada, espinhos laterais e articulacoes reforcadas das pincas.",
+    "bounds_local": [
+      [
+        -3.1884055137634277,
+        -2.147395372390747,
+        0.1599999964237213
+      ],
+      [
+        3.1737518310546875,
+        0.6966503858566284,
+        2.6700000762939453
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  },
+  {
+    "id": "lava_helmet",
+    "preview_triangles": 7476,
+    "design": "Elmo de obsidiana macico, placas separadas por magma, cornos grossos fraturados e nucleo preso por garras.",
+    "bounds_local": [
+      [
+        -2.7543787956237793,
+        -2.316774606704712,
+        0.1599999964237213
+      ],
+      [
+        2.7463526725769043,
+        1.309619665145874,
+        3.7460854053497314
+      ]
+    ],
+    "integrated": false,
+    "revision": "v02 reinforced"
+  }
+]
