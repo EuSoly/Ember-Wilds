@@ -132,4 +132,16 @@ function ArmorRules.regenFactor(mods: Modifiers): number
 	return (mods.regenHeal or C.STARVE_REGEN_HEAL) / C.STARVE_REGEN_HEAL
 end
 
+-- Pode vestir outra peça? `lockUntil` = instante gravado ao vestir a última
+-- (SurvivalConfig.ARMOR_SWAP_LOCK depois); nil = sem trava.
+function ArmorRules.canSwap(lockUntil: number?, now: number): boolean
+	return lockUntil == nil or now >= lockUntil
+end
+
+-- Explorador ligado: a peça tem `explorer` e o dono não bateu em nada há
+-- pouco (`offUntil` = instante em que o efeito volta; nil = nunca bateu).
+function ArmorRules.isStealthy(mods: Modifiers, offUntil: number?, now: number): boolean
+	return mods.explorer and (offUntil == nil or now >= offUntil)
+end
+
 return ArmorRules

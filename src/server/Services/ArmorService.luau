@@ -5,12 +5,14 @@
 -- devagar) vêm do bloco `armor` do item em Defs/Items, via ArmorRules.
 -- Contrato (igual ao InventoryService.equipBag): wear NÃO tira nem devolve
 -- itens do inventário; quem chamar no futuro (tela de equipamento) cuida disso.
--- Hoje quem chama é o comando de dev DevArmor e a morte (tira a armadura).
+-- Quem chama: WearService (segurar e usar), DevArmor e a morte (tira a peça).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
 
 local ArmorService = {}
 
@@ -24,6 +26,11 @@ function ArmorService.wear(player: Player, itemId: string?): boolean
 		end
 	end
 	player:SetAttribute(StatNames.Armor, itemId)
+	-- Tirar a peça (morte, dev) zera a trava de troca e o explorador.
+	if itemId == nil then
+		player:SetAttribute(StatNames.ArmorLockUntil, nil)
+		player:SetAttribute(StatNames.ExplorerOffUntil, nil)
+	end
 	return true
 end
 
@@ -34,6 +41,34 @@ function ArmorService.modifiers(player: Player): ArmorRules.Modifiers
 		return ArmorRules.NONE
 	end
 	return ArmorRules.modifiers(Defs.Items[itemId])
+end
+
+-- Dá para vestir outra peça agora? (espera de ARMOR_SWAP_LOCK depois de vestir)
+function ArmorService.canSwap(player: Player): boolean
+	local lockUntil = player:GetAttribute(StatNames.ArmorLockUntil)
+	return ArmorRules.canSwap(if type(lockUntil) == "number" then lockUntil else nil, Workspace:GetServerTimeNow())
+end
+
+-- Começa a espera de troca (chamar depois de vestir pelo jogo).
+function ArmorService.startSwapLock(player: Player)
+	player:SetAttribute(StatNames.ArmorLockUntil, Workspace:GetServerTimeNow() + SurvivalConfig.ARMOR_SWAP_LOCK)
+end
+
+-- O jogador bateu em algo: o Chapéu de Explorador para de esconder por EXPLORER_OFF s.
+function ArmorService.markHit(player: Player)
+	if ArmorService.modifiers(player).explorer then
+		player:SetAttribute(StatNames.ExplorerOffUntil, Workspace:GetServerTimeNow() + SurvivalConfig.EXPLORER_OFF)
+	end
+end
+
+-- Mobs agressivos ignoram o jogador agora? (Chapéu de Explorador ligado)
+function ArmorService.isStealthy(player: Player): boolean
+	local offUntil = player:GetAttribute(StatNames.ExplorerOffUntil)
+	return ArmorRules.isStealthy(
+		ArmorService.modifiers(player),
+		if type(offUntil) == "number" then offUntil else nil,
+		Workspace:GetServerTimeNow()
+	)
 end
 
 return ArmorService

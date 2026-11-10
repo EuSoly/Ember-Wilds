@@ -15,8 +15,9 @@ type Rng = Rng.Rng
 
 export type Mode = "wander" | "chase" | "flee"
 
--- Jogador vivo, no chão, no bioma.
-export type Seen = { who: any, x: number, z: number }
+-- Jogador vivo, no chão, no bioma. stealth = com o Chapéu de Explorador
+-- ligado: mob agressivo não começa a perseguir e larga se já perseguia.
+export type Seen = { who: any, x: number, z: number, stealth: boolean? }
 
 export type Brain = {
 	mode: Mode,
@@ -226,6 +227,7 @@ local function thinkHunter(
 		and def.behavior == "aggressive"
 		and now >= brain.calmUntil
 		and nearest ~= nil
+		and nearest.stealth ~= true
 		and distance(x, z, nearest.x, nearest.z) <= MobRules.SENSE_RADIUS
 	then
 		startChase(brain, nearest.who, now)
@@ -239,7 +241,8 @@ local function thinkHunter(
 	if seen == nil and nearest ~= nil and nearest.who == brain.target then
 		seen = nearest
 	end
-	if seen == nil or now - brain.lastHitAt >= MobRules.GIVE_UP then
+	-- Explorador: o alvo ficou "escondido" (não bate em nada há EXPLORER_OFF s).
+	if seen == nil or seen.stealth == true or now - brain.lastHitAt >= MobRules.GIVE_UP then
 		giveUp(brain, now)
 		return
 	end

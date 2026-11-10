@@ -69,6 +69,20 @@ return {
 		assert(m.warm.night == 0 and m.warm.waterDay == 0, "warm ausente = 0")
 	end,
 
+	["swap lock"] = function()
+		assert(ArmorRules.canSwap(nil, 0), "sem trava troca")
+		assert(not ArmorRules.canSwap(10, 9), "antes do fim da trava não troca")
+		assert(ArmorRules.canSwap(10, 10), "no fim da trava troca")
+	end,
+
+	["explorer stealth"] = function()
+		local m = ArmorRules.modifiers(helmet({ explorer = true }))
+		assert(ArmorRules.isStealthy(m, nil, 5), "nunca bateu: escondido")
+		assert(not ArmorRules.isStealthy(m, 20, 15), "bateu há pouco: visível")
+		assert(ArmorRules.isStealthy(m, 20, 20), "passou o tempo: escondido de novo")
+		assert(not ArmorRules.isStealthy(ArmorRules.NONE, nil, 5), "sem explorador: visível")
+	end,
+
 	["item without armor block is neutral"] = function()
 		local m = ArmorRules.modifiers({ id = "wood", nameKey = "item.wood", category = "resource", maxStack = 255 })
 		assert(m == ArmorRules.NONE, "item comum = NONE")

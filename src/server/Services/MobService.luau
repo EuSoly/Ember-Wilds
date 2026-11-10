@@ -52,6 +52,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Types = require(ReplicatedStorage.Shared.Defs.Types)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
+local ArmorService = require(script.Parent.ArmorService)
 local CharacterService = require(script.Parent.CharacterService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
@@ -203,7 +204,12 @@ local function livingBodies(): { MobBrain.Seen }
 		local character = player.Character
 		local root = rootOf(character)
 		if character and root then
-			table.insert(bodies, { who = character, x = root.Position.X, z = root.Position.Z })
+			table.insert(bodies, {
+				who = character,
+				x = root.Position.X,
+				z = root.Position.Z,
+				stealth = ArmorService.isStealthy(player),
+			})
 		end
 	end
 	return bodies
@@ -244,10 +250,14 @@ local function distanceSq(ax: number, az: number, bx: number, bz: number): numbe
 end
 
 -- Mais perto de (x, z) na lista, e o quadrado da distância (math.huge sem ninguém).
-local function closest(list: { MobBrain.Seen }, x: number, z: number): (MobBrain.Seen?, number)
+-- skipStealth: pula quem está com o Chapéu de Explorador ligado (caçadores).
+local function closest(list: { MobBrain.Seen }, x: number, z: number, skipStealth: boolean?): (MobBrain.Seen?, number)
 	local best: MobBrain.Seen? = nil
 	local bestSq = math.huge
 	for _, body in list do
+		if skipStealth and body.stealth then
+			continue
+		end
 		local sq = distanceSq(x, z, body.x, body.z)
 		if sq < bestSq then
 			best, bestSq = body, sq
@@ -532,7 +542,7 @@ local function step()
 			view = viewOf(mob.rect, bodies)
 			views[mob.biome] = view
 		end
-		local nearest = closest(view.list, mob.x, mob.z)
+		local nearest = closest(view.list, mob.x, mob.z, mob.def.behavior ~= "passive")
 		-- Alvo que morreu, renasceu (outro personagem) ou saiu do bioma = nil: o cérebro desiste.
 		local brainTarget = mob.brain.target
 		local target = if brainTarget ~= nil then view.byWho[brainTarget] else nil

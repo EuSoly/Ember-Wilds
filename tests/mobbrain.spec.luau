@@ -56,6 +56,21 @@ local function chasing(def: any, now: number): (MobBrain.Brain, any)
 end
 
 return {
+	["agressivo ignora quem está com o explorador"] = function()
+		local rng = Rng.new(1)
+		local brain = MobBrain.new(wolf, 0, 0, 0, rng)
+		local stealthy = { who = P1, x = 5, z = 0, stealth = true }
+		MobBrain.think(brain, wolf, 1, 0, 0, stealthy, nil, true, rng)
+		assert(brain.mode ~= "chase", "não persegue quem está com o explorador")
+	end,
+
+	["perseguindo solta o alvo quando o explorador liga"] = function()
+		local brain, rng = chasing(wolf, 0)
+		local stealthy = { who = P1, x = 10, z = 0, stealth = true }
+		MobBrain.think(brain, wolf, 1, 0, 0, stealthy, stealthy, true, rng)
+		assert(brain.mode ~= "chase" and brain.target == nil, "desiste do alvo com o explorador")
+	end,
+
 	["agressivo vê a 18 e não a 19"] = function()
 		local rng = Rng.new(1)
 		local far = MobBrain.new(wolf, 0, 0, 0, rng)

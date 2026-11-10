@@ -53,6 +53,10 @@ local function wear(player: Player, character: Model)
 	end
 
 	if item.category == "armor" then
+		-- Starve: depois de vestir, espera ARMOR_SWAP_LOCK para trocar de novo.
+		if not ArmorService.canSwap(player) then
+			return
+		end
 		local previous = player:GetAttribute(StatNames.Armor)
 		local oldId = if type(previous) == "string" then previous else nil
 		if not canReturnArmor(player, heldId, oldId) then
@@ -65,6 +69,7 @@ local function wear(player: Player, character: Model)
 			InventoryService.give(player, heldId, 1)
 			return
 		end
+		ArmorService.startSwapLock(player)
 		if oldId then
 			InventoryService.give(player, oldId, 1)
 		end

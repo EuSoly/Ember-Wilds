@@ -29,6 +29,7 @@ local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local TutorialRules = require(ReplicatedStorage.Shared.Tutorial.TutorialRules)
+local ArmorService = require(script.Parent.ArmorService)
 local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
 local CrateService = require(script.Parent.CrateService)
@@ -189,6 +190,8 @@ local function hit(player: Player, character: Model, root: BasePart)
 	if target == nil then
 		return
 	end
+	-- Bateu em algo: o Chapéu de Explorador para de esconder por um tempo.
+	ArmorService.markHit(player)
 	if target.structure then
 		StructureService.hit(target.structure, player, tool)
 		return
