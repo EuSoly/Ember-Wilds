@@ -129,6 +129,44 @@ return {
 		assert(armorOf("coat").warm.day == 2 and armorOf("coat").warm.night == 13, "casaco 2/13")
 	end,
 
+	["armor recipes"] = function()
+		for _, id in PIECES do
+			local recipe = Defs.Recipes[id]
+			if id == "santa" or id == "elf" then
+				assert(recipe == nil, `{id} sai do presente de Natal, sem receita`)
+			else
+				assert(recipe ~= nil and recipe.result == id, `{id} sem receita`)
+			end
+		end
+		local reidite = Defs.Recipes.reidite_helmet
+		assert(reidite.station == "workbench", "reidite na bancada")
+		assert(reidite.alsoNear and #reidite.alsoNear == 1 and reidite.alsoNear[1] == "fire", "e no fogo")
+		local crown = Defs.Recipes.life_crown
+		assert(crown.alsoNear and #crown.alsoNear == 2, "coroa: fogo e água")
+		assert(crown.alsoNear[1] == "fire" and crown.alsoNear[2] == "water", "ordem fogo, água")
+		local explorer = Defs.Recipes.explorer
+		local counts = {}
+		for _, part in explorer.ingredients do
+			counts[part.id] = part.count
+		end
+		assert(counts.paper == 1 and counts.rabbit_fur == 1 and counts.thread == 2, "explorador do Starve")
+		assert(explorer.station == "workbench" and explorer.time == 5, "bancada, 5 s")
+		local blue = Defs.Recipes.blue_thread
+		assert(blue and blue.time == 3 and #blue.ingredients == 2, "linha azul: diamante + linha, 3 s")
+	end,
+
+	["released recipes only use released items"] = function()
+		for _, recipe in Defs.Recipes do
+			local result = Defs.Items[recipe.result]
+			if result and result.testOnly ~= true then
+				for _, part in recipe.ingredients do
+					local item = Defs.Items[part.id]
+					assert(item and item.testOnly ~= true, `{recipe.id} liberado usa {part.id} (só teste)`)
+				end
+			end
+		end
+	end,
+
 	["crab food"] = function()
 		local sticks = Defs.Items.crab_sticks
 		local claws = Defs.Items.crab_claws

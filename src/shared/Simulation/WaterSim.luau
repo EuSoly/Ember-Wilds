@@ -108,6 +108,18 @@ function WaterSim.isWaterAt(x: number, z: number): boolean
 	return isWater(x, z)
 end
 
+-- true se (x, z) está a até `radius` studs (visto de cima) da borda de alguma
+-- peça de água, ou dentro dela. É a "estação" água das receitas do Starve.
+function WaterSim.isNearWater(x: number, z: number, radius: number): boolean
+	startWatching()
+	for _, shape in waterShapes do
+		if Shapes.distanceOutside(shape, x, z) <= radius then
+			return true
+		end
+	end
+	return false
+end
+
 -- Último resultado da simulação para o jogador (false sem personagem).
 function WaterSim.isInWater(player: Player): boolean
 	return inWater[player] == true

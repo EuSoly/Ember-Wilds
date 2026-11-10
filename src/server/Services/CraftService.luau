@@ -13,6 +13,7 @@ local CraftRules = require(ReplicatedStorage.Shared.Craft.CraftRules)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 local InventoryService = require(script.Parent.InventoryService)
 local StatsService = require(script.Parent.StatsService)
 local Net = require(script.Parent.Parent.Net)
@@ -26,7 +27,16 @@ local function maxStackOf(id: string): number
 	return if item then item.maxStack else 1
 end
 
+local NOTICE_BY_STATION: { [string]: string } = {
+	workbench = "craft.needWorkbench",
+	fire = "craft.needFire",
+	water = "craft.needWater",
+}
+
 local function stationNear(kind: string, position: Vector3): boolean
+	if kind == "water" then
+		return WaterSim.isNearWater(position.X, position.Z, CraftRules.STATION_RADIUS)
+	end
 	for _, station in CollectionService:GetTagged(StatNames.CraftStationTag) do
 		if station:GetAttribute(StatNames.Station) == kind and station:IsDescendantOf(Workspace) then
 			local center: Vector3?
@@ -97,9 +107,11 @@ local function start(player: Player, recipeId: string)
 	if inv == nil then
 		return
 	end
-	if recipe.station and not stationNear(recipe.station, root.Position) then
-		notify(player, if recipe.station == "workbench" then "craft.needWorkbench" else "craft.needFire")
-		return
+	for _, station in CraftRules.stationsOf(recipe) do
+		if not stationNear(station, root.Position) then
+			notify(player, NOTICE_BY_STATION[station])
+			return
+		end
 	end
 	local counts = countsOf(inv)
 	if not CraftRules.hasIngredients(recipe, counts) then

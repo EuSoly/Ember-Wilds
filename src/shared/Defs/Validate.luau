@@ -268,6 +268,9 @@ local function isWholeNumber(value: any, min: number): boolean
 	return isFiniteNumber(value) and value % 1 == 0 and value >= min
 end
 
+-- Estações de craft que existem (Types.CraftStation).
+local CRAFT_STATIONS: { [string]: boolean } = { workbench = true, fire = true, water = true }
+
 -- order: inteiro ≥ 1 e sem repetir. A ordem decide a posição na tela, e
 -- repetida deixaria a lista instável (depende da ordem da tabela).
 local function checkOrder(errors: { string }, kind: string, key: string, order: any, seen: { [number]: string })
@@ -653,8 +656,19 @@ local function validateRecipes(errors: { string }, defs: Types.DefsTables, hasSt
 			table.insert(errors, `Recipe "{key}": time deve ser maior que 0`)
 		end
 		checkOrder(errors, "Recipe", key, recipe.order, orders)
-		if recipe.station ~= nil and recipe.station ~= "workbench" and recipe.station ~= "fire" then
+		if recipe.station ~= nil and not CRAFT_STATIONS[recipe.station] then
 			table.insert(errors, `Recipe "{key}": station "{recipe.station}" não existe`)
+		end
+		if recipe.alsoNear ~= nil then
+			if type(recipe.alsoNear) ~= "table" or #recipe.alsoNear == 0 then
+				table.insert(errors, `Recipe "{key}": alsoNear precisa de ao menos uma estação`)
+			else
+				for _, station in recipe.alsoNear do
+					if not CRAFT_STATIONS[station] or station == recipe.station then
+						table.insert(errors, `Recipe "{key}": alsoNear "{station}" não existe ou repete a station`)
+					end
+				end
+			end
 		end
 		if items[recipe.result] == nil then
 			table.insert(errors, `Recipe "{key}": resultado "{recipe.result}" não existe em Items`)

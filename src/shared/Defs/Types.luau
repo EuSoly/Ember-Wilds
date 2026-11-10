@@ -145,7 +145,8 @@ export type ItemDef = {
 
 export type AttackAnim = "swing" | "thrust"
 
-export type CraftStation = "workbench" | "fire"
+-- "water": perto da água do mapa (Map/Water), sem peça construída.
+export type CraftStation = "workbench" | "fire" | "water"
 export type RecipeIngredient = { id: string, count: number }
 export type RecipeDef = {
 	id: string,
@@ -155,6 +156,9 @@ export type RecipeDef = {
 	ingredients: { RecipeIngredient },
 	time: number,
 	station: CraftStation?,
+	-- Estações exigidas ALÉM de `station` (Starve: bancada + fogo, ou bancada +
+	-- fogo + água nas coroas e nos capacetes de dragão e lava).
+	alsoNear: { CraftStation }?,
 	order: number,
 }
 

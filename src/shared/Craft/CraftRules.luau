@@ -19,8 +19,33 @@ function CraftRules.hasIngredients(recipe: RecipeDef, counts: Counts): boolean
 	return true
 end
 
+-- Todas as estações que a receita exige: `station` primeiro, depois `alsoNear`.
+function CraftRules.stationsOf(recipe: RecipeDef): { Types.CraftStation }
+	local out: { Types.CraftStation } = {}
+	if recipe.station ~= nil then
+		table.insert(out, recipe.station)
+	end
+	local extra = recipe.alsoNear
+	if extra ~= nil then
+		for _, station in extra do
+			table.insert(out, station)
+		end
+	end
+	return out
+end
+
+-- Primeira estação exigida que não está perto (nil = todas perto).
+function CraftRules.missingStation(recipe: RecipeDef, near: { [string]: boolean }): Types.CraftStation?
+	for _, station in CraftRules.stationsOf(recipe) do
+		if near[station] ~= true then
+			return station :: Types.CraftStation
+		end
+	end
+	return nil
+end
+
 function CraftRules.canCraft(recipe: RecipeDef, counts: Counts, near: { [string]: boolean }): boolean
-	return CraftRules.hasIngredients(recipe, counts) and (recipe.station == nil or near[recipe.station] == true)
+	return CraftRules.hasIngredients(recipe, counts) and CraftRules.missingStation(recipe, near) == nil
 end
 
 function CraftRules.duration(recipe: RecipeDef, held: ItemDef?): number

@@ -16,6 +16,7 @@ local Inventory = require(Shared:WaitForChild("Inventory"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 local HotbarState = require(script.Parent:WaitForChild("HotbarState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
 local Net = require(script.Parent:WaitForChild("Net"))
 local Notifications = require(script.Parent:WaitForChild("UI"):WaitForChild("Notifications"))
 
@@ -57,6 +58,10 @@ local function updateNear()
 					end
 				end
 			end
+		end
+		-- Água do mapa conta como estação (receitas do Starve com "perto da água").
+		if WaterSim.isNearWater(root.Position.X, root.Position.Z, CraftRules.STATION_RADIUS) then
+			result.water = true
 		end
 	end
 	local previous = CraftState.near()

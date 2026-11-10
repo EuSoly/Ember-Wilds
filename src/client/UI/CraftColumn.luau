@@ -37,10 +37,11 @@ local function durationText(recipe: Defs.RecipeDef): string
 	local equipped = CraftState.equipped()
 	local item = if type(equipped) == "string" then Defs.Items[equipped] else nil
 	local seconds = CraftRules.duration(recipe, item)
-	local station = if recipe.station == "workbench"
-		then Strings.get("craft.station.workbench")
-		elseif recipe.station == "fire" then Strings.get("craft.station.fire")
-		else Strings.get("craft.station.none")
+	local names = {}
+	for _, station in CraftRules.stationsOf(recipe) do
+		table.insert(names, Strings.get(`craft.station.{station}`))
+	end
+	local station = if #names > 0 then table.concat(names, " + ") else Strings.get("craft.station.none")
 	return `{string.format("%.0f", seconds)} s · {station}`
 end
 

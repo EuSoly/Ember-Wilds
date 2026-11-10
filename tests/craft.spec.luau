@@ -19,6 +19,19 @@ local function maxStack(id: string): number
 end
 
 return {
+	["combined stations need all"] = function()
+		local r = recipe("crown", 1, "workbench")
+		r.alsoNear = { "fire", "water" }
+		local counts = { wood = 2 }
+		assert(not CraftRules.canCraft(r, counts, { workbench = true, fire = true }), "falta a água")
+		assert(CraftRules.missingStation(r, { workbench = true, fire = true }) == "water", "aponta a água")
+		assert(CraftRules.canCraft(r, counts, { workbench = true, fire = true, water = true }), "com as três")
+		assert(CraftRules.missingStation(r, { workbench = true, fire = true, water = true }) == nil, "nada falta")
+		local all = CraftRules.stationsOf(r)
+		assert(#all == 3 and all[1] == "workbench" and all[3] == "water", "ordem das estações")
+		assert(#CraftRules.stationsOf(recipe("x", 1, nil)) == 0, "sem estação")
+	end,
+
 	["materials exact or insufficient"] = function()
 		local r = recipe("tool", 1, nil)
 		assert(CraftRules.hasIngredients(r, { wood = 2 }))

@@ -91,8 +91,7 @@ function BookInfo.firstTab(itemId: string, inStudio: boolean): Tab?
 end
 
 -- Estações de craft: texto e ícone (BookImages.STATION[icon]). A ficha monta
--- "Precisa de" só por esta tabela: a água ainda não existe nas receitas, mas
--- quando a primeira receita com station = "water" chegar, aparece sozinha.
+-- "Precisa de" só por esta tabela (água: coroas e capacetes de dragão e lava).
 BookInfo.STATIONS = {
 	workbench = { key = "book.station.workbench", icon = "workbench" },
 	fire = { key = "book.station.fire", icon = "fire" },
@@ -102,7 +101,7 @@ BookInfo.STATIONS = {
 export type Craft = {
 	ingredients: { Types.RecipeIngredient },
 	count: number, -- quantos a receita faz
-	station: string?,
+	stations: { Types.CraftStation }, -- estações exigidas (vazio = em qualquer lugar)
 	seconds: number, -- tempo sem item na mão
 }
 
@@ -115,7 +114,7 @@ function BookInfo.craft(itemId: string): Craft?
 	return {
 		ingredients = recipe.ingredients,
 		count = recipe.count,
-		station = recipe.station :: string?,
+		stations = CraftRules.stationsOf(recipe),
 		seconds = CraftRules.duration(recipe, nil),
 	}
 end
@@ -195,7 +194,7 @@ function BookInfo.craftableNow(itemId: string, counts: { [string]: number }, nea
 			return false
 		end
 	end
-	return recipe.station == nil or near[recipe.station] == true
+	return CraftRules.missingStation(recipe, near) == nil
 end
 
 return BookInfo

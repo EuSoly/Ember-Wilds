@@ -300,12 +300,15 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 		add(section(3, "book.section.how", { chipGrid(1, chips) }))
 
 		local needs: { Instance } = {}
-		local station = craft.station and BookInfo.STATIONS[craft.station]
-		if station then
-			table.insert(needs, row(1, BookImages.STATION[station.icon], Strings.get(station.key)))
+		for index, stationId in craft.stations do
+			local station = BookInfo.STATIONS[stationId]
+			if station then
+				table.insert(needs, row(index, BookImages.STATION[station.icon], Strings.get(station.key)))
+			end
 		end
 		local seconds = string.format("%.0f", craft.seconds)
-		table.insert(needs, row(2, BookImages.CLOCK, Strings.format("book.seconds", { value = seconds })))
+		local clockRow = row(#craft.stations + 1, BookImages.CLOCK, Strings.format("book.seconds", { value = seconds }))
+		table.insert(needs, clockRow)
 		add(section(4, "book.section.needs", needs))
 	end
 

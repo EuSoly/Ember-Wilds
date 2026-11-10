@@ -87,8 +87,19 @@ return {
 
 	["sword craft lists ingredients, workbench and time"] = function()
 		local craft = BookInfo.craft("gold_sword")
-		assert(craft and craft.station == "workbench" and craft.seconds > 0, "bancada e tempo")
+		assert(
+			craft and #craft.stations == 1 and craft.stations[1] == "workbench" and craft.seconds > 0,
+			"bancada e tempo"
+		)
 		assert(#craft.ingredients == 4 and craft.count == 1, "quatro ingredientes")
+	end,
+
+	["crown shows three stations"] = function()
+		local craft = BookInfo.craft("life_crown")
+		assert(craft and #craft.stations == 3, "bancada, fogo e água")
+		local kit = { gold = 200, green_gem = 1 }
+		assert(BookInfo.craftableNow("life_crown", kit, { workbench = true, fire = true }) == false, "sem água")
+		assert(BookInfo.craftableNow("life_crown", kit, { workbench = true, fire = true, water = true }), "com água")
 	end,
 
 	["raw item has no craft"] = function()
@@ -98,6 +109,9 @@ return {
 	["every station used by a recipe is in the table"] = function()
 		for _, recipe in Defs.Recipes do
 			assert(recipe.station == nil or BookInfo.STATIONS[recipe.station], recipe.id)
+			for _, station in recipe.alsoNear or {} do
+				assert(BookInfo.STATIONS[station], `{recipe.id}: {station}`)
+			end
 		end
 		assert(BookInfo.STATIONS.water, "água já prevista para receitas futuras")
 		assert(Strings.get(BookInfo.STATIONS.water.key) == "Perto da água", "texto da água")
