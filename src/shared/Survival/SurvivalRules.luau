@@ -21,6 +21,9 @@ export type Context = {
 	oxygen: number, -- 0 a 100 (WaterService)
 	mods: ArmorRules.Modifiers,
 	biomeColdFactor: number, -- 1 na floresta
+	-- Lugar em terra para o frio da peça de cabeça (base do Starve); na água
+	-- vale "water" sozinho.
+	coldPlace: ArmorRules.ColdPlace,
 	-- Dormindo numa cama (BedDef): regeneração × regenFactor e queda de fome,
 	-- sede e frio × drainFactor; o calor da fogueira continua valendo por cima.
 	sleep: { regenFactor: number, drainFactor: number }?,
@@ -104,7 +107,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 	else
 		local drain = (if ctx.isNight then C.COLD_DRAIN_NIGHT else C.COLD_DRAIN_DAY)
 			* ctx.biomeColdFactor
-			* ArmorRules.coldMultiplier(mods, "forest", ctx.isNight)
+			* ArmorRules.coldMultiplier(mods, if ctx.inWater then "water" else ctx.coldPlace, ctx.isNight)
 			* drainFactor
 		if ctx.inWater then
 			drain *= C.WATER_COLD_FACTOR
@@ -140,7 +143,7 @@ function SurvivalRules.step(bars: Bars, ctx: Context, dt: number): StepResult
 		and thirst >= C.REGEN_MIN
 		and heat < C.REGEN_MAX_HEAT
 	then
-		health = clamp(health + C.REGEN_RATE * regenFactor * dt, HEALTH_MAX)
+		health = clamp(health + C.REGEN_RATE * regenFactor * ArmorRules.regenFactor(mods) * dt, HEALTH_MAX)
 	end
 
 	return {

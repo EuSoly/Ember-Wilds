@@ -12,6 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
+local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
+local ArmorService = require(script.Parent.ArmorService)
 
 local TICK = 0.1 -- segundos (10 vezes por segundo)
 
@@ -36,8 +38,11 @@ local function step(player: Player, dt: number)
 
 	local current = player:GetAttribute(StatNames.Oxygen)
 	local oxygen = if type(current) == "number" then current else StatNames.StatusMax
+	-- Máscara e roupa de mergulho: o fôlego cai mais devagar (ArmorRules.oxygenFactor).
 	local rate = if wet
-		then -StatNames.StatusMax / WorldConfig.OXYGEN_EMPTY_SECONDS
+		then -StatNames.StatusMax / WorldConfig.OXYGEN_EMPTY_SECONDS * ArmorRules.oxygenFactor(
+			ArmorService.modifiers(player)
+		)
 		else StatNames.StatusMax / WorldConfig.OXYGEN_REFILL_SECONDS
 	oxygen = math.clamp(oxygen + rate * dt, 0, StatNames.StatusMax)
 	setIfChanged(player, StatNames.Oxygen, oxygen)

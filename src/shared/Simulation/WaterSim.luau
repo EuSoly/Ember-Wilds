@@ -24,6 +24,7 @@ local Defs = require("../Defs")
 local HeldItem = require("../HeldItem")
 local MobRules = require("../Mobs/MobRules")
 local StatNames = require("../StatNames")
+local ArmorRules = require("../Survival/ArmorRules")
 local EatRules = require("../Survival/EatRules")
 local SurvivalConfig = require("../SurvivalConfig")
 local MapShapes = require("../World/MapShapes")
@@ -142,6 +143,12 @@ function WaterSim.start(getPlayers: () -> { Player }): RBXScriptConnection
 			local wet = isWet(root.Position.X, root.Position.Z)
 			inWater[player] = wet
 			local speed = if wet then slowSpeed else WorldConfig.WALK_SPEED
+			-- Peça de mergulho (atributo Armor do Player): nada mais rápido.
+			if wet then
+				local armorId = player:GetAttribute(StatNames.Armor)
+				local armorDef = if type(armorId) == "string" then Defs.Items[armorId] else nil
+				speed *= ArmorRules.modifiers(armorDef).swimSpeed
+			end
 			-- Arma na mão (espada, lança) deixa mais lento: moveSpeed do item.
 			local equipped = character and character:GetAttribute(StatNames.Equipped)
 			speed *= HeldItem.speedFactor(if type(equipped) == "string" then Defs.Items[equipped] else nil)

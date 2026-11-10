@@ -24,11 +24,17 @@ local function ctx(overrides: { [string]: any }?): SurvivalRules.Context
 		oxygen = 100,
 		mods = ArmorRules.NONE,
 		biomeColdFactor = 1,
+		coldPlace = "forest",
 	}
 	for k, v in overrides or {} do
 		c[k] = v
 	end
 	return c
+end
+
+-- Peça de cabeça de teste com o bloco armor dado.
+local function wearing(armor: { [string]: any }): ArmorRules.Modifiers
+	return ArmorRules.modifiers({ id = "h", nameKey = "h", category = "armor", maxStack = 1, armor = armor :: any })
 end
 
 local function bars(overrides: { [string]: any }?): SurvivalRules.Bars
@@ -118,6 +124,51 @@ return {
 	["biome factor scales the cold"] = function()
 		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ biomeColdFactor = 2 }), 10)
 		expect("frio", r.bars.cold, 92)
+	end,
+
+	["coat keeps cold by forest day"] = function()
+		local coat = wearing({ warm = { day = 2, night = 13 } })
+		local r = SurvivalRules.step(bars({ cold = 50 }), ctx({ mods = coat }), 10)
+		expect("frio", r.bars.cold, 50)
+	end,
+
+	["fur hat warms by forest day"] = function()
+		local fur = wearing({ warm = { day = 3, night = 17 } })
+		local r = SurvivalRules.step(bars({ cold = 50 }), ctx({ mods = fur }), 10)
+		expect("frio sobe 0,4 × 0,5 × 10", r.bars.cold, 52)
+	end,
+
+	["cold gain caps at full"] = function()
+		local fur = wearing({ warm = { day = 3, night = 17 } })
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ mods = fur }), 10)
+		expect("frio", r.bars.cold, 100)
+		expect("roupa não enche o calor", r.bars.heat, 0)
+	end,
+
+	["earmuffs slow night cold"] = function()
+		local muffs = wearing({ warm = { day = 1, night = 10 } })
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ mods = muffs, isNight = true }), 9)
+		expect("frio cai 1,6 × 8/18 × 9", r.bars.cold, 100 - 1.6 * 8 / 18 * 9)
+	end,
+
+	["diving gear keeps warm in water"] = function()
+		local mask = wearing({ warm = { waterDay = 2, waterNight = 15 } })
+		local r = SurvivalRules.step(SurvivalRules.full(), ctx({ mods = mask, inWater = true }), 10)
+		expect("água de dia: 0,4 × 2 × 3/5 × 10", r.bars.cold, 100 - 0.4 * 2 * 3 / 5 * 10)
+	end,
+
+	["protection blocks fire heat"] = function()
+		local protection = wearing({ fireHeatFactor = 0 })
+		local r =
+			SurvivalRules.step(SurvivalRules.full(), ctx({ nearFire = true, onFire = true, mods = protection }), 2)
+		expect("calor", r.bars.heat, 0)
+		expect("frio", r.bars.cold, 100)
+	end,
+
+	["life crown regenerates faster"] = function()
+		local crown = wearing({ regenHeal = 40 })
+		local r = SurvivalRules.step(bars({ health = 50 }), ctx({ mods = crown }), 3)
+		expect("vida", r.bars.health, 50 + 0.5 * 40 / 12 * 3)
 	end,
 
 	["empty hunger hurts and names the cause"] = function()

@@ -132,6 +132,7 @@ local function step(player: Player, dt: number, night: boolean)
 		mods = ArmorService.modifiers(player),
 		-- Só a floresta é jogável; o inverno (N2) vai escolher pelo bioma da posição.
 		biomeColdFactor = SurvivalConfig.BIOME_COLD_FACTOR.forest,
+		coldPlace = "forest",
 		biomeHeat = SurvivalConfig.BIOME_HEAT.forest,
 		sleep = sleeping[player],
 	}, dt)
