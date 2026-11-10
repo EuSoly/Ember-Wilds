@@ -31,12 +31,12 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 | `assets/ui/*.model.json` | Os moldes (no jogo: `ReplicatedStorage.UITemplates`) |
 | `src/first/LoadingScreen.model.json`, `Loading.client.luau` | Molde e script da tela de carregamento (em `ReplicatedFirst`, roda antes de tudo) |
 | `src/client/UITemplates/Template.luau` | Liga os moldes: `clone`, `find`, `bind`, `show` |
-| `src/client/Screens/` | Uma tela por arquivo: `DeathScreen`, `SettingsScreen`, `RecipeBookScreen` e a lista de kits de pontos `KitList` (usada pela morte; a escolha é compartilhada com o menu) |
+| `src/client/Screens/` | Uma tela por arquivo: `DeathScreen` e `SettingsScreen` (em código, estilo rústico), `RecipeBookScreen` (molde) e `KitList`, a escolha do kit de pontos compartilhada pela morte e pelo menu |
 | `src/client/Menu/` | O menu inteiro, em código (Vide): veja "Menu" abaixo |
 | `src/client/Controllers/ScreenController.luau` | Monta as telas e mostra/esconde conforme o estado |
 | `src/client/ScreenState.luau` | O estado de tela |
 | `src/client/AudioSettings.luau` | Grupos de som e volumes |
-| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `KitOffer`, `MenuLayout`, `CountUp`, `SettingsFormat` |
+| `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `KitOffer`, `MenuLayout`, `DeathLayout`, `CountUp`, `SettingsFormat` |
 | `src/shared/UiImages.luau` | Ids das imagens da interface num lugar só: logo, sol, lua, árvore, galho, moeda e placa de madeira. Para trocar uma: envie o PNG novo, cole o id aqui (a árvore, o galho e a placa têm a proporção/corte anotados ao lado) |
 | `assets/ui/brand/` | PNGs da marca (logo, sol, lua), fonte das imagens enviadas ao Roblox |
 
@@ -44,7 +44,7 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 
 ### No Studio
 
-1. Com o `rojo serve` conectado, abra `ReplicatedStorage.UITemplates` e escolha o molde (ex. `Death`).
+1. Com o `rojo serve` conectado, abra `ReplicatedStorage.UITemplates` e escolha o molde (ex. `RecipeBook`).
 2. Para ver enquanto edita, copie o molde para `StarterGui` e ligue `Enabled`. Edite à vontade: cores, fontes, imagens, posições, enfeites novos.
 3. **Mantenha os nomes combinados** (tabela abaixo). Pode mudar onde eles ficam: o código procura em qualquer profundidade dentro do molde.
 4. Terminou: apague a cópia do `StarterGui`, clique com o botão direito no molde editado → **Save to File** e salve como `assets/ui/Nome.rbxmx` (mesmo nome do molde).
@@ -60,7 +60,7 @@ Importe o design para o Studio com um plugin (FigBloxUI, Framewisp, UILint ou Fi
 ### Regras dos moldes
 
 - **Cada tela é um `ScreenGui`** com um **`CanvasGroup` chamado `Root`** contendo tudo. É por ele que o código faz o fade de abrir e fechar. Sem `Root`, a tela funciona, mas abre sem animação.
-- **Linhas repetidas** (`KitRow`, `RecipeRow`) são um `Frame` simples. O código clona uma por item dentro da lista da tela. A lista deve ter um `UIListLayout` e, se for rolar, ser um `ScrollingFrame` com `AutomaticCanvasSize = Y`.
+- **Linhas repetidas** (`RecipeRow`) são um `Frame` simples. O código clona uma por item dentro da lista da tela. A lista deve ter um `UIListLayout` e, se for rolar, ser um `ScrollingFrame` com `AutomaticCanvasSize = Y`.
 - **Use Scale, não pixels**, em tamanho e posição, para funcionar do celular ao PC. Limite o texto com `UITextSizeConstraint`.
 - **Moldes não têm scripts.** Toda lógica e animação ficam no código.
 - Telas que cobrem tudo (menu, morte, configurações) usam `ScreenInsets = None` e `IgnoreGuiInset = true`, para cobrir também a faixa da barra do Roblox. Por isso, deixe os botões longe da borda de cima.
@@ -90,32 +90,7 @@ Se um nome combinado sumir ou for renomeado, o jogo **não quebra**. Aparece **u
 
 Os textos e os ids das imagens ficam escritos no molde e no script: os textos e o `UiImages` do jogo ainda não chegaram ao cliente nessa hora. Para trocar a arte de fundo: no Studio, ponha o id da imagem em `Art.Image` e salve o molde (veja "Como trocar o visual de uma tela").
 
-**`Death`**
-
-| Nome | Classe | Para quê |
-|---|---|---|
-| `CauseLabel` | TextLabel | Causa da morte (`death.cause`) |
-| `DaysLabel` | TextLabel | Dias vividos (`death.days`) |
-| `PointsLabel` | TextLabel | Pontos descendo até 0 (`death.points`) |
-| `CurrencyLabel` | TextLabel | Golden Ember subindo (`death.currency`) |
-| `XpBar` → `XpFill` | Frame | Barra de XP: o `XpFill` (filho) enche do XP de antes até o de agora e recomeça a cada nível |
-| `XpLabel` | TextLabel | XP ganho na vida (`death.xp`, "+30.000 XP") |
-| `LevelUpLabel` | TextLabel | "Subiu para o nível N!" (`death.levelup`); só aparece se subiu de nível, no fim da contagem |
-| `KitList` | Lista | Linhas de kit |
-| `KitPointsLabel` | TextLabel | Pontos para kit |
-| `PlayAgainButton` | Botão | Nasce de novo com o kit escolhido |
-| `MenuButton` | Botão | Volta ao menu |
-
-**`KitRow`** (uma por kit)
-
-| Nome | Classe | Para quê |
-|---|---|---|
-| `NameLabel` | TextLabel | Nome do kit |
-| `PriceLabel` | TextLabel | Preço (`kit.price`) |
-| `ItemsLabel` | TextLabel | Itens ("8× Frutinha, 20× Madeira") |
-| `SelectButton` | Botão | Seleciona / tira a seleção (de preferência cobrindo a linha toda) |
-
-O destaque do kit escolhido usa o `UIStroke` filho direto da linha (fica laranja e mais grosso). Sem `UIStroke`, o fundo fica laranja.
+A tela de morte não é mais molde: veja "Tela de morte" abaixo.
 
 **`RecipeBook`** (livro de crafting): molde `ScreenGui` com `Root` (`CanvasGroup`), `List` (`ScrollingFrame`) e `CloseButton`. O botão do livro fica na HUD ao lado da engrenagem.
 
@@ -179,6 +154,19 @@ Pronto: o kit aparece no menu e na tela de morte. A validação no boot recusa:
 - preço negativo ou quebrado;
 - `order` repetida;
 - mais de uma mochila por kit (e a mochila precisa ter `count = 1`).
+
+## Tela de morte
+
+Janela no estilo rústico, feita em código (`src/client/Screens/DeathScreen.luau`, sem molde; o antigo molde `Death` e a linha `KitRow` foram aposentados). Aparece no estado `dead` com o resumo da vida (`Net.LifeEnded`). O mundo atrás perde a cor e fica um pouco escurecido.
+
+- **Placa "VOCÊ MORREU"** pregada no alto da janela escura (como Configurações e Cosméticos).
+- **Esquerda, folha de papel (resumo):** causa da morte (ou o nome de quem matou), dias vividos, pontos, a Golden Ember ganha com o ícone da moeda, **Nível N** com o XP ganho ("+30.000 XP") e a barra de XP do nível ("9.361/61.000 XP", a mesma `Rustic.bar` do menu). Se subiu de nível, aparece "Subiu para o nível N!" no fim da contagem.
+- **Direita, KIT INICIAL:** os pontos para kit e uma linha por kit (nome e preço). O escolhido ganha borda de brasa; o que custa mais que os pontos fica apagado e sem clique. A escolha é a mesma do menu (`KitList.selected`).
+- **Embaixo:** **Menu** (couro) e **Jogar de novo** (brasa), que nasce com o kit escolhido.
+
+**Animação (2 s):** os pontos descem até 0 enquanto a Golden Ember sobe; a barra de XP enche do XP de antes até o de agora, e o nível sobe junto (a barra recomeça a cada nível que passa). Ao nascer ou ir ao menu, a cor do mundo volta.
+
+**Tamanhos (`src/shared/UIFlow/DeathLayout.luau`, teste `tests/deathlayout.spec.luau`):** janela de até 760×460, com margem de 24 (12 no compacto). Janela com menos de 560 de largura (celular em pé, ou interface muito grande) vira **uma coluna só**: o resumo em cima e os kits embaixo, e a tela inteira rola. Nas outras, as duas colunas ficam lado a lado e só a lista de kits rola, se não couber.
 
 ## Configurações
 

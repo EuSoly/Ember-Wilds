@@ -47,6 +47,8 @@ function ScreenController.Start(_self)
 		local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 		vide.root(function()
+			-- Pontos para kit: a fonte nasce antes das telas que escolhem kit.
+			KitList.start()
 			-- O menu inteiro (coluna, boneco, Kits/JOGAR, painéis): liga e desliga sozinho.
 			MenuShell.mount(playerGui)
 			local death = DeathScreen.mount(playerGui)

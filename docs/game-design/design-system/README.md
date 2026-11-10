@@ -419,5 +419,7 @@ Entregues: especificação do design system, tokens estruturados e referência v
 
 Aplicado em 04/11/2026 (UI 1): tela de carregamento e menu (topo, coluna, boneco com o livro, Kits/JOGAR e painel de kits), com as cores em `Palette.rustic` e as peças em `src/client/UI/Rustic.luau` (molduras feitas com UIGradient e UIStroke enquanto as texturas finais não existem). Logo extraído da prancha em `assets/ui/brand/`. Veja `docs/guia/telas.md`.
 
+Aplicado em 09/11/2026: tela de morte (janela escura com placa, resumo em papel com nível e barra de XP, kits e botões de couro/brasa; `src/client/Screens/DeathScreen.luau`, veja `docs/guia/telas.md`).
+
 Permanecem etapas de produção: arte final isolada da marca em alta resolução, exportação dos assets por componente, integração às outras telas (morte, HUD, loja, cosméticos, perfil, ranking, tutorial, configurações) e teste no Studio. A aprovação do estilo está registrada; essas etapas não exigem escolher novamente uma direção visual.
 
