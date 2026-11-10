@@ -783,4 +783,12 @@ return table.freeze({
 	["rank.outside"] = "100+",
 	["rank.none"] = "—",
 	["mock.step"] = "{number}. {text}",
+
+	-- Tutorial da primeira partida (Shared/Tutorial).
+	["tutorial.step.wood"] = "Pegue madeira nas árvores ({have}/{need})",
+	["tutorial.step.pickaxe"] = "Faça uma Picareta de Madeira",
+	["tutorial.step.berries"] = "Pegue frutinhas nos arbustos ({have}/{need})",
+	["tutorial.step.book"] = "Abra o livro e veja a receita da Fogueira",
+	["tutorial.step.campfire"] = "Faça uma Fogueira e coloque no chão",
+	["tutorial.step.water"] = "Vá até a água e beba",
 })
