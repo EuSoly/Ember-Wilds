@@ -24,6 +24,15 @@ ShopLayout.SPIN_REEL_EXTRA = 20 -- a janela do carrossel = quadradinho + isto
 ShopLayout.SPIN_SIDE_MIN = 250 -- altura que um lado completo precisa
 ShopLayout.SPIN_SIDE_MIN_COMPACT = 130 -- lado compacto: 3 linhas
 ShopLayout.SPIN_SIDE_MAX = 300
+-- Cartões "Escolha o tipo" de giro. No celular deitado o cartão de 250 px
+-- passava da lista e o Escolher ficava na borda (10/11/2026): agora a altura sai
+-- do espaço da lista (título da seção + cartão cabem juntos) e, se a largura
+-- der, os 4 tipos ficam numa fileira só.
+ShopLayout.SPIN_CARD_HEIGHT = 360
+ShopLayout.SPIN_CARD_HEIGHT_COMPACT = 250 -- teto no celular
+ShopLayout.SPIN_CARD_MIN = 180
+ShopLayout.SPIN_CARD_MIN_WIDTH = 150 -- largura mínima para 4 numa fileira
+ShopLayout.SECTION_TITLE = 36 + 10 -- título da seção + espaço até a grade (ShopParts/ShopScreen)
 
 export type Layout = {
 	compact: boolean,
@@ -40,6 +49,7 @@ export type Layout = {
 	contentTop: number,
 	passColumns: number,
 	spinColumns: number,
+	spinCardHeight: number,
 	emberTop: number, -- cartões de Golden Ember na fileira de cima
 	emberBottom: number, -- e na de baixo (maiores)
 	bannerHeight: number,
@@ -63,6 +73,16 @@ function ShopLayout.compute(width: number, height: number): Layout
 	local top = m
 	local topHeight = MenuLayout.POD_HEIGHT
 	local contentWidth = math.min(width - 2 * m, ShopLayout.CONTENT_MAX)
+
+	local contentTop = top + topHeight + m
+	local fourFit = contentWidth >= 4 * ShopLayout.SPIN_CARD_MIN_WIDTH + 3 * gap
+	local spinCardHeight = if compact
+		then math.clamp(
+			height - contentTop - m - ShopLayout.SECTION_TITLE,
+			ShopLayout.SPIN_CARD_MIN,
+			ShopLayout.SPIN_CARD_HEIGHT_COMPACT
+		)
+		else ShopLayout.SPIN_CARD_HEIGHT
 
 	local spinBoxTop = if compact then m else top + topHeight + m
 	local spinTitleRow = if compact then 34 else 50
@@ -88,10 +108,12 @@ function ShopLayout.compute(width: number, height: number): Layout
 		balanceLeft = balanceLeft,
 		contentX = (width - contentWidth) / 2,
 		contentWidth = contentWidth,
-		contentTop = top + topHeight + m,
+		contentTop = contentTop,
 		passColumns = if compact then 3 else 5,
-		-- 4 tipos de giro (MockStore.SPIN_TYPES): uma fileira no PC, 2x2 no celular.
-		spinColumns = if compact then 2 else 4,
+		-- 4 tipos de giro (MockStore.SPIN_TYPES): uma fileira no PC e no celular
+		-- largo; 2x2 só quando não cabe.
+		spinColumns = if not compact or fourFit then 4 else 2,
+		spinCardHeight = spinCardHeight,
 		emberTop = if compact then 2 else 3,
 		emberBottom = 2,
 		bannerHeight = if compact then math.clamp(height * 0.42, 120, 200) else math.clamp(width * 0.2, 180, 300),

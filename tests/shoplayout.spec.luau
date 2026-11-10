@@ -51,12 +51,11 @@ return {
 			pc.passColumns == 5 and pc.spinColumns == 4 and pc.emberTop == 3 and pc.emberBottom == 2,
 			"colunas do PC"
 		)
-		-- 4 tipos de giro (sem Acessórios desde 10/11/2026): uma fileira no PC, 2x2 no celular.
-		assert(phone.spinColumns == 2, "giros 2x2 no celular")
-		assert(
-			phone.passColumns < pc.passColumns and phone.spinColumns < pc.spinColumns,
-			"celular devia ter menos colunas"
-		)
+		-- 4 tipos de giro (sem Acessórios desde 10/11/2026): uma fileira no PC e
+		-- no celular largo; 2x2 só no estreito.
+		assert(phone.spinColumns == 4, "giros numa fileira no celular largo")
+		assert(ShopLayout.compute(568, 320).spinColumns == 2, "giros 2x2 no celular estreito")
+		assert(phone.passColumns < pc.passColumns, "celular devia ter menos colunas")
 		assert(phone.titleWidth == 0, "celular sem a placa LOJA")
 	end,
 
@@ -67,6 +66,23 @@ return {
 		assert(l.tabsWidth <= ShopLayout.TABS_MAX, `abas largas demais: {l.tabsWidth}`)
 		local small = ShopLayout.compute(1024, 640)
 		assert(small.contentWidth == 1024 - 16, "em 1024 a loja usa a largura toda")
+	end,
+
+	["spin type cards fit under the section title"] = function()
+		for _, size in SIZES do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local listHeight = h - l.contentTop - ShopLayout.MARGIN
+			if l.compact then
+				assert(
+					l.spinCardHeight + ShopLayout.SECTION_TITLE <= listHeight
+						or l.spinCardHeight == ShopLayout.SPIN_CARD_MIN,
+					`{w}x{h}: cartão de giro passa da lista ({l.spinCardHeight} em {listHeight})`
+				)
+			end
+			assert(l.spinCardHeight >= ShopLayout.SPIN_CARD_MIN, `{w}x{h}: cartão de giro baixo demais`)
+		end
+		assert(ShopLayout.compute(1280, 720).spinCardHeight == ShopLayout.SPIN_CARD_HEIGHT, "PC mantém 360")
 	end,
 
 	["spin screen sides always side by side"] = function()

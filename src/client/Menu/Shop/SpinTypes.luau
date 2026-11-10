@@ -23,8 +23,6 @@ local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
 local create = vide.create
 local R = Theme.rustic
 
-local CARD_HEIGHT = 360 -- alto: abaixo do título fica a faixa das skins de amostra
-local CARD_HEIGHT_COMPACT = 250 -- no celular o cartão alto passaria da tela
 -- Fundo de cartão (ShopImages.CARD) de cada tipo, na mesma ordem de cores da referência.
 local CARD_ART: { [string]: string } = {
 	body = "red",
@@ -89,7 +87,16 @@ end
 -- Roleta: com a arte, disco (gira) + moldura (+ ponteiro, se houver camada à
 -- parte; a moldura atual já traz o ponteiro); sem ela, o desenho
 -- feito por código com um pino de texto. Devolve a roleta e o que gira.
-local function roulette(): (Frame, GuiObject)
+local WHEEL_BOTTOM = 62 -- espaço do botão embaixo da roleta
+local SAMPLES_BOTTOM = 0.35 -- fim da faixa da skin de amostra (fração do cartão)
+
+-- Altura da roleta (fração do cartão): até 40%, mas no cartão baixo do celular
+-- encolhe para não cobrir a skin de amostra.
+local function wheelShare(cardHeight: number): number
+	return math.clamp(1 - SAMPLES_BOTTOM - WHEEL_BOTTOM / cardHeight, 0.2, 0.4)
+end
+
+local function roulette(cardHeight: () -> number): (Frame, GuiObject)
 	if ShopImages.has(ShopImages.WHEEL_DISC) then
 		local disc = layer("Disc", ShopImages.WHEEL_DISC, 3)
 		local pointer: Instance? = if ShopImages.has(ShopImages.WHEEL_POINTER)
@@ -99,10 +106,12 @@ local function roulette(): (Frame, GuiObject)
 			Name = "WheelBox",
 			-- Embaixo, logo acima do botão: em cima ficam as skins de amostra.
 			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -62),
+			Position = UDim2.new(0.5, 0, 1, -WHEEL_BOTTOM),
 			-- Cabe no menor lado: até 78% da largura e até 40% da altura do
 			-- cartão (em tela larga, só pela largura ela cobria o título).
-			Size = UDim2.fromScale(0.78, 0.4),
+			Size = function()
+				return UDim2.fromScale(0.78, wheelShare(cardHeight()))
+			end,
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 			create("UIAspectRatioConstraint")({
@@ -195,8 +204,14 @@ local function bottomButton(spinType: MockStore.SpinType): Instance
 	})
 end
 
-local function card(spinType: MockStore.SpinType, order: number, wheels: { GuiObject }, open: () -> boolean): Frame
-	local wheelBox, disc = roulette()
+local function card(
+	spinType: MockStore.SpinType,
+	order: number,
+	wheels: { GuiObject },
+	open: () -> boolean,
+	cardHeight: () -> number
+): Frame
+	local wheelBox, disc = roulette(cardHeight)
 	table.insert(wheels, disc)
 	return ShopParts.vividCard(Color3.fromHex(spinType.theme), {
 		art = CARD_ART[spinType.id],
@@ -223,11 +238,16 @@ function SpinTypes.build(layout: () -> ShopLayout.Layout, open: () -> boolean): 
 		ShopParts.grid(function()
 			return layout().spinColumns
 		end, function()
-			return if layout().compact then CARD_HEIGHT_COMPACT else CARD_HEIGHT
+			return layout().spinCardHeight
 		end, ShopLayout.GAP),
 	}
 	for i, spinType in MockStore.SPIN_TYPES do
-		table.insert(children, card(spinType, i, wheels, open))
+		table.insert(
+			children,
+			card(spinType, i, wheels, open, function()
+				return layout().spinCardHeight
+			end)
+		)
 	end
 
 	-- Uma conexão só gira todas as roletas, e só enquanto a loja está aberta.
