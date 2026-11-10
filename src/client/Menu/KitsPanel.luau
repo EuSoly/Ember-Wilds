@@ -197,17 +197,19 @@ local function balanceCorner(kit: Defs.KitDef, expanded: (() -> boolean) & ((boo
 			end,
 			maxSize = 18,
 		}),
-		Rustic.button({
+		-- "+" sem fundo (o botão de madeira tem 44 px de mínimo e cobria a descrição).
+		create("TextButton")({
 			Name = "More",
 			LayoutOrder = 2,
 			Size = UDim2.fromOffset(CORNER_HEIGHT, CORNER_HEIGHT),
-			kind = function()
-				return if expanded() then "ember" else "wood"
-			end,
-			text = function()
+			BackgroundTransparency = 1,
+			AutoButtonColor = false,
+			FontFace = Theme.font.number,
+			TextSize = 26,
+			TextColor3 = R.emberShadow,
+			Text = function()
 				return if expanded() then "−" else "+"
 			end,
-			maxSize = 18,
 			Activated = function()
 				expanded(not vide.untrack(expanded))
 			end,
