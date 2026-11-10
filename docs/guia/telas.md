@@ -110,6 +110,17 @@ Textos com dados (saldo, pontos, dias) são escritos pelo código nos elementos 
 - **Morte:** o mundo perde a cor (saturação até −1 em 1 s; volta ao sair da tela de morte), e os pontos descem até 0 enquanto a Golden Ember sobe, em 2 s.
 - **Kits:** o que custa mais que os pontos fica apagado e sem clique; o escolhido ganha destaque.
 
+## Carregamento das artes (10/11/2026)
+
+As malhas e as imagens só baixam na primeira vez que aparecem na tela, e era isso que fazia as skins e o livro demorarem a aparecer. Agora a tela de carregamento (`src/first/Loading.client.luau`) baixa as artes antes, com `Shared/AssetPreload/AssetPreloader`:
+
+- **Ordem:** imagens da interface (`Shared/*Images`), depois ferramentas e ícones (`Assets.Tools`, `Assets.Icons`), depois mundo (`Structures`, `Mobs`) e por fim os cosméticos (`Bags`, `Books`, `Crates`, `Skins`). São cerca de 1.700 itens.
+- **Malhas vão pela peça e imagens pelo id.** A lista guarda uma peça por malha diferente, porque o `PreloadAsync` trata um id solto como imagem e falha nas malhas ("Asset type does not match").
+- **A barra mostra a contagem** ("Carregando artes 312/1.730", contas em `LoadingMath.assetTarget`/`assetStatus`).
+- **Espera no máximo 60 s** (`ASSET_WAIT_MAX`). Com o perfil pronto, aparece o botão **Pular**. Nos dois casos o resto continua baixando em segundo plano.
+- **Prioridade:** abrir os Cosméticos (a categoria aberta), a Loja (skins) ou o livro (ferramentas e mundo) passa aquela parte na frente da fila (`AssetPreloader.prioritize`).
+- **No Studio** tudo já está no PC e passa rápido. O tempo de verdade só aparece no jogo publicado, principalmente no celular.
+
 ## Kits iniciais
 
 Como no Starve.io: antes de nascer, o jogador pode comprar **um** kit com os **pontos da vida que acabou** (não com Golden Ember). Esses pontos ficam no atributo `KitPoints` do Player, só em memória (ao sair do jogo, perde). Os mesmos pontos também viram Golden Ember normalmente na morte: são duas coisas independentes.

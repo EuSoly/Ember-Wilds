@@ -6,6 +6,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local AssetPreloader =
+	require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("AssetPreload"):WaitForChild("AssetPreloader"))
 
 export type Panel = "play" | "kits" | "profile" | "cosmetics" | "shop" | "ranking"
 -- Seções da Loja (abas). A loja pula para a pedida e limpa o pedido.
@@ -22,6 +24,10 @@ MenuState.panel = panel
 
 -- Abre um painel (escrever pela fonte direto confunde o tipo nas chamadas).
 function MenuState.open(target: Panel)
+	-- A loja mostra as skins nas roletas: elas passam na frente (AssetPreload).
+	if target == "shop" then
+		AssetPreloader.prioritize("skins")
+	end
 	panel(target)
 end
 

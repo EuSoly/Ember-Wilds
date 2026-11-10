@@ -56,4 +56,25 @@ return {
 		assert(LoadingMath.step(0, 10, false) <= LoadingMath.WAITING_TARGET, "dt grande passou do alvo")
 		assert(LoadingMath.step(0.95, 10, true) == 1, "pronto com dt grande deveria ir a 1")
 	end,
+	["a target below the default holds the bar there"] = function()
+		local p = 0
+		for _ = 1, 600 do
+			p = LoadingMath.step(p, FRAME, false, 0.3)
+		end
+		assert(p <= 0.3 and p > 0.28, `segue o alvo das artes: {p}`)
+	end,
+
+	["asset target grows with the assets loaded"] = function()
+		assert(LoadingMath.assetTarget(0, 0) == LoadingMath.WAITING_TARGET, "sem lista: o alvo de sempre")
+		local start = LoadingMath.assetTarget(0, 100)
+		local half = LoadingMath.assetTarget(50, 100)
+		local all = LoadingMath.assetTarget(100, 100)
+		assert(start < half and half < all, "cresce")
+		assert(all == LoadingMath.WAITING_TARGET, "tudo carregado: o alvo de sempre")
+	end,
+
+	["asset status shows the count with a thousands dot"] = function()
+		assert(LoadingMath.assetStatus(312, 1730) == "Carregando artes 312/1.730", LoadingMath.assetStatus(312, 1730))
+		assert(LoadingMath.assetStatus(0, 12) == "Carregando artes 0/12", "sem milhar")
+	end,
 }

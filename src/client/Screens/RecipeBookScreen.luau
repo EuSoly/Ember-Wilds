@@ -11,6 +11,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local BookImages = require(Shared:WaitForChild("BookImages"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local AssetPreloader = require(Shared:WaitForChild("AssetPreload"):WaitForChild("AssetPreloader"))
 local BookInfo = require(Shared:WaitForChild("UIFlow"):WaitForChild("BookInfo"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
@@ -55,7 +56,13 @@ local RecipeBookScreen = {
 local inStudio = false
 
 function RecipeBookScreen.toggle()
-	RecipeBookScreen.open(not vide.untrack(RecipeBookScreen.open))
+	local opening = not vide.untrack(RecipeBookScreen.open)
+	if opening then
+		-- Artes que ainda não baixaram: as do livro passam na frente (AssetPreload).
+		AssetPreloader.prioritize("world")
+		AssetPreloader.prioritize("tools")
+	end
+	RecipeBookScreen.open(opening)
 end
 
 -- Mostra a ficha de `itemId`, trocando para a primeira aba que o tem.

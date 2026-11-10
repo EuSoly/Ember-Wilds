@@ -18,6 +18,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local AssetPreloader = require(Shared:WaitForChild("AssetPreload"):WaitForChild("AssetPreloader"))
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local UIFlow = Shared:WaitForChild("UIFlow")
@@ -38,6 +39,9 @@ local MenuBoneco = require(Menu:WaitForChild("MenuBoneco"))
 local CategoryView = require(script.Parent:WaitForChild("CategoryView"))
 local CratePreview = require(script.Parent:WaitForChild("CratePreview"))
 local ItemViewport = require(script.Parent:WaitForChild("ItemViewport"))
+
+-- Categoria da tela -> grupo do AssetPreloader.
+local PRELOAD_GROUP: { [string]: string } = { body = "skins", bag = "bags", book = "books", crate = "crates" }
 
 local create = vide.create
 local R = Theme.rustic
@@ -247,6 +251,17 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 	vide.effect(function()
 		if not open() then
 			category(nil)
+		end
+	end)
+	-- Artes que ainda não baixaram: a tela aberta passa na frente da fila
+	-- (AssetPreload). Na principal, as skins (a maior pasta); numa categoria, a dela.
+	vide.effect(function()
+		if not open() then
+			return
+		end
+		local group = PRELOAD_GROUP[category() or "body"]
+		if group then
+			AssetPreloader.prioritize(group)
 		end
 	end)
 	local function main(): boolean
