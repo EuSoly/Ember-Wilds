@@ -29,6 +29,7 @@ local HudArt = require(UI:WaitForChild("HudArt"))
 local ItemIcon = require(UI:WaitForChild("ItemIcon"))
 local Kit = require(UI:WaitForChild("Kit"))
 local Rustic = require(UI:WaitForChild("Rustic"))
+local ScreenMetrics = require(UI:WaitForChild("ScreenMetrics"))
 local TutorialGlow = require(UI:WaitForChild("TutorialGlow"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 
@@ -316,8 +317,18 @@ local function Book(): Frame
 		Name = "Book",
 		Active = true, -- o clique no livro não passa para o mundo
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.52),
-		Size = UDim2.fromScale(0.9, 0.84),
+		-- Tela baixa (celular deitado): quase toda a altura, com a placa do
+		-- título ainda dentro da tela (10/11/2026).
+		Position = function()
+			return if ScreenMetrics.short()
+				then UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4)
+				else UDim2.fromScale(0.5, 0.52)
+		end,
+		Size = function()
+			return if ScreenMetrics.short()
+				then UDim2.new(0.9, 0, ScreenMetrics.SHORT_WINDOW_SHARE, -TITLE_HEIGHT / 2)
+				else UDim2.fromScale(0.9, 0.84)
+		end,
 		create("UISizeConstraint")({ MaxSize = Vector2.new(980, 620) }),
 		Rustic.plate({
 			Name = "Title",
@@ -378,16 +389,26 @@ local function Book(): Frame
 				Size = UDim2.new(1 - GRID_SHARE, -GAP, 1, -TAB_HEIGHT - GAP - 4),
 			}),
 			-- Fixar a receita no HUD (UI/PinnedRecipe), no canto da ficha; só
-			-- para itens com receita. Fixado: vira "Desafixar".
+			-- para itens com receita. Fixado: vira "Desafixar". Na tela baixa a
+			-- ficha é estreita e o botão cobria o nome do item: vai para o canto
+			-- de baixo (a ficha rola por baixo dele).
 			Rustic.button({
 				Name = "PinButton",
 				Visible = function()
 					local id = RecipeBookScreen.selected()
 					return id ~= nil and Defs.Recipes[id] ~= nil
 				end,
-				AnchorPoint = Vector2.new(1, 0),
-				Position = UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18),
-				Size = UDim2.fromOffset(120, 38),
+				AnchorPoint = function()
+					return if ScreenMetrics.short() then Vector2.new(1, 1) else Vector2.new(1, 0)
+				end,
+				Position = function()
+					return if ScreenMetrics.short()
+						then UDim2.new(1, -18, 1, -12)
+						else UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18)
+				end,
+				Size = function()
+					return if ScreenMetrics.short() then UDim2.fromOffset(104, 38) else UDim2.fromOffset(120, 38)
+				end,
 				ZIndex = 6,
 				kind = function()
 					return if PinState.pinned() == RecipeBookScreen.selected() then "leather" else "ember"
