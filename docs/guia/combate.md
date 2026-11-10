@@ -16,7 +16,7 @@ Na G6 os jogadores passaram a brigar entre si e **todo mundo que morre, jogador 
 - Leva o golpe o que estiver **mais perto à frente** (`GatherRules.pickTarget`), seja o que for. Um recurso na frente de um jogador protege o jogador.
 - **Quem bate nunca é alvo de si mesmo.**
 - O dano é o mesmo do golpe em mob (`mobDamage` do item, ou 5 de mão): espadas 12 / 19 / 22, lanças 10 / 14 / 15, picaretas 4 a 14. Veja a tabela em `mobs.md`.
-- O dano é do tipo **combate**: o **capacete protege** (`defense`, veja `sobrevivencia.md`).
+- A peça de cabeça protege como no Starve: **tira um número fixo** do golpe (`golpe − defesa`, nunca abaixo de 0). Contra jogador (e espinho) vale `defense`, contra mob vale `mobDefense`. O capacete de ouro, por exemplo, é 4 / 13. Veja `armaduras.md`.
 - A lança alcança mais longe, mas **nunca empurra jogador** (decisão do Elizeu).
 - Todos batem em todos: ainda não há times (`BuildRules.areAllies` é o gancho).
 

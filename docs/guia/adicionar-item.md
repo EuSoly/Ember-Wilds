@@ -22,22 +22,22 @@ Comida (`category = "food"`) precisa do bloco `food`, com o que repõe ao comer 
 berry = { id = "berry", nameKey = "item.berry", category = "food", maxStack = 255, food = { hunger = 10 } },
 ```
 
-Armadura (`category = "armor"`) precisa do bloco `armor` (todos os campos opcionais):
+Peça de cabeça (`category = "armor"`) precisa do bloco `armor` com os números do Starve, e do modelo em `Assets.Armor/<id>`:
 
 ```lua
-wood_helmet = {
-	id = "wood_helmet", nameKey = "item.wood_helmet", category = "armor", tier = "wood", maxStack = 1,
-	armor = { defense = 0.2 },  -- corta 20% do dano de combate (máx. 0,9)
+gold_helmet = {
+	id = "gold_helmet", nameKey = "item.gold_helmet", category = "armor", tier = "gold", maxStack = 1,
+	armor = { defense = 4, mobDefense = 13 },  -- tira 4 do golpe de jogador e 13 da mordida
 },
 coat = {
 	id = "coat", nameKey = "item.coat", category = "armor", maxStack = 1,
-	armor = { coldFactor = 0.5 },  -- o frio cai na metade da velocidade (0 a 2; também hungerFactor, thirstFactor e heatFactor)
+	armor = { warm = { day = 2, night = 13, winterDay = 8, winterNight = 15 }, blizzard = 12 },
 },
 ```
 
-Veja `sobrevivencia.md`.
+Todos os campos, a conversão e o passo a passo estão em `armaduras.md`.
 
-A carne crua (`raw_meat`, fome +15) e a assada (`cooked_meat`, +35, receita na fogueira) são comidas assim; as peles (`rabbit_fur`, `wolf_fur`, `boar_fur`), a pena (`hawk_feather`) e a linha (`thread`) são `category = "resource"`, sem receita ainda.
+A carne crua (`raw_meat`, fome +15) e a assada (`cooked_meat`, +35, receita na fogueira) são comidas assim; as peles (`rabbit_fur`, `wolf_fur`, `boar_fur`), a pena (`hawk_feather`) e a linha (`thread`) são `category = "resource"`. Os materiais das peças que o jogo ainda não dá (diamante, peles de inverno e de mamute, penas, corações, itens de quest...) são `testOnly` (veja `armaduras.md`).
 
 Picareta (`category = "tool"`) ganha `pickaxe = { level = n }`: quanto maior o nível, mais pega por golpe e mais duros os recursos que ela coleta. Veja `coleta.md`.
 

@@ -53,18 +53,16 @@ Por dentro: o `FoodService` grava no personagem o atributo `EatUntil` (instante 
 
 Comida nova: um item com `category = "food"` e o bloco `food = { hunger = ?, thirst = ?, health = ? }` (pelo menos um) em `src/shared/Defs/Items.luau`; opcional `crumbColor = "#RRGGBB"` (cor dos farelos; sem ela, cor de pão). Para aparecer na mão, precisa do ícone em `Assets.Icons/<id>`. Veja `adicionar-item.md`.
 
-## Armaduras (preparadas)
+## Armaduras (itens de cabeça)
 
-Já existe a base; **ainda não existe nenhum item de armadura**, nem tela para vestir, nem a armadura aparecendo no boneco.
+As 32 peças do Starve (capacetes, roupas, proteções, coroas...) estão em `armaduras.md`. Resumo do que mexe nas barras:
 
-- Uma armadura vestida por vez (como o item de cabeça do Starve), guardada no atributo `Armor` do jogador.
-- Um item de armadura tem `category = "armor"` e o bloco `armor`:
-  - `defense`: quanto do **dano de combate** ela corta (0,2 = 20%; máximo 0,9). Fome, frio e sede vazios **não** são cortados.
-  - `coldFactor`, `hungerFactor`, `thirstFactor`: quanto mais devagar a barra cai (0,5 = metade da velocidade; de 0 a 2).
-  - `heatFactor`: quanto mais devagar o calor sobe (para as proteções de calor do deserto/lava).
-- Exemplos: capacete de madeira `armor = { defense = 0.2 }`; casaco `armor = { coldFactor = 0.5 }`.
-- A morte tira a armadura (como a mochila): ela vai **para a caixa** do morto, como item, e outro jogador pode pegá-la.
-- Quem veste é o `ArmorService.wear(player, itemId)` no servidor. Ele não tira o item do inventário: a tela de equipamento, quando existir, cuida disso.
+- **Frio:** cada peça tem `warm` (números do Starve por lugar e hora). A perda de frio é multiplicada por `(base − warm) / base`. O casaco de dia não perde frio e o chapéu de pele esquenta.
+- **Calor do fogo:** as proteções (`fireHeatFactor = 0`) não deixam o fogo encher a barra de calor.
+- **Regeneração:** a Coroa da Vida cura 40/12 vezes mais rápido.
+- **Fôlego:** a máscara e a roupa de mergulho fazem o fôlego cair mais devagar.
+- **Defesa:** vale só para golpes (de jogador ou de mob). Fome, frio e sede vazios **não** são cortados.
+- A morte tira a peça (como a mochila): ela vai **para a caixa** do morto.
 
 ## Testar no Studio
 
@@ -77,7 +75,7 @@ game.ServerStorage.DevBar:Invoke(p, "Cold", 20)       -- quase congelando
 game.ServerStorage.DevBar:Invoke(p, "Heat", 90)       -- quase queimando (anel laranja)
 game.ServerStorage.DevGive:Invoke(p, "campfire", 1)    -- dá a fogueira; coloque no chão (esquenta)
 workspace:SetAttribute("CycleStart", workspace:GetServerTimeNow() - 238) -- anoitece em 2 s
-game.ServerStorage.DevArmor:Invoke(p, "algum_item_armor") -- quando existir uma armadura
+game.ServerStorage.DevArmor:Invoke(p, "coat")          -- veste o casaco (nil tira)
 ```
 
 ## Onde fica no código
@@ -86,7 +84,7 @@ game.ServerStorage.DevArmor:Invoke(p, "algum_item_armor") -- quando existir uma 
 |---|---|
 | `src/shared/SurvivalConfig.luau` | todos os números |
 | `src/shared/Survival/SurvivalRules.luau` | as regras das barras (puras, testadas em `tests/survival.spec.luau`) |
-| `src/shared/Survival/ArmorRules.luau` | efeitos da armadura (testadas em `tests/armor.spec.luau`) |
+| `src/shared/Survival/ArmorRules.luau` | números do Starve das peças viram efeitos (testadas em `tests/armor.spec.luau`; veja `armaduras.md`) |
 | `src/server/Services/SurvivalService.luau` | aplica as regras a cada jogador e grava as barras |
 | `src/server/Services/FoodService.luau` | comer |
 | `src/server/Services/ArmorService.luau` | vestir/tirar armadura |

@@ -2,6 +2,16 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Armaduras (10/11)
+
+- **Defesa contra mob sem escala:** as mordidas daqui são mais fracas que no Starve (lobo 24 contra 40), mas o `mobDefense` entrou com o número do Starve (decisão do Elizeu). Com capacete de ouro, o lobo tira 11 e a aranha 3. Rever quando balancear os mobs.
+- **Efeitos só-dado:** roubo (capuz), fazenda (túnicas), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, bônus de conjunto (dragão e lava), aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
+- **Peças sem receita:** os gorros de Natal e de elfo (no Starve saem do presente de Natal).
+- **Itens de quest sem modelo:** gemas, cubos, óculos de piloto, peles de lobo negro e branco, vaga-lume (a grade mostra a sigla).
+- **Chapéu de pele esquentando:** de dia na floresta ele enche o frio, mas não passa para a barra de calor (o calor só vem do fogo e do bioma).
+- **Ícone das peças:** ângulo `ARMOR_TILT` (60°) escolhido sem ver todas; ajustar com `IconeGiro` nas que saírem estranhas.
+- **Workspace.armaduras-32:** o import original continua no Workspace do place; pode apagar (as cópias usadas estão em `Assets.Armor`).
+
 ## Antes de lançar (09/11)
 
 - **Loja entregando de graça (desde 09/11):** tudo com preço em Robux (pacotes, giros especiais, kits, VIP, Golden Ember) é entregue sem cobrar, no jogo aberto (`ShopService.charge`). Antes de ligar o Robux de verdade: **zerar todos os perfis** (decisão do Elizeu) e trocar o `charge` pelo `MarketplaceService` (veja `docs/guia/loja.md`, "Ligar o Robux de verdade").
