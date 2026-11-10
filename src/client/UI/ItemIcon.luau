@@ -6,7 +6,9 @@
 --   Tools/<id>      ferramenta/arma de mão, deitada na diagonal (ponta em cima
 --                   à direita), vista pelo lado largo; itens de mão que não são
 --                   ferramenta nem arma (livro, balde) são vistos como os ícones;
---   Structures/<id> construção, vista de cima como os ícones.
+--   Structures/<id> construção, vista de cima como os ícones;
+--   Armor/<id>      peça de cabeça (capacete, roupa, coroa), vista de frente e
+--                   um pouco de cima (a frente do modelo é −Z, como o boneco).
 -- Sem modelo, o ícone mostra as iniciais do nome.
 --
 -- Ajuste por item (atributos opcionais no molde OU numa peça direta dele, ex.
@@ -41,6 +43,7 @@ local FRAME_BORDER = 3
 local ICON_FOV = 30 -- campo de visão vertical da câmera do ícone
 local ICON_MARGIN = 0.12 -- folga fixa em volta do modelo
 local ICON_TILT = math.rad(35) -- inclinação em relação à vista de cima
+local ARMOR_TILT = math.rad(60) -- peça de cabeça: mais de frente que os ícones
 local FRAMED_SIZE = 0.86 -- moldura do tier dentro do slot
 local FRAMED_VIEWPORT = 0.9 -- 3D dentro da moldura do tier
 local BARE_VIEWPORT = 1.08 -- sem moldura: o 3D passa um pouco do quadro (a folga do ICON_MARGIN some)
@@ -65,7 +68,7 @@ local function displayName(itemId: string): string
 	return if def then Strings.get(def.nameKey) else itemId
 end
 
-type Kind = "flat" | "tool"
+type Kind = "flat" | "tool" | "armor"
 type Source = { instance: Instance, kind: Kind }
 
 -- Pastas de Assets onde procurar o modelo do item, em ordem, e como enquadrar.
@@ -73,6 +76,7 @@ local SOURCES: { { folder: string, kind: Kind } } = {
 	{ folder = "Icons", kind = "flat" },
 	{ folder = "Tools", kind = "tool" },
 	{ folder = "Structures", kind = "flat" },
+	{ folder = "Armor", kind = "armor" },
 }
 
 -- Molde do ícone do item, ou nil. Procura na hora (o Assets pode ainda não ter
@@ -199,6 +203,14 @@ local function flatView(model: Model): View
 	return { center = boxCFrame.Position, right = Vector3.xAxis, up = up }
 end
 
+-- Peça de cabeça: de frente (a câmera fica do lado −Z, a frente do modelo) e
+-- inclinada ARMOR_TILT a partir da vista de cima.
+local function armorView(model: Model): View
+	local boxCFrame = model:GetBoundingBox()
+	local up = Vector3.new(0, math.sin(ARMOR_TILT), math.cos(ARMOR_TILT))
+	return { center = boxCFrame.Position, right = -Vector3.xAxis, up = up }
+end
+
 -- Ferramenta: olha pelo eixo mais fino da peça principal (o lado largo da
 -- lâmina/cabeça) e gira para a ponta (o lado longe da pegada) ficar em cima à
 -- direita, como nos ícones de ferramenta de jogos do gênero.
@@ -283,7 +295,10 @@ local function ItemIcon(props: Props): Frame
 			end
 		end
 		model.Parent = viewport
-		local view = if source.kind == "tool" then toolView(model) else flatView(model)
+		local view = if source.kind == "tool"
+			then toolView(model)
+			elseif source.kind == "armor" then armorView(model)
+			else flatView(model)
 		placeCamera(camera, model, view, source.instance)
 		-- Ajuste ao vivo: mexer nos atributos do molde no Studio reenquadra.
 		local connections = {}

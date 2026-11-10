@@ -4,6 +4,7 @@
 -- do item em Defs/Items. A tela (UI/ItemTooltip) só formata com Strings.
 local Defs = require("../Defs")
 local Types = require("../Defs/Types")
+local SurvivalConfig = require("../SurvivalConfig")
 
 export type Line = { key: string, vars: { [string]: string | number } }
 
@@ -43,6 +44,12 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 			table.insert(out, { key = key, vars = { value = value } })
 		end
 	end
+	-- Linha sem número (efeito da peça de cabeça).
+	local function flag(key: string, on: boolean)
+		if on and #out < limit then
+			table.insert(out, { key = key, vars = {} })
+		end
+	end
 
 	local food = def.food
 	if food then
@@ -68,6 +75,14 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 		if armor.mobDefense and armor.mobDefense > 0 then
 			add("info.defenseMob", armor.mobDefense)
 		end
+		local warm = armor.warm
+		flag("info.warm", warm ~= nil and (warm.night or 0) > 0)
+		flag("info.fireproof", armor.fireHeatFactor == 0)
+		flag("info.oxygen", (armor.oxygenLoss or 0) > 0)
+		flag("info.swim", (armor.swimSpeed or 1) > 1)
+		flag("info.regen", (armor.regenHeal or 0) > SurvivalConfig.STARVE_REGEN_HEAL)
+		flag("info.hidesName", armor.hidesName == true)
+		flag("info.explorer", armor.explorer == true)
 	end
 	add("info.bag", def.bagSlots)
 	local structure = def.structure

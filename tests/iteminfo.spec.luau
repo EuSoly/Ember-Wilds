@@ -12,6 +12,15 @@ local function lines(id: string): { string }
 	return out
 end
 
+-- Todas as linhas (ficha do livro), já como chaves.
+local function keys(id: string): { string }
+	local out = {}
+	for _, line in ItemInfo.lines(Defs.Items[id], math.huge) do
+		table.insert(out, line.key)
+	end
+	return out
+end
+
 local function has(list: { string }, text: string): boolean
 	return table.find(list, text) ~= nil
 end
@@ -64,6 +73,35 @@ return {
 		local l = lines("gold_helmet")
 		assert(has(l, "Defesa contra jogadores: 4"), table.concat(l, " | "))
 		assert(has(l, "Defesa contra criaturas: 13"), table.concat(l, " | "))
+	end,
+
+	["armor effects show in the sheet"] = function()
+		assert(has(keys("coat"), "info.warm"), "casaco protege do frio")
+		assert(has(keys("diamond_protection"), "info.fireproof"), "proteção anula o fogo")
+		assert(has(keys("diving_mask"), "info.oxygen") and has(keys("diving_mask"), "info.swim"), "mergulho")
+		assert(has(keys("hood"), "info.hidesName"), "capuz esconde o nome")
+		assert(has(keys("explorer"), "info.explorer"), "explorador")
+		assert(has(keys("life_crown"), "info.regen"), "coroa da vida")
+		assert(not has(keys("diamond_protection"), "info.warm"), "proteção não aquece à noite")
+		for _, key in keys("gold_sword") do
+			assert(not string.find(key, "^info%.defense"), "espada sem linha de peça")
+		end
+	end,
+
+	["armor effect texts exist"] = function()
+		for _, key in
+			{
+				"info.warm",
+				"info.fireproof",
+				"info.oxygen",
+				"info.swim",
+				"info.regen",
+				"info.hidesName",
+				"info.explorer",
+			}
+		do
+			assert(Strings.has(key), `falta o texto {key}`)
+		end
 	end,
 
 	["bag shows extra slots"] = function()
