@@ -18,12 +18,14 @@ local BonecoAnim = require(Shared:WaitForChild("BonecoAnim"))
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local ArmorRules = require(Shared:WaitForChild("Survival"):WaitForChild("ArmorRules"))
 local EatRules = require(Shared:WaitForChild("Survival"):WaitForChild("EatRules"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local SurvivalConfig = require(Shared:WaitForChild("SurvivalConfig"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
 local Validate = require(Shared:WaitForChild("Defs"):WaitForChild("Validate"))
+local ArmorModel = require(script.Parent:WaitForChild("ArmorModel"))
 local BagFx = require(script.Parent:WaitForChild("BagFx"))
 local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
 local SkinAnimator = require(script.Parent:WaitForChild("SkinAnimator"))
@@ -82,6 +84,11 @@ type Entry = {
 	-- Dono do personagem (nil em boneco de teste) e o selo "Tutorial" mostrado.
 	player: Player?,
 	tutorialBadge: boolean,
+	-- Peça de cabeça vestida (atributo Armor do Player) e o modelo dela.
+	armorId: string?,
+	armorModel: Model?,
+	-- Capuz: o nick (e o selo) some para os outros jogadores.
+	nameHidden: boolean,
 	connections: { RBXScriptConnection },
 }
 
@@ -167,6 +174,26 @@ local function applyBag(entry: Entry, id: string?)
 	end
 end
 
+local function applyArmor(entry: Entry, id: string?)
+	entry.armorId = id
+	if entry.armorModel then
+		entry.armorModel:Destroy()
+		entry.armorModel = nil
+	end
+	if id ~= nil then
+		local model = ArmorModel.build(id)
+		if model then
+			ArmorModel.attach(model, entry.boneco)
+			entry.armorModel = model
+		end
+	end
+	local owner = entry.player
+	local hides = ArmorRules.modifiers(if id then Defs.Items[id] else nil).hidesName
+	entry.nameHidden = hides and owner ~= Players.LocalPlayer
+	entry.boneco.nameLabel.Visible = not entry.nameHidden
+	entry.boneco.tutorialBadge.Visible = entry.tutorialBadge and not entry.nameHidden
+end
+
 local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
 	entry.equippedId = id
 	entry.bookCosmeticId = bookCosmeticId
@@ -225,7 +252,13 @@ local function syncAttributes(entry: Entry)
 	local badge = owner ~= nil and owner:GetAttribute(StatNames.TutorialProtected) == true
 	if badge ~= entry.tutorialBadge then
 		entry.tutorialBadge = badge
-		entry.boneco.tutorialBadge.Visible = badge
+		entry.boneco.tutorialBadge.Visible = badge and not entry.nameHidden
+	end
+	-- Peça de cabeça: atributo do Player (bonecos de teste não têm).
+	local armorValue = if owner then owner:GetAttribute(StatNames.Armor) else nil
+	local armorId = if type(armorValue) == "string" then armorValue else nil
+	if armorId ~= entry.armorId then
+		applyArmor(entry, armorId)
 	end
 	local cosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT)
 	if cosmeticId ~= entry.cosmeticId then
@@ -283,6 +316,9 @@ local function build(character: Model, hrp: BasePart)
 		nameResolved = player ~= nil or isDevCrowd(character),
 		player = player,
 		tutorialBadge = false,
+		armorId = nil,
+		armorModel = nil,
+		nameHidden = false,
 		connections = {},
 	}
 	entries[character] = entry
