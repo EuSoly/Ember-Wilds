@@ -259,6 +259,16 @@ function InventoryService.reset(player: Player)
 	notifySelected(player)
 end
 
+-- Slots extras do VIP vindos da loja (ShopService: passe salvo no perfil).
+-- O gamepass real (checkVipPass) continua valendo; os dois dão o mesmo bônus.
+function InventoryService.setPassBonus(player: Player, slots: number)
+	if player.Parent == nil then
+		return
+	end
+	passBonus[player] = math.max(passBonus[player] or 0, slots)
+	refreshCapacity(player)
+end
+
 -- Gamepass VIP: confere se o jogador tem o passe e soma os slots extras.
 local function checkVipPass(player: Player)
 	if VIP_PASS.gamePassId == 0 then

@@ -67,6 +67,19 @@ return table.freeze({
 	-- possuída, Name = id do cosmético (CosmeticService). Objetos, não atributos:
 	-- com centenas de skins, atributos passariam do limite de ~1 KB da instância.
 	OwnedFolder = "OwnedCosmetics",
+	-- Pasta (Folder) no Player com o estado da loja (ShopService). Atributos da
+	-- pasta: saldos de giros e o kit para sempre ativo ("" = nenhum). Subpastas
+	-- com um objeto por entrada (listas que crescem não viram atributo):
+	-- KitsOwned (BoolValue por kit), KitBalance (IntValue por kit, saldo de 1
+	-- vida), Purchased (BoolValue por produto "once" comprado), Passes (BoolValue).
+	ShopFolder = "Shop",
+	SpinsNormal = "SpinsNormal",
+	SpinsPaid = "SpinsPaid",
+	KitActive = "KitActive",
+	KitsOwnedFolder = "KitsOwned",
+	KitBalanceFolder = "KitBalance",
+	PurchasedFolder = "Purchased",
+	PassesFolder = "Passes",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
 	-- Raízes visuais dos mobs; contadores de eventos, sem regras de combate.

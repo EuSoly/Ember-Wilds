@@ -92,12 +92,15 @@ event EquipCosmetic {
 -- Pedido para nascer (botões Jogar / Jogar de novo). KitId = id em Defs/Kits,
 -- opcional. O servidor (SpawnService) ignora se o perfil não carregou, se o
 -- jogador já está vivo ou nascendo; kit inexistente ou caro demais = nasce sem kit.
+-- Source = de onde sai o kit: "points" (KitPoints) ou "balance" (saldo de 1
+-- vida comprado). Sem pedido válido, vem o kit para sempre ativo (KitChoice).
 event RequestSpawn {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
 	Data: struct {
-		KitId: string(1..32)?
+		KitId: string(1..32)?,
+		Source: string(1..8)?
 	}
 }
 
@@ -321,5 +324,70 @@ event RankingData {
 		Entries: RankEntry[],
 		MyValue: u32,
 		MyPosition: u16
+	}
+}
+
+-- Loja de verdade (sem cobrar Robux por enquanto). O cliente só pede; o
+-- servidor (ShopService) confere produto, data, limite e saldo, cobra (Golden
+-- Ember) e entrega. Pedidos rápidos demais são ignorados.
+-- Comprar um produto (id em Shop/Products: bundle_brasa, spins_normal_3...).
+event RequestPurchase {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ProductId: string(1..48)
+	}
+}
+
+-- Resultado da compra, só para quem comprou. Reason = PurchaseRules.Refusal
+-- ("unknown", "closed", "bought", "balance") quando Ok = false.
+event PurchaseResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ProductId: string(1..48),
+		Ok: boolean,
+		Reason: string(1..16)?
+	}
+}
+
+-- Girar a roleta TypeId (body, bag, book, crate...) gastando um giro normal
+-- (Paid = false) ou especial (Paid = true).
+event RequestSpin {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		TypeId: string(1..16),
+		Paid: boolean
+	}
+}
+
+-- Resultado do giro, só para quem girou. Ok = false: nada foi gasto (sem
+-- giro ou roleta sem skins). Duplicate: já tinha a skin; Refund = Golden
+-- Ember devolvida no lugar.
+event SpinResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		TypeId: string(1..16),
+		Paid: boolean,
+		Ok: boolean,
+		ItemId: string(1..48)?,
+		Duplicate: boolean,
+		Refund: u16
+	}
+}
+
+-- Ativar um kit para sempre (KitId nil = desativar). Kit não possuído é ignorado.
+event SetActiveKit {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		KitId: string(1..32)?
 	}
 }

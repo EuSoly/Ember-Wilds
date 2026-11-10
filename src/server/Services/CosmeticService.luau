@@ -7,7 +7,8 @@
 -- O mesmo atributo vai também no Player: no menu não há personagem, e o boneco
 -- do menu (MenuBoneco) mostra a skin equipada lendo dali.
 -- O padrão de cada slot conta como possuído sempre. Equipar um cosmético não
--- possuído falha. Até a loja (F5), a posse vem do comando de dev (DevDataService).
+-- possuído falha. A posse vem da loja (ShopService: roleta e pacotes) e, no
+-- Studio, do comando de dev (DevDataService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -139,10 +140,6 @@ end
 -- possuída. A pasta é preenchida ANTES de ir para o Player, para chegar ao
 -- cliente de uma vez (com centenas de skins, evita centenas de envios).
 local function publishOwned(player: Player, data: { [string]: any })
-	-- Todas as skins liberadas para teste.
-	for id in Defs.Cosmetics do
-		data.Cosmetics.Owned[id] = true
-	end
 	local folder = ownedFolder(player)
 	local fresh = folder == nil
 	local target: Folder = folder or Instance.new("Folder")
