@@ -578,8 +578,6 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	)
 	table.insert(children, shop)
 	table.insert(children, noticeBanner(layout))
-	-- Pop-up da roleta depois do tutorial (uma vez), por cima de tudo.
-	table.insert(children, TutorialSpinPopup.build())
 
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
@@ -618,6 +616,22 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		}),
 	}) :: ScreenGui
 	backdrop.Parent = playerGui
+
+	-- Pop-up da roleta depois do tutorial (uma vez): ScreenGui próprio, por cima
+	-- do menu, e sem a área segura, para o fundo escuro cobrir a tela toda
+	-- (inclusive atrás dos botões do Roblox no topo).
+	local popup = create("ScreenGui")({
+		Name = "TutorialSpinPopup",
+		ResetOnSpawn = false,
+		DisplayOrder = 2,
+		IgnoreGuiInset = true,
+		ScreenInsets = Enum.ScreenInsets.None,
+		Enabled = function()
+			return ScreenState.current() == "menu"
+		end,
+		TutorialSpinPopup.build(),
+	}) :: ScreenGui
+	popup.Parent = playerGui
 
 	local scale = gui:FindFirstChildOfClass("UIScale")
 	local function refresh()

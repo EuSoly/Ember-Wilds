@@ -1,5 +1,6 @@
 --!strict
--- Pop-up da roleta depois do tutorial: na primeira vez no menu depois de
+-- Pop-up da roleta depois do tutorial (só uma vez, não sempre que há giros):
+-- na primeira vez no menu depois de
 -- completar (quando a vida do tutorial acaba, ou numa sessão nova), "Você tem
 -- 2 giros!" com Ir para a roleta (abre a loja na seção de giros) ou Depois.
 -- Aparece uma vez: qualquer botão avisa o servidor (TutorialPopupSeen), que
@@ -15,6 +16,7 @@ local Net = require(Client:WaitForChild("Net"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
 local create = vide.create
@@ -39,7 +41,7 @@ function TutorialSpinPopup.build(): Frame
 		Net.TutorialPopupSeen.Fire()
 	end
 
-	return create("Frame")({
+	local root = create("Frame")({
 		Name = "TutorialSpinPopup",
 		Visible = visible,
 		Size = UDim2.fromScale(1, 1),
@@ -106,6 +108,10 @@ function TutorialSpinPopup.build(): Frame
 			}),
 		}),
 	}) :: Frame
+	-- A escala de interface (Configurações) vale só para a janela: o fundo
+	-- escuro continua cobrindo a tela inteira.
+	Template.bindUiScale(root:FindFirstChild("Window") :: Instance)
+	return root
 end
 
 return TutorialSpinPopup
