@@ -161,8 +161,10 @@ function TutorialService.Start(_self)
 		end
 	end)
 	Net.TutorialBookViewed.On(function(player: Player, request: { ItemId: string })
+		-- Só conta na etapa de ver a ficha e do item dela (nada de encher a
+		-- tabela com qualquer texto, nem pular a etapa antes da hora).
 		local state = states[player]
-		if state then
+		if state and TutorialRules.acceptsView(TutorialSteps.LIST[state.index], request.ItemId) then
 			state.facts.viewed[request.ItemId] = true
 		end
 	end)

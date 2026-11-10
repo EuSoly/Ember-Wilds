@@ -28,6 +28,7 @@ local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
 local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local TutorialRules = require(ReplicatedStorage.Shared.Tutorial.TutorialRules)
 local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
 local CrateService = require(script.Parent.CrateService)
@@ -156,19 +157,37 @@ local function hit(player: Player, character: Model, root: BasePart)
 			)
 		end
 	end
+	-- Tutorial: o protegido não acerta jogador, bicho, caixa nem peça alheia.
+	-- Esses alvos saem da disputa antes de escolher, para o golpe ir no
+	-- recurso ao lado (dois novatos na mesma árvore continuam coletando).
+	if TutorialService.isProtected(player) then
+		local function allowed(candidate: Candidate): boolean
+			local kind: TutorialRules.HitKind = if candidate.character
+				then "character"
+				elseif candidate.mob then "mob"
+				elseif candidate.crate then "crate"
+				elseif candidate.structure then "structure"
+				else "resource"
+			local own = candidate.structure ~= nil and candidate.structure.owner == player
+			return not TutorialRules.blocksHit(kind, own)
+		end
+		local function only(list: { Candidate }): { Candidate }
+			local kept: { Candidate } = {}
+			for _, candidate in list do
+				if allowed(candidate) then
+					table.insert(kept, candidate)
+				end
+			end
+			return kept
+		end
+		candidates = only(candidates)
+		overlays = only(overlays)
+	end
 	-- Ponte/telhado só leva o golpe se não houver mais nada ao alcance.
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
 		or GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
 		return
-	end
-	-- Tutorial: o protegido não causa dano a jogador, bicho, caixa nem peça
-	-- alheia (coletar recurso e mexer nas próprias peças continua normal).
-	if TutorialService.isProtected(player) then
-		local structure = target.structure
-		if target.character or target.mob or target.crate or (structure and structure.owner ~= player) then
-			return
-		end
 	end
 	if target.structure then
 		StructureService.hit(target.structure, player, tool)

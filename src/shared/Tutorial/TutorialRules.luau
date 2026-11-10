@@ -141,6 +141,34 @@ function TutorialRules.highlights(step: Step?, ui: UiState): Highlights
 	return out
 end
 
+-- Cliente: o item a avisar como "visto" agora (livro aberto na ficha do item da
+-- etapa "view"), ou nil. Sem memória: cada vida que chega na etapa avisa de novo
+-- (o servidor ignora o que não serve).
+function TutorialRules.viewToReport(step: Step?, bookOpen: boolean, selected: string?): string?
+	if step == nil or step.goal.kind ~= "view" or not bookOpen then
+		return nil
+	end
+	return if selected ~= nil and selected == step.goal.item then selected else nil
+end
+
+-- Servidor: só conta "vi a ficha" na etapa "view" e do item dela.
+function TutorialRules.acceptsView(step: Step?, itemId: string): boolean
+	return step ~= nil and step.goal.kind == "view" and step.goal.item == itemId
+end
+
+export type HitKind = "character" | "mob" | "crate" | "structure" | "resource"
+
+-- Protegido: o golpe não pega em jogador, bicho, caixa nem peça de outro dono
+-- (esses alvos saem da disputa, para o golpe ir no recurso ao lado).
+function TutorialRules.blocksHit(kind: HitKind, ownStructure: boolean): boolean
+	if kind == "resource" then
+		return false
+	elseif kind == "structure" then
+		return not ownStructure
+	end
+	return true
+end
+
 -- true enquanto a proteção vale (desde `startedAt`, em segundos).
 function TutorialRules.protected(startedAt: number, now: number): boolean
 	return now - startedAt < TutorialRules.PROTECTION_SECONDS

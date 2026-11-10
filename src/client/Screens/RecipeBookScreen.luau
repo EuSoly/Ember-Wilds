@@ -11,6 +11,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local BookImages = require(Shared:WaitForChild("BookImages"))
 local BookInfo = require(Shared:WaitForChild("UIFlow"):WaitForChild("BookInfo"))
+local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -286,17 +287,14 @@ local function Book(): Frame
 	end)
 
 	-- Tutorial: a ficha do item da etapa aberta no livro conta como "vista".
-	-- Avisa uma vez por etapa (o servidor só conta se for a etapa certa).
-	local sentForStep = 0
+	-- Sem memória entre vidas (o livro vive a sessão toda): o efeito só roda de
+	-- novo quando a etapa, o livro ou a ficha mudam, e o servidor ignora o que
+	-- não é da etapa certa.
 	vide.effect(function()
-		local step = TutorialState.current()
-		local stepIndex = TutorialState.step()
-		if step == nil or step.goal.kind ~= "view" or sentForStep == stepIndex then
-			return
-		end
-		if RecipeBookScreen.open() and RecipeBookScreen.selected() == step.goal.item then
-			sentForStep = stepIndex
-			Net.TutorialBookViewed.Fire({ ItemId = step.goal.item :: string })
+		local itemId =
+			TutorialRules.viewToReport(TutorialState.current(), RecipeBookScreen.open(), RecipeBookScreen.selected())
+		if itemId then
+			Net.TutorialBookViewed.Fire({ ItemId = itemId })
 		end
 	end)
 

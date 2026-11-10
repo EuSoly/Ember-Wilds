@@ -104,6 +104,32 @@ return {
 		assert(h.recipe == nil and not h.bookButton and h.tab == nil and h.cell == nil, "fora do tutorial: nada")
 	end,
 
+	["book_view_is_reported_every_life"] = function()
+		-- Sem memória entre vidas: a mesma ficha aberta na etapa do livro sempre conta.
+		local book = step("book")
+		assert(TutorialRules.viewToReport(book, true, "campfire") == "campfire", "livro aberto na Fogueira")
+		assert(TutorialRules.viewToReport(book, true, "campfire") == "campfire", "de novo, em outra vida")
+		assert(TutorialRules.viewToReport(book, false, "campfire") == nil, "livro fechado")
+		assert(TutorialRules.viewToReport(book, true, "workbench") == nil, "outra ficha")
+		assert(TutorialRules.viewToReport(step("wood"), true, "campfire") == nil, "fora da etapa do livro")
+	end,
+
+	["server_accepts_view_only_at_the_book_step"] = function()
+		assert(TutorialRules.acceptsView(step("book"), "campfire"), "etapa certa, item certo")
+		assert(not TutorialRules.acceptsView(step("wood"), "campfire"), "etapa errada")
+		assert(not TutorialRules.acceptsView(step("book"), "xxxxxxxx"), "item errado")
+		assert(not TutorialRules.acceptsView(nil, "campfire"), "fora do tutorial")
+	end,
+
+	["protected_hit_skips_players_mobs_crates_and_foreign_buildings"] = function()
+		assert(TutorialRules.blocksHit("character", false), "jogador")
+		assert(TutorialRules.blocksHit("mob", false), "bicho")
+		assert(TutorialRules.blocksHit("crate", false), "caixa")
+		assert(TutorialRules.blocksHit("structure", false), "peça de outro")
+		assert(not TutorialRules.blocksHit("structure", true), "peça própria")
+		assert(not TutorialRules.blocksHit("resource", false), "recurso")
+	end,
+
 	["restart_from_zero"] = function()
 		assert(TutorialRules.advance(1, facts()) == 1, "sem nada, fica na 1")
 	end,
