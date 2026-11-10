@@ -21,6 +21,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local DeathService = require(script.Parent.DeathService)
+local TutorialService = require(script.Parent.TutorialService)
 
 local CharacterService = {}
 
@@ -52,6 +53,10 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		return
 	end
 	local player = Players:GetPlayerFromCharacter(character)
+	-- Tutorial: nada machuca o jogador protegido (jogador, bicho, espinho, fome...).
+	if player and TutorialService.isProtected(player) then
+		return
+	end
 	if player and kind == "combat" then
 		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player))
 	end

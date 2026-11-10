@@ -19,6 +19,7 @@ local ChestRules = require(ReplicatedStorage.Shared.Build.ChestRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
 local StructureService = require(script.Parent.StructureService)
+local TutorialService = require(script.Parent.TutorialService)
 local Net = require(script.Parent.Parent.Net)
 
 -- Limite de taxa: até RATE_MAX pedidos de baú (pôr + tirar) por RATE_WINDOW
@@ -77,6 +78,10 @@ local function validChest(player: Player, chest: Instance?): Entry?
 	-- removido não está lá).
 	local entry = StructureService.entryOf(chest)
 	if entry == nil or entry.def.kind ~= "chest" then
+		return nil
+	end
+	-- Tutorial: o protegido só mexe nos próprios baús.
+	if entry.owner ~= player and TutorialService.isProtected(player) then
 		return nil
 	end
 	local dx, dz = root.Position.X - entry.x, root.Position.Z - entry.z

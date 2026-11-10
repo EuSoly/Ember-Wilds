@@ -10,6 +10,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local StatNames = require(game:GetService("ReplicatedStorage").Shared.StatNames)
 local InventoryService = require(script.Parent.InventoryService)
 
 local KIT: { { id: string, count: number } } = {
@@ -28,6 +29,11 @@ local KIT: { { id: string, count: number } } = {
 local DevItemsService = {}
 
 local function giveKit(player: Player)
+	-- Vida de tutorial: sem o kit de teste (ele completaria as etapas sozinho).
+	-- Para pular o tutorial no Studio: ServerStorage.DevTutorialDone.
+	if player:GetAttribute(StatNames.TutorialPending) == true then
+		return
+	end
 	InventoryService.equipBag(player, "leather_bag")
 	for _, item in KIT do
 		InventoryService.give(player, item.id, item.count)

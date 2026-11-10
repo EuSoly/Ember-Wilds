@@ -30,6 +30,10 @@
 -- - ServerStorage.DevRankRemove:Invoke(userId, semana?) -> string: moderação do
 --   ranking semanal: tira o jogador do placar da semana (padrão: a atual).
 -- - ServerStorage.DevRankRefresh:Invoke(): esquece o cache do top (teste).
+-- - ServerStorage.DevTutorialReset:Invoke(player) -> boolean: o perfil volta a
+--   ter o tutorial pendente (e sem pop-up da roleta); vale na próxima vida.
+-- - ServerStorage.DevTutorialDone:Invoke(player) -> boolean: dá o tutorial como
+--   feito, sem prêmio (e encerra o desta vida).
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -46,6 +50,7 @@ local InventoryService = require(script.Parent.InventoryService)
 local RankService = require(script.Parent.RankService)
 local ShopService = require(script.Parent.ShopService)
 local StatsService = require(script.Parent.StatsService)
+local TutorialService = require(script.Parent.TutorialService)
 
 -- Pacotes prontos do DevGive (nome -> itens).
 local GIVE_PRESETS: { [string]: { [string]: number } } = {
@@ -74,6 +79,14 @@ function DevDataService.Start(_self)
 
 	newCommand("DevScore", function(player: Player, points: number)
 		player:SetAttribute(StatNames.Score, points)
+	end)
+
+	newCommand("DevTutorialReset", function(player: Player)
+		return TutorialService.devReset(player)
+	end)
+
+	newCommand("DevTutorialDone", function(player: Player)
+		return TutorialService.devDone(player)
 	end)
 
 	newCommand("DevEndLife", function(player: Player)

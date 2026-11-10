@@ -104,6 +104,35 @@ event RequestSpawn {
 	}
 }
 
+-- Tutorial da primeira partida (TutorialService). O cliente avisa que viu a
+-- ficha de um item no livro (etapa "ver a receita da Fogueira"); o servidor só
+-- conta se o jogador estiver no tutorial.
+event TutorialBookViewed {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ItemId: string(1..32)
+	}
+}
+
+-- O pop-up da roleta (depois do tutorial) foi mostrado no menu: não volta mais.
+event TutorialPopupSeen {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+-- Tutorial completo: Spins = giros normais ganhos (para a mensagem de parabéns).
+event TutorialDone {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Spins: u8
+	}
+}
+
 -- Pedido de reset do personagem (botão de teste em Configurações).
 event RequestReset {
 	From: Client,

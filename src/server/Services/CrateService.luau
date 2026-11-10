@@ -42,6 +42,7 @@ local CosmeticService = require(script.Parent.CosmeticService)
 local DeathService = require(script.Parent.DeathService)
 local InventoryService = require(script.Parent.InventoryService)
 local MobService = require(script.Parent.MobService)
+local TutorialService = require(script.Parent.TutorialService)
 local Net = require(script.Parent.Parent.Net)
 
 -- Studs por célula do índice espacial.
@@ -294,6 +295,10 @@ end
 -- `crate` vem do cliente: pode ser nil ou qualquer Instance.
 local function crateInReach(player: Player, crate: Instance?, range: number): Entry?
 	if typeof(crate) ~= "Instance" or not crate:IsA("Model") then
+		return nil
+	end
+	-- Tutorial: o protegido não abre caixa (loot de outro jogador ou de bicho).
+	if TutorialService.isProtected(player) then
 		return nil
 	end
 	-- byModel só tem caixas vivas (um modelo forjado ou já removido não está lá).

@@ -37,6 +37,7 @@ local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
 local StatsService = require(script.Parent.StatsService)
 local StructureService = require(script.Parent.StructureService)
+local TutorialService = require(script.Parent.TutorialService)
 local Net = require(script.Parent.Parent.Net)
 
 local CHECK_EVERY = 0.05 -- segundos entre conferências de quem está batendo
@@ -160,6 +161,14 @@ local function hit(player: Player, character: Model, root: BasePart)
 		or GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
 		return
+	end
+	-- Tutorial: o protegido não causa dano a jogador, bicho, caixa nem peça
+	-- alheia (coletar recurso e mexer nas próprias peças continua normal).
+	if TutorialService.isProtected(player) then
+		local structure = target.structure
+		if target.character or target.mob or target.crate or (structure and structure.owner ~= player) then
+			return
+		end
 	end
 	if target.structure then
 		StructureService.hit(target.structure, player, tool)

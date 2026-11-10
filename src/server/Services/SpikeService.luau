@@ -19,6 +19,7 @@ local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local CharacterService = require(script.Parent.CharacterService)
 local MobService = require(script.Parent.MobService)
 local StructureService = require(script.Parent.StructureService)
+local TutorialService = require(script.Parent.TutorialService)
 
 local SPIKE_CHECK_EVERY = 0.2 -- segundos (5 Hz)
 -- Studs: a raiz do jogador a até isso da borda do círculo do espinho (raio
@@ -53,6 +54,10 @@ local function stepMobs(now: number)
 		for _, entry in StructureService.near(mob.x, mob.z, margin) do
 			local damage = entry.def.spikeDamage
 			if not BuildRules.hurts(entry.def.kind) or damage == nil then
+				continue
+			end
+			-- Espinho de quem está protegido no tutorial não causa dano.
+			if TutorialService.isProtected(entry.owner) then
 				continue
 			end
 			if not BuildRules.touchesCircle(mob.x, mob.z, entry.x, entry.z, entry.radius, margin) then
@@ -96,6 +101,9 @@ local function step()
 				continue
 			end
 			if BuildRules.areAllies(entry.owner.UserId, victim.UserId) then
+				continue
+			end
+			if TutorialService.isProtected(entry.owner) then
 				continue
 			end
 			if not BuildRules.touchesCircle(px, pz, entry.x, entry.z, entry.radius, SPIKE_MARGIN) then

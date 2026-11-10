@@ -21,6 +21,7 @@ local KitChoice = require(ReplicatedStorage.Shared.UIFlow.KitChoice)
 local KitRules = require(ReplicatedStorage.Shared.UIFlow.KitRules)
 local InventoryService = require(script.Parent.InventoryService)
 local ShopService = require(script.Parent.ShopService)
+local TutorialService = require(script.Parent.TutorialService)
 local Net = require(script.Parent.Parent.Net)
 
 local SpawnService = {}
@@ -150,9 +151,15 @@ function SpawnService.spawn(player: Player, kitId: string?, source: string?): bo
 	if player.Parent ~= Players then
 		return false
 	end
-	local chosen, from = chooseKit(player, kitId, source)
-	local given = if chosen ~= nil and from ~= nil then giveKit(player, chosen, from :: KitChoice.Source) else nil
+	-- Vida de tutorial: sem kit (nada é aplicado nem gasto; um kit com picareta
+	-- pularia a etapa 2).
+	local given: string? = nil
+	if not TutorialService.pending(player) then
+		local chosen, from = chooseKit(player, kitId, source)
+		given = if chosen ~= nil and from ~= nil then giveKit(player, chosen, from :: KitChoice.Source) else nil
+	end
 	giveSpawnItems(player, given)
+	TutorialService.begin(player)
 	return true
 end
 

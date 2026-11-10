@@ -80,6 +80,14 @@ return table.freeze({
 	KitBalanceFolder = "KitBalance",
 	PurchasedFolder = "Purchased",
 	PassesFolder = "Passes",
+	-- Tutorial da primeira partida (TutorialService), atributos do Player:
+	-- TutorialStep = etapa atual (0 = fora do tutorial, 1..6); TutorialProtected =
+	-- protegido (nem leva nem causa dano); TutorialPending = o perfil ainda não
+	-- completou; SpinPopupPending = mostrar o pop-up da roleta no menu.
+	TutorialStep = "TutorialStep",
+	TutorialProtected = "TutorialProtected",
+	TutorialPending = "TutorialPending",
+	SpinPopupPending = "SpinPopupPending",
 	-- Tag (CollectionService) dos personagens que ganham um boneco visual.
 	BonecoTag = "Boneco",
 	-- Raízes visuais dos mobs; contadores de eventos, sem regras de combate.

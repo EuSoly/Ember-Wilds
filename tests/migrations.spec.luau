@@ -119,6 +119,13 @@ return {
 		assert(type(template.PurchaseIdCache) == "table", "cache de compras")
 	end,
 
+	["template starts with the tutorial pending"] = function()
+		local template = ProfileTemplate.build(Defs)
+		assert(type(template.Tutorial) == "table", "tutorial no perfil")
+		assert(template.Tutorial.Done == false, "tutorial ainda não feito")
+		assert(template.Tutorial.SpinPopup == false, "sem pop-up da roleta pendente")
+	end,
+
 	["template is a new table each call"] = function()
 		local a = ProfileTemplate.build(Defs)
 		local b = ProfileTemplate.build(Defs)

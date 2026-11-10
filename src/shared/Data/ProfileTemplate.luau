@@ -25,6 +25,9 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		Ranking = RankRules.empty(0),
 		-- Loja (Shop/ShopData): saldos de giros e de kits, kits e passes, compras.
 		Shop = ShopData.empty(),
+		-- Tutorial da primeira partida (TutorialService): Done = completou;
+		-- SpinPopup = o pop-up da roleta ainda não foi mostrado no menu.
+		Tutorial = { Done = false, SpinPopup = false },
 		-- Reservado para as compras com Robux (F5/loja), padrão do ProfileStore.
 		PurchaseIdCache = {},
 	}

@@ -58,6 +58,7 @@ local ScoreService = require(script.Parent.ScoreService)
 local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 local StructureService = require(script.Parent.StructureService)
+local TutorialService = require(script.Parent.TutorialService)
 
 type MobDef = Defs.MobDef
 type MobStats = Types.MobStats
@@ -225,6 +226,11 @@ local function viewOf(rect: WorldConfig.Rect, bodies: { MobBrain.Seen }): View
 		return view
 	end
 	for _, body in bodies do
+		-- Tutorial: bicho não vê (nem persegue) o jogador protegido.
+		local player = Players:GetPlayerFromCharacter(body.who)
+		if player and TutorialService.isProtected(player) then
+			continue
+		end
 		if inRect(rect, body.x, body.z) then
 			table.insert(view.list, body)
 			view.byWho[body.who] = body
