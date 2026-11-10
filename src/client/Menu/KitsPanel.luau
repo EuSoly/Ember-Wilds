@@ -1,8 +1,10 @@
 --!strict
 -- Painel "ESCOLHA SEU KIT" (UI 1): folha de papel à direita do boneco, uma
 -- linha por kit com os três jeitos de levar o kit:
---   pontos · 1 vida (de verdade)   Robux · 1 vida   Robux · para sempre (mockup)
--- Kit permanente troca os três por um botão verde "Usar" / "Ativo".
+--   pontos · 1 vida    Robux · +1 no saldo de 1 vida    Robux · para sempre
+-- (Robux ainda não é cobrado: o servidor entrega de graça.)
+-- Kit para sempre troca os três por um botão verde "Usar" / "Ativo".
+-- Com saldo de 1 vida, aparece "Usar 1 · N guardados" ao lado do nome.
 -- O kit que vai nesta vida (KitShop.current) ganha a borda de brasa.
 -- Quem chama posiciona e dimensiona o painel (MenuShell, pelo MenuLayout).
 local Players = game:GetService("Players")
@@ -12,7 +14,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local KitRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("KitRules"))
-local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
+local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -20,6 +22,8 @@ local Client = script.Parent.Parent
 local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
+local ShopData = require(Client:WaitForChild("ShopData"))
+local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
@@ -35,6 +39,7 @@ local ICON = 52
 local BUTTONS_HEIGHT = 48
 local BUTTON_GAP = 6
 local SELECTED_STROKE = 3
+local BALANCE_WIDTH = 150 -- botão "Usar 1 · N guardados" ao lado do nome
 
 local KitsPanel = {}
 
@@ -55,7 +60,7 @@ local function iconItem(kit: Defs.KitDef): string
 end
 
 local function buyButtons(kit: Defs.KitDef, points: () -> number): Frame
-	local robux = MockStore.KIT_ROBUX[kit.id]
+	local robux = ShopConfig.KIT_ROBUX[kit.id]
 	local function canBuy(): boolean
 		return KitRules.canBuy(kit, points())
 	end
@@ -70,7 +75,7 @@ local function buyButtons(kit: Defs.KitDef, points: () -> number): Frame
 		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
 		Visible = function()
-			return KitShop.state().owned[kit.id] ~= true
+			return not ShopData.kitOwned(kit.id)
 		end,
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,
@@ -121,11 +126,11 @@ local function useButton(kit: Defs.KitDef): TextButton
 		Name = "Use",
 		Size = UDim2.fromScale(1, 1),
 		Visible = function()
-			return KitShop.state().owned[kit.id] == true
+			return ShopData.kitOwned(kit.id)
 		end,
 		kind = "success",
 		text = function()
-			return Strings.get(if KitShop.state().active == kit.id then "kit.active" else "kit.use")
+			return Strings.get(if ShopData.kitActive() == kit.id then "kit.active" else "kit.use")
 		end,
 		Activated = function()
 			KitShop.toggleActive(kit.id)
@@ -171,11 +176,32 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 			Name = "Name",
 			dark = true,
 			Position = UDim2.fromOffset(ICON + 20, 8),
-			Size = UDim2.new(1, -(ICON + 30), 0, 24),
+			Size = UDim2.new(1, -(ICON + 30 + BALANCE_WIDTH), 0, 24),
 			FontFace = Theme.font.number,
 			Text = Strings.get(kit.nameKey),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 20,
+		}),
+		-- Saldo de 1 vida comprado: "Usar 1 · 3 guardados" (escolhe gastando 1).
+		Rustic.button({
+			Name = "UseBalance",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -10, 0, 6),
+			Size = UDim2.fromOffset(BALANCE_WIDTH, 28),
+			Visible = function()
+				return ShopData.kitBalance(kit.id) > 0
+			end,
+			kind = function()
+				local chosen = KitList.selected() == kit.id and KitList.source() == "balance"
+				return if chosen then "ember" else "leather"
+			end,
+			text = function()
+				return Strings.format("kit.useOne", { n = ShopData.kitBalance(kit.id) })
+			end,
+			maxSize = 14,
+			Activated = function()
+				KitShop.useBalance(kit.id)
+			end,
 		}),
 		Rustic.label({
 			Name = "Items",

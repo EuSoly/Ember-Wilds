@@ -16,7 +16,6 @@ local ScreenState = require(Client:WaitForChild("ScreenState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local MenuShell = require(Client:WaitForChild("Menu"):WaitForChild("MenuShell"))
 local MenuState = require(Client:WaitForChild("Menu"):WaitForChild("MenuState"))
-local KitShop = require(Client:WaitForChild("Menu"):WaitForChild("KitShop"))
 local Screens = Client:WaitForChild("Screens")
 local DeathScreen = require(Screens:WaitForChild("DeathScreen"))
 local KitList = require(Screens:WaitForChild("KitList"))
@@ -82,8 +81,7 @@ function ScreenController.Start(_self)
 				-- Nasceu: o kit escolhido já foi usado (ou recusado); a próxima
 				-- escolha começa vazia, para nada ser cobrado sem querer.
 				if screen == "playing" then
-					KitList.selected(nil)
-					KitShop.spend() -- a compra de 1 vida (mockup) também foi usada
+					KitList.clear()
 				end
 			end)
 		end)

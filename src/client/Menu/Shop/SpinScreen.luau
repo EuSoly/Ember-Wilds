@@ -4,13 +4,17 @@
 --   giro com Golden Ember (chances baixas) e giro especial com Robux (altas),
 --   cada um com as chances, "Você tem N giros", comprar +1/+3/+10 e GIRAR.
 -- Girar acontece aqui mesmo: o carrossel para no prêmio e abre só uma
--- janelinha com a skin. Tudo simulado (nada é cobrado nem salvo).
+-- janelinha com a skin. Os saldos de giros são do jogador (um normal e um
+-- especial, que servem em qualquer roleta); o sorteio e a entrega são do
+-- servidor (Net.RequestSpin → SpinResult); o carrossel anima até o prêmio
+-- que o servidor mandou. Repetida devolve Golden Ember (mostrado no prêmio).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
+local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
@@ -19,6 +23,10 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
+local ShopData = require(Client:WaitForChild("ShopData"))
+local Net = require(Client:WaitForChild("Net"))
+local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
+local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
@@ -33,7 +41,7 @@ local WON_TILE = 170
 local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
 
-export type Won = { item: MockStore.SpinItem, typeId: string, paid: boolean }
+export type Won = { item: MockStore.SpinItem, typeId: string, paid: boolean, refund: number }
 -- Sons de um giro (SpinSounds): frame a cada quadro, land ao parar, stop se fechar.
 export type SoundSession = {
 	frame: (progress: number, tile: number) -> (),
@@ -113,10 +121,10 @@ local function oddsRow(odds: { number }): Frame
 	}) :: Frame
 end
 
--- Um lado da tela (normal ou pago).
+-- Um lado da tela (normal ou pago). O saldo é o mesmo em qualquer roleta.
 local function side(
 	kind: SpinRules.Kind,
-	typeId: () -> string?,
+	_typeId: () -> string?,
 	currency: () -> number,
 	onSpin: (SpinRules.Kind) -> (),
 	order: number,
@@ -128,11 +136,10 @@ local function side(
 	local function compact(): boolean
 		return layout().compact
 	end
-	local prices: { MockStore.SpinPrice } = if paid then MockStore.SPIN_PRICES.paid else MockStore.SPIN_PRICES.normal
+	local prices: { ShopConfig.SpinPack } = ShopConfig.SPIN_PACKS[kind]
+	-- Saldo único do jogador (serve em qualquer roleta).
 	local function count(): number
-		local id = typeId()
-		local entry = if id then ShopState.counts()[id] else nil
-		return if entry then entry[kind] else 0
+		return ShopData.spins(kind)
 	end
 
 	local buyCells: { Instance } = {
@@ -168,10 +175,7 @@ local function side(
 							return math.max(offer.price - currency(), 0)
 						end,
 					onClick = function()
-						local id = vide.untrack(typeId)
-						if id then
-							ShopState.buySpins(id, kind, offer.qty, offer.price)
-						end
+						Purchase.buy(`spins_{kind}_{offer.qty}`)
 					end,
 					position = UDim2.fromScale(0, 0.26),
 					size = UDim2.fromScale(1, 0.74),
@@ -245,7 +249,7 @@ local function side(
 				maxSize = 24,
 			}),
 			(function()
-				local row = oddsRow(if paid then MockStore.SPIN_ODDS.paid else MockStore.SPIN_ODDS.normal)
+				local row = oddsRow(ShopConfig.SPIN_ODDS[kind])
 				row.LayoutOrder = 2
 				vide.apply(row)({
 					Size = function()
@@ -300,7 +304,6 @@ function SpinScreen.build(
 ): Frame
 	local currency = Sources.attribute(Players.LocalPlayer, StatNames.Currency, 0)
 	local won: (() -> Won?) & ((Won?) -> Won?) = vide.source(nil :: Won?) :: any
-	local rng = Random.new()
 
 	local function tileSize(): number
 		return layout().spinTile
@@ -374,18 +377,13 @@ function SpinScreen.build(
 		end
 	end)
 
-	local function spin(kind: SpinRules.Kind)
-		local id = vide.untrack(ShopState.spinType)
-		local spinType = if id then typeOf(id) else nil
+	-- Anima o carrossel até o prêmio que o servidor sorteou.
+	local function play(spinType: MockStore.SpinType, prize: MockStore.SpinItem, paid: boolean, refund: number)
 		local current = reel
-		if spinType == nil or current == nil or not ShopState.useSpin(spinType.id, kind) then
+		if current == nil then
+			ShopState.spinning(false)
 			return
 		end
-		ShopState.spinning(true)
-		local paid = kind == "paid"
-		local odds = if paid then MockStore.SPIN_ODDS.paid else MockStore.SPIN_ODDS.normal
-		local rarity = SpinRules.pickIndex(odds, rng:NextNumber())
-		local prize = SpinRules.pickItem(spinType.items, rarity, rng:NextNumber())
 		if paid and hooks.startPaid then
 			stopFx = hooks.startPaid(box, window)
 		end
@@ -404,9 +402,47 @@ function SpinScreen.build(
 				hooks.land(box)
 			end
 			ShopState.spinning(false)
-			won({ item = prize, typeId = spinType.id, paid = paid })
+			won({ item = prize, typeId = spinType.id, paid = paid, refund = refund })
 		end, if session then session.frame else nil)
 	end
+
+	-- GIRAR: pede o giro ao servidor e trava até a resposta (SpinResult).
+	local function spin(kind: SpinRules.Kind)
+		local id = vide.untrack(ShopState.spinType)
+		local spinType = if id then typeOf(id) else nil
+		if spinType == nil or reel == nil or vide.untrack(ShopState.spinning) then
+			return
+		end
+		if vide.untrack(function()
+			return ShopData.spins(kind)
+		end) < 1 then
+			return
+		end
+		ShopState.spinning(true)
+		Net.RequestSpin.Fire({ TypeId = spinType.id, Paid = kind == "paid" })
+	end
+
+	Net.SpinResult.On(function(result)
+		local spinType = typeOf(result.TypeId)
+		local prize: MockStore.SpinItem? = nil
+		if spinType and result.Ok and result.ItemId then
+			for _, item in spinType.items do
+				if item.id == result.ItemId then
+					prize = item
+					break
+				end
+			end
+		end
+		-- A tela pode ter fechado (ou trocado de roleta) enquanto esperava.
+		if spinType == nil or prize == nil or vide.untrack(ShopState.spinType) ~= result.TypeId then
+			ShopState.spinning(false)
+			if not result.Ok then
+				MenuState.notify(Strings.get("shop.spin.failed"))
+			end
+			return
+		end
+		play(spinType, prize, result.Paid, result.Refund)
+	end)
 
 	-- Janelinha do prêmio: refeita a cada prêmio.
 	local prizeHolder = create("Frame")({
@@ -421,7 +457,7 @@ function SpinScreen.build(
 		Name = "PrizeName",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0.2, WON_TILE + 10),
-		Size = UDim2.new(0.9, 0, 0, 30),
+		Size = UDim2.new(0.9, 0, 0, 52), -- nome e, se repetida, a devolução
 		FontFace = Theme.font.number,
 		RichText = true,
 		Text = "",
@@ -477,6 +513,10 @@ function SpinScreen.build(
 		local rarityName = Strings.get(MockStore.RARITIES[result.item.rarity].nameKey)
 		prizeName.Text =
 			`{Strings.get(result.item.nameKey)} · <font color="#{rarityColor(result.item.rarity):ToHex()}">{rarityName}</font>`
+		-- Repetida: o servidor devolveu Golden Ember no lugar da skin.
+		if result.refund > 0 then
+			prizeName.Text ..= `\n{Strings.format("shop.spin.duplicate", { amount = result.refund })}`
+		end
 		if hooks.celebrate then
 			hooks.celebrate(popup, result.item.rarity, result.paid)
 		end

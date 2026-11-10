@@ -81,18 +81,14 @@ local BRANCH_SHARE = 1.45 -- largura do galho em relação ao card
 local BRANCH_LIFT = 0.22 -- quanto do galho fica acima do topo do card
 local COIN_SIZE = 40
 
--- "Nenhum", "Explorador" ou "Iniciante (simulado)" (kit que não vai ao servidor).
+-- "Nenhum" ou o nome do kit da próxima vida ("Explorador").
 local function kitLabel(): string
-	local id, source = KitShop.current()
+	local id = KitShop.current()
 	if id == nil then
 		return Strings.get("menu.kits.none")
 	end
 	local kit = Defs.Kits[id]
-	local name = if kit then Strings.get(kit.nameKey) else id
-	if source ~= "points" then
-		return Strings.format("menu.kits.simulated", { name = name })
-	end
-	return name
+	return if kit then Strings.get(kit.nameKey) else id
 end
 
 local function navButton(id: string, layout: () -> Layout): TextButton
@@ -436,7 +432,7 @@ local function kitsPanel(layout: () -> Layout): Frame
 	return panel
 end
 
--- Aviso de compra simulada: faixa no alto, abaixo dos pods; só enquanto há texto.
+-- Aviso do menu (resultado de compra...): faixa no alto, abaixo dos pods; só enquanto há texto.
 local function noticeBanner(layout: () -> Layout): Frame
 	return Kit.pill({
 		Name = "Notice",

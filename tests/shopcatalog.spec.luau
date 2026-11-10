@@ -153,6 +153,29 @@ return {
 		end
 	end,
 
+	["kit robux prices"] = function()
+		local expected = {
+			kit_starter = { 15, 99 },
+			kit_explorer = { 25, 199 },
+			kit_survivor = { 49, 399 },
+			kit_veteran = { 99, 799 },
+		}
+		for id, prices in expected do
+			local entry = ShopConfig.KIT_ROBUX[id]
+			assert(entry ~= nil, `{id} sem preço em Robux`)
+			assert(entry.once == prices[1] and entry.forever == prices[2], `{id}: {entry.once}/{entry.forever}`)
+		end
+	end,
+
+	["ember packs and the VIP price"] = function()
+		local expected = { { 300, 80 }, { 600, 150 }, { 2600, 600 }, { 7000, 1500 }, { 20000, 3500 } }
+		assert(#ShopConfig.EMBER_PACKS == 5, `veio {#ShopConfig.EMBER_PACKS}`)
+		for i, pack in ShopConfig.EMBER_PACKS do
+			assert(pack.amount == expected[i][1] and pack.robux == expected[i][2], `pacote {i}`)
+		end
+		assert(ShopConfig.PASSES.vip.robux == 149, "VIP de 149")
+	end,
+
 	["spin odds and refunds"] = function()
 		assert(table.concat(ShopConfig.SPIN_ODDS.normal, ",") == "30,40,23,6,1", "chances do normal")
 		assert(table.concat(ShopConfig.SPIN_ODDS.paid, ",") == "5,25,40,25,5", "chances do especial")

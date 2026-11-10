@@ -145,6 +145,8 @@ export type PriceProps = {
 	robux: number?,
 	ember: number?,
 	missing: (() -> number)?, -- só Golden Ember: quanto falta (0 = pode comprar)
+	-- Já comprado (produto "once"): botão verde "Comprado", sem clique.
+	owned: (() -> boolean)?,
 	onClick: () -> (),
 	size: UDim2?,
 	position: UDim2?,
@@ -156,6 +158,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 	local function missing(): number
 		return if p.missing then p.missing() else 0
 	end
+	local function owned(): boolean
+		return if p.owned then p.owned() else false
+	end
 	local isRobux = p.robux ~= nil
 	local button = Rustic.button({
 		Name = "Price",
@@ -163,12 +168,18 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		Position = p.position,
 		AnchorPoint = p.anchor,
 		kind = function()
+			if owned() then
+				return "success"
+			end
 			if isRobux then
 				return "green"
 			end
 			return if missing() > 0 then "disabled" else "ember"
 		end,
 		text = function()
+			if owned() then
+				return Strings.get("shop.bundle.bought")
+			end
 			if isRobux then
 				-- Com o ícone do Robux desenhado, o texto deixa espaço para ele.
 				if ShopImages.has(ShopImages.ROBUX) then
@@ -183,7 +194,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		end,
 		maxSize = p.textSize or 22,
 		Activated = function()
-			if missing() <= 0 then
+			if missing() <= 0 and not owned() then
 				p.onClick()
 			end
 		end,
@@ -191,6 +202,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 	if isRobux and ShopImages.has(ShopImages.ROBUX) then
 		create("ImageLabel")({
 			Name = "RobuxIcon",
+			Visible = function()
+				return not owned()
+			end,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.fromScale(0.42, 0.46),
 			Size = UDim2.fromScale(0.42, 0.5),
@@ -207,7 +221,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		create("ImageLabel")({
 			Name = "Coin",
 			Visible = function()
-				return missing() <= 0
+				return missing() <= 0 and not owned()
 			end,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.fromScale(0.42, 0.46),

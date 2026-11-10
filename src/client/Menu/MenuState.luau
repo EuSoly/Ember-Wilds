@@ -35,7 +35,7 @@ function MenuState.openShop(section: ShopSection?)
 	shopSection(section)
 end
 
--- Aviso curto de "compra simulada" (G7a): aparece sobre os painéis e some
+-- Aviso curto (resultado de compra, giro sem saldo...): aparece sobre os painéis e some
 -- sozinho. A geração evita que um timer velho apague um aviso mais novo.
 local NOTICE_SECONDS = 2.5
 local notice: Source<string?> = vide.source(nil :: string?) :: any

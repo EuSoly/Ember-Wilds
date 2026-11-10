@@ -1,12 +1,13 @@
 --!strict
 -- Quadradinho de uma skin da loja (carrossel, prêmio, pacotes): fundo na cor
 -- da raridade (cores dos tiers), a skin em 3D (ItemViewport) e nome embaixo.
--- A prévia dos pacotes (preview) ainda usa um desenho simples feito de Frames,
--- porque os pacotes são só um mockup: corpo, acessório, mochila, livro e caixa.
+-- A prévia dos pacotes usa a skin real (cosmeticPreview); o desenho simples feito
+-- de Frames (preview) fica para tipos sem skin: corpo, acessório, mochila, livro e caixa.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local Defs = require(Shared:WaitForChild("Defs"))
 local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -225,6 +226,23 @@ function SpinTile.build(item: MockStore.SpinItem, size: number): Frame
 				maxSize = math.max(math.floor(size / 7), 11),
 				ZIndex = 6,
 			}),
+		}
+	)
+end
+
+-- Skin de verdade (3D) na prévia dos pacotes, sem nome: `sizeScale` da altura
+-- do pai, moldura na cor da raridade da skin.
+function SpinTile.cosmeticPreview(cosmeticId: string, sizeScale: number): Frame
+	local cosmetic = Defs.Cosmetics[cosmeticId]
+	return tileFrame(
+		function()
+			return ItemViewport.build(cosmeticId)
+		end,
+		if cosmetic then cosmetic.rarity else 1,
+		{
+			Name = cosmeticId,
+			Size = UDim2.fromScale(sizeScale, sizeScale),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		}
 	)
 end
