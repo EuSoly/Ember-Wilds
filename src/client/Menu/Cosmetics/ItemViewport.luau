@@ -151,7 +151,7 @@ function ItemViewport.build(cosmeticId: string): ViewportFrame
 		model.Parent = viewport
 		ItemViewport.frame(camera, model, ItemViewport.direction(cosmeticId))
 		-- Arte ainda baixando (segundo plano, AssetPreload): brilho até chegar.
-		LoadingShimmer.watch(viewport, model)
+		LoadingShimmer.watch(viewport, model, cosmeticId)
 	end
 	return viewport
 end

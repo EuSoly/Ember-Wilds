@@ -4,14 +4,23 @@
 -- carregamento só espera a interface, e o resto chega em segundo plano
 -- (Shared/AssetPreload). Some sozinho quando tudo do modelo chegou, ou depois
 -- de TIMEOUT (para nunca ficar piscando para sempre).
+--
+-- Mesmo com tudo baixado, na primeira vez que um item aparece num
+-- ViewportFrame o quadro fica vazio por ~1 s (só os olhos do boneco, até nas
+-- skins só de cor, feitas de peças simples; visto no Studio em 10/11/2026). Não
+-- há sinal de quando isso termina, então na primeira vez de cada item na sessão
+-- o brilho fica FIRST_VIEW.
 local ContentProvider = game:GetService("ContentProvider")
 local TweenService = game:GetService("TweenService")
 
 local CHECK_EVERY = 0.25 -- s entre conferências
 local TIMEOUT = 20 -- s no máximo com o brilho
+local FIRST_VIEW = 0.9 -- s de brilho na primeira vez de cada item (malha saindo do disco)
 local SWEEP = TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1)
 
 local LoadingShimmer = {}
+
+local seen: { [string]: true } = {} -- itens que já apareceram nesta sessão
 
 -- Ids de conteúdo (malha e textura) das peças do modelo.
 local function contentOf(model: Instance): { string }
@@ -44,17 +53,20 @@ local function allLoaded(ids: { string }): boolean
 	return true
 end
 
--- Põe o brilho em `container` até as artes de `model` chegarem.
-function LoadingShimmer.watch(container: GuiObject, model: Instance)
+-- Põe o brilho em `container` até as artes de `model` chegarem (e, na
+-- primeira vez do item `key` na sessão, pelo menos FIRST_VIEW).
+function LoadingShimmer.watch(container: GuiObject, model: Instance, key: string)
 	local ids = contentOf(model)
-	if #ids == 0 or allLoaded(ids) then
+	local firstView = not seen[key]
+	seen[key] = true
+	if not firstView and allLoaded(ids) then
 		return
 	end
 	local overlay = Instance.new("Frame")
 	overlay.Name = "LoadingShimmer"
 	overlay.Size = UDim2.fromScale(1, 1)
 	overlay.BackgroundColor3 = Color3.new(1, 1, 1)
-	overlay.BackgroundTransparency = 0.55
+	overlay.BackgroundTransparency = 0
 	overlay.BorderSizePixel = 0
 	overlay.ZIndex = 20
 	local corner = Instance.new("UICorner")
@@ -63,12 +75,13 @@ function LoadingShimmer.watch(container: GuiObject, model: Instance)
 	-- Uma faixa clara atravessando o quadro, sem parar.
 	local gradient = Instance.new("UIGradient")
 	gradient.Rotation = 20
+	-- Véu claro no quadro todo e uma faixa mais forte atravessando.
 	gradient.Transparency = NumberSequence.new({
-		NumberSequenceKeypoint.new(0, 1),
-		NumberSequenceKeypoint.new(0.4, 1),
-		NumberSequenceKeypoint.new(0.5, 0.2),
-		NumberSequenceKeypoint.new(0.6, 1),
-		NumberSequenceKeypoint.new(1, 1),
+		NumberSequenceKeypoint.new(0, 0.7),
+		NumberSequenceKeypoint.new(0.4, 0.7),
+		NumberSequenceKeypoint.new(0.5, 0.25),
+		NumberSequenceKeypoint.new(0.6, 0.7),
+		NumberSequenceKeypoint.new(1, 0.7),
 	})
 	gradient.Offset = Vector2.new(-1, 0)
 	gradient.Parent = overlay
@@ -78,7 +91,11 @@ function LoadingShimmer.watch(container: GuiObject, model: Instance)
 
 	task.spawn(function()
 		local started = os.clock()
-		while overlay.Parent ~= nil and os.clock() - started < TIMEOUT and not allLoaded(ids) do
+		while overlay.Parent ~= nil and os.clock() - started < TIMEOUT do
+			local minimum = if firstView then FIRST_VIEW else 0
+			if os.clock() - started >= minimum and allLoaded(ids) then
+				break
+			end
 			task.wait(CHECK_EVERY)
 		end
 		sweep:Cancel()

@@ -120,7 +120,7 @@ As malhas e as imagens só baixam na primeira vez que aparecem na tela, e era is
 - **A barra mostra a contagem** dessa parte ("Carregando artes 120/250", contas em `LoadingMath.assetTarget`/`assetStatus`).
 - **Espera no máximo 60 s** (`ASSET_WAIT_MAX`). Com o perfil pronto, aparece o botão **Pular**. Nos dois casos o resto continua baixando em segundo plano.
 - **No menu,** enquanto o segundo plano não termina, um indicador pequeno no canto mostra "Baixando artes 812/1.706" (`Menu/AssetProgress`).
-- **Nos quadradinhos 3D** (Cosméticos e loja), um brilho de "carregando" fica por cima até a malha e a textura do item chegarem (`UI/LoadingShimmer`, no `ItemViewport`).
+- **Nos quadradinhos 3D** (Cosméticos e loja), um véu claro com uma faixa passando fica por cima até a malha e a textura do item chegarem (`UI/LoadingShimmer`, no `ItemViewport`). Também aparece por 0,9 s na primeira vez de cada item na sessão: mesmo com tudo baixado, o quadro 3D fica vazio por cerca de 1 s quando monta pela primeira vez (só os olhos do boneco), e o Roblox não avisa quando termina.
 - **Prioridade:** abrir os Cosméticos (a categoria aberta), a Loja (skins) ou o livro (ferramentas e mundo) passa aquela parte na frente da fila (`AssetPreloader.prioritize`).
 - **No Studio** tudo já está no PC e passa rápido. O tempo de verdade só aparece no jogo publicado, principalmente no celular.
 
