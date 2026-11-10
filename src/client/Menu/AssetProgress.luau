@@ -12,6 +12,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -42,9 +43,10 @@ function AssetProgress.build(): Frame
 
 	return create("Frame")({
 		Name = "AssetProgress",
+		-- Só na tela inicial do menu: com uma janela aberta, ficaria por cima dela.
 		Visible = function()
 			local p = progress()
-			return p.running and p.total > 0
+			return p.running and p.total > 0 and MenuState.panel() == "play"
 		end,
 		AnchorPoint = Vector2.new(1, 1),
 		Position = UDim2.new(1, -16, 1, -16),

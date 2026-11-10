@@ -50,7 +50,6 @@ local R = Theme.rustic
 local TITLE_HEIGHT = CosmeticsLayout.TITLE_HEIGHT
 local BODY_TOP = CosmeticsLayout.BODY_TOP
 local BODY_SIDE = CosmeticsLayout.BODY_SIDE
-local BODY_BOTTOM = CosmeticsLayout.BODY_BOTTOM
 
 local BODY = Color3.fromHex("#2B2018")
 local ROW = Color3.fromHex("#3A2B20")
@@ -362,7 +361,10 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 				return category() == nil
 			end,
 			Position = UDim2.fromOffset(BODY_SIDE, BODY_TOP),
-			Size = UDim2.new(1, -2 * BODY_SIDE, 1, -(BODY_TOP + BODY_BOTTOM)),
+			-- A altura vem do layout (tela baixa: sem o Fechar de baixo).
+			Size = function()
+				return UDim2.new(1, -2 * BODY_SIDE, 0, layout().bodyHeight)
+			end,
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			CanvasSize = function()
@@ -381,11 +383,24 @@ function CosmeticsScreen.build(screenSize: () -> Vector2): Frame
 			Visible = function()
 				return category() == nil
 			end,
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -14),
-			Size = UDim2.fromOffset(200, CosmeticsLayout.CLOSE_HEIGHT),
+			-- Tela baixa (celular deitado): um X na quina de cima, na linha da
+			-- borda como a placa do título; libera a altura do Fechar de baixo.
+			AnchorPoint = function()
+				return if layout().closeInCorner then Vector2.new(1, 0.5) else Vector2.new(0.5, 1)
+			end,
+			Position = function()
+				return if layout().closeInCorner then UDim2.new(1, -12, 0, 0) else UDim2.new(0.5, 0, 1, -14)
+			end,
+			Size = function()
+				return if layout().closeInCorner
+					then UDim2.fromOffset(44, 44)
+					else UDim2.fromOffset(200, CosmeticsLayout.CLOSE_HEIGHT)
+			end,
+			ZIndex = 4,
 			kind = "ember",
-			text = Strings.get("menu.close"),
+			text = function()
+				return if layout().closeInCorner then "X" else Strings.get("menu.close")
+			end,
 			maxSize = 24,
 			Activated = function()
 				MenuState.open("play")

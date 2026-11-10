@@ -18,6 +18,7 @@ local CosmeticsLayout = {}
 export type Rect = { x: number, y: number, w: number, h: number }
 export type Layout = {
 	compact: boolean,
+	closeInCorner: boolean, -- tela baixa: o Fechar vira um X no canto do título
 	windowWidth: number,
 	windowHeight: number,
 	bodyWidth: number,
@@ -58,10 +59,14 @@ CosmeticsLayout.CATEGORY_BOTTOM = 16
 
 local WINDOW_MAX = { w = 960, h = 600 }
 local WINDOW_SHARE = { w = 0.92, h = 0.86 }
+-- Tela baixa (celular deitado, 10/11/2026): a janela usa quase toda a altura
+-- e o Fechar de baixo vira um X no canto, para caber o layout largo.
+CosmeticsLayout.SHORT_HEIGHT = 480
+local SHORT_WINDOW_SHARE_H = 0.95
 local GAP = 12
 local SIDE_SHARE = 0.3 -- largura de cada coluna de cartões (largo)
 local BONECO_SHARE = 0.68 -- altura do boneco na vitrine (largo); o resto é a caixa
-local WIDE_MIN_WIDTH = 600
+local WIDE_MIN_WIDTH = 560
 local SCROLL_GUTTER = 10 -- espaço da barra de rolagem (compacto)
 -- Vitrine no compacto: uma fração da altura visível, para os cartões
 -- aparecerem logo abaixo (mostra que a lista rola).
@@ -116,6 +121,7 @@ local function wide(bodyW: number, bodyH: number, sides: { string }): Layout?
 	end
 	return {
 		compact = false,
+		closeInCorner = false,
 		windowWidth = 0,
 		windowHeight = 0,
 		bodyWidth = bodyW,
@@ -146,6 +152,7 @@ local function compact(bodyW: number, bodyH: number, count: number): Layout
 	local rows = (count + 1) // 2
 	return {
 		compact = true,
+		closeInCorner = false,
 		windowWidth = 0,
 		windowHeight = 0,
 		bodyWidth = bodyW,
@@ -206,11 +213,15 @@ end
 
 -- `sides` = o lado de cada cartão, na ordem dos cartões ("left"/"right").
 function CosmeticsLayout.compute(screenW: number, screenH: number, sides: { string }): Layout
+	local short = screenH < CosmeticsLayout.SHORT_HEIGHT
+	local shareH = if short then SHORT_WINDOW_SHARE_H else WINDOW_SHARE.h
 	local windowW = math.min(screenW * WINDOW_SHARE.w, WINDOW_MAX.w)
-	local windowH = math.min(screenH * WINDOW_SHARE.h - CosmeticsLayout.TITLE_HEIGHT / 2, WINDOW_MAX.h)
+	local windowH = math.min(screenH * shareH - CosmeticsLayout.TITLE_HEIGHT / 2, WINDOW_MAX.h)
 	local bodyW = math.max(windowW - 2 * CosmeticsLayout.BODY_SIDE, 1)
-	local bodyH = math.max(windowH - CosmeticsLayout.BODY_TOP - CosmeticsLayout.BODY_BOTTOM, 1)
+	local bottom = if short then CosmeticsLayout.CATEGORY_BOTTOM else CosmeticsLayout.BODY_BOTTOM
+	local bodyH = math.max(windowH - CosmeticsLayout.BODY_TOP - bottom, 1)
 	local layout = wide(bodyW, bodyH, sides) or compact(bodyW, bodyH, #sides)
+	layout.closeInCorner = short
 	layout.windowWidth = windowW
 	layout.windowHeight = windowH
 	local categoryH = math.max(windowH - CosmeticsLayout.BODY_TOP - CosmeticsLayout.CATEGORY_BOTTOM, 1)

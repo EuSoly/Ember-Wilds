@@ -137,7 +137,33 @@ return {
 		for _, size in SIZES do
 			local l = CosmeticsLayout.compute(size[1], size[2], SIDES)
 			assert(l.category.width == l.bodyWidth, `{size[1]}x{size[2]}: largura diferente do corpo`)
-			assert(l.category.height > l.bodyHeight, `{size[1]}x{size[2]}: categoria não ganhou a altura do Fechar`)
+			-- Tela baixa: o Fechar já virou o X do canto, não há altura a ganhar.
+			if l.closeInCorner then
+				assert(l.category.height >= l.bodyHeight, `{size[1]}x{size[2]}: categoria menor que o corpo`)
+			else
+				assert(
+					l.category.height > l.bodyHeight,
+					`{size[1]}x{size[2]}: categoria não ganhou a altura do Fechar`
+				)
+			end
 		end
+	end,
+
+	-- Celular deitado (10/11/2026): com os 4 cartões de hoje (2 de cada lado),
+	-- a janela usa a altura da tela, o Fechar vira um X no canto e o layout
+	-- largo cabe sem rolar (antes os cartões ficavam abaixo da dobra).
+	["short phone screens use the wide layout with the close in the corner"] = function()
+		local four = { "left", "left", "right", "right" }
+		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 } } do
+			local l = CosmeticsLayout.compute(size[1], size[2], four)
+			assert(l.closeInCorner, `{size[1]}x{size[2]}: Fechar deveria ir para o canto`)
+			assert(not l.compact, `{size[1]}x{size[2]}: deveria ser largo`)
+			assert(l.canvasHeight <= l.bodyHeight, `{size[1]}x{size[2]}: não deveria rolar`)
+			assert(
+				l.windowHeight + CosmeticsLayout.TITLE_HEIGHT / 2 <= size[2],
+				`{size[1]}x{size[2]}: janela passa da tela`
+			)
+		end
+		assert(not CosmeticsLayout.compute(1280, 720, four).closeInCorner, "PC mantém o Fechar embaixo")
 	end,
 }
