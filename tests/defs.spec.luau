@@ -759,7 +759,9 @@ return {
 		)
 		assert(Defs.Resources.pebble.sink == 0.5, "pedra do chão meio enterrada")
 		assert(Defs.ResourceZones.forest_dense.densities.tree == 14, "densidade de árvores na floresta densa")
-		assert(Defs.ResourceZones.forest_open.densities.gold_vein == 0.3, "ouro na floresta aberta")
+		assert(Defs.ResourceZones.forest_open.densities.gold_vein == 0.6, "ouro na floresta aberta (dobrado em 10/11)")
+		assert(Defs.Resources.flower.decorative and Defs.Resources.leaves.decorative, "flores e folhas são enfeite")
+		assert(Defs.ResourceZones.shore.densities.flower > 0, "margem tem flores")
 	end,
 
 	["valid fake world defs give no errors"] = function()

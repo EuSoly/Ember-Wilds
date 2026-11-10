@@ -110,6 +110,9 @@ local Resources: { [string]: ResourceDef } = {
 	}),
 	-- Pedras do chão: só enfeite, metade enterradas, espalhadas junto com os recursos.
 	pebble = resource("pebble", 1.5, 0.4, 10, { size = 1.8, sizeJitter = 0.4, sink = 0.5, decorative = true }),
+	-- Flores e folhas caídas: só enfeite (vida no chão), sem colisão.
+	flower = resource("flower", 1.2, 0.3, 4, { size = 1.6, sizeJitter = 0.3, decorative = true }),
+	leaves = resource("leaves", 2, 0.3, 3, { size = 3, sizeJitter = 0.3, decorative = true }),
 }
 
 return table.freeze(Resources)

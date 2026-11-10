@@ -650,12 +650,15 @@ return table.freeze({
 	["resource.gold_vein"] = "Jazida de ouro",
 	["resource.berry_bush"] = "Arbusto de frutinha",
 	["resource.pebble"] = "Pedra do chão",
+	["resource.flower"] = "Flor",
+	["resource.leaves"] = "Folhas caídas",
 
 	-- Zonas de recurso (Map/Zones, atributo ZoneType)
 	["zone.forest_dense"] = "Floresta densa",
 	["zone.forest_open"] = "Floresta aberta",
 	["zone.quarry"] = "Pedreira",
 	["zone.berry_field"] = "Campo de frutinhas",
+	["zone.shore"] = "Margem",
 
 	["mob.rabbit"] = "Coelho",
 	["mob.wolf"] = "Lobo",

@@ -25,7 +25,7 @@ O mapa é um quadrado de **2.220 × 2.220 studs**, centrado na origem (no Studio
 | Pasta | O que vai dentro | O que o jogo faz |
 |---|---|---|
 | `Ground` | o chão de cada bioma (Parts planos, topo em Y = 0) | nada (é só o chão) |
-| `Water` | córregos e lagos (Parts finos, **um pouco acima** do chão, ex. topo em Y = 0,05) | quem está dentro anda a 60% da velocidade, perde fôlego e (no Studio) enche a sede; nenhum recurso nasce ali; a água fica **opaca** no jogo |
+| `Water` | rio, laguinhos e baía (Parts finos, **um pouco acima** do chão, ex. topo em Y = 0,15) | quem está dentro anda a 60% da velocidade, perde fôlego e enche a sede; nenhum recurso nasce ali; a água fica **opaca** no jogo |
 | `NoSpawn` | Parts cobrindo caminhos e clareiras | nenhum recurso nasce ali; ficam invisíveis no jogo |
 | `Zones` | Parts com o atributo **`ZoneType`** | o jogo espalha os recursos daquele tipo de zona dentro de cada uma; ficam invisíveis no jogo |
 | `Resources` | Parts ou Models com o atributo **`ResourceId`** | cada um vira um recurso de verdade na mesma posição e rotação |
@@ -42,16 +42,27 @@ No Studio você pode deixar zonas e caminhos coloridos e meio transparentes para
 
 Dica para um córrego em curva: vários blocos em sequência, cada um girado, com as pontas se sobrepondo um pouco.
 
+## A floresta de 10/11/2026
+
+A água, as margens, as manchas do chão e os grupinhos de ouro ficam em subpastas **`Floresta2026`** dentro de `Water`, `Ground`, `NoSpawn`, `Zones` e `Resources` (montadas por script no Studio; dá para mexer à mão). O córrego e o lago antigos estão guardados em `ServerStorage.MapaAntigo`.
+
+- **Água:** um rio que nasce numa nascente no noroeste, passa a ~80 studs de onde se nasce e abre numa **baía no oceano do leste**, e 8 laguinhos espalhados, para quase todo ponto da floresta ficar a uma caminhada curta da água. O rio é feito de pedaços curtos com discos nas emendas (curva suave).
+- **Camadas (topo):** chão 0, manchas de grama 0,03, grama escura perto da água 0,06, areia da margem 0,1, água 0,15. As camadas de cima não têm colisão (anda-se no chão de baixo).
+- **Textura:** as manchas e a grama escura usam a mesma textura de grama do chão original (`rbxassetid://10041176516`, 10 × 10 studs), só com outro tom. Disco deitado: a textura vai na face `Right`; bloco, na `Top`.
+- **Margens:** areia (`NoSpawn` por baixo, para nada nascer nela) e uma zona `shore` com flores em volta de cada água.
+- **Ouro:** 6 grupinhos de 2 a 3 veios fora da pedreira (em `Resources/Floresta2026`), além do dobro de ouro na `forest_open`.
+
 ## Zonas de recurso
 
 Cada peça em `Map/Zones` precisa do atributo `ZoneType` com um destes valores:
 
 | `ZoneType` | O que tem (por 10.000 studs², ≈ um quadrado de 100 × 100) |
 |---|---|
-| `forest_dense` | 14 árvores, 2 rochas, 2 arbustos, 3 pedras do chão |
-| `forest_open` | 6 árvores, 3 rochas, 3 arbustos, 0,3 de ouro, 5 pedras do chão |
+| `forest_dense` | 14 árvores, 2 rochas, 2 arbustos, 3 pedras do chão, 10 montinhos de folhas |
+| `forest_open` | 6 árvores, 3 rochas, 3 arbustos, 0,6 de ouro, 5 pedras do chão, 3 flores, 3 montinhos de folhas |
 | `quarry` (pedreira) | 8 rochas, 3 de ouro, 1 árvore, 10 pedras do chão |
-| `berry_field` | 8 arbustos de frutinha, 1 árvore, 3 pedras do chão |
+| `berry_field` | 8 arbustos de frutinha, 1 árvore, 3 pedras do chão, 5 flores |
+| `shore` (margem) | 12 flores, 6 pedras do chão (em volta da água; a água em si nunca recebe nada) |
 
 - Os números ficam em `src/shared/Defs/ResourceZones.luau`. Mudou um número, o mapa muda na próxima partida.
 - Densidade quebrada (ex. 0,3 de ouro) é sorteada: uma zona pequena pode ganhar 0 ou 1, em vez de nunca ter nenhum.
@@ -70,6 +81,8 @@ Para um recurso num lugar exato: coloque uma Part (ou um Model) em `Map/Resource
 | `gold_vein` | Jazida de ouro (1 variação) |
 | `berry_bush` | Arbusto de frutinha (1 variação) |
 | `pebble` | Pedra do chão, só enfeite (10 variações) |
+| `flower` | Flor, só enfeite (4 variações: branca, vermelha, roxa, amarela) |
+| `leaves` | Folhas caídas, só enfeite (3 variações) |
 
 - O atributo opcional **`Variant`** (número) escolhe a variação; sem ele, é a 1.
 - O que vale é a **posição e a rotação** da peça: ela fica invisível e o jogo põe o modelo padrão no lugar. (Recursos com modelo único, feito à mão, ficam para quando precisarmos.)
@@ -86,6 +99,7 @@ Os modelos ficam no Studio, em **`ServerStorage.Assets.Resources`**, com o nome 
 | `gold_vein_1` | jazida de ouro |
 | `berry_bush_1` | arbusto de frutinha |
 | `pebble_1` … `pebble_10` | pedras do chão (enfeite) |
+| `flower_1` … `flower_4`, `leaves_1` … `leaves_3` | flores e folhas caídas (enfeite; cada uma é uma união de poucas peças, para pesar pouco) |
 
 - **Trocar um modelo:** substitua o modelo com o mesmo nome. **Mais uma variação:** coloque `tree_4` (por exemplo) e suba o `variants` do recurso em `src/shared/Defs/Resources.luau`. Se faltar a variação pedida, o jogo usa a `_1`; se faltar o modelo inteiro, usa um provisório feito por código.
 - **Tamanho:** modele em qualquer escala. Cada recurso tem um **tamanho padrão** (`size`, a maior largura vista de cima, em studs) em `Defs/Resources.luau`, e o jogo redimensiona o modelo para ele. Cada exemplar ainda varia (`sizeJitter`: árvores, rochas, ouro e arbustos ±15%; pedras do chão ±40%) e sai **girado** aleatoriamente (o giro vem do sorteio do espalhador; nos recursos colocados à mão, é o giro do marcador). Tudo é sorteado com semente fixa: o mapa continua igual em toda partida.
