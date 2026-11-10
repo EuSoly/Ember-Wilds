@@ -26,6 +26,9 @@ local MAP_NAME = "Map"
 local RESOURCES_FOLDER = "Resources"
 local SPAWN_NAME = "Spawn"
 local VARIANT_ATTRIBUTE = "Variant"
+-- Pasta de Map/Water com Painted = true: a água dela está pintada no chão
+-- (Decal de Map/Ground/WaterPaint), e as peças viram só a forma (invisíveis).
+local PAINTED_ATTRIBUTE = "Painted"
 
 local MapService = {}
 
@@ -38,6 +41,18 @@ local function hideMarker(part: BasePart)
 	part.CanQuery = false
 	part.CanTouch = false
 	part.CastShadow = false
+end
+
+-- true se a peça (ou uma pasta acima dela, até `root`) tem Painted = true.
+local function isPainted(part: Instance, root: Instance): boolean
+	local node: Instance? = part
+	while node and node ~= root do
+		if node:GetAttribute(PAINTED_ATTRIBUTE) == true then
+			return true
+		end
+		node = node.Parent
+	end
+	return false
 end
 
 -- Lê as formas de todas as peças de uma pasta do mapa. `onShape` recebe cada
@@ -187,12 +202,18 @@ function MapService.Init(_self)
 
 	-- Água e caminhos: o espalhador não põe recurso neles.
 	local blockers: { Shapes.Shape } = {}
-	readShapes(map:FindFirstChild("Water"), function(part, shape)
+	local water = map:FindFirstChild("Water")
+	readShapes(water, function(part, shape)
 		-- Dá para atravessar a água andando (a lentidão vem do WaterSim).
 		part.CanCollide = false
-		-- Opaca: água transparente é desenhada por cima das etiquetas (nome do
-		-- jogador, bolha de ar) e as deixa apagadas (visto no Studio em 29/10).
-		part.Transparency = 0
+		if water and isPainted(part, water) then
+			-- A água pintada já aparece no chão: a peça é só a forma.
+			hideMarker(part)
+		else
+			-- Opaca: água transparente é desenhada por cima das etiquetas (nome do
+			-- jogador, bolha de ar) e as deixa apagadas (visto no Studio em 29/10).
+			part.Transparency = 0
+		end
 		table.insert(blockers, shape)
 	end)
 	readShapes(map:FindFirstChild("NoSpawn"), function(part, shape)
