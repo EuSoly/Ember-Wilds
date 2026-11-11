@@ -242,18 +242,22 @@ end
 function spec.encaixe_vizinha_longe_nao_puxa()
 	local x, z = BuildRules.snapPlacement(20, 0, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
 	assert(x == 20 and z == 0, "longe demais")
-	-- Perto da vizinha, mas longe da casa mais próxima (> SNAP_RANGE): livre.
-	local fx, fz = BuildRules.snapPlacement(3, 3, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
-	assert(fx == 3 and fz == 3, `no meio das casas fica livre: {fx}, {fz}`)
+end
+
+function spec.encaixe_no_canto_tambem_gruda()
+	-- Ponto na diagonal entre as casas (sem zona morta): vai para a casa (1, 1).
+	local x, z = BuildRules.snapPlacement(3.3, 3.3, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 6) and close(z, 6), `canto: {x}, {z}`)
 end
 
 function spec.encaixe_escolhe_a_vizinha_mais_perto()
-	local x, z = BuildRules.snapPlacement(13, 0.2, 0, 1, 0, {
+	-- Vizinhas em grades desalinhadas, (0, 0) e (0, 13): o ponto (6.5, 11) está
+	-- mais perto da segunda, que leva a (6, 13); a primeira levaria a (6, 12).
+	local x, z = BuildRules.snapPlacement(6.5, 11, 0, 1, 0, {
 		{ x = 0, z = 0, yaw = 0, radius = 3 },
-		{ x = 12, z = 0, yaw = 0, radius = 3 },
+		{ x = 0, z = 13, yaw = 0, radius = 3 },
 	})
-	assert(close(x, 12 + 0) or close(x, 18), `perto da segunda vizinha: {x}`)
-	assert(close(z, 0), "mesma linha")
+	assert(close(x, 6) and close(z, 13), `casa da vizinha mais perto: {x}, {z}`)
 end
 
 return spec

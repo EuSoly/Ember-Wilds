@@ -15,8 +15,8 @@ Hoje o fantasma de construção é um bloco translúcido, e todas as peças se c
 
 ## Como funciona
 
-- **Fantasma:** o cliente monta o modelo com o `StructureModel.build`, o mesmo que o servidor usa. Todas as partes ficam translúcidas e sem colisão, consulta ou toque. Um `Highlight` pinta o modelo de verde ou vermelho, e a posição e o giro são exatamente os que o servidor vai usar. Se o modelo não montar (falta template), volta o bloco de hoje.
-- **Encaixe:** a peça com `snap = true` no `structure` do item (telhado e ponte agora) procura a peça vizinha mais perto da **mesma camada** que também tenha `snap`. Se a vizinha estiver a até `SNAP_RANGE` do ponto onde a peça sairia, a peça vai para a casa mais próxima da grade dessa vizinha:
+- **Fantasma:** o cliente monta o modelo com o `StructureModel.build`, o mesmo que o servidor usa. Todas as partes ficam translúcidas e sem colisão, consulta ou toque. Um `Highlight` pinta o modelo de verde ou vermelho, e a posição e o giro são exatamente os que o servidor vai usar. Sem template do Elizeu aparece o modelo provisório (o mesmo do servidor); o bloco de hoje só volta se o modelo falhar. O fantasma não leva luz, efeitos, som nem clique (revisão: a fogueira acendia luz).
+- **Encaixe:** a peça com `snap = true` no `structure` do item (telhado e ponte agora) procura a peça vizinha mais perto da **mesma camada** que também tenha `snap`. Se a vizinha estiver ao alcance (centro a até `2 × raio + SNAP_RANGE` do ponto onde a peça sairia), a peça vai para a casa mais próxima da grade dessa vizinha, inclusive nos cantos (revisão: tirada a zona morta):
   - o lado da casa é o diâmetro da vizinha (`2 × radius`);
   - os eixos são os da vizinha, então a peça copia o giro dela;
   - se a casa mais próxima for a própria vizinha, a peça vai para a casa ao lado na direção em que o jogador olha.
@@ -26,7 +26,7 @@ Hoje o fantasma de construção é um bloco translúcido, e todas as peças se c
 
 ## Números (minhas escolhas)
 
-- `SNAP_RANGE = 3` studs, a distância entre o ponto livre e a casa da grade para grudar.
+- `SNAP_RANGE = 3` studs de folga além do diâmetro da vizinha.
 - Busca de vizinhas: até `2 × radius + SNAP_RANGE` do ponto livre.
 
 ## Fora do escopo

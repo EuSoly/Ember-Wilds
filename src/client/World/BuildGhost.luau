@@ -4,8 +4,9 @@
 -- (o mesmo que o servidor escolhe), girado como a peça sairá (o giro vem de
 -- BuildRotation), pintado de verde se parece livre e vermelho se não (Highlight).
 -- Peça de chão/teto com snap encaixa na grade da vizinha mais perto
--- (BuildRules.snapPlacement, a mesma conta do servidor). Sem modelo, volta ao
--- bloco com a faixa da frente. É só uma dica: o servidor decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
+-- (BuildRules.snapPlacement, a mesma conta do servidor). Sem template do Elizeu
+-- o modelo provisório (o mesmo do servidor) aparece; o bloco com a faixa da
+-- frente só volta se o build falhar. É só uma dica: o servidor decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
 -- BuildRules.waterAllows: ponte só na água, o resto nunca).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -173,7 +174,10 @@ local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, High
 		return nil, nil
 	end
 	local model = built :: Model
-	for _, instance in { model :: Instance, unpack(model:GetDescendants()) } do
+	for _, tag in CollectionService:GetTags(model) do
+		CollectionService:RemoveTag(model, tag)
+	end
+	for _, instance in model:GetDescendants() do
 		for _, tag in CollectionService:GetTags(instance) do
 			CollectionService:RemoveTag(instance, tag)
 		end
@@ -184,7 +188,22 @@ local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, High
 			instance.CanTouch = false
 			instance.CastShadow = false
 			instance.Transparency = math.max(instance.Transparency, MODEL_TRANSPARENCY)
-		elseif instance:IsA("Script") or instance:IsA("LocalScript") then
+		elseif
+			-- Fantasma não ilumina, não solta efeito, não toca som nem é clicável
+			-- (a fogueira traz uma PointLight: seria luz grátis à noite).
+			instance:IsA("Script")
+			or instance:IsA("LocalScript")
+			or instance:IsA("Light")
+			or instance:IsA("ParticleEmitter")
+			or instance:IsA("Fire")
+			or instance:IsA("Smoke")
+			or instance:IsA("Sparkles")
+			or instance:IsA("Beam")
+			or instance:IsA("Trail")
+			or instance:IsA("Sound")
+			or instance:IsA("ProximityPrompt")
+			or instance:IsA("ClickDetector")
+		then
 			instance:Destroy()
 		end
 	end

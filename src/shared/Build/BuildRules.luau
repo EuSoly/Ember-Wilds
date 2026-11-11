@@ -59,14 +59,16 @@ end
 -- canteiros no futuro). Vizinha = peça já colocada da mesma camada com snap.
 export type SnapNeighbor = { x: number, z: number, yaw: number, radius: number }
 
--- Distância (studs) entre o ponto livre e a casa da grade para grudar.
+-- Folga (studs) além do diâmetro da vizinha em que ela ainda puxa a peça.
 BuildRules.SNAP_RANGE = 3
 
 -- Onde a peça sai: na casa da grade da vizinha mais perto de (x, z), com o giro
 -- dela. A casa tem o lado do diâmetro da vizinha e os eixos dela. Ponto em cima
 -- da própria vizinha vai para a casa ao lado na direção (dirX, dirZ) para onde
--- o jogador olha. Sem vizinha ao alcance, ou casa longe demais (> SNAP_RANGE),
--- devolve (x, z, yaw) sem mudar. Servidor e fantasma usam a mesma conta.
+-- o jogador olha. Vizinha ao alcance = centro a até 2 × raio dela + SNAP_RANGE
+-- do ponto livre; aí a peça sempre vai para a casa mais próxima (sem zona morta
+-- nos cantos). Sem vizinha ao alcance, devolve (x, z, yaw) sem mudar. Servidor e
+-- fantasma usam a mesma conta.
 function BuildRules.snapPlacement(
 	x: number,
 	z: number,
@@ -96,8 +98,7 @@ function BuildRules.snapPlacement(
 	local side = 2 * best.radius
 	local lx, lz = toLocal(x - best.x, z - best.z)
 	local ix, iz = math.round(lx / side), math.round(lz / side)
-	local onTop = ix == 0 and iz == 0
-	if onTop then
+	if ix == 0 and iz == 0 then
 		local dlx, dlz = toLocal(dirX, dirZ)
 		if math.abs(dlx) >= math.abs(dlz) then
 			ix = if dlx >= 0 then 1 else -1
@@ -107,10 +108,6 @@ function BuildRules.snapPlacement(
 	end
 	local cellX = best.x + (ix * cos + iz * sin) * side
 	local cellZ = best.z + (-ix * sin + iz * cos) * side
-	-- Longe da casa: continua livre (em cima da vizinha sempre vai para o lado).
-	if not onTop and (cellX - x) ^ 2 + (cellZ - z) ^ 2 > BuildRules.SNAP_RANGE ^ 2 then
-		return x, z, yaw
-	end
 	return cellX, cellZ, best.yaw
 end
 

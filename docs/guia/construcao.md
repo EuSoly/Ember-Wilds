@@ -5,7 +5,7 @@ As peças de base (bancada, fogueiras, paredes, portas, espinhos e baú; mais as
 ## Como colocar
 
 1. Crafte a peça (veja `crafting.md`) e selecione o slot dela na hotbar.
-2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**. Ele é o **próprio modelo da peça**, translúcido, pintado de verde se pode construir e de vermelho se não pode (`Highlight`). Sem modelo no place, volta o bloco com a faixa da frente. É só uma aproximação do cliente; quem decide é o servidor.
+2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**. Ele é o **próprio modelo da peça**, translúcido, pintado de verde se pode construir e de vermelho se não pode (`Highlight`), sem luz, efeitos nem som. Sem template no place, aparece o modelo provisório (o mesmo que o servidor coloca); o bloco com a faixa da frente só volta se o modelo falhar. É só uma aproximação do cliente; quem decide é o servidor.
 3. **PC:** solte o clique (botão de usar). **Celular:** solte o joystick direito. Posição inválida não gasta nada.
 4. Para parar de construir, troque de slot. Com uma peça na mão, o golpe não bate (só constrói).
 
@@ -26,7 +26,8 @@ Peças com `snap = true` no bloco `structure` do item se encaixam umas nas outra
 
 - Perto de uma peça da **mesma camada** que também tem `snap`, a nova vai para a **casa mais próxima da grade dessa vizinha**. O lado da casa é o diâmetro dela (`2 × radius`), os eixos são os dela, e a nova **copia o giro da vizinha**: forma um piso contínuo, sem fresta.
 - O ponto livre em cima da própria vizinha vai para a casa ao lado, na direção da mira.
-- Gruda só se a casa estiver a até `BuildRules.SNAP_RANGE` (3 studs) do ponto livre. Mais longe, ou sem vizinha, a peça fica livre.
+- A vizinha puxa a peça quando o centro dela está a até `2 × raio + BuildRules.SNAP_RANGE` (3 studs de folga) do ponto livre; aí a peça sempre vai para a casa mais próxima, inclusive nos cantos. Sem vizinha ao alcance, a peça fica livre.
+- Encaixada, a peça usa o giro da vizinha: a tecla R (e o botão Girar) não muda nada até ela sair da grade.
 - A conta é `BuildRules.snapPlacement`, a mesma no servidor (`StructureService.place`, com `StructureService.snapNeighbors`) e no fantasma (`BuildGhost`). Testes em `tests/build.spec.luau` (`encaixe_*`).
 
 ## Peças são círculos
