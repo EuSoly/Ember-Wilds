@@ -182,6 +182,7 @@ Queue.Reliable[26] = table.create(256)
 Queue.Reliable[28] = table.create(256)
 Queue.Reliable[30] = table.create(256)
 Queue.Reliable[32] = table.create(256)
+Queue.Reliable[33] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
@@ -675,6 +676,17 @@ function SerdesFunctions.ReadEVENT_SetActiveKit(): ({ KitId: string? })
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_CreativeGive(): ({ Id: string })
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = {} :: any
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	Value.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Id < 1 then error(`Expected length of "Value.Id" to be larger than or equal to 1, got {#Value.Id} instead.`) end
+	if #Value.Id > 48 then error(`Expected length of "Value.Id" to be smaller than or equal to  48, got {#Value.Id} instead.`) end
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -817,6 +829,9 @@ if not RunService:IsRunning() then
 		FireExcept = NOOP
 	},
 	SetActiveKit = {
+		On = NOOP
+	},
+	CreativeGive = {
 		On = NOOP
 	},
 	})
@@ -1090,6 +1105,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"SetActiveKit\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[32], {Player, Value} :: {any})
+			end
+		elseif Index == 33 then
+			local Value: { Id: string } = SerdesFunctions.ReadEVENT_CreativeGive()
+			if Events.Reliable[33] ~= nil then
+				task.spawn(Events.Reliable[33], Player, Value)
+			else
+				if #Queue.Reliable[33] > 256 then
+					warn("[Blink]: Event queue of \"CreativeGive\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[33], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -1995,6 +2020,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[32] == Listener then
 					Events.Reliable[32] = nil
+				end
+			end
+		end
+	},
+	CreativeGive = {
+		On = function(Listener: (Player: Player, Value: { Id: string }) -> ()): () -> ()
+			Events.Reliable[33] = Listener
+			for Index, Arguments in Queue.Reliable[33] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[33] = {}
+			return function (): ()
+				if Events.Reliable[33] == Listener then
+					Events.Reliable[33] = nil
 				end
 			end
 		end

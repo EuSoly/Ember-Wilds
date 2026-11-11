@@ -675,6 +675,16 @@ function SerdesFunctions.WriteEVENT_SetActiveKit(Value: { KitId: string? }): ()
 	end
 end
 
+function SerdesFunctions.WriteEVENT_CreativeGive(Value: { Id: string }): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 33)
+	local Length = #Value.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -778,6 +788,9 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	SetActiveKit = {
+		Fire = NOOP
+	},
+	CreativeGive = {
 		Fire = NOOP
 	},
 	})
@@ -1254,6 +1267,11 @@ local Returns = table.freeze({
 	SetActiveKit = {
 		Fire = function(Value: { KitId: string? }): ()
 			SerdesFunctions.WriteEVENT_SetActiveKit(Value)
+		end
+	},
+	CreativeGive = {
+		Fire = function(Value: { Id: string }): ()
+			SerdesFunctions.WriteEVENT_CreativeGive(Value)
 		end
 	},
 })

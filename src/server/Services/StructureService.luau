@@ -41,6 +41,7 @@ local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
 local ResourceService = require(script.Parent.ResourceService)
+local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
 
 -- Studs: jogador a até isso da borda do círculo da porta impede fechar (raio do corpo).
@@ -375,7 +376,9 @@ local function place(player: Player, character: Model)
 	end
 	local itemId = slot.id
 	-- Item só-para-teste fora do Studio: recusa antes de tirar da mão.
-	if not ItemAccess.isAvailable(itemId, RunService:IsStudio()) then
+	if
+		not ItemAccess.isAvailable(itemId, ItemAccess.allowsTest(RunService:IsStudio(), CreativeService.isOn(player)))
+	then
 		return
 	end
 	local item = Defs.Items[itemId]

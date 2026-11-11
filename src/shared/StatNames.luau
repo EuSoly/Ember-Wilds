@@ -164,6 +164,9 @@ return table.freeze({
 	-- Id do item de armadura vestido (category "armor"), ou nil; atributo no
 	-- Player (escrito pelo ArmorService).
 	Armor = "Armor",
+	-- Modo criativo ligado (true/nil), atributo no Player escrito só pelo
+	-- CreativeService a partir do perfil; o cliente lê para o livro.
+	Creative = "Creative",
 	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
 	-- o frio sobe (SurvivalService).
 	HeatSourceTag = "HeatSource",

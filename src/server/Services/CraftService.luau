@@ -16,6 +16,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 local InventoryService = require(script.Parent.InventoryService)
 local StatsService = require(script.Parent.StatsService)
+local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
 
 type ActiveCraft = { token: {}, character: Model, ingredients: { { id: string, count: number } } }
@@ -95,7 +96,12 @@ local function start(player: Player, recipeId: string)
 		return
 	end
 	-- Receita com item só-para-teste: recusa quieto (o cliente já a esconde).
-	if not ItemAccess.recipeAvailable(recipe, RunService:IsStudio()) then
+	if
+		not ItemAccess.recipeAvailable(
+			recipe,
+			ItemAccess.allowsTest(RunService:IsStudio(), CreativeService.isOn(player))
+		)
+	then
 		return
 	end
 	local humanoid = character:FindFirstChildOfClass("Humanoid")

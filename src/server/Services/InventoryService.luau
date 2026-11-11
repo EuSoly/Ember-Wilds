@@ -18,6 +18,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
+local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
 
 local HOTBAR_SLOTS = InventoryConfig.HOTBAR_SLOTS
@@ -114,7 +115,11 @@ end
 
 -- Dá itens ao jogador. Devolve o que não coube (0 = coube tudo).
 function InventoryService.give(player: Player, id: string, count: number): number
-	if not ItemAccess.isAvailable(id, RunService:IsStudio()) or count < 1 or count % 1 ~= 0 then
+	if
+		not ItemAccess.isAvailable(id, ItemAccess.allowsTest(RunService:IsStudio(), CreativeService.isOn(player)))
+		or count < 1
+		or count % 1 ~= 0
+	then
 		return count
 	end
 	local inv = ensure(player)
@@ -159,7 +164,7 @@ function InventoryService.swapAt(player: Player, index: number, fromId: string, 
 		or slot.count ~= 1
 		or Defs.Items[toId] == nil
 		or maxStackOf(toId) < 1
-		or not ItemAccess.isAvailable(toId, RunService:IsStudio())
+		or not ItemAccess.isAvailable(toId, ItemAccess.allowsTest(RunService:IsStudio(), CreativeService.isOn(player)))
 	then
 		return false
 	end

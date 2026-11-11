@@ -420,3 +420,13 @@ event SetActiveKit {
 		KitId: string(1..32)?
 	}
 }
+
+-- Modo criativo: pede uma pilha do item (o servidor confere a marca no perfil).
+event CreativeGive {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Id: string(1..48)
+	}
+}

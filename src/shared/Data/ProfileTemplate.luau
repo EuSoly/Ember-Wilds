@@ -28,6 +28,10 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		-- Tutorial da primeira partida (TutorialService): Done = completou;
 		-- SpinPopup = o pop-up da roleta ainda não foi mostrado no menu.
 		Tutorial = { Done = false, SpinPopup = false },
+		-- Modo criativo (CreativeService): todos os itens livres no livro, sem
+		-- pontos, ranking nem estatísticas. Liga editando o perfil no DataStore
+		-- (ou DevCreative no Studio). Veja docs/guia/modo-criativo.md.
+		Creative = false,
 		-- Reservado para as compras com Robux (F5/loja), padrão do ProfileStore.
 		PurchaseIdCache = {},
 	}
