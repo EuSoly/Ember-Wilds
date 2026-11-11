@@ -17,6 +17,8 @@ local Workspace = game:GetService("Workspace")
 
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
+local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
+local TeamRules = require(ReplicatedStorage.Shared.Build.TeamRules)
 local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -64,6 +66,12 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	-- Tutorial: nada machuca o jogador protegido (jogador, bicho, espinho, fome...).
 	if player and TutorialService.isProtected(player) then
 		return
+	end
+	-- Colega de time tira só 30% (Starve; TeamService resolve os aliados).
+	if player and kind == "player" and attacker and attacker ~= player then
+		if BuildRules.areAllies(attacker.UserId, player.UserId) then
+			amount = TeamRules.teamDamage(amount)
+		end
 	end
 	if player and kind ~= "survival" then
 		-- Escudo na mão (Starve): soma a defesa com a da peça de cabeça.

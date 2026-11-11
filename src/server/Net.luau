@@ -184,6 +184,10 @@ Queue.Reliable[30] = table.create(256)
 Queue.Reliable[32] = table.create(256)
 Queue.Reliable[33] = table.create(256)
 Queue.Reliable[34] = table.create(256)
+Queue.Reliable[35] = table.create(256)
+Queue.Reliable[36] = table.create(256)
+Queue.Reliable[37] = table.create(256)
+Queue.Reliable[38] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
@@ -692,6 +696,30 @@ function SerdesFunctions.ReadEVENT_Resurrect(): (nil)
 	return nil
 end
 
+function SerdesFunctions.ReadEVENT_TeamJoin(): ({ Leader: number })
+	-- Read BLOCK: 8 bytes
+	local BLOCK_START = Read(8)
+	local Value = {} :: any
+	Value.Leader = buffer.readf64(RecieveBuffer, BLOCK_START + 0)
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_TeamLeave(): (nil)
+	return nil
+end
+
+function SerdesFunctions.ReadEVENT_TeamKick(): ({ UserId: number })
+	-- Read BLOCK: 8 bytes
+	local BLOCK_START = Read(8)
+	local Value = {} :: any
+	Value.UserId = buffer.readf64(RecieveBuffer, BLOCK_START + 0)
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_TeamLock(): (nil)
+	return nil
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -840,6 +868,18 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	Resurrect = {
+		On = NOOP
+	},
+	TeamJoin = {
+		On = NOOP
+	},
+	TeamLeave = {
+		On = NOOP
+	},
+	TeamKick = {
+		On = NOOP
+	},
+	TeamLock = {
 		On = NOOP
 	},
 	})
@@ -1133,6 +1173,46 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"Resurrect\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[34], {Player, Value} :: {any})
+			end
+		elseif Index == 35 then
+			local Value: { Leader: number } = SerdesFunctions.ReadEVENT_TeamJoin()
+			if Events.Reliable[35] ~= nil then
+				task.spawn(Events.Reliable[35], Player, Value)
+			else
+				if #Queue.Reliable[35] > 256 then
+					warn("[Blink]: Event queue of \"TeamJoin\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[35], {Player, Value} :: {any})
+			end
+		elseif Index == 36 then
+			local Value: nil = SerdesFunctions.ReadEVENT_TeamLeave()
+			if Events.Reliable[36] ~= nil then
+				task.spawn(Events.Reliable[36], Player, Value)
+			else
+				if #Queue.Reliable[36] > 256 then
+					warn("[Blink]: Event queue of \"TeamLeave\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[36], {Player, Value} :: {any})
+			end
+		elseif Index == 37 then
+			local Value: { UserId: number } = SerdesFunctions.ReadEVENT_TeamKick()
+			if Events.Reliable[37] ~= nil then
+				task.spawn(Events.Reliable[37], Player, Value)
+			else
+				if #Queue.Reliable[37] > 256 then
+					warn("[Blink]: Event queue of \"TeamKick\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[37], {Player, Value} :: {any})
+			end
+		elseif Index == 38 then
+			local Value: nil = SerdesFunctions.ReadEVENT_TeamLock()
+			if Events.Reliable[38] ~= nil then
+				task.spawn(Events.Reliable[38], Player, Value)
+			else
+				if #Queue.Reliable[38] > 256 then
+					warn("[Blink]: Event queue of \"TeamLock\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[38], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -2066,6 +2146,62 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[34] == Listener then
 					Events.Reliable[34] = nil
+				end
+			end
+		end
+	},
+	TeamJoin = {
+		On = function(Listener: (Player: Player, Value: { Leader: number }) -> ()): () -> ()
+			Events.Reliable[35] = Listener
+			for Index, Arguments in Queue.Reliable[35] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[35] = {}
+			return function (): ()
+				if Events.Reliable[35] == Listener then
+					Events.Reliable[35] = nil
+				end
+			end
+		end
+	},
+	TeamLeave = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[36] = Listener
+			for Index, Arguments in Queue.Reliable[36] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[36] = {}
+			return function (): ()
+				if Events.Reliable[36] == Listener then
+					Events.Reliable[36] = nil
+				end
+			end
+		end
+	},
+	TeamKick = {
+		On = function(Listener: (Player: Player, Value: { UserId: number }) -> ()): () -> ()
+			Events.Reliable[37] = Listener
+			for Index, Arguments in Queue.Reliable[37] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[37] = {}
+			return function (): ()
+				if Events.Reliable[37] == Listener then
+					Events.Reliable[37] = nil
+				end
+			end
+		end
+	},
+	TeamLock = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[38] = Listener
+			for Index, Arguments in Queue.Reliable[38] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[38] = {}
+			return function (): ()
+				if Events.Reliable[38] == Listener then
+					Events.Reliable[38] = nil
 				end
 			end
 		end

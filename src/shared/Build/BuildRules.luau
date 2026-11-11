@@ -217,9 +217,26 @@ function BuildRules.repairAmount(item: ItemDef?, health: number, maxHealth: numb
 	return math.clamp(maxHealth - health, 0, repair)
 end
 
--- Gancho dos times: hoje só o próprio jogador é aliado (UserIds).
+-- Times (TeamService): quem resolve o time de um UserId (o UserId do líder, ou
+-- nil sem time). Sem resolvedor, só a própria pessoa é aliada.
+local teamOf: ((number) -> number?)? = nil
+
+function BuildRules.setTeamResolver(resolver: ((number) -> number?)?)
+	teamOf = resolver
+end
+
+-- Aliados (UserIds): a própria pessoa, ou dois do mesmo time. Vale para portas,
+-- baús, espinhos, máquinas e o golpe entre colegas.
 function BuildRules.areAllies(a: number, b: number): boolean
-	return a == b
+	if a == b then
+		return true
+	end
+	local resolve = teamOf
+	if resolve == nil then
+		return false
+	end
+	local teamA = resolve(a)
+	return teamA ~= nil and teamA == resolve(b)
 end
 
 -- Abre e fecha como porta (porta comum e porta com espinhos).

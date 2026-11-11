@@ -721,6 +721,12 @@ return table.freeze({
 	["death.cause.emerald"] = "Máquina de esmeralda destruída",
 	["ghost.timer"] = "Fantasma: {value} s para chegar a uma Pedra da Ressurreição",
 	["ghost.revive"] = "Ressuscitar",
+	["team.join"] = "Entrar no time de {name}",
+	["team.title"] = "Time de {name} ({size}/{max})",
+	["team.leave"] = "Sair",
+	["team.leader"] = "{name} (líder)",
+	["team.lock"] = "Trancar",
+	["team.unlock"] = "Destrancar",
 	["death.cause.player"] = "Jogador",
 
 	-- Coleta

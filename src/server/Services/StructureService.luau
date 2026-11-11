@@ -438,6 +438,13 @@ local function place(player: Player, character: Model)
 	if def.kind == "emerald_machine" and not EmeraldRules.canPlace(StructureService.ownedOfKind(player, def.kind)) then
 		return
 	end
+	-- Totem: um por jogador, e só para quem não está no time de outro (TeamService).
+	if def.kind == "totem" then
+		local team = player:GetAttribute(StatNames.Team)
+		if StructureService.ownedOfKind(player, def.kind) > 0 or (team ~= nil and team ~= player.UserId) then
+			return
+		end
+	end
 
 	local look = root.CFrame.LookVector
 	local flat = Vector3.new(look.X, 0, look.Z)

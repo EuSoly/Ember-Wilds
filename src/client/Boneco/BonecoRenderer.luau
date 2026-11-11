@@ -34,6 +34,7 @@ local BagModel = require(script.Parent.Parent:WaitForChild("Menu"):WaitForChild(
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 
 local ROOT_TIMEOUT = 10
+local TEAMMATE_COLOR = Color3.fromRGB(120, 230, 120) -- nick dos colegas de time
 local BODY_SLOT = "body"
 local BAG_SLOT = "bag"
 local BOOK_SLOT = "book"
@@ -92,6 +93,9 @@ type Entry = {
 	nameHidden: boolean,
 	-- Fantasma (atributo GhostUntil do Player): brilho azul translúcido.
 	ghostGlow: Highlight?,
+	-- Colega de time (nick verde) e a cor original do nick.
+	teammate: boolean,
+	nameColor: Color3,
 	connections: { RBXScriptConnection },
 }
 
@@ -263,6 +267,16 @@ local function syncAttributes(entry: Entry)
 	if armorId ~= entry.armorId then
 		applyArmor(entry, armorId)
 	end
+	-- Colega de time: nick verde (só quem está no mesmo time vê).
+	local myTeam = Players.LocalPlayer:GetAttribute(StatNames.Team)
+	local mate = owner ~= nil
+		and owner ~= Players.LocalPlayer
+		and myTeam ~= nil
+		and owner:GetAttribute(StatNames.Team) == myTeam
+	if mate ~= entry.teammate then
+		entry.teammate = mate
+		entry.boneco.nameLabel.TextColor3 = if mate then TEAMMATE_COLOR else entry.nameColor
+	end
 	-- Fantasma: brilho azul (some quando volta ou morre).
 	local ghost = owner ~= nil and GhostRules.isGhostPlayer(owner, Workspace:GetServerTimeNow())
 	if ghost and entry.ghostGlow == nil then
@@ -339,6 +353,8 @@ local function build(character: Model, hrp: BasePart)
 		armorModel = nil,
 		nameHidden = false,
 		ghostGlow = nil,
+		teammate = false,
+		nameColor = boneco.nameLabel.TextColor3,
 		connections = {},
 	}
 	entries[character] = entry
