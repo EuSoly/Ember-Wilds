@@ -23,6 +23,7 @@ local InventoryState = require(Client:WaitForChild("InventoryState"))
 local Net = require(Client:WaitForChild("Net"))
 local TutorialState = require(Client:WaitForChild("TutorialState"))
 local PinState = require(Client:WaitForChild("PinState"))
+local CreativeState = require(Client:WaitForChild("CreativeState"))
 local UI = Client:WaitForChild("UI")
 local BookSheet = require(UI:WaitForChild("BookSheet"))
 local HudArt = require(UI:WaitForChild("HudArt"))
@@ -53,8 +54,8 @@ local RecipeBookScreen = {
 }
 
 -- O livro mostra o que o jogador vê: sem itens de teste, nem no Studio
--- (decisão do Elizeu, 09/11). Craftar no Studio pela coluna continua valendo.
-local inStudio = false
+-- (decisão do Elizeu, 09/11), a não ser no modo criativo (CreativeState).
+-- Craftar no Studio pela coluna continua valendo.
 
 function RecipeBookScreen.toggle()
 	local opening = not vide.untrack(RecipeBookScreen.open)
@@ -68,7 +69,7 @@ end
 
 -- Mostra a ficha de `itemId`, trocando para a primeira aba que o tem.
 function RecipeBookScreen.show(itemId: string)
-	local tab = BookInfo.firstTab(itemId, inStudio)
+	local tab = BookInfo.firstTab(itemId, vide.untrack(CreativeState.on))
 	if tab then
 		RecipeBookScreen.tab(tab)
 	end
@@ -285,7 +286,7 @@ end
 
 local function Book(): Frame
 	local items = vide.derive(function()
-		return BookInfo.items(RecipeBookScreen.tab(), inStudio)
+		return BookInfo.items(RecipeBookScreen.tab(), CreativeState.on())
 	end)
 	-- Aba nova (ou primeira vez): seleciona o primeiro item se o atual não está nela.
 	vide.effect(function()
@@ -341,7 +342,9 @@ local function Book(): Frame
 				Position = UDim2.fromScale(0.5, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				FontFace = Theme.font.number,
-				Text = Strings.get("book.title"),
+				Text = function()
+					return Strings.get(if CreativeState.on() then "book.creative.title" else "book.title")
+				end,
 				maxSize = 24,
 				ZIndex = 11,
 			}),
@@ -423,6 +426,38 @@ local function Book(): Frame
 					local id = vide.untrack(RecipeBookScreen.selected)
 					if id then
 						PinState.toggle(id)
+					end
+				end,
+			}),
+			-- Modo criativo: "Pegar" entrega o item (o servidor confere a marca no
+			-- perfil). Ao lado do Fixar, ou no lugar dele em item sem receita.
+			Rustic.button({
+				Name = "GiveButton",
+				Visible = function()
+					return CreativeState.on() and RecipeBookScreen.selected() ~= nil
+				end,
+				AnchorPoint = function()
+					return if ScreenMetrics.short() then Vector2.new(1, 1) else Vector2.new(1, 0)
+				end,
+				Position = function()
+					local id = RecipeBookScreen.selected()
+					local besidePin = id ~= nil and Defs.Recipes[id] ~= nil
+					local shift = if besidePin then (if ScreenMetrics.short() then 112 else 128) else 0
+					return if ScreenMetrics.short()
+						then UDim2.new(1, -18 - shift, 1, -12)
+						else UDim2.new(1, -18 - shift, 0, TAB_HEIGHT + GAP + 18)
+				end,
+				Size = function()
+					return if ScreenMetrics.short() then UDim2.fromOffset(104, 38) else UDim2.fromOffset(120, 38)
+				end,
+				ZIndex = 6,
+				kind = "ember",
+				text = Strings.get("book.creative.give"),
+				maxSize = 18,
+				Activated = function()
+					local id = vide.untrack(RecipeBookScreen.selected)
+					if id then
+						Net.CreativeGive.Fire({ Id = id })
 					end
 				end,
 			}),

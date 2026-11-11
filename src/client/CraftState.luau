@@ -18,6 +18,7 @@ local HotbarState = require(script.Parent:WaitForChild("HotbarState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
 local Net = require(script.Parent:WaitForChild("Net"))
+local CreativeState = require(script.Parent:WaitForChild("CreativeState"))
 local Notifications = require(script.Parent:WaitForChild("UI"):WaitForChild("Notifications"))
 
 export type Current = { id: string, start: number, finish: number }
@@ -97,7 +98,7 @@ local function updateRows()
 	local craftable = CraftRules.craftable(Defs.Recipes, counts(), near)
 	local out: { Row } = {}
 	local seen: { [string]: boolean } = {}
-	local inStudio = RunService:IsStudio()
+	local inStudio = ItemAccess.allowsTest(RunService:IsStudio(), CreativeState.on())
 	for _, recipe in craftable do
 		if ItemAccess.recipeAvailable(recipe, inStudio) then
 			seen[recipe.id] = true

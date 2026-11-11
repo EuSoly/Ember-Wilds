@@ -20,6 +20,7 @@ local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local MobPortrait = require(script.Parent:WaitForChild("MobPortrait"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
+local CreativeState = require(script.Parent.Parent:WaitForChild("CreativeState"))
 
 local create = vide.create
 
@@ -31,8 +32,8 @@ local ROW_HEIGHT = 30
 local SOURCE_HEIGHT = 52
 local SECTION_COLOR = Color3.fromRGB(122, 84, 46) -- título de seção: marrom do couro
 -- O livro mostra o que o jogador vê: sem itens de teste, nem no Studio
--- (decisão do Elizeu, 09/11). Craftar no Studio pela coluna continua valendo.
-local inStudio = false
+-- (decisão do Elizeu, 09/11), a não ser no modo criativo (CreativeState).
+-- Craftar no Studio pela coluna continua valendo.
 
 export type Props = {
 	item: () -> string?,
@@ -325,7 +326,7 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 	add(section(6, "book.section.where", sources))
 
 	local used: { Instance } = {}
-	for index, result in BookInfo.usedIn(id, inStudio) do
+	for index, result in BookInfo.usedIn(id, vide.untrack(CreativeState.on)) do
 		local item = chip(result, itemName(result), onShow)
 		item.LayoutOrder = index
 		table.insert(used, item)
