@@ -27,6 +27,7 @@ local RankConfig = require(ReplicatedStorage.Shared.Data.RankConfig)
 local RankRules = require(ReplicatedStorage.Shared.Data.RankRules)
 local Net = require(script.Parent.Parent.Net)
 local DataService = require(script.Parent.DataService)
+local CreativeService = require(script.Parent.CreativeService)
 
 type Entry = { UserId: number, Name: string, Value: number }
 type Top = { ok: boolean, entries: { Entry }, at: number }
@@ -167,7 +168,8 @@ end
 -- Fim de uma vida: pontos e dias da vida (melhor da semana) e o XP ganho.
 -- Grava na hora (fim de vida é raro).
 function RankService.addLife(player: Player, life: { points: number, days: number, xp: number })
-	if not COUNTS_HERE then
+	-- Modo criativo não entra no ranking.
+	if not COUNTS_HERE or CreativeService.isOn(player) then
 		return
 	end
 	local state = RankService.state(player)
@@ -181,7 +183,7 @@ end
 -- Um abate de `killer`: "players" (golpe final em jogador; victimKey = UserId
 -- da vítima) ou "creatures" (mob; sem vítima).
 function RankService.addKill(killer: Player, category: RankRules.Category, victimKey: string?)
-	if not COUNTS_HERE then
+	if not COUNTS_HERE or CreativeService.isOn(killer) then
 		return
 	end
 	local state = RankService.state(killer)

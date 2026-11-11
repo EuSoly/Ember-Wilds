@@ -14,6 +14,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local StatsRules = require(ReplicatedStorage.Shared.Data.StatsRules)
 local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
 local DataService = require(script.Parent.DataService)
+local CreativeService = require(script.Parent.CreativeService)
 
 local PLAYTIME_STAT = "playtime_seconds"
 
@@ -62,10 +63,11 @@ local function findDef(statId: string): Defs.StatDef?
 end
 
 -- Soma em counter/keyed. Estatística desconhecida ou valor inválido: warn e ignora.
+-- Modo criativo não mexe nas estatísticas do perfil (add e record).
 function StatsService.add(player: Player, statId: string, amount: number, key: string?)
 	local def = findDef(statId)
 	local data = DataService.data(player)
-	if def == nil or data == nil then
+	if def == nil or data == nil or CreativeService.isOn(player) then
 		return
 	end
 	-- Chave de item precisa existir em Defs.Items (mob ainda não tem Defs: só o formato).
@@ -85,7 +87,7 @@ end
 function StatsService.record(player: Player, statId: string, value: number)
 	local def = findDef(statId)
 	local data = DataService.data(player)
-	if def == nil or data == nil then
+	if def == nil or data == nil or CreativeService.isOn(player) then
 		return
 	end
 	local stored, changed = StatsRules.record(data.Stats, def, value)

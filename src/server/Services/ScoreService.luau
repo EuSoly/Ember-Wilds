@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Ranking = require(ReplicatedStorage.Shared.Gather.Ranking)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local CreativeService = require(script.Parent.CreativeService)
 
 local RANK_EVERY = 1 -- segundos
 
@@ -24,8 +25,9 @@ local function scoreOf(player: Player): number
 end
 
 -- Soma pontos na vida atual.
+-- Modo criativo não soma pontos (nem XP e Golden Ember, que saem deles).
 function ScoreService.add(player: Player, points: number)
-	if not (points > 0) then
+	if not (points > 0) or CreativeService.isOn(player) then
 		return
 	end
 	player:SetAttribute(StatNames.Score, scoreOf(player) + points)

@@ -37,6 +37,7 @@ local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
+local CreativeService = require(script.Parent.CreativeService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
 local RankService = require(script.Parent.RankService)
@@ -124,8 +125,9 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	if validKiller and validKiller.Character ~= nil then
 		ScoreService.add(validKiller, CrateRules.killBonus(scoreOf(player)))
 	end
-	-- Abate de jogador (golpe final): Perfil e ranking da semana.
-	if validKiller then
+	-- Abate de jogador (golpe final): Perfil e ranking da semana. Vítima no modo
+	-- criativo não conta (não dá para farmar abate com um amigo no criativo).
+	if validKiller and not CreativeService.isOn(player) then
 		StatsService.add(validKiller, "players_killed", 1)
 		RankService.addKill(validKiller, "players", tostring(player.UserId))
 	end
