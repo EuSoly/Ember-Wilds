@@ -91,7 +91,9 @@ Números da config oficial do Starve (11/11), de madeira a reidite:
 
 - **Extratores** (pedra, ouro, diamante, ametista, reidite): 2000 de vida; 1 minério a cada 10 s gastando 2 madeiras; até 255 de madeira e 255 de minério. Qualquer um põe madeira, só o dono e os aliados tiram.
 - **Fornalha:** 1000 de vida, 1 madeira a cada 5 s, até 255.
-- **Máquina de esmeralda:** 750 pontos por minuto ao dono vivo (`EmeraldService`, `EmeraldRules`). Só **uma por jogador**. **Destruída, o dono morre** (causa "Máquina de esmeralda destruída"); removida porque o dono morreu ou saiu, nada acontece.
+- **Máquina de esmeralda:** 750 pontos por minuto ao dono vivo (`EmeraldService`, `EmeraldRules`). **Destruída por outra pessoa, o dono morre** (causa "Máquina de esmeralda destruída"); quebrada pelo próprio dono ou por um aliado, ou removida porque o dono morreu ou saiu, nada acontece.
+- **Limite por jogador** (`structure.maxPerPlayer`): totem, pedra da ressurreição e máquina de esmeralda, **uma de cada**. Ao tentar colocar além do limite, aparece o aviso "Você já tem o máximo desta construção".
+- **Descrições:** o livro mostra "Como funciona" (texto `desc.<id>` em `Strings/ptBR.luau`) nas construções, ferramentas especiais e peças de cabeça. Item novo que não é óbvio: escreva o `desc.<id>`.
 - **Pedra da ressurreição:** veja `ressurreicao.md`. **Totem:** veja `times.md`.
 - **Testar no Studio:** `ServerStorage.DevPlace:Invoke(player, "<itemId>")` coloca a peça à frente do jogador sem gastar item (só no Studio).
 
@@ -163,7 +165,7 @@ Código: as regras puras são `MachineRules`, `WellRules`, `SignRules` e `Intera
 Os dois são exceções da regra "uma peça por círculo": cada um vive numa **camada** (`BuildRules`) e só bloqueia peças da mesma camada, e os dois **se encaixam em grade** (veja "Encaixe em grade"). Ponte: raio 3,1, vida 300. Telhado: raio 3,2, vida 1000. Liberados em 11/11.
 
 - **Ponte** (`bridge`, 15 madeiras): só se coloca **sobre a água** (o centro cai na água), e não sobre outra ponte. Quem está em cima é tratado como em terra: não perde oxigênio nem fica lento. A ponte vale como chão dentro do raio dela mais o raio do corpo do jogador (1,5), para que uma fileira de pontes encostadas forme um caminho sem buraco. Se a ponte some, quem estava em cima volta a estar na água. Colocar qualquer outra peça "na água" continua proibido. Os mobs usam a água crua: a ponte não os protege.
-- **Telhado** (`roof`, 30 madeiras): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
+- **Telhado** (`roof`, 30 madeiras; debaixo de qualquer telhado, **todos os telhados na tela** ficam translúcidos para você: `BuildRules.roofsToFade`, `RoofFade`): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
 
 Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRadius`) no módulo `TaggedCircles`, para a simulação de água e os mobs não precisarem conhecer o `StructureService`.
 

@@ -17,7 +17,7 @@ Como no Starve: o **Totem** (50 madeira) cria um time. Design: `docs/superpowers
   - colegas são **aliados**: abrem as portas uns dos outros, usam baús e máquinas, e os espinhos de um não machucam o outro;
   - o golpe entre colegas tira **30%** do dano;
   - os colegas veem o nick uns dos outros em verde;
-  - o painel do time fica à esquerda do HUD.
+  - o painel do time fica à esquerda do HUD, e a setinha (`<` / `>`) recolhe e abre.
 
 ## Por dentro
 

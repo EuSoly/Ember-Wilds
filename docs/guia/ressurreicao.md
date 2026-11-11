@@ -20,7 +20,7 @@ Como no Starve: quem morre com um **Coração de Dragão no inventário** ou **v
   - volta com a vida e as barras cheias e com **1/3 dos pontos**;
   - perde os itens da lista do Starve (`GhostRules.loses`). Com o coração: armas e escudos, picaretas, chave inglesa, forcados, martelo de reidite e super martelo. Com a coroa: armas e escudos, espinhos, portas com espinho e super martelo.
 
-  A pedra não some, e qualquer jogador usa qualquer pedra.
+  **A pedra usada quebra** (pedido do Elizeu, 11/11), e qualquer jogador usa qualquer pedra. Cada jogador tem **uma pedra** no mundo por vez.
 - **Tempo acabou:** morte normal, com caixa e tela de morte.
 - **Quem matou:** ganha 10% dos pontos da vítima, em vez dos 15% de uma morte normal, e não conta abate.
 

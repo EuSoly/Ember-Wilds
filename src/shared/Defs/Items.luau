@@ -1422,7 +1422,7 @@ local Items: { [string]: ItemDef } = {
 		},
 	},
 	-- Totem: cria o time do dono (TeamService). Vida: escolha nossa (a config não tem).
-	-- Raio no máximo aceito (4): o modelo tem 4,3 (veja docs/pendencias.md).
+	-- Raio no máximo aceito (4): o modelo tem 4,3 e fica grande de propósito (Elizeu).
 	totem = {
 		id = "totem",
 		nameKey = "item.totem",
@@ -1430,14 +1430,14 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 255,
 		structure = { kind = "totem", health = 500, radius = 4, maxPerPlayer = 1 },
 	},
-	-- Pedra da ressurreição (GhostService). Raio no máximo aceito (o modelo tem 4,4).
+	-- Pedra da ressurreição (GhostService). Modelo reduzido a 88% em 11/11 (raio 3,9).
 	resurrection_stone = {
 		id = "resurrection_stone",
 		testOnly = true,
 		nameKey = "item.resurrection_stone",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "resurrection", health = 200, radius = 4, maxPerPlayer = 1 },
+		structure = { kind = "resurrection", health = 200, radius = 3.9, maxPerPlayer = 1 },
 	},
 	-- Máquina de esmeralda (EmeraldService): pontos por minuto ao dono; destruída, o dono morre.
 	emerald_machine = {

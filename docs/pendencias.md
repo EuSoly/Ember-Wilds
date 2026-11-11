@@ -4,9 +4,10 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 ## Construções (11/11)
 
-- **Modelos grandes demais:** totem (raio 4,3) e pedra da ressurreição (4,4) passam do raio máximo aceito (4); estão com 4. Reduzir os modelos uns 10% na bancada. O extrator de diamante está menor que os outros (1,6 contra 2,7).
+- **Modelos:** o totem fica grande de propósito (modelo com raio 4,3, círculo 4). A pedra da ressurreição foi reduzida a 88% no place em 11/11 (raio 3,9): **salvar o place**. O extrator de diamante está menor que os outros (1,6 contra 2,7).
 - **Fantasma atravessar construções:** o Starve deixa; aqui ainda colide (precisa de grupos de colisão no mapa).
-- **Conferir com 2 jogadores (Test → 2 Players):** entrar no time, expulsar, dano de 30% entre colegas, nick verde, portas e baús compartilhados.
+- **Testar depois (Elizeu, 11/11): dano entre colegas de time (30%).**
+- **Testes com 2 jogadores, para depois (Test → 2 Players):** entrar no time, expulsar, trancar, nick verde, portas e baús compartilhados, espinhos sem machucar colegas, máquina de esmeralda quebrada por colega (não mata).
 - **Conferir:** o tempo de fantasma acabar → morte normal com caixa; máquina de esmeralda destruída matando o dono.
 - **Vidas sem número na config:** totem 500, ponte 300 e placa 100 (escolha nossa).
 - **Poço:** a receita do Starve é 100 pedras + 30 terra (bancada + fogo); a nossa ainda é 60 pedras. Trocar quando a terra (pá) existir.
