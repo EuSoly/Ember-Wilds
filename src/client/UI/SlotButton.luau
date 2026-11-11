@@ -1,7 +1,8 @@
 --!strict
 -- Um slot do inventário (usado pela hotbar e pela grade da mochila).
 -- - Toque/clique rápido num slot da hotbar: seleciona.
--- - Segurar e arrastar: move o item para outro slot (ver DragState).
+-- - Segurar e arrastar: move o item para outro slot (ver DragState); soltar no
+--   mundo larga a pilha. Botão direito no slot também larga a pilha.
 -- - Borda laranja: slot selecionado da hotbar. Borda amarela: slot debaixo do
 --   item que está sendo arrastado (onde ele vai cair).
 -- - Trancado (slots da mochila sem mochila): escuro e sem toque.
@@ -218,6 +219,11 @@ local function SlotButton(props: Props): TextButton
 			end
 			-- Apertou o "+": é do baú, não começa arrasto.
 			if vide.untrack(plusVisible) and pressedOn(plus, input) then
+				return
+			end
+			-- Botão direito: larga a pilha inteira (vira uma caixa na sua frente).
+			if kind == Enum.UserInputType.MouseButton2 and not vide.untrack(locked) then
+				DragState.drop(index)
 				return
 			end
 			if

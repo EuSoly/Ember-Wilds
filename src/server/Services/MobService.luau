@@ -28,7 +28,9 @@
 -- Studio (barra de comandos do servidor):
 -- - ServerStorage.DevSpawnMob:Invoke(player, "wolf"): cria a 12 studs à frente
 --   (sem as distâncias de nascimento);
--- - ServerStorage.DevMobCount:Invoke(): contagem por tipo e a meta do período.
+-- - ServerStorage.DevMobCount:Invoke(): contagem por tipo e a meta do período;
+-- - ServerStorage.DevKillMob:Invoke(player): mata o mob mais perto, como se o
+--   jogador tivesse matado (pontos, caixa na skin dele).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -879,6 +881,28 @@ local function setupSizeTuning()
 	end
 end
 
+-- Mata o mob vivo mais perto do jogador, com ele como matador. Devolve o id.
+local function devKill(player: Player): string?
+	local character = player.Character
+	if character == nil then
+		return nil
+	end
+	local at = character:GetPivot().Position
+	local best: Mob? = nil
+	local bestDistance = math.huge
+	for mob in alive do
+		local distance = (mob.x - at.X) ^ 2 + (mob.z - at.Z) ^ 2
+		if distance < bestDistance then
+			best, bestDistance = mob, distance
+		end
+	end
+	if best == nil then
+		return nil
+	end
+	MobService.damage(best, math.huge, player)
+	return best.id
+end
+
 -- Os tamanhos ajustados no Studio, prontos para colar nos dados.
 local function devSizes(): string
 	local lines = { "-- scale vai em Mobs/MobAnimConfig, radius em Defs/Mobs (stats)" }
@@ -908,6 +932,7 @@ function MobService.Start(_self)
 		newCommand("DevSpawnMob", devSpawn)
 		newCommand("DevMobCount", devCount)
 		newCommand("DevMobSizes", devSizes)
+		newCommand("DevKillMob", devKill)
 		task.spawn(setupSizeTuning)
 	end
 end

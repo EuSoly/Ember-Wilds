@@ -40,7 +40,7 @@ Toda a lógica está em `src/server/Services/CrateService.luau`; os números em 
 
 - A caixa nasce no lugar da morte. Sem item nenhum, **não há caixa**.
 - Na morte do jogador, o `CrateService` só **copia** (ouvinte do `DeathService.onDeath`, antes de zerar); quem zera o inventário, a mochila e a armadura é o `DeathService`, logo depois. Nada fica no inventário zerado e nada é copiado duas vezes.
-- A caixa de mob nasce pelo gancho `MobService.onDeath`.
+- A caixa de mob nasce pelo gancho `MobService.onDeath`, na **skin de caixa de quem matou** (sem matador, como espinho: `crate_default`). Até 11/11 ela usava o id do mob como modelo, que não existe em `Assets.Crates`, e caía na caixa provisória antiga.
 - Mob sem `loot` (ou lista vazia) não deixa caixa.
 
 ### O que cada mob deixa
@@ -61,6 +61,14 @@ Carne crua dá +15 de fome; **carne assada** dá +35 e sai da fogueira (1 carne 
 - A skin é um cosmético do slot `crate` (`Defs/CosmeticSlots.luau`, padrão `crate_default`). Veja `boneco.md`.
 - O modelo vem de `ReplicatedStorage.Assets.Crates.<skin ou id do mob>` (um `Model` com o pivô **no chão, no centro**). Sem ele, o `CrateModel` monta uma caixa provisória: madeira com faixas **douradas** (jogador) ou de uma cor fixa tirada do id do mob. Os modelos finais o Elizeu vai fazer: basta pôr um Model com o nome certo, sem mexer em código.
 - A caixa é ancorada e sem colisão, toque nem raycast (pode haver gente em cima dela); o golpe a acha pelo índice do servidor.
+
+### Largar item
+
+- **Como:** botão direito num slot (PC) ou segurar o item, arrastar e soltar **no mundo**, fora de qualquer parte visível da interface (PC e celular). Durante o arrasto, no mundo, aparece "Largar" embaixo do item. Soltar em cima de outra parte da interface cancela, como antes.
+- **O que acontece:** a **pilha inteira** vira uma caixa com a **skin de caixa de quem largou**, a 4 studs à frente dele (`CrateRules.DROP_DISTANCE`). Qualquer um pode pegar. Ela some em **60 s** (`DROP_LIFETIME`).
+- **Juntar:** largar de novo a até 4 studs (`DROP_MERGE_RADIUS`) da sua própria caixa de item largado junta nela (`CrateRules.mergeDrop`, até 20 slots) e renova o tempo.
+- **Servidor** (`Net.DropSlot`, em `CrateService`): limite de 10 por segundo; fantasma não larga; no **modo criativo** o item só some (como na morte, os itens dele não vão para os outros). A caixa recebe o item antes de o slot ser esvaziado, sem pausa no meio.
+- **Testar no Studio:** `ServerStorage.DevKillMob:Invoke(player)` mata o mob mais perto com você como matador (caixa na sua skin).
 
 ### Abrir e saquear
 

@@ -37,6 +37,7 @@ return table.freeze({
 	["book.station.fire"] = "Fogo",
 	["book.station.water"] = "Perto da água",
 	["book.section.about"] = "Como funciona",
+	["inventory.drop"] = "Largar",
 	["book.section.how"] = "Como fazer",
 	["book.section.needs"] = "Precisa de",
 	["book.section.stats"] = "Dados",
