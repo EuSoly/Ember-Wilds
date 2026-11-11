@@ -111,14 +111,30 @@ function BuildRules.snapPlacement(
 	return cellX, cellZ, best.yaw
 end
 
+-- "Debaixo do telhado" usa o círculo que passa pelos cantos do quadrado (raio
+-- × √2): o círculo de raio r deixava um buraco nas emendas e nos cantos entre
+-- telhados encaixados, e andando por baixo os telhados piscavam.
+local ROOF_COVER_SCALE = math.sqrt(2)
+-- Quem já estava debaixo só sai a esta distância além da cobertura (studs),
+-- para a borda não ficar acendendo e apagando.
+BuildRules.ROOF_EXIT_MARGIN = 2
+
 -- Telhados translúcidos para o jogador em (x, z): se ele está debaixo de algum,
 -- todos os que estão a até `viewRadius` dele (a tela); senão, nenhum. Devolve
--- os índices de `circles` a apagar.
-function BuildRules.roofsToFade(x: number, z: number, circles: { Circle }, viewRadius: number): { [number]: boolean }
+-- os índices de `circles` a apagar. `wasUnder` = estava apagado no quadro
+-- anterior (ganha a folga ROOF_EXIT_MARGIN para sair).
+function BuildRules.roofsToFade(
+	x: number,
+	z: number,
+	circles: { Circle },
+	viewRadius: number,
+	wasUnder: boolean?
+): { [number]: boolean }
 	local out: { [number]: boolean } = {}
+	local margin = if wasUnder then BuildRules.ROOF_EXIT_MARGIN else 0
 	local under = false
 	for _, circle in circles do
-		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, 0) then
+		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r * ROOF_COVER_SCALE, margin) then
 			under = true
 			break
 		end

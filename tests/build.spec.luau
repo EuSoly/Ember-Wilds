@@ -281,6 +281,28 @@ function spec.telhados_translucidos_na_tela()
 	assert(next(outside) == nil, "fora de qualquer telhado: nenhum")
 end
 
+function spec.telhado_sem_buraco_entre_os_quadrados()
+	-- Quatro telhados encaixados (lado 6): o canto comum fica a 4,24 dos centros,
+	-- fora do círculo de raio 3, mas debaixo do telhado quadrado.
+	local circles = {
+		{ x = 0, z = 0, r = 3 },
+		{ x = 6, z = 0, r = 3 },
+		{ x = 0, z = 6, r = 3 },
+		{ x = 6, z = 6, r = 3 },
+	}
+	assert(next(BuildRules.roofsToFade(3, 3, circles, 80)) ~= nil, "no canto entre quatro telhados ainda está debaixo")
+	assert(next(BuildRules.roofsToFade(3, 0, circles, 80)) ~= nil, "na emenda entre dois também")
+end
+
+function spec.telhado_nao_pisca_na_borda()
+	local circles = { { x = 0, z = 0, r = 3 } }
+	-- Pouco fora do telhado: quem não estava debaixo não apaga...
+	assert(next(BuildRules.roofsToFade(5, 0, circles, 80, false)) == nil, "entrando: ainda não")
+	-- ...mas quem já estava continua apagado (folga para sair).
+	assert(next(BuildRules.roofsToFade(5, 0, circles, 80, true)) ~= nil, "saindo: continua apagado")
+	assert(next(BuildRules.roofsToFade(12, 0, circles, 80, true)) == nil, "longe: volta ao normal")
+end
+
 function spec.limite_por_jogador()
 	assert(BuildRules.underKindLimit(0, 1), "a primeira pode")
 	assert(not BuildRules.underKindLimit(1, 1), "a segunda não")

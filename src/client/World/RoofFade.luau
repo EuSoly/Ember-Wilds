@@ -3,7 +3,8 @@
 -- esconderia quem está embaixo. Estando debaixo de algum telhado (tag Roof +
 -- PieceRadius, TaggedCircles), TODOS os telhados a até VIEW_RADIUS (a tela) ficam
 -- semitransparentes só para este jogador (LocalTransparencyModifier); saindo de
--- baixo, voltam ao normal (BuildRules.roofsToFade).
+-- baixo, voltam ao normal (BuildRules.roofsToFade: cobre o quadrado inteiro,
+-- sem buraco entre telhados encaixados, e tem folga para sair, sem piscar).
 -- A posição é lida a cada quadro (não por sinal de atributo: com o Server
 -- Authority o personagem local é previsto).
 local Players = game:GetService("Players")
@@ -47,7 +48,8 @@ function RoofFade.start()
 		local now: { [Model]: boolean } = {}
 		if root and root:IsA("BasePart") then
 			local circles, owners = TaggedCircles.list(roofs)
-			for i in BuildRules.roofsToFade(root.Position.X, root.Position.Z, circles, VIEW_RADIUS) do
+			local wasUnder = next(faded) ~= nil
+			for i in BuildRules.roofsToFade(root.Position.X, root.Position.Z, circles, VIEW_RADIUS, wasUnder) do
 				now[owners[i]] = true
 			end
 		end
