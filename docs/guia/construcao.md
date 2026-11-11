@@ -77,11 +77,23 @@ O dono (e, no futuro, o time) bate na porta e ela abre ou fecha; aberta, deixa p
 
 ## Espinho
 
-Fere quem encosta, menos o dono e os aliados. O `SpikeService` varre a 5 Hz as peças vizinhas (não usa `Touched`): quem chega no círculo do espinho, com margem de 1,8 studs (`PLAYER_RADIUS` + 0,3), é ferido. Cada espinho fere cada vítima no máximo 1× por segundo, então três espinhos em volta ferem três vezes mais. O dano é do tipo `"combat"` (o capacete protege) e a morte tem causa "Espinho".
+Fere quem encosta, menos o dono e os aliados (com os times, os colegas: `times.md`). **Bater** num espinho alheio também machuca quem bate (`spikeHitDamage`, Starve "hit"; `BuildRules.spikeHitDamage`, aplicado no `StructureService.hit`). O `SpikeService` varre a 5 Hz as peças vizinhas (não usa `Touched`): quem chega no círculo do espinho, com margem de 1,8 studs (`PLAYER_RADIUS` + 0,3), é ferido. Cada espinho fere cada vítima no máximo 1× por segundo, então três espinhos em volta ferem três vezes mais. O dano é golpe de jogador (o capacete protege) e a morte tem causa "Espinho".
 
-| Espinho | Dano por toque |
-|---|---:|
-| Madeira / pedra / ouro | 10 / 20 / 30 |
+Números da config oficial do Starve (11/11), de madeira a reidite:
+
+| Peça | Vida | Encostar | Bater |
+|---|---|---|---|
+| Espinho | 150 / 300 / 600 / 1200 / 2400 / 3000 | 10 / 20 / 30 / 40 / 50 / 60 | 2 / 3 / 3 / 4 / 4 / 5 |
+| Porta com espinhos | 100 / 200 / 400 / 800 / 1600 / 2000 | 5 / 10 / 15 / 25 / 30 / 35 | 1 / 2 / 2 / 3 / 3 / 4 |
+| Parede e porta | 1000 / 1500 / 2000 / 2500 / 3500 / 4000 | — | — |
+
+## Extratores, fornalha e máquina de esmeralda
+
+- **Extratores** (pedra, ouro, diamante, ametista, reidite): 2000 de vida; 1 minério a cada 10 s gastando 2 madeiras; até 255 de madeira e 255 de minério. Qualquer um põe madeira, só o dono e os aliados tiram.
+- **Fornalha:** 1000 de vida, 1 madeira a cada 5 s, até 255.
+- **Máquina de esmeralda:** 750 pontos por minuto ao dono vivo (`EmeraldService`, `EmeraldRules`). Só **uma por jogador**. **Destruída, o dono morre** (causa "Máquina de esmeralda destruída"); removida porque o dono morreu ou saiu, nada acontece.
+- **Pedra da ressurreição:** veja `ressurreicao.md`. **Totem:** veja `times.md`.
+- **Testar no Studio:** `ServerStorage.DevPlace:Invoke(player, "<itemId>")` coloca a peça à frente do jogador sem gastar item (só no Studio).
 
 ## Fogo
 
@@ -159,7 +171,7 @@ Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRa
 
 Item com `testOnly = true` em `Defs/Items.luau` só existe no Studio. Fora do Studio (`RunService:IsStudio()` falso, inclusive servidor privado) é como se não existisse: não aparece no craft nem nas listas, não é craftável, não é dado (nem pelo `InventoryService.give`) e não é colocável. O `Validate` proíbe item `testOnly` em kit e no loot de mob. O lugar único dessa regra é `src/shared/ItemAccess.luau`.
 
-Itens marcados hoje: as três portas com espinhos, os dois extratores, fornalha, ponte, telhado, placa, poço, cama, balde e balde cheio.
+Itens marcados hoje (11/11): as peças de diamante, ametista e reidite (paredes, portas, espinhos, portas com espinho e extratores), poço, balde, balde cheio, pedra da ressurreição e máquina de esmeralda. Liberados em 11/11: portas com espinho de madeira a ouro, extratores de pedra e ouro, fornalha, ponte, telhado, placa, cama e totem.
 
 **Para liberar um item num update:** apague a linha `testOnly = true` do item em `Defs/Items.luau` (e do `bucket` e do `water_bucket` se for liberar o poço, senão ele não tem uso). Antes, revise os números marcados `-- provisório` da peça e da receita (em `Defs/Items.luau` e `Defs/Recipes.luau`). Rode `bash scripts/check.sh`. Não existe dado salvo para limpar: o inventário e a base não persistem.
 

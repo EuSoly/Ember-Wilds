@@ -2,6 +2,15 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Construções (11/11)
+
+- **Modelos grandes demais:** totem (raio 4,3) e pedra da ressurreição (4,4) passam do raio máximo aceito (4); estão com 4. Reduzir os modelos uns 10% na bancada. O extrator de diamante está menor que os outros (1,6 contra 2,7).
+- **Fantasma atravessar construções:** o Starve deixa; aqui ainda colide (precisa de grupos de colisão no mapa).
+- **Conferir com 2 jogadores (Test → 2 Players):** entrar no time, expulsar, dano de 30% entre colegas, nick verde, portas e baús compartilhados.
+- **Conferir:** o tempo de fantasma acabar → morte normal com caixa; máquina de esmeralda destruída matando o dono.
+- **Vidas sem número na config:** totem 500, ponte 300 e placa 100 (escolha nossa).
+- **Encaixe em grade (fantasma):** busca de vizinhas a cada quadro; cor pode atrasar 0,15 s depois de um salto; em cima da vizinha a peça pode ir para casa a ~10 studs; falta teste de "peça sem snap não encaixa".
+
 ## Modo criativo (11/11)
 
 - **Conferir no Studio:** abrir o livro com o criativo ligado (título "Modo criativo", botão Pegar ao lado do Fixar, itens de teste nas abas). O Pegar em si já foi conferido (+100 madeira, espada de lava). O clique simulado pelo MCP não abriu o livro.
