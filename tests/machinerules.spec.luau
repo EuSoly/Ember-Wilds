@@ -89,4 +89,42 @@ function spec.putWood_respeita_o_maximo()
 	assert(MachineRules.putWood(0, 0 / 0, 100) == 0, "NaN: nada")
 end
 
+-- Barrinha do painel (cliente): o ciclo recomeça quando a máquina passa a
+-- trabalhar, quando o extrator entrega (estoque sobe) ou quando a fornalha
+-- queima uma madeira (madeira desce). Pôr madeira não recomeça.
+function spec.ciclo_recomeca_ao_comecar_a_trabalhar()
+	local a = { wood = 0, stock = 0 }
+	local b = { wood = 10, stock = 0 }
+	assert(MachineRules.cycleRestarted("extractor", a, b, false, true), "começou a trabalhar")
+	assert(
+		not MachineRules.cycleRestarted("extractor", a, b, true, true),
+		"já trabalhava: pôr madeira não recomeça"
+	)
+end
+
+function spec.ciclo_do_extrator_recomeca_quando_o_estoque_sobe()
+	local a = { wood = 10, stock = 3 }
+	local b = { wood = 8, stock = 4 }
+	assert(MachineRules.cycleRestarted("extractor", a, b, true, true), "entregou")
+	assert(
+		not MachineRules.cycleRestarted("extractor", a, { wood = 10, stock = 0 }, true, true),
+		"pegar não recomeça"
+	)
+end
+
+function spec.ciclo_da_fornalha_recomeca_quando_queima_uma_madeira()
+	assert(MachineRules.cycleRestarted("furnace", { wood = 5 }, { wood = 4 }, true, true), "queimou")
+	assert(
+		not MachineRules.cycleRestarted("furnace", { wood = 5 }, { wood = 15 }, true, true),
+		"pôr madeira não recomeça"
+	)
+end
+
+function spec.fracao_do_ciclo_fica_entre_0_e_1()
+	assert(MachineRules.cycleFraction(5, 10) == 0.5, "metade")
+	assert(MachineRules.cycleFraction(-1, 10) == 0, "antes do começo")
+	assert(MachineRules.cycleFraction(30, 10) == 1, "passou do fim")
+	assert(MachineRules.cycleFraction(5, 0) == 0, "ciclo inválido")
+end
+
 return spec

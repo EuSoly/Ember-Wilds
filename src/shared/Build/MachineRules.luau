@@ -93,4 +93,34 @@ function MachineRules.putWood(wood: number, have: number, max: number): number
 	return math.floor(math.min(MachineRules.WOOD_PER_PUT, have, room))
 end
 
+-- Barrinha do painel (cliente, sem rede): o cliente só vê os atributos Wood e
+-- Stock, então estima o ciclo. Ele recomeça quando a máquina passa a trabalhar,
+-- quando o extrator entrega (estoque sobe) ou quando a fornalha queima uma
+-- madeira (madeira desce). Pôr madeira ou pegar o estoque não recomeça.
+export type Seen = { wood: number, stock: number? }
+function MachineRules.cycleRestarted(
+	kind: string,
+	before: Seen,
+	after: Seen,
+	wasWorking: boolean,
+	nowWorking: boolean
+): boolean
+	if nowWorking and not wasWorking then
+		return true
+	end
+	if kind == "extractor" then
+		return (after.stock or 0) > (before.stock or 0)
+	end
+	return kind == "furnace" and after.wood < before.wood
+end
+
+-- Quanto do ciclo já passou (0 a 1), com `elapsed` segundos de um ciclo de
+-- `cycleSeconds`. Ciclo inválido: 0.
+function MachineRules.cycleFraction(elapsed: number, cycleSeconds: number): number
+	if not (cycleSeconds > 0 and cycleSeconds < math.huge) or not (elapsed > 0) then
+		return 0
+	end
+	return math.min(elapsed / cycleSeconds, 1)
+end
+
 return table.freeze(MachineRules)
