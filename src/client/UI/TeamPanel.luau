@@ -1,7 +1,7 @@
 --!strict
 -- Painel do time (TeamService; docs/guia/times.md). No time: nome do líder,
 -- membros, Sair e, para o líder perto do próprio totem, Trancar/Destrancar e o X
--- de expulsar. Sem time, perto de um totem com vaga e destrancado: Entrar.
+-- de expulsar; a setinha (< / >) recolhe e abre o painel. Sem time, perto de um totem com vaga e destrancado: Entrar.
 -- Tudo lido dos atributos (Team no Player; TeamLeader/TeamLocked/TeamSize no
 -- totem). Quem decide é o servidor.
 local CollectionService = game:GetService("CollectionService")
@@ -64,6 +64,8 @@ local function TeamPanel(): Frame
 	local myTeam = vide.source(nil :: number?)
 	local members = vide.source({} :: { Member })
 	local totem = vide.source(nil :: Totem?)
+	-- Painel recolhido (só o título e a setinha): pedido do Elizeu, 11/11.
+	local collapsed = vide.source(false)
 
 	local last = 0
 	local connection = RunService.RenderStepped:Connect(function()
@@ -165,9 +167,23 @@ local function TeamPanel(): Frame
 			end,
 			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
+			Rustic.button({
+				Name = "Toggle",
+				AnchorPoint = Vector2.new(1, 0),
+				Position = UDim2.fromScale(1, 0),
+				Size = UDim2.fromOffset(30, 28),
+				kind = "leather",
+				text = function()
+					return if collapsed() then ">" else "<"
+				end,
+				maxSize = 16,
+				Activated = function()
+					collapsed(not vide.untrack(collapsed))
+				end,
+			}) :: Instance,
 			Kit.text({
 				Name = "Title",
-				Size = UDim2.new(1, 0, 0, 30),
+				Size = UDim2.new(1, -34, 0, 30),
 				TextXAlignment = Enum.TextXAlignment.Left,
 				FontFace = Theme.font.number,
 				TextColor3 = Color3.fromRGB(120, 230, 120),
@@ -183,6 +199,9 @@ local function TeamPanel(): Frame
 			}) :: Instance,
 			create("Frame")({
 				Name = "Members",
+				Visible = function()
+					return not collapsed()
+				end,
 				Position = UDim2.fromOffset(0, 34),
 				Size = UDim2.new(1, 0, 0, ROW * TeamRules.MAX + 4 * TeamRules.MAX),
 				BackgroundTransparency = 1,
@@ -191,6 +210,9 @@ local function TeamPanel(): Frame
 			}),
 			create("Frame")({
 				Name = "Buttons",
+				Visible = function()
+					return not collapsed()
+				end,
 				AnchorPoint = Vector2.new(0, 1),
 				Position = UDim2.fromScale(0, 1),
 				Size = UDim2.new(1, 0, 0, 36),
