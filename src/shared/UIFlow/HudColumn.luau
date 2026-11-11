@@ -55,9 +55,12 @@ end
 
 export type Column = { tutorialY: number, pinnedY: number, notificationsY: number }
 
--- Onde cada peça começa, dadas as alturas (0 = não aparece).
-function HudColumn.compute(tutorialHeight: number, pinnedHeight: number): Column
-	local y = HudColumn.TOP
+-- Onde cada peça começa, dadas as alturas (0 = não aparece). `top` = onde a
+-- coluna começa (fração da tela; padrão TOP): desde 11/11 o minimapa e os botões
+-- têm tamanho em px (MinimapRules.layout), e a coluna começa logo abaixo deles.
+function HudColumn.compute(tutorialHeight: number, pinnedHeight: number, top: number?): Column
+	local start = top or HudColumn.TOP
+	local y = start
 	local tutorialY = y
 	if tutorialHeight > 0 then
 		y += tutorialHeight + HudColumn.GAP
@@ -66,7 +69,7 @@ function HudColumn.compute(tutorialHeight: number, pinnedHeight: number): Column
 	if pinnedHeight > 0 then
 		y += pinnedHeight + HudColumn.GAP
 	end
-	local notificationsY = if y == HudColumn.TOP then HudColumn.NOTIFICATIONS_ALONE else y
+	local notificationsY = if y == start then math.max(HudColumn.NOTIFICATIONS_ALONE, start) else y
 	return { tutorialY = tutorialY, pinnedY = pinnedY, notificationsY = notificationsY }
 end
 

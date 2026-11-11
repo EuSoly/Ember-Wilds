@@ -58,7 +58,7 @@ O molde `RecipeBook` em `UITemplates` (Studio) não é mais usado pelo livro.
 
 ## Fixar uma receita (10/11/2026)
 
-Na ficha de um item com receita, o botão **Fixar** põe a receita no HUD, na coluna da direita, embaixo do quadrinho do tutorial (`UI/PinnedRecipe`). O painel mostra "Fixado: <item>" e uma linha por ingrediente, com ícone e "Madeira 15/10": a contagem não tem teto, para o jogador ver que passou do necessário. A linha fica verde quando ele já tem a quantidade, e o título fica verde quando dá para fazer.
+Na ficha de um item com receita, o botão **Fixar** põe a receita no HUD, na coluna da direita, embaixo do quadrinho do tutorial (`UI/PinnedRecipe`). O painel mostra "Fixado: <item>" e uma linha por ingrediente, com ícone e "Madeira 15/10": a contagem não tem teto, para o jogador ver que passou do necessário. A linha fica verde quando ele já tem a quantidade, e o título fica verde quando dá para fazer. O **X** redondo no canto do papel desafixa sem abrir o livro. Até 11/11 era um "✕", que a fonte não tem, e ficava invisível. A coluna da direita começa logo abaixo do livro e da engrenagem (`HudColumn.compute` com o topo vindo do `CornerLayout`), para não ficar por cima deles com o minimapa maior.
 
 - **Uma receita por vez:** fixar outra troca a anterior. **Desafixar** no livro, ou o ✕ do painel, tira.
 - **Só no cliente e só na sessão:** continua depois de morrer e some ao sair do jogo (`PinState`). As linhas vêm de `Shared/UIFlow/PinRules` (testado).

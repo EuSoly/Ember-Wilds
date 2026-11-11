@@ -8,6 +8,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 local TutorialRules = require(Shared:WaitForChild("Tutorial"):WaitForChild("TutorialRules"))
 local PinState = require(script.Parent.Parent:WaitForChild("PinState"))
+local CornerLayout = require(script.Parent:WaitForChild("CornerLayout"))
 local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
 local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
 
@@ -33,8 +34,13 @@ function HudColumnState.pinnedHeight(): number
 end
 
 -- Função comum (não derive): pode ser lida fora de um escopo do Vide; a conta é barata.
+-- Topo da coluna: logo abaixo do livro e da engrenagem (CornerLayout, em px).
+local BELOW_BUTTONS = 10 -- px
+
 function HudColumnState.column(): HudColumn.Column
-	return HudColumn.compute(HudColumnState.tutorialHeight(), HudColumnState.pinnedHeight())
+	local layout = CornerLayout.get()
+	local top = (layout.buttonTop + layout.buttonSize + BELOW_BUTTONS) / ScreenMetrics.guiHeight()
+	return HudColumn.compute(HudColumnState.tutorialHeight(), HudColumnState.pinnedHeight(), top)
 end
 
 return HudColumnState

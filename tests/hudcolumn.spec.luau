@@ -44,4 +44,12 @@ return {
 		assert(HudColumn.pinnedHeight(0) == 0, "sem receita fixada: 0")
 		assert(HudColumn.pinnedHeight(3) > HudColumn.pinnedHeight(1), "mais itens, mais alto")
 	end,
+
+	["column starts where it is told (below the round buttons)"] = function()
+		local c = HudColumn.compute(0, 0.12, 0.5)
+		assert(c.tutorialY == 0.5 and c.pinnedY == 0.5, "começa no topo dado")
+		assert(c.notificationsY > 0.5 + 0.12, "avisos embaixo da receita")
+		local alone = HudColumn.compute(0, 0, 0.5)
+		assert(alone.notificationsY >= 0.5, "sozinhos, os avisos não sobem por cima dos botões")
+	end,
 }

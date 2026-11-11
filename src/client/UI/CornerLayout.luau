@@ -11,8 +11,9 @@ local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
 local CornerLayout = {}
 
 function CornerLayout.get(): MinimapRules.Layout
+	-- Altura da área do HUD (sem a barra do Roblox): as posições são dentro dela.
 	local size = ScreenMetrics.size()
-	return MinimapRules.layout(size.X, size.Y, ScreenMetrics.short())
+	return MinimapRules.layout(size.X, ScreenMetrics.guiHeight(), ScreenMetrics.short())
 end
 
 -- Posição do botão: `left` = livro (borda esquerda da fileira), senão a engrenagem.
