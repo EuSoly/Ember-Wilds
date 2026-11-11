@@ -268,4 +268,22 @@ function spec.espinho_machuca_quem_bate()
 	assert(BuildRules.spikeHitDamage(wall, false) == 0, "parede não machuca")
 end
 
+function spec.telhados_translucidos_na_tela()
+	local circles = {
+		{ x = 0, z = 0, r = 3 }, -- em cima do jogador
+		{ x = 30, z = 0, r = 3 }, -- longe, mas na tela
+		{ x = 500, z = 0, r = 3 }, -- fora da tela
+	}
+	local under = BuildRules.roofsToFade(1, 1, circles, 80)
+	assert(under[1] and under[2] and not under[3], "debaixo de um: todos da tela")
+	local outside = BuildRules.roofsToFade(15, 0, circles, 80)
+	assert(next(outside) == nil, "fora de qualquer telhado: nenhum")
+end
+
+function spec.limite_por_jogador()
+	assert(BuildRules.underKindLimit(0, 1), "a primeira pode")
+	assert(not BuildRules.underKindLimit(1, 1), "a segunda não")
+	assert(BuildRules.underKindLimit(50, nil), "sem limite")
+end
+
 return spec

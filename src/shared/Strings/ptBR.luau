@@ -736,6 +736,8 @@ return table.freeze({
 	["craft.needWorkbench"] = "Precisa estar perto de uma bancada",
 	["craft.needFire"] = "Precisa estar perto do fogo",
 	["craft.needWater"] = "Precisa estar perto da água",
+	["build.limit"] = "Você já tem o máximo desta construção",
+	["build.inTeam"] = "Saia do seu time para colocar um totem",
 	["creative.full"] = "Inventário cheio",
 	["book.creative.give"] = "Pegar",
 	["book.creative.title"] = "Modo criativo",

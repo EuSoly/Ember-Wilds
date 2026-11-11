@@ -1,9 +1,9 @@
 --!strict
--- Telhado translúcido sobre o próprio boneco (G8): a câmera é de cima, então o
--- telhado esconderia quem está embaixo. Os telhados (tag Roof + PieceRadius,
--- TaggedCircles) cujo círculo contém a raiz do personagem local ficam
--- semitransparentes só para este jogador (LocalTransparencyModifier) e voltam
--- ao normal quando ele sai de baixo.
+-- Telhados translúcidos (G8; 11/11): a câmera é de cima, então o telhado
+-- esconderia quem está embaixo. Estando debaixo de algum telhado (tag Roof +
+-- PieceRadius, TaggedCircles), TODOS os telhados a até VIEW_RADIUS (a tela) ficam
+-- semitransparentes só para este jogador (LocalTransparencyModifier); saindo de
+-- baixo, voltam ao normal (BuildRules.roofsToFade).
 -- A posição é lida a cada quadro (não por sinal de atributo: com o Server
 -- Authority o personagem local é previsto).
 local Players = game:GetService("Players")
@@ -17,6 +17,7 @@ local StatNames = require(Shared:WaitForChild("StatNames"))
 local TaggedCircles = require(Build:WaitForChild("TaggedCircles"))
 
 local FADED = 0.7 -- 0 = normal, 1 = invisível
+local VIEW_RADIUS = 80 -- studs: o que cabe na tela com a câmera de cima
 
 local RoofFade = {}
 
@@ -45,12 +46,9 @@ function RoofFade.start()
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		local now: { [Model]: boolean } = {}
 		if root and root:IsA("BasePart") then
-			local x, z = root.Position.X, root.Position.Z
 			local circles, owners = TaggedCircles.list(roofs)
-			for i, circle in circles do
-				if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, 0) then
-					now[owners[i]] = true
-				end
+			for i in BuildRules.roofsToFade(root.Position.X, root.Position.Z, circles, VIEW_RADIUS) do
+				now[owners[i]] = true
 			end
 		end
 		-- Só mexe nos que mudaram.

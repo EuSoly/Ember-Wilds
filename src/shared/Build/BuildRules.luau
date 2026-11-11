@@ -111,6 +111,35 @@ function BuildRules.snapPlacement(
 	return cellX, cellZ, best.yaw
 end
 
+-- Telhados translúcidos para o jogador em (x, z): se ele está debaixo de algum,
+-- todos os que estão a até `viewRadius` dele (a tela); senão, nenhum. Devolve
+-- os índices de `circles` a apagar.
+function BuildRules.roofsToFade(x: number, z: number, circles: { Circle }, viewRadius: number): { [number]: boolean }
+	local out: { [number]: boolean } = {}
+	local under = false
+	for _, circle in circles do
+		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, 0) then
+			under = true
+			break
+		end
+	end
+	if not under then
+		return out
+	end
+	for index, circle in circles do
+		if BuildRules.touchesCircle(x, z, circle.x, circle.z, circle.r, viewRadius) then
+			out[index] = true
+		end
+	end
+	return out
+end
+
+-- Cabe mais uma peça com limite por jogador (`structure.maxPerPlayer`)? `owned` =
+-- quantas do mesmo tipo o jogador já tem no mundo; sem limite, sempre cabe.
+function BuildRules.underKindLimit(owned: number, max: number?): boolean
+	return max == nil or owned < max
+end
+
 function BuildRules.radiusOf(def: StructureDef): number
 	return def.radius or BuildRules.PIECE_RADIUS
 end

@@ -1428,7 +1428,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.totem",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "totem", health = 500, radius = 4 },
+		structure = { kind = "totem", health = 500, radius = 4, maxPerPlayer = 1 },
 	},
 	-- Pedra da ressurreição (GhostService). Raio no máximo aceito (o modelo tem 4,4).
 	resurrection_stone = {
@@ -1437,7 +1437,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.resurrection_stone",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "resurrection", health = 200, radius = 4 },
+		structure = { kind = "resurrection", health = 200, radius = 4, maxPerPlayer = 1 },
 	},
 	-- Máquina de esmeralda (EmeraldService): pontos por minuto ao dono; destruída, o dono morre.
 	emerald_machine = {
@@ -1446,7 +1446,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.emerald_machine",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "emerald_machine", health = 1000, radius = 2.9 },
+		structure = { kind = "emerald_machine", health = 1000, radius = 2.9, maxPerPlayer = 1 },
 	},
 	furnace = {
 		id = "furnace",

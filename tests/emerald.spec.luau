@@ -13,14 +13,10 @@ return {
 		assert(EmeraldRules.pointsFor(0) == 0, "parado")
 	end,
 
-	["only one machine per player"] = function()
-		assert(EmeraldRules.canPlace(0), "a primeira pode")
-		assert(not EmeraldRules.canPlace(1), "a segunda não")
-	end,
-
-	["destroyed kills the owner, removed does not"] = function()
-		assert(EmeraldRules.killsOwner(0), "vida zerada: destruída")
-		assert(not EmeraldRules.killsOwner(1000), "saiu com vida (dono morreu ou saiu)")
+	["destroyed by someone else kills the owner"] = function()
+		assert(EmeraldRules.killsOwner(0, false), "outro destruiu: o dono morre")
+		assert(not EmeraldRules.killsOwner(0, true), "o dono (ou aliado) quebrou: ninguém morre")
+		assert(not EmeraldRules.killsOwner(1000, false), "saiu com vida (dono morreu ou saiu)")
 	end,
 
 	["whole points carry the fraction"] = function()

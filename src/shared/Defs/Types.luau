@@ -106,6 +106,8 @@ export type StructureDef = {
 	-- Encaixa em grade nas vizinhas da mesma camada com snap (chão e teto:
 	-- telhado, ponte, canteiros). Veja BuildRules.snapPlacement.
 	snap: boolean?,
+	-- Quantas desta peça (do mesmo kind) cada jogador pode ter no mundo (nil = sem limite).
+	maxPerPlayer: number?,
 }
 
 export type ItemDef = {

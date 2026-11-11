@@ -33,7 +33,6 @@ local Workspace = game:GetService("Workspace")
 
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
-local EmeraldRules = require(ReplicatedStorage.Shared.Build.EmeraldRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
@@ -67,6 +66,8 @@ export type Entry = {
 	radius: number, -- raio do círculo (BuildRules.radiusOf; também o do GatherRules.pickTarget)
 	yaw: number, -- graus em torno de Y (BuildRules.facingYaw)
 	health: number,
+	-- Quem deu o último golpe (a máquina de esmeralda sabe se foi o dono/aliado).
+	lastHitBy: Player?,
 }
 
 type RateState = { start: number, count: number }
@@ -211,6 +212,7 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 		return
 	end
 	local allied = BuildRules.areAllies(entry.owner.UserId, attacker.UserId)
+	entry.lastHitBy = attacker
 	-- Chave inglesa numa peça aliada: conserta (e não abre a porta).
 	if allied and item and item.repair then
 		local amount = BuildRules.repairAmount(item, entry.health, entry.def.health)
@@ -366,6 +368,14 @@ local function create(
 	return true
 end
 
+-- Tira a peça do mundo agora (como se tivesse sido destruída por fora). Usado
+-- pela pedra da ressurreição gasta (GhostService).
+function StructureService.remove(entry: Entry)
+	if alive[entry] then
+		remove(entry)
+	end
+end
+
 -- Quantas peças do tipo `kind` o jogador tem no mundo.
 function StructureService.ownedOfKind(player: Player, kind: string): number
 	local count = 0
@@ -434,14 +444,16 @@ local function place(player: Player, character: Model)
 	if def == nil then
 		return
 	end
-	-- Máquina de esmeralda: uma por jogador (EmeraldRules).
-	if def.kind == "emerald_machine" and not EmeraldRules.canPlace(StructureService.ownedOfKind(player, def.kind)) then
+	-- Limite por jogador (totem, pedra da ressurreição, máquina): avisa e recusa.
+	if not BuildRules.underKindLimit(StructureService.ownedOfKind(player, def.kind), def.maxPerPlayer) then
+		Net.CraftNotice.Fire(player, "build.limit")
 		return
 	end
-	-- Totem: um por jogador, e só para quem não está no time de outro (TeamService).
+	-- Totem: só para quem não está no time de outro (TeamService).
 	if def.kind == "totem" then
 		local team = player:GetAttribute(StatNames.Team)
-		if StructureService.ownedOfKind(player, def.kind) > 0 or (team ~= nil and team ~= player.UserId) then
+		if team ~= nil and team ~= player.UserId then
+			Net.CraftNotice.Fire(player, "build.inTeam")
 			return
 		end
 	end

@@ -5,7 +5,8 @@
 -- fantasma: atributo GhostUntil no Player. O fantasma não leva dano nem muda as
 -- barras, e não bate, coleta, constrói, come, veste nem crafta (os serviços olham
 -- o atributo). Perto de uma pedra, Net.Resurrect volta com a vida e as barras
--- cheias, 1/3 dos pontos e sem os itens da lista. O tempo acabou: morte normal.
+-- cheias, 1/3 dos pontos e sem os itens da lista (a pedra usada quebra). O tempo
+-- acabou: morte normal.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -122,14 +123,17 @@ local function clear(player: Player)
 	player:SetAttribute(StatNames.GhostUntil, nil)
 end
 
--- Distância (studs) do jogador até a borda da pedra mais perto.
-local function stoneDistance(position: Vector3): number
-	local best = math.huge
+-- A pedra mais perto do jogador e a distância (studs) até a borda dela.
+local function nearestStone(position: Vector3): (StructureService.Entry?, number)
+	local best: StructureService.Entry? = nil
+	local bestDistance = math.huge
 	for _, entry in StructureService.allOfKind(STONE_KIND) do
 		local d = math.sqrt((entry.x - position.X) ^ 2 + (entry.z - position.Z) ^ 2) - entry.radius
-		best = math.min(best, d)
+		if d < bestDistance then
+			best, bestDistance = entry, d
+		end
 	end
-	return best
+	return best, bestDistance
 end
 
 local function onResurrect(player: Player)
@@ -138,9 +142,12 @@ local function onResurrect(player: Player)
 	if ghost == nil or root == nil then
 		return
 	end
-	if not GhostRules.canRevive(stoneDistance(root.Position), now(), ghost.untilAt) then
+	local stone, distance = nearestStone(root.Position)
+	if stone == nil or not GhostRules.canRevive(distance, now(), ghost.untilAt) then
 		return
 	end
+	-- A pedra usada quebra (pedido do Elizeu, 11/11).
+	StructureService.remove(stone)
 	-- Perde os itens da lista (do fim para o começo, sem pular slot).
 	local inv = InventoryService.get(player)
 	if inv then

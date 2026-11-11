@@ -1,12 +1,13 @@
 --!strict
 -- Máquina de esmeralda (EmeraldRules; docs/guia/construcao.md): a cada segundo
 -- dá ao dono vivo os pontos da máquina (750 por minuto, como pontos da vida).
--- Destruída (vida zerada), o dono morre; removida com vida (o dono morreu ou
--- saiu) não faz nada. A regra de uma por jogador fica no StructureService.place.
+-- Destruída por outra pessoa, o dono morre; quebrada pelo dono (ou aliado) ou
+-- removida com vida (o dono morreu ou saiu), não. Uma por jogador: maxPerPlayer.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
+local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local EmeraldRules = require(ReplicatedStorage.Shared.Build.EmeraldRules)
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local DeathService = require(script.Parent.DeathService)
@@ -53,7 +54,9 @@ function EmeraldService.Start(_self)
 		end
 		local owner = entry.owner
 		carry[owner] = nil
-		if EmeraldRules.killsOwner(entry.health) and owner.Parent == Players and alive(owner) then
+		local hitter = entry.lastHitBy
+		local byAlly = hitter ~= nil and BuildRules.areAllies(hitter.UserId, owner.UserId)
+		if EmeraldRules.killsOwner(entry.health, byAlly) and owner.Parent == Players and alive(owner) then
 			DeathService.kill(owner, CAUSE)
 		end
 	end)

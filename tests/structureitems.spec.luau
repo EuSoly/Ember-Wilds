@@ -95,6 +95,9 @@ return {
 
 	["new structures and their life"] = function()
 		assert(structure("totem").kind == "totem", "totem")
+		for _, id in { "totem", "resurrection_stone", "emerald_machine" } do
+			assert(structure(id).maxPerPlayer == 1, `{id}: uma por jogador`)
+		end
 		assert(structure("resurrection_stone").kind == "resurrection", "pedra")
 		assert(structure("resurrection_stone").health == 200, "pedra: 200")
 		assert(structure("emerald_machine").kind == "emerald_machine", "máquina")

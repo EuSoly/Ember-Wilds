@@ -877,6 +877,10 @@ local function validateStructureBlocks(errors: { string }, key: string, structur
 			table.insert(errors, `Item "{key}": spikeHitDamage deve ser maior que 0`)
 		end
 	end
+	local maxPer = structure.maxPerPlayer
+	if maxPer ~= nil and not (type(maxPer) == "number" and maxPer >= 1 and maxPer % 1 == 0) then
+		table.insert(errors, `Item "{key}": structure.maxPerPlayer deve ser inteiro ≥ 1`)
+	end
 	if structure.snap ~= nil and type(structure.snap) ~= "boolean" then
 		table.insert(errors, `Item "{key}": structure.snap deve ser true ou false`)
 	end
