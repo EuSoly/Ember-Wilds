@@ -357,6 +357,19 @@ local function create(
 	return true
 end
 
+-- Vizinhas para o encaixe de uma peça `def` com snap perto de (x, z): peças
+-- já colocadas da mesma camada que também têm snap.
+function StructureService.snapNeighbors(def: Defs.StructureDef, x: number, z: number): { BuildRules.SnapNeighbor }
+	local layer = BuildRules.layerOf(def.kind)
+	local out: { BuildRules.SnapNeighbor } = {}
+	for _, other in StructureService.near(x, z, 2 * BuildRules.radiusOf(def) + BuildRules.SNAP_RANGE) do
+		if other.def.snap and BuildRules.layerOf(other.def.kind) == layer then
+			table.insert(out, { x = other.x, z = other.z, yaw = other.yaw, radius = other.radius })
+		end
+	end
+	return out
+end
+
 local function place(player: Player, character: Model)
 	if player.Parent ~= Players or player.Character ~= character then
 		return
@@ -396,10 +409,15 @@ local function place(player: Player, character: Model)
 	local rx, rz = root.Position.X, root.Position.Z
 	local x, z = BuildRules.placePoint(rx, rz, dir.X, dir.Z)
 	local radius = BuildRules.radiusOf(def)
+	local yaw = BuildRules.facingYaw(x, z, rx, rz, rotation[player] or 0)
+	-- Chão e teto (snap): encaixa na grade da vizinha mais perto da mesma
+	-- camada, igual ao fantasma do cliente (BuildRules.snapPlacement).
+	if def.snap then
+		x, z, yaw = BuildRules.snapPlacement(x, z, yaw, dir.X, dir.Z, StructureService.snapNeighbors(def, x, z))
+	end
 	if not canPlace(player, def.kind, x, z, radius) then
 		return
 	end
-	local yaw = BuildRules.facingYaw(x, z, rx, rz, rotation[player] or 0)
 	if not InventoryService.take(player, itemId, 1) then
 		return
 	end

@@ -5,7 +5,7 @@ As peças de base (bancada, fogueiras, paredes, portas, espinhos e baú; mais as
 ## Como colocar
 
 1. Crafte a peça (veja `crafting.md`) e selecione o slot dela na hotbar.
-2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**: verde se pode construir, vermelho se não pode. É só uma aproximação do cliente; quem decide é o servidor.
+2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**. Ele é o **próprio modelo da peça**, translúcido, pintado de verde se pode construir e de vermelho se não pode (`Highlight`). Sem modelo no place, volta o bloco com a faixa da frente. É só uma aproximação do cliente; quem decide é o servidor.
 3. **PC:** solte o clique (botão de usar). **Celular:** solte o joystick direito. Posição inválida não gasta nada.
 4. Para parar de construir, troque de slot. Com uma peça na mão, o golpe não bate (só constrói).
 
@@ -13,12 +13,21 @@ O servidor recusa e não gasta nada se: a peça não está na mão, a peça cair
 
 ## Posição livre e rotação
 
-Não existe grade. A peça nasce no ponto `BuildRules.placePoint`: a partir do centro do boneco, `PLACE_DISTANCE` studs na direção da mira. A distância é fixa, então a peça sempre aparece num círculo em volta do jogador, em qualquer direção.
+As peças são livres, sem grade, com uma exceção: as de chão e teto (veja "Encaixe em grade" abaixo). A peça nasce no ponto `BuildRules.placePoint`: a partir do centro do boneco, `PLACE_DISTANCE` studs na direção da mira. A distância é fixa, então a peça sempre aparece num círculo em volta do jogador, em qualquer direção.
 
 - **De frente para o jogador:** sem girar, a frente da peça olha para quem constrói (`BuildRules.facingYaw`).
 - **Girar:** a tecla **R** (PC) ou o botão **"Girar"** (celular, só aparece com uma peça na mão) gira o fantasma 45° por vez (`ROTATE_STEP`), em 8 passos (`ROTATE_STEPS`). O giro vale **até trocar de item** (ou renascer), quando volta a 0 (o servidor zera o dele, e o cliente também manda `SetBuildRotation(0)` ao zerar com uma peça na mão, porque a troca chega ao cliente um pouco depois; assim a última mensagem sempre bate com o fantasma). A tecla R é ignorada enquanto você digita no chat.
 - **Na rede:** o cliente manda só o número do passo (`SetBuildRotation`, 0 a 7). O servidor ignora valor fora disso, fracionário ou mandado sem uma peça na mão (`BuildRules.validSteps`), e guarda o giro por jogador.
 - **O fantasma e a peça são iguais:** o cliente usa o mesmo ponto, o mesmo giro e os mesmos raios (constantes em `BuildRules`), por isso a peça construída cai onde o fantasma estava.
+
+## Encaixe em grade (chão e teto)
+
+Peças com `snap = true` no bloco `structure` do item se encaixam umas nas outras. Hoje são o telhado e a ponte; os canteiros de plantação vão usar o mesmo campo. Paredes, espinhos, portas e o resto continuam livres (decisão do Elizeu, 11/11).
+
+- Perto de uma peça da **mesma camada** que também tem `snap`, a nova vai para a **casa mais próxima da grade dessa vizinha**. O lado da casa é o diâmetro dela (`2 × radius`), os eixos são os dela, e a nova **copia o giro da vizinha**: forma um piso contínuo, sem fresta.
+- O ponto livre em cima da própria vizinha vai para a casa ao lado, na direção da mira.
+- Gruda só se a casa estiver a até `BuildRules.SNAP_RANGE` (3 studs) do ponto livre. Mais longe, ou sem vizinha, a peça fica livre.
+- A conta é `BuildRules.snapPlacement`, a mesma no servidor (`StructureService.place`, com `StructureService.snapNeighbors`) e no fantasma (`BuildGhost`). Testes em `tests/build.spec.luau` (`encaixe_*`).
 
 ## Peças são círculos
 

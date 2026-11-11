@@ -1,9 +1,11 @@
 --!strict
--- Fantasma da construção livre: com uma peça `placeable` na mão, mostra um bloco
--- translúcido no ponto à frente (o mesmo que o servidor escolhe), girado como a
--- peça sairá (o giro vem de BuildRotation), verde se parece livre e vermelho se
--- não. Uma faixa mais escura marca a "frente" da peça. É só uma dica: o servidor
--- decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
+-- Fantasma da construção: com uma peça `placeable` na mão, mostra o MODELO da
+-- peça translúcido (StructureModel.build, o mesmo do servidor) no ponto à frente
+-- (o mesmo que o servidor escolhe), girado como a peça sairá (o giro vem de
+-- BuildRotation), pintado de verde se parece livre e vermelho se não (Highlight).
+-- Peça de chão/teto com snap encaixa na grade da vizinha mais perto
+-- (BuildRules.snapPlacement, a mesma conta do servidor). Sem modelo, volta ao
+-- bloco com a faixa da frente. É só uma dica: o servidor decide de verdade. A água é a mesma regra do servidor (WaterSim.isWaterAt +
 -- BuildRules.waterAllows: ponte só na água, o resto nunca).
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -16,6 +18,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local BuildRules = require(Shared:WaitForChild("Build"):WaitForChild("BuildRules"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local StructureModel = require(Shared:WaitForChild("Models"):WaitForChild("StructureModel"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
 local BuildRotation = require(script.Parent.Parent:WaitForChild("BuildRotation"))
@@ -30,6 +33,9 @@ local RESOURCE_MAX_RADIUS = 4
 -- Faixa da frente: comprimento (fração do raio) e espessura, em studs.
 local FRONT_LENGTH = 0.5
 local FRONT_WIDTH = 0.4
+-- Modelo do fantasma: transparência das partes e do preenchimento do Highlight.
+local MODEL_TRANSPARENCY = 0.45
+local FILL_TRANSPARENCY = 0.6
 
 local BuildGhost = {}
 
@@ -138,6 +144,59 @@ local function looksFree(kind: string, px: number, pz: number, radius: number): 
 	return looksFreeOfPlayers(px, pz, radius)
 end
 
+-- Peças de chão/teto (snap) já colocadas perto de (px, pz), da mesma camada.
+local function snapNeighbors(def: Defs.StructureDef, px: number, pz: number): { BuildRules.SnapNeighbor }
+	local layer = BuildRules.layerOf(def.kind)
+	local range = 2 * BuildRules.radiusOf(def) + BuildRules.SNAP_RANGE + RESOURCE_MAX_RADIUS
+	local out: { BuildRules.SnapNeighbor } = {}
+	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
+		if instance:IsA("PVInstance") then
+			local pivot = instance:GetPivot()
+			local x, z = pivot.Position.X, pivot.Position.Z
+			if math.abs(x - px) <= range and math.abs(z - pz) <= range then
+				local other = structureOf(instance:GetAttribute(StatNames.StructureItem))
+				if other and other.snap and BuildRules.layerOf(other.kind) == layer then
+					local _, yaw = pivot:ToOrientation()
+					table.insert(out, { x = x, z = z, yaw = math.deg(yaw), radius = BuildRules.radiusOf(other) })
+				end
+			end
+		end
+	end
+	return out
+end
+
+-- Modelo da peça como fantasma: translúcido, sem colisão nem tags (senão o
+-- jogo acharia uma bancada, ponte ou telhado de verdade ali). nil sem modelo.
+local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, Highlight?)
+	local ok, built = pcall(StructureModel.build, itemId, def)
+	if not ok then
+		return nil, nil
+	end
+	local model = built :: Model
+	for _, instance in { model :: Instance, unpack(model:GetDescendants()) } do
+		for _, tag in CollectionService:GetTags(instance) do
+			CollectionService:RemoveTag(instance, tag)
+		end
+		if instance:IsA("BasePart") then
+			instance.Anchored = true
+			instance.CanCollide = false
+			instance.CanQuery = false
+			instance.CanTouch = false
+			instance.CastShadow = false
+			instance.Transparency = math.max(instance.Transparency, MODEL_TRANSPARENCY)
+		elseif instance:IsA("Script") or instance:IsA("LocalScript") then
+			instance:Destroy()
+		end
+	end
+	model.Name = "BuildGhost"
+	local highlight = Instance.new("Highlight")
+	highlight.FillTransparency = FILL_TRANSPARENCY
+	highlight.OutlineTransparency = 0.2
+	highlight.DepthMode = Enum.HighlightDepthMode.Occluded
+	highlight.Parent = model
+	return model, highlight
+end
+
 function BuildGhost.start()
 	local ghost = makePart("BuildGhost")
 	local front = makePart("Front")
@@ -145,17 +204,35 @@ function BuildGhost.start()
 	local lastRadius = 0
 	local lastCheck = 0
 	local free = false
+	-- Modelo do fantasma da peça na mão (refeito ao trocar de item).
+	local modelItem: string? = nil
+	local model: Model? = nil
+	local highlight: Highlight? = nil
+	local function clearModel()
+		if model then
+			model:Destroy()
+		end
+		model, highlight, modelItem = nil, nil, nil
+	end
 
 	RunService.RenderStepped:Connect(function()
 		local character = Players.LocalPlayer.Character
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		-- Polling de propósito: com Server Authority o AttributeChanged não
 		-- dispara no personagem previsto local.
-		local structure = if character then structureOf(character:GetAttribute(StatNames.Equipped)) else nil
+		local equipped = if character then character:GetAttribute(StatNames.Equipped) else nil
+		local structure = structureOf(equipped)
 		if structure == nil or root == nil or not root:IsA("BasePart") then
 			ghost.Parent = nil
+			clearModel()
 			lastRadius = 0
 			return
+		end
+		local itemId = equipped :: string
+		if modelItem ~= itemId then
+			clearModel()
+			modelItem = itemId
+			model, highlight = ghostModel(itemId, structure)
 		end
 
 		local look = root.CFrame.LookVector
@@ -168,6 +245,9 @@ function BuildGhost.start()
 		local px, pz = BuildRules.placePoint(root.Position.X, root.Position.Z, flat.X, flat.Z)
 		local steps = vide.untrack(BuildRotation.steps)
 		local yaw = BuildRules.facingYaw(px, pz, root.Position.X, root.Position.Z, steps)
+		if structure.snap then
+			px, pz, yaw = BuildRules.snapPlacement(px, pz, yaw, flat.X, flat.Z, snapNeighbors(structure, px, pz))
+		end
 
 		-- Refaz o teste só a cada REFRESH (ou ao trocar de peça): a varredura
 		-- é cara para rodar todo quadro.
@@ -178,8 +258,17 @@ function BuildGhost.start()
 			free = looksFree(structure.kind, px, pz, radius)
 		end
 
-		local side = radius * 2
 		local color = if free then Theme.ui.success else Theme.ui.danger
+		-- Com modelo: só ele (o bloco some). Parte local: não replica.
+		if model and highlight then
+			ghost.Parent = nil
+			highlight.FillColor = color
+			highlight.OutlineColor = color
+			model:PivotTo(CFrame.new(px, 0, pz) * CFrame.Angles(0, math.rad(yaw), 0))
+			model.Parent = Workspace
+			return
+		end
+		local side = radius * 2
 		-- O topo do chão do mapa é Y = 0.
 		local cframe = CFrame.new(px, THICKNESS / 2, pz) * CFrame.Angles(0, math.rad(yaw), 0)
 		ghost.Size = Vector3.new(side, THICKNESS, side)
