@@ -1,6 +1,6 @@
 --!strict
 -- Brilhos na água: traços brancos que aparecem e somem devagar em pontos soltos
--- da água perto da câmera, para a água pintada (Map/Ground/Forest, ColorMap)
+-- da água perto da câmera, para a água pintada (Map/Ground/Forest_<ix>_<iz>, ColorMap)
 -- não parecer parada. Só visual, no cliente; o tempo e a forma de cada brilho
 -- estão em World/GlintRules (testado). Os brilhos são reaproveitados (pool).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

@@ -5,9 +5,13 @@
 -- "pisca" das peças sobrepostas (visto no Studio em 10/11/2026).
 --
 -- Uso (Lune, na pasta scripts/groundmap):
---   lune run forest            -> grava forest.png (chão e água), 1024x1024
---   lune run forest serve      -> grava e serve em http://localhost:34999/forest.png
+--   lune run forest            -> grava forest_<ix>_<iz>.png (chão e água), 4x4 imagens 1024x1024
+--   lune run forest serve      -> grava e serve em http://localhost:34999/forest_<ix>_<iz>.png
 --     (o upload_image do Studio MCP só sobe imagem por URL)
+-- 4x4 pedaços (11/11/2026): uma imagem só para os 960 studs dava ~1 stud por pixel
+-- e a espuma e a beira da areia ficavam pixeladas. Cada pedaço cobre 240 studs
+-- (0,23 stud por pixel) e vai num Decal da peça Forest_<ix>_<iz> (Map/Ground).
+-- ix cresce com X e iz com Z, a partir do canto (X0, Z0).
 -- A água vem de water.txt, exportado do Studio (Map/Water):
 --   d x z raio            (disco)
 --   b x z largura comprimento angulo   (bloco; angulo = atan2(look.X, look.Z) em graus)
@@ -19,9 +23,11 @@ local serde = require("@lune/serde")
 
 -- Área da peça Forest: centro (-630, 630), 960 x 960.
 local X0, Z0, SIZE = -1110, 150, 960
-local RES = 1024 -- pixels da imagem
-local CELL = 3 -- studs por célula da grade grossa (campos suaves)
-local N = SIZE // CELL + 2
+local RES = 1024 -- pixels de cada imagem
+local TILES = 4 -- pedaços por lado
+local TILE = SIZE / TILES -- studs de cada pedaço
+local CELL = 1.5 -- studs por célula da grade grossa (campos suaves)
+local N = math.floor(SIZE / CELL) + 2
 local MAXD = 80 -- studs: mais longe que isso da água conta como "longe"
 
 local DENSE = { x0 = -1100, x1 = -780, z0 = 160, z1 = 500 } -- zona DenseNorthWest
@@ -305,16 +311,22 @@ end
 
 -- Decal no topo da peça: linha de cima da imagem = lado +Z, esquerda = +X
 -- (conferido no Studio em 10/11/2026: ao contrário, a imagem saiu girada 180°).
-local function render(withAlpha: boolean, pixel: (number, number) -> (RGB, number)): string
+local function render(
+	withAlpha: boolean,
+	x0: number,
+	z0: number,
+	size: number,
+	pixel: (number, number) -> (RGB, number)
+): string
 	local channels = if withAlpha then 4 else 3
 	local raw = buffer.create(RES * (RES * channels + 1))
 	local o = 0
 	for row = 0, RES - 1 do
 		buffer.writeu8(raw, o, 0)
 		o += 1
-		local z = Z0 + SIZE - (row + 0.5) * SIZE / RES
+		local z = z0 + size - (row + 0.5) * size / RES
 		for col = 0, RES - 1 do
-			local x = X0 + SIZE - (col + 0.5) * SIZE / RES
+			local x = x0 + size - (col + 0.5) * size / RES
 			local c, a = pixel(x, z)
 			buffer.writeu8(raw, o, byte(c[1]))
 			buffer.writeu8(raw, o + 1, byte(c[2]))
@@ -331,15 +343,18 @@ local function render(withAlpha: boolean, pixel: (number, number) -> (RGB, numbe
 		.. chunk("IEND", "")
 end
 
-local images = {
-	["forest.png"] = render(false, function(x, z)
-		local water, alpha = waterAt(x, z)
-		return mix(colorAt(x, z), water, alpha), 1
-	end),
-}
-for name, png in images do
-	fs.writeFile(name, png)
-	print(`{name}: {RES}x{RES}, {#png // 1024} KB`)
+local images: { [string]: string } = {}
+for iz = 0, TILES - 1 do
+	for ix = 0, TILES - 1 do
+		local name = `forest_{ix}_{iz}.png`
+		local png = render(false, X0 + ix * TILE, Z0 + iz * TILE, TILE, function(x, z)
+			local water, alpha = waterAt(x, z)
+			return mix(colorAt(x, z), water, alpha), 1
+		end)
+		images[name] = png
+		fs.writeFile(name, png)
+		print(`{name}: {RES}x{RES}, {#png // 1024} KB`)
+	end
 end
 
 if process.args[1] == "serve" then
@@ -351,5 +366,5 @@ if process.args[1] == "serve" then
 		end
 		return { status = 200, headers = { ["Content-Type"] = "image/png" }, body = png }
 	end)
-	print(`servindo em http://localhost:{port}/forest.png`)
+	print(`servindo em http://localhost:{port}/forest_<ix>_<iz>.png`)
 end

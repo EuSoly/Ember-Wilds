@@ -28,3 +28,6 @@ build/
 __pycache__/
 *.blend1
 
+
+# Imagens do chão (geradas por scripts/groundmap/forest.luau)
+scripts/groundmap/*.png
