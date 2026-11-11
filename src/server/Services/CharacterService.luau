@@ -15,6 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
 local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
 local Defs = require(ReplicatedStorage.Shared.Defs)
@@ -56,6 +57,10 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		return
 	end
 	local player = Players:GetPlayerFromCharacter(character)
+	-- Fantasma não leva dano (GhostService).
+	if player and GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	-- Tutorial: nada machuca o jogador protegido (jogador, bicho, espinho, fome...).
 	if player and TutorialService.isProtected(player) then
 		return

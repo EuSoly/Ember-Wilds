@@ -719,6 +719,8 @@ return table.freeze({
 	["death.cause.heat"] = "Calor",
 	["death.cause.spike"] = "Espinho",
 	["death.cause.emerald"] = "Máquina de esmeralda destruída",
+	["ghost.timer"] = "Fantasma: {value} s para chegar a uma Pedra da Ressurreição",
+	["ghost.revive"] = "Ressuscitar",
 	["death.cause.player"] = "Jogador",
 
 	-- Coleta

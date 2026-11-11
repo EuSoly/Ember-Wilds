@@ -21,7 +21,9 @@
 -- quem bateu, no máximo um da mesma chave a cada NOTICE_EVERY.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
@@ -250,6 +252,10 @@ local function step()
 	for _, player in Players:GetPlayers() do
 		local character = player.Character
 		if character == nil or character:GetAttribute(StatNames.Using) ~= true then
+			continue
+		end
+		-- Fantasma não bate nem coleta (GhostService).
+		if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 			continue
 		end
 		if CraftService.isCrafting(player) then

@@ -15,6 +15,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
@@ -53,6 +54,10 @@ end
 -- Começa uma mordida se der: personagem vivo, comida na mão (o Equipped vem do
 -- slot selecionado, então o item está no inventário) e alguma barra a repor.
 local function tryStart(player: Player)
+	-- Fantasma não come (GhostService).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	if bites[player] then
 		return
 	end

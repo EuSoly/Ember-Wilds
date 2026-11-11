@@ -685,6 +685,12 @@ function SerdesFunctions.WriteEVENT_CreativeGive(Value: { Id: string }): ()
 	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
 end
 
+function SerdesFunctions.WriteEVENT_Resurrect(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 34)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -791,6 +797,9 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	CreativeGive = {
+		Fire = NOOP
+	},
+	Resurrect = {
 		Fire = NOOP
 	},
 	})
@@ -1272,6 +1281,11 @@ local Returns = table.freeze({
 	CreativeGive = {
 		Fire = function(Value: { Id: string }): ()
 			SerdesFunctions.WriteEVENT_CreativeGive(Value)
+		end
+	},
+	Resurrect = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_Resurrect(Value)
 		end
 	},
 })

@@ -430,3 +430,10 @@ event CreativeGive {
 		Id: string(1..48)
 	}
 }
+
+-- Fantasma perto de uma pedra da ressurreição pede para voltar (GhostService).
+event Resurrect {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}

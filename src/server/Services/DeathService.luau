@@ -38,6 +38,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local CreativeService = require(script.Parent.CreativeService)
+local GhostService = require(script.Parent.GhostService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
 local RankService = require(script.Parent.RankService)
@@ -97,6 +98,11 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	-- nem mandar outra tela de morte.
 	local character = player.Character
 	if character == nil or dying[player] then
+		return
+	end
+	-- Coração de Dragão ou Coroa do Anjo, com pedra no mundo: vira fantasma em
+	-- vez de morrer agora (GhostService; o tempo acabou, ele chama kill de novo).
+	if GhostService.tryGhost(player, causeKey, killer) then
 		return
 	end
 	-- Quem matou só vale se ainda está no jogo e não é o próprio morto.

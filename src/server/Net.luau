@@ -183,6 +183,7 @@ Queue.Reliable[28] = table.create(256)
 Queue.Reliable[30] = table.create(256)
 Queue.Reliable[32] = table.create(256)
 Queue.Reliable[33] = table.create(256)
+Queue.Reliable[34] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
@@ -687,6 +688,10 @@ function SerdesFunctions.ReadEVENT_CreativeGive(): ({ Id: string })
 	return Value
 end
 
+function SerdesFunctions.ReadEVENT_Resurrect(): (nil)
+	return nil
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -832,6 +837,9 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	CreativeGive = {
+		On = NOOP
+	},
+	Resurrect = {
 		On = NOOP
 	},
 	})
@@ -1115,6 +1123,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"CreativeGive\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[33], {Player, Value} :: {any})
+			end
+		elseif Index == 34 then
+			local Value: nil = SerdesFunctions.ReadEVENT_Resurrect()
+			if Events.Reliable[34] ~= nil then
+				task.spawn(Events.Reliable[34], Player, Value)
+			else
+				if #Queue.Reliable[34] > 256 then
+					warn("[Blink]: Event queue of \"Resurrect\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[34], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -2034,6 +2052,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[33] == Listener then
 					Events.Reliable[33] = nil
+				end
+			end
+		end
+	},
+	Resurrect = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[34] = Listener
+			for Index, Arguments in Queue.Reliable[34] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[34] = {}
+			return function (): ()
+				if Events.Reliable[34] == Listener then
+					Events.Reliable[34] = nil
 				end
 			end
 		end

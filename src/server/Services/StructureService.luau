@@ -31,6 +31,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local EmeraldRules = require(ReplicatedStorage.Shared.Build.EmeraldRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
@@ -404,6 +405,10 @@ local function place(player: Player, character: Model)
 	if player.Parent ~= Players or player.Character ~= character then
 		return
 	end
+	-- Fantasma não constrói (GhostService).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	if CraftService.isCrafting(player) then
 		return
 	end
@@ -530,6 +535,28 @@ end
 function StructureService.Start(_self)
 	getFolder()
 	Net.SetBuildRotation.On(onSetRotation)
+	if RunService:IsStudio() then
+		-- ServerStorage.DevPlace:Invoke(player, itemId) -> boolean: coloca a peça
+		-- `itemId` no ponto à frente do jogador, sem gastar item nem checar lugar
+		-- livre (para testar construções; só no Studio).
+		local command = Instance.new("BindableFunction")
+		command.Name = "DevPlace"
+		command.OnInvoke = function(player: Player, itemId: string): boolean
+			local item = Defs.Items[itemId]
+			local def = if item and item.category == "placeable" then item.structure else nil
+			local root = rootOf(player.Character)
+			if def == nil or root == nil then
+				return false
+			end
+			local look = root.CFrame.LookVector
+			local flat = Vector3.new(look.X, 0, look.Z)
+			local dir = if flat.Magnitude > 1e-3 then flat.Unit else Vector3.new(0, 0, -1)
+			local rx, rz = root.Position.X, root.Position.Z
+			local x, z = BuildRules.placePoint(rx, rz, dir.X, dir.Z)
+			return create(player, itemId, def, x, z, BuildRules.radiusOf(def), BuildRules.facingYaw(x, z, rx, rz, 0))
+		end
+		command.Parent = game:GetService("ServerStorage")
+	end
 	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

@@ -14,6 +14,7 @@ local CratePanel = require(script.Parent:WaitForChild("CratePanel"))
 local Clock = require(script.Parent:WaitForChild("Clock"))
 local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
+local GhostPanel = require(script.Parent:WaitForChild("GhostPanel"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local InteractPanel = require(script.Parent:WaitForChild("InteractPanel"))
 local ItemTooltip = require(script.Parent:WaitForChild("ItemTooltip"))
@@ -43,6 +44,7 @@ local function App(): ScreenGui
 		TutorialPanel(),
 		PinnedRecipe(),
 		Notifications.Component(),
+		GhostPanel(),
 		ChestPanel(),
 		CratePanel(),
 		InteractPanel(),

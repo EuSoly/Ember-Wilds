@@ -167,6 +167,9 @@ return table.freeze({
 	-- Modo criativo ligado (true/nil), atributo no Player escrito só pelo
 	-- CreativeService a partir do perfil; o cliente lê para o livro.
 	Creative = "Creative",
+	-- Fantasma (GhostService): instante (relógio do servidor) em que o tempo de
+	-- fantasma acaba; nil = não é fantasma. Atributo no Player.
+	GhostUntil = "GhostUntil",
 	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
 	-- o frio sobe (SurvivalService).
 	HeatSourceTag = "HeatSource",

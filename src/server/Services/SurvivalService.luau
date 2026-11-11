@@ -10,6 +10,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local DayCycle = require(ReplicatedStorage.Shared.DayCycle)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -111,6 +112,10 @@ local function fireAround(position: Vector3): (boolean, boolean)
 end
 
 local function step(player: Player, dt: number, night: boolean)
+	-- Fantasma: as barras não mudam (GhostService).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	local root = aliveRoot(player)
 	local character = player.Character
 	if root == nil or character == nil then
