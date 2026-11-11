@@ -88,6 +88,18 @@ return {
 		end
 	end,
 
+	["shield wrench and gear bonus show in the sheet"] = function()
+		local shield = keys("gold_shield")
+		assert(has(shield, "info.defensePlayer") and has(shield, "info.defenseMob"), "escudo mostra as defesas")
+		assert(has(keys("wrench"), "info.repair"), "chave conserta")
+		assert(has(keys("dragon_sword"), "info.gearBonus"), "bônus de conjunto")
+		local l = {}
+		for _, line in ItemInfo.lines(Defs.Items.wrench, math.huge) do
+			table.insert(l, Strings.format(line.key, line.vars))
+		end
+		assert(has(l, "Conserta 70 de vida das suas construções"), table.concat(l, " | "))
+	end,
+
 	["armor effect texts exist"] = function()
 		for _, key in
 			{

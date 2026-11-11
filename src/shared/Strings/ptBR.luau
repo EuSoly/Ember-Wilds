@@ -63,6 +63,8 @@ return table.freeze({
 	["info.reach"] = "Alcance +{value}",
 	["info.defensePlayer"] = "Defesa contra jogadores: {value}",
 	["info.defenseMob"] = "Defesa contra criaturas: {value}",
+	["info.repair"] = "Conserta {value} de vida das suas construções",
+	["info.gearBonus"] = "+{value} de dano com o capacete do mesmo conjunto",
 	["info.warm"] = "Protege do frio",
 	["info.fireproof"] = "Anula o calor do fogo",
 	["info.oxygen"] = "Fôlego dura mais na água",

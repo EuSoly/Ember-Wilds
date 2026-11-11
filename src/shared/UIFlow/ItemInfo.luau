@@ -67,6 +67,15 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 	add("info.structureDamage", def.structureDamage)
 	add("info.reach", def.reach)
 	add("info.equipLock", def.equipLock)
+	local shield = def.shield
+	if shield then
+		add("info.defensePlayer", shield.defense)
+		add("info.defenseMob", shield.mobDefense)
+	end
+	add("info.repair", def.repair)
+	if def.gearBonus then
+		add("info.gearBonus", def.gearBonus.damage)
+	end
 	local armor = def.armor
 	if armor then
 		if armor.defense and armor.defense > 0 then
