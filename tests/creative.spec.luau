@@ -18,6 +18,11 @@ return {
 		assert(CreativeRules.giveCount(small) == 10, "pilha menor que 100: a pilha")
 	end,
 
+	["creative items stay with the creative player"] = function()
+		assert(not CreativeRules.sharesItems(true), "criativo não deixa caixa nem guarda em baú")
+		assert(CreativeRules.sharesItems(false), "jogador normal deixa caixa e usa baú")
+	end,
+
 	["one give at a time"] = function()
 		assert(CreativeRules.canGive(nil, 5), "primeiro pedido")
 		assert(not CreativeRules.canGive(5, 5 + CreativeRules.GIVE_EVERY / 2), "rápido demais")

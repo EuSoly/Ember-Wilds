@@ -35,10 +35,12 @@ local Workspace = game:GetService("Workspace")
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local CrateModel = require(ReplicatedStorage.Shared.Models.CrateModel)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
+local CreativeRules = require(ReplicatedStorage.Shared.Creative.CreativeRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CosmeticService = require(script.Parent.CosmeticService)
+local CreativeService = require(script.Parent.CreativeService)
 local DeathService = require(script.Parent.DeathService)
 local InventoryService = require(script.Parent.InventoryService)
 local MobService = require(script.Parent.MobService)
@@ -395,6 +397,10 @@ end
 
 -- Ouvinte do DeathService: sem pausa (a morte espera os ouvintes).
 local function onPlayerDeath(player: Player, character: Model, killer: Player?)
+	-- Modo criativo: os itens somem com ele (não viram caixa para os outros).
+	if not CreativeRules.sharesItems(CreativeService.isOn(player)) then
+		return
+	end
 	local items = belongingsOf(player)
 	if #items == 0 then
 		return

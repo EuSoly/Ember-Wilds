@@ -20,4 +20,10 @@ function CreativeRules.canGive(last: number?, now: number): boolean
 	return last == nil or now - last >= CreativeRules.GIVE_EVERY
 end
 
+-- Os itens do jogador podem ir para outros? Do criativo, não: ao morrer não
+-- vira caixa e não guarda em baú (senão o amigo farma com os itens dele).
+function CreativeRules.sharesItems(creative: boolean): boolean
+	return not creative
+end
+
 return CreativeRules

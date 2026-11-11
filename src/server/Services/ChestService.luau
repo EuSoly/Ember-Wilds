@@ -15,8 +15,10 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local CreativeRules = require(ReplicatedStorage.Shared.Creative.CreativeRules)
 local ChestRules = require(ReplicatedStorage.Shared.Build.ChestRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local CreativeService = require(script.Parent.CreativeService)
 local InventoryService = require(script.Parent.InventoryService)
 local StructureService = require(script.Parent.StructureService)
 local TutorialService = require(script.Parent.TutorialService)
@@ -108,7 +110,8 @@ end
 
 -- Pôr `Count` (1 ou 10) do slot `Slot` no baú. Sem pausa até o fim.
 local function onPut(player: Player, data: { Chest: Instance?, Slot: number, Count: number })
-	if data.Chest == nil then
+	-- Modo criativo não guarda em baú (os itens não passam para os outros).
+	if data.Chest == nil or not CreativeRules.sharesItems(CreativeService.isOn(player)) then
 		return
 	end
 	local entry = validChest(player, data.Chest)

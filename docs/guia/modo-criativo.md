@@ -24,6 +24,7 @@ game.ServerStorage.DevCreative:Invoke(p, false) -- desliga
   - ranking semanal, vida e abates (`RankService`);
   - estatísticas do perfil (`StatsService`), incluindo mortes e tempo jogado.
 - **Abate:** matar um jogador que está no criativo não conta abate para quem matou.
+- **Itens não passam para os outros:** ao morrer, o jogador do criativo não deixa caixa (os itens somem com ele), e não consegue guardar em baú. Assim ninguém farma com os itens dele.
 
 O resto do jogo é igual: fome, frio, dano, mobs e morte continuam valendo.
 
