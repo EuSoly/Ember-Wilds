@@ -55,6 +55,14 @@ local Items: { [string]: ItemDef } = {
 
 	-- Materiais das peças de cabeça que o jogo ainda não dá (mobs, biomas, minérios
 	-- e quests futuros): só teste até existirem. Nomes iguais aos ícones em Assets.Icons.
+	emerald = { id = "emerald", testOnly = true, nameKey = "item.emerald", category = "resource", maxStack = 255 },
+	sandworm_juice = {
+		id = "sandworm_juice",
+		testOnly = true,
+		nameKey = "item.sandworm_juice",
+		category = "misc",
+		maxStack = 255,
+	},
 	diamond = { id = "diamond", testOnly = true, nameKey = "item.diamond", category = "resource", maxStack = 255 },
 	amethyst = { id = "amethyst", testOnly = true, nameKey = "item.amethyst", category = "resource", maxStack = 255 },
 	winter_fur = {
@@ -1156,7 +1164,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "spike", health = 150, radius = 3, spikeDamage = 10 },
+		structure = { kind = "spike", health = 150, radius = 3, spikeDamage = 10, spikeHitDamage = 2 },
 	},
 	stone_spike = {
 		id = "stone_spike",
@@ -1164,7 +1172,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "spike", health = 300, radius = 3, spikeDamage = 20 },
+		structure = { kind = "spike", health = 300, radius = 3, spikeDamage = 20, spikeHitDamage = 3 },
 	},
 	gold_spike = {
 		id = "gold_spike",
@@ -1172,7 +1180,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "spike", health = 600, radius = 3, spikeDamage = 30 },
+		structure = { kind = "spike", health = 600, radius = 3, spikeDamage = 30, spikeHitDamage = 3 },
 	},
 	chest = {
 		id = "chest",
@@ -1181,79 +1189,70 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 255,
 		structure = { kind = "chest", health = 500, radius = 2.3 },
 	},
-	-- G8: estruturas novas, só para teste (testOnly). Números provisórios salvo onde diz wiki.
+	-- Construções da config oficial do Starve (11/11; veja docs/guia/construcao.md).
 	wood_spike_door = {
 		id = "wood_spike_door",
-		testOnly = true,
 		nameKey = "item.wood_spike_door",
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 1000, radius = 3, spikeDamage = 10 },
+		structure = { kind = "spike_door", health = 100, radius = 3, spikeDamage = 5, spikeHitDamage = 1 },
 	},
 	stone_spike_door = {
 		id = "stone_spike_door",
-		testOnly = true,
 		nameKey = "item.stone_spike_door",
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 1500, radius = 3, spikeDamage = 20 },
+		structure = { kind = "spike_door", health = 200, radius = 3, spikeDamage = 10, spikeHitDamage = 2 },
 	},
 	gold_spike_door = {
 		id = "gold_spike_door",
-		testOnly = true,
 		nameKey = "item.gold_spike_door",
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 2000, radius = 3, spikeDamage = 30 },
+		structure = { kind = "spike_door", health = 400, radius = 3, spikeDamage = 15, spikeHitDamage = 2 },
 	},
 	stone_extractor = {
 		id = "stone_extractor",
-		testOnly = true,
 		nameKey = "item.stone_extractor",
 		category = "placeable",
 		maxStack = 255,
 		structure = {
 			radius = 2.7, -- tamanho do modelo (bancada)
 			kind = "extractor",
-			health = 300, -- provisório
-			-- cycleSeconds: wiki; o resto provisório
+			health = 2000,
 			extractor = {
 				output = "stone",
 				woodPerCycle = 2,
 				cycleSeconds = 10,
 				yield = 1,
-				maxWood = 100,
-				maxStock = 100,
+				maxWood = 255,
+				maxStock = 255,
 			},
 		},
 	},
 	gold_extractor = {
 		id = "gold_extractor",
-		testOnly = true,
 		nameKey = "item.gold_extractor",
 		category = "placeable",
 		maxStack = 255,
 		structure = {
 			radius = 2.7, -- tamanho do modelo (bancada)
 			kind = "extractor",
-			health = 300, -- provisório
-			-- cycleSeconds: wiki; o resto provisório
+			health = 2000,
 			extractor = {
 				output = "gold",
 				woodPerCycle = 2,
 				cycleSeconds = 10,
 				yield = 1,
-				maxWood = 100,
-				maxStock = 100,
+				maxWood = 255,
+				maxStock = 255,
 			},
 		},
 	},
-	-- Builds de reidite (09/11): só para teste (testOnly), para ver os modelos no
-	-- jogo. Números provisórios, na escada dos outros tiers (vida +500 por tier
-	-- nas paredes/portas; espinho dobra a vida e soma 10 de dano por tier).
+	-- Diamante, ametista e reidite: só para teste até os minérios existirem.
 	reidite_wall = {
 		id = "reidite_wall",
 		testOnly = true,
@@ -1261,7 +1260,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "wall", health = 3500, radius = 3 },
+		structure = { kind = "wall", health = 4000, radius = 3 },
 	},
 	reidite_door = {
 		id = "reidite_door",
@@ -1270,7 +1269,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "door", health = 3500, radius = 3 },
+		structure = { kind = "door", health = 4000, radius = 3 },
 	},
 	reidite_spike = {
 		id = "reidite_spike",
@@ -1279,7 +1278,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "spike", health = 4800, radius = 3, spikeDamage = 60 },
+		structure = { kind = "spike", health = 3000, radius = 3, spikeDamage = 60, spikeHitDamage = 5 },
 	},
 	reidite_spike_door = {
 		id = "reidite_spike_door",
@@ -1288,7 +1287,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 3500, radius = 3, spikeDamage = 60 },
+		structure = { kind = "spike_door", health = 2000, radius = 3, spikeDamage = 35, spikeHitDamage = 4 },
 	},
 	reidite_extractor = {
 		id = "reidite_extractor",
@@ -1299,51 +1298,186 @@ local Items: { [string]: ItemDef } = {
 		structure = {
 			radius = 2.7, -- mesmo modelo-base dos outros extratores
 			kind = "extractor",
-			health = 300, -- provisório
+			health = 2000,
 			extractor = {
 				output = "reidite",
 				woodPerCycle = 2,
 				cycleSeconds = 10,
 				yield = 1,
-				maxWood = 100,
-				maxStock = 100,
+				maxWood = 255,
+				maxStock = 255,
 			},
 		},
 	},
+	diamond_wall = {
+		id = "diamond_wall",
+		testOnly = true,
+		nameKey = "item.diamond_wall",
+		category = "placeable",
+		tier = "diamond",
+		maxStack = 255,
+		structure = { kind = "wall", health = 2500, radius = 3 },
+	},
+	diamond_door = {
+		id = "diamond_door",
+		testOnly = true,
+		nameKey = "item.diamond_door",
+		category = "placeable",
+		tier = "diamond",
+		maxStack = 255,
+		structure = { kind = "door", health = 2500, radius = 3 },
+	},
+	diamond_spike = {
+		id = "diamond_spike",
+		testOnly = true,
+		nameKey = "item.diamond_spike",
+		category = "placeable",
+		tier = "diamond",
+		maxStack = 255,
+		structure = { kind = "spike", health = 1200, radius = 3, spikeDamage = 40, spikeHitDamage = 4 },
+	},
+	diamond_spike_door = {
+		id = "diamond_spike_door",
+		testOnly = true,
+		nameKey = "item.diamond_spike_door",
+		category = "placeable",
+		tier = "diamond",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 800, radius = 3, spikeDamage = 25, spikeHitDamage = 3 },
+	},
+	diamond_extractor = {
+		id = "diamond_extractor",
+		testOnly = true,
+		nameKey = "item.diamond_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.7, -- mesmo raio dos outros extratores
+			kind = "extractor",
+			health = 2000,
+			extractor = {
+				output = "diamond",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 255,
+				maxStock = 255,
+			},
+		},
+	},
+	amethyst_wall = {
+		id = "amethyst_wall",
+		testOnly = true,
+		nameKey = "item.amethyst_wall",
+		category = "placeable",
+		tier = "amethyst",
+		maxStack = 255,
+		structure = { kind = "wall", health = 3500, radius = 3 },
+	},
+	amethyst_door = {
+		id = "amethyst_door",
+		testOnly = true,
+		nameKey = "item.amethyst_door",
+		category = "placeable",
+		tier = "amethyst",
+		maxStack = 255,
+		structure = { kind = "door", health = 3500, radius = 3 },
+	},
+	amethyst_spike = {
+		id = "amethyst_spike",
+		testOnly = true,
+		nameKey = "item.amethyst_spike",
+		category = "placeable",
+		tier = "amethyst",
+		maxStack = 255,
+		structure = { kind = "spike", health = 2400, radius = 3, spikeDamage = 50, spikeHitDamage = 4 },
+	},
+	amethyst_spike_door = {
+		id = "amethyst_spike_door",
+		testOnly = true,
+		nameKey = "item.amethyst_spike_door",
+		category = "placeable",
+		tier = "amethyst",
+		maxStack = 255,
+		structure = { kind = "spike_door", health = 1600, radius = 3, spikeDamage = 30, spikeHitDamage = 3 },
+	},
+	amethyst_extractor = {
+		id = "amethyst_extractor",
+		testOnly = true,
+		nameKey = "item.amethyst_extractor",
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			radius = 2.7, -- mesmo raio dos outros extratores
+			kind = "extractor",
+			health = 2000,
+			extractor = {
+				output = "amethyst",
+				woodPerCycle = 2,
+				cycleSeconds = 10,
+				yield = 1,
+				maxWood = 255,
+				maxStock = 255,
+			},
+		},
+	},
+	-- Totem: cria o time do dono (TeamService). Vida: escolha nossa (a config não tem).
+	-- Raio no máximo aceito (4): o modelo tem 4,3 (veja docs/pendencias.md).
+	totem = {
+		id = "totem",
+		nameKey = "item.totem",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "totem", health = 500, radius = 4 },
+	},
+	-- Pedra da ressurreição (GhostService). Raio no máximo aceito (o modelo tem 4,4).
+	resurrection_stone = {
+		id = "resurrection_stone",
+		testOnly = true,
+		nameKey = "item.resurrection_stone",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "resurrection", health = 200, radius = 4 },
+	},
+	-- Máquina de esmeralda (EmeraldService): pontos por minuto ao dono; destruída, o dono morre.
+	emerald_machine = {
+		id = "emerald_machine",
+		testOnly = true,
+		nameKey = "item.emerald_machine",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "emerald_machine", health = 1000, radius = 2.9 },
+	},
 	furnace = {
 		id = "furnace",
-		testOnly = true,
 		nameKey = "item.furnace",
 		category = "placeable",
 		maxStack = 255,
 		structure = {
 			radius = 3, -- tamanho do modelo (bancada)
 			kind = "furnace",
-			health = 500, -- provisório
+			health = 1000,
 			heatRadius = 24, -- provisório
 			station = "fire",
-			furnace = { burnEvery = 6, maxWood = 200 }, -- burnEvery: wiki; maxWood provisório
+			furnace = { burnEvery = 5, maxWood = 255 }, -- Starve: 1 madeira a cada 5 s
 		},
 	},
 	bridge = {
 		id = "bridge",
-		testOnly = true,
 		nameKey = "item.bridge",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "bridge", health = 300, radius = 3.1, snap = true }, -- provisório
+		structure = { kind = "bridge", health = 300, radius = 3.1, snap = true }, -- vida: escolha nossa
 	},
 	roof = {
 		id = "roof",
-		testOnly = true,
 		nameKey = "item.roof",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "roof", health = 300, radius = 3.2, snap = true }, -- provisório
+		structure = { kind = "roof", health = 1000, radius = 3.2, snap = true }, -- vida: wiki
 	},
 	sign = {
 		id = "sign",
-		testOnly = true,
 		nameKey = "item.sign",
 		category = "placeable",
 		maxStack = 255,
@@ -1364,14 +1498,13 @@ local Items: { [string]: ItemDef } = {
 	},
 	bed = {
 		id = "bed",
-		testOnly = true,
 		nameKey = "item.bed",
 		category = "placeable",
 		maxStack = 255,
 		structure = {
 			radius = 3.5, -- tamanho do modelo (bancada)
 			kind = "bed",
-			health = 300, -- provisório
+			health = 400,
 			bed = { regenFactor = 2, drainFactor = 0.5 },
 		},
 	},

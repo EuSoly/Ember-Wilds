@@ -183,47 +183,26 @@ local Recipes: { [string]: RecipeDef } = {
 	wood_spike_door = recipe(
 		"wood_spike_door",
 		1,
-		{ ingredient("wood_door", 1), ingredient("wood_spike", 1) },
-		10,
+		{ i("wood_door", 1), i("wood", 80), i("stone", 60) },
+		20,
 		"workbench",
 		51
-	), -- provisório
-	stone_spike_door = recipe(
-		"stone_spike_door",
-		1,
-		{ ingredient("stone_door", 1), ingredient("stone_spike", 1) },
-		10,
-		"workbench",
-		52
-	), -- provisório
+	),
+	stone_spike_door = recipe("stone_spike_door", 1, { i("stone_door", 1), i("stone", 140) }, 20, "workbench", 52),
 	gold_spike_door = recipe(
 		"gold_spike_door",
 		1,
-		{ ingredient("gold_door", 1), ingredient("gold_spike", 1) },
-		10,
+		{ i("gold_door", 1), i("gold", 80), i("stone", 60) },
+		20,
 		"workbench",
 		53
-	), -- provisório
-	stone_extractor = recipe(
-		"stone_extractor",
-		1,
-		{ ingredient("wood", 200), ingredient("stone", 50) },
-		10,
-		"workbench",
-		54
-	), -- provisório
-	gold_extractor = recipe(
-		"gold_extractor",
-		1,
-		{ ingredient("wood", 200), ingredient("gold", 30) },
-		10,
-		"workbench",
-		55
-	), -- provisório
-	furnace = recipe("furnace", 1, { ingredient("stone", 100), ingredient("gold", 30) }, 10, "workbench", 44), -- provisório
-	bridge = recipe("bridge", 1, { ingredient("wood", 30) }, 5, "workbench", 45), -- provisório
-	roof = recipe("roof", 1, { ingredient("wood", 25) }, 5, "workbench", 46), -- provisório
-	sign = recipe("sign", 1, { ingredient("wood", 20) }, 5, "workbench", 47), -- wiki
+	),
+	stone_extractor = recipe("stone_extractor", 1, { i("wood", 50), i("stone", 100) }, 90, "workbench", 54),
+	gold_extractor = recipe("gold_extractor", 1, { i("stone", 60), i("gold", 120) }, 90, "workbench", 55),
+	furnace = recipe("furnace", 1, { i("wood", 150), i("stone", 50), i("gold", 15) }, 20, "workbench", 44),
+	bridge = recipe("bridge", 1, { i("wood", 15) }, 5, "workbench", 45),
+	roof = recipe("roof", 1, { i("wood", 30) }, 5, "workbench", 46),
+	sign = recipe("sign", 1, { i("wood", 20) }, 5, "workbench", 47),
 	well = recipe("well", 1, { ingredient("stone", 60) }, 8, "workbench", 48), -- provisório
 	bed = recipe("bed", 1, {
 		ingredient("wood", 100),
@@ -607,6 +586,78 @@ local Recipes: { [string]: RecipeDef } = {
 	gold_pitchfork = recipe("gold_pitchfork", 1, { i("pitchfork", 1), i("pitchfork_part", 1) }, 60, "workbench", 119),
 	watering_can = recipe("watering_can", 1, { i("wood", 50) }, 5, "workbench", 120),
 	machete = recipe("machete", 1, { i("stone", 70), i("wood", 50) }, 10, "workbench", 121),
+	reidite_wall = recipe("reidite_wall", 1, { i("amethyst_wall", 1), i("reidite", 5) }, 5, "workbench", 130),
+	reidite_door = recipe("reidite_door", 1, { i("amethyst_door", 1), i("reidite", 15) }, 8, "workbench", 131),
+	reidite_spike = recipe(
+		"reidite_spike",
+		1,
+		{ i("reidite_wall", 1), i("reidite", 40), i("gold", 30) },
+		20,
+		"workbench",
+		132
+	),
+	reidite_spike_door = recipe(
+		"reidite_spike_door",
+		1,
+		{ i("reidite_door", 1), i("reidite", 80), i("gold", 60) },
+		20,
+		"workbench",
+		133
+	),
+	reidite_extractor = recipe("reidite_extractor", 1, { i("amethyst", 90), i("reidite", 180) }, 90, "workbench", 134),
+	-- Construções novas (config oficial do Starve; 11/11).
+	diamond_wall = recipe("diamond_wall", 1, { i("gold_wall", 1), i("diamond", 11) }, 5, "workbench", 122),
+	diamond_door = recipe("diamond_door", 1, { i("gold_door", 1), i("diamond", 21) }, 8, "workbench", 123),
+	diamond_spike = recipe(
+		"diamond_spike",
+		1,
+		{ i("diamond_wall", 1), i("diamond", 40), i("stone", 30) },
+		20,
+		"workbench",
+		124
+	),
+	diamond_spike_door = recipe(
+		"diamond_spike_door",
+		1,
+		{ i("diamond_door", 1), i("diamond", 80), i("stone", 60) },
+		20,
+		"workbench",
+		125
+	),
+	amethyst_wall = recipe("amethyst_wall", 1, { i("diamond_wall", 1), i("amethyst", 8) }, 5, "workbench", 126),
+	amethyst_door = recipe("amethyst_door", 1, { i("diamond_door", 1), i("amethyst", 18) }, 8, "workbench", 127),
+	amethyst_spike = recipe(
+		"amethyst_spike",
+		1,
+		{ i("amethyst_wall", 1), i("amethyst", 40), i("stone", 30) },
+		20,
+		"workbench",
+		128
+	),
+	amethyst_spike_door = recipe(
+		"amethyst_spike_door",
+		1,
+		{ i("amethyst_door", 1), i("amethyst", 80), i("stone", 60) },
+		20,
+		"workbench",
+		129
+	),
+	diamond_extractor = recipe("diamond_extractor", 1, { i("gold", 70), i("diamond", 140) }, 90, "workbench", 135),
+	amethyst_extractor = recipe(
+		"amethyst_extractor",
+		1,
+		{ i("diamond", 80), i("amethyst", 160) },
+		90,
+		"workbench",
+		136
+	),
+	totem = recipe("totem", 1, { i("wood", 50) }, 10, "workbench", 137),
+	resurrection_stone = recipe("resurrection_stone", 1, { i("diamond", 40), i("stone", 45) }, 20, "workbench", 138),
+	emerald_machine = recipe("emerald_machine", 1, {
+		i("resurrection_stone", 1),
+		i("emerald", 40),
+		i("sandworm_juice", 1),
+	}, 200, "workbench", 139, FIRE_WATER),
 }
 
 return table.freeze(Recipes)

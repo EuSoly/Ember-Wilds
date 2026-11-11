@@ -852,6 +852,9 @@ local STRUCTURE_KINDS: { [string]: boolean } = {
 	sign = true,
 	well = true,
 	bed = true,
+	totem = true,
+	resurrection = true,
+	emerald_machine = true,
 }
 -- Bloco de dados que só vale (e é obrigatório) no seu kind: campos numéricos > 0.
 local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } } = {
@@ -866,6 +869,14 @@ local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } }
 }
 
 local function validateStructureBlocks(errors: { string }, key: string, structure: Types.StructureDef)
+	local hit = structure.spikeHitDamage
+	if hit ~= nil then
+		if structure.kind ~= "spike" and structure.kind ~= "spike_door" then
+			table.insert(errors, `Item "{key}": spikeHitDamage só vale para espinho e porta com espinhos`)
+		elseif not (type(hit) == "number" and hit > 0 and hit < math.huge) then
+			table.insert(errors, `Item "{key}": spikeHitDamage deve ser maior que 0`)
+		end
+	end
 	if structure.snap ~= nil and type(structure.snap) ~= "boolean" then
 		table.insert(errors, `Item "{key}": structure.snap deve ser true ou false`)
 	end
