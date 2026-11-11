@@ -26,6 +26,7 @@ local create = vide.create
 local REFRESH = 0.1 -- 10 vezes por segundo
 local MARKER = 18 -- px da seta do jogador
 local OUTLINE = Color3.fromRGB(45, 28, 16)
+local OVERLAP = 0.035 -- fração do lado que o mapa entra por baixo da moldura
 
 -- Desenho de cada bioma (gerado por scripts/groundmap: `lune run forest minimap
 -- serve`; a linha de cima é −Z e a esquerda −X). Sem imagem: só a cor.
@@ -109,8 +110,10 @@ local function Minimap(): Frame
 	end))
 
 	local framed = HudImages.has(HudImages.MINIMAP_FRAME)
-	-- Com a moldura de madeira, o mapa fica dentro do furo dela.
-	local inner = if framed then 1 - 2 * HudImages.MINIMAP_INSET else 0.88
+	-- Com a moldura de madeira, o mapa fica dentro do furo dela e entra um pouco
+	-- por baixo da madeira (OVERLAP): encostado só na borda, sobrava um fio
+	-- entre o desenho e a moldura (visto em 11/11).
+	local inner = if framed then 1 - 2 * (HudImages.MINIMAP_INSET - OVERLAP) else 0.88
 	local ground = create("Frame")({
 		Name = "Ground",
 		AnchorPoint = Vector2.new(0.5, 0.5),
