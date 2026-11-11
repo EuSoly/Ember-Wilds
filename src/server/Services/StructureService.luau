@@ -207,12 +207,31 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 	if not alive[entry] then
 		return
 	end
+	local allied = BuildRules.areAllies(entry.owner.UserId, attacker.UserId)
+	-- Chave inglesa numa peça aliada: conserta (e não abre a porta).
+	if allied and item and item.repair then
+		local amount = BuildRules.repairAmount(item, entry.health, entry.def.health)
+		if amount > 0 then
+			entry.health += amount
+			entry.model:SetAttribute(StatNames.StructureHealth, entry.health)
+		end
+		return
+	end
 	-- Porta do aliado: abre ou fecha, sem dano. Quem não é aliado só tira vida.
-	if BuildRules.isDoor(entry.def.kind) and BuildRules.areAllies(entry.owner.UserId, attacker.UserId) then
+	if BuildRules.isDoor(entry.def.kind) and allied then
 		toggleDoor(entry)
 		return
 	end
-	entry.health = math.max(entry.health - BuildRules.damageOf(item), 0)
+	-- Martelo contra peça de material acima do dele: só o mínimo.
+	local pieceDef = Defs.Items[entry.itemId]
+	local structureTier = pieceDef and pieceDef.tier and Defs.Tiers[pieceDef.tier]
+	local itemTier = item and item.tier and Defs.Tiers[item.tier]
+	local damage = BuildRules.damageOf(
+		item,
+		if structureTier then structureTier.order else nil,
+		if itemTier then itemTier.order else nil
+	)
+	entry.health = math.max(entry.health - damage, 0)
 	entry.model:SetAttribute(StatNames.StructureHealth, entry.health)
 	if entry.health <= 0 then
 		remove(entry)

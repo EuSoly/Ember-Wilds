@@ -818,7 +818,7 @@ function MobService.hit(mob: Mob, attacker: Player, item: Defs.ItemDef?)
 	if mob.dead or mob.flying then
 		return
 	end
-	MobService.damage(mob, MobRules.damageOf(item), attacker)
+	MobService.damage(mob, MobRules.damageOf(item, ArmorService.worn(attacker)), attacker)
 	local knockback = HeldItem.knockback(item)
 	local root = rootOf(attacker.Character)
 	if not mob.dead and knockback > 0 and root then

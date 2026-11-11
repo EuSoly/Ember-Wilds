@@ -48,6 +48,12 @@ function ArmorService.modifiers(player: Player): ArmorRules.Modifiers
 	return ArmorRules.modifiers(Defs.Items[itemId])
 end
 
+-- Item da peça vestida (nil sem peça ou id que sumiu das Defs).
+function ArmorService.worn(player: Player): Defs.ItemDef?
+	local itemId = player:GetAttribute(StatNames.Armor)
+	return if type(itemId) == "string" then Defs.Items[itemId] else nil
+end
+
 -- Dá para vestir outra peça agora? (espera de ARMOR_SWAP_LOCK depois de vestir)
 function ArmorService.canSwap(player: Player): boolean
 	return ArmorRules.canSwap(lockUntil[player], Workspace:GetServerTimeNow())

@@ -17,6 +17,7 @@ local Workspace = game:GetService("Workspace")
 
 local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
 local CharacterBody = require(ReplicatedStorage.Shared.Models.CharacterBody)
+local Defs = require(ReplicatedStorage.Shared.Defs)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
 local ArmorService = require(script.Parent.ArmorService)
@@ -60,7 +61,10 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		return
 	end
 	if player and kind ~= "survival" then
-		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player), kind)
+		-- Escudo na mão (Starve): soma a defesa com a da peça de cabeça.
+		local heldId = character:GetAttribute(StatNames.Equipped)
+		local held = if type(heldId) == "string" then Defs.Items[heldId] else nil
+		amount = ArmorRules.reduce(amount, ArmorService.modifiers(player), kind, held)
 		if amount <= 0 then
 			return
 		end
