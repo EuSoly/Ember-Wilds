@@ -223,6 +223,13 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 		toggleDoor(entry)
 		return
 	end
+	-- Espinho alheio machuca quem bate nele (golpe de jogador: o capacete protege).
+	local hitBack = BuildRules.spikeHitDamage(entry.def, allied)
+	if hitBack > 0 and attacker.Character then
+		-- Require tardio: CharacterService → DeathService → StructureService (ciclo no topo).
+		local CharacterService = require(script.Parent.CharacterService) :: any
+		CharacterService.hurt(attacker.Character, hitBack, "death.cause.spike", "player")
+	end
 	-- Martelo contra peça de material acima do dele: só o mínimo.
 	local pieceDef = Defs.Items[entry.itemId]
 	local structureTier = pieceDef and pieceDef.tier and Defs.Tiers[pieceDef.tier]

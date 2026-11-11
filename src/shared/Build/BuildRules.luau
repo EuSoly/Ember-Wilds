@@ -199,6 +199,15 @@ function BuildRules.damageOf(item: ItemDef?, structureTier: number?, itemTier: n
 	return item.structureDamage
 end
 
+-- Dano em quem BATE numa peça (espinho e porta com espinhos, Starve "hit"):
+-- 0 para o dono e os aliados, e para peça sem spikeHitDamage.
+function BuildRules.spikeHitDamage(def: StructureDef, allied: boolean): number
+	if allied or def.spikeHitDamage == nil then
+		return 0
+	end
+	return def.spikeHitDamage
+end
+
 -- Vida que a chave inglesa devolve a uma construção (0 sem chave ou cheia).
 function BuildRules.repairAmount(item: ItemDef?, health: number, maxHealth: number): number
 	local repair = item and item.repair

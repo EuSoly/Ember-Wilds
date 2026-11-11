@@ -260,4 +260,12 @@ function spec.encaixe_escolhe_a_vizinha_mais_perto()
 	assert(close(x, 6) and close(z, 13), `casa da vizinha mais perto: {x}, {z}`)
 end
 
+function spec.espinho_machuca_quem_bate()
+	local spike: any = { kind = "spike", health = 150, spikeDamage = 10, spikeHitDamage = 2 }
+	assert(BuildRules.spikeHitDamage(spike, false) == 2, "estranho que bate leva o dano de bater")
+	assert(BuildRules.spikeHitDamage(spike, true) == 0, "dono e aliado não levam")
+	local wall: any = { kind = "wall", health = 1000 }
+	assert(BuildRules.spikeHitDamage(wall, false) == 0, "parede não machuca")
+end
+
 return spec
