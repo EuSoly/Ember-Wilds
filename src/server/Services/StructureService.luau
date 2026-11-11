@@ -32,6 +32,7 @@ local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
+local EmeraldRules = require(ReplicatedStorage.Shared.Build.EmeraldRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
@@ -364,6 +365,28 @@ local function create(
 	return true
 end
 
+-- Quantas peças do tipo `kind` o jogador tem no mundo.
+function StructureService.ownedOfKind(player: Player, kind: string): number
+	local count = 0
+	for entry in alive do
+		if entry.owner == player and entry.def.kind == kind then
+			count += 1
+		end
+	end
+	return count
+end
+
+-- Peças vivas do tipo `kind` (para os serviços que agem por peça).
+function StructureService.allOfKind(kind: string): { Entry }
+	local out: { Entry } = {}
+	for entry in alive do
+		if entry.def.kind == kind then
+			table.insert(out, entry)
+		end
+	end
+	return out
+end
+
 -- Vizinhas para o encaixe de uma peça `def` com snap perto de (x, z): peças
 -- já colocadas da mesma camada que também têm snap.
 function StructureService.snapNeighbors(def: Defs.StructureDef, x: number, z: number): { BuildRules.SnapNeighbor }
@@ -404,6 +427,10 @@ local function place(player: Player, character: Model)
 	local item = Defs.Items[itemId]
 	local def = if item and item.category == "placeable" then item.structure else nil
 	if def == nil then
+		return
+	end
+	-- Máquina de esmeralda: uma por jogador (EmeraldRules).
+	if def.kind == "emerald_machine" and not EmeraldRules.canPlace(StructureService.ownedOfKind(player, def.kind)) then
 		return
 	end
 

@@ -718,6 +718,7 @@ return table.freeze({
 	["death.cause.drown"] = "Afogado",
 	["death.cause.heat"] = "Calor",
 	["death.cause.spike"] = "Espinho",
+	["death.cause.emerald"] = "Máquina de esmeralda destruída",
 	["death.cause.player"] = "Jogador",
 
 	-- Coleta
