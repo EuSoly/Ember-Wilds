@@ -18,6 +18,7 @@ O perfil só existe no **servidor**. O cliente lê o que precisa nos atributos d
 | `Xp` | `{ Seeded, HourWindowStart, HourEarned }`: XP inicial já copiado do total de pontos? e a janela do teto de XP por hora. O XP em si é a estatística `xp_total` |
 | `Shop` | `{ Spins = { normal, paid }, Purchased, KitsOwned, KitBalance, KitActive, Passes }`: saldos de giros, produtos "once" comprados, kits para sempre, saldo de 1 vida por kit, kit ativo (`""` = nenhum) e passes. Veja `loja.md` |
 | `Tutorial` | `{ Done, SpinPopup }`: completou o tutorial da primeira partida; o pop-up da roleta ainda não foi mostrado. Veja `tutorial.md` |
+| `Creative` | `true` liga o modo criativo: todos os itens no livro com o botão Pegar, sem pontos, ranking nem estatísticas (veja `modo-criativo.md`). Padrão `false`. |
 | `PurchaseIdCache` | Reservado para as compras com Robux (F5) |
 
 O template fica em `src/shared/Data/ProfileTemplate.luau`. Nada de nomes ou chat no perfil (GDPR).

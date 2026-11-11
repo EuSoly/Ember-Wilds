@@ -2,6 +2,11 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Modo criativo (11/11)
+
+- **Conferir no Studio:** abrir o livro com o criativo ligado (título "Modo criativo", botão Pegar ao lado do Fixar, itens de teste nas abas). O Pegar em si já foi conferido (+100 madeira, espada de lava). O clique simulado pelo MCP não abriu o livro.
+- **Golpe no criativo sem pontos:** a regra está no `ScoreService`, mas o teste de coletar pelo MCP não chegou a acertar a árvore (a direção do golpe vem do cliente). Conferir coletando de verdade com o criativo ligado: os pontos devem ficar em 0.
+
 ## Ferramentas e armas (11/11)
 
 - **Dano mínimo garantido (decisão do Elizeu em aberto):** com capacete de lava + escudo de reidite (defesa 15), tudo até a lança de ouro tira 0 e a espada de ouro tira 7. As armas de diamante para cima ainda matam (espada de lava: 18 por golpe). Veja `docs/game-design/balanco-armas-defesa.md`. Opções: liberar capacete e arma do mesmo material juntos, e/ou deixar sempre passar uma parte do golpe (ex.: 25%).
