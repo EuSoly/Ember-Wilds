@@ -26,7 +26,9 @@ Os números ficam no bloco `armor` do item (`src/shared/Defs/Items.luau`), **em 
 | `explorer` | Mobs que caçam não escolhem o jogador como alvo e largam a perseguição. Qualquer golpe dele (em mob, jogador, recurso, construção ou caixa) desliga o efeito por **10 s** (`EXPLORER_OFF`). |
 | `hungerFactor`, `thirstFactor` | Multiplicam a queda da fome e da sede. Nenhuma peça do Starve usa. |
 
-**Só dado (nada lê ainda):** `blizzard` (nevasca), `sand` (tempestade de areia), `cropGrowth` (fazenda das túnicas), `stealImmune` (roubo), `tameLuck` e `digLuck` (Coroa da Sorte), `resurrect` (Coroa do Anjo), `crabFriend` (capacete de caranguejo), `spiderImmune` (capacete de lava), `pilotAcceleration` (avião), `gearSet` (bônus com as armas de dragão e lava). Quando o sistema chegar, ele lê esses campos.
+**Só dado (nada lê ainda):** `blizzard` (nevasca), `sand` (tempestade de areia), `cropGrowth` (fazenda das túnicas), `stealImmune` (roubo), `tameLuck` e `digLuck` (Coroa da Sorte), `resurrect` (Coroa do Anjo), `crabFriend` (capacete de caranguejo), `spiderImmune` (capacete de lava), `pilotAcceleration` (avião). Quando o sistema chegar, ele lê esses campos.
+
+`gearSet` (dragão, lava) já funciona: a espada ou a lança do mesmo conjunto bate mais forte com o capacete vestido (veja `ferramentas.md`).
 
 > As mordidas dos nossos mobs são mais fracas que no Starve (lobo 24 contra 40), mas a defesa contra mob entrou sem escala (decisão do Elizeu). Por isso o capacete protege proporcionalmente mais aqui. Está em `docs/pendencias.md`.
 

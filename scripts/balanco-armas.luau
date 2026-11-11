@@ -20,7 +20,11 @@ local COLUMNS: { { label: string, helmet: string?, shield: string? } } = {
 	{ label = "Cap. reidite", helmet = "reidite_helmet" },
 	{ label = "Cap. dragão", helmet = "dragon_helmet" },
 	{ label = "Cap. lava", helmet = "lava_helmet" },
+	{ label = "Madeira + escudo de madeira", helmet = "wood_helmet", shield = "wood_shield" },
+	{ label = "Pedra + escudo de pedra", helmet = "stone_helmet", shield = "stone_shield" },
 	{ label = "Ouro + escudo de ouro", helmet = "gold_helmet", shield = "gold_shield" },
+	{ label = "Diamante + escudo de diamante", helmet = "diamond_helmet", shield = "diamond_shield" },
+	{ label = "Ametista + escudo de ametista", helmet = "amethyst_helmet", shield = "amethyst_shield" },
 	{ label = "Reidite + escudo de reidite", helmet = "reidite_helmet", shield = "reidite_shield" },
 	{ label = "Lava + escudo de reidite", helmet = "lava_helmet", shield = "reidite_shield" },
 }

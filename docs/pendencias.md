@@ -4,7 +4,7 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 ## Ferramentas e armas (11/11)
 
-- **Dano mínimo garantido (decisão do Elizeu em aberto):** com capacete de lava + escudo de reidite (defesa 15), tudo até a lança de pedra tira 0 e a espada de ouro tira 7. As armas de diamante para cima ainda matam (espada de lava: 18 por golpe). Veja `docs/game-design/balanco-armas-defesa.md`. Opções: liberar capacete e arma do mesmo material juntos, e/ou deixar sempre passar uma parte do golpe (ex.: 25%).
+- **Dano mínimo garantido (decisão do Elizeu em aberto):** com capacete de lava + escudo de reidite (defesa 15), tudo até a lança de ouro tira 0 e a espada de ouro tira 7. As armas de diamante para cima ainda matam (espada de lava: 18 por golpe). Veja `docs/game-design/balanco-armas-defesa.md`. Opções: liberar capacete e arma do mesmo material juntos, e/ou deixar sempre passar uma parte do golpe (ex.: 25%).
 - **Dano em construção das armas:** espadas, lanças e picaretas usam a nossa escala (5 a 20 e 10 a 35), não a do Starve (picareta 0 a 1, espada 4 a 11). Só os martelos usam a do Starve. Rever quando balancear as bases.
 - **Conferir no Studio:** escudo de ouro + capacete de ouro tirando 21 da mordida de 24; martelo de pedra numa parede de ouro tirando 5; chave inglesa consertando uma parede própria; espada de lava com capacete de lava (+3).
 - **Só dado:** pás (cavar), forcados e regador (fazenda), facão (caixa de mob em dobro), lança de caranguejo (acalmar caranguejos), defesa contra flecha dos escudos.
@@ -13,7 +13,7 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 ## Armaduras (10/11)
 
 - **Defesa contra mob sem escala:** as mordidas daqui são mais fracas que no Starve (lobo 24 contra 40), mas o `mobDefense` entrou com o número do Starve (decisão do Elizeu). Com capacete de ouro, o lobo tira 11 e a aranha 3. Rever quando balancear os mobs.
-- **Efeitos só-dado:** roubo (capuz), fazenda (túnicas), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, bônus de conjunto (dragão e lava), aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
+- **Efeitos só-dado:** roubo (capuz), fazenda (túnicas), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
 - **Peças sem receita:** os gorros de Natal e de elfo (no Starve saem do presente de Natal).
 - **Itens de quest sem modelo:** gemas, cubos, óculos de piloto, peles de lobo negro e branco, vaga-lume (a grade mostra a sigla).
 - **Chapéu de pele esquentando:** de dia na floresta ele enche o frio, mas não passa para a barra de calor (o calor só vem do fogo e do bioma).

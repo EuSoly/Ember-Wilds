@@ -100,6 +100,11 @@ return {
 		assert(has(l, "Conserta 70 de vida das suas construções"), table.concat(l, " | "))
 	end,
 
+	["gear bonus fits in the tooltip"] = function()
+		local l = lines("dragon_sword")
+		assert(has(l, "+3 de dano com o capacete do mesmo conjunto"), table.concat(l, " | "))
+	end,
+
 	["armor effect texts exist"] = function()
 		for _, key in
 			{

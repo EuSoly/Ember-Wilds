@@ -61,6 +61,10 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 		table.insert(out, { key = "info.pickaxe", vars = { level = def.pickaxe.level } })
 	end
 	add("info.damage", def.mobDamage)
+	-- Logo depois do dano: é o que diferencia as armas de dragão e lava na dica.
+	if def.gearBonus then
+		add("info.gearBonus", def.gearBonus.damage)
+	end
 	if def.moveSpeed and def.moveSpeed < 1 then
 		add("info.speed", percent(def.moveSpeed))
 	end
@@ -73,9 +77,6 @@ function ItemInfo.lines(def: Types.ItemDef, max: number?): { Line }
 		add("info.defenseMob", shield.mobDefense)
 	end
 	add("info.repair", def.repair)
-	if def.gearBonus then
-		add("info.gearBonus", def.gearBonus.damage)
-	end
 	local armor = def.armor
 	if armor then
 		if armor.defense and armor.defense > 0 then
