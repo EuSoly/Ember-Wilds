@@ -1013,8 +1013,11 @@ for _, item in Items do
 		end
 		table.freeze(item.armor)
 	end
-	if item.pickaxe ~= nil then
-		table.freeze(item.pickaxe)
+	for _, field in { "pickaxe", "shield", "hammer", "gearBonus" } do
+		local block = (item :: any)[field]
+		if block ~= nil then
+			table.freeze(block)
+		end
 	end
 	if item.structure ~= nil then
 		for _, field in { "extractor", "furnace", "well", "bed" } do

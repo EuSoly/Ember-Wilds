@@ -28,11 +28,19 @@ local MobRules = {
 }
 
 -- Dano do golpe em mob: o do item, ou o de mão.
-function MobRules.damageOf(item: ItemDef?): number
-	if item ~= nil and type(item.mobDamage) == "number" then
-		return item.mobDamage
+-- Dano do golpe com `item` na mão (nil = mão). `armor` = peça de cabeça de
+-- quem bate: com o mesmo conjunto da arma (gearBonus), soma o bônus.
+function MobRules.damageOf(item: ItemDef?, armor: ItemDef?): number
+	if item == nil or type(item.mobDamage) ~= "number" then
+		return MobRules.HAND_DAMAGE
 	end
-	return MobRules.HAND_DAMAGE
+	local damage = item.mobDamage
+	local bonus = item.gearBonus
+	local worn = armor and armor.armor
+	if bonus and worn and worn.gearSet == bonus.set then
+		damage += bonus.damage
+	end
+	return damage
 end
 
 -- Teia por instante absoluto: número e ainda no prazo. NaN, nil e texto não prendem.

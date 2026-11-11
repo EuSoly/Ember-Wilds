@@ -141,6 +141,23 @@ export type ItemDef = {
 	-- Animação do golpe com o item na mão: "swing" (padrão, arco de lado, como a
 	-- picareta e a espada) ou "thrust" (estocada para a frente: as lanças). Só visual.
 	attackAnim: AttackAnim?,
+	-- Escudo (Starve): na mão, a defesa soma com a da peça de cabeça (golpe de
+	-- jogador e mordida de mob). arrowDefense é só dado (flechas não existem).
+	shield: { defense: number, mobDefense: number, arrowDefense: number? }?,
+	-- Martelo: contra construção de material acima do dele, o dano em
+	-- construção cai para minDamage (Starve `building_min_damage`).
+	hammer: { minDamage: number }?,
+	-- Bônus de conjunto: + damage no golpe quando a peça de cabeça vestida tem
+	-- armor.gearSet == set (espadas e lanças de dragão e de lava).
+	gearBonus: { set: string, damage: number }?,
+	-- Chave inglesa: golpe numa construção aliada danificada devolve essa vida.
+	repair: number?,
+	-- Só dado, para sistemas futuros (nada no jogo lê ainda):
+	dig: number?, -- pá: quanto cava por golpe
+	harvest: number?, -- forcado: multiplica a colheita
+	waters: boolean?, -- regador: rega plantas
+	butcher: number?, -- facão: multiplica o que a caixa de mob dá
+	crabCalm: boolean?, -- lança de caranguejo: acalma caranguejos
 }
 
 export type AttackAnim = "swing" | "thrust"

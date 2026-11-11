@@ -102,9 +102,14 @@ function ArmorRules.modifiers(def: Types.ItemDef?): Modifiers
 	}
 end
 
--- Golpe depois da defesa (Starve: golpe − defesa, nunca abaixo de 0).
-function ArmorRules.reduce(amount: number, mods: Modifiers, source: HitSource): number
+-- Golpe depois da defesa (Starve: golpe − defesa, nunca abaixo de 0). `held`
+-- = o que o atingido tem na mão: um escudo soma a defesa dele.
+function ArmorRules.reduce(amount: number, mods: Modifiers, source: HitSource, held: Types.ItemDef?): number
 	local defense = if source == "mob" then mods.mobDefense else mods.defense
+	local shield = held and held.shield
+	if shield then
+		defense += if source == "mob" then shield.mobDefense else shield.defense
+	end
 	return math.max(amount - defense, 0)
 end
 

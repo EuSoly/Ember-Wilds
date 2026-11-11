@@ -268,6 +268,50 @@ local function isWholeNumber(value: any, min: number): boolean
 	return isFiniteNumber(value) and value % 1 == 0 and value >= min
 end
 
+local function isNonNegative(value: any): boolean
+	return isFiniteNumber(value) and value >= 0
+end
+
+-- Blocos das ferramentas (escudo, martelo, bônus de conjunto, conserto e os
+-- campos só-dado): números finitos ≥ 0; martelo precisa de structureDamage.
+local function validateToolBlocks(errors: { string }, key: string, item: Types.ItemDef)
+	local shield = item.shield
+	if shield ~= nil then
+		if
+			type(shield) ~= "table"
+			or not isNonNegative(shield.defense)
+			or not isNonNegative(shield.mobDefense)
+			or (shield.arrowDefense ~= nil and not isNonNegative(shield.arrowDefense))
+		then
+			table.insert(errors, `Item "{key}": shield precisa de defense e mobDefense (≥ 0)`)
+		end
+	end
+	local hammer = item.hammer
+	if hammer ~= nil then
+		if type(hammer) ~= "table" or not isNonNegative(hammer.minDamage) then
+			table.insert(errors, `Item "{key}": hammer.minDamage deve ser ≥ 0`)
+		elseif item.structureDamage == nil then
+			table.insert(errors, `Item "{key}": martelo precisa de structureDamage`)
+		end
+	end
+	local bonus = item.gearBonus
+	if bonus ~= nil and (type(bonus) ~= "table" or type(bonus.set) ~= "string" or not isNonNegative(bonus.damage)) then
+		table.insert(errors, `Item "{key}": gearBonus precisa de set (texto) e damage (≥ 0)`)
+	end
+	for _, field in { "repair", "dig", "harvest", "butcher" } do
+		local value = (item :: any)[field]
+		if value ~= nil and not isNonNegative(value) then
+			table.insert(errors, `Item "{key}": {field} deve ser ≥ 0`)
+		end
+	end
+	for _, field in { "waters", "crabCalm" } do
+		local value = (item :: any)[field]
+		if value ~= nil and type(value) ~= "boolean" then
+			table.insert(errors, `Item "{key}": {field} deve ser true ou false`)
+		end
+	end
+end
+
 -- Estações de craft que existem (Types.CraftStation).
 local CRAFT_STATIONS: { [string]: boolean } = { workbench = true, fire = true, water = true }
 
@@ -900,6 +944,7 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 	if damage ~= nil and not isPositive(damage) then
 		table.insert(errors, `Item "{key}": structureDamage deve ser maior que 0`)
 	end
+	validateToolBlocks(errors, key, item)
 	if item.moveSpeed ~= nil and (not isPositive(item.moveSpeed) or item.moveSpeed > 1) then
 		table.insert(errors, `Item "{key}": moveSpeed deve ser maior que 0 e no máximo 1`)
 	end

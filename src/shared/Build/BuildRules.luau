@@ -129,11 +129,27 @@ function BuildRules.mobSpikeMargin(mobRadius: number): number
 	return mobRadius + BuildRules.MOB_SPIKE_SLACK
 end
 
-function BuildRules.damageOf(item: ItemDef?): number
-	if item ~= nil and item.structureDamage ~= nil then
-		return item.structureDamage
+-- Dano de um golpe numa construção. Martelo contra material acima do dele
+-- (ordem dos tiers: `structureTier` > `itemTier`) dá só hammer.minDamage;
+-- construção ou martelo sem tier = dano cheio.
+function BuildRules.damageOf(item: ItemDef?, structureTier: number?, itemTier: number?): number
+	if item == nil or item.structureDamage == nil then
+		return BuildRules.HAND_DAMAGE
 	end
-	return BuildRules.HAND_DAMAGE
+	local hammer = item.hammer
+	if hammer and structureTier and itemTier and structureTier > itemTier then
+		return hammer.minDamage
+	end
+	return item.structureDamage
+end
+
+-- Vida que a chave inglesa devolve a uma construção (0 sem chave ou cheia).
+function BuildRules.repairAmount(item: ItemDef?, health: number, maxHealth: number): number
+	local repair = item and item.repair
+	if repair == nil then
+		return 0
+	end
+	return math.clamp(maxHealth - health, 0, repair)
 end
 
 -- Gancho dos times: hoje só o próprio jogador é aliado (UserIds).
