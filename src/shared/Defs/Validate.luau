@@ -866,6 +866,9 @@ local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } }
 }
 
 local function validateStructureBlocks(errors: { string }, key: string, structure: Types.StructureDef)
+	if structure.snap ~= nil and type(structure.snap) ~= "boolean" then
+		table.insert(errors, `Item "{key}": structure.snap deve ser true ou false`)
+	end
 	for _, spec in STRUCTURE_BLOCKS do
 		local block = (structure :: any)[spec.field]
 		if structure.kind ~= spec.kind then

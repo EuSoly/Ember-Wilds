@@ -99,6 +99,9 @@ export type StructureDef = {
 	furnace: FurnaceDef?, -- calor por heatRadius; queima enquanto tem madeira (sem lifetime)
 	well: WellDef?,
 	bed: BedDef?,
+	-- Encaixa em grade nas vizinhas da mesma camada com snap (chão e teto:
+	-- telhado, ponte, canteiros). Veja BuildRules.snapPlacement.
+	snap: boolean?,
 }
 
 export type ItemDef = {

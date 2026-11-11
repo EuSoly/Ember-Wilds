@@ -207,4 +207,53 @@ function spec.constantes_da_construcao_livre()
 	assert(BuildRules.ROTATE_STEP == 45 and BuildRules.ROTATE_STEPS == 8, "passos de giro")
 end
 
+-- Encaixe em grade (telhado, ponte): vizinha de raio 3 = casa de 6 studs.
+local function close(a: number, b: number): boolean
+	return math.abs(a - b) < 1e-6
+end
+
+function spec.encaixe_sem_vizinha_fica_livre()
+	local x, z, yaw = BuildRules.snapPlacement(4, 5, 30, 0, -1, {})
+	assert(x == 4 and z == 5 and yaw == 30, "sem vizinha não muda nada")
+end
+
+function spec.encaixe_na_casa_ao_lado()
+	local x, z, yaw = BuildRules.snapPlacement(6.5, 0.4, 90, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 6) and close(z, 0), `casa ao lado: {x}, {z}`)
+	assert(yaw == 0, "copia o giro da vizinha")
+end
+
+function spec.encaixe_respeita_giro_da_vizinha()
+	local c, s = math.cos(math.rad(45)), math.sin(math.rad(45))
+	-- Casa +1 no eixo X local da vizinha girada 45°: (6·cos, −6·sin).
+	local x, z, yaw = BuildRules.snapPlacement(6 * c + 0.5, -6 * s + 0.3, 0, 1, 0, {
+		{ x = 0, z = 0, yaw = 45, radius = 3 },
+	})
+	assert(close(x, 6 * c) and close(z, -6 * s), `casa girada: {x}, {z}`)
+	assert(yaw == 45, "giro 45")
+end
+
+function spec.encaixe_em_cima_da_vizinha_vai_para_o_lado()
+	-- Ponto livre quase no centro da vizinha, olhando para −Z: casa (0, −6).
+	local x, z = BuildRules.snapPlacement(0.5, 0.5, 0, 0, -1, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 0) and close(z, -6), `casa da frente: {x}, {z}`)
+end
+
+function spec.encaixe_vizinha_longe_nao_puxa()
+	local x, z = BuildRules.snapPlacement(20, 0, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(x == 20 and z == 0, "longe demais")
+	-- Perto da vizinha, mas longe da casa mais próxima (> SNAP_RANGE): livre.
+	local fx, fz = BuildRules.snapPlacement(3, 3, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(fx == 3 and fz == 3, `no meio das casas fica livre: {fx}, {fz}`)
+end
+
+function spec.encaixe_escolhe_a_vizinha_mais_perto()
+	local x, z = BuildRules.snapPlacement(13, 0.2, 0, 1, 0, {
+		{ x = 0, z = 0, yaw = 0, radius = 3 },
+		{ x = 12, z = 0, yaw = 0, radius = 3 },
+	})
+	assert(close(x, 12 + 0) or close(x, 18), `perto da segunda vizinha: {x}`)
+	assert(close(z, 0), "mesma linha")
+end
+
 return spec

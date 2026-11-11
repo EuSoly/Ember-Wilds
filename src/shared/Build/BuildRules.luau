@@ -55,6 +55,65 @@ function BuildRules.validSteps(steps: any): boolean
 	return type(steps) == "number" and steps == math.floor(steps) and steps >= 0 and steps < BuildRules.ROTATE_STEPS
 end
 
+-- Encaixe em grade das peças de chão e teto (`structure.snap`: telhado, ponte,
+-- canteiros no futuro). Vizinha = peça já colocada da mesma camada com snap.
+export type SnapNeighbor = { x: number, z: number, yaw: number, radius: number }
+
+-- Distância (studs) entre o ponto livre e a casa da grade para grudar.
+BuildRules.SNAP_RANGE = 3
+
+-- Onde a peça sai: na casa da grade da vizinha mais perto de (x, z), com o giro
+-- dela. A casa tem o lado do diâmetro da vizinha e os eixos dela. Ponto em cima
+-- da própria vizinha vai para a casa ao lado na direção (dirX, dirZ) para onde
+-- o jogador olha. Sem vizinha ao alcance, ou casa longe demais (> SNAP_RANGE),
+-- devolve (x, z, yaw) sem mudar. Servidor e fantasma usam a mesma conta.
+function BuildRules.snapPlacement(
+	x: number,
+	z: number,
+	yaw: number,
+	dirX: number,
+	dirZ: number,
+	neighbors: { SnapNeighbor }
+): (number, number, number)
+	local best: SnapNeighbor? = nil
+	local bestSq = math.huge
+	for _, neighbor in neighbors do
+		local reach = 2 * neighbor.radius + BuildRules.SNAP_RANGE
+		local sq = (neighbor.x - x) ^ 2 + (neighbor.z - z) ^ 2
+		if sq <= reach * reach and sq < bestSq then
+			best, bestSq = neighbor, sq
+		end
+	end
+	if best == nil then
+		return x, z, yaw
+	end
+	local angle = math.rad(best.yaw)
+	local cos, sin = math.cos(angle), math.sin(angle)
+	-- Eixos da vizinha no chão (CFrame.Angles(0, yaw, 0)): X local = (cos, −sin), Z local = (sin, cos).
+	local function toLocal(wx: number, wz: number): (number, number)
+		return wx * cos - wz * sin, wx * sin + wz * cos
+	end
+	local side = 2 * best.radius
+	local lx, lz = toLocal(x - best.x, z - best.z)
+	local ix, iz = math.round(lx / side), math.round(lz / side)
+	local onTop = ix == 0 and iz == 0
+	if onTop then
+		local dlx, dlz = toLocal(dirX, dirZ)
+		if math.abs(dlx) >= math.abs(dlz) then
+			ix = if dlx >= 0 then 1 else -1
+		else
+			iz = if dlz >= 0 then 1 else -1
+		end
+	end
+	local cellX = best.x + (ix * cos + iz * sin) * side
+	local cellZ = best.z + (-ix * sin + iz * cos) * side
+	-- Longe da casa: continua livre (em cima da vizinha sempre vai para o lado).
+	if not onTop and (cellX - x) ^ 2 + (cellZ - z) ^ 2 > BuildRules.SNAP_RANGE ^ 2 then
+		return x, z, yaw
+	end
+	return cellX, cellZ, best.yaw
+end
+
 function BuildRules.radiusOf(def: StructureDef): number
 	return def.radius or BuildRules.PIECE_RADIUS
 end

@@ -1331,7 +1331,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.bridge",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "bridge", health = 300, radius = 3.1 }, -- provisório
+		structure = { kind = "bridge", health = 300, radius = 3.1, snap = true }, -- provisório
 	},
 	roof = {
 		id = "roof",
@@ -1339,7 +1339,7 @@ local Items: { [string]: ItemDef } = {
 		nameKey = "item.roof",
 		category = "placeable",
 		maxStack = 255,
-		structure = { kind = "roof", health = 300, radius = 3.2 }, -- provisório
+		structure = { kind = "roof", health = 300, radius = 3.2, snap = true }, -- provisório
 	},
 	sign = {
 		id = "sign",
