@@ -2,7 +2,7 @@
 -- Fantasma da construção: com uma peça `placeable` na mão, mostra o MODELO da
 -- peça translúcido (StructureModel.build, o mesmo do servidor) no ponto à frente
 -- (o mesmo que o servidor escolhe), girado como a peça sairá (o giro vem de
--- BuildRotation), pintado de verde se parece livre e vermelho se não (Highlight).
+-- BuildRotation), pintado de verde se parece livre e vermelho se não.
 -- Peça de chão/teto com snap encaixa na grade da vizinha mais perto
 -- (BuildRules.snapPlacement, a mesma conta do servidor). Sem template do Elizeu
 -- o modelo provisório (o mesmo do servidor) aparece; o bloco com a faixa da
@@ -34,9 +34,8 @@ local RESOURCE_MAX_RADIUS = 4
 -- Faixa da frente: comprimento (fração do raio) e espessura, em studs.
 local FRONT_LENGTH = 0.5
 local FRONT_WIDTH = 0.4
--- Modelo do fantasma: transparência das partes e do preenchimento do Highlight.
-local MODEL_TRANSPARENCY = 0.45
-local FILL_TRANSPARENCY = 0.6
+-- Modelo do fantasma: transparência das peças (pintadas de verde/vermelho).
+local MODEL_TRANSPARENCY = 0.4
 
 local BuildGhost = {}
 
@@ -125,8 +124,8 @@ local function looksFree(kind: string, px: number, pz: number, radius: number): 
 	if layer == "roof" then
 		return true
 	end
-	if layer ~= "solid" then
-		return looksFreeOfPlayers(px, pz, radius)
+	if not BuildRules.blockedByPlayers(kind) then
+		return true
 	end
 	-- Recursos: o raio de colisão que o servidor publica; sem ele, aproxima
 	-- pelo tamanho do modelo.
@@ -167,13 +166,16 @@ local function snapNeighbors(def: Defs.StructureDef, px: number, pz: number): { 
 end
 
 -- Modelo da peça como fantasma: translúcido, sem colisão nem tags (senão o
--- jogo acharia uma bancada, ponte ou telhado de verdade ali). nil sem modelo.
-local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, Highlight?)
+-- jogo acharia uma bancada, ponte ou telhado de verdade ali) e SEM textura: as
+-- peças visíveis são pintadas de verde/vermelho (o Highlight sozinho não
+-- aparecia por cima dos modelos). Devolve o modelo e as peças a pintar.
+local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, { BasePart })
 	local ok, built = pcall(StructureModel.build, itemId, def)
 	if not ok then
-		return nil, nil
+		return nil, {}
 	end
 	local model = built :: Model
+	local paint: { BasePart } = {}
 	for _, tag in CollectionService:GetTags(model) do
 		CollectionService:RemoveTag(model, tag)
 	end
@@ -187,11 +189,22 @@ local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, High
 			instance.CanQuery = false
 			instance.CanTouch = false
 			instance.CastShadow = false
-			instance.Transparency = math.max(instance.Transparency, MODEL_TRANSPARENCY)
+			if instance.Transparency < 1 then
+				instance.Transparency = math.max(instance.Transparency, MODEL_TRANSPARENCY)
+				instance.Material = Enum.Material.SmoothPlastic
+				if instance:IsA("MeshPart") then
+					instance.TextureID = ""
+				end
+				table.insert(paint, instance)
+			end
 		elseif
-			-- Fantasma não ilumina, não solta efeito, não toca som nem é clicável
-			-- (a fogueira traz uma PointLight: seria luz grátis à noite).
-			instance:IsA("Script")
+			-- Sem textura (a cor de verde/vermelho tem de aparecer), e o fantasma não
+			-- ilumina, não solta efeito, não toca som nem é clicável (a fogueira traz
+			-- uma PointLight: seria luz grátis à noite).
+			instance:IsA("SurfaceAppearance")
+			or instance:IsA("Decal")
+			or instance:IsA("Texture")
+			or instance:IsA("Script")
 			or instance:IsA("LocalScript")
 			or instance:IsA("Light")
 			or instance:IsA("ParticleEmitter")
@@ -208,12 +221,7 @@ local function ghostModel(itemId: string, def: Defs.StructureDef): (Model?, High
 		end
 	end
 	model.Name = "BuildGhost"
-	local highlight = Instance.new("Highlight")
-	highlight.FillTransparency = FILL_TRANSPARENCY
-	highlight.OutlineTransparency = 0.2
-	highlight.DepthMode = Enum.HighlightDepthMode.Occluded
-	highlight.Parent = model
-	return model, highlight
+	return model, paint
 end
 
 function BuildGhost.start()
@@ -226,12 +234,14 @@ function BuildGhost.start()
 	-- Modelo do fantasma da peça na mão (refeito ao trocar de item).
 	local modelItem: string? = nil
 	local model: Model? = nil
-	local highlight: Highlight? = nil
+	local paint: { BasePart } = {}
+	local painted: Color3? = nil
 	local function clearModel()
 		if model then
 			model:Destroy()
 		end
-		model, highlight, modelItem = nil, nil, nil
+		model, modelItem, painted = nil, nil, nil
+		paint = {}
 	end
 
 	RunService.RenderStepped:Connect(function()
@@ -251,7 +261,7 @@ function BuildGhost.start()
 		if modelItem ~= itemId then
 			clearModel()
 			modelItem = itemId
-			model, highlight = ghostModel(itemId, structure)
+			model, paint = ghostModel(itemId, structure)
 		end
 
 		local look = root.CFrame.LookVector
@@ -279,10 +289,14 @@ function BuildGhost.start()
 
 		local color = if free then Theme.ui.success else Theme.ui.danger
 		-- Com modelo: só ele (o bloco some). Parte local: não replica.
-		if model and highlight then
+		if model and #paint > 0 then
 			ghost.Parent = nil
-			highlight.FillColor = color
-			highlight.OutlineColor = color
+			if painted ~= color then
+				painted = color
+				for _, part in paint do
+					part.Color = color
+				end
+			end
 			model:PivotTo(CFrame.new(px, 0, pz) * CFrame.Angles(0, math.rad(yaw), 0))
 			model.Parent = Workspace
 			return

@@ -193,9 +193,10 @@ function spec.blocksPlacement_so_na_mesma_camada()
 	assert(not BuildRules.blocksPlacement("bridge", "roof"), "ponte e telhado não se veem")
 end
 
-function spec.waterAllows_ponte_so_na_agua_o_resto_nunca()
-	assert(BuildRules.waterAllows("bridge", true), "ponte na água pode")
-	assert(not BuildRules.waterAllows("bridge", false), "ponte em terra não")
+-- Desde 11/11 a ponte é o "piso": vale na terra também (piso_na_terra_e_na_agua).
+function spec.waterAllows_piso_em_qualquer_lugar_o_resto_so_na_terra()
+	assert(BuildRules.waterAllows("bridge", true), "piso na água pode")
+	assert(BuildRules.waterAllows("bridge", false), "piso em terra também")
 	for _, kind in { "wall", "roof", "spike", "fire", "chest" } do
 		assert(BuildRules.waterAllows(kind, false), `{kind} em terra pode`)
 		assert(not BuildRules.waterAllows(kind, true), `{kind} na água não`)
@@ -284,6 +285,34 @@ function spec.limite_por_jogador()
 	assert(BuildRules.underKindLimit(0, 1), "a primeira pode")
 	assert(not BuildRules.underKindLimit(1, 1), "a segunda não")
 	assert(BuildRules.underKindLimit(50, nil), "sem limite")
+end
+
+function spec.piso_na_terra_e_na_agua()
+	assert(BuildRules.waterAllows("bridge", false), "piso na terra")
+	assert(BuildRules.waterAllows("bridge", true), "piso na água")
+	assert(not BuildRules.waterAllows("wall", true), "parede na água não")
+	assert(BuildRules.waterAllows("wall", false), "parede na terra")
+end
+
+function spec.jogador_nao_bloqueia_piso_nem_telhado()
+	assert(not BuildRules.blockedByPlayers("bridge"), "piso: dá para estar em cima")
+	assert(not BuildRules.blockedByPlayers("roof"), "telhado: por cima de quem está embaixo")
+	assert(BuildRules.blockedByPlayers("wall"), "parede: não em cima de jogador")
+end
+
+function spec.piso_encaixado_nao_conta_como_sobreposto()
+	-- Casa vizinha calculada com seno/cosseno: a distância sai um fio menor que
+	-- 2 × raio por arredondamento. Encostar continua valendo.
+	local neighbor = { x = -634.34, z = 626.63, yaw = -127.8, radius = 3.1 }
+	local look = math.rad(-127.8)
+	local x, z =
+		BuildRules.snapPlacement(neighbor.x + 1, neighbor.z + 1, 0, -math.sin(look), -math.cos(look), { neighbor })
+	assert(
+		not BuildRules.circlesOverlap(x, z, 3.1, neighbor.x, neighbor.z, 3.1),
+		"casa vizinha encosta, não sobrepõe"
+	)
+	assert(not BuildRules.circlesOverlap(0, 0, 3, 6 - 1e-9, 0, 3), "encostar com arredondamento")
+	assert(BuildRules.circlesOverlap(0, 0, 3, 5.9, 0, 3), "sobrepor de verdade continua barrado")
 end
 
 return spec

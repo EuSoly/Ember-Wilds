@@ -146,9 +146,13 @@ end
 
 -- Dois círculos se sobrepõem se a distância dos centros é menor que a soma dos raios;
 -- encostar exatamente NÃO é sobrepor.
+-- Folga para encostar: peças encaixadas na grade (seno/cosseno) ficam um fio
+-- mais perto que a soma dos raios por arredondamento, e isso não é sobrepor.
+local TOUCH_SLACK = 1e-4
+
 function BuildRules.circlesOverlap(ax: number, az: number, ar: number, bx: number, bz: number, br: number): boolean
 	local dx, dz = ax - bx, az - bz
-	local r = ar + br
+	local r = ar + br - TOUCH_SLACK
 	return dx * dx + dz * dz < r * r
 end
 
@@ -200,13 +204,20 @@ function BuildRules.onBridge(x: number, z: number, bridges: { Circle }): boolean
 	return BuildRules.insideAny(x, z, bridges, BuildRules.PLAYER_RADIUS)
 end
 
--- A água bruta no ponto (`water`, sem contar ponte) deixa colocar a peça? A
--- ponte só vai na água; o resto nunca (ponte não torna a água construível).
+-- A água bruta no ponto (`water`, sem contar ponte) deixa colocar a peça? O
+-- piso (camada "bridge") vai na terra e na água (11/11: deixou de ser só ponte);
+-- o resto nunca na água (o piso não torna a água construível).
 function BuildRules.waterAllows(kind: string, water: boolean): boolean
 	if BuildRules.layerOf(kind) == "bridge" then
-		return water
+		return true
 	end
 	return not water
+end
+
+-- Um jogador em cima impede colocar a peça? Só as sólidas: o piso fica sob os
+-- pés e o telhado por cima da cabeça.
+function BuildRules.blockedByPlayers(kind: string): boolean
+	return BuildRules.layerOf(kind) == "solid"
 end
 
 -- Margem do espinho para um mob de raio `mobRadius`: o corpo mais a folga.

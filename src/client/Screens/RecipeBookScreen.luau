@@ -430,22 +430,19 @@ local function Book(): Frame
 				end,
 			}),
 			-- Modo criativo: "Pegar" entrega o item (o servidor confere a marca no
-			-- perfil). Ao lado do Fixar, ou no lugar dele em item sem receita.
+			-- perfil). Fica no canto de baixo da ficha (no alto cobria o nome do
+			-- item); na tela baixa, ao lado do Fixar, que também fica embaixo.
 			Rustic.button({
 				Name = "GiveButton",
 				Visible = function()
 					return CreativeState.on() and RecipeBookScreen.selected() ~= nil
 				end,
-				AnchorPoint = function()
-					return if ScreenMetrics.short() then Vector2.new(1, 1) else Vector2.new(1, 0)
-				end,
+				AnchorPoint = Vector2.new(1, 1),
 				Position = function()
 					local id = RecipeBookScreen.selected()
-					local besidePin = id ~= nil and Defs.Recipes[id] ~= nil
-					local shift = if besidePin then (if ScreenMetrics.short() then 112 else 128) else 0
-					return if ScreenMetrics.short()
-						then UDim2.new(1, -18 - shift, 1, -12)
-						else UDim2.new(1, -18 - shift, 0, TAB_HEIGHT + GAP + 18)
+					local besidePin = ScreenMetrics.short() and id ~= nil and Defs.Recipes[id] ~= nil
+					local shift = if besidePin then 112 else 0
+					return UDim2.new(1, -18 - shift, 1, -12)
 				end,
 				Size = function()
 					return if ScreenMetrics.short() then UDim2.fromOffset(104, 38) else UDim2.fromOffset(120, 38)

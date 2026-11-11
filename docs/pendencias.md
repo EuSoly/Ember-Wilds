@@ -4,6 +4,8 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 ## Construções (11/11)
 
+- **Conferir jogando:** colocar vários pisos lado a lado na terra (a casa encaixada era recusada por arredondamento; corrigido com folga de 0,0001 stud em `circlesOverlap`, teste `piso_encaixado_nao_conta_como_sobreposto`); paredes e espinhos mais perto (raio 2,5).
+
 - **Modelos:** o totem fica grande de propósito (modelo com raio 4,3, círculo 4). A pedra da ressurreição foi reduzida a 88% no place em 11/11 (raio 3,9): **salvar o place**. O extrator de diamante está menor que os outros (1,6 contra 2,7).
 - **Fantasma atravessar construções:** o Starve deixa; aqui ainda colide (precisa de grupos de colisão no mapa).
 - **Testar depois (Elizeu, 11/11): dano entre colegas de time (30%).**

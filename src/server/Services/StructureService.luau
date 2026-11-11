@@ -283,6 +283,10 @@ local function canPlace(player: Player, kind: string, x: number, z: number, radi
 			end
 		end
 	end
+	-- Piso e telhado: jogador não atrapalha (fica em cima ou embaixo).
+	if not BuildRules.blockedByPlayers(kind) then
+		return true
+	end
 	for _, other in Players:GetPlayers() do
 		local root = rootOf(other.Character)
 		if

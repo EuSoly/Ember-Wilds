@@ -1116,7 +1116,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "wall", health = 1000, radius = 3 },
+		structure = { kind = "wall", health = 1000, radius = 2.5 },
 	},
 	stone_wall = {
 		id = "stone_wall",
@@ -1124,7 +1124,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "wall", health = 1500, radius = 3 },
+		structure = { kind = "wall", health = 1500, radius = 2.5 },
 	},
 	gold_wall = {
 		id = "gold_wall",
@@ -1132,7 +1132,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "wall", health = 2000, radius = 3 },
+		structure = { kind = "wall", health = 2000, radius = 2.5 },
 	},
 	wood_door = {
 		id = "wood_door",
@@ -1140,7 +1140,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "door", health = 1000, radius = 3 },
+		structure = { kind = "door", health = 1000, radius = 2.5 },
 	},
 	stone_door = {
 		id = "stone_door",
@@ -1148,7 +1148,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "door", health = 1500, radius = 3 },
+		structure = { kind = "door", health = 1500, radius = 2.5 },
 	},
 	gold_door = {
 		id = "gold_door",
@@ -1156,7 +1156,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "door", health = 2000, radius = 3 },
+		structure = { kind = "door", health = 2000, radius = 2.5 },
 	},
 	wood_spike = {
 		id = "wood_spike",
@@ -1164,7 +1164,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "spike", health = 150, radius = 3, spikeDamage = 10, spikeHitDamage = 2 },
+		structure = { kind = "spike", health = 150, radius = 2.5, spikeDamage = 10, spikeHitDamage = 2 },
 	},
 	stone_spike = {
 		id = "stone_spike",
@@ -1172,7 +1172,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "spike", health = 300, radius = 3, spikeDamage = 20, spikeHitDamage = 3 },
+		structure = { kind = "spike", health = 300, radius = 2.5, spikeDamage = 20, spikeHitDamage = 3 },
 	},
 	gold_spike = {
 		id = "gold_spike",
@@ -1180,7 +1180,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "spike", health = 600, radius = 3, spikeDamage = 30, spikeHitDamage = 3 },
+		structure = { kind = "spike", health = 600, radius = 2.5, spikeDamage = 30, spikeHitDamage = 3 },
 	},
 	chest = {
 		id = "chest",
@@ -1196,7 +1196,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "wood",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 100, radius = 3, spikeDamage = 5, spikeHitDamage = 1 },
+		structure = { kind = "spike_door", health = 100, radius = 2.5, spikeDamage = 5, spikeHitDamage = 1 },
 	},
 	stone_spike_door = {
 		id = "stone_spike_door",
@@ -1204,7 +1204,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "stone",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 200, radius = 3, spikeDamage = 10, spikeHitDamage = 2 },
+		structure = { kind = "spike_door", health = 200, radius = 2.5, spikeDamage = 10, spikeHitDamage = 2 },
 	},
 	gold_spike_door = {
 		id = "gold_spike_door",
@@ -1212,7 +1212,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "gold",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 400, radius = 3, spikeDamage = 15, spikeHitDamage = 2 },
+		structure = { kind = "spike_door", health = 400, radius = 2.5, spikeDamage = 15, spikeHitDamage = 2 },
 	},
 	stone_extractor = {
 		id = "stone_extractor",
@@ -1260,7 +1260,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "wall", health = 4000, radius = 3 },
+		structure = { kind = "wall", health = 4000, radius = 2.5 },
 	},
 	reidite_door = {
 		id = "reidite_door",
@@ -1269,7 +1269,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "door", health = 4000, radius = 3 },
+		structure = { kind = "door", health = 4000, radius = 2.5 },
 	},
 	reidite_spike = {
 		id = "reidite_spike",
@@ -1278,7 +1278,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "spike", health = 3000, radius = 3, spikeDamage = 60, spikeHitDamage = 5 },
+		structure = { kind = "spike", health = 3000, radius = 2.5, spikeDamage = 60, spikeHitDamage = 5 },
 	},
 	reidite_spike_door = {
 		id = "reidite_spike_door",
@@ -1287,7 +1287,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "reidite",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 2000, radius = 3, spikeDamage = 35, spikeHitDamage = 4 },
+		structure = { kind = "spike_door", health = 2000, radius = 2.5, spikeDamage = 35, spikeHitDamage = 4 },
 	},
 	reidite_extractor = {
 		id = "reidite_extractor",
@@ -1316,7 +1316,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "diamond",
 		maxStack = 255,
-		structure = { kind = "wall", health = 2500, radius = 3 },
+		structure = { kind = "wall", health = 2500, radius = 2.5 },
 	},
 	diamond_door = {
 		id = "diamond_door",
@@ -1325,7 +1325,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "diamond",
 		maxStack = 255,
-		structure = { kind = "door", health = 2500, radius = 3 },
+		structure = { kind = "door", health = 2500, radius = 2.5 },
 	},
 	diamond_spike = {
 		id = "diamond_spike",
@@ -1334,7 +1334,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "diamond",
 		maxStack = 255,
-		structure = { kind = "spike", health = 1200, radius = 3, spikeDamage = 40, spikeHitDamage = 4 },
+		structure = { kind = "spike", health = 1200, radius = 2.5, spikeDamage = 40, spikeHitDamage = 4 },
 	},
 	diamond_spike_door = {
 		id = "diamond_spike_door",
@@ -1343,7 +1343,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "diamond",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 800, radius = 3, spikeDamage = 25, spikeHitDamage = 3 },
+		structure = { kind = "spike_door", health = 800, radius = 2.5, spikeDamage = 25, spikeHitDamage = 3 },
 	},
 	diamond_extractor = {
 		id = "diamond_extractor",
@@ -1372,7 +1372,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "amethyst",
 		maxStack = 255,
-		structure = { kind = "wall", health = 3500, radius = 3 },
+		structure = { kind = "wall", health = 3500, radius = 2.5 },
 	},
 	amethyst_door = {
 		id = "amethyst_door",
@@ -1381,7 +1381,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "amethyst",
 		maxStack = 255,
-		structure = { kind = "door", health = 3500, radius = 3 },
+		structure = { kind = "door", health = 3500, radius = 2.5 },
 	},
 	amethyst_spike = {
 		id = "amethyst_spike",
@@ -1390,7 +1390,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "amethyst",
 		maxStack = 255,
-		structure = { kind = "spike", health = 2400, radius = 3, spikeDamage = 50, spikeHitDamage = 4 },
+		structure = { kind = "spike", health = 2400, radius = 2.5, spikeDamage = 50, spikeHitDamage = 4 },
 	},
 	amethyst_spike_door = {
 		id = "amethyst_spike_door",
@@ -1399,7 +1399,7 @@ local Items: { [string]: ItemDef } = {
 		category = "placeable",
 		tier = "amethyst",
 		maxStack = 255,
-		structure = { kind = "spike_door", health = 1600, radius = 3, spikeDamage = 30, spikeHitDamage = 3 },
+		structure = { kind = "spike_door", health = 1600, radius = 2.5, spikeDamage = 30, spikeHitDamage = 3 },
 	},
 	amethyst_extractor = {
 		id = "amethyst_extractor",
