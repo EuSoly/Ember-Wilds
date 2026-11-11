@@ -7,11 +7,15 @@
 -- Uso (Lune, na pasta scripts/groundmap):
 --   lune run forest            -> grava forest_<ix>_<iz>.png (chão e água), 4x4 imagens 1024x1024
 --   lune run forest serve      -> grava e serve em http://localhost:34999/forest_<ix>_<iz>.png
+--   lune run forest minimap serve -> só o forest_minimap.png (rápido)
 --     (o upload_image do Studio MCP só sobe imagem por URL)
 -- 4x4 pedaços (11/11/2026): uma imagem só para os 960 studs dava ~1 stud por pixel
 -- e a espuma e a beira da areia ficavam pixeladas. Cada pedaço cobre 240 studs
 -- (0,23 stud por pixel) e vai num Decal da peça Forest_<ix>_<iz> (Map/Ground).
 -- ix cresce com X e iz com Z, a partir do canto (X0, Z0).
+-- Também grava forest_minimap.png (512x512, a floresta inteira) para o minimapa
+-- (UI/Minimap): ali a linha de cima é o lado −Z e a esquerda é −X (como o
+-- minimapa desenha o mundo), o contrário do Decal do chão.
 -- A água vem de water.txt, exportado do Studio (Map/Water):
 --   d x z raio            (disco)
 --   b x z largura comprimento angulo   (bloco; angulo = atan2(look.X, look.Z) em graus)
@@ -316,17 +320,20 @@ local function render(
 	x0: number,
 	z0: number,
 	size: number,
-	pixel: (number, number) -> (RGB, number)
+	pixel: (number, number) -> (RGB, number),
+	res: number?,
+	minimap: boolean?
 ): string
+	local RES = res or RES
 	local channels = if withAlpha then 4 else 3
 	local raw = buffer.create(RES * (RES * channels + 1))
 	local o = 0
 	for row = 0, RES - 1 do
 		buffer.writeu8(raw, o, 0)
 		o += 1
-		local z = z0 + size - (row + 0.5) * size / RES
+		local z = if minimap then z0 + (row + 0.5) * size / RES else z0 + size - (row + 0.5) * size / RES
 		for col = 0, RES - 1 do
-			local x = x0 + size - (col + 0.5) * size / RES
+			local x = if minimap then x0 + (col + 0.5) * size / RES else x0 + size - (col + 0.5) * size / RES
 			local c, a = pixel(x, z)
 			buffer.writeu8(raw, o, byte(c[1]))
 			buffer.writeu8(raw, o + 1, byte(c[2]))
@@ -344,8 +351,20 @@ local function render(
 end
 
 local images: { [string]: string } = {}
-for iz = 0, TILES - 1 do
-	for ix = 0, TILES - 1 do
+local MINIMAP_RES = 512
+do
+	local png = render(false, X0, Z0, SIZE, function(x, z)
+		local water, alpha = waterAt(x, z)
+		return mix(colorAt(x, z), water, alpha), 1
+	end, MINIMAP_RES, true)
+	images["forest_minimap.png"] = png
+	fs.writeFile("forest_minimap.png", png)
+	print(`forest_minimap.png: {MINIMAP_RES}x{MINIMAP_RES}, {#png // 1024} KB`)
+end
+-- `lune run forest minimap [serve]`: só a imagem do minimapa (os pedaços levam minutos).
+local tiles = if table.find(process.args, "minimap") then 0 else TILES
+for iz = 0, tiles - 1 do
+	for ix = 0, tiles - 1 do
 		local name = `forest_{ix}_{iz}.png`
 		local png = render(false, X0 + ix * TILE, Z0 + iz * TILE, TILE, function(x, z)
 			local water, alpha = waterAt(x, z)
@@ -357,7 +376,7 @@ for iz = 0, TILES - 1 do
 	end
 end
 
-if process.args[1] == "serve" then
+if table.find(process.args, "serve") then
 	local port = 34999
 	net.serve(port, function(request)
 		local png = images[string.sub(request.path, 2)]

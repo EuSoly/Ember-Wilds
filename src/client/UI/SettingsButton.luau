@@ -7,6 +7,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local SettingsScreen = require(script.Parent.Parent:WaitForChild("Screens"):WaitForChild("SettingsScreen"))
+local CornerLayout = require(script.Parent:WaitForChild("CornerLayout"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 
 local function SettingsButton(): TextButton
@@ -15,9 +16,12 @@ local function SettingsButton(): TextButton
 		icon = HudImages.ICON.settings,
 		fallback = "⚙",
 		AnchorPoint = Vector2.new(1, 0),
-		-- O minimapa ocupa de 0.02 até ~0.22 da altura (lado = 0.2 da altura).
-		Position = UDim2.fromScale(0.98, 0.25),
-		Size = UDim2.fromScale(0.09, 0.09),
+		-- Embaixo do minimapa, na borda direita dele (CornerLayout).
+		Position = function()
+			return CornerLayout.buttonPosition(false)
+		end,
+		Size = CornerLayout.buttonSize,
+		SizeConstraint = Enum.SizeConstraint.RelativeXY,
 		minSize = Theme.touchMinSize,
 		maxSize = Vector2.new(68, 68),
 		Activated = SettingsScreen.toggle,

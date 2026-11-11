@@ -25,7 +25,8 @@ create("TextLabel")({
 | `src/client/UI/Sources.luau` | Fontes reativas: `attribute`, `isTouch`, `preferredInput`, `cycle` |
 | `src/client/UI/StatusRing(s).luau` | Anéis de vida, fome, frio e sede |
 | `src/client/UI/ScorePill.luau`, `Clock.luau`, `Minimap.luau` | Topo da tela |
-| `src/client/UI/Minimap.luau` | Mapa inteiro esquemático (os quatro biomas a partir do `WorldConfig`, regiões fechadas escurecidas) e o ponto do jogador |
+| `src/client/UI/Minimap.luau`, `src/shared/World/MinimapRules.luau` | Desde 11/11, mostra **só o bioma onde você está**. Na cruz do oceano, mostra o bioma mais perto (`MinimapRules.biomeAt`). A floresta tem o desenho (rio, lagos, areia, pedreira) da imagem `forest_minimap.png`, gerada por `lune run forest minimap serve` em `scripts/groundmap`. Os outros biomas têm só a cor até ganharem desenho. Uma seta branca com contorno escuro marca o jogador e gira para onde ele olha (`MinimapRules.heading`). O mapa grande, de tela inteira, vem depois. |
+| `src/client/UI/CornerLayout.luau` | Medidas do canto superior direito (`MinimapRules.layout`). No PC, o mapa tem de 150 a 210 px (25% da altura); na tela baixa, de 72 a 120 px. O livro fica na borda esquerda de baixo do mapa e a engrenagem na direita, alinhados |
 | `src/client/World/OxygenBubble.luau` | Fôlego ao lado do próprio boneco (no mundo, não na HUD): o medalhão dos anéis com o ícone de bolha; aparece na água ou com o fôlego abaixo do cheio, pulsa abaixo de 25% |
 | `src/client/UI/StatusVignette.luau`, `src/shared/UIFlow/ScreenFx.luau` | Bordas da tela quando o jogador sofre (ver abaixo) |
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |

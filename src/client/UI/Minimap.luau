@@ -1,8 +1,12 @@
 --!strict
--- Minimapa (canto superior direito): o mapa inteiro de forma esquemática,
--- montado a partir do WorldConfig (os quatro biomas nos cantos sobre o
--- oceano), com as regiões ainda fechadas escurecidas e um ponto na posição do
--- jogador. Não lê o mapa desenhado: com streaming, o cliente nem o tem inteiro.
+-- Minimapa (canto superior direito), refeito em 11/11: mostra só o bioma onde
+-- o jogador está (na cruz do oceano, o mais perto: MinimapRules.biomeAt), com o
+-- desenho dele (a floresta usa a imagem do gerador scripts/groundmap, com o
+-- rio, os lagos, a areia e a pedreira; os outros biomas, a cor dele até ganharem
+-- desenho) e uma seta na posição do jogador, girada para onde ele olha.
+-- Tamanho e lugar vêm do MinimapRules.layout: maior no PC, com o livro e a
+-- engrenagem alinhados nas bordas de baixo (CornerLayout).
+-- O mapa grande (a tela inteira) vem depois.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -12,67 +16,93 @@ local Palette = require(Shared:WaitForChild("Palette"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local WorldConfig = require(Shared:WaitForChild("WorldConfig"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
+local MinimapRules = require(Shared:WaitForChild("World"):WaitForChild("MinimapRules"))
+local CornerLayout = require(script.Parent:WaitForChild("CornerLayout"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 
 local create = vide.create
 
 local REFRESH = 0.1 -- 10 vezes por segundo
+local MARKER = 18 -- px da seta do jogador
+local OUTLINE = Color3.fromRGB(45, 28, 16)
 
--- Cor de cada bioma no minimapa.
+-- Desenho de cada bioma (gerado por scripts/groundmap: `lune run forest minimap
+-- serve`; a linha de cima é −Z e a esquerda −X). Sem imagem: só a cor.
+local IMAGES: { [string]: string } = {
+	forest = "rbxassetid://83714901539965",
+}
+
+-- Cor de fundo de cada bioma (aparece sem imagem ou enquanto ela carrega).
 local BIOME_COLORS: { [string]: string } = {
 	forest = Palette.biome.forest[1],
 	winter = Palette.biome.winter[1],
 	lava = Palette.biome.lava[2],
 	desert = Palette.biome.desert[1],
 }
-local LOCKED_SHADE = 0.55 -- quanto escurece uma região ainda fechada
-
--- Posição no mundo (x, z) → fração do minimapa (0 a 1); o mapa é centrado na origem.
-local function toScale(x: number, z: number): (number, number)
-	local half = WorldConfig.MAP_SIZE / 2
-	return math.clamp((x + half) / WorldConfig.MAP_SIZE, 0, 1), math.clamp((z + half) / WorldConfig.MAP_SIZE, 0, 1)
-end
-
-local function toMap(position: Vector3): UDim2
-	local x, z = toScale(position.X, position.Z)
-	return UDim2.fromScale(x, z)
-end
+local LOCKED_SHADE = 0.55 -- quanto escurece um bioma ainda fechado
 
 local function sameRect(a: WorldConfig.Rect, b: WorldConfig.Rect): boolean
 	return a.minX == b.minX and a.minZ == b.minZ and a.maxX == b.maxX and a.maxZ == b.maxZ
 end
 
--- Um retângulo de bioma; fora da área jogável, com uma sombra por cima.
-local function Biome(name: string, area: WorldConfig.Rect): Frame
-	local x0, z0 = toScale(area.minX, area.minZ)
-	local x1, z1 = toScale(area.maxX, area.maxZ)
-	local locked = not sameRect(area, WorldConfig.PLAYABLE)
-	return create("Frame")({
-		Name = name,
-		Position = UDim2.fromScale(x0, z0),
-		Size = UDim2.fromScale(x1 - x0, z1 - z0),
-		BackgroundColor3 = Theme.color(BIOME_COLORS[name] or Palette.biome.forest[2]),
-		BorderSizePixel = 0,
-		create("Frame")({
-			Name = "Locked",
-			Size = UDim2.fromScale(1, 1),
-			BackgroundColor3 = Theme.ui.panel,
-			BackgroundTransparency = if locked then 1 - LOCKED_SHADE else 1,
+-- Seta do jogador: um círculo claro com uma ponta em cima (losango), girada
+-- para onde o boneco olha. Contorno escuro para aparecer na grama e na água.
+local function Marker(position: () -> UDim2, rotation: () -> number): Frame
+	local function piece(props: { [any]: any }): Frame
+		return create("Frame")({
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderSizePixel = 0,
+			create("UIStroke")({ Color = OUTLINE, Thickness = 2 }),
+			props,
+		}) :: Frame
+	end
+	return create("Frame")({
+		Name = "PlayerMarker",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = position,
+		Size = UDim2.fromOffset(MARKER, MARKER),
+		Rotation = rotation,
+		BackgroundTransparency = 1,
+		ZIndex = 3,
+		-- Ponta: um quadrado girado 45° no alto do círculo.
+		piece({
+			Name = "Tip",
+			Position = UDim2.fromScale(0.5, 0.12),
+			Size = UDim2.fromScale(0.5, 0.5),
+			Rotation = 45,
+			ZIndex = 3,
+		}),
+		piece({
+			Name = "Body",
+			Position = UDim2.fromScale(0.5, 0.55),
+			Size = UDim2.fromScale(0.78, 0.78),
+			ZIndex = 4,
+			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		}),
 	}) :: Frame
 end
 
 local function Minimap(): Frame
-	local dot = vide.source(UDim2.fromScale(0.5, 0.5))
+	local biome = vide.source("forest")
+	local position = vide.source(UDim2.fromScale(0.5, 0.5))
+	local rotation = vide.source(0)
 	vide.cleanup(task.spawn(function()
 		while true do
 			-- Sempre o personagem atual: depois do respawn segue o novo.
 			local character = Players.LocalPlayer.Character
 			local root = character and character:FindFirstChild("HumanoidRootPart")
 			if root and root:IsA("BasePart") then
-				dot(toMap(root.Position))
+				local at = root.Position
+				local name = MinimapRules.biomeAt(at.X, at.Z)
+				if vide.untrack(biome) ~= name then
+					biome(name)
+				end
+				local x, z = MinimapRules.toView(at.X, at.Z, WorldConfig.BIOMES[name])
+				position(UDim2.fromScale(x, z))
+				local look = root.CFrame.LookVector
+				rotation(MinimapRules.heading(look.X, look.Z))
 			end
 			task.wait(REFRESH)
 		end
@@ -86,27 +116,36 @@ local function Minimap(): Frame
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromScale(inner, inner),
-		-- Fundo = oceano; os biomas por cima.
-		BackgroundColor3 = Theme.color(Palette.biome.ocean[3]),
+		BackgroundColor3 = function()
+			return Theme.color(BIOME_COLORS[biome()] or Palette.biome.forest[2])
+		end,
 		BorderSizePixel = 0,
 		ClipsDescendants = true,
 		create("UICorner")({ CornerRadius = Theme.slotCorner }),
-		Biome("forest", WorldConfig.BIOMES.forest),
-		Biome("winter", WorldConfig.BIOMES.winter),
-		Biome("lava", WorldConfig.BIOMES.lava),
-		Biome("desert", WorldConfig.BIOMES.desert),
+		create("ImageLabel")({
+			Name = "Drawing",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ScaleType = Enum.ScaleType.Stretch,
+			Image = function()
+				return IMAGES[biome()] or ""
+			end,
+			create("UICorner")({ CornerRadius = Theme.slotCorner }),
+		}),
 		create("Frame")({
-			Name = "PlayerDot",
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = dot,
-			Size = UDim2.fromScale(0.07, 0.07),
-			BackgroundColor3 = Theme.ui.text,
+			Name = "Locked",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = Theme.ui.panel,
+			BackgroundTransparency = function()
+				local open = sameRect(WorldConfig.BIOMES[biome()], WorldConfig.PLAYABLE)
+				return if open then 1 else 1 - LOCKED_SHADE
+			end,
 			BorderSizePixel = 0,
 			ZIndex = 2,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		}),
+		Marker(position, rotation),
 	})
-	local children: { Instance } = { create("UIAspectRatioConstraint")({ AspectRatio = 1 }), ground }
+	local children: { Instance } = { ground }
 	if framed then
 		table.insert(
 			children,
@@ -119,8 +158,14 @@ local function Minimap(): Frame
 	return vide.apply(frame)({
 		Name = "Minimap",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.fromScale(0.98, 0.02),
-		Size = UDim2.fromScale(0.15, 0.2),
+		Position = function()
+			local layout = CornerLayout.get()
+			return UDim2.new(1, -layout.margin, 0, layout.top)
+		end,
+		Size = function()
+			local side = CornerLayout.get().mapSize
+			return UDim2.fromOffset(side, side)
+		end,
 		children,
 	}) :: Frame
 end
