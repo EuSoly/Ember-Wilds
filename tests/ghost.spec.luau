@@ -46,6 +46,12 @@ return {
 		assert(GhostRules.ghostKillBonus(1000) == 100, "quem matou: 10%")
 	end,
 
+	["no ghost from a fall or an already dead body"] = function()
+		assert(GhostRules.canBecomeGhost("death.cause.wolf", true), "golpe: vira fantasma")
+		assert(not GhostRules.canBecomeGhost("death.cause.fall", true), "queda do mapa: morre (não gasta o coração)")
+		assert(not GhostRules.canBecomeGhost("death.cause.unknown", false), "Humanoid já morto: morre")
+	end,
+
 	["revive near a stone before the time ends"] = function()
 		assert(GhostRules.canRevive(5, 10, 20), "perto e no tempo")
 		assert(not GhostRules.canRevive(GhostRules.REVIVE_RADIUS + 0.1, 10, 20), "longe")

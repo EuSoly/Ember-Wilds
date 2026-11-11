@@ -14,7 +14,9 @@
 -- junto (como no Starve), pelo StructureService.onRemoved.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local CreativeRules = require(ReplicatedStorage.Shared.Creative.CreativeRules)
 local ChestRules = require(ReplicatedStorage.Shared.Build.ChestRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -69,6 +71,10 @@ end
 -- Confere tudo que pôr e tirar têm em comum. Devolve a peça do baú, ou nil.
 -- `chest` vem do cliente: pode ser nil ou qualquer Instance.
 local function validChest(player: Player, chest: Instance?): Entry?
+	-- Fantasma não usa baú (guardaria a arma e escaparia da perda ao ressuscitar).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return nil
+	end
 	if player.Parent ~= Players or not allow(player) then
 		return nil
 	end

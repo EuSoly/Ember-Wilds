@@ -5,8 +5,10 @@
 -- saiu) não faz nada. A regra de uma por jogador fica no StructureService.place.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local EmeraldRules = require(ReplicatedStorage.Shared.Build.EmeraldRules)
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local DeathService = require(script.Parent.DeathService)
 local ScoreService = require(script.Parent.ScoreService)
 local StructureService = require(script.Parent.StructureService)
@@ -29,7 +31,12 @@ end
 local function step()
 	for _, entry in StructureService.allOfKind(KIND) do
 		local owner = entry.owner
-		if owner.Parent == Players and alive(owner) then
+		-- Fantasma não ganha pontos da máquina (escolha nossa; a spec não fala).
+		if
+			owner.Parent == Players
+			and alive(owner)
+			and not GhostRules.isGhostPlayer(owner, Workspace:GetServerTimeNow())
+		then
 			local whole, rest = EmeraldRules.split((carry[owner] or 0) + EmeraldRules.pointsFor(STEP))
 			carry[owner] = rest
 			if whole > 0 then

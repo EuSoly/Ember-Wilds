@@ -32,6 +32,7 @@ local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local CrateModel = require(ReplicatedStorage.Shared.Models.CrateModel)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
@@ -342,6 +343,10 @@ end
 
 -- Pegar um slot: leva o que couber, o resto fica. Sem pausa até o fim.
 local function onTake(player: Player, data: { Crate: Instance?, Slot: number, ItemId: string })
+	-- Fantasma não saqueia caixas.
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	if player.Parent ~= Players or not allow(takeRates, player, TAKE_RATE_MAX) then
 		return
 	end

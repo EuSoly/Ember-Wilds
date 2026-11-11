@@ -148,7 +148,13 @@ local function hit(player: Player, character: Model, root: BasePart)
 	-- Outros jogadores vivos (quem bate fica de fora); o pickTarget filtra a distância.
 	for _, other in Players:GetPlayers() do
 		local otherCharacter = other.Character
-		if other == player or otherCharacter == nil or otherCharacter:FindFirstChildOfClass("Humanoid") == nil then
+		-- Fantasma não é alvo (senão serviria de escudo invulnerável).
+		if
+			other == player
+			or otherCharacter == nil
+			or otherCharacter:FindFirstChildOfClass("Humanoid") == nil
+			or GhostRules.isGhostPlayer(other, Workspace:GetServerTimeNow())
+		then
 			continue
 		end
 		local otherRoot = otherCharacter:FindFirstChild("HumanoidRootPart")

@@ -81,6 +81,12 @@ function GhostRules.loses(source: Source, def: ItemDef): boolean
 	return structure ~= nil and (structure.kind == "spike" or structure.kind == "spike_door")
 end
 
+-- A morte com essa causa pode virar fantasma? Não na queda do mapa (o corpo
+-- some; gastaria o coração à toa) nem com o Humanoid já morto (ficaria preso).
+function GhostRules.canBecomeGhost(causeKey: string, humanoidAlive: boolean): boolean
+	return humanoidAlive and causeKey ~= "death.cause.fall"
+end
+
 -- Pontos que ficam ao ressuscitar (1/3, para baixo).
 function GhostRules.revivedScore(score: number): number
 	return math.floor(score / 3)

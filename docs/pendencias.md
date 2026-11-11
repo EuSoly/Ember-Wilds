@@ -9,6 +9,9 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 - **Conferir com 2 jogadores (Test → 2 Players):** entrar no time, expulsar, dano de 30% entre colegas, nick verde, portas e baús compartilhados.
 - **Conferir:** o tempo de fantasma acabar → morte normal com caixa; máquina de esmeralda destruída matando o dono.
 - **Vidas sem número na config:** totem 500, ponte 300 e placa 100 (escolha nossa).
+- **Poço:** a receita do Starve é 100 pedras + 30 terra (bancada + fogo); a nossa ainda é 60 pedras. Trocar quando a terra (pá) existir.
+- **Fantasma (casos de borda):** pode levar golpe entre o fim do tempo e o próximo passo (até 0,25 s); o estado só é limpo no polling se ele morrer por outro caminho; craft ou mordida em andamento continuam; listas de perda não cobrem tiers acima de reidite (não existem ainda).
+- **Times:** membros do time desfeito pelo totem também esperam 20 s; eventos de time e de ressurreição sem limite de taxa; `DevPlace` pula os limites de totem e máquina (só Studio); ordenação dos membros no painel pode oscilar.
 - **Encaixe em grade (fantasma):** busca de vizinhas a cada quadro; cor pode atrasar 0,15 s depois de um salto; em cima da vizinha a peça pode ir para casa a ~10 studs; falta teste de "peça sem snap não encaixa".
 
 ## Modo criativo (11/11)

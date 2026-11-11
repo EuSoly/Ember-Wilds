@@ -133,25 +133,25 @@ Calor, estação de craft e tempo de vida das fogueiras são os mesmos de antes:
 
 `wood_spike_door`, `stone_spike_door` e `gold_spike_door` (kind `spike_door`). É uma porta (o dono bate e ela abre ou fecha, nunca fecha com alguém dentro) que também fere quem não é aliado, como o espinho do mesmo tier. O dono e os aliados nunca se ferem. O código reaproveita os dois comportamentos: `BuildRules.isDoor` diz se o kind é porta (inclui `spike_door`) e `BuildRules.hurts` diz se ele fere.
 
-| Porta com espinhos | Vida | Dano por toque | Receita (bancada) |
-|---|---:|---:|---|
-| Madeira | 1000 | 10 | porta de madeira + espinho de madeira |
-| Pedra | 1500 | 20 | porta de pedra + espinho de pedra |
-| Ouro | 2000 | 30 | porta de ouro + espinho de ouro |
+| Porta com espinhos | Vida | Encostar | Bater | Receita (bancada) |
+|---|---:|---:|---:|---|
+| Madeira | 100 | 5 | 1 | porta de madeira + 80 madeiras + 60 pedras |
+| Pedra | 200 | 10 | 2 | porta de pedra + 140 pedras |
+| Ouro | 400 | 15 | 2 | porta de ouro + 80 ouros + 60 pedras |
 
-Vida e dano são os da porta e do espinho do mesmo tier. A receita é provisória. Só para teste.
+Números e receitas da config oficial do Starve (11/11); diamante, ametista e reidite na tabela da seção "Espinho". Madeira a ouro liberadas.
 
 ## Estruturas interativas
 
-Chegue perto (até 8 studs do centro, `InteractRules.RANGE`) e o **painel de interação** aparece sobre a hotbar com um botão por ação (veja `hud.md`). O servidor confere tudo: distância, item, quantidade e taxa. O estado (madeira, estoque, água) vive só enquanto a peça existe, como o conteúdo do baú; ao destruir a peça, o painel some e nada fica preso. Tudo abaixo é **só para teste**, e os números são provisórios, exceto os marcados "wiki".
+Chegue perto (até 8 studs do centro, `InteractRules.RANGE`) e o **painel de interação** aparece sobre a hotbar com um botão por ação (veja `hud.md`). O servidor confere tudo: distância, item, quantidade e taxa. O estado (madeira, estoque, água) vive só enquanto a peça existe, como o conteúdo do baú; ao destruir a peça, o painel some e nada fica preso. Números da config oficial do Starve (11/11). Liberados: extratores de pedra e ouro, fornalha, cama e placa; o poço e o balde seguem só de teste. Fantasma não usa nada daqui (`ressurreicao.md`).
 
 | Peça | Vida | Receita (bancada) | O que faz |
 |---|---:|---|---|
-| Extrator de pedra / ouro | 300 | 200 madeiras + 50 pedras / 30 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s (wiki) e produz 1 pedra / 1 ouro por ciclo, até 100 guardados. O dono (e aliados) pega o estoque pelo painel. Guarda até 100 madeiras. |
-| Fornalha | 500 | 100 pedras + 30 ouros | "Baú de mão única": você põe madeira (até 200) e não tira. Queima 1 madeira a cada 6 s (wiki). Acesa, esquenta (raio 24) e é estação de fogo do craft; não queima quem encosta. Sem madeira, apaga: tira o calor e a estação. |
+| Extrator de pedra / ouro | 2000 | 50 madeiras + 100 pedras / 60 pedras + 120 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s e produz 1 pedra / 1 ouro por ciclo, até 255 guardados. O dono (e os aliados do time) pega o estoque pelo painel. Guarda até 255 madeiras. Diamante, ametista e reidite: só de teste. |
+| Fornalha | 1000 | 150 madeiras, 50 pedras, 15 ouros | "Baú de mão única": você põe madeira (até 255) e não tira. Queima 1 madeira a cada 5 s. Acesa, esquenta (raio 24) e é estação de fogo do craft; não queima quem encosta. Sem madeira, apaga: tira o calor e a estação. |
 | Poço | 500 | 60 pedras | Com um balde cheio na mão, "Encher" põe água no poço: 1 balde = 12 goles (wiki), até 48. "Beber" gasta 1 gole e dá 20 de sede. |
 | Balde (`bucket`) | - | 15 madeiras | Com o balde na mão, perto da água do mapa (até 3 studs), ele enche quando você aperta ou segura o botão de usar (vira `water_bucket`, no mesmo slot). Do balde não se bebe. Não empilha. |
-| Cama | 300 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Deitar" põe você em cima da cama: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
+| Cama | 400 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Deitar" põe você em cima da cama: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
 | Placa | 100 | 20 madeiras (wiki) | O dono escolhe no painel um símbolo de uma lista fixa (`SignRules.SYMBOLS`: setas, aviso, coração, caveira, estrela, casa, ! e ?). Sem texto livre, porque texto de jogador exige filtro da Roblox. Aparece nas duas faces. |
 
 Os números ficam nos blocos `extractor`, `furnace`, `well` e `bed` da peça, em `Defs/Items.luau`. O extrator produz mais devagar que bater numa rocha com picareta, para não deixar a mineração inútil. Qualquer jogador perto pode pôr madeira no extrator e na fornalha; pegar o estoque do extrator e trocar o símbolo da placa é só do dono (e aliados, via `BuildRules.areAllies`, quando os times chegarem). A regra está em `InteractRules`.
@@ -160,10 +160,10 @@ Código: as regras puras são `MachineRules`, `WellRules`, `SignRules` e `Intera
 
 ## Ponte e telhado
 
-Os dois são exceções da regra "uma peça por círculo": cada um vive numa **camada** (`BuildRules`) e só bloqueia peças da mesma camada. Raio 2,1, vida 300, só para teste.
+Os dois são exceções da regra "uma peça por círculo": cada um vive numa **camada** (`BuildRules`) e só bloqueia peças da mesma camada, e os dois **se encaixam em grade** (veja "Encaixe em grade"). Ponte: raio 3,1, vida 300. Telhado: raio 3,2, vida 1000. Liberados em 11/11.
 
-- **Ponte** (`bridge`, 30 madeiras): só se coloca **sobre a água** (o centro cai na água), e não sobre outra ponte. Quem está em cima é tratado como em terra: não perde oxigênio nem fica lento. A ponte vale como chão dentro do raio dela mais o raio do corpo do jogador (1,5), para que uma fileira de pontes encostadas forme um caminho sem buraco. Se a ponte some, quem estava em cima volta a estar na água. Colocar qualquer outra peça "na água" continua proibido. Os mobs usam a água crua: a ponte não os protege.
-- **Telhado** (`roof`, 25 madeiras): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
+- **Ponte** (`bridge`, 15 madeiras): só se coloca **sobre a água** (o centro cai na água), e não sobre outra ponte. Quem está em cima é tratado como em terra: não perde oxigênio nem fica lento. A ponte vale como chão dentro do raio dela mais o raio do corpo do jogador (1,5), para que uma fileira de pontes encostadas forme um caminho sem buraco. Se a ponte some, quem estava em cima volta a estar na água. Colocar qualquer outra peça "na água" continua proibido. Os mobs usam a água crua: a ponte não os protege.
+- **Telhado** (`roof`, 30 madeiras): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
 
 Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRadius`) no módulo `TaggedCircles`, para a simulação de água e os mobs não precisarem conhecer o `StructureService`.
 

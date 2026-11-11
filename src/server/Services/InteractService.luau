@@ -10,7 +10,9 @@
 -- tratador registrado: nada acontece.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local InteractRules = require(ReplicatedStorage.Shared.Build.InteractRules)
 local StructureService = require(script.Parent.StructureService)
@@ -70,6 +72,10 @@ end
 
 -- `data` vem do cliente: Target pode ser nil ou qualquer Instance.
 local function onAction(player: Player, data: { Target: Instance?, Action: number, Arg: number })
+	-- Fantasma não usa poço, extrator, fornalha nem placa.
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	if player.Parent ~= Players or not allow(player) then
 		return
 	end

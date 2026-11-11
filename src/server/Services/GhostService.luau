@@ -90,6 +90,10 @@ function GhostService.tryGhost(player: Player, causeKey: string, killer: Player?
 	if ghosts[player] or spent[player] or rootOf(player) == nil then
 		return false
 	end
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if not GhostRules.canBecomeGhost(causeKey, humanoid ~= nil and humanoid.Health > 0) then
+		return false
+	end
 	if #StructureService.allOfKind(STONE_KIND) == 0 then
 		return false
 	end
