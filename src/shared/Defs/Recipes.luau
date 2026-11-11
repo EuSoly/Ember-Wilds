@@ -53,31 +53,27 @@ local Recipes: { [string]: RecipeDef } = {
 		"workbench",
 		3
 	),
-	-- Tiers altos: provisórias até os minérios (diamante etc.) existirem no mapa.
+	-- Tiers altos: receitas do Starve (testOnly até os minérios existirem no mapa).
 	diamond_pickaxe = recipe(
 		"diamond_pickaxe",
 		1,
-		{ ingredient("wood", 60), ingredient("stone", 40), ingredient("gold", 30), ingredient("gold_pickaxe", 1) },
-		30,
+		{ ingredient("diamond", 20), ingredient("gold", 50), ingredient("stone", 80), ingredient("gold_pickaxe", 1) },
+		20,
 		"workbench",
 		30
 	),
-	amethyst_pickaxe = recipe(
-		"amethyst_pickaxe",
-		1,
-		{ ingredient("wood", 80), ingredient("stone", 60), ingredient("gold", 45), ingredient("diamond_pickaxe", 1) },
-		40,
-		"workbench",
-		31
-	),
-	reidite_pickaxe = recipe(
-		"reidite_pickaxe",
-		1,
-		{ ingredient("wood", 100), ingredient("stone", 80), ingredient("gold", 60), ingredient("amethyst_pickaxe", 1) },
-		50,
-		"workbench",
-		32
-	),
+	amethyst_pickaxe = recipe("amethyst_pickaxe", 1, {
+		ingredient("diamond", 40),
+		ingredient("gold", 60),
+		ingredient("amethyst", 30),
+		ingredient("diamond_pickaxe", 1),
+	}, 60, "workbench", 31),
+	reidite_pickaxe = recipe("reidite_pickaxe", 1, {
+		ingredient("amethyst", 30),
+		ingredient("diamond", 40),
+		ingredient("reidite", 30),
+		ingredient("amethyst_pickaxe", 1),
+	}, 90, "workbench", 32),
 	wood_sword = recipe("wood_sword", 1, { ingredient("wood", 30) }, 5, nil, 4),
 	stone_sword = recipe(
 		"stone_sword",
@@ -405,6 +401,212 @@ local Recipes: { [string]: RecipeDef } = {
 	),
 	luck_crown = recipe("luck_crown", 1, { i("orange_gem", 1), i("gold", 200) }, 60, "workbench", 85, FIRE_WATER),
 	blue_thread = recipe("blue_thread", 1, { i("diamond", 1), i("thread", 1) }, 3, "workbench", 86),
+	-- Ferramentas e armas (config oficial do Starve; 11/11).
+	diamond_sword = recipe(
+		"diamond_sword",
+		1,
+		{ i("diamond", 40), i("gold", 60), i("stone", 80), i("gold_sword", 1) },
+		30,
+		"workbench",
+		90
+	),
+	amethyst_sword = recipe(
+		"amethyst_sword",
+		1,
+		{ i("diamond", 60), i("gold", 100), i("amethyst", 40), i("diamond_sword", 1) },
+		60,
+		"workbench",
+		91
+	),
+	reidite_sword = recipe(
+		"reidite_sword",
+		1,
+		{ i("diamond", 100), i("amethyst", 80), i("reidite", 40), i("amethyst_sword", 1) },
+		90,
+		"workbench",
+		92
+	),
+	dragon_sword = recipe(
+		"dragon_sword",
+		1,
+		{ i("blue_thread", 20), i("dragon_orb", 1), i("amethyst", 150), i("dragon_heart", 3) },
+		120,
+		"workbench",
+		93,
+		FIRE_WATER
+	),
+	lava_sword = recipe(
+		"lava_sword",
+		1,
+		{ i("dragon_sword", 1), i("lava_orb", 1), i("reidite", 150), i("lava_heart", 2) },
+		180,
+		"workbench",
+		94,
+		FIRE_WATER
+	),
+	diamond_spear = recipe(
+		"diamond_spear",
+		1,
+		{ i("wood", 200), i("diamond", 40), i("gold", 60), i("gold_spear", 1) },
+		30,
+		"workbench",
+		95
+	),
+	amethyst_spear = recipe(
+		"amethyst_spear",
+		1,
+		{ i("amethyst", 40), i("diamond", 80), i("gold", 90), i("diamond_spear", 1) },
+		60,
+		"workbench",
+		96
+	),
+	reidite_spear = recipe(
+		"reidite_spear",
+		1,
+		{ i("reidite", 40), i("amethyst", 80), i("diamond", 90), i("amethyst_spear", 1) },
+		90,
+		"workbench",
+		97
+	),
+	dragon_spear = recipe(
+		"dragon_spear",
+		1,
+		{ i("blue_thread", 20), i("dragon_orb", 1), i("amethyst", 100), i("dragon_heart", 3) },
+		120,
+		"workbench",
+		98,
+		FIRE_WATER
+	),
+	lava_spear = recipe(
+		"lava_spear",
+		1,
+		{ i("dragon_spear", 1), i("lava_orb", 1), i("reidite", 100), i("lava_heart", 2) },
+		200,
+		"workbench",
+		99,
+		FIRE_WATER
+	),
+	crab_spear = recipe(
+		"crab_spear",
+		1,
+		{ i("wood_spear", 1), i("crab_claws", 5), i("thread", 6) },
+		30,
+		"workbench",
+		100
+	),
+	stone_hammer = recipe("stone_hammer", 1, { i("wood", 90), i("stone", 50) }, 10, "workbench", 101),
+	gold_hammer = recipe(
+		"gold_hammer",
+		1,
+		{ i("wood", 160), i("stone", 120), i("gold", 80), i("stone_hammer", 1) },
+		15,
+		"workbench",
+		102
+	),
+	diamond_hammer = recipe(
+		"diamond_hammer",
+		1,
+		{ i("diamond", 80), i("stone", 200), i("gold", 150), i("gold_hammer", 1) },
+		20,
+		"workbench",
+		103
+	),
+	amethyst_hammer = recipe(
+		"amethyst_hammer",
+		1,
+		{ i("diamond", 160), i("amethyst", 60), i("gold", 250), i("diamond_hammer", 1) },
+		60,
+		"workbench",
+		104
+	),
+	reidite_hammer = recipe(
+		"reidite_hammer",
+		1,
+		{ i("amethyst", 160), i("reidite", 60), i("diamond", 250), i("amethyst_hammer", 1) },
+		90,
+		"workbench",
+		105
+	),
+	-- Super Martelo: a garrafa d'água do Starve vira o balde d'água.
+	super_hammer = recipe("super_hammer", 1, {
+		i("reidite_hammer", 1),
+		i("water_bucket", 1),
+		i("kraken_skin", 1),
+		i("piranha_scales", 10),
+		i("amethyst", 20),
+	}, 120, "workbench", 106, FIRE),
+	wood_shield = recipe("wood_shield", 1, { i("wood", 100) }, 25, "workbench", 107),
+	stone_shield = recipe(
+		"stone_shield",
+		1,
+		{ i("wood_shield", 1), i("stone", 100), i("wood", 50) },
+		40,
+		"workbench",
+		108
+	),
+	gold_shield = recipe(
+		"gold_shield",
+		1,
+		{ i("stone_shield", 1), i("gold", 50), i("stone", 50), i("wood", 50) },
+		50,
+		"workbench",
+		109
+	),
+	diamond_shield = recipe(
+		"diamond_shield",
+		1,
+		{ i("gold_shield", 1), i("diamond", 50), i("gold", 50), i("stone", 50) },
+		70,
+		"workbench",
+		110
+	),
+	amethyst_shield = recipe(
+		"amethyst_shield",
+		1,
+		{ i("diamond_shield", 1), i("amethyst", 50), i("diamond", 50), i("gold", 50) },
+		90,
+		"workbench",
+		111
+	),
+	reidite_shield = recipe(
+		"reidite_shield",
+		1,
+		{ i("amethyst_shield", 1), i("reidite", 50), i("amethyst", 50), i("diamond", 50) },
+		120,
+		"workbench",
+		112
+	),
+	-- Chave inglesa: receita da wiki (70 pedra); o tempo é escolha nossa.
+	wrench = recipe("wrench", 1, { i("stone", 70) }, 10, "workbench", 113),
+	stone_shovel = recipe("stone_shovel", 1, { i("wood", 30), i("stone", 15) }, 5, "workbench", 114),
+	gold_shovel = recipe(
+		"gold_shovel",
+		1,
+		{ i("stone_shovel", 1), i("gold", 20), i("stone", 30), i("wood", 40) },
+		10,
+		"workbench",
+		115
+	),
+	diamond_shovel = recipe(
+		"diamond_shovel",
+		1,
+		{ i("gold_shovel", 1), i("diamond", 20), i("gold", 50), i("stone", 80) },
+		20,
+		"workbench",
+		116
+	),
+	amethyst_shovel = recipe(
+		"amethyst_shovel",
+		1,
+		{ i("diamond_shovel", 1), i("gold", 60), i("amethyst", 30), i("diamond", 40) },
+		40,
+		"workbench",
+		117
+	),
+	pitchfork = recipe("pitchfork", 1, { i("wood", 100), i("stone", 50) }, 10, "workbench", 118),
+	gold_pitchfork = recipe("gold_pitchfork", 1, { i("pitchfork", 1), i("pitchfork_part", 1) }, 60, "workbench", 119),
+	watering_can = recipe("watering_can", 1, { i("wood", 50) }, 5, "workbench", 120),
+	machete = recipe("machete", 1, { i("stone", 70), i("wood", 50) }, 10, "workbench", 121),
 }
 
 return table.freeze(Recipes)
