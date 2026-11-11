@@ -685,6 +685,38 @@ function SerdesFunctions.WriteEVENT_CreativeGive(Value: { Id: string }): ()
 	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
 end
 
+function SerdesFunctions.WriteEVENT_Resurrect(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 34)
+end
+
+function SerdesFunctions.WriteEVENT_TeamJoin(Value: { Leader: number }): ()
+	-- Allocate BLOCK: 9 bytes
+	local BLOCK_START = Allocate(9)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 35)
+	buffer.writef64(SendBuffer, BLOCK_START + 1, Value.Leader)
+end
+
+function SerdesFunctions.WriteEVENT_TeamLeave(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 36)
+end
+
+function SerdesFunctions.WriteEVENT_TeamKick(Value: { UserId: number }): ()
+	-- Allocate BLOCK: 9 bytes
+	local BLOCK_START = Allocate(9)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 37)
+	buffer.writef64(SendBuffer, BLOCK_START + 1, Value.UserId)
+end
+
+function SerdesFunctions.WriteEVENT_TeamLock(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 38)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -791,6 +823,21 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	CreativeGive = {
+		Fire = NOOP
+	},
+	Resurrect = {
+		Fire = NOOP
+	},
+	TeamJoin = {
+		Fire = NOOP
+	},
+	TeamLeave = {
+		Fire = NOOP
+	},
+	TeamKick = {
+		Fire = NOOP
+	},
+	TeamLock = {
 		Fire = NOOP
 	},
 	})
@@ -1272,6 +1319,31 @@ local Returns = table.freeze({
 	CreativeGive = {
 		Fire = function(Value: { Id: string }): ()
 			SerdesFunctions.WriteEVENT_CreativeGive(Value)
+		end
+	},
+	Resurrect = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_Resurrect(Value)
+		end
+	},
+	TeamJoin = {
+		Fire = function(Value: { Leader: number }): ()
+			SerdesFunctions.WriteEVENT_TeamJoin(Value)
+		end
+	},
+	TeamLeave = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_TeamLeave(Value)
+		end
+	},
+	TeamKick = {
+		Fire = function(Value: { UserId: number }): ()
+			SerdesFunctions.WriteEVENT_TeamKick(Value)
+		end
+	},
+	TeamLock = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_TeamLock(Value)
 		end
 	},
 })

@@ -193,9 +193,10 @@ function spec.blocksPlacement_so_na_mesma_camada()
 	assert(not BuildRules.blocksPlacement("bridge", "roof"), "ponte e telhado não se veem")
 end
 
-function spec.waterAllows_ponte_so_na_agua_o_resto_nunca()
-	assert(BuildRules.waterAllows("bridge", true), "ponte na água pode")
-	assert(not BuildRules.waterAllows("bridge", false), "ponte em terra não")
+-- Desde 11/11 a ponte é o "piso": vale na terra também (piso_na_terra_e_na_agua).
+function spec.waterAllows_piso_em_qualquer_lugar_o_resto_so_na_terra()
+	assert(BuildRules.waterAllows("bridge", true), "piso na água pode")
+	assert(BuildRules.waterAllows("bridge", false), "piso em terra também")
 	for _, kind in { "wall", "roof", "spike", "fire", "chest" } do
 		assert(BuildRules.waterAllows(kind, false), `{kind} em terra pode`)
 		assert(not BuildRules.waterAllows(kind, true), `{kind} na água não`)
@@ -205,6 +206,135 @@ end
 function spec.constantes_da_construcao_livre()
 	assert(BuildRules.PIECE_RADIUS == 2, "PIECE_RADIUS")
 	assert(BuildRules.ROTATE_STEP == 45 and BuildRules.ROTATE_STEPS == 8, "passos de giro")
+end
+
+-- Encaixe em grade (telhado, ponte): vizinha de raio 3 = casa de 6 studs.
+local function close(a: number, b: number): boolean
+	return math.abs(a - b) < 1e-6
+end
+
+function spec.encaixe_sem_vizinha_fica_livre()
+	local x, z, yaw = BuildRules.snapPlacement(4, 5, 30, 0, -1, {})
+	assert(x == 4 and z == 5 and yaw == 30, "sem vizinha não muda nada")
+end
+
+function spec.encaixe_na_casa_ao_lado()
+	local x, z, yaw = BuildRules.snapPlacement(6.5, 0.4, 90, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 6) and close(z, 0), `casa ao lado: {x}, {z}`)
+	assert(yaw == 0, "copia o giro da vizinha")
+end
+
+function spec.encaixe_respeita_giro_da_vizinha()
+	local c, s = math.cos(math.rad(45)), math.sin(math.rad(45))
+	-- Casa +1 no eixo X local da vizinha girada 45°: (6·cos, −6·sin).
+	local x, z, yaw = BuildRules.snapPlacement(6 * c + 0.5, -6 * s + 0.3, 0, 1, 0, {
+		{ x = 0, z = 0, yaw = 45, radius = 3 },
+	})
+	assert(close(x, 6 * c) and close(z, -6 * s), `casa girada: {x}, {z}`)
+	assert(yaw == 45, "giro 45")
+end
+
+function spec.encaixe_em_cima_da_vizinha_vai_para_o_lado()
+	-- Ponto livre quase no centro da vizinha, olhando para −Z: casa (0, −6).
+	local x, z = BuildRules.snapPlacement(0.5, 0.5, 0, 0, -1, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 0) and close(z, -6), `casa da frente: {x}, {z}`)
+end
+
+function spec.encaixe_vizinha_longe_nao_puxa()
+	local x, z = BuildRules.snapPlacement(20, 0, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(x == 20 and z == 0, "longe demais")
+end
+
+function spec.encaixe_no_canto_tambem_gruda()
+	-- Ponto na diagonal entre as casas (sem zona morta): vai para a casa (1, 1).
+	local x, z = BuildRules.snapPlacement(3.3, 3.3, 0, 1, 0, { { x = 0, z = 0, yaw = 0, radius = 3 } })
+	assert(close(x, 6) and close(z, 6), `canto: {x}, {z}`)
+end
+
+function spec.encaixe_escolhe_a_vizinha_mais_perto()
+	-- Vizinhas em grades desalinhadas, (0, 0) e (0, 13): o ponto (6.5, 11) está
+	-- mais perto da segunda, que leva a (6, 13); a primeira levaria a (6, 12).
+	local x, z = BuildRules.snapPlacement(6.5, 11, 0, 1, 0, {
+		{ x = 0, z = 0, yaw = 0, radius = 3 },
+		{ x = 0, z = 13, yaw = 0, radius = 3 },
+	})
+	assert(close(x, 6) and close(z, 13), `casa da vizinha mais perto: {x}, {z}`)
+end
+
+function spec.espinho_machuca_quem_bate()
+	local spike: any = { kind = "spike", health = 150, spikeDamage = 10, spikeHitDamage = 2 }
+	assert(BuildRules.spikeHitDamage(spike, false) == 2, "estranho que bate leva o dano de bater")
+	assert(BuildRules.spikeHitDamage(spike, true) == 0, "dono e aliado não levam")
+	local wall: any = { kind = "wall", health = 1000 }
+	assert(BuildRules.spikeHitDamage(wall, false) == 0, "parede não machuca")
+end
+
+function spec.telhados_translucidos_na_tela()
+	local circles = {
+		{ x = 0, z = 0, r = 3 }, -- em cima do jogador
+		{ x = 30, z = 0, r = 3 }, -- longe, mas na tela
+		{ x = 500, z = 0, r = 3 }, -- fora da tela
+	}
+	local under = BuildRules.roofsToFade(1, 1, circles, 80)
+	assert(under[1] and under[2] and not under[3], "debaixo de um: todos da tela")
+	local outside = BuildRules.roofsToFade(15, 0, circles, 80)
+	assert(next(outside) == nil, "fora de qualquer telhado: nenhum")
+end
+
+function spec.telhado_sem_buraco_entre_os_quadrados()
+	-- Quatro telhados encaixados (lado 6): o canto comum fica a 4,24 dos centros,
+	-- fora do círculo de raio 3, mas debaixo do telhado quadrado.
+	local circles = {
+		{ x = 0, z = 0, r = 3 },
+		{ x = 6, z = 0, r = 3 },
+		{ x = 0, z = 6, r = 3 },
+		{ x = 6, z = 6, r = 3 },
+	}
+	assert(next(BuildRules.roofsToFade(3, 3, circles, 80)) ~= nil, "no canto entre quatro telhados ainda está debaixo")
+	assert(next(BuildRules.roofsToFade(3, 0, circles, 80)) ~= nil, "na emenda entre dois também")
+end
+
+function spec.telhado_nao_pisca_na_borda()
+	local circles = { { x = 0, z = 0, r = 3 } }
+	-- Pouco fora do telhado: quem não estava debaixo não apaga...
+	assert(next(BuildRules.roofsToFade(5, 0, circles, 80, false)) == nil, "entrando: ainda não")
+	-- ...mas quem já estava continua apagado (folga para sair).
+	assert(next(BuildRules.roofsToFade(5, 0, circles, 80, true)) ~= nil, "saindo: continua apagado")
+	assert(next(BuildRules.roofsToFade(12, 0, circles, 80, true)) == nil, "longe: volta ao normal")
+end
+
+function spec.limite_por_jogador()
+	assert(BuildRules.underKindLimit(0, 1), "a primeira pode")
+	assert(not BuildRules.underKindLimit(1, 1), "a segunda não")
+	assert(BuildRules.underKindLimit(50, nil), "sem limite")
+end
+
+function spec.piso_na_terra_e_na_agua()
+	assert(BuildRules.waterAllows("bridge", false), "piso na terra")
+	assert(BuildRules.waterAllows("bridge", true), "piso na água")
+	assert(not BuildRules.waterAllows("wall", true), "parede na água não")
+	assert(BuildRules.waterAllows("wall", false), "parede na terra")
+end
+
+function spec.jogador_nao_bloqueia_piso_nem_telhado()
+	assert(not BuildRules.blockedByPlayers("bridge"), "piso: dá para estar em cima")
+	assert(not BuildRules.blockedByPlayers("roof"), "telhado: por cima de quem está embaixo")
+	assert(BuildRules.blockedByPlayers("wall"), "parede: não em cima de jogador")
+end
+
+function spec.piso_encaixado_nao_conta_como_sobreposto()
+	-- Casa vizinha calculada com seno/cosseno: a distância sai um fio menor que
+	-- 2 × raio por arredondamento. Encostar continua valendo.
+	local neighbor = { x = -634.34, z = 626.63, yaw = -127.8, radius = 3.1 }
+	local look = math.rad(-127.8)
+	local x, z =
+		BuildRules.snapPlacement(neighbor.x + 1, neighbor.z + 1, 0, -math.sin(look), -math.cos(look), { neighbor })
+	assert(
+		not BuildRules.circlesOverlap(x, z, 3.1, neighbor.x, neighbor.z, 3.1),
+		"casa vizinha encosta, não sobrepõe"
+	)
+	assert(not BuildRules.circlesOverlap(0, 0, 3, 6 - 1e-9, 0, 3), "encostar com arredondamento")
+	assert(BuildRules.circlesOverlap(0, 0, 3, 5.9, 0, 3), "sobrepor de verdade continua barrado")
 end
 
 return spec

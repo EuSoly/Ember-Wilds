@@ -1230,7 +1230,7 @@ return {
 		assert(containsError(errors, "mobDamage"), `faltou erro de mobDamage: {table.concat(errors, "; ")}`)
 	end,
 
-	["G8 new items exist, are testOnly and have the table recipes"] = function()
+	["G8 items exist and have their recipes (Starve numbers since 11/11)"] = function()
 		local ids = {
 			"wood_spike_door",
 			"stone_spike_door",
@@ -1246,9 +1246,11 @@ return {
 			"bucket",
 			"water_bucket",
 		}
+		-- Liberados em 11/11 (structureitems.spec); poço e baldes continuam de teste.
+		local stillTest = { well = true, bucket = true, water_bucket = true }
 		for _, id in ids do
 			local item = (Defs.Items :: any)[id]
-			assert(item ~= nil and item.testOnly == true, `{id}: falta ou não é testOnly`)
+			assert(item ~= nil and (item.testOnly == true) == (stillTest[id] == true), `{id}: liberação`)
 			if id == "water_bucket" then
 				assert(Defs.Recipes[id] == nil, "balde cheio não tem receita")
 			else
@@ -1268,12 +1270,12 @@ return {
 			bed.wood == 100 and bed.stone == 50 and bed.wolf_fur == 5 and bed.rabbit_fur == 5 and bed.thread == 6,
 			"cama"
 		)
-		assert(cost("stone_extractor").wood == 200 and cost("stone_extractor").stone == 50, "extrator de pedra")
-		assert(cost("gold_extractor").wood == 200 and cost("gold_extractor").gold == 30, "extrator de ouro")
-		assert(cost("furnace").stone == 100 and cost("furnace").gold == 30, "fornalha")
-		assert(cost("bridge").wood == 30 and cost("roof").wood == 25 and cost("sign").wood == 20, "madeira")
+		assert(cost("stone_extractor").wood == 50 and cost("stone_extractor").stone == 100, "extrator de pedra")
+		assert(cost("gold_extractor").stone == 60 and cost("gold_extractor").gold == 120, "extrator de ouro")
+		assert(cost("furnace").wood == 150 and cost("furnace").stone == 50 and cost("furnace").gold == 15, "fornalha")
+		assert(cost("bridge").wood == 15 and cost("roof").wood == 30 and cost("sign").wood == 20, "madeira")
 		assert(cost("well").stone == 60 and cost("bucket").wood == 15, "poço e balde")
-		assert(cost("stone_spike_door").stone_door == 1 and cost("stone_spike_door").stone_spike == 1, "porta espinhos")
+		assert(cost("stone_spike_door").stone_door == 1 and cost("stone_spike_door").stone == 140, "porta espinhos")
 		local items: any = Defs.Items
 		assert(
 			items.bucket.category == "misc" and items.bucket.maxStack == 1 and items.bucket.structure == nil,
@@ -1287,25 +1289,25 @@ return {
 		local function s(id: string): any
 			return items[id].structure
 		end
-		assert(s("wood_spike_door").kind == "spike_door" and s("wood_spike_door").health == 1000, "porta madeira")
-		assert(s("stone_spike_door").health == 1500 and s("stone_spike_door").spikeDamage == 20, "porta pedra")
-		assert(s("gold_spike_door").health == 2000 and s("gold_spike_door").spikeDamage == 30, "porta ouro")
+		assert(s("wood_spike_door").kind == "spike_door" and s("wood_spike_door").health == 100, "porta madeira")
+		assert(s("stone_spike_door").health == 200 and s("stone_spike_door").spikeDamage == 10, "porta pedra")
+		assert(s("gold_spike_door").health == 400 and s("gold_spike_door").spikeDamage == 15, "porta ouro")
 		local ext = s("gold_extractor").extractor
-		assert(s("gold_extractor").health == 300 and ext.output == "gold", "extrator de ouro")
+		assert(s("gold_extractor").health == 2000 and ext.output == "gold", "extrator de ouro")
 		assert(ext.woodPerCycle == 2 and ext.cycleSeconds == 10 and ext.yield == 1, "ciclo")
-		assert(ext.maxWood == 100 and ext.maxStock == 100, "limites do extrator")
+		assert(ext.maxWood == 255 and ext.maxStock == 255, "limites do extrator")
 		assert(s("stone_extractor").extractor.output == "stone", "extrator de pedra")
 		local furnace = s("furnace")
-		assert(furnace.heatRadius == 24 and furnace.station == "fire" and furnace.health == 500, "fornalha")
-		assert(furnace.lifetime == nil and furnace.furnace.burnEvery == 6 and furnace.furnace.maxWood == 200, "queima")
+		assert(furnace.heatRadius == 24 and furnace.station == "fire" and furnace.health == 1000, "fornalha")
+		assert(furnace.lifetime == nil and furnace.furnace.burnEvery == 5 and furnace.furnace.maxWood == 255, "queima")
 		assert(s("bridge").radius == 3.1 and s("bridge").health == 300, "ponte")
-		assert(s("roof").radius == 3.2 and s("roof").health == 300, "telhado")
+		assert(s("roof").radius == 3.2 and s("roof").health == 1000, "telhado")
 		assert(s("sign").health == 100, "placa")
 		local well = s("well").well
 		assert(s("well").health == 500 and well.drinksPerBucket == 12, "poço")
 		assert(well.maxDrinks == 48 and well.thirstPerDrink == 20, "poço")
 		local bed = s("bed").bed
-		assert(s("bed").health == 300 and bed.regenFactor == 2 and bed.drainFactor == 0.5, "cama")
+		assert(s("bed").health == 400 and bed.regenFactor == 2 and bed.drainFactor == 0.5, "cama")
 	end,
 
 	["structure blocks are required in their kind and refused elsewhere"] = function()

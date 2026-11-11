@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local CraftRules = require(ReplicatedStorage.Shared.Craft.CraftRules)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
@@ -90,6 +91,10 @@ local function countsOf(inv: Inventory.Inventory): { [string]: number }
 end
 
 local function start(player: Player, recipeId: string)
+	-- Fantasma não crafta (GhostService).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
 	local character = player.Character
 	local recipe = Defs.Recipes[recipeId]
 	if recipe == nil or active[player] ~= nil or character == nil then

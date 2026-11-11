@@ -5,7 +5,7 @@ As peças de base (bancada, fogueiras, paredes, portas, espinhos e baú; mais as
 ## Como colocar
 
 1. Crafte a peça (veja `crafting.md`) e selecione o slot dela na hotbar.
-2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**: verde se pode construir, vermelho se não pode. É só uma aproximação do cliente; quem decide é o servidor.
+2. Um **fantasma** aparece no chão, **a uma distância fixa do boneco, na direção da mira**. Ele é o **próprio modelo da peça**, translúcido e sem textura, com as peças **pintadas de verde** se pode construir e **de vermelho** se não pode (o `Highlight` não aparecia por cima dos modelos), sem luz, efeitos nem som. Sem template no place, aparece o modelo provisório (o mesmo que o servidor coloca); o bloco com a faixa da frente só volta se o modelo falhar. É só uma aproximação do cliente; quem decide é o servidor.
 3. **PC:** solte o clique (botão de usar). **Celular:** solte o joystick direito. Posição inválida não gasta nada.
 4. Para parar de construir, troque de slot. Com uma peça na mão, o golpe não bate (só constrói).
 
@@ -13,12 +13,22 @@ O servidor recusa e não gasta nada se: a peça não está na mão, a peça cair
 
 ## Posição livre e rotação
 
-Não existe grade. A peça nasce no ponto `BuildRules.placePoint`: a partir do centro do boneco, `PLACE_DISTANCE` studs na direção da mira. A distância é fixa, então a peça sempre aparece num círculo em volta do jogador, em qualquer direção.
+As peças são livres, sem grade, com uma exceção: as de chão e teto (veja "Encaixe em grade" abaixo). A peça nasce no ponto `BuildRules.placePoint`: a partir do centro do boneco, `PLACE_DISTANCE` studs na direção da mira. A distância é fixa, então a peça sempre aparece num círculo em volta do jogador, em qualquer direção.
 
 - **De frente para o jogador:** sem girar, a frente da peça olha para quem constrói (`BuildRules.facingYaw`).
 - **Girar:** a tecla **R** (PC) ou o botão **"Girar"** (celular, só aparece com uma peça na mão) gira o fantasma 45° por vez (`ROTATE_STEP`), em 8 passos (`ROTATE_STEPS`). O giro vale **até trocar de item** (ou renascer), quando volta a 0 (o servidor zera o dele, e o cliente também manda `SetBuildRotation(0)` ao zerar com uma peça na mão, porque a troca chega ao cliente um pouco depois; assim a última mensagem sempre bate com o fantasma). A tecla R é ignorada enquanto você digita no chat.
 - **Na rede:** o cliente manda só o número do passo (`SetBuildRotation`, 0 a 7). O servidor ignora valor fora disso, fracionário ou mandado sem uma peça na mão (`BuildRules.validSteps`), e guarda o giro por jogador.
 - **O fantasma e a peça são iguais:** o cliente usa o mesmo ponto, o mesmo giro e os mesmos raios (constantes em `BuildRules`), por isso a peça construída cai onde o fantasma estava.
+
+## Encaixe em grade (chão e teto)
+
+Peças com `snap = true` no bloco `structure` do item se encaixam umas nas outras. Hoje são o telhado e a ponte; os canteiros de plantação vão usar o mesmo campo. Paredes, espinhos, portas e o resto continuam livres (decisão do Elizeu, 11/11).
+
+- Perto de uma peça da **mesma camada** que também tem `snap`, a nova vai para a **casa mais próxima da grade dessa vizinha**. O lado da casa é o diâmetro dela (`2 × radius`), os eixos são os dela, e a nova **copia o giro da vizinha**: forma um piso contínuo, sem fresta.
+- O ponto livre em cima da própria vizinha vai para a casa ao lado, na direção da mira.
+- A vizinha puxa a peça quando o centro dela está a até `2 × raio + BuildRules.SNAP_RANGE` (3 studs de folga) do ponto livre; aí a peça sempre vai para a casa mais próxima, inclusive nos cantos. Sem vizinha ao alcance, a peça fica livre.
+- Encaixada, a peça usa o giro da vizinha: a tecla R (e o botão Girar) não muda nada até ela sair da grade.
+- A conta é `BuildRules.snapPlacement`, a mesma no servidor (`StructureService.place`, com `StructureService.snapNeighbors`) e no fantasma (`BuildGhost`). Testes em `tests/build.spec.luau` (`encaixe_*`).
 
 ## Peças são círculos
 
@@ -36,7 +46,7 @@ Cada peça ocupa um círculo no chão (centro x, z e raio). Duas peças **encost
 
 A distância é meia peça + o raio do corpo (1,5) + meia peça: a peça nasce sempre à frente do corpo, e o próprio construtor nunca a bloqueia. As regras puras estão em `src/shared/Build/BuildRules.luau` (testadas no Lune).
 
-**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). Desde a G8 cada peça com modelo do Elizeu tem o `radius` do tamanho do modelo (metade da maior medida vista de cima, ajustado na bancada): paredes, portas, espinhos e portas com espinhos 3 (peça de 6), bancada e fornalha 3, fogueira 2,7, fogueira grande 3,1, baú 2,3, extratores 2,7, poço 2,6, cama 3,5, ponte 3,1, telhado 3,2; a placa usa o padrão (2). Mudou o tamanho de um modelo na bancada? Ajuste o `radius` do item junto. O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; o raio máximo aceito é `PLACE_DISTANCE - PLAYER_RADIUS` (4 studs); acima disso a peça sempre cobriria o corpo e o boot recusa o item.
+**Peça maior:** coloque `radius` no bloco `structure` do item (opcional; sem ele vale `PIECE_RADIUS`, via `BuildRules.radiusOf`). Desde a G8 cada peça com modelo do Elizeu tem o `radius` do tamanho do modelo (metade da maior medida vista de cima, ajustado na bancada): paredes, portas, espinhos e portas com espinhos 2,5 desde 11/11 (o modelo tem 6: dá para colocar um pouco mais perto, pedido do Elizeu), bancada e fornalha 3, fogueira 2,7, fogueira grande 3,1, baú 2,3, extratores 2,7, poço 2,6, cama 3,5, ponte 3,1, telhado 3,2; a placa usa o padrão (2). Mudou o tamanho de um modelo na bancada? Ajuste o `radius` do item junto. O campo `size` e a grade não existem mais. Atenção: a distância de colocação é fixa; o raio máximo aceito é `PLACE_DISTANCE - PLAYER_RADIUS` (4 studs); acima disso a peça sempre cobriria o corpo e o boot recusa o item.
 
 ## Vida e dano em construção
 
@@ -67,11 +77,25 @@ O dono (e, no futuro, o time) bate na porta e ela abre ou fecha; aberta, deixa p
 
 ## Espinho
 
-Fere quem encosta, menos o dono e os aliados. O `SpikeService` varre a 5 Hz as peças vizinhas (não usa `Touched`): quem chega no círculo do espinho, com margem de 1,8 studs (`PLAYER_RADIUS` + 0,3), é ferido. Cada espinho fere cada vítima no máximo 1× por segundo, então três espinhos em volta ferem três vezes mais. O dano é do tipo `"combat"` (o capacete protege) e a morte tem causa "Espinho".
+Fere quem encosta, menos o dono e os aliados (com os times, os colegas: `times.md`). **Bater** num espinho alheio também machuca quem bate (`spikeHitDamage`, Starve "hit"; `BuildRules.spikeHitDamage`, aplicado no `StructureService.hit`). O `SpikeService` varre a 5 Hz as peças vizinhas (não usa `Touched`): quem chega no círculo do espinho, com margem de 1,8 studs (`PLAYER_RADIUS` + 0,3), é ferido. Cada espinho fere cada vítima no máximo 1× por segundo, então três espinhos em volta ferem três vezes mais. O dano é golpe de jogador (o capacete protege) e a morte tem causa "Espinho".
 
-| Espinho | Dano por toque |
-|---|---:|
-| Madeira / pedra / ouro | 10 / 20 / 30 |
+Números da config oficial do Starve (11/11), de madeira a reidite:
+
+| Peça | Vida | Encostar | Bater |
+|---|---|---|---|
+| Espinho | 150 / 300 / 600 / 1200 / 2400 / 3000 | 10 / 20 / 30 / 40 / 50 / 60 | 2 / 3 / 3 / 4 / 4 / 5 |
+| Porta com espinhos | 100 / 200 / 400 / 800 / 1600 / 2000 | 5 / 10 / 15 / 25 / 30 / 35 | 1 / 2 / 2 / 3 / 3 / 4 |
+| Parede e porta | 1000 / 1500 / 2000 / 2500 / 3500 / 4000 | — | — |
+
+## Extratores, fornalha e máquina de esmeralda
+
+- **Extratores** (pedra, ouro, diamante, ametista, reidite): 2000 de vida; 1 minério a cada 10 s gastando 2 madeiras; até 255 de madeira e 255 de minério. Qualquer um põe madeira, só o dono e os aliados tiram.
+- **Fornalha:** 1000 de vida, 1 madeira a cada 5 s, até 255.
+- **Máquina de esmeralda:** 750 pontos por minuto ao dono vivo (`EmeraldService`, `EmeraldRules`). **Destruída por outra pessoa, o dono morre** (causa "Máquina de esmeralda destruída"); quebrada pelo próprio dono ou por um aliado, ou removida porque o dono morreu ou saiu, nada acontece.
+- **Limite por jogador** (`structure.maxPerPlayer`): totem, pedra da ressurreição e máquina de esmeralda, **uma de cada**. Ao tentar colocar além do limite, aparece o aviso "Você já tem o máximo desta construção".
+- **Descrições:** o livro mostra "Como funciona" (texto `desc.<id>` em `Strings/ptBR.luau`) nas construções, ferramentas especiais e peças de cabeça. Item novo que não é óbvio: escreva o `desc.<id>`.
+- **Pedra da ressurreição:** veja `ressurreicao.md`. **Totem:** veja `times.md`.
+- **Testar no Studio:** `ServerStorage.DevPlace:Invoke(player, "<itemId>")` coloca a peça à frente do jogador sem gastar item (só no Studio).
 
 ## Fogo
 
@@ -111,25 +135,25 @@ Calor, estação de craft e tempo de vida das fogueiras são os mesmos de antes:
 
 `wood_spike_door`, `stone_spike_door` e `gold_spike_door` (kind `spike_door`). É uma porta (o dono bate e ela abre ou fecha, nunca fecha com alguém dentro) que também fere quem não é aliado, como o espinho do mesmo tier. O dono e os aliados nunca se ferem. O código reaproveita os dois comportamentos: `BuildRules.isDoor` diz se o kind é porta (inclui `spike_door`) e `BuildRules.hurts` diz se ele fere.
 
-| Porta com espinhos | Vida | Dano por toque | Receita (bancada) |
-|---|---:|---:|---|
-| Madeira | 1000 | 10 | porta de madeira + espinho de madeira |
-| Pedra | 1500 | 20 | porta de pedra + espinho de pedra |
-| Ouro | 2000 | 30 | porta de ouro + espinho de ouro |
+| Porta com espinhos | Vida | Encostar | Bater | Receita (bancada) |
+|---|---:|---:|---:|---|
+| Madeira | 100 | 5 | 1 | porta de madeira + 80 madeiras + 60 pedras |
+| Pedra | 200 | 10 | 2 | porta de pedra + 140 pedras |
+| Ouro | 400 | 15 | 2 | porta de ouro + 80 ouros + 60 pedras |
 
-Vida e dano são os da porta e do espinho do mesmo tier. A receita é provisória. Só para teste.
+Números e receitas da config oficial do Starve (11/11); diamante, ametista e reidite na tabela da seção "Espinho". Madeira a ouro liberadas.
 
 ## Estruturas interativas
 
-Chegue perto (até 8 studs do centro, `InteractRules.RANGE`) e o **painel de interação** aparece sobre a hotbar com um botão por ação (veja `hud.md`). O servidor confere tudo: distância, item, quantidade e taxa. O estado (madeira, estoque, água) vive só enquanto a peça existe, como o conteúdo do baú; ao destruir a peça, o painel some e nada fica preso. Tudo abaixo é **só para teste**, e os números são provisórios, exceto os marcados "wiki".
+Chegue perto (até 8 studs do centro, `InteractRules.RANGE`) e o **painel de interação** aparece sobre a hotbar com um botão por ação (veja `hud.md`). O servidor confere tudo: distância, item, quantidade e taxa. O estado (madeira, estoque, água) vive só enquanto a peça existe, como o conteúdo do baú; ao destruir a peça, o painel some e nada fica preso. Números da config oficial do Starve (11/11). Liberados: extratores de pedra e ouro, fornalha, cama e placa; o poço e o balde seguem só de teste. Fantasma não usa nada daqui (`ressurreicao.md`).
 
 | Peça | Vida | Receita (bancada) | O que faz |
 |---|---:|---|---|
-| Extrator de pedra / ouro | 300 | 200 madeiras + 50 pedras / 30 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s (wiki) e produz 1 pedra / 1 ouro por ciclo, até 100 guardados. O dono (e aliados) pega o estoque pelo painel. Guarda até 100 madeiras. |
-| Fornalha | 500 | 100 pedras + 30 ouros | "Baú de mão única": você põe madeira (até 200) e não tira. Queima 1 madeira a cada 6 s (wiki). Acesa, esquenta (raio 24) e é estação de fogo do craft; não queima quem encosta. Sem madeira, apaga: tira o calor e a estação. |
+| Extrator de pedra / ouro | 2000 | 50 madeiras + 100 pedras / 60 pedras + 120 ouros | Você põe madeira (não dá para tirar). Com madeira, gasta 2 madeiras a cada 10 s e produz 1 pedra / 1 ouro por ciclo, até 255 guardados. O dono (e os aliados do time) pega o estoque pelo painel. Guarda até 255 madeiras. Diamante, ametista e reidite: só de teste. |
+| Fornalha | 1000 | 150 madeiras, 50 pedras, 15 ouros | "Baú de mão única": você põe madeira (até 255) e não tira. Queima 1 madeira a cada 5 s. Acesa, esquenta (raio 24) e é estação de fogo do craft; não queima quem encosta. Sem madeira, apaga: tira o calor e a estação. |
 | Poço | 500 | 60 pedras | Com um balde cheio na mão, "Encher" põe água no poço: 1 balde = 12 goles (wiki), até 48. "Beber" gasta 1 gole e dá 20 de sede. |
 | Balde (`bucket`) | - | 15 madeiras | Com o balde na mão, perto da água do mapa (até 3 studs), ele enche quando você aperta ou segura o botão de usar (vira `water_bucket`, no mesmo slot). Do balde não se bebe. Não empilha. |
-| Cama | 300 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Deitar" põe você em cima da cama: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
+| Cama | 400 | 100 madeiras, 50 pedras, 5 peles de lobo, 5 de coelho, 6 linhas (wiki) | "Deitar" põe você em cima da cama: regeneração de vida x2; fome, frio e sede caem na metade (`SurvivalRules`). O bônus soma com o calor da fogueira. Andar ou levar dano levanta. Deitado, você pode ser atacado. Olhos fechados enquanto dorme. |
 | Placa | 100 | 20 madeiras (wiki) | O dono escolhe no painel um símbolo de uma lista fixa (`SignRules.SYMBOLS`: setas, aviso, coração, caveira, estrela, casa, ! e ?). Sem texto livre, porque texto de jogador exige filtro da Roblox. Aparece nas duas faces. |
 
 Os números ficam nos blocos `extractor`, `furnace`, `well` e `bed` da peça, em `Defs/Items.luau`. O extrator produz mais devagar que bater numa rocha com picareta, para não deixar a mineração inútil. Qualquer jogador perto pode pôr madeira no extrator e na fornalha; pegar o estoque do extrator e trocar o símbolo da placa é só do dono (e aliados, via `BuildRules.areAllies`, quando os times chegarem). A regra está em `InteractRules`.
@@ -138,10 +162,10 @@ Código: as regras puras são `MachineRules`, `WellRules`, `SignRules` e `Intera
 
 ## Ponte e telhado
 
-Os dois são exceções da regra "uma peça por círculo": cada um vive numa **camada** (`BuildRules`) e só bloqueia peças da mesma camada. Raio 2,1, vida 300, só para teste.
+Os dois são exceções da regra "uma peça por círculo": cada um vive numa **camada** (`BuildRules`) e só bloqueia peças da mesma camada, e os dois **se encaixam em grade** (veja "Encaixe em grade"). Ponte: raio 3,1, vida 300. Telhado: raio 3,2, vida 1000. Liberados em 11/11.
 
-- **Ponte** (`bridge`, 30 madeiras): só se coloca **sobre a água** (o centro cai na água), e não sobre outra ponte. Quem está em cima é tratado como em terra: não perde oxigênio nem fica lento. A ponte vale como chão dentro do raio dela mais o raio do corpo do jogador (1,5), para que uma fileira de pontes encostadas forme um caminho sem buraco. Se a ponte some, quem estava em cima volta a estar na água. Colocar qualquer outra peça "na água" continua proibido. Os mobs usam a água crua: a ponte não os protege.
-- **Telhado** (`roof`, 25 madeiras): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
+- **Piso** (id `bridge`, 15 madeiras; era "ponte" até 11/11): vai **na terra ou na água**, e não sobre outro piso. Jogador em cima não impede colocar (`BuildRules.blockedByPlayers`). Quem está em cima é tratado como em terra: não perde oxigênio nem fica lento. A ponte vale como chão dentro do raio dela mais o raio do corpo do jogador (1,5), para que uma fileira de pontes encostadas forme um caminho sem buraco. Se a ponte some, quem estava em cima volta a estar na água. Colocar qualquer outra peça "na água" continua proibido. Os mobs usam a água crua: a ponte não os protege.
+- **Telhado** (`roof`, 30 madeiras; debaixo de qualquer telhado, **todos os telhados na tela** ficam translúcidos para você: `BuildRules.roofsToFade`, `RoofFade`. "Debaixo" usa o círculo que passa pelos cantos do quadrado, raio × √2, para não ter buraco entre telhados encaixados, e quem já estava debaixo só sai 2 studs além, `ROOF_EXIT_MARGIN`; antes piscava andando por baixo): fica numa camada de cima, a `ROOF_HEIGHT = 3` studs do chão (altura provisória), e pode cobrir outras peças sem colidir com elas nem com o jogador. Protege quem está embaixo: mobs voadores (o falcão) não mordem quem está sob um telhado. Fica translúcido só para você quando está embaixo. Nevasca e tempestade de areia ficam para quando esses biomas existirem. O golpe de coleta acerta ponte e telhado por último (não atrapalham bater no que está embaixo).
 
 Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRadius`) no módulo `TaggedCircles`, para a simulação de água e os mobs não precisarem conhecer o `StructureService`.
 
@@ -149,7 +173,7 @@ Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRa
 
 Item com `testOnly = true` em `Defs/Items.luau` só existe no Studio. Fora do Studio (`RunService:IsStudio()` falso, inclusive servidor privado) é como se não existisse: não aparece no craft nem nas listas, não é craftável, não é dado (nem pelo `InventoryService.give`) e não é colocável. O `Validate` proíbe item `testOnly` em kit e no loot de mob. O lugar único dessa regra é `src/shared/ItemAccess.luau`.
 
-Itens marcados hoje: as três portas com espinhos, os dois extratores, fornalha, ponte, telhado, placa, poço, cama, balde e balde cheio.
+Itens marcados hoje (11/11): as peças de diamante, ametista e reidite (paredes, portas, espinhos, portas com espinho e extratores), poço, balde, balde cheio, pedra da ressurreição e máquina de esmeralda. Liberados em 11/11: portas com espinho de madeira a ouro, extratores de pedra e ouro, fornalha, ponte, telhado, placa, cama e totem.
 
 **Para liberar um item num update:** apague a linha `testOnly = true` do item em `Defs/Items.luau` (e do `bucket` e do `water_bucket` se for liberar o poço, senão ele não tem uso). Antes, revise os números marcados `-- provisório` da peça e da receita (em `Defs/Items.luau` e `Defs/Recipes.luau`). Rode `bash scripts/check.sh`. Não existe dado salvo para limpar: o inventário e a base não persistem.
 

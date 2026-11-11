@@ -167,6 +167,16 @@ return table.freeze({
 	-- Modo criativo ligado (true/nil), atributo no Player escrito só pelo
 	-- CreativeService a partir do perfil; o cliente lê para o livro.
 	Creative = "Creative",
+	-- Fantasma (GhostService): instante (relógio do servidor) em que o tempo de
+	-- fantasma acaba; nil = não é fantasma. Atributo no Player.
+	GhostUntil = "GhostUntil",
+	-- Time (TeamService): UserId do líder do time do jogador (nil = sem time),
+	-- atributo no Player. No modelo do totem: TeamLeader (UserId), TeamLocked e
+	-- TeamSize, para o cliente mostrar Entrar/Trancar.
+	Team = "Team",
+	TeamLeader = "TeamLeader",
+	TeamLocked = "TeamLocked",
+	TeamSize = "TeamSize",
 	-- Tag (CollectionService) dos modelos que esquentam (fogueira): perto deles
 	-- o frio sobe (SurvivalService).
 	HeatSourceTag = "HeatSource",

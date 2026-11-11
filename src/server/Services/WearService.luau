@@ -2,7 +2,9 @@
 -- Usar capacete, protetor ou mochila consome o item segurado e devolve o usado.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -35,7 +37,8 @@ local function canReturnArmor(player: Player, heldId: string, oldId: string?): b
 end
 
 local function wear(player: Player, character: Model)
-	if CraftService.isCrafting(player) then
+	-- Fantasma não veste (GhostService).
+	if CraftService.isCrafting(player) or GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 		return
 	end
 	local heldId = character:GetAttribute(StatNames.Equipped)

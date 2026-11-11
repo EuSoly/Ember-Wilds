@@ -290,6 +290,22 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 		size = 15,
 	}))
 
+	-- Como funciona (texto "desc.<id>", só para o que não é óbvio: construções,
+	-- ferramentas especiais, peças de cabeça).
+	local descKey = "desc." .. id
+	if Strings.has(descKey) then
+		add(section(3, "book.section.about", {
+			text({
+				Name = "About",
+				LayoutOrder = 1,
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+				Text = Strings.get(descKey),
+				size = 15,
+			}),
+		}))
+	end
+
 	local craft = BookInfo.craft(id)
 	if craft then
 		local chips: { Instance } = {}
@@ -298,7 +314,7 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 			item.LayoutOrder = index
 			table.insert(chips, item)
 		end
-		add(section(3, "book.section.how", { chipGrid(1, chips) }))
+		add(section(4, "book.section.how", { chipGrid(1, chips) }))
 
 		local needs: { Instance } = {}
 		for index, stationId in craft.stations do
@@ -310,20 +326,20 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 		local seconds = string.format("%.0f", craft.seconds)
 		local clockRow = row(#craft.stations + 1, BookImages.CLOCK, Strings.format("book.seconds", { value = seconds }))
 		table.insert(needs, clockRow)
-		add(section(4, "book.section.needs", needs))
+		add(section(5, "book.section.needs", needs))
 	end
 
 	local stats: { Instance } = {}
 	for index, line in BookInfo.stats(id) do
 		table.insert(stats, row(index, BookImages.STAT[line.key], Strings.format(line.key, line.vars)))
 	end
-	add(section(5, "book.section.stats", stats))
+	add(section(6, "book.section.stats", stats))
 
 	local sources: { Instance } = {}
 	for index, source in BookInfo.sources(id) do
 		table.insert(sources, sourceRow(index, source))
 	end
-	add(section(6, "book.section.where", sources))
+	add(section(7, "book.section.where", sources))
 
 	local used: { Instance } = {}
 	for index, result in BookInfo.usedIn(id, vide.untrack(CreativeState.on)) do
@@ -332,7 +348,7 @@ local function content(id: string, onShow: (string) -> ()): { Instance }
 		table.insert(used, item)
 	end
 	if #used > 0 then
-		add(section(7, "book.section.usedIn", { chipGrid(1, used) }))
+		add(section(8, "book.section.usedIn", { chipGrid(1, used) }))
 	end
 	return out
 end

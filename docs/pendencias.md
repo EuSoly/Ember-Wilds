@@ -2,6 +2,21 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Construções (11/11)
+
+- **Conferir jogando:** colocar vários pisos lado a lado na terra (a casa encaixada era recusada por arredondamento; corrigido com folga de 0,0001 stud em `circlesOverlap`, teste `piso_encaixado_nao_conta_como_sobreposto`); paredes e espinhos mais perto (raio 2,5).
+
+- **Modelos:** o totem fica grande de propósito (modelo com raio 4,3, círculo 4). A pedra da ressurreição foi reduzida a 88% no place em 11/11 (raio 3,9): **salvar o place**. O extrator de diamante está menor que os outros (1,6 contra 2,7).
+- **Fantasma atravessar construções:** o Starve deixa; aqui ainda colide (precisa de grupos de colisão no mapa).
+- **Testar depois (Elizeu, 11/11): dano entre colegas de time (30%).**
+- **Testes com 2 jogadores, para depois (Test → 2 Players):** entrar no time, expulsar, trancar, nick verde, portas e baús compartilhados, espinhos sem machucar colegas, máquina de esmeralda quebrada por colega (não mata).
+- **Conferir:** o tempo de fantasma acabar → morte normal com caixa; máquina de esmeralda destruída matando o dono.
+- **Vidas sem número na config:** totem 500, ponte 300 e placa 100 (escolha nossa).
+- **Poço:** a receita do Starve é 100 pedras + 30 terra (bancada + fogo); a nossa ainda é 60 pedras. Trocar quando a terra (pá) existir.
+- **Fantasma (casos de borda):** pode levar golpe entre o fim do tempo e o próximo passo (até 0,25 s); o estado só é limpo no polling se ele morrer por outro caminho; craft ou mordida em andamento continuam; listas de perda não cobrem tiers acima de reidite (não existem ainda).
+- **Times:** membros do time desfeito pelo totem também esperam 20 s; eventos de time e de ressurreição sem limite de taxa; `DevPlace` pula os limites de totem e máquina (só Studio); ordenação dos membros no painel pode oscilar.
+- **Encaixe em grade (fantasma):** busca de vizinhas a cada quadro; cor pode atrasar 0,15 s depois de um salto; em cima da vizinha a peça pode ir para casa a ~10 studs; falta teste de "peça sem snap não encaixa".
+
 ## Modo criativo (11/11)
 
 - **Conferir no Studio:** abrir o livro com o criativo ligado (título "Modo criativo", botão Pegar ao lado do Fixar, itens de teste nas abas). O Pegar em si já foi conferido (+100 madeira, espada de lava). O clique simulado pelo MCP não abriu o livro.

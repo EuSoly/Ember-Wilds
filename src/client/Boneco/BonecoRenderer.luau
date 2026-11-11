@@ -19,6 +19,7 @@ local C = require(Shared:WaitForChild("BonecoConfig"))
 local Cosmetic = require(Shared:WaitForChild("Cosmetic"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local ArmorRules = require(Shared:WaitForChild("Survival"):WaitForChild("ArmorRules"))
+local GhostRules = require(Shared:WaitForChild("Survival"):WaitForChild("GhostRules"))
 local EatRules = require(Shared:WaitForChild("Survival"):WaitForChild("EatRules"))
 local ExpressionState = require(Shared:WaitForChild("ExpressionState"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
@@ -33,6 +34,7 @@ local BagModel = require(script.Parent.Parent:WaitForChild("Menu"):WaitForChild(
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 
 local ROOT_TIMEOUT = 10
+local TEAMMATE_COLOR = Color3.fromRGB(120, 230, 120) -- nick dos colegas de time
 local BODY_SLOT = "body"
 local BAG_SLOT = "bag"
 local BOOK_SLOT = "book"
@@ -89,6 +91,11 @@ type Entry = {
 	armorModel: Model?,
 	-- Capuz: o nick (e o selo) some para os outros jogadores.
 	nameHidden: boolean,
+	-- Fantasma (atributo GhostUntil do Player): brilho azul translúcido.
+	ghostGlow: Highlight?,
+	-- Colega de time (nick verde) e a cor original do nick.
+	teammate: boolean,
+	nameColor: Color3,
 	connections: { RBXScriptConnection },
 }
 
@@ -260,6 +267,32 @@ local function syncAttributes(entry: Entry)
 	if armorId ~= entry.armorId then
 		applyArmor(entry, armorId)
 	end
+	-- Colega de time: nick verde (só quem está no mesmo time vê).
+	local myTeam = Players.LocalPlayer:GetAttribute(StatNames.Team)
+	local mate = owner ~= nil
+		and owner ~= Players.LocalPlayer
+		and myTeam ~= nil
+		and owner:GetAttribute(StatNames.Team) == myTeam
+	if mate ~= entry.teammate then
+		entry.teammate = mate
+		entry.boneco.nameLabel.TextColor3 = if mate then TEAMMATE_COLOR else entry.nameColor
+	end
+	-- Fantasma: brilho azul (some quando volta ou morre).
+	local ghost = owner ~= nil and GhostRules.isGhostPlayer(owner, Workspace:GetServerTimeNow())
+	if ghost and entry.ghostGlow == nil then
+		local glow = Instance.new("Highlight")
+		glow.Name = "GhostGlow"
+		glow.FillColor = Color3.fromRGB(150, 205, 255)
+		glow.OutlineColor = Color3.fromRGB(210, 235, 255)
+		glow.FillTransparency = 0.35
+		glow.OutlineTransparency = 0.2
+		glow.DepthMode = Enum.HighlightDepthMode.Occluded
+		glow.Parent = entry.boneco.model
+		entry.ghostGlow = glow
+	elseif not ghost and entry.ghostGlow then
+		entry.ghostGlow:Destroy()
+		entry.ghostGlow = nil
+	end
 	local cosmeticId = stringAttribute(character, StatNames.CosmeticPrefix .. BODY_SLOT)
 	if cosmeticId ~= entry.cosmeticId then
 		applyCosmetic(entry, cosmeticId)
@@ -319,6 +352,9 @@ local function build(character: Model, hrp: BasePart)
 		armorId = nil,
 		armorModel = nil,
 		nameHidden = false,
+		ghostGlow = nil,
+		teammate = false,
+		nameColor = boneco.nameLabel.TextColor3,
 		connections = {},
 	}
 	entries[character] = entry

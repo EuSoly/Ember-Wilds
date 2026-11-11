@@ -140,7 +140,7 @@ end
 
 -- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,
 -- placa, poço e cama.
-for _, kind in { "extractor", "furnace", "sign", "well", "bed" } do
+for _, kind in { "extractor", "furnace", "sign", "well", "bed", "totem", "resurrection", "emerald_machine" } do
 	builders[kind] = builders.station
 end
 

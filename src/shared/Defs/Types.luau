@@ -75,6 +75,9 @@ export type StructureKind =
 	| "sign"
 	| "well"
 	| "bed"
+	| "totem" -- cria e guarda o time do dono (TeamService)
+	| "resurrection" -- pedra da ressurreição (GhostService)
+	| "emerald_machine" -- pontos por minuto ao dono (EmeraldService)
 export type ExtractorDef = {
 	output: string, -- id do item produzido
 	woodPerCycle: number,
@@ -90,7 +93,8 @@ export type StructureDef = {
 	kind: StructureKind,
 	health: number, -- vida máxima (> 0)
 	radius: number?, -- studs: raio do círculo da peça no chão; padrão BuildRules.PIECE_RADIUS
-	spikeDamage: number?, -- só kind "spike" e "spike_door" (obrigatório neles)
+	spikeDamage: number?, -- só kind "spike" e "spike_door" (obrigatório neles): dano ao encostar
+	spikeHitDamage: number?, -- só "spike" e "spike_door": dano em quem BATE na peça (Starve "hit")
 	lifetime: number?, -- segundos até sumir; só kind "fire" (obrigatório nele)
 	heatRadius: number?, -- studs; só kind "fire" e "furnace" (obrigatório neles)
 	station: CraftStation?, -- estação oferecida: "workbench" (kind station) ou "fire" (kind fire/furnace)
@@ -99,6 +103,11 @@ export type StructureDef = {
 	furnace: FurnaceDef?, -- calor por heatRadius; queima enquanto tem madeira (sem lifetime)
 	well: WellDef?,
 	bed: BedDef?,
+	-- Encaixa em grade nas vizinhas da mesma camada com snap (chão e teto:
+	-- telhado, ponte, canteiros). Veja BuildRules.snapPlacement.
+	snap: boolean?,
+	-- Quantas desta peça (do mesmo kind) cada jogador pode ter no mundo (nil = sem limite).
+	maxPerPlayer: number?,
 }
 
 export type ItemDef = {

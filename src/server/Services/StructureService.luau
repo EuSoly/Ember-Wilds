@@ -31,6 +31,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
@@ -65,6 +66,8 @@ export type Entry = {
 	radius: number, -- raio do círculo (BuildRules.radiusOf; também o do GatherRules.pickTarget)
 	yaw: number, -- graus em torno de Y (BuildRules.facingYaw)
 	health: number,
+	-- Quem deu o último golpe (a máquina de esmeralda sabe se foi o dono/aliado).
+	lastHitBy: Player?,
 }
 
 type RateState = { start: number, count: number }
@@ -209,6 +212,7 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 		return
 	end
 	local allied = BuildRules.areAllies(entry.owner.UserId, attacker.UserId)
+	entry.lastHitBy = attacker
 	-- Chave inglesa numa peça aliada: conserta (e não abre a porta).
 	if allied and item and item.repair then
 		local amount = BuildRules.repairAmount(item, entry.health, entry.def.health)
@@ -222,6 +226,13 @@ function StructureService.hit(entry: Entry, attacker: Player, item: Defs.ItemDef
 	if BuildRules.isDoor(entry.def.kind) and allied then
 		toggleDoor(entry)
 		return
+	end
+	-- Espinho alheio machuca quem bate nele (golpe de jogador: o capacete protege).
+	local hitBack = BuildRules.spikeHitDamage(entry.def, allied)
+	if hitBack > 0 and attacker.Character then
+		-- Require tardio: CharacterService → DeathService → StructureService (ciclo no topo).
+		local CharacterService = require(script.Parent.CharacterService) :: any
+		CharacterService.hurt(attacker.Character, hitBack, "death.cause.spike", "player")
 	end
 	-- Martelo contra peça de material acima do dele: só o mínimo.
 	local pieceDef = Defs.Items[entry.itemId]
@@ -271,6 +282,10 @@ local function canPlace(player: Player, kind: string, x: number, z: number, radi
 				return false
 			end
 		end
+	end
+	-- Piso e telhado: jogador não atrapalha (fica em cima ou embaixo).
+	if not BuildRules.blockedByPlayers(kind) then
+		return true
 	end
 	for _, other in Players:GetPlayers() do
 		local root = rootOf(other.Character)
@@ -357,8 +372,55 @@ local function create(
 	return true
 end
 
+-- Tira a peça do mundo agora (como se tivesse sido destruída por fora). Usado
+-- pela pedra da ressurreição gasta (GhostService).
+function StructureService.remove(entry: Entry)
+	if alive[entry] then
+		remove(entry)
+	end
+end
+
+-- Quantas peças do tipo `kind` o jogador tem no mundo.
+function StructureService.ownedOfKind(player: Player, kind: string): number
+	local count = 0
+	for entry in alive do
+		if entry.owner == player and entry.def.kind == kind then
+			count += 1
+		end
+	end
+	return count
+end
+
+-- Peças vivas do tipo `kind` (para os serviços que agem por peça).
+function StructureService.allOfKind(kind: string): { Entry }
+	local out: { Entry } = {}
+	for entry in alive do
+		if entry.def.kind == kind then
+			table.insert(out, entry)
+		end
+	end
+	return out
+end
+
+-- Vizinhas para o encaixe de uma peça `def` com snap perto de (x, z): peças
+-- já colocadas da mesma camada que também têm snap.
+function StructureService.snapNeighbors(def: Defs.StructureDef, x: number, z: number): { BuildRules.SnapNeighbor }
+	local layer = BuildRules.layerOf(def.kind)
+	local out: { BuildRules.SnapNeighbor } = {}
+	for _, other in StructureService.near(x, z, 2 * BuildRules.radiusOf(def) + BuildRules.SNAP_RANGE) do
+		if other.def.snap and BuildRules.layerOf(other.def.kind) == layer then
+			table.insert(out, { x = other.x, z = other.z, yaw = other.yaw, radius = other.radius })
+		end
+	end
+	return out
+end
+
 local function place(player: Player, character: Model)
 	if player.Parent ~= Players or player.Character ~= character then
+		return
+	end
+	-- Fantasma não constrói (GhostService).
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 		return
 	end
 	if CraftService.isCrafting(player) then
@@ -386,6 +448,19 @@ local function place(player: Player, character: Model)
 	if def == nil then
 		return
 	end
+	-- Limite por jogador (totem, pedra da ressurreição, máquina): avisa e recusa.
+	if not BuildRules.underKindLimit(StructureService.ownedOfKind(player, def.kind), def.maxPerPlayer) then
+		Net.CraftNotice.Fire(player, "build.limit")
+		return
+	end
+	-- Totem: só para quem não está no time de outro (TeamService).
+	if def.kind == "totem" then
+		local team = player:GetAttribute(StatNames.Team)
+		if team ~= nil and team ~= player.UserId then
+			Net.CraftNotice.Fire(player, "build.inTeam")
+			return
+		end
+	end
 
 	local look = root.CFrame.LookVector
 	local flat = Vector3.new(look.X, 0, look.Z)
@@ -396,10 +471,15 @@ local function place(player: Player, character: Model)
 	local rx, rz = root.Position.X, root.Position.Z
 	local x, z = BuildRules.placePoint(rx, rz, dir.X, dir.Z)
 	local radius = BuildRules.radiusOf(def)
+	local yaw = BuildRules.facingYaw(x, z, rx, rz, rotation[player] or 0)
+	-- Chão e teto (snap): encaixa na grade da vizinha mais perto da mesma
+	-- camada, igual ao fantasma do cliente (BuildRules.snapPlacement).
+	if def.snap then
+		x, z, yaw = BuildRules.snapPlacement(x, z, yaw, dir.X, dir.Z, StructureService.snapNeighbors(def, x, z))
+	end
 	if not canPlace(player, def.kind, x, z, radius) then
 		return
 	end
-	local yaw = BuildRules.facingYaw(x, z, rx, rz, rotation[player] or 0)
 	if not InventoryService.take(player, itemId, 1) then
 		return
 	end
@@ -478,6 +558,28 @@ end
 function StructureService.Start(_self)
 	getFolder()
 	Net.SetBuildRotation.On(onSetRotation)
+	if RunService:IsStudio() then
+		-- ServerStorage.DevPlace:Invoke(player, itemId) -> boolean: coloca a peça
+		-- `itemId` no ponto à frente do jogador, sem gastar item nem checar lugar
+		-- livre (para testar construções; só no Studio).
+		local command = Instance.new("BindableFunction")
+		command.Name = "DevPlace"
+		command.OnInvoke = function(player: Player, itemId: string): boolean
+			local item = Defs.Items[itemId]
+			local def = if item and item.category == "placeable" then item.structure else nil
+			local root = rootOf(player.Character)
+			if def == nil or root == nil then
+				return false
+			end
+			local look = root.CFrame.LookVector
+			local flat = Vector3.new(look.X, 0, look.Z)
+			local dir = if flat.Magnitude > 1e-3 then flat.Unit else Vector3.new(0, 0, -1)
+			local rx, rz = root.Position.X, root.Position.Z
+			local x, z = BuildRules.placePoint(rx, rz, dir.X, dir.Z)
+			return create(player, itemId, def, x, z, BuildRules.radiusOf(def), BuildRules.facingYaw(x, z, rx, rz, 0))
+		end
+		command.Parent = game:GetService("ServerStorage")
+	end
 	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

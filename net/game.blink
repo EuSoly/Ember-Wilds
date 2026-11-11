@@ -430,3 +430,41 @@ event CreativeGive {
 		Id: string(1..48)
 	}
 }
+
+-- Fantasma perto de uma pedra da ressurreição pede para voltar (GhostService).
+event Resurrect {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+-- Times pelo totem (TeamService). Leader/UserId são UserIds (f64: passam de u32).
+event TeamJoin {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Leader: f64
+	}
+}
+
+event TeamLeave {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+event TeamKick {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		UserId: f64
+	}
+}
+
+event TeamLock {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}

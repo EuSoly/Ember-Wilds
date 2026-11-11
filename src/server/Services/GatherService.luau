@@ -21,7 +21,9 @@
 -- quem bateu, no máximo um da mesma chave a cada NOTICE_EVERY.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
@@ -146,7 +148,13 @@ local function hit(player: Player, character: Model, root: BasePart)
 	-- Outros jogadores vivos (quem bate fica de fora); o pickTarget filtra a distância.
 	for _, other in Players:GetPlayers() do
 		local otherCharacter = other.Character
-		if other == player or otherCharacter == nil or otherCharacter:FindFirstChildOfClass("Humanoid") == nil then
+		-- Fantasma não é alvo (senão serviria de escudo invulnerável).
+		if
+			other == player
+			or otherCharacter == nil
+			or otherCharacter:FindFirstChildOfClass("Humanoid") == nil
+			or GhostRules.isGhostPlayer(other, Workspace:GetServerTimeNow())
+		then
 			continue
 		end
 		local otherRoot = otherCharacter:FindFirstChild("HumanoidRootPart")
@@ -250,6 +258,10 @@ local function step()
 	for _, player in Players:GetPlayers() do
 		local character = player.Character
 		if character == nil or character:GetAttribute(StatNames.Using) ~= true then
+			continue
+		end
+		-- Fantasma não bate nem coleta (GhostService).
+		if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 			continue
 		end
 		if CraftService.isCrafting(player) then
