@@ -7,6 +7,13 @@ local Types = require("./Defs/Types")
 
 local ItemAccess = {}
 
+-- Os itens só-para-teste valem aqui? No Studio, ou para quem está no modo
+-- criativo (marca do perfil, docs/guia/modo-criativo.md). Quem chama passa o
+-- resultado como `inStudio` das funções abaixo.
+function ItemAccess.allowsTest(inStudio: boolean, creative: boolean): boolean
+	return inStudio or creative
+end
+
 -- `items` é só para teste; o padrão é Defs.Items.
 function ItemAccess.isAvailable(itemId: string, inStudio: boolean, items: { [string]: Types.ItemDef }?): boolean
 	local item = (items or Defs.Items)[itemId]
