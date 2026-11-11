@@ -6,7 +6,8 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 - **Dano mínimo garantido (decisão do Elizeu em aberto):** com capacete de lava + escudo de reidite (defesa 15), tudo até a lança de ouro tira 0 e a espada de ouro tira 7. As armas de diamante para cima ainda matam (espada de lava: 18 por golpe). Veja `docs/game-design/balanco-armas-defesa.md`. Opções: liberar capacete e arma do mesmo material juntos, e/ou deixar sempre passar uma parte do golpe (ex.: 25%).
 - **Dano em construção das armas:** espadas, lanças e picaretas usam a nossa escala (5 a 20 e 10 a 35), não a do Starve (picareta 0 a 1, espada 4 a 11). Só os martelos usam a do Starve. Rever quando balancear as bases.
-- **Conferir no Studio:** escudo de ouro + capacete de ouro tirando 21 da mordida de 24; martelo de pedra numa parede de ouro tirando 5; chave inglesa consertando uma parede própria; espada de lava com capacete de lava (+3).
+- **Conferir no Studio:** já conferido em 11/11 (Play, servidor) que capacete + escudo de ouro tiram 21 da mordida de 24 e 7 do golpe de 22, que a fome não é reduzida, e que a espada de lava com capacete de lava dá 36. Falta, jogando de verdade: martelo de pedra numa parede de ouro (deve tirar 5) e chave inglesa consertando uma parede sua (não pude colocar parede pelo MCP).
+- **Dois `DevGive` no ServerStorage:** um deles responde "entregue" mas não põe nada no inventário (provavelmente sobra salva no place). Apagar o que não é criado pelo DevDataService.
 - **Só dado:** pás (cavar), forcados e regador (fazenda), facão (caixa de mob em dobro), lança de caranguejo (acalmar caranguejos), defesa contra flecha dos escudos.
 - **Sem receita:** espada pirata (baú do tesouro). Orbes azul e de lava e peça do forcado não têm modelo nem quest.
 
