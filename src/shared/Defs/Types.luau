@@ -151,7 +151,8 @@ export type ItemDef = {
 	-- Só mob: nunca empurra jogador (no PvP seria forte demais; decisão do Elizeu).
 	knockback: number?,
 	-- Animação do golpe com o item na mão: "swing" (padrão, arco de lado, como a
-	-- picareta e a espada) ou "thrust" (estocada para a frente: as lanças). Só visual.
+	-- picareta e a espada), "thrust" (estocada para a frente: as lanças e os
+	-- forcados) ou "bash" (escudo nas duas mãos, à frente; o golpe avança). Só visual.
 	attackAnim: AttackAnim?,
 	-- Escudo (Starve): na mão, a defesa soma com a da peça de cabeça (golpe de
 	-- jogador e mordida de mob). arrowDefense é só dado (flechas não existem).
@@ -172,7 +173,7 @@ export type ItemDef = {
 	crabCalm: boolean?, -- lança de caranguejo: acalma caranguejos
 }
 
-export type AttackAnim = "swing" | "thrust"
+export type AttackAnim = "swing" | "thrust" | "bash"
 
 -- "water": perto da água do mapa (Map/Water), sem peça construída.
 export type CraftStation = "workbench" | "fire" | "water"

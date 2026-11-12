@@ -572,6 +572,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 1,
 		shield = { defense = 1, mobDefense = 2, arrowDefense = 13 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	stone_shield = {
 		id = "stone_shield",
@@ -581,6 +582,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 2,
 		shield = { defense = 2, mobDefense = 4, arrowDefense = 17 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	gold_shield = {
 		id = "gold_shield",
@@ -590,6 +592,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 3,
 		shield = { defense = 3, mobDefense = 8, arrowDefense = 21 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	diamond_shield = {
 		id = "diamond_shield",
@@ -600,6 +603,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 4,
 		shield = { defense = 4, mobDefense = 12, arrowDefense = 25 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	amethyst_shield = {
 		id = "amethyst_shield",
@@ -610,6 +614,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 5,
 		shield = { defense = 5, mobDefense = 16, arrowDefense = 29 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	reidite_shield = {
 		id = "reidite_shield",
@@ -620,6 +625,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 6,
 		shield = { defense = 6, mobDefense = 18, arrowDefense = 33 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	-- Chave inglesa: conserta construção aliada danificada.
 	wrench = {

@@ -605,8 +605,11 @@ function BonecoModel.setHeldItem(boneco: Boneco, itemId: string?, cosmeticId: st
 	-- de estocada (lança) apontam THRUST_REST_ANGLE: para a frente, um pouco para dentro.
 	-- Weld com C0/C1 em vez de WeldConstraint: o encaixe não depende de onde a
 	-- mão está neste quadro (pode estar no meio de um golpe).
-	local thrust = ToolModel.attackAnimOf(itemId) == "thrust"
-	local restAngle = if thrust then C.THRUST_REST_ANGLE else C.SWING_REST_ANGLE
+	local anim = ToolModel.attackAnimOf(itemId)
+	local restAngle = if anim == "thrust"
+		then C.THRUST_REST_ANGLE
+		elseif anim == "bash" then C.SHIELD_REST_ANGLE
+		else C.SWING_REST_ANGLE
 	local rest = CFrame.Angles(0, -math.rad(restAngle), 0)
 	local joint = Instance.new("Weld")
 	joint.Name = "GripWeld"

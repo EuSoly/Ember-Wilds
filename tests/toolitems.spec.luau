@@ -120,4 +120,14 @@ return {
 		assert(Defs.Recipes.pirate_sword == nil, "espada pirata sai do baú do tesouro")
 		assert(Defs.Recipes.wrench and Defs.Recipes.wrench.station == "workbench", "chave na bancada")
 	end,
+
+	["shields bash with both hands"] = function()
+		for _, id in
+			{ "wood_shield", "stone_shield", "gold_shield", "diamond_shield", "amethyst_shield", "reidite_shield" }
+		do
+			local item = (Defs.Items :: any)[id]
+			assert(item.attackAnim == "bash", `{id}: escudo golpeia com as duas mãos (bash)`)
+		end
+		assert((Defs.Items :: any).wood_sword.attackAnim ~= "bash", "espada continua no arco")
+	end,
 }

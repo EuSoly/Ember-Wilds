@@ -1136,8 +1136,8 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 		table.insert(errors, `Item "{key}": reach deve ser maior que 0`)
 	end
 	local attackAnim = item.attackAnim :: string?
-	if attackAnim ~= nil and attackAnim ~= "swing" and attackAnim ~= "thrust" then
-		table.insert(errors, `Item "{key}": attackAnim deve ser "swing" ou "thrust"`)
+	if attackAnim ~= nil and attackAnim ~= "swing" and attackAnim ~= "thrust" and attackAnim ~= "bash" then
+		table.insert(errors, `Item "{key}": attackAnim deve ser "swing", "thrust" ou "bash"`)
 	end
 	if item.mobDamage ~= nil and not isPositive(item.mobDamage) then
 		table.insert(errors, `Item "{key}": mobDamage deve ser maior que 0`)
