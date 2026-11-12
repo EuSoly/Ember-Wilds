@@ -24,4 +24,23 @@ function WellRules.drink(drinks: number): number?
 	return drinks - 1
 end
 
+-- Dá para beber agora? Precisa de água no poço e de sede não cheia (o
+-- servidor confere de novo; isto só apaga o botão).
+function WellRules.canDrink(drinks: number, thirst: number, thirstMax: number): boolean
+	return drinks > 0 and thirst < thirstMax
+end
+
+-- Dá para encher? Precisa do balde cheio na mão e de espaço no poço.
+function WellRules.canFill(held: string?, drinks: number, def: WellDef): boolean
+	return held == "water_bucket" and drinks < def.maxDrinks
+end
+
+-- Quanto do poço está cheio (0 a 1), para o medidor de água.
+function WellRules.fraction(drinks: number, def: WellDef): number
+	if def.maxDrinks <= 0 then
+		return 0
+	end
+	return math.clamp(drinks / def.maxDrinks, 0, 1)
+end
+
 return WellRules

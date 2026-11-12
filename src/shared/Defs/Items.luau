@@ -635,11 +635,12 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		repair = 70,
 	},
-	-- Só para teste até os sistemas existirem: cavar (pás), fazenda (forcados,
-	-- regador) e caixa de mob em dobro (facão). Os números ficam guardados.
+	-- Pás: cavam o chão (DigRules; terra na floresta, areia nas margens). As de
+	-- diamante para cima continuam de teste, como o resto desses materiais.
+	-- Só para teste até os sistemas existirem: fazenda (forcados, regador) e
+	-- caixa de mob em dobro (facão). Os números ficam guardados.
 	stone_shovel = {
 		id = "stone_shovel",
-		testOnly = true,
 		nameKey = "item.stone_shovel",
 		category = "tool",
 		tier = "stone",
@@ -649,7 +650,6 @@ local Items: { [string]: ItemDef } = {
 	},
 	gold_shovel = {
 		id = "gold_shovel",
-		testOnly = true,
 		nameKey = "item.gold_shovel",
 		category = "tool",
 		tier = "gold",
@@ -1492,7 +1492,6 @@ local Items: { [string]: ItemDef } = {
 	},
 	well = {
 		id = "well",
-		testOnly = true,
 		nameKey = "item.well",
 		category = "placeable",
 		maxStack = 255,
@@ -1526,6 +1525,9 @@ local Items: { [string]: ItemDef } = {
 		handModel = true,
 	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
+	-- Cavados com a pá (DigRules): terra no chão da floresta, areia nas margens.
+	ground = { id = "ground", nameKey = "item.ground", category = "resource", maxStack = 255 },
+	sand = { id = "sand", nameKey = "item.sand", category = "resource", maxStack = 255 },
 	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3, handModel = true },
 }
 

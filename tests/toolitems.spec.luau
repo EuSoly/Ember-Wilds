@@ -46,6 +46,9 @@ local RELEASED = {
 	stone_shield = true,
 	gold_shield = true,
 	wrench = true,
+	-- Cavar (12/11): pás de pedra e de ouro.
+	stone_shovel = true,
+	gold_shovel = true,
 }
 
 local function counts(recipeId: string): { [string]: number }

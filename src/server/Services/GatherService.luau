@@ -27,6 +27,9 @@ local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local GatherRules = require(ReplicatedStorage.Shared.Gather.GatherRules)
+local DigRules = require(ReplicatedStorage.Shared.Gather.DigRules)
+local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
+local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -36,6 +39,7 @@ local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
 local CrateService = require(script.Parent.CrateService)
 local InventoryService = require(script.Parent.InventoryService)
+local MapService = require(script.Parent.MapService)
 local MobService = require(script.Parent.MobService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
@@ -104,6 +108,56 @@ local function sendFx(entry: ResourceService.Entry, hitX: number, hitZ: number, 
 			DirZ = dirZ,
 			Material = entry.gather.material,
 		})
+	end
+end
+
+-- Lasquinhas e som num ponto do chão (cavar: sem recurso para dar o tranco).
+local function sendFxAt(x: number, z: number, dirX: number, dirZ: number, material: string)
+	local listeners = {}
+	for _, other in Players:GetPlayers() do
+		local character = other.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		if root and root:IsA("BasePart") then
+			local dx, dz = root.Position.X - x, root.Position.Z - z
+			if dx * dx + dz * dz <= FX_RANGE * FX_RANGE then
+				table.insert(listeners, other)
+			end
+		end
+	end
+	if #listeners > 0 then
+		Net.ResourceHit.FireList(listeners, { X = x, Z = z, DirX = dirX, DirZ = dirZ, Material = material })
+	end
+end
+
+-- Golpe de pá sem alvo: cava o chão em (x, z). Terra no chão da floresta,
+-- areia nas margens, nada na água ou fora do mapa (DigRules).
+local function dig(player: Player, tool: Defs.ItemDef, x: number, z: number, dir: Vector3)
+	local rect = WorldConfig.PLAYABLE
+	if x < rect.minX or x > rect.maxX or z < rect.minZ or z > rect.maxZ then
+		return
+	end
+	local surface = DigRules.surfaceAt(WaterSim.isWaterAt(x, z), MapService.isSandAt(x, z))
+	if surface == nil then
+		return
+	end
+	sendFxAt(x, z, dir.X, dir.Z, surface)
+	local rolls = {}
+	for index in DigRules.LUCK do
+		rolls[index] = math.random()
+	end
+	local gotAny = false
+	for _, find in DigRules.dig(tool, surface :: DigRules.Surface, rolls, Defs) do
+		local given = find.count - InventoryService.give(player, find.id, find.count)
+		if given > 0 then
+			gotAny = true
+			StatsService.add(player, "resources_gathered", given, find.id)
+			if find.id == surface then
+				ScoreService.add(player, given * DigRules.POINTS)
+			end
+		end
+	end
+	if not gotAny then
+		notify(player, "gather.full")
 	end
 end
 
@@ -196,6 +250,10 @@ local function hit(player: Player, character: Model, root: BasePart)
 	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
 		or GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
 	if target == nil then
+		-- Pá sem nada à frente: cava o chão onde o golpe cai.
+		if tool and DigRules.canDig(tool) then
+			dig(player, tool, px, pz, dir)
+		end
 		return
 	end
 	-- Bateu em algo: o Chapéu de Explorador para de esconder por um tempo.

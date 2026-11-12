@@ -78,6 +78,9 @@ local sounds: { [string]: Sound } = {
 	hit_gold = fx(9125361455, 0.35, 0.6, { pitch = 0.1 }), -- PSE, batida em metal (0,6 s)
 	hit_diamond = fx(9114597147, 0.45, 0.75, { pitch = 0.1 }), -- PSE "Glass Clinks 30" (0,75 s)
 	hit_leaves = fx(9114518386, 0.6, 1.3, { pitch = 0.1 }), -- PSE, folhas (1,3 s)
+	-- Cavar (pá): o mesmo som abafado das folhas, mais grave na terra.
+	hit_ground = fx(9114518386, 0.55, 1.3, { pitch = 0.15 }), -- PSE, folhas (1,3 s)
+	hit_sand = fx(9114518386, 0.45, 1.3, { pitch = 0.2 }), -- PSE, folhas (1,3 s)
 	-- Golpe em bicho, em outro jogador e em construção ou caixa.
 	hit_mob = fx(9114482141, 0.5, 0.76, { pitch = 0.1 }), -- PSE "Flesh Hits 2" (0,76 s)
 	hit_player = fx(9113573976, 0.55, 0.58, { pitch = 0.1 }), -- PSE "Boxing Hits 14" (0,58 s)

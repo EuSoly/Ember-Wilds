@@ -29,4 +29,23 @@ function spec.gole_tira_1()
 	assert(WellRules.drink(1) == 0, "1 → 0")
 end
 
+function spec.botao_beber_so_com_agua_e_sede()
+	assert(WellRules.canDrink(10, 50, 100), "tem água e sede")
+	assert(not WellRules.canDrink(0, 50, 100), "poço vazio")
+	assert(not WellRules.canDrink(10, 100, 100), "sede cheia")
+end
+
+function spec.botao_encher_so_com_balde_cheio_e_espaco()
+	assert(WellRules.canFill("water_bucket", 10, WELL), "balde cheio e espaço")
+	assert(not WellRules.canFill("bucket", 10, WELL), "balde vazio não enche")
+	assert(not WellRules.canFill(nil, 10, WELL), "mão vazia")
+	assert(not WellRules.canFill("water_bucket", WELL.maxDrinks, WELL), "poço cheio")
+end
+
+function spec.medidor_de_agua()
+	assert(WellRules.fraction(24, WELL) == 0.5, "metade")
+	assert(WellRules.fraction(0, WELL) == 0, "vazio")
+	assert(WellRules.fraction(99, WELL) == 1, "nunca passa de cheio")
+end
+
 return spec

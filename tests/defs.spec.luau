@@ -1247,7 +1247,7 @@ return {
 			"water_bucket",
 		}
 		-- Liberados em 11/11 (structureitems.spec); baldes em 12/11; o poço continua de teste.
-		local stillTest = { well = true }
+		local stillTest = {}
 		for _, id in ids do
 			local item = (Defs.Items :: any)[id]
 			assert(item ~= nil and (item.testOnly == true) == (stillTest[id] == true), `{id}: liberação`)
@@ -1274,7 +1274,9 @@ return {
 		assert(cost("gold_extractor").stone == 60 and cost("gold_extractor").gold == 120, "extrator de ouro")
 		assert(cost("furnace").wood == 150 and cost("furnace").stone == 50 and cost("furnace").gold == 15, "fornalha")
 		assert(cost("bridge").wood == 15 and cost("roof").wood == 30 and cost("sign").wood == 20, "madeira")
-		assert(cost("well").stone == 60, "poço")
+		assert(cost("well").stone == 100 and cost("well").ground == 30, "poço (config do Starve)")
+		local wellNear = Defs.Recipes.well.alsoNear
+		assert(wellNear and #wellNear == 1 and wellNear[1] == "fire", "poço: bancada e fogo perto (Starve)")
 		-- Balde vazio da config do Starve: 20 madeira + 1 linha (bucket_empty).
 		assert(cost("bucket").wood == 20 and cost("bucket").thread == 1, "balde")
 		assert(cost("stone_spike_door").stone_door == 1 and cost("stone_spike_door").stone == 140, "porta espinhos")

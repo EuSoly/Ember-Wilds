@@ -12,6 +12,7 @@ local SPIKE_DOOR_TOUCH = { 5, 10, 15, 25, 30, 35 }
 local SPIKE_DOOR_HIT = { 1, 2, 2, 3, 3, 4 }
 
 local RELEASED = {
+	"well", -- 12/11 (receita do Starve: 100 pedras + 30 terras)
 	"wood_spike_door",
 	"stone_spike_door",
 	"gold_spike_door",
@@ -36,7 +37,6 @@ local TEST_ONLY = {
 	"amethyst_spike_door",
 	"amethyst_extractor",
 	"reidite_extractor",
-	"well",
 	"resurrection_stone",
 	"emerald_machine",
 	"emerald",

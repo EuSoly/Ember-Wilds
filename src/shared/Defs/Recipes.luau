@@ -203,7 +203,8 @@ local Recipes: { [string]: RecipeDef } = {
 	bridge = recipe("bridge", 1, { i("wood", 15) }, 5, "workbench", 45),
 	roof = recipe("roof", 1, { i("wood", 30) }, 5, "workbench", 46),
 	sign = recipe("sign", 1, { i("wood", 20) }, 5, "workbench", 47),
-	well = recipe("well", 1, { ingredient("stone", 60) }, 8, "workbench", 48), -- provisório
+	-- Config do Starve: 100 pedras + 30 terras, bancada e fogo perto, 10 s.
+	well = recipe("well", 1, { ingredient("stone", 100), ingredient("ground", 30) }, 10, "workbench", 48, FIRE),
 	bed = recipe("bed", 1, {
 		ingredient("wood", 100),
 		ingredient("stone", 50),

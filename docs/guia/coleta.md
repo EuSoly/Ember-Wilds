@@ -20,6 +20,22 @@ Cada picareta tem um **nível** e cada recurso uma **dureza**. Rendimento por go
 
 A frutinha rende sempre 1 por golpe (`fixedYield`), com qualquer coisa na mão.
 
+## Cavar com a pá (12/11)
+
+Com uma **pá** na mão, o golpe que não acerta nada cava o chão onde ele cai (o mesmo ponto à frente do boneco). Golpe que acerta árvore, rocha ou arbusto continua sendo coleta normal (com a pá, rocha pede picareta).
+
+| Onde | O que sai |
+|---|---|
+| Chão da floresta | **Terra** (`ground`) |
+| Margens do rio, dos lagos e a praia da baía | **Areia** (`sand`) |
+| Água ou fora do mapa | nada |
+
+Por golpe: pá de pedra 1, pá de ouro 2 (config do Starve; diamante 3 e ametista 4 seguem só de teste). Cada golpe também sorteia achados de sorte, um de cada: pedra 5%, ouro 1,5%, diamante 0,17% (`dig_items` do Starve). Cada unidade cavada vale 1 ponto e conta em `resources_gathered`.
+
+**Onde é areia:** as peças do mapa com o atributo `Sand = true` (na peça ou na pasta dela), vistas de cima. Hoje estão marcadas em `Map/NoSpawn/Floresta2026`: as `RiverBank` (88), `Lake1Bank` a `Lake8Bank` e a `BayBeach`. A margem é mais larga que a água (a `RiverBank` tem 48 de largura, o rio 36), então a areia é a faixa de 6 studs de cada lado. A água ganha da areia. Para marcar uma margem nova, ponha `Sand = true` nela no Studio.
+
+Terra e areia ainda não têm ícone (aparecem como "Te" e "Ar"). A terra entra na receita do poço; a areia fica guardada para as receitas que vierem.
+
 ## Reserva, regeneração e pontos
 
 | Recurso | Reserva | Volta | Pontos por unidade |
@@ -65,11 +81,12 @@ A cor das lasquinhas de cada material fica em `src/shared/GatherFxConfig.luau`. 
 
 | Arquivo | O que faz |
 |---|---|
+| `src/shared/Gather/DigRules.luau` | cavar com a pá: o que sai em cada chão e os achados de sorte (testado em `tests/dig.spec.luau`) |
 | `src/shared/Gather/GatherRules.luau` | rendimento, picareta mínima, reserva, regeneração, alvo do golpe, frutinhas visíveis (testadas em `tests/gather.spec.luau`) |
 | `src/shared/World/SpatialGrid.luau` | grade para achar o alvo sem olhar os 1.600 recursos |
 | `src/shared/Gather/Ranking.luau` | posição no ranking |
 | `src/server/Services/ResourceService.luau` | reserva de cada recurso (atributos `Amount`/`AmountMax`) e regeneração |
-| `src/server/Services/GatherService.luau` | o golpe |
+| `src/server/Services/GatherService.luau` | o golpe (e o cavar, quando não há alvo) |
 | `src/server/Services/ScoreService.luau` | pontos (`Score`) e ranking (`Rank`) |
 | `src/client/World/GatherFx.luau` | tranco, lasquinhas, som e avisos |
 | `src/client/World/BerryDisplay.luau` | frutinhas visíveis |

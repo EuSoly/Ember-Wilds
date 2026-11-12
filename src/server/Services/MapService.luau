@@ -29,10 +29,14 @@ local VARIANT_ATTRIBUTE = "Variant"
 -- Pasta de Map/Water com Painted = true: a água dela está pintada no chão
 -- (Decal de Map/Ground/WaterPaint), e as peças viram só a forma (invisíveis).
 local PAINTED_ATTRIBUTE = "Painted"
+-- Pasta de Map/NoSpawn com Sand = true: as peças dela são a areia das margens
+-- (a pá cava areia ali, não terra; DigRules).
+local SAND_ATTRIBUTE = "Sand"
 
 local MapService = {}
 
 local hasMap = false
+local sandShapes: { Shapes.Shape } = {}
 
 -- Peça puramente de marcação (zona, caminho, marcador de recurso): some no jogo.
 local function hideMarker(part: BasePart)
@@ -43,16 +47,20 @@ local function hideMarker(part: BasePart)
 	part.CastShadow = false
 end
 
--- true se a peça (ou uma pasta acima dela, até `root`) tem Painted = true.
-local function isPainted(part: Instance, root: Instance): boolean
+-- true se a peça (ou uma pasta acima dela, até `root`) tem o atributo `name` = true.
+local function marked(part: Instance, root: Instance, name: string): boolean
 	local node: Instance? = part
 	while node and node ~= root do
-		if node:GetAttribute(PAINTED_ATTRIBUTE) == true then
+		if node:GetAttribute(name) == true then
 			return true
 		end
 		node = node.Parent
 	end
 	return false
+end
+
+local function isPainted(part: Instance, root: Instance): boolean
+	return marked(part, root, PAINTED_ATTRIBUTE)
 end
 
 -- Lê as formas de todas as peças de uma pasta do mapa. `onShape` recebe cada
@@ -185,6 +193,11 @@ local function ensureSpawn()
 	spawn.Parent = Workspace
 end
 
+-- true se (x, z) está na areia das margens (peças de Map/NoSpawn marcadas Sand).
+function MapService.isSandAt(x: number, z: number): boolean
+	return Shapes.anyContains(sandShapes, x, z)
+end
+
 -- true se o place tem um mapa desenhado (Workspace.Map).
 function MapService.hasMap(): boolean
 	return hasMap
@@ -216,9 +229,13 @@ function MapService.Init(_self)
 		end
 		table.insert(blockers, shape)
 	end)
-	readShapes(map:FindFirstChild("NoSpawn"), function(part, shape)
+	local noSpawn = map:FindFirstChild("NoSpawn")
+	readShapes(noSpawn, function(part, shape)
 		hideMarker(part)
 		table.insert(blockers, shape)
+		if noSpawn and marked(part, noSpawn, SAND_ATTRIBUTE) then
+			table.insert(sandShapes, shape)
+		end
 	end)
 
 	local zones = readZones(map:FindFirstChild("Zones"))

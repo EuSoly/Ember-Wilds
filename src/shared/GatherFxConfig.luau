@@ -11,4 +11,7 @@ return table.freeze({
 	stone = table.freeze({ color = Palette.tier.stone }),
 	gold = table.freeze({ color = Palette.tier.gold }),
 	leaves = table.freeze({ color = Palette.biome.forest[1] }),
+	-- Cavar com a pá (DigRules): terra da floresta e areia das margens.
+	ground = table.freeze({ color = Palette.biome.forest[3] }),
+	sand = table.freeze({ color = Palette.biome.ocean[1] }),
 }) :: { [string]: MaterialFx }
