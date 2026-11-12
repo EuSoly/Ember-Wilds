@@ -133,8 +133,11 @@ local function build(): { Product }
 		end
 	end
 	local kitIds: { string } = {}
-	for id in Defs.Kits do
-		table.insert(kitIds, id)
+	for id, kit in Defs.Kits do
+		-- Kit só de conquista (exclusive) não se vende.
+		if not kit.exclusive then
+			table.insert(kitIds, id)
+		end
 	end
 	table.sort(kitIds, function(a, b)
 		return Defs.Kits[a].order < Defs.Kits[b].order
@@ -214,8 +217,8 @@ end
 -- Todos os erros do catálogo real (vazio = tudo certo).
 function Products.validate(defs: DefsTables, strings: StringsApi): { string }
 	local errors = Products.validateBundles(Bundles, defs, strings)
-	for kitId in defs.Kits do
-		if ShopConfig.KIT_ROBUX[kitId] == nil then
+	for kitId, kit in defs.Kits do
+		if not kit.exclusive and ShopConfig.KIT_ROBUX[kitId] == nil then
 			table.insert(errors, `kit "{kitId}" sem preço em ShopConfig.KIT_ROBUX`)
 		end
 	end

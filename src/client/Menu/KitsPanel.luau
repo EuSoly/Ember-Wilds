@@ -318,7 +318,14 @@ function KitsPanel.build(): Frame
 		create("UIPadding")({ PaddingRight = UDim.new(0, 6) }), -- espaço da barra de rolagem
 	}
 	for _, kit in KitRules.sorted(Defs.Kits) do
-		table.insert(rows, row(kit, points))
+		local line = row(kit, points)
+		-- Kit só de conquista: só aparece para quem tem a posse.
+		if kit.exclusive then
+			vide.effect(function()
+				line.Visible = ShopData.kitOwned(kit.id)
+			end)
+		end
+		table.insert(rows, line)
 	end
 	return Rustic.paper({
 		Name = "KitsPanel",

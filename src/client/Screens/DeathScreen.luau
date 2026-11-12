@@ -350,7 +350,14 @@ local function kitsColumn(layout: () -> DeathLayout.Layout, rect: () -> DeathLay
 		}),
 	}
 	for _, kit in KitRules.sorted(Defs.Kits) do
-		table.insert(rows, kitRow(kit))
+		local line = kitRow(kit)
+		-- Kit só de conquista: só aparece para quem tem a posse.
+		if kit.exclusive then
+			vide.effect(function()
+				line.Visible = ShopData.kitOwned(kit.id)
+			end)
+		end
+		table.insert(rows, line)
 	end
 	local column = create("Frame")({
 		Name = "Kits",
@@ -412,11 +419,12 @@ end
 function DeathScreen.mount(playerGui: Instance): ScreenGui?
 	KitList.start()
 
-	local kitCount = #KitRules.sorted(Defs.Kits)
 	-- Tamanho da tela em pixels lógicos (descontada a escala da interface).
 	local screenSize: Source<Vector2> = vide.source(Vector2.new(1280, 720)) :: any
 	local layout = vide.derive(function(): DeathLayout.Layout
 		local size = screenSize()
+		-- Kits que aparecem (os exclusivos só com a posse).
+		local kitCount = #KitRules.visible(Defs.Kits, ShopData.snapshot().owned)
 		return DeathLayout.compute(size.X, size.Y, kitCount)
 	end)
 

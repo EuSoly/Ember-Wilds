@@ -19,10 +19,22 @@ function KitRules.sorted(kits: { [string]: KitDef }): { KitDef }
 	return list
 end
 
--- Kit existe e os pontos (finitos) pagam o preço. Pontos vêm de atributo,
+-- Kits que o jogador vê, na ordem da tela: os exclusivos (só de conquista)
+-- só para quem tem a posse (Shop.KitsOwned).
+function KitRules.visible(kits: { [string]: KitDef }, owned: { [string]: boolean }): { KitDef }
+	local list: { KitDef } = {}
+	for _, kit in KitRules.sorted(kits) do
+		if not kit.exclusive or owned[kit.id] == true then
+			table.insert(list, kit)
+		end
+	end
+	return list
+end
+
+-- Kit existe, não é exclusivo e os pontos (finitos) pagam o preço. Pontos vêm de atributo,
 -- então NaN/infinito são tratados como inválidos.
 function KitRules.canBuy(kit: KitDef?, points: number): boolean
-	if kit == nil or type(points) ~= "number" or points ~= points then
+	if kit == nil or kit.exclusive or type(points) ~= "number" or points ~= points then
 		return false
 	end
 	if points == math.huge or points == -math.huge then
