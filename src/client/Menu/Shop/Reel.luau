@@ -2,8 +2,9 @@
 -- Carrossel de skins da tela do giro (estilo CS:GO).
 -- Parado, ele anda devagar para a esquerda mostrando o que pode sair (pesos
 -- de vitrine) e vai trocando os quadradinhos que saem da tela. Ao girar,
--- acrescenta quadradinhos com o prêmio lá na frente e desliza até o prêmio
--- parar embaixo do marcador, freando forte no fim.
+-- acrescenta quadradinhos com o prêmio lá na frente, dá uma puxadinha para
+-- trás (o impulso) e desliza até o prêmio parar embaixo do marcador, freando
+-- aos poucos: os últimos quadradinhos passam devagar, um a um.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -15,7 +16,11 @@ local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
 
 local IDLE_SPEED = 40 -- px lógicos por segundo
 local SPIN_SECONDS = 5.2
-local SPIN_INFO = TweenInfo.new(SPIN_SECONDS, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+-- Cubic (e não Quint): com Quint os quadradinhos paravam de passar na metade
+-- do tempo e o resto era um arrasto mudo; assim o último passa lá pelos 70%.
+local SPIN_INFO = TweenInfo.new(SPIN_SECONDS, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+local WINDUP_INFO = TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local WINDUP_TILES = 0.3 -- a puxadinha para trás, em quadradinhos
 local START_TILES = 14
 local EXTRA_TILES = 40 -- acrescentados ao girar
 local PRIZE_AHEAD = 34 -- o prêmio fica tantos quadradinhos à frente
@@ -27,7 +32,8 @@ export type OnFrame = (progress: number, tile: number) -> ()
 
 export type Reel = {
 	idle: (self: Reel) -> (),
-	spinTo: (self: Reel, prize: MockStore.SpinItem, onDone: () -> (), onFrame: OnFrame?) -> (),
+	-- onDone recebe o quadradinho do prêmio (para o destaque).
+	spinTo: (self: Reel, prize: MockStore.SpinItem, onDone: (tile: GuiObject) -> (), onFrame: OnFrame?) -> (),
 	destroy: (self: Reel) -> (),
 }
 
@@ -73,12 +79,13 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 		return SpinRules.pickItem(spinType.items, rarity, rng:NextNumber())
 	end
 
-	local function push(item: MockStore.SpinItem)
+	local function push(item: MockStore.SpinItem): GuiObject
 		order += 1
 		local tile = SpinTile.build(item, tileSize)
 		tile.LayoutOrder = order
 		tile.Parent = strip
 		table.insert(tiles, tile)
+		return tile
 	end
 
 	local function place()
@@ -88,13 +95,16 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 	for _ = 1, START_TILES do
 		push(showcaseItem())
 	end
+	-- Sempre sobra um quadradinho inteiro à esquerda, fora da janela: é ele
+	-- que aparece na puxadinha para trás do começo do giro.
+	offset = -step
 	place()
 
 	-- Anda devagar; o quadradinho que sai pela esquerda vai para o fim.
 	connection = RunService.RenderStepped:Connect(function(dt)
 		if mode == "spinning" then
 			local callback = frameCallback
-			if callback then
+			if callback and spinStarted > 0 then
 				local progress = math.min((os.clock() - spinStarted) / SPIN_SECONDS, 1)
 				callback(progress, SpinRules.markerTile(strip.Position.X.Offset, step, spinWindow))
 			end
@@ -104,7 +114,7 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 			return
 		end
 		offset -= IDLE_SPEED * dt
-		while -offset > step and #tiles > 0 do
+		while -offset > step * 2 and #tiles > 0 do
 			local gone = table.remove(tiles, 1)
 			if gone then
 				gone:Destroy()
@@ -127,24 +137,28 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 		mode = "idle"
 	end
 
-	function self.spinTo(_: Reel, prize: MockStore.SpinItem, onDone: () -> (), onFrame: OnFrame?)
+	function self.spinTo(_: Reel, prize: MockStore.SpinItem, onDone: (tile: GuiObject) -> (), onFrame: OnFrame?)
 		if mode == "spinning" then
 			return
 		end
 		mode = "spinning"
 		frameCallback = onFrame
-		spinStarted = os.clock()
+		spinStarted = 0 -- só conta (e avisa os quadros) depois da puxadinha
 		local prizeIndex = #tiles + PRIZE_AHEAD
+		local prizeTile: GuiObject? = nil
 		for _ = 1, EXTRA_TILES do
-			push(if #tiles + 1 == prizeIndex then prize else showcaseItem())
+			if #tiles + 1 == prizeIndex then
+				prizeTile = push(prize)
+			else
+				push(showcaseItem())
+			end
 		end
 		local windowWidth = window.AbsoluteSize.X / uiScale(window)
 		spinWindow = windowWidth
 		local jitter = (rng:NextNumber() - 0.5) * 2 * JITTER * tileSize
 		local target = -((prizeIndex - 1) * step + tileSize / 2 - windowWidth / 2 + jitter)
-		tween = TweenService:Create(strip, SPIN_INFO, { Position = UDim2.new(0, target, 0.5, 0) })
-		local current = tween :: Tween
-		current.Completed:Once(function(state)
+		local main = TweenService:Create(strip, SPIN_INFO, { Position = UDim2.new(0, target, 0.5, 0) })
+		main.Completed:Once(function(state)
 			if state ~= Enum.PlaybackState.Completed or mode ~= "spinning" then
 				return
 			end
@@ -160,9 +174,24 @@ function Reel.new(window: GuiObject, spinType: MockStore.SpinType, tileSize: num
 			place()
 			mode = "stopped"
 			frameCallback = nil
-			onDone()
+			if prizeTile then
+				onDone(prizeTile)
+			end
 		end)
-		current:Play()
+		-- Impulso: puxa um pouco para trás e só então dispara.
+		local windup = TweenService:Create(strip, WINDUP_INFO, {
+			Position = UDim2.new(0, offset + WINDUP_TILES * step, 0.5, 0),
+		})
+		tween = windup
+		windup.Completed:Once(function(state)
+			if state ~= Enum.PlaybackState.Completed or mode ~= "spinning" then
+				return
+			end
+			spinStarted = os.clock()
+			tween = main
+			main:Play()
+		end)
+		windup:Play()
 	end
 
 	function self.destroy(_: Reel)

@@ -7,7 +7,7 @@ end
 
 return {
 	["todos os sons têm id e volume válidos"] = function()
-		for _, name in { "tick", "riser", "drumroll", "whoosh" } do
+		for _, name in { "tick", "riser", "drumroll", "start", "whoosh", "land", "shine" } do
 			local entry = (SpinSoundConfig :: any)[name] :: SpinSoundConfig.Sound
 			assert(isSound(entry), name)
 		end
@@ -15,6 +15,16 @@ return {
 		for r, entry in SpinSoundConfig.reveal do
 			assert(isSound(entry), `reveal {r}`)
 		end
+	end,
+
+	["brilho da revelação cresce com a raridade e Comum não tem"] = function()
+		local shine = SpinSoundConfig.shineFor
+		assert(#shine == 5, "um por raridade")
+		assert(shine[1] == 0, "Comum sem brilho")
+		for r = 2, 5 do
+			assert(shine[r] >= shine[r - 1] and shine[r] <= 1, `brilho fora da ordem na raridade {r}`)
+		end
+		assert(shine[5] == 1, "Mítico no máximo")
 	end,
 
 	["suspense cresce com a raridade e Comum não tem"] = function()

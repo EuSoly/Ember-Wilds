@@ -1,11 +1,17 @@
 --!strict
--- Efeitos do giro pago (e a comemoração do prêmio), ligados na tela do giro:
---   start(box, window) — raios de luz girando atrás da janela, borda brilhando
---     e pulsando, borda colorida correndo no carrossel, marcador piscando e
---     faíscas atravessando as skins. Devolve a função que para e limpa tudo.
---   land(box) — clarão e tremidinha quando o carrossel para.
---   celebrate(popup, rarity, paid) — raios na cor da raridade atrás da
---     janelinha do prêmio e confete (quantidade em SpinRules.confettiFor).
+-- Efeitos da tela do giro (o quanto de cada um vem de SpinRules.revealFor e
+-- SpinRules.confettiFor, na medida da raridade):
+--   start(box, window) — só no giro pago: raios de luz girando atrás da
+--     janela, borda brilhando e pulsando, borda colorida correndo no
+--     carrossel, marcador piscando e faíscas atravessando as skins. Devolve a
+--     função que para e limpa tudo.
+--   tick(window) — um quadradinho passou: o marcador dá um "tranco".
+--   land(box, window, tile, rarity, paid) — o carrossel parou: tremidinha, o
+--     resto do carrossel escurece e o prêmio ganha uma borda pulsando na cor
+--     da raridade. Devolve a função que desfaz o destaque.
+--   celebrate(popup, rarity, paid) — a janelinha do prêmio abriu: ela "pula"
+--     (cresce com um quique), ganha a borda na cor da raridade, clarão, raios
+--     girando atrás, onda de choque e confete puxado para a cor da raridade.
 -- Tudo some sozinho; nada fica rodando com a tela fechada.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -24,6 +30,18 @@ local RAY_COUNT = 14
 local RAY_SPEED = 70 -- graus por segundo
 local SPARK_EVERY = 0.05
 local CONFETTI_COLORS = { GOLD, PURPLE, Color3.fromHex("#4DA3FF"), PINK, Color3.fromHex("#92B56A"), Theme.rustic.cream }
+local MARKER_WIDTH = 4 -- px do marcador parado (igual ao da SpinScreen)
+local MARKER_KICK = 10 -- px no tranco
+local KICK_INFO = TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local KICK_GAP = 0.04 -- s mínimos entre dois trancos (no começo passam muitos)
+local DIM = 0.45 -- transparência do escuro sobre os vizinhos do prêmio
+local DIM_INFO = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local PULSE_INFO = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+local POP_INFO = TweenInfo.new(0.32, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local POP_FROM = 0.6
+local FLASH_INFO = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local RING_INFO = TweenInfo.new(0.65, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local SHAKE_PATTERN = { Vector2.new(-1, 0.5), Vector2.new(0.9, -0.6), Vector2.new(-0.5, 0.4), Vector2.new(0.4, 0) }
 
 local SpinFx = {}
 
@@ -168,54 +186,189 @@ function SpinFx.start(box: GuiObject, window: GuiObject): () -> ()
 	end
 end
 
-function SpinFx.land(box: GuiObject)
-	local parent = box.Parent :: Instance
-	local flash = Instance.new("Frame")
-	flash.Name = "Flash"
-	flash.Size = UDim2.fromScale(1, 1)
-	flash.BackgroundColor3 = Color3.fromHex("#FFF3D6")
-	flash.BackgroundTransparency = 0.15
-	flash.BorderSizePixel = 0
-	flash.ZIndex = 40
-	flash.Parent = parent
-	local fade = TweenService:Create(flash, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		BackgroundTransparency = 1,
-	})
+local function rarityColor(rarity: number): Color3
+	return Color3.fromHex(MockStore.RARITIES[math.clamp(rarity, 1, #MockStore.RARITIES)].color)
+end
+
+-- Tranco do marcador a cada quadradinho que passa: engrossa e volta.
+local lastKick = 0
+function SpinFx.tick(window: GuiObject)
+	local now = os.clock()
+	if now - lastKick < KICK_GAP then
+		return
+	end
+	lastKick = now
+	local marker = window:FindFirstChild("Marker") :: GuiObject?
+	if marker == nil then
+		return
+	end
+	marker.Size = UDim2.new(0, MARKER_KICK, 1, 0)
+	TweenService:Create(marker, KICK_INFO, { Size = UDim2.new(0, MARKER_WIDTH, 1, 0) }):Play()
+end
+
+function SpinFx.land(box: GuiObject, window: GuiObject, tile: GuiObject, rarity: number, paid: boolean): () -> ()
+	local reveal = SpinRules.revealFor(rarity, paid)
+	-- Tremidinha: alguns deslocamentos curtos e volta ao lugar.
+	if reveal.shake > 0 then
+		local home = box.Position
+		task.spawn(function()
+			for _, shake in SHAKE_PATTERN do
+				box.Position = home + UDim2.fromOffset(shake.X * reveal.shake, shake.Y * reveal.shake)
+				task.wait(0.05)
+			end
+			box.Position = home
+		end)
+	end
+	-- Escurece o carrossel dos dois lados do prêmio (em fração da janela: vale
+	-- com qualquer escala da interface).
+	local made: { Instance } = {}
+	local width = math.max(window.AbsoluteSize.X, 1)
+	local left = (tile.AbsolutePosition.X - window.AbsolutePosition.X) / width
+	local right = left + tile.AbsoluteSize.X / width
+	for _, span in { { 0, left }, { right, 1 } } do
+		local dim = Instance.new("Frame")
+		dim.Name = "Dim"
+		dim.Position = UDim2.fromScale(span[1], 0)
+		dim.Size = UDim2.fromScale(math.max(span[2] - span[1], 0), 1)
+		dim.BackgroundColor3 = Color3.new(0, 0, 0)
+		dim.BackgroundTransparency = 1
+		dim.BorderSizePixel = 0
+		dim.ZIndex = 9
+		dim.Parent = window
+		TweenService:Create(dim, DIM_INFO, { BackgroundTransparency = DIM }):Play()
+		table.insert(made, dim)
+	end
+	-- Borda pulsando no prêmio, na cor da raridade.
+	local glow = Instance.new("Frame")
+	glow.Name = "PrizeGlow"
+	glow.Size = UDim2.fromScale(1, 1)
+	glow.BackgroundTransparency = 1
+	glow.ZIndex = 8
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0.1, 0)
+	corner.Parent = glow
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = rarityColor(rarity):Lerp(WHITE, 0.25)
+	stroke.Thickness = 3
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = glow
+	glow.Parent = tile
+	table.insert(made, glow)
+	local pulse = TweenService:Create(stroke, PULSE_INFO, { Thickness = 7, Color = WHITE })
+	pulse:Play()
+
+	local marker = window:FindFirstChild("Marker") :: GuiObject?
+	if marker then
+		marker.Visible = false -- o prêmio aparece inteiro, sem o risco no meio
+	end
+
+	local undone = false
+	return function()
+		if undone then
+			return
+		end
+		undone = true
+		pulse:Cancel()
+		for _, instance in made do
+			instance:Destroy()
+		end
+		if marker then
+			marker.Visible = true
+		end
+	end
+end
+
+-- Clarão na cor da raridade (puxada para o branco), que some sozinho.
+local function flash(overlay: GuiObject, color: Color3, opacity: number)
+	local frame = Instance.new("Frame")
+	frame.Name = "Flash"
+	frame.Size = UDim2.fromScale(1, 1)
+	frame.BackgroundColor3 = color:Lerp(WHITE, 0.5)
+	frame.BackgroundTransparency = 1 - opacity
+	frame.BorderSizePixel = 0
+	frame.ZIndex = 40
+	frame.Parent = overlay
+	local fade = TweenService:Create(frame, FLASH_INFO, { BackgroundTransparency = 1 })
 	fade.Completed:Once(function()
-		flash:Destroy()
+		frame:Destroy()
 	end)
 	fade:Play()
-	-- Tremidinha: alguns deslocamentos curtos e volta ao lugar.
-	local home = box.Position
-	task.spawn(function()
-		for _, shake in { Vector2.new(-8, 4), Vector2.new(7, -5), Vector2.new(-4, 3), Vector2.new(3, 0) } do
-			box.Position = home + UDim2.fromOffset(shake.X, shake.Y)
-			task.wait(0.05)
-		end
-		box.Position = home
+end
+
+-- Onda de choque: um anel que cresce a partir do centro da janelinha e some.
+local function ring(overlay: GuiObject, popup: GuiObject, color: Color3)
+	local frame = Instance.new("Frame")
+	frame.Name = "Ring"
+	frame.AnchorPoint = Vector2.new(0.5, 0.5)
+	frame.Position = popup.Position
+	frame.Size = UDim2.fromOffset(160, 160)
+	frame.BackgroundTransparency = 1
+	frame.ZIndex = math.max(popup.ZIndex - 1, 1)
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(1, 0)
+	corner.Parent = frame
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = color:Lerp(WHITE, 0.3)
+	stroke.Thickness = 14
+	stroke.Transparency = 0.1
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = frame
+	frame.Parent = overlay
+	local grow = TweenService:Create(frame, RING_INFO, { Size = UDim2.fromOffset(820, 820) })
+	TweenService:Create(stroke, RING_INFO, { Transparency = 1, Thickness = 2 }):Play()
+	grow.Completed:Once(function()
+		frame:Destroy()
 	end)
+	grow:Play()
 end
 
 function SpinFx.celebrate(popup: GuiObject, rarity: number, paid: boolean)
 	local overlay = popup.Parent :: GuiObject
-	local count = SpinRules.confettiFor(rarity, paid)
-	if count <= 0 then
-		return
+	local reveal = SpinRules.revealFor(rarity, paid)
+	local color = rarityColor(rarity)
+
+	-- A janelinha "pula": nasce menor e cresce com um quique.
+	local pop = popup:FindFirstChild("Pop") :: UIScale?
+	if pop == nil then
+		local created = Instance.new("UIScale")
+		created.Name = "Pop"
+		created.Parent = popup
+		pop = created
 	end
-	local color = Color3.fromHex(MockStore.RARITIES[rarity].color)
-	-- Atrás da janelinha (irmão dela, com ZIndex menor), no mesmo centro.
-	local glow = rays(overlay, UDim2.fromOffset(640, 640), { color, WHITE }, math.max(popup.ZIndex - 1, 1))
-	glow.Position = popup.Position
-	-- Os raios giram enquanto a janelinha estiver aberta.
-	local connection: RBXScriptConnection
-	connection = RunService.RenderStepped:Connect(function(dt)
-		if not overlay.Visible or glow.Parent == nil then
-			connection:Disconnect()
-			glow:Destroy()
-			return
-		end
-		glow.Rotation = (glow.Rotation + 35 * dt) % 360
-	end)
+	if pop then
+		pop.Scale = POP_FROM
+		TweenService:Create(pop, POP_INFO, { Scale = 1 }):Play()
+	end
+	-- Borda na cor da raridade (Comum fica com o dourado de sempre).
+	local border = strokeOf(popup)
+	if border then
+		border.Color = if rarity >= 2 then color else GOLD
+	end
+
+	if reveal.flash > 0 then
+		flash(overlay, color, reveal.flash)
+	end
+	if reveal.ring then
+		ring(overlay, popup, color)
+	end
+	if reveal.rays then
+		-- Atrás da janelinha (irmão dela, com ZIndex menor), no mesmo centro.
+		local glow = rays(overlay, UDim2.fromOffset(640, 640), { color, WHITE }, math.max(popup.ZIndex - 1, 1))
+		glow.Position = popup.Position
+		-- Os raios giram enquanto a janelinha estiver aberta.
+		local connection: RBXScriptConnection
+		connection = RunService.RenderStepped:Connect(function(dt)
+			if not overlay.Visible or glow.Parent == nil then
+				connection:Disconnect()
+				glow:Destroy()
+				return
+			end
+			glow.Rotation = (glow.Rotation + 35 * dt) % 360
+		end)
+	end
+
+	-- Confete: metade na cor da raridade, o resto colorido.
+	local count = SpinRules.confettiFor(rarity, paid)
 	for i = 1, count do
 		local piece = Instance.new("Frame")
 		piece.Name = "Confetti"
@@ -223,7 +376,7 @@ function SpinFx.celebrate(popup: GuiObject, rarity: number, paid: boolean)
 		piece.Position = UDim2.fromScale(math.random(), -0.05)
 		piece.Size = UDim2.fromOffset(9, 14)
 		piece.Rotation = math.random(0, 360)
-		piece.BackgroundColor3 = CONFETTI_COLORS[(i - 1) % #CONFETTI_COLORS + 1]
+		piece.BackgroundColor3 = if i % 2 == 0 then color else CONFETTI_COLORS[(i // 2) % #CONFETTI_COLORS + 1]
 		piece.BorderSizePixel = 0
 		piece.ZIndex = 45
 		piece.Parent = overlay

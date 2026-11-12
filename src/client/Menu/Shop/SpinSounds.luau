@@ -3,8 +3,12 @@
 --   frame(progress, tile) — a cada quadro: tique quando um quadradinho passa
 --     pelo marcador (mais agudo no fim, quanto mais rara) e o volume do chiado e
 --     do tambor sobe conforme o fim chega, na medida da raridade que vai sair;
---   land() — o carrossel parou: corta o suspense e toca a revelação da raridade;
+--   land() — o carrossel parou: batida seca; o suspense (tambor) continua
+--     durante a "respirada" com o prêmio em destaque;
+--   reveal() — a janelinha do prêmio abriu: corta o suspense e toca a
+--     revelação da raridade (com o brilho por cima, nas raras);
 --   stop() — saiu no meio (fechou a tela): corta tudo, sem revelação.
+-- Todo giro começa com um "vupt" (o do pago é o mágico).
 -- Os Sound ficam numa pasta em SoundService, no grupo "Effects".
 local SoundService = game:GetService("SoundService")
 local ContentProvider = game:GetService("ContentProvider")
@@ -17,13 +21,14 @@ local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"
 
 local TICK_POOL = 6 -- tiques podem se sobrepor no começo (giro rápido)
 local MIN_TICK_GAP = 0.03 -- s; no começo passam ~30 quadradinhos por segundo
-local TICK_PITCH_UP = 0.35 -- quanto o tique sobe no suspense máximo
+local TICK_JITTER = 0.06 -- variação de tom entre um tique e outro
 local SPIN_SECONDS = 5.2 -- mesmo tempo do Reel: o chiado termina junto
 local FADE = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 export type Session = {
 	frame: (progress: number, tile: number) -> (),
 	land: () -> (),
+	reveal: () -> (),
 	stop: () -> (),
 }
 
@@ -31,7 +36,10 @@ type Bank = {
 	ticks: { Sound },
 	riser: Sound,
 	drumroll: Sound,
+	start: Sound,
 	whoosh: Sound,
+	land: Sound,
+	shine: Sound,
 	reveal: { Sound },
 }
 
@@ -72,7 +80,10 @@ local function ensure(): Bank
 		ticks = ticks,
 		riser = make(folder, "Riser", SpinSoundConfig.riser, false),
 		drumroll = make(folder, "Drumroll", SpinSoundConfig.drumroll, true),
+		start = make(folder, "Start", SpinSoundConfig.start, false),
 		whoosh = make(folder, "Whoosh", SpinSoundConfig.whoosh, false),
+		land = make(folder, "Land", SpinSoundConfig.land, false),
+		shine = make(folder, "Shine", SpinSoundConfig.shine, false),
 		reveal = reveal,
 	}
 	bank = created
@@ -82,7 +93,7 @@ end
 -- Carrega os áudios antes do primeiro giro (sem travar quem chamou).
 function SpinSounds.preload()
 	local b = ensure()
-	local list: { Instance } = { b.ticks[1], b.riser, b.drumroll, b.whoosh }
+	local list: { Instance } = { b.ticks[1], b.riser, b.drumroll, b.start, b.whoosh, b.land, b.shine }
 	for _, s in b.reveal do
 		table.insert(list, s)
 	end
@@ -127,16 +138,18 @@ function SpinSounds.begin(rarity: number, paid: boolean): Session
 	local lastTile: number? = nil
 	local lastTickAt = 0
 	local nextTick = 1
+	local landed = false
 	local ended = false
+	local tickVolume = SpinSoundConfig.tick.volume
 
-	for _, s in { b.riser, b.drumroll, b.whoosh } do
+	for _, s in { b.riser, b.drumroll, b.whoosh, b.start } do
 		cancelFade(s)
 		s:Stop()
 	end
-	if paid then
-		b.whoosh.Volume = SpinSoundConfig.whoosh.volume
-		b.whoosh:Play()
-	end
+	local opening = if paid then b.whoosh else b.start
+	opening.Volume = (if paid then SpinSoundConfig.whoosh else SpinSoundConfig.start).volume
+	opening.TimePosition = 0
+	opening:Play()
 	if profile.riser > 0 then
 		-- Começa de um ponto que faz o pico do chiado cair no fim do giro.
 		b.riser.Volume = 0
@@ -157,7 +170,7 @@ function SpinSounds.begin(rarity: number, paid: boolean): Session
 	local session = {} :: Session
 
 	function session.frame(progress: number, tile: number)
-		if ended then
+		if ended or landed then
 			return
 		end
 		local tension = SpinRules.tensionRamp(progress)
@@ -182,22 +195,39 @@ function SpinSounds.begin(rarity: number, paid: boolean): Session
 		lastTickAt = now
 		local tick = b.ticks[nextTick]
 		nextTick = nextTick % #b.ticks + 1
-		-- Agudo pelo tempo (não pela curva): os quadradinhos param de passar
-		-- lá pelos 60% do giro, antes de a curva do suspense subir.
-		tick.PlaybackSpeed = 1 + TICK_PITCH_UP * progress * profile.riser + (rng:NextNumber() - 0.5) * 0.06
+		-- Tom e volume pelo tempo (não pela curva do suspense): os últimos
+		-- quadradinhos passam lá pelos 70% do giro.
+		tick.PlaybackSpeed = SpinRules.tickPitch(progress, profile.riser) + (rng:NextNumber() - 0.5) * TICK_JITTER
+		tick.Volume = tickVolume * SpinRules.tickVolume(progress)
 		tick.TimePosition = 0
 		tick:Play()
 	end
 
 	function session.land()
+		if ended or landed then
+			return
+		end
+		landed = true
+		b.land.TimePosition = 0
+		b.land:Play()
+	end
+
+	function session.reveal()
 		if ended then
 			return
 		end
 		ended = true
 		cutSuspense()
-		local reveal = b.reveal[math.clamp(rarity, 1, #b.reveal)]
+		local r = math.clamp(rarity, 1, #b.reveal)
+		local reveal = b.reveal[r]
 		reveal.TimePosition = 0
 		reveal:Play()
+		local shine = SpinSoundConfig.shineFor[r] or 0
+		if shine > 0 then
+			b.shine.Volume = SpinSoundConfig.shine.volume * shine
+			b.shine.TimePosition = 0
+			b.shine:Play()
+		end
 	end
 
 	function session.stop()
@@ -207,6 +237,7 @@ function SpinSounds.begin(rarity: number, paid: boolean): Session
 		ended = true
 		cutSuspense()
 		fadeOut(b.whoosh)
+		fadeOut(b.start)
 	end
 
 	return session

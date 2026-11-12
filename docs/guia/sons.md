@@ -24,6 +24,22 @@ O que cada número de um efeito quer dizer (`fx(id, volume, duração, { ... })`
 
 Limites gerais, no mesmo arquivo: `MAX_VOICES` (12 efeitos ao mesmo tempo; o que passar é descartado), `ROLLOFF_MIN`/`ROLLOFF_MAX` (12 e 70 studs), `MUSIC_FADE` (3 s de crossfade), `MUSIC_MAX_VOLUME` (0,4: a música fica sempre abaixo dos efeitos; o teste recusa faixa mais alta), `AMBIENT_FADE`, `WATER_RANGE`, `FIRE_RANGE` e `MAX_FIRES`.
 
+## Sons da roleta
+
+Ficam à parte, em **`src/shared/SpinSoundConfig.luau`** (ids e volumes) e `src/client/Menu/Shop/SpinSounds.luau` (quem toca). Para trocar, é o mesmo passo a passo: troque o número na linha.
+
+| Linha | Quando toca | Áudio (12/11/2026) |
+| --- | --- | --- |
+| `start` | Começo do giro normal | `9120972321`, PSE "Wood Whoosh Slicing Air Quick Swings 4" (0,56 s) |
+| `whoosh` | Começo do giro pago | `9125647922`, PSE "Magic Zoom Up" (1,2 s) |
+| `tick` | Cada quadradinho que passa pelo marcador (tom e volume sobem perto do fim: `SpinRules.tickPitch`/`tickVolume`) | `87342128651257`, "Click" (0,23 s) |
+| `riser`, `drumroll` | Suspense do fim, na medida da raridade (`tension`) | `9040281024` e `1840444182`, APM |
+| `land` | O carrossel parou (o tambor continua até a janelinha abrir) | `9126267413`, PSE "Wood Hit Giant Wood Beam Dull Thuds Knocks 1" (0,63 s) |
+| `reveal[1..5]` | A janelinha do prêmio abriu, um por raridade | veja o arquivo |
+| `shine` | Por cima da revelação, de Épico para cima (`shineFor`) | `9116394545`, PSE "Magic Glows Soft Clusters Of Chiming Hits 1" (1,43 s) |
+
+`start`, `land` e `shine` entraram em 12/11/2026 e foram escolhidos **só pelo nome** (são áudios que o jogo já usava em outros lugares: golpe no ar, colocar peça e ressuscitar); todos carregam no Studio, mas ninguém ouviu a mistura. Dos `reveal`, só o do Mítico é da APM: os outros quatro são de criadores comuns e podem não tocar fora do Studio (veja `docs/pendencias.md`).
+
 ## Como funciona
 
 | Arquivo | O que faz |

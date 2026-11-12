@@ -24,7 +24,7 @@ Tudo que se compra é um **produto**: um id, um preço (`robux` ou `ember`), um 
 
 ### Giros e roleta
 
-Os giros são **dois saldos**, `normal` e `paid` (especial), que servem em **qualquer roleta** (Skins, Mochila, Livro, Caixa). GIRAR manda `Net.RequestSpin { TypeId, Paid }`. O servidor confere o saldo, desconta 1, sorteia (`Shop/SpinRoll`, com as chances de `ShopConfig.SPIN_ODDS`) entre as skins da roleta e entrega a skin. Se o jogador **já tem** a skin, ele recebe Golden Ember no lugar (`ShopConfig.DUPLICATE_REFUND`: 50 no normal, 150 no especial). O cliente anima o carrossel até o prêmio que o servidor mandou (`Net.SpinResult`).
+Os giros são **dois saldos**, `normal` e `paid` (especial), que servem em **qualquer roleta** (Skins, Mochila, Livro, Caixa). GIRAR manda `Net.RequestSpin { TypeId, Paid }`. O servidor confere o saldo, desconta 1, sorteia (`Shop/SpinRoll`, com as chances de `ShopConfig.SPIN_ODDS`) entre as skins da roleta e entrega a skin. Se o jogador **já tem** a skin, ele recebe Golden Ember no lugar (`ShopConfig.DUPLICATE_REFUND`: 50 no normal, 150 no especial). O cliente anima o carrossel até o prêmio que o servidor mandou (`Net.SpinResult`); os efeitos e os sons do giro (impulso, tiques, suspense, destaque do prêmio e comemoração por raridade) estão em `telas.md`, na Loja, e em `sons.md`, "Sons da roleta".
 
 ### Kits
 

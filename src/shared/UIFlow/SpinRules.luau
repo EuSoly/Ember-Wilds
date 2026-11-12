@@ -134,16 +134,61 @@ function SpinRules.canAfford(balance: number, price: number): boolean
 end
 
 -- Peças de confete na janelinha do prêmio: no pago sempre (mais quanto mais
--- raro); no normal só de Épico (3) para cima, com pouco.
+-- raro); no normal só de Épico (3) para cima, crescendo com a raridade.
 local CONFETTI_PAID = { 20, 35, 60, 100, 150 }
-local CONFETTI_NORMAL = 20
-local NORMAL_FROM = 3
+local CONFETTI_NORMAL = { 0, 0, 20, 40, 70 }
 
 function SpinRules.confettiFor(rarity: number, paid: boolean): number
-	if paid then
-		return CONFETTI_PAID[math.clamp(rarity, 1, #CONFETTI_PAID)]
-	end
-	return if rarity >= NORMAL_FROM then CONFETTI_NORMAL else 0
+	local list = if paid then CONFETTI_PAID else CONFETTI_NORMAL
+	return list[math.clamp(rarity, 1, #list)]
+end
+
+-- Efeitos de quando o carrossel para e o prêmio aparece, na medida da
+-- raridade (o giro pago ganha um degrau a mais):
+--   hold  — s com o prêmio em destaque no carrossel antes da janelinha abrir
+--           (a "respirada" do suspense; o tambor continua nela);
+--   shake — px da tremida da caixa ao parar (0 = não treme);
+--   flash — opacidade do clarão na cor da raridade quando a janelinha abre
+--           (0 = sem clarão);
+--   rays  — raios girando atrás da janelinha;
+--   ring  — onda de choque (anel que cresce e some) atrás da janelinha.
+export type Reveal = { hold: number, shake: number, flash: number, rays: boolean, ring: boolean }
+
+local HOLD = { 0.3, 0.4, 0.55, 0.7, 0.9 }
+local SHAKE = { 0, 0, 3, 6, 9 }
+local FLASH = { 0, 0.15, 0.3, 0.45, 0.6 }
+local PAID_SHAKE = 3
+local PAID_FLASH = 0.15
+local RAYS_FROM = 2
+local RING_FROM = 3
+
+function SpinRules.revealFor(rarity: number, paid: boolean): Reveal
+	local r = math.clamp(rarity, 1, #HOLD)
+	return {
+		hold = HOLD[r],
+		shake = SHAKE[r] + (if paid then PAID_SHAKE else 0),
+		flash = FLASH[r] + (if paid then PAID_FLASH else 0),
+		rays = paid or r >= RAYS_FROM,
+		ring = paid or r >= RING_FROM,
+	}
+end
+
+-- Tique do carrossel: `progress` é a fração do tempo do giro (0..1) e
+-- `suspense` o quanto a raridade que vai sair aperta o som (0..1,
+-- SpinSoundConfig.tension). O tom sobe um pouco em todo giro conforme freia e
+-- sobe mais com o suspense; o volume começa baixo (no começo passam muitos
+-- por segundo) e cresce até os últimos, que são os que contam.
+local TICK_PITCH_BASE = 0.12
+local TICK_PITCH_SUSPENSE = 0.35
+local TICK_VOLUME_START = 0.55
+
+function SpinRules.tickPitch(progress: number, suspense: number): number
+	local p = math.clamp(progress, 0, 1)
+	return 1 + p * (TICK_PITCH_BASE + TICK_PITCH_SUSPENSE * math.clamp(suspense, 0, 1))
+end
+
+function SpinRules.tickVolume(progress: number): number
+	return TICK_VOLUME_START + (1 - TICK_VOLUME_START) * math.clamp(progress, 0, 1)
 end
 
 -- Suspense dos sons do giro: 0 até TENSION_START do giro (fração do tempo),
