@@ -26,7 +26,9 @@ local SLIDE = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out
 local HIDE = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
 local STAY_SECONDS = 2.5
 local SHOWN = UDim2.new(0.5, 0, 0, 132) -- abaixo do relógio do HUD
-local HIDDEN = UDim2.new(0.5, 0, 0, -140)
+-- Bem acima: a área segura começa abaixo da barra do Roblox, e o que fica
+-- acima dela ainda aparece (o pé da faixa aparecia no topo da tela).
+local HIDDEN = UDim2.new(0.5, 0, 0, -320)
 
 local MissionBanner = {}
 
@@ -57,6 +59,7 @@ function MissionBanner.mount(playerGui: Instance): ScreenGui
 		Name = "Banner",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = HIDDEN,
+		Visible = false, -- só durante o aviso
 		Size = UDim2.new(0.42, 0, 0, 96),
 		BackgroundTransparency = 1,
 		create("UISizeConstraint")({ MinSize = Vector2.new(260, 70), MaxSize = Vector2.new(520, 120) }),
@@ -105,10 +108,12 @@ function MissionBanner.mount(playerGui: Instance): ScreenGui
 		subtitle(nameOf(notice))
 		SoundPlayer.play(if notice.Done then "notify_success" else "notify_alert")
 		banner.Position = HIDDEN
+		banner.Visible = true
 		TweenService:Create(banner, SLIDE, { Position = SHOWN }):Play()
 		task.wait(SLIDE.Time + STAY_SECONDS)
 		TweenService:Create(banner, HIDE, { Position = HIDDEN }):Play()
 		task.wait(HIDE.Time)
+		banner.Visible = false
 	end
 
 	task.spawn(function()

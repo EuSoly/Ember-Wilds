@@ -1131,6 +1131,7 @@ return table.freeze({
 	["missions.reward.kit"] = "Kit {name}",
 	["missions.reward.skin"] = "Skin exclusiva",
 	["missions.reward.ember"] = "+{n} Golden Ember",
+	["missions.reward.points"] = "{n} pts",
 	["missions.reward.item_score"] = "{item} · {n} pts",
 	["time.days_hours"] = "{d}d {h}h",
 	["time.hours_minutes"] = "{h}h {m}min",

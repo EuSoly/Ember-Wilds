@@ -126,4 +126,25 @@ return {
 	["daily header waits for the first snapshot"] = function()
 		assert(MissionView.tabHeader("daily", nil, 0) == "", "sem dados mostrou um tempo")
 	end,
+
+	["reward badges pair an icon with a short text"] = function()
+		local ember = MissionView.rewardBadges({ { kind = "ember", amount = 40 } }, Defs)
+		assert(#ember == 1 and ember[1].kind == "ember" and ember[1].text == "+40", "ember")
+		local both = MissionView.rewardBadges({
+			{ kind = "spins", spin = "paid", count = 1 },
+			{ kind = "kitOnce", id = "kit_veteran", count = 1 },
+		}, Defs)
+		assert(both[1].kind == "spins" and both[1].text == "×1", `giro: {both[1].text}`)
+		assert(both[2].kind == "kit" and both[2].id == "kit_veteran" and both[2].text == "×1", "uso de kit")
+		local forever = MissionView.rewardBadges({ { kind = "kit", id = "kit_hunter" } }, Defs)
+		assert(forever[1].kind == "kit" and forever[1].text == "Caçador", forever[1].text)
+		local soon = MissionView.rewardBadges({}, Defs)
+		assert(soon[1].kind == "soon" and soon[1].text == "Em breve", "em breve")
+	end,
+
+	["quest badges show the item and the points"] = function()
+		local badges = MissionView.questBadges(Defs.Quests.survive)
+		assert(badges[1].kind == "item" and badges[1].id == "green_gem", "gema")
+		assert(badges[2].kind == "score" and badges[2].text == "7500 pts", badges[2].text)
+	end,
 }

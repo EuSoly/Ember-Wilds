@@ -21,18 +21,24 @@ local MissionsState = require(Client:WaitForChild("MissionsState"))
 local SoundPlayer = require(Client:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
 
 local create = vide.create
 local R = Theme.rustic
 
 type Tab = MissionView.Tab
 type Piece = MissionImages.Piece
+type Badge = MissionView.Badge
 
 local PANEL_MAX = Vector2.new(760, 520)
 local TITLE_HEIGHT = 46
 local TAB_HEIGHT = 38
 local HEADER_HEIGHT = 18
-local CARD_HEIGHT = 58
+local CARD_HEIGHT = 74
+-- Os cartões pronto e falhou têm uma fita na ponta direita da arte (de x 800 a
+-- 1024 em 241 de altura): prêmio e RESGATAR ficam antes dela.
+local RIBBON = math.round((1024 - 800) * CARD_HEIGHT / 241) + 6
 local STATE_READY, STATE_CLAIMED, STATE_FAILED, STATE_LOCKED = 1, 2, 3, 4
 -- A moldura da janela sai fina: cantos em ~45% do tamanho que teriam pela altura.
 local WINDOW_SLICE_FACTOR = 0.45
@@ -167,13 +173,114 @@ local function claimButton(onClaim: () -> ()): Instance
 	return Rustic.button({
 		Name = "Claim",
 		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -10, 0.5, 0),
-		Size = UDim2.new(0.24, 0, 0, 34),
+		-- O cartão pronto tem a fita verde na ponta direita.
+		Position = UDim2.new(1, if hasArt(MissionImages.PIECES.CARD_DONE) then -RIBBON else -10, 0.5, 0),
+		Size = UDim2.new(0.22, 0, 0, 40),
 		kind = "ember",
 		text = Strings.get("missions.claim"),
-		maxSize = 16,
+		maxSize = 19,
 		-- O som toca quando o servidor confirma (MissionsState).
 		Activated = onClaim,
+	})
+end
+
+-- Imagem do ícone de um prêmio (o item usa o ItemIcon, à parte).
+local function badgeImage(kind: string): string
+	if kind == "ember" then
+		return UiImages.COIN
+	elseif kind == "spins" then
+		return MissionImages.ICON.premio_giro_especial
+	elseif kind == "kit" then
+		return MissionImages.ICON.premio_uso_kit
+	elseif kind == "score" or kind == "cosmetic" then
+		return MissionImages.ICON.aba_conquistas
+	end
+	return ""
+end
+
+local BADGE_ICON = 30
+
+-- Um prêmio: ícone + texto curto, lado a lado.
+local function badge(item: () -> Badge, index: number): Instance
+	return create("Frame")({
+		Name = "Badge",
+		LayoutOrder = index,
+		Size = UDim2.fromOffset(0, BADGE_ICON),
+		AutomaticSize = Enum.AutomaticSize.X,
+		BackgroundTransparency = 1,
+		create("UIListLayout")({
+			FillDirection = Enum.FillDirection.Horizontal,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 3),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+		create("ImageLabel")({
+			Name = "Icon",
+			LayoutOrder = 1,
+			Size = UDim2.fromOffset(BADGE_ICON, BADGE_ICON),
+			BackgroundTransparency = 1,
+			ScaleType = Enum.ScaleType.Fit,
+			Image = function()
+				return badgeImage(item().kind)
+			end,
+			Visible = function()
+				return badgeImage(item().kind) ~= ""
+			end,
+		}),
+		vide.show(function()
+			return item().kind == "item" and item().id ~= nil and Defs.Items[item().id :: string] ~= nil
+		end, function()
+			local holder = create("Frame")({
+				Name = "Item",
+				LayoutOrder = 1,
+				Size = UDim2.fromOffset(BADGE_ICON + 6, BADGE_ICON + 6),
+				BackgroundTransparency = 1,
+			}) :: Frame
+			ItemIcon({
+				item = function()
+					return { id = item().id :: string, count = 1 }
+				end,
+			}).Parent =
+				holder
+			return holder
+		end),
+		create("TextLabel")({
+			Name = "Text",
+			LayoutOrder = 2,
+			Size = UDim2.fromOffset(0, BADGE_ICON),
+			AutomaticSize = Enum.AutomaticSize.X,
+			BackgroundTransparency = 1,
+			FontFace = Theme.font.number,
+			TextSize = 18,
+			TextColor3 = R.charcoal,
+			Text = function()
+				return item().text
+			end,
+			Visible = function()
+				return item().text ~= ""
+			end,
+		}),
+	})
+end
+
+-- Os prêmios de um cartão, alinhados à direita.
+local function badges(list: () -> { Badge }, beforeRibbon: () -> boolean): Instance
+	return create("Frame")({
+		Name = "Rewards",
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = function()
+			return UDim2.new(1, if beforeRibbon() then -RIBBON else -14, 0.5, 0)
+		end,
+		Size = UDim2.new(0.3, 0, 0, BADGE_ICON + 6),
+		BackgroundTransparency = 1,
+		create("UIListLayout")({
+			FillDirection = Enum.FillDirection.Horizontal,
+			HorizontalAlignment = Enum.HorizontalAlignment.Right,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 10),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+		vide.indexes(list, badge),
 	})
 end
 
@@ -181,7 +288,7 @@ type CardView = {
 	icon: () -> string,
 	name: () -> string,
 	detail: () -> string,
-	reward: () -> string,
+	badges: () -> { Badge },
 	fraction: () -> number,
 	state: () -> number,
 	claim: () -> (),
@@ -249,45 +356,44 @@ local function card(view: CardView, order: () -> number): Instance
 			create("Frame")({
 				Name = "Body",
 				Position = UDim2.fromOffset(CARD_HEIGHT + 6, 6),
-				Size = UDim2.new(0.74, -(CARD_HEIGHT + 6), 1, -12),
+				Size = UDim2.new(0.66, -(CARD_HEIGHT + 6), 1, -12),
 				BackgroundTransparency = 1,
 				Rustic.label({
 					Name = "Name",
-					Size = UDim2.fromScale(1, 0.42),
+					Size = UDim2.fromScale(1, 0.4),
+					FontFace = Theme.font.number,
 					Text = view.name,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					dark = true,
-					maxSize = 16,
+					maxSize = 21,
 				}),
 				create("Frame")({
-					Position = UDim2.fromScale(0, 0.46),
-					Size = UDim2.fromScale(1, 0.2),
+					Position = UDim2.fromScale(0, 0.45),
+					Size = UDim2.fromScale(1, 0.18),
 					BackgroundTransparency = 1,
 					bar(view.fraction),
 				}),
 				Rustic.label({
 					Name = "Detail",
-					Position = UDim2.fromScale(0, 0.7),
-					Size = UDim2.fromScale(1, 0.3),
-					FontFace = Theme.font.body,
+					Position = UDim2.fromScale(0, 0.68),
+					Size = UDim2.fromScale(1, 0.32),
+					FontFace = Theme.font.label,
 					Text = view.detail,
 					TextXAlignment = Enum.TextXAlignment.Left,
 					dark = true,
-					maxSize = 12,
+					maxSize = 15,
 				}),
 			}),
-			Rustic.label({
-				Name = "Reward",
-				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.new(1, -10, 0.5, 0),
-				Size = UDim2.fromScale(0.24, 0.6),
-				Text = view.reward,
-				TextXAlignment = Enum.TextXAlignment.Right,
-				dark = true,
-				maxSize = 13,
+			create("Frame")({
+				Name = "RewardArea",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
 				Visible = function()
 					return view.state() ~= STATE_READY
 				end,
+				badges(view.badges, function()
+					return view.state() == STATE_FAILED and hasArt(P.CARD_FAILED)
+				end),
 			}),
 		}),
 		vide.show(function()
@@ -336,8 +442,8 @@ local function questCard(item: () -> any, index: number): Instance
 					def()
 				)}`
 		end,
-		reward = function()
-			return MissionView.questReward(def(), Defs)
+		badges = function()
+			return MissionView.questBadges(def())
 		end,
 		fraction = function()
 			return MissionView.chronoFraction(item(), serverNow())
@@ -376,12 +482,12 @@ local function periodCard(tab: Tab, item: () -> any, index: number): Instance
 			local c = item()
 			return stateText(c.State) or MissionView.progressText(c)
 		end,
-		reward = function()
+		badges = function()
 			if isFinal() then
 				local list = if tab == "daily" then { MissionConfig.DAILY_FINAL[1] } else MissionConfig.WEEKLY_FINAL
-				return MissionView.rewardText(list, Defs)
+				return MissionView.rewardBadges(list, Defs)
 			end
-			return MissionView.rewardText(Defs.Missions[item().Id].rewards, Defs)
+			return MissionView.rewardBadges(Defs.Missions[item().Id].rewards, Defs)
 		end,
 		fraction = function()
 			local c = item()
@@ -424,12 +530,12 @@ local function achievementCard(item: () -> any, index: number): Instance
 			local target = tier().target
 			return `{MissionView.achievementGoal(a.Id, target)} · {math.min(a.Progress, target)} / {target}`
 		end,
-		reward = function()
+		badges = function()
 			local a = item()
 			if a.Claimed >= #def().tiers then
-				return ""
+				return {}
 			end
-			return MissionView.rewardText(tier().rewards, Defs)
+			return MissionView.rewardBadges(tier().rewards, Defs)
 		end,
 		fraction = function()
 			local a = item()
@@ -530,6 +636,7 @@ local function tabButton(tab: Tab, order: number): Instance
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, TAB_HEIGHT, 0.5, 0),
 			Size = UDim2.new(1, -(TAB_HEIGHT + 6), 0.6, 0),
+			FontFace = Theme.font.number,
 			Text = Strings.get("missions.tab." .. tab),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextColor3 = function()

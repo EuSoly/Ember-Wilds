@@ -153,4 +153,42 @@ function MissionView.chronoFraction(card: any, serverNow: number): number
 	return math.clamp((card.Target - (card.EndsAt - serverNow)) / card.Target, 0, 1)
 end
 
+-- Um prêmio na tela: ícone (kind; id do item/kit) e um texto curto ao lado.
+export type Badge = {
+	kind: "ember" | "spins" | "kit" | "cosmetic" | "item" | "score" | "soon",
+	id: string?,
+	text: string,
+}
+
+-- Prêmios de missão/conquista como ícones ("+40" com a moeda, "×1" com o giro...).
+function MissionView.rewardBadges(rewards: { Types.MissionReward }, defs: Types.DefsTables): { Badge }
+	if #rewards == 0 then
+		return { { kind = "soon", text = Strings.get("missions.soon") } }
+	end
+	local list: { Badge } = {}
+	for _, reward in rewards do
+		if reward.kind == "ember" then
+			table.insert(list, { kind = "ember", text = `+{reward.amount or 0}` })
+		elseif reward.kind == "spins" then
+			table.insert(list, { kind = "spins", text = `×{reward.count or 1}` })
+		elseif reward.kind == "kitOnce" then
+			table.insert(list, { kind = "kit", id = reward.id, text = `×{reward.count or 1}` })
+		elseif reward.kind == "kit" then
+			local kit = if reward.id then defs.Kits[reward.id] else nil
+			table.insert(list, { kind = "kit", id = reward.id, text = if kit then Strings.get(kit.nameKey) else "" })
+		elseif reward.kind == "cosmetic" then
+			table.insert(list, { kind = "cosmetic", id = reward.id, text = Strings.get("missions.reward.skin") })
+		end
+	end
+	return list
+end
+
+-- Prêmio da chrono quest: o item (ícone do item) e os pontos.
+function MissionView.questBadges(quest: Types.QuestDef): { Badge }
+	return {
+		{ kind = "item", id = quest.rewardItem, text = "" },
+		{ kind = "score", text = Strings.format("missions.reward.points", { n = quest.score }) },
+	}
+end
+
 return MissionView
