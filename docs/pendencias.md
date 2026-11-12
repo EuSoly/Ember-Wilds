@@ -176,3 +176,13 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 - Cantos de blocos girados se cruzando um pouco na tela (até os modelos finais).
 - Apertar R e soltar o clique quase juntos pode construir com o giro anterior.
 - Caso raro do botão "+" do baú segurado.
+
+## Missões (12/11)
+
+- **Artes da tela:** recortadas em `assets/ui/missoes/`, mas ainda sem envio para a conta do Elizeu (ids vazios em `MissionImages`: a tela usa o desenho de reserva). Enviar com a confirmação dele.
+- **Skins exclusivas das conquistas:** Lenhador, Minerador, Lenda (Mítica), Artesão (livro), Guerreiro (caixa), Fiel (mochila) e a do Cronista estão "Em breve" até o Elizeu escolher; ao escolher, tirar a skin das roletas (`inSpins = false`) e dos pacotes.
+- **Modelos das gemas verde e azul:** liberadas como prêmio de quest, ainda sem modelo/ícone (a grade mostra a sigla). Há uma pasta `assets/resources/missing-items/` do Elizeu, fora do git, com itens que parecem incluir as gemas.
+- **11 chrono quests desligadas:** esperam biomas, mobs e o motor de objetivos (`have`, `farm`, `open`, `spend`) no `QuestService`.
+- **Diárias de comer e construir:** precisam de estatística nova antes de entrar no banco.
+- **Confete na faixa de missão completa:** ficou de fora (ParticleEmitter não roda em ScreenGui).
+- **Números para conferir:** conteúdo dos kits Caçador e Guardião da Floresta, Golden Ember das diárias/semanais, prêmios dos níveis I e II.
