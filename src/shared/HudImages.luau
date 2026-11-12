@@ -55,14 +55,15 @@ HudImages.JOYSTICK_KNOB = "rbxassetid://109220113444721" -- joystick_knob.png (1
 -- ou já colorida cobrindo a tela inteira, transparente no meio. Vazio = a
 -- borda em degradê feita por código, na cor de cada efeito.
 HudImages.FX = {
-	-- Arte nova de 10/11/2026 (Downloads/UI Assets/Hud do jogo/Indicadores de
-	-- dano), reduzida para 1024x576; a sede continua com a anterior.
-	damage = "rbxassetid://134791102070208", -- fx_damage.png: bordas vermelhas
-	cold = "rbxassetid://94858225269423", -- fx_cold.png: neve e cristais de gelo
-	heat = "rbxassetid://87821623873428", -- fx_heat.png: fogo
-	hunger = "rbxassetid://82797138078675", -- fx_hunger.png: terra rachada
-	thirst = "rbxassetid://115630801477028", -- fx_thirst.png: gotas nos cantos
-	oxygen = "rbxassetid://135673245855383", -- fx_oxygen.png: água e bolhas
+	-- Arte de 10/11/2026 (Downloads/UI Assets/Hud do jogo/Indicadores de dano),
+	-- reduzida para 1024x576. Em 11/11 a terra rachada (sede.png) ficou para a
+	-- sede e para a fome (pedido do Elizeu) e as gotas de 09/11 saíram.
+	damage = "rbxassetid://134791102070208", -- fx_damage.png (dano.png): bordas vermelhas
+	cold = "rbxassetid://94858225269423", -- fx_cold.png (frio.png): neve e cristais de gelo
+	heat = "rbxassetid://87821623873428", -- fx_heat.png (calor.png): fogo
+	hunger = "rbxassetid://82797138078675", -- fx_thirst.png (sede.png): terra rachada, a mesma da sede
+	thirst = "rbxassetid://82797138078675", -- fx_thirst.png (sede.png): terra rachada
+	oxygen = "rbxassetid://135673245855383", -- fx_oxygen.png (respiração.png): água e bolhas
 } :: { [string]: string }
 
 -- Seta do tutorial (UI/TutorialPointer): o ponteiro dourado da roleta antiga
