@@ -33,6 +33,7 @@ local UiImages = require(Shared:WaitForChild("UiImages"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local SoundPlayer = require(Client:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
@@ -611,6 +612,7 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 					stopCounting()
 					if leveledUp then
 						shown.levelUp(levelAfter)
+						SoundPlayer.play("level_up")
 					end
 				end
 			end)

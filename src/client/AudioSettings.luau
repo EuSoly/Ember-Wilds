@@ -3,7 +3,7 @@
 -- Effects em SoundService e aplica neles os volumes das configurações
 -- (atributos Setting_music_volume / Setting_ambient_volume /
 -- Setting_effects_volume do Player), reagindo às mudanças.
--- Ainda não há sons no jogo: quando houver, cada Sound usa SoundGroup = um destes.
+-- Todo Sound do jogo usa SoundGroup = um destes (client/Audio; docs/guia/sons.md).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local SoundService = game:GetService("SoundService")

@@ -23,6 +23,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local UIMath = require(Shared:WaitForChild("UIMath"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 local Net = require(script.Parent:WaitForChild("Net"))
+local SoundPlayer = require(script.Parent:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 
 local DRAG_THRESHOLD = 8 -- pixels
 -- Por quanto tempo depois de soltar um arrasto o "clique" do slot é ignorado
@@ -102,6 +103,7 @@ local function finish(position: Vector2)
 			Net.MoveSlot.Fire(drag.from, target)
 		elseif target == nil and overWorld(position) then
 			Net.DropSlot.Fire(drag.from)
+			SoundPlayer.play("drop")
 		end
 	end
 	DragState.current(nil)
@@ -113,6 +115,7 @@ end
 function DragState.drop(index: number)
 	if vide.untrack(InventoryState.slots)[index] ~= nil then
 		Net.DropSlot.Fire(index)
+		SoundPlayer.play("drop")
 	end
 end
 
