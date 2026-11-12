@@ -48,6 +48,7 @@ export type MissionDef = Types.MissionDef
 export type MissionTrack = Types.MissionTrack
 export type MissionReward = Types.MissionReward
 export type AchievementDef = Types.AchievementDef
+export type AchievementTier = Types.AchievementTier
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),

@@ -23,6 +23,13 @@ function CornerLayout.buttonPosition(left: boolean): UDim2
 	return UDim2.new(1, -right, 0, layout.buttonTop)
 end
 
+-- Embaixo da engrenagem (segunda fileira, borda direita): botão das Missões.
+function CornerLayout.secondRowPosition(): UDim2
+	local layout = CornerLayout.get()
+	local gap = math.max(math.round(layout.buttonSize * 0.15), 4)
+	return UDim2.new(1, -layout.margin, 0, layout.buttonTop + layout.buttonSize + gap)
+end
+
 function CornerLayout.buttonSize(): UDim2
 	local side = CornerLayout.get().buttonSize
 	return UDim2.fromOffset(side, side)

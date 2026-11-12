@@ -21,6 +21,8 @@ local DeathScreen = require(Screens:WaitForChild("DeathScreen"))
 local KitList = require(Screens:WaitForChild("KitList"))
 local RecipeBookScreen = require(Screens:WaitForChild("RecipeBookScreen"))
 local SettingsScreen = require(Screens:WaitForChild("SettingsScreen"))
+local MissionsScreen = require(Screens:WaitForChild("MissionsScreen"))
+local MissionBanner = require(Client:WaitForChild("UI"):WaitForChild("MissionBanner"))
 
 local ScreenController = {}
 
@@ -52,6 +54,8 @@ function ScreenController.Start(_self)
 			MenuShell.mount(playerGui)
 			local death = DeathScreen.mount(playerGui)
 			local settings = SettingsScreen.mount(playerGui)
+			local missions = MissionsScreen.mount(playerGui)
+			MissionBanner.mount(playerGui)
 			local recipeBook = RecipeBookScreen.mount(playerGui)
 
 			showWhen(death, function()
@@ -59,6 +63,10 @@ function ScreenController.Start(_self)
 			end)
 			showWhen(settings, function()
 				return SettingsScreen.open() and ScreenFlow.canOpenSettings(ScreenState.current())
+			end)
+			-- Missões: mesma regra das Configurações (menu ou jogando).
+			showWhen(missions, function()
+				return MissionsScreen.open() and ScreenFlow.canOpenSettings(ScreenState.current())
 			end)
 			showWhen(recipeBook, function()
 				return RecipeBookScreen.open() and ScreenState.current() == "playing"
@@ -70,6 +78,7 @@ function ScreenController.Start(_self)
 				-- exemplo): a janela fecha sozinha.
 				if not ScreenFlow.canOpenSettings(screen) then
 					SettingsScreen.open(false)
+					MissionsScreen.open(false)
 				end
 				-- O menu sempre abre no "play", sem painel do mockup aberto.
 				if screen ~= "menu" then

@@ -29,6 +29,7 @@ local ScreenState = require(Client:WaitForChild("ScreenState"))
 local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local SettingsScreen = require(Client:WaitForChild("Screens"):WaitForChild("SettingsScreen"))
+local MissionsState = require(Client:WaitForChild("MissionsState"))
 local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
@@ -58,7 +59,7 @@ local R = Theme.rustic
 
 -- Botões da coluna, de cima para baixo (ids de MenuState.Panel). "settings"
 -- não é painel: abre a janela de Configurações de sempre.
-local NAV: { string } = { "profile", "cosmetics", "shop", "ranking", "settings" }
+local NAV: { string } = { "profile", "cosmetics", "shop", "missions", "ranking", "settings" }
 
 local MARGIN = MenuLayout.MARGIN
 local TOUCH = Theme.touchMinSize.Y
@@ -104,7 +105,10 @@ local function navButton(id: string, layout: () -> Layout): TextButton
 			return UDim2.new(1, -6, 0, layout().buttonHeight)
 		end,
 		kind = function()
-			local active = if id == "settings" then SettingsScreen.open() else MenuState.panel() == id
+			local active = if id == "settings"
+				then SettingsScreen.open()
+				elseif id == "missions" then MissionsState.open()
+				else MenuState.panel() == id
 			return if active then "ember" else "wood"
 		end,
 		text = Strings.get("menu.nav." .. id),
@@ -114,8 +118,14 @@ local function navButton(id: string, layout: () -> Layout): TextButton
 		Activated = function()
 			if id == "settings" then
 				MenuState.open("play")
+				MissionsState.open(false)
 				SettingsScreen.open(true)
+			elseif id == "missions" then
+				MenuState.open("play")
+				SettingsScreen.open(false)
+				MissionsState.open(true)
 			else
+				MissionsState.open(false)
 				SettingsScreen.open(false)
 				MenuState.open((id :: any) :: MenuState.Panel)
 			end

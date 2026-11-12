@@ -1100,6 +1100,7 @@ return table.freeze({
 	["achievement.chronicler.goal"] = "Complete {n} chrono quests",
 
 	["missions.title"] = "Missões",
+	["menu.nav.missions"] = "Missões",
 	["missions.tab.match"] = "Partida",
 	["missions.tab.daily"] = "Diárias",
 	["missions.tab.weekly"] = "Semanais",
@@ -1129,6 +1130,8 @@ return table.freeze({
 	["missions.reward.spins"] = "{n} giros especiais",
 	["missions.reward.kit"] = "Kit {name}",
 	["missions.reward.skin"] = "Skin exclusiva",
+	["missions.reward.ember"] = "+{n} Golden Ember",
+	["missions.reward.item_score"] = "{item} · {n} pts",
 	["time.days_hours"] = "{d}d {h}h",
 	["time.hours_minutes"] = "{h}h {m}min",
 	["time.minutes"] = "{m}min",
