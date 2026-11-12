@@ -304,6 +304,15 @@ local function card(view: CardView, order: () -> number): Instance
 			elseif state == STATE_READY then P.CARD_DONE
 			else P.CARD_ACTIVE
 	end
+	-- A arte do cartão e o quadradinho do ícone dela.
+	local function cardArt(): (Piece, { number })
+		local state = view.state()
+		local key = if state == STATE_FAILED
+			then "CARD_FAILED"
+			elseif state == STATE_READY then "CARD_DONE"
+			else "CARD_ACTIVE"
+		return P[key], MissionImages.CARD_ICON[key]
+	end
 	return create("Frame")({
 		Name = "Card",
 		LayoutOrder = order,
@@ -375,16 +384,30 @@ local function card(view: CardView, order: () -> number): Instance
 					return hasArt(P.CARD_DONE) and (state == STATE_FAILED or state == STATE_READY)
 				end,
 			}),
+			-- Em cima do quadradinho que a arte do cartão já tem (pelo estado).
 			icon(view.icon, {
-				Position = UDim2.new(0, 10, 0.5, 0),
-				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.fromScale(0.72, 0.72),
-				SizeConstraint = Enum.SizeConstraint.RelativeYY,
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = function()
+					local piece, square = cardArt()
+					local scale = CARD_HEIGHT / piece.size[2]
+					if not hasArt(piece) then
+						return UDim2.fromOffset(10 + CARD_HEIGHT * 0.36, CARD_HEIGHT / 2)
+					end
+					return UDim2.fromOffset(math.round(square[1] * scale), math.round(square[2] * scale))
+				end,
+				Size = function()
+					local piece, square = cardArt()
+					if not hasArt(piece) then
+						return UDim2.fromOffset(CARD_HEIGHT * 0.72, CARD_HEIGHT * 0.72)
+					end
+					local side = math.round(square[3] * CARD_HEIGHT / piece.size[2] * 1.06) -- o ícone tem margem própria
+					return UDim2.fromOffset(side, side)
+				end,
 			}),
 			create("Frame")({
 				Name = "Body",
 				Position = UDim2.fromOffset(CARD_HEIGHT + 6, 6),
-				Size = UDim2.new(0.66, -(CARD_HEIGHT + 6), 1, -12),
+				Size = UDim2.new(0.56, -(CARD_HEIGHT + 6), 1, -12),
 				BackgroundTransparency = 1,
 				Rustic.label({
 					Name = "Name",
@@ -623,7 +646,6 @@ local TAB_ICON: { [Tab]: string } = {
 
 local function tabButton(tab: Tab, order: number): Instance
 	local P = MissionImages.PIECES
-	local tabSlice = P.TAB.slice :: { number }
 	local function active(): boolean
 		return MissionsState.tab() == tab
 	end
@@ -649,9 +671,14 @@ local function tabButton(tab: Tab, order: number): Instance
 				Image = function()
 					return if active() then P.TAB_ON.image else P.TAB.image
 				end,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = Rect.new(tabSlice[1], tabSlice[2], tabSlice[3], tabSlice[4]),
-				SliceScale = TAB_HEIGHT / P.TAB.size[2],
+				-- Só a parte de cima da arte (sem a tábua), esticada inteira: o 9
+				-- partes com escala fracionária deformava as pontas.
+				ImageRectOffset = Vector2.zero,
+				ImageRectSize = function()
+					local piece = if active() then P.TAB_ON else P.TAB
+					return Vector2.new(piece.size[1], MissionImages.TAB_TOP)
+				end,
+				ScaleType = Enum.ScaleType.Stretch,
 			})
 			else create("UIStroke")({ Color = R.outline, Thickness = 2 }),
 		icon(TAB_ICON[tab], {

@@ -40,6 +40,18 @@ MissionImages.PIECES = table.freeze({
 	MEDAL_LOCKED = piece("rbxassetid://97088904383413", 512, 512), -- medal_locked.png
 }) :: { [string]: Piece }
 
+-- Quadradinho do ícone desenhado na arte de cada cartão: centro x, centro y e
+-- lado, em px da arte (medidos pelo contorno). O ícone da missão vai em cima dele.
+MissionImages.CARD_ICON = table.freeze({
+	CARD_ACTIVE = table.freeze({ 155, 134, 152 }),
+	CARD_DONE = table.freeze({ 153, 124, 150 }),
+	CARD_FAILED = table.freeze({ 153, 124, 148 }),
+}) :: { [string]: { number } }
+
+-- A aba sem a tábua de baixo (a arte da aba tem uma tábua larga embaixo, de
+-- y 205 em diante; recortada, ela saía cortada): altura útil, em px da arte.
+MissionImages.TAB_TOP = 205
+
 -- Ícones (512x512), pelo nome da arte; Defs usam estas chaves no campo icon.
 MissionImages.ICON = table.freeze({
 	missao_hud = "rbxassetid://124347086794522", -- icon_missao_hud.png (botão do HUD e do menu)
