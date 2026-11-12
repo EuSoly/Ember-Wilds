@@ -344,9 +344,37 @@ local function card(view: CardView, order: () -> number): Instance
 						local s = background().slice :: { number }
 						return Rect.new(s[1], s[2], s[3], s[4])
 					end,
-					SliceScale = CARD_HEIGHT / P.CARD_ACTIVE.size[2],
+					-- Escala pela altura da própria arte (pronto/falhou têm 240 px, em
+					-- andamento 258): assim a fita com o ✓/✗ não estica.
+					SliceScale = function()
+						return CARD_HEIGHT / background().size[2]
+					end,
 				})
 				else create("UIStroke")({ Color = R.paperShadow, Thickness = 2 }),
+			-- A fita (✓ pronto / ✗ falhou) por cima, inteira e na proporção da arte.
+			create("ImageLabel")({
+				Name = "Ribbon",
+				AnchorPoint = Vector2.new(1, 0),
+				Position = UDim2.fromScale(1, 0),
+				Size = function()
+					local cap = if view.state() == STATE_FAILED then P.CARD_FAILED_CAP else P.CARD_DONE_CAP
+					return UDim2.fromOffset(math.round(CARD_HEIGHT * cap.size[1] / cap.size[2]), CARD_HEIGHT)
+				end,
+				BackgroundTransparency = 1,
+				ScaleType = Enum.ScaleType.Stretch,
+				ZIndex = 2,
+				Image = function()
+					local state = view.state()
+					return if state == STATE_FAILED
+						then P.CARD_FAILED_CAP.image
+						elseif state == STATE_READY then P.CARD_DONE_CAP.image
+						else ""
+				end,
+				Visible = function()
+					local state = view.state()
+					return hasArt(P.CARD_DONE) and (state == STATE_FAILED or state == STATE_READY)
+				end,
+			}),
 			icon(view.icon, {
 				Position = UDim2.new(0, 10, 0.5, 0),
 				AnchorPoint = Vector2.new(0, 0.5),

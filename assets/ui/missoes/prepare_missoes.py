@@ -76,6 +76,12 @@ def fit(image):
     return image
 
 
+# Pontas dos cartões pronto/falhou (a fita com o ✓/✗), recortadas de x 800 até
+# o fim: vão por cima do cartão sem 9 partes (com 9 partes o Roblox deformava a fita).
+CAPS = {"card_done_cap.png": "card_done.png", "card_failed_cap.png": "card_failed.png"}
+CAP_LEFT = 800
+
+
 def main():
     if len(sys.argv) != 2:
         print(__doc__)
@@ -86,6 +92,11 @@ def main():
         image = fit(image)
         image.save(os.path.join(OUT, out_name))
         print(f"{out_name}: {image.size[0]}x{image.size[1]}")
+    for out_name, card in CAPS.items():
+        image = Image.open(os.path.join(OUT, card)).convert("RGBA")
+        cap = image.crop((CAP_LEFT, 0, image.size[0], image.size[1]))
+        cap.save(os.path.join(OUT, out_name))
+        print(f"{out_name}: {cap.size[0]}x{cap.size[1]}")
 
 
 if __name__ == "__main__":

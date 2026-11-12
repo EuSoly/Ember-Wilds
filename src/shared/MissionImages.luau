@@ -21,6 +21,10 @@ MissionImages.PIECES = table.freeze({
 	CARD_ACTIVE = piece("rbxassetid://74145940195431", 1024, 258, { 250, 60, 860, 200 }), -- card_active.png
 	CARD_DONE = piece("rbxassetid://117736607067914", 1024, 240, { 250, 60, 800, 190 }), -- card_done.png (fita verde à direita)
 	CARD_FAILED = piece("rbxassetid://70734483213092", 1024, 241, { 250, 60, 800, 190 }), -- card_failed.png (fita vermelha)
+	-- Ponta direita (a fita com ✓/✗) dos cartões pronto/falhou, por cima e sem
+	-- 9 partes: com 9 partes e escala fracionária o Roblox deformava a fita.
+	CARD_DONE_CAP = piece("rbxassetid://132335963743431", 224, 240), -- card_done_cap.png
+	CARD_FAILED_CAP = piece("rbxassetid://84260764682963", 224, 241), -- card_failed_cap.png
 	BAR_TRACK = piece("rbxassetid://75502677632651", 1024, 112, { 60, 30, 964, 82 }), -- bar_track.png
 	BAR_ORANGE = piece("rbxassetid://75774099068661", 711, 76, { 38, 20, 673, 56 }), -- bar_orange.png
 	BAR_GREEN = piece("rbxassetid://135891204951719", 711, 76, { 38, 20, 673, 56 }), -- bar_green.png
