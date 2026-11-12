@@ -562,6 +562,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	SpinScreen.build(shopLayout, screenSize, shopOpen, {
 		sounds = SpinSounds.begin,
 		startPaid = SpinFx.start,
+		tick = SpinFx.tick,
 		land = SpinFx.land,
 		celebrate = SpinFx.celebrate,
 	}).Parent =

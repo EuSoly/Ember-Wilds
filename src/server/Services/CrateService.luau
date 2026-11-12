@@ -10,7 +10,13 @@
 --   viram a caixa, no lugar da morte. Skin = CrateRules.skinFor(skin de caixa
 --   de quem matou, a do morto). Sem item nenhum: sem caixa. Só copia: quem zera
 --   o inventário, a mochila e a armadura é o DeathService, logo depois.
--- - Mob morto (MobService.onDeath): caixa com o loot dos dados, modelo = id do mob.
+-- - Mob morto (MobService.onDeath): caixa com o loot dos dados, na skin de caixa
+--   de quem matou (sem matador: a caixa padrão). Antes de 11/11 o modelo era o
+--   id do mob, que não existe em Assets.Crates e caía na caixa provisória.
+-- - Item largado (DropSlot): a pilha inteira do slot vira uma caixa com a skin
+--   de caixa de quem largou, DROP_DISTANCE studs à frente dele; largar perto da
+--   própria caixa de item largado junta nela (CrateRules.mergeDrop) e renova o
+--   tempo. Modo criativo: o item só some. Fantasma não larga.
 -- - Olhar (CrateWatch): o cliente diz qual caixa está olhando; o servidor
 --   confere a distância (com folga) e manda o conteúdo agora e a cada mudança.
 -- - Pegar (CrateTake): confere taxa, jogador vivo, caixa viva, distância XZ até
@@ -59,6 +65,7 @@ local WATCH_SLACK = 4
 -- ignorado. Olhar é mais folgado (troca ao andar entre caixas).
 local TAKE_RATE_MAX = 10
 local WATCH_RATE_MAX = 20
+local DROP_RATE_MAX = 10
 local RATE_WINDOW = 1
 local CRATE_SLOT = "crate" -- slot de cosmético da skin de caixa
 
@@ -71,6 +78,8 @@ export type Entry = {
 	radius: number,
 	health: number,
 	slots: { Item }, -- em ordem, sem buracos (nunca vazia enquanto viva)
+	expiresAt: number, -- os.clock() em que some sozinha
+	dropOwner: Player?, -- caixa de item largado: quem largou (junta as próximas)
 }
 
 type RateState = { start: number, count: number }
@@ -85,6 +94,7 @@ local watchers: { [Entry]: { [Player]: boolean } } = {}
 local watching: { [Player]: Entry } = {}
 local takeRates: { [Player]: RateState } = {}
 local watchRates: { [Player]: RateState } = {}
+local dropRates: { [Player]: RateState } = {}
 local folder: Folder? = nil
 
 local function getFolder(): Folder
@@ -246,6 +256,7 @@ function CrateService.spawn(
 		radius = CrateRules.RADIUS,
 		health = CrateRules.HEALTH,
 		slots = items,
+		expiresAt = os.clock() + lifetime,
 	}
 	grid:insert(entry, x, z)
 	alive[entry] = true
@@ -262,7 +273,19 @@ function CrateService.spawn(
 		end
 	end)
 	-- A entrada é a "ficha" desta caixa (nunca reaproveitada): se já saiu, ignora.
-	task.delay(lifetime, remove, entry)
+	-- O prazo pode ter sido renovado (item largado juntado): espera o resto.
+	local function expire()
+		if not alive[entry] then
+			return
+		end
+		local left = entry.expiresAt - os.clock()
+		if left > 0 then
+			task.delay(left, expire)
+		else
+			remove(entry)
+		end
+	end
+	task.delay(lifetime, expire)
 	return model
 end
 
@@ -376,6 +399,63 @@ local function onTake(player: Player, data: { Crate: Instance?, Slot: number, It
 	end
 end
 
+-- A caixa de item largado de `player` mais perto de (x, z), até DROP_MERGE_RADIUS.
+local function ownDropNear(player: Player, x: number, z: number): Entry?
+	local best: Entry? = nil
+	local bestDistance = math.huge
+	for _, entry in CrateService.near(x, z, CrateRules.DROP_MERGE_RADIUS) do
+		if entry.dropOwner == player then
+			local distance = (entry.x - x) ^ 2 + (entry.z - z) ^ 2
+			if distance < bestDistance then
+				best, bestDistance = entry, distance
+			end
+		end
+	end
+	return best
+end
+
+-- Largar a pilha inteira do slot `index`. Tudo sem pausa: o slot é conferido,
+-- a caixa recebe o item e só então o slot é esvaziado.
+local function onDrop(player: Player, index: number)
+	if player.Parent ~= Players or not allow(dropRates, player, DROP_RATE_MAX) then
+		return
+	end
+	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		return
+	end
+	local root = rootOf(player)
+	local inv = InventoryService.get(player)
+	if root == nil or inv == nil or index > inv.capacity then
+		return
+	end
+	local slot = inv.slots[index]
+	if slot == nil then
+		return
+	end
+	local id, count = slot.id, slot.count
+	-- Modo criativo: os itens dele não vão para os outros (como na morte).
+	if not CreativeRules.sharesItems(CreativeService.isOn(player)) then
+		InventoryService.takeAt(player, index, count)
+		return
+	end
+	local ahead = root.Position + root.CFrame.LookVector * CrateRules.DROP_DISTANCE
+	local entry = ownDropNear(player, ahead.X, ahead.Z)
+	if entry and CrateRules.mergeDrop(entry.slots, id, count, MAX_COUNT) then
+		entry.expiresAt = os.clock() + CrateRules.DROP_LIFETIME
+		publish(entry)
+	else
+		local skin = CosmeticService.equipped(player, CRATE_SLOT)
+		local model =
+			CrateService.spawn(ahead.X, ahead.Z, { { id = id, count = count } }, skin, CrateRules.DROP_LIFETIME)
+		local created = model and byModel[model]
+		if created == nil then
+			return
+		end
+		created.dropOwner = player
+	end
+	InventoryService.takeAt(player, index, count)
+end
+
 -- Itens do morto, em ordem: slots do inventário (com os da mochila), a
 -- mochila vestida e a armadura vestida. Só lê; a morte zera depois.
 local function belongingsOf(player: Player): { Item }
@@ -418,12 +498,14 @@ local function onPlayerDeath(player: Player, character: Model, killer: Player?)
 	CrateService.spawn(position.X, position.Z, items, skin, CrateRules.PLAYER_LIFETIME)
 end
 
-local function onMobDeath(mob: MobService.Mob, _killer: Player?)
+local function onMobDeath(mob: MobService.Mob, killer: Player?)
 	local loot = mob.def.loot
 	if loot == nil or #loot == 0 then
 		return
 	end
-	CrateService.spawn(mob.x, mob.z, loot, mob.id, CrateRules.MOB_LIFETIME)
+	local killerSkin = if killer and killer.Parent == Players then CosmeticService.equipped(killer, CRATE_SLOT) else nil
+	local skin = CrateRules.skinFor(killerSkin, Defs.CosmeticSlots[CRATE_SLOT].default)
+	CrateService.spawn(mob.x, mob.z, loot, skin, CrateRules.MOB_LIFETIME)
 end
 
 -- Studio: ServerStorage.DevCrate:Invoke(player) → caixa com alguns itens a
@@ -457,6 +539,7 @@ end
 
 function CrateService.Start(_self)
 	getFolder()
+	Net.DropSlot.On(onDrop)
 	DeathService.onDeath(onPlayerDeath)
 	MobService.onDeath(onMobDeath)
 	Net.CrateWatch.On(onWatch)
@@ -465,6 +548,13 @@ function CrateService.Start(_self)
 		unwatch(player)
 		takeRates[player] = nil
 		watchRates[player] = nil
+		dropRates[player] = nil
+		-- A caixa que ele largou fica no mundo, mas não guarda mais o jogador.
+		for entry in alive do
+			if entry.dropOwner == player then
+				entry.dropOwner = nil
+			end
+		end
 	end)
 	if RunService:IsStudio() then
 		setupDev()

@@ -308,6 +308,12 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		visual.Parent = model
 		if def.kind == "fire" then
 			moveFireLight(model, visual)
+		elseif def.kind == "furnace" then
+			-- Fornalha: luz de fogo nas chamas, ligada só acesa (StructureModel.setLit).
+			local flames = findBySuffix(visual, FLAMES_SUFFIX)
+			if flames then
+				FireLight.attach(flames).Enabled = false
+			end
 		elseif BuildRules.isDoor(def.kind) then
 			rememberPanels(model, visual)
 		end
@@ -326,6 +332,30 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		model:SetAttribute(StatNames.PieceRadius, BuildRules.radiusOf(def))
 	end
 	return model
+end
+
+-- Fornalha acesa ou apagada: a luz de fogo liga/desliga e as chamas do modelo
+-- aparecem/somem (antes de 11/11 a fornalha não tinha luz nenhuma). Chamado pelo
+-- MachineService a cada mudança de estado; o cliente só tremula a luz.
+local FLAME_ALPHA = "FlameTransparency" -- transparência original das chamas
+function StructureModel.setLit(model: Model, lit: boolean)
+	for _, part in model:GetDescendants() do
+		if not part:IsA("BasePart") then
+			continue
+		end
+		local light = FireLight.find(part)
+		if light then
+			light.Enabled = lit
+		end
+		if string.sub(part.Name, -#FLAMES_SUFFIX) == FLAMES_SUFFIX then
+			local original = part:GetAttribute(FLAME_ALPHA)
+			if type(original) ~= "number" then
+				original = part.Transparency
+				part:SetAttribute(FLAME_ALPHA, original)
+			end
+			part.Transparency = if lit then original :: number else 1
+		end
+	end
 end
 
 -- Folha da porta do Elizeu desliza até a posição aberta (ou fechada), relativa

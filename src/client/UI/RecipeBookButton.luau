@@ -8,6 +8,7 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local RecipeBookScreen = require(script.Parent.Parent:WaitForChild("Screens"):WaitForChild("RecipeBookScreen"))
 local TutorialState = require(script.Parent.Parent:WaitForChild("TutorialState"))
+local CornerLayout = require(script.Parent:WaitForChild("CornerLayout"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local TutorialGlow = require(script.Parent:WaitForChild("TutorialGlow"))
 
@@ -17,8 +18,12 @@ local function RecipeBookButton(): TextButton
 		icon = HudImages.ICON.book,
 		fallback = "▤",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.fromScale(0.885, 0.25),
-		Size = UDim2.fromScale(0.09, 0.09),
+		-- Embaixo do minimapa, na borda esquerda dele (CornerLayout).
+		Position = function()
+			return CornerLayout.buttonPosition(true)
+		end,
+		Size = CornerLayout.buttonSize,
+		SizeConstraint = Enum.SizeConstraint.RelativeXY,
 		minSize = Theme.touchMinSize,
 		maxSize = Vector2.new(68, 68),
 		Activated = RecipeBookScreen.toggle,

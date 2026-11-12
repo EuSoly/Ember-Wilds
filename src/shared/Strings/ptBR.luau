@@ -37,6 +37,7 @@ return table.freeze({
 	["book.station.fire"] = "Fogo",
 	["book.station.water"] = "Perto da água",
 	["book.section.about"] = "Como funciona",
+	["inventory.drop"] = "Largar",
 	["book.section.how"] = "Como fazer",
 	["book.section.needs"] = "Precisa de",
 	["book.section.stats"] = "Dados",
@@ -96,6 +97,14 @@ return table.freeze({
 	["interact.stock"] = "Estoque: {count}",
 	["interact.drinks"] = "Goles: {count}",
 	["interact.symbol_now"] = "Símbolo: {symbol}",
+	["machine.put"] = "Pôr {count}",
+	["machine.take"] = "Pegar",
+	["machine.owner_only"] = "Só o dono",
+	["machine.working"] = "Trabalhando",
+	["machine.no_wood"] = "Sem madeira",
+	["machine.full"] = "Cheio",
+	["machine.lit"] = "Acesa",
+	["machine.out"] = "Apagada",
 
 	-- Itens
 	["item.wood"] = "Madeira",

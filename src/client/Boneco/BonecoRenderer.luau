@@ -32,6 +32,7 @@ local BonecoModel = require(script.Parent:WaitForChild("BonecoModel"))
 local SkinAnimator = require(script.Parent:WaitForChild("SkinAnimator"))
 local BagModel = require(script.Parent.Parent:WaitForChild("Menu"):WaitForChild("Cosmetics"):WaitForChild("BagModel"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
+local GameSounds = require(script.Parent.Parent:WaitForChild("Audio"):WaitForChild("GameSounds"))
 
 local ROOT_TIMEOUT = 10
 local TEAMMATE_COLOR = Color3.fromRGB(120, 230, 120) -- nick dos colegas de time
@@ -220,6 +221,7 @@ local function checkEat(entry: Entry, eatUntil: number?)
 	entry.eatUntil = eatUntil
 	if EatRules.isEating(eatUntil, Workspace:GetServerTimeNow()) then
 		ExpressionState.trigger(entry.expression, EAT_EVENT, os.clock())
+		GameSounds.characterEat(entry.character, entry.hrp.Position)
 	else
 		ExpressionState.clear(entry.expression, EAT_EVENT)
 	end
@@ -232,6 +234,7 @@ local function checkHurt(entry: Entry, hurtAt: number?)
 	entry.hurtAt = hurtAt
 	if ExpressionState.isRecent(hurtAt, Workspace:GetServerTimeNow(), C.HURT_RECENT) then
 		ExpressionState.trigger(entry.expression, HURT_EVENT, os.clock())
+		GameSounds.characterHurt(entry.character, entry.hrp.Position)
 	end
 end
 
@@ -437,6 +440,7 @@ local function animate(entry: Entry, dt: number, speed: number, now: number, ser
 	local character = entry.character
 	local eat = EatRules.progress(entry.eatUntil, serverNow, SurvivalConfig.EAT_DURATION)
 	dropCrumbs(entry, eat)
+	local swingsBefore = entry.anim.swingCount
 	local pose = BonecoAnim.step(entry.anim, dt, {
 		speed = speed,
 		-- Craftando, o próprio braço não bate (só o dono sabe do craft). Com
@@ -448,6 +452,10 @@ local function animate(entry: Entry, dt: number, speed: number, now: number, ser
 		thrust = entry.thrust,
 		eat = eat,
 	})
+	-- Golpe novo (acerte ou não): o "vupt" do braço.
+	if entry.anim.swingCount ~= swingsBefore then
+		GameSounds.characterSwing(character, entry.hrp.Position)
+	end
 	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
 	boneco.rightHandJoint.Transform = rightHandTransform(boneco.rightHandJoint.C0, pose.right)

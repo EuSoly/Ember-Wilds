@@ -3,8 +3,8 @@
 -- carrossel passando devagar (Reel); embaixo, os dois lados:
 --   giro com Golden Ember (chances baixas) e giro especial com Robux (altas),
 --   cada um com as chances, "Você tem N giros", comprar +1/+3/+10 e GIRAR.
--- Girar acontece aqui mesmo: o carrossel para no prêmio e abre só uma
--- janelinha com a skin. Os saldos de giros são do jogador (um normal e um
+-- Girar acontece aqui mesmo: o carrossel para no prêmio, o prêmio fica um
+-- instante em destaque (SpinRules.revealFor) e abre só uma janelinha com a skin. Os saldos de giros são do jogador (um normal e um
 -- especial, que servem em qualquer roleta); o sorteio e a entrega são do
 -- servidor (Net.RequestSpin → SpinResult); o carrossel anima até o prêmio
 -- que o servidor mandou. Repetida devolve Golden Ember (mostrado no prêmio).
@@ -43,17 +43,22 @@ local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
 
 export type Won = { item: MockStore.SpinItem, typeId: string, paid: boolean, refund: number }
--- Sons de um giro (SpinSounds): frame a cada quadro, land ao parar, stop se fechar.
+-- Sons de um giro (SpinSounds): frame a cada quadro, land ao parar, reveal
+-- quando a janelinha do prêmio abre, stop se fechar.
 export type SoundSession = {
 	frame: (progress: number, tile: number) -> (),
 	land: () -> (),
+	reveal: () -> (),
 	stop: () -> (),
 }
 export type Hooks = {
 	sounds: ((rarity: number, paid: boolean) -> SoundSession)?,
-	-- Efeitos do giro pago (Task 7). start devolve a função que para tudo.
+	-- Efeitos (SpinFx). startPaid (só no giro pago) devolve a função que para
+	-- tudo; tick a cada quadradinho que passa; land devolve a função que
+	-- desfaz o destaque do prêmio.
 	startPaid: ((box: GuiObject, window: GuiObject) -> () -> ())?,
-	land: ((box: GuiObject) -> ())?,
+	tick: ((window: GuiObject) -> ())?,
+	land: ((box: GuiObject, window: GuiObject, tile: GuiObject, rarity: number, paid: boolean) -> () -> ())?,
 	celebrate: ((popup: GuiObject, rarity: number, paid: boolean) -> ())?,
 }
 
@@ -70,6 +75,22 @@ end
 
 local function rarityColor(rarity: number): Color3
 	return Color3.fromHex(MockStore.RARITIES[rarity].color)
+end
+
+-- Ponta do marcador do carrossel: losango dourado na borda da janela
+-- (`edge` 0 = em cima, 1 = embaixo).
+local function markerTip(edge: number): Frame
+	return create("Frame")({
+		Name = "Tip",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, edge),
+		Size = UDim2.fromOffset(14, 14),
+		Rotation = 45,
+		BackgroundColor3 = Theme.tier.gold,
+		BorderSizePixel = 0,
+		ZIndex = 11,
+		create("UIStroke")({ Color = R.outline, Thickness = 2, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+	}) :: Frame
 end
 
 -- Linha das chances: uma célula por raridade, na cor dela.
@@ -322,7 +343,7 @@ function SpinScreen.build(
 		ClipsDescendants = true,
 		create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
 		create("UIStroke")({ Color = R.woodShadow, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
-		-- Marcador dourado no meio.
+		-- Marcador dourado no meio, com uma ponta (losango) em cima e embaixo.
 		create("Frame")({
 			Name = "Marker",
 			AnchorPoint = Vector2.new(0.5, 0),
@@ -331,6 +352,8 @@ function SpinScreen.build(
 			BackgroundColor3 = Theme.tier.gold,
 			BorderSizePixel = 0,
 			ZIndex = 10,
+			markerTip(0),
+			markerTip(1),
 		}),
 	}) :: Frame
 
@@ -339,11 +362,20 @@ function SpinScreen.build(
 	local reel: Reel.Reel? = nil
 	local stopFx: (() -> ())? = nil
 	local sound: SoundSession? = nil
+	local undoSpotlight: (() -> ())? = nil
+	local playId = 0 -- muda a cada giro e quando a tela fecha: cancela a revelação pendente
 
 	local function stopEffects()
 		if stopFx then
 			stopFx()
 			stopFx = nil
+		end
+	end
+
+	local function clearSpotlight()
+		if undoSpotlight then
+			undoSpotlight()
+			undoSpotlight = nil
 		end
 	end
 
@@ -364,6 +396,8 @@ function SpinScreen.build(
 		end
 		stopEffects()
 		stopSound()
+		clearSpotlight()
+		playId += 1
 		if not isOpen and id ~= nil then
 			-- Saiu da loja com a tela aberta: fecha e destrava.
 			task.defer(function()
@@ -389,23 +423,47 @@ function SpinScreen.build(
 		if paid and hooks.startPaid then
 			stopFx = hooks.startPaid(box, window)
 		end
+		clearSpotlight()
+		playId += 1
+		local mine = playId
 		-- Os sons seguem a raridade do item que vai sair (o suspense cresce com ela).
 		local session = if hooks.sounds then hooks.sounds(prize.rarity, paid) else nil
 		sound = session
-		current:spinTo(prize, function()
+		local lastTile: number? = nil
+		local function onFrame(progress: number, tile: number)
+			if session then
+				session.frame(progress, tile)
+			end
+			-- Um quadradinho passou pelo marcador: tranco.
+			if lastTile ~= nil and tile ~= lastTile and hooks.tick then
+				hooks.tick(window)
+			end
+			lastTile = tile
+		end
+		current:spinTo(prize, function(tile: GuiObject)
 			stopEffects()
 			if session then
 				session.land()
-				if sound == session then
-					sound = nil
+			end
+			if hooks.land then
+				undoSpotlight = hooks.land(box, window, tile, prize.rarity, paid)
+			end
+			-- A "respirada": o prêmio fica em destaque (ainda travado, com o
+			-- suspense tocando) e só então a janelinha abre.
+			task.delay(SpinRules.revealFor(prize.rarity, paid).hold, function()
+				if playId ~= mine then
+					return -- a tela fechou nesse meio-tempo
 				end
-			end
-			if paid and hooks.land then
-				hooks.land(box)
-			end
-			ShopState.spinning(false)
-			won({ item = prize, typeId = spinType.id, paid = paid, refund = refund })
-		end, if session then session.frame else nil)
+				if session then
+					session.reveal()
+					if sound == session then
+						sound = nil
+					end
+				end
+				ShopState.spinning(false)
+				won({ item = prize, typeId = spinType.id, paid = paid, refund = refund })
+			end)
+		end, onFrame)
 	end
 
 	-- GIRAR: pede o giro ao servidor e trava até a resposta (SpinResult).
@@ -508,6 +566,7 @@ function SpinScreen.build(
 			text = Strings.get("shop.spin.take"),
 			Activated = function()
 				won(nil)
+				clearSpotlight()
 				-- Só volta a andar devagar se não houver giro em andamento (o
 				-- idle no meio do giro cortava o fim dele e a tela travava).
 				if reel and not vide.untrack(ShopState.spinning) then

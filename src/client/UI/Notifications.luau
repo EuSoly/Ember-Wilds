@@ -17,6 +17,7 @@ local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
 local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
+local SoundPlayer = require(script.Parent.Parent:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 
 local create = vide.create
 
@@ -44,6 +45,8 @@ end
 function Notifications.push(textKey: string, vars: { [string]: string | number }?, kind: Kind?)
 	nextId += 1
 	local id = nextId
+	-- Som do aviso pelo tipo (notify_info, notify_alert, notify_success).
+	SoundPlayer.play("notify_" .. (kind or "info"))
 	-- untrack: se push for chamado de dentro de um efeito, ler a lista não pode
 	-- fazer esse efeito depender dela (senão cada aviso dispara o efeito de novo).
 	local current = table.clone(vide.untrack(visible))

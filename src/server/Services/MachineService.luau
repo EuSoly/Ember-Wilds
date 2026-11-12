@@ -22,6 +22,7 @@ local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InteractRules = require(ReplicatedStorage.Shared.Build.InteractRules)
 local MachineRules = require(ReplicatedStorage.Shared.Build.MachineRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
+local StructureModel = require(ReplicatedStorage.Shared.Models.StructureModel)
 local InteractService = require(script.Parent.InteractService)
 local InventoryService = require(script.Parent.InventoryService)
 local StructureService = require(script.Parent.StructureService)
@@ -44,12 +45,15 @@ local function publishExtractor(entry: Entry, state: MachineRules.ExtractorState
 	model:SetAttribute(StatNames.Working, MachineRules.isWorking(state, def))
 end
 
--- Copia o estado da fornalha para o modelo: madeira, Lit e as tags de calor e
--- de estação (só acesa).
+-- Copia o estado da fornalha para o modelo: madeira, Lit, a luz e as chamas
+-- (StructureModel.setLit) e as tags de calor e de estação (só acesa).
 local function publishFurnace(entry: Entry, state: MachineRules.FurnaceState)
 	local model = entry.model
 	local lit = MachineRules.isLit(state)
 	model:SetAttribute(StatNames.Wood, state.wood)
+	if model:GetAttribute(StatNames.Lit) ~= lit then
+		StructureModel.setLit(model, lit) -- luz e chamas
+	end
 	model:SetAttribute(StatNames.Lit, lit)
 	if lit then
 		model:SetAttribute(StatNames.HeatRadius, entry.def.heatRadius)

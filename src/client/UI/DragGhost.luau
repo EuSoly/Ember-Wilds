@@ -1,13 +1,16 @@
 --!strict
 -- O item "fantasma" que segue o dedo/ponteiro enquanto um item é arrastado.
+-- No mundo (fora da interface), aparece "Largar" embaixo: soltar ali larga.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local DragState = require(script.Parent.Parent:WaitForChild("DragState"))
+local Strings = require(Shared:WaitForChild("Strings"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
+local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local create = vide.create
 
@@ -50,6 +53,18 @@ local function DragGhost(): Frame
 				then HudArt.inSlot(ItemIcon({ item = current, bare = true }))
 				else ItemIcon({ item = current })
 		end),
+		Rustic.label({
+			Name = "DropHint",
+			Visible = DragState.outside,
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 1, 2),
+			Size = UDim2.fromOffset(90, 20),
+			Text = Strings.get("inventory.drop"),
+			maxSize = 16,
+			ZIndex = 51,
+			-- Contorno escuro: o texto creme fica legível em cima da grama e da areia.
+			create("UIStroke")({ Thickness = 1.5, Color = Color3.fromRGB(45, 28, 16) }),
+		}),
 	}) :: Frame
 	return ghost
 end

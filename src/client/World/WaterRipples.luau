@@ -13,6 +13,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local RippleRules = require(Shared:WaitForChild("World"):WaitForChild("RippleRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local WaterSim = require(Shared:WaitForChild("Simulation"):WaitForChild("WaterSim"))
+local SoundPlayer = require(script.Parent.Parent:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 
 local CHECK_EVERY = 0.1 -- s entre conferências de quem está na água
 local MAX_DISTANCE = 160 -- studs da câmera: mais longe não solta anel
@@ -114,6 +115,8 @@ local function check(now: number)
 					states[instance] = state
 					if shouldEmit then
 						emit(p.X, p.Z, now)
+						-- Passo na água (o SoundPlayer corta os distantes e o excesso).
+						SoundPlayer.play("water_step", Vector3.new(p.X, RING_Y, p.Z))
 					end
 				end
 			end

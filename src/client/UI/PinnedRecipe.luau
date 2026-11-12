@@ -106,16 +106,25 @@ local function PinnedRecipe(): Frame
 				return Strings.format("hud.pinned.title", { item = itemName(id) })
 			end,
 		}),
+		-- Desafixar sem abrir o livro. Um "X" de letra (o "✕" não existe na fonte e
+		-- ficava invisível, visto em 11/11), num botão redondo de couro.
 		create("TextButton")({
 			Name = "Unpin",
 			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.fromScale(1, 0),
-			Size = UDim2.fromOffset(24, 24),
-			BackgroundTransparency = 1,
-			Text = "✕",
+			Position = UDim2.new(1, 2, 0, -2),
+			Size = UDim2.fromOffset(26, 26),
+			BackgroundColor3 = R.emberShadow,
+			AutoButtonColor = true,
+			Text = "X",
 			FontFace = Theme.font.number,
 			TextScaled = true,
-			TextColor3 = R.charcoal,
+			TextColor3 = R.cream,
+			ZIndex = 3,
+			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			create("UIPadding")({
+				PaddingTop = UDim.new(0, 5),
+				PaddingBottom = UDim.new(0, 5),
+			}),
 			Activated = function()
 				PinState.pinned(nil)
 			end,

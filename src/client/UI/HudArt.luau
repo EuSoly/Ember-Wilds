@@ -77,7 +77,7 @@ export type RoundProps = {
 	fallback: string, -- texto no desenho de reserva (sem a arte)
 	Position: any,
 	AnchorPoint: Vector2?,
-	Size: UDim2,
+	Size: any, -- UDim2 ou função reativa
 	SizeConstraint: Enum.SizeConstraint?,
 	Visible: any?,
 	Activated: () -> (),

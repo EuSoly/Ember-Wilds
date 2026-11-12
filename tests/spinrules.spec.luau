@@ -79,7 +79,56 @@ return {
 			SpinRules.confettiFor(1, false) == 0 and SpinRules.confettiFor(2, false) == 0,
 			"normal comum/incomum sem confete"
 		)
-		assert(SpinRules.confettiFor(3, false) == 20 and SpinRules.confettiFor(5, false) == 20, "normal épico+ com 20")
+		assert(SpinRules.confettiFor(3, false) == 20, "normal épico com 20")
+		assert(SpinRules.confettiFor(4, false) == 40 and SpinRules.confettiFor(5, false) == 70, "normal cresce")
+		assert(SpinRules.confettiFor(9, false) == 70 and SpinRules.confettiFor(0, false) == 0, "fora da faixa")
+	end,
+
+	["revelação cresce com a raridade e Comum normal é discreto"] = function()
+		local common = SpinRules.revealFor(1, false)
+		assert(common.shake == 0 and common.flash == 0, "Comum normal sem tremida nem clarão")
+		assert(not common.rays and not common.ring, "Comum normal sem raios nem anel")
+		assert(common.hold > 0 and common.hold < 0.5, "espera curta no Comum")
+		for _, paid in { false, true } do
+			for r = 2, 5 do
+				local low, high = SpinRules.revealFor(r - 1, paid), SpinRules.revealFor(r, paid)
+				assert(high.hold >= low.hold, `espera caiu em {r}`)
+				assert(high.shake >= low.shake, `tremida caiu em {r}`)
+				assert(high.flash >= low.flash, `clarão caiu em {r}`)
+			end
+		end
+		local mythic = SpinRules.revealFor(5, true)
+		assert(mythic.hold <= 1, "ninguém espera mais de 1 s")
+		assert(mythic.flash <= 0.8, "o clarão nunca cobre a tela toda")
+		assert(mythic.rays and mythic.ring, "Mítico com tudo")
+	end,
+
+	["giro pago sempre tem raios, anel, tremida e clarão"] = function()
+		local paid = SpinRules.revealFor(1, true)
+		assert(paid.rays and paid.ring and paid.shake > 0 and paid.flash > 0, "pago Comum")
+		assert(SpinRules.revealFor(2, false).rays and not SpinRules.revealFor(2, false).ring, "Raro normal: só raios")
+		assert(SpinRules.revealFor(3, false).ring, "Épico normal: anel")
+	end,
+
+	["só o Mítico tem a comemoração mística, pago ou não"] = function()
+		for _, paid in { false, true } do
+			assert(SpinRules.revealFor(5, paid).mystic, "Mítico místico")
+			for r = 1, 4 do
+				assert(not SpinRules.revealFor(r, paid).mystic, `raridade {r} sem místico`)
+			end
+		end
+		assert(SpinRules.revealFor(9, false).mystic, "acima da faixa conta como Mítico")
+	end,
+
+	["tique sobe de tom e de volume conforme o giro freia"] = function()
+		assert(SpinRules.tickPitch(0, 1) == 1, "começo no tom normal")
+		assert(SpinRules.tickPitch(1, 0) > 1, "sobe mesmo sem suspense")
+		assert(SpinRules.tickPitch(1, 1) > SpinRules.tickPitch(1, 0), "sobe mais com suspense")
+		assert(SpinRules.tickPitch(1, 1) <= 1.5, "sem ficar esganiçado")
+		assert(SpinRules.tickPitch(2, 5) == SpinRules.tickPitch(1, 1), "fora da faixa")
+		assert(SpinRules.tickVolume(0) < SpinRules.tickVolume(0.5), "volume cresce")
+		assert(SpinRules.tickVolume(1) == 1 and SpinRules.tickVolume(3) == 1, "fim no volume cheio")
+		assert(SpinRules.tickVolume(0) >= 0.4, "começo ainda audível")
 	end,
 
 	["tensão fica em zero no começo do giro e chega a 1 no fim"] = function()

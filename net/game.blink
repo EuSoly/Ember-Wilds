@@ -55,6 +55,15 @@ event MoveSlot {
 	Data: (u8(1..40), u8(1..40))
 }
 
+-- Largar a pilha inteira de um slot: vira uma caixa com a skin de caixa de
+-- quem largou, na frente dele (botão direito no slot ou arrastar para fora).
+event DropSlot {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: u8(1..40)
+}
+
 -- Selecionar um slot da hotbar.
 event SelectSlot {
 	From: Client,

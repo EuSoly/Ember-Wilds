@@ -270,7 +270,7 @@ export type KitDef = {
 -- Recursos do mundo (árvore, rocha...). radius = espaço que ocupa (para o
 -- espalhador não encostar outro); collisionRadius = raio da única peça que
 -- bloqueia a passagem; variants = quantas variações de modelo existem.
--- Coleta de um recurso (G2). Material escolhe som e lasquinhas (GatherFxConfig).
+-- Coleta de um recurso (G2). Material escolhe as lasquinhas (GatherFxConfig) e o som (Audio/SoundConfig).
 export type GatherMaterial = "wood" | "stone" | "gold" | "leaves"
 export type GatherDef = {
 	item: string, -- id em Items que o golpe dá

@@ -5,8 +5,11 @@
 -- 1. o slot chama DragState.press(index, input) quando o dedo/clique começa nele;
 -- 2. se o ponteiro andar mais que DRAG_THRESHOLD px, vira arrasto: o item segue
 --    o ponteiro (componente DragGhost) e o slot debaixo dele fica destacado;
--- 3. ao soltar em cima de outro slot, pede ao servidor MoveSlot(origem, destino).
---    Soltar fora de um slot cancela.
+-- 3. ao soltar em cima de outro slot, pede ao servidor MoveSlot(origem, destino);
+--    soltar no mundo (fora de qualquer parte visível da interface) LARGA a pilha
+--    (DropSlot: vira uma caixa com a sua skin); soltar em cima de outra parte da
+--    interface cancela.
+-- O botão direito num slot também larga a pilha (DragState.drop, pelo SlotButton).
 -- Se o ponteiro não andou o bastante, foi um toque simples e o slot trata como
 -- seleção (ver SlotButton).
 --
@@ -20,6 +23,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local UIMath = require(Shared:WaitForChild("UIMath"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 local Net = require(script.Parent:WaitForChild("Net"))
+local SoundPlayer = require(script.Parent:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 
 local DRAG_THRESHOLD = 8 -- pixels
 -- Por quanto tempo depois de soltar um arrasto o "clique" do slot é ignorado
@@ -38,6 +42,8 @@ local DragState = {}
 DragState.current = vide.source(nil :: Drag?)
 -- Slot debaixo do ponteiro durante o arrasto (nil = nenhum).
 DragState.target = vide.source(nil :: number?)
+-- O ponteiro está no mundo (soltar ali larga o item).
+DragState.outside = vide.source(false)
 
 local pressed: { index: number, input: InputObject, start: Vector2 }? = nil
 local lastDragEnd = -math.huge
@@ -57,6 +63,36 @@ local function slotAt(position: Vector2): number?
 	return nil
 end
 
+-- Esta peça da interface aparece na tela (cobre o mundo)? Moldura invisível
+-- que só organiza o HUD não conta.
+local function isSolid(gui: GuiObject): boolean
+	if gui:IsA("GuiButton") or gui.BackgroundTransparency < 1 then
+		return true
+	end
+	if (gui:IsA("ImageLabel") or gui:IsA("ImageButton")) and gui.Image ~= "" and gui.ImageTransparency < 1 then
+		return true
+	end
+	return (gui:IsA("TextLabel") or gui:IsA("TextBox")) and gui.Text ~= "" and gui.TextTransparency < 1
+end
+
+-- O ponto (x, y) está no mundo: nenhuma peça visível da interface em cima
+-- (fora o próprio item arrastado, que segue o ponteiro).
+local function overWorld(position: Vector2): boolean
+	local playerGui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
+	if not playerGui then
+		return false
+	end
+	for _, gui in playerGui:GetGuiObjectsAtPosition(position.X, position.Y) do
+		if gui.Name == "DragGhost" or gui:FindFirstAncestor("DragGhost") then
+			continue
+		end
+		if isSolid(gui) then
+			return false
+		end
+	end
+	return true
+end
+
 local function finish(position: Vector2)
 	local drag = vide.untrack(DragState.current)
 	pressed = nil
@@ -65,10 +101,22 @@ local function finish(position: Vector2)
 		local target = slotAt(position)
 		if target and target ~= drag.from then
 			Net.MoveSlot.Fire(drag.from, target)
+		elseif target == nil and overWorld(position) then
+			Net.DropSlot.Fire(drag.from)
+			SoundPlayer.play("drop")
 		end
 	end
 	DragState.current(nil)
 	DragState.target(nil)
+	DragState.outside(false)
+end
+
+-- Larga a pilha inteira do slot `index` (botão direito no slot).
+function DragState.drop(index: number)
+	if vide.untrack(InventoryState.slots)[index] ~= nil then
+		Net.DropSlot.Fire(index)
+		SoundPlayer.play("drop")
+	end
 end
 
 -- O dedo/clique começou num slot com item.
@@ -113,7 +161,9 @@ function DragState.start()
 		else
 			DragState.current({ from = drag.from, item = drag.item, position = position })
 		end
-		DragState.target(slotAt(position))
+		local target = slotAt(position)
+		DragState.target(target)
+		DragState.outside(target == nil and overWorld(position))
 	end)
 
 	-- A janela perdeu o foco no meio do arrasto: o "soltar" nunca chega, então cancela.
@@ -121,6 +171,7 @@ function DragState.start()
 		pressed = nil
 		DragState.current(nil)
 		DragState.target(nil)
+		DragState.outside(false)
 	end)
 
 	UserInputService.InputEnded:Connect(function(input: InputObject)

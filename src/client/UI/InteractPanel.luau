@@ -2,7 +2,8 @@
 -- Painel de interação com estruturas (G8): aparece acima da hotbar só enquanto
 -- há uma peça de usar de perto (extrator, fornalha, poço, cama, placa) e mostra
 -- o nome dela, o estado (madeira, estoque, goles: só o que a peça tem) e um
--- botão por ação. Fica empilhado em cima dos painéis do baú e da caixa quando
+-- botão por ação. Fornalha e extratores mostram slots no lugar do texto e dos
+-- botões (MachineSlots, 11/11). Fica empilhado em cima dos painéis do baú e da caixa quando
 -- eles estão visíveis, sem sobrepor. Só pede: quem decide é o servidor.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -18,6 +19,7 @@ local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
 local CrateState = require(script.Parent.Parent:WaitForChild("CrateState"))
 local InteractState = require(script.Parent.Parent:WaitForChild("InteractState"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
+local MachineSlots = require(script.Parent:WaitForChild("MachineSlots"))
 
 local create = vide.create
 
@@ -223,13 +225,17 @@ local function InteractPanel(): Frame
 			FontFace = Theme.font.number,
 			Text = statusText,
 			Visible = function()
-				return statusText() ~= ""
+				return statusText() ~= "" and not MachineSlots.handles(kind())
 			end,
 			maxSize = 14,
 		}),
+		vide.apply(MachineSlots.new())({ LayoutOrder = 3 }),
 		create("Frame")({
 			Name = "Actions",
 			LayoutOrder = 3,
+			Visible = function()
+				return not MachineSlots.handles(kind())
+			end,
 			BackgroundTransparency = 1,
 			AutomaticSize = Enum.AutomaticSize.Y,
 			Size = UDim2.fromOffset(WIDTH, 0),
