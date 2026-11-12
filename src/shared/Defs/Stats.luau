@@ -30,6 +30,9 @@ local Stats: { [string]: StatDef } = {
 	days_total = { id = "days_total", nameKey = "stat.days_total", kind = "counter" },
 	-- Só mortes de verdade (sair do jogo não conta; "deaths" conta). Começou em 04/11.
 	real_deaths = { id = "real_deaths", nameKey = "stat.real_deaths", kind = "counter" },
+	-- Missões: dias com a final das diárias resgatada (Fiel) e chrono quests resgatadas (Cronista).
+	daily_sets_completed = { id = "daily_sets_completed", nameKey = "stat.daily_sets_completed", kind = "counter" },
+	chrono_completed = { id = "chrono_completed", nameKey = "stat.chrono_completed", kind = "counter" },
 }
 
 for _, stat in Stats do

@@ -265,6 +265,9 @@ export type KitDef = {
 	order: number, -- posição na lista (1 = primeiro)
 	price: number, -- em pontos
 	items: { KitItem },
+	-- Só de conquista (Defs/Achievements): fora da loja e dos pontos; só
+	-- aparece e só vem para quem tem a posse (Shop.KitsOwned).
+	exclusive: boolean?,
 }
 
 -- Recursos do mundo (árvore, rocha...). radius = espaço que ocupa (para o
@@ -348,6 +351,66 @@ export type MobDef = {
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de
 -- CosmeticSlots/Cosmetics/Expressions/Stats/Settings/Kits/Resources/ResourceZones
 -- para os testes poderem validar só Tiers/Items.
+-- Recompensa de missão: o mesmo formato das recompensas da loja (Shop/Types),
+-- entregue por ShopService.give. Repetido aqui para Defs não depender de Shop.
+export type MissionReward = {
+	kind: string,
+	id: string?,
+	amount: number?,
+	count: number?,
+	spin: ("normal" | "paid")?,
+}
+
+-- Chrono quests (Defs/Quests): valem só na vida atual, com prazo em dias de jogo.
+-- Regras que falham a quest: alone (sem time de 2+), unhurt (não perder vida),
+-- peaceful (não acertar jogador nem mob manso/neutro, não pôr espinho), mined
+-- e stay (só dado, para as quests de biomas futuros).
+export type QuestRuleType = "alone" | "unhurt" | "peaceful" | "mined" | "stay"
+export type QuestRule = { type: QuestRuleType, items: { string }?, biomes: { string }? }
+-- Objetivos só como dado nas quests desligadas (ainda não há motor de objetivos).
+export type QuestGoal = { type: string, item: string?, amount: number?, biomes: { string }? }
+export type QuestDef = {
+	id: string,
+	nameKey: string,
+	descKey: string,
+	icon: string, -- chave de MissionImages.ICON
+	enabled: boolean,
+	days: number, -- prazo em dias de jogo (DataConfig.DAY_CYCLE_SECONDS cada)
+	ends: "time" | "goals", -- time = vence quem chega ao fim do prazo sem quebrar regra
+	goals: { QuestGoal },
+	rules: { QuestRule },
+	rewardItem: string, -- "" só em quest desligada (prêmio de slot de mochila)
+	rewardCount: number,
+	score: number, -- pontos da vida ao resgatar
+}
+
+-- De onde sai o progresso de uma missão ou conquista: uma estatística
+-- (Defs/Stats; key = chave da keyed, sem key = soma) ou o valor da vida atual.
+export type MissionTrack = { stat: string?, key: string?, life: ("days" | "score")? }
+
+-- Diárias e semanais (Defs/Missions): banco sorteado por jogador.
+export type MissionDef = {
+	id: string,
+	period: "daily" | "weekly",
+	nameKey: string, -- texto com {n} = alvo
+	icon: string,
+	track: MissionTrack,
+	target: number,
+	rewards: { MissionReward },
+}
+
+-- Conquistas (Defs/Achievements): permanentes, 3 níveis. Nível com rewards
+-- vazio = "em breve" (skin exclusiva ainda não escolhida).
+export type AchievementTier = { target: number, rewards: { MissionReward } }
+export type AchievementDef = {
+	id: string,
+	order: number,
+	nameKey: string,
+	icon: string,
+	track: MissionTrack,
+	tiers: { AchievementTier },
+}
+
 export type DefsTables = {
 	Tiers: { [string]: TierDef },
 	Items: { [string]: ItemDef },
@@ -361,6 +424,9 @@ export type DefsTables = {
 	Resources: { [string]: ResourceDef },
 	ResourceZones: { [string]: ResourceZoneDef },
 	Mobs: { [string]: MobDef },
+	Quests: { [string]: QuestDef },
+	Missions: { [string]: MissionDef },
+	Achievements: { [string]: AchievementDef },
 }
 
 return nil

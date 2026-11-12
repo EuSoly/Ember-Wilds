@@ -9,6 +9,8 @@ local WorldConfig = require("../WorldConfig")
 local Types = require("./Types")
 local BuildRules = require("../Build/BuildRules")
 local SettingsFormat = require("../UIFlow/SettingsFormat")
+-- Rewards só requer tipos e módulos da loja sem Defs (sem ciclo).
+local Rewards = require("../Shop/Rewards")
 
 local ID_PATTERN = "^[a-z0-9_]+$"
 local HEX_PATTERN = "^#%x%x%x%x%x%x$"
@@ -393,6 +395,161 @@ local function validateSettings(errors: { string }, defs: Types.DefsTables, hasS
 					table.insert(errors, `Setting "{key}": default "{tostring(default)}" não está em options`)
 				end
 			end
+		end
+	end
+end
+
+-- Missões (Defs/Quests, Defs/Missions, Defs/Achievements). --------------------
+
+local QUEST_RULES = table.freeze({ "alone", "unhurt", "peaceful", "mined", "stay" })
+
+local function checkRewards(errors: { string }, kind: string, key: string, rewards: any, defs: Types.DefsTables)
+	if type(rewards) ~= "table" then
+		table.insert(errors, `{kind} "{key}": rewards precisa ser uma lista`)
+		return
+	end
+	for _, reward in rewards do
+		local problem = Rewards.validate(reward :: any, defs)
+		if problem ~= nil then
+			table.insert(errors, `{kind} "{key}": {problem}`)
+		end
+	end
+end
+
+-- track = { stat, key? } ou { life = "days" | "score" }.
+local function checkTrack(errors: { string }, kind: string, key: string, track: any, defs: Types.DefsTables)
+	if type(track) ~= "table" then
+		table.insert(errors, `{kind} "{key}": track precisa ser uma tabela`)
+		return
+	end
+	if track.life ~= nil then
+		if track.life ~= "days" and track.life ~= "score" then
+			table.insert(errors, `{kind} "{key}": track.life "{track.life}" não existe (days, score)`)
+		end
+		if track.stat ~= nil then
+			table.insert(errors, `{kind} "{key}": track tem life e stat juntos`)
+		end
+		return
+	end
+	local stat = (defs :: any).Stats and defs.Stats[track.stat]
+	if stat == nil then
+		table.insert(errors, `{kind} "{key}": track.stat "{track.stat}" não existe em Defs/Stats`)
+		return
+	end
+	if track.key ~= nil then
+		if stat.kind ~= "keyed" then
+			table.insert(errors, `{kind} "{key}": track.key só vale para estatística keyed`)
+		elseif stat.keyKind == "item" and defs.Items[track.key] == nil then
+			table.insert(errors, `{kind} "{key}": track.key "{track.key}" não existe em Defs/Items`)
+		elseif stat.keyKind == "mob" and ((defs :: any).Mobs == nil or defs.Mobs[track.key] == nil) then
+			table.insert(errors, `{kind} "{key}": track.key "{track.key}" não existe em Defs/Mobs`)
+		end
+	end
+end
+
+local function validateQuests(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local quests: { [string]: Types.QuestDef }? = (defs :: any).Quests
+	if quests == nil then
+		return
+	end
+	for key, quest in quests do
+		checkDataId(errors, "Quest", key, quest.id)
+		checkString(errors, "Quest", key, "nameKey", quest.nameKey, hasString)
+		checkString(errors, "Quest", key, "descKey", quest.descKey, hasString)
+		if type(quest.icon) ~= "string" or quest.icon == "" then
+			table.insert(errors, `Quest "{key}": icon vazio`)
+		end
+		if type(quest.enabled) ~= "boolean" then
+			table.insert(errors, `Quest "{key}": enabled precisa ser boolean`)
+		end
+		if not isWholeNumber(quest.days, 1) then
+			table.insert(errors, `Quest "{key}": days deve ser inteiro maior que 0`)
+		end
+		if quest.ends ~= "time" and quest.ends ~= "goals" then
+			table.insert(errors, `Quest "{key}": ends "{quest.ends}" não existe (time, goals)`)
+		end
+		for _, rule in quest.rules do
+			if not table.find(QUEST_RULES, rule.type) then
+				table.insert(errors, `Quest "{key}": regra "{rule.type}" não existe`)
+			end
+		end
+		if not isWholeNumber(quest.score, 0) then
+			table.insert(errors, `Quest "{key}": score deve ser inteiro maior ou igual a 0`)
+		end
+		if quest.rewardItem == "" then
+			if quest.enabled then
+				table.insert(errors, `Quest "{key}": rewardItem vazio só em quest desligada`)
+			end
+		elseif defs.Items[quest.rewardItem] == nil then
+			table.insert(errors, `Quest "{key}": rewardItem "{quest.rewardItem}" não existe em Defs/Items`)
+		elseif not isWholeNumber(quest.rewardCount, 1) then
+			table.insert(errors, `Quest "{key}": rewardCount deve ser inteiro maior que 0`)
+		end
+		-- Quest ligada só pode ter as regras que o QuestService sabe vigiar.
+		if quest.enabled then
+			if quest.ends ~= "time" then
+				table.insert(errors, `Quest "{key}": ligada com ends "goals" (ainda não há motor de objetivos)`)
+			end
+			for _, rule in quest.rules do
+				if rule.type ~= "alone" and rule.type ~= "unhurt" and rule.type ~= "peaceful" then
+					table.insert(errors, `Quest "{key}": ligada com a regra "{rule.type}" (sem motor ainda)`)
+				end
+			end
+		end
+	end
+end
+
+local function validateMissions(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local missions: { [string]: Types.MissionDef }? = (defs :: any).Missions
+	if missions == nil then
+		return
+	end
+	for key, mission in missions do
+		checkDataId(errors, "Mission", key, mission.id)
+		checkString(errors, "Mission", key, "nameKey", mission.nameKey, hasString)
+		if mission.period ~= "daily" and mission.period ~= "weekly" then
+			table.insert(errors, `Mission "{key}": period "{mission.period}" não existe (daily, weekly)`)
+		end
+		if type(mission.icon) ~= "string" or mission.icon == "" then
+			table.insert(errors, `Mission "{key}": icon vazio`)
+		end
+		if not isWholeNumber(mission.target, 1) then
+			table.insert(errors, `Mission "{key}": target deve ser inteiro maior que 0`)
+		end
+		checkTrack(errors, "Mission", key, mission.track, defs)
+		checkRewards(errors, "Mission", key, mission.rewards, defs)
+		if type(mission.rewards) == "table" and #mission.rewards == 0 then
+			table.insert(errors, `Mission "{key}": rewards vazio`)
+		end
+	end
+end
+
+local function validateAchievements(errors: { string }, defs: Types.DefsTables, hasString: (string) -> boolean)
+	local achievements: { [string]: Types.AchievementDef }? = (defs :: any).Achievements
+	if achievements == nil then
+		return
+	end
+	local orders: { [number]: string } = {}
+	for key, achievement in achievements do
+		checkDataId(errors, "Achievement", key, achievement.id)
+		checkString(errors, "Achievement", key, "nameKey", achievement.nameKey, hasString)
+		checkOrder(errors, "Achievement", key, achievement.order, orders)
+		if type(achievement.icon) ~= "string" or achievement.icon == "" then
+			table.insert(errors, `Achievement "{key}": icon vazio`)
+		end
+		checkTrack(errors, "Achievement", key, achievement.track, defs)
+		local tiers = achievement.tiers
+		if type(tiers) ~= "table" or #tiers ~= 3 then
+			table.insert(errors, `Achievement "{key}": precisa de 3 níveis`)
+			continue
+		end
+		local last = 0
+		for index, tier in tiers do
+			if not isWholeNumber(tier.target, 1) or tier.target <= last then
+				table.insert(errors, `Achievement "{key}": nível {index} com alvo que não cresce`)
+			end
+			last = if type(tier.target) == "number" then tier.target else last
+			checkRewards(errors, "Achievement", key, tier.rewards, defs)
 		end
 	end
 end
@@ -1049,6 +1206,9 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 	validateResources(errors, defs, hasString)
 	validateRecipes(errors, defs, hasString)
 	validateMobs(errors, defs, hasString)
+	validateQuests(errors, defs, hasString)
+	validateMissions(errors, defs, hasString)
+	validateAchievements(errors, defs, hasString)
 
 	table.sort(errors)
 	return errors
