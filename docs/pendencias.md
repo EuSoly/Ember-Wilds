@@ -178,7 +178,7 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 
 ## Missões (12/11)
 
-- **Ícones dos itens de quest (12/11):** os 16 do pacote `assets/resources/missing-items/` (gemas, cubos, orbes, peles, óculos, vaga-lume, peça do forcado, papel, linha azul, baldes) estão em `ReplicatedStorage.Assets.Icons` (só no place). Os deitados vieram girados 180° em relação às comidas: cada um tem `IconeGiro = (0, 0, 180)`. Salvar o place.
+- **Ícones dos itens de quest (12/11):** os 16 do pacote `assets/resources/missing-items/` (gemas, cubos, orbes, peles, óculos, vaga-lume, peça do forcado, papel, linha azul, baldes) estão em `ReplicatedStorage.Assets.Icons` (só no place). Os deitados vieram girados 180° em relação às comidas: cada um tem `IconeGiro = (0, 180, 0)` (gira o item no eixo vertical, assim a borda de espessura fica embaixo como nas comidas; girar na tela, Z, punha a borda em cima). Salvar o place.
 
 - **Artes da tela:** enviadas na conta do Elizeu em 12/11 (ids em `MissionImages`). Três (trilho da barra, cartão em andamento, ícone do Caçador) não desenhavam e foram reenviadas com um pixel transparente mudado.
 - **Skins exclusivas das conquistas:** Lenhador, Minerador, Lenda (Mítica), Artesão (livro), Guerreiro (caixa), Fiel (mochila) e a do Cronista estão "Em breve" até o Elizeu escolher; ao escolher, tirar a skin das roletas (`inSpins = false`) e dos pacotes.
