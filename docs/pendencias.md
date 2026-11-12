@@ -2,6 +2,19 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Sons (11/11)
+
+Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição da loja e conferidos só por carregar: **ninguém ouviu ainda**.
+
+- **Ouvir tudo e ajustar (Elizeu):** volumes e escolha de cada som em `src/shared/Audio/SoundConfig.luau`. Suspeitos: `heartbeat` (é um baque de sintetizador em loop, não um coração de verdade), `mob_wolf_death` (latido de coiote; não achamos ganido), `level_up` (efeito mágico; não achamos fanfarra), `ui_tab` nas abas (som de papel) e o fogo (lareira, não fogueira). Conferir também se as músicas da APM são mesmo sem voz.
+- **Dano de frio/fome repete o `hurt`:** cada piscada de dano de sobrevivência (`HurtAt`) toca o som de dano, a cada ~2 s. Se cansar, dar um som mais leve para esse caso (o cliente hoje não sabe a causa do dano).
+- **Sem teste no Studio:** comer (`eat`), ressuscitar, subir de nível, largar item, passo na água, som da água perto, avisos (`notify_*`), golpe em outro jogador, fornalha (apagar e acender), uivo, e tudo com 2 jogadores (sons 3D dos outros). O código está ligado, mas não foi disparado no teste.
+- **Sem teste no celular:** peso e mistura no aparelho; o limite é de 12 efeitos ao mesmo tempo.
+- **Colocar e quebrar peça por heurística:** vale "apareceu ou sumiu a até 50 studs". Peça recolhida ou apagada por outro motivo também faz o som de quebrar; várias no mesmo instante fazem um som só.
+- **Som abafado embaixo do telhado** (identidade visual): não feito.
+- **Faltam sons próprios:** falcão e os bichos sem IA (usam os genéricos), tipos de construção (pedra e madeira soam igual), diamante e outros materiais ainda sem recurso no jogo, clima (inverno, deserto, lava), montaria, teia da aranha, espinho, cama e placa.
+- **Sons da roleta** continuam em `SpinSoundConfig`/`SpinSounds`, fora do `SoundPlayer` (sem o limite de sons).
+
 ## Construções (11/11)
 
 - **Conferir jogando:** colocar vários pisos lado a lado na terra (a casa encaixada era recusada por arredondamento; corrigido com folga de 0,0001 stud em `circlesOverlap`, teste `piso_encaixado_nao_conta_como_sobreposto`); paredes e espinhos mais perto (raio 2,5).

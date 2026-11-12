@@ -59,7 +59,7 @@ Num modelo de recurso, as peças chamadas **`Berry`** mostram quanto ele ainda t
 
 ## Sons e lasquinhas
 
-Ficam em `src/shared/GatherFxConfig.luau`, por material: a cor das lasquinhas e o som do golpe. Para trocar um som, pegue outro áudio na loja do Roblox (create.roblox.com/store/audio), copie o número do link e troque o `soundId`. Os sons tocam no volume de "efeitos" das configurações.
+A cor das lasquinhas de cada material fica em `src/shared/GatherFxConfig.luau`. O som do golpe fica com os outros sons, em `src/shared/Audio/SoundConfig.luau` (`hit_wood`, `hit_stone`, `hit_gold`, `hit_leaves`, `hit_diamond`; material sem som próprio usa o da pedra). Veja `docs/guia/sons.md`.
 
 ## Onde fica no código
 

@@ -35,7 +35,7 @@ As transições ficam em `src/shared/UIFlow/ScreenFlow.luau` (testado no Lune). 
 | `src/client/Menu/` | O menu inteiro, em código (Vide): veja "Menu" abaixo |
 | `src/client/Controllers/ScreenController.luau` | Monta as telas e mostra/esconde conforme o estado |
 | `src/client/ScreenState.luau` | O estado de tela |
-| `src/client/AudioSettings.luau` | Grupos de som e volumes |
+| `src/client/AudioSettings.luau` | Grupos de som e volumes (os sons em si: `docs/guia/sons.md`) |
 | `src/shared/UIFlow/` | Lógica pura das telas: `ScreenFlow`, `KitRules`, `MenuLayout`, `DeathLayout`, `KitChoice`, `CountUp`, `SettingsFormat` |
 | `src/shared/UiImages.luau` | Ids das imagens da interface num lugar só: logo, sol, lua, árvore, galho, moeda e placa de madeira. Para trocar uma: envie o PNG novo, cole o id aqui (a árvore, o galho e a placa têm a proporção/corte anotados ao lado) |
 | `assets/ui/brand/` | PNGs da marca (logo, sol, lua), fonte das imagens enviadas ao Roblox |
