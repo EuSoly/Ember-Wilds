@@ -4,6 +4,7 @@
 local DataConfig = require("./DataConfig")
 local RankRules = require("./RankRules")
 local SettingsRules = require("./SettingsRules")
+local MissionData = require("../Missions/MissionData")
 local ShopData = require("../Shop/ShopData")
 local Types = require("../Defs/Types")
 
@@ -25,6 +26,9 @@ function ProfileTemplate.build(defs: Types.DefsTables): { [string]: any }
 		Ranking = RankRules.empty(0),
 		-- Loja (Shop/ShopData): saldos de giros e de kits, kits e passes, compras.
 		Shop = ShopData.empty(),
+		-- Missões (Missions/MissionData): sorteio das diárias e semanais e nível
+		-- resgatado de cada conquista. A Partida (chrono quests) não salva.
+		Missions = MissionData.empty(),
 		-- Tutorial da primeira partida (TutorialService): Done = completou;
 		-- SpinPopup = o pop-up da roleta ainda não foi mostrado no menu.
 		Tutorial = { Done = false, SpinPopup = false },

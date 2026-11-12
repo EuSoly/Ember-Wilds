@@ -59,7 +59,8 @@ end
 
 function ToolModel.build(itemId: string, cosmeticId: string?): Model?
 	local def = Defs.Items[itemId]
-	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" and itemId ~= "book" then
+	-- Na mão: ferramentas, armas e o que os dados marcam (handModel: livro, baldes).
+	if def ~= nil and def.category ~= "tool" and def.category ~= "weapon" and not def.handModel then
 		return nil
 	end
 	-- Sem definição: só no Studio, para conferir modelos que ainda não são itens

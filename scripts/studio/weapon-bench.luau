@@ -29,17 +29,25 @@ local TOLERANCE = 1e-3
 local tools = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Tools")
 
 -- Golpe do item: o da definição, ou pelo nome para armas que ainda não são itens.
-local function isThrust(id: string): boolean
+local function animOf(id: string): string
 	local def = Defs.Items[id]
 	if def then
-		return def.attackAnim == "thrust"
+		return def.attackAnim or "swing"
 	end
-	return id:match("_spear$") ~= nil
+	return if id:match("_spear$") then "thrust" else "swing"
+end
+
+local function isThrust(id: string): boolean
+	return animOf(id) == "thrust"
 end
 
 -- C0 do GripWeld na mão (igual ao BonecoModel.setHeldItem).
 local function gripC0(id: string): CFrame
-	local angle = if isThrust(id) then C.THRUST_REST_ANGLE else C.SWING_REST_ANGLE
+	local anim = animOf(id)
+	local angle = if anim == "thrust"
+		then C.THRUST_REST_ANGLE
+		elseif anim == "bash" then C.SHIELD_REST_ANGLE
+		else C.SWING_REST_ANGLE
 	local rest = CFrame.Angles(0, -math.rad(angle), 0)
 	return CFrame.fromMatrix(Vector3.zero, rest.RightVector, rest.LookVector)
 end
@@ -87,6 +95,16 @@ local function montar()
 				for _, part in body:GetDescendants() do
 					if part:IsA("BasePart") and (part.Name:match("^RightHand") or part.Name:match("^LeftHand")) then
 						part.CFrame += Vector3.new(0, 0, C.THRUST_HOLD_BACK)
+					end
+				end
+			elseif animOf(id) == "bash" then
+				-- Escudo: as duas mãos para o centro e à frente (BonecoAnim).
+				local inward = C.HAND_X - C.SHIELD_HAND_X
+				for _, part in body:GetDescendants() do
+					if part:IsA("BasePart") and part.Name:match("^RightHand") then
+						part.CFrame += Vector3.new(-inward, 0, C.SHIELD_HOLD_FORWARD)
+					elseif part:IsA("BasePart") and part.Name:match("^LeftHand") then
+						part.CFrame += Vector3.new(inward, 0, C.SHIELD_HOLD_FORWARD)
 					end
 				end
 			end

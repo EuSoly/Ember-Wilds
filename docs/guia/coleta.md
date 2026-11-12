@@ -27,7 +27,7 @@ A frutinha rende sempre 1 por golpe (`fixedYield`), com qualquer coisa na mão.
 | Árvore | 20 (a menor) a 80 (a maior), conforme o tamanho | +2 a cada 10 s | 1 |
 | Rocha | 40 | +2 a cada 10 s | 2 |
 | Jazida de ouro | 20 | +1 a cada 10 s | 3 |
-| Arbusto | 7 frutinhas | +1 a cada 10 s | 2 |
+| Arbusto | 5 frutinhas (uma por baga do modelo) | +1 a cada 10 s | 2 |
 
 - O modelo **nunca some**: vazio, ele fica e aparece "Este recurso acabou". A reserva volta aos poucos.
 - Inventário cheio: aparece "Inventário cheio" e o recurso não perde nada. Se só couber uma parte, só essa parte sai da reserva.
@@ -55,7 +55,7 @@ Picareta nova: em `Defs/Items.luau`, `category = "tool"`, `tier` e `pickaxe = { 
 
 ## Frutinhas que aparecem e somem
 
-Num modelo de recurso, as peças chamadas **`Berry`** mostram quanto ele ainda tem: com a reserva cheia todas aparecem; conforme é colhido, elas somem (em proporção) e voltam quando regenera. O `berry_bush_1` tem 7 frutinhas `Berry`, uma por unidade da reserva. Vale para qualquer modelo novo: é só dar o nome `Berry` às peças.
+Num modelo de recurso, as peças chamadas **`Berry`** mostram quanto ele ainda tem: com a reserva cheia todas aparecem; conforme é colhido, elas somem (em proporção) e voltam quando regenera. O `berry_bush_1` tem 5 frutinhas `Berry`, uma por unidade da reserva (5). Vale para qualquer modelo novo: é só dar o nome `Berry` às peças.
 
 ## Sons e lasquinhas
 

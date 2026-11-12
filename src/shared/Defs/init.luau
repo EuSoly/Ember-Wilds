@@ -42,6 +42,13 @@ export type StructureKind = Types.StructureKind
 export type StructureDef = Types.StructureDef
 export type MobBehavior = Types.MobBehavior
 export type MobDef = Types.MobDef
+export type QuestDef = Types.QuestDef
+export type QuestRule = Types.QuestRule
+export type MissionDef = Types.MissionDef
+export type MissionTrack = Types.MissionTrack
+export type MissionReward = Types.MissionReward
+export type AchievementDef = Types.AchievementDef
+export type AchievementTier = Types.AchievementTier
 
 local Defs: Types.DefsTables = table.freeze({
 	Tiers = require("@self/Tiers"),
@@ -56,6 +63,9 @@ local Defs: Types.DefsTables = table.freeze({
 	Resources = require("@self/Resources"),
 	ResourceZones = require("@self/ResourceZones"),
 	Mobs = require("@self/Mobs"),
+	Quests = require("@self/Quests"),
+	Missions = require("@self/Missions"),
+	Achievements = require("@self/Achievements"),
 })
 
 local errors = Validate.all(Defs, Strings.has)

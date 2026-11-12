@@ -63,6 +63,38 @@ local Kits: { [string]: KitDef } = {
 			{ id = "big_campfire", count = 4 },
 		},
 	},
+	-- Só de conquista (Defs/Achievements): Caçador III e Sobrevivente III.
+	kit_hunter = {
+		id = "kit_hunter",
+		nameKey = "kit.kit_hunter",
+		order = 5,
+		price = 0,
+		exclusive = true,
+		items = {
+			{ id = "cooked_meat", count = 15 },
+			{ id = "stone_spear", count = 1 },
+			{ id = "wood_wall", count = 10 },
+			{ id = "campfire", count = 2 },
+			{ id = "berry", count = 10 },
+		},
+	},
+	kit_guardian = {
+		id = "kit_guardian",
+		nameKey = "kit.kit_guardian",
+		order = 6,
+		price = 0,
+		exclusive = true,
+		items = {
+			{ id = "berry", count = 30 },
+			{ id = "wood", count = 300 },
+			{ id = "stone", count = 300 },
+			{ id = "gold", count = 60 },
+			{ id = "gold_pickaxe", count = 1 },
+			{ id = "gold_sword", count = 1 },
+			{ id = "gold_helmet", count = 1 },
+			{ id = "big_campfire", count = 4 },
+		},
+	},
 }
 
 for _, kit in Kits do

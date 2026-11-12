@@ -142,6 +142,14 @@ local function onLock(player: Player)
 	publish(leader)
 end
 
+-- Quantos estão no time do jogador (ele incluso); 0 sem time. "Sozinho" nas
+-- chrono quests = menos de 2.
+function TeamService.sizeOf(player: Player): number
+	local leader = leaderOf[player.UserId]
+	local team = if leader then teams[leader] else nil
+	return if team then #team.members else 0
+end
+
 function TeamService.Start(_self)
 	BuildRules.setTeamResolver(function(userId: number): number?
 		return leaderOf[userId]

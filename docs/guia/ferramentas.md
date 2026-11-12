@@ -21,6 +21,7 @@ Para liberar, apague o `testOnly = true` do item em `src/shared/Defs/Items.luau`
 | Bônus de conjunto | `gearBonus = { set, damage }`: com o capacete do mesmo conjunto (`armor.gearSet`), soma o dano. Espada de dragão/lava +3, lança +2. |
 | Martelo | `structureDamage` alto (20 a 95) e `hammer.minDamage`: contra peça de **material acima** do martelo (ordem em `Defs/Tiers`), só o mínimo. Bate fraco em jogador e mob e não deixa lento. |
 | Escudo | `shield = { defense, mobDefense }`: **na mão**, soma com a defesa da peça de cabeça (`golpe − capacete − escudo`). Bate com o dano do material (1 a 6) e não deixa lento. `arrowDefense` é só dado. |
+| Animação na mão | `attackAnim`: `"swing"` (arco de lado: picaretas, espadas, martelos), `"thrust"` (estocada, mãos do lado do corpo: lanças e forcados) ou `"bash"` (escudos: seguro com as duas mãos à frente do corpo e de frente; o golpe avança as duas mãos com o escudo). Números em `BonecoConfig` (`SHIELD_HAND_X`, `SHIELD_HOLD_FORWARD`, `SHIELD_BASH_DISTANCE`). A pegada de cada modelo se ajusta na bancada (`scripts/studio/weapon-bench.luau`). |
 | Chave inglesa | `repair = 70`: golpe numa construção **sua** danificada devolve até 70 de vida, sem passar do máximo, e não abre a porta. Em construção alheia, é golpe de mão. |
 | Pá, forcado, regador, facão | `dig`, `harvest`, `waters`, `butcher`: só dado, até cavar, fazenda e caixa de mob em dobro existirem. |
 

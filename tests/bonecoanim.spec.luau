@@ -154,4 +154,25 @@ return {
 			end
 		end
 	end,
+
+	["shield holds the shield with both hands in front"] = function()
+		local state = BonecoAnim.newState()
+		local pose = run(state, 30, DT, { speed = 0, using = false, hasTool = true, bash = true })
+		local inward = C.HAND_X - C.SHIELD_HAND_X
+		assert(near(pose.left.x, inward, 1e-6) and near(pose.right.x, -inward, 1e-6), "mãos para o centro")
+		assert(
+			near(pose.left.z, C.SHIELD_HOLD_FORWARD) and near(pose.right.z, C.SHIELD_HOLD_FORWARD),
+			"mãos à frente"
+		)
+		assert(pose.right.yaw == 0 and pose.left.yaw == 0, "escudo não gira")
+	end,
+
+	["shield bash pushes both hands forward together"] = function()
+		local state = BonecoAnim.newState()
+		local pose = run(state, PEAK_STEPS, SWING_DT, { speed = 0, using = true, hasTool = true, bash = true })
+		local peak = C.SHIELD_HOLD_FORWARD - C.SHIELD_BASH_DISTANCE
+		assert(near(pose.left.z, peak, 1e-3) and near(pose.right.z, peak, 1e-3), `pico: {pose.left.z} {pose.right.z}`)
+		assert(near(pose.left.x, -pose.right.x, 1e-6), "as duas mãos juntas")
+		assert(pose.right.yaw == 0, "sem arco de lado")
+	end,
 }

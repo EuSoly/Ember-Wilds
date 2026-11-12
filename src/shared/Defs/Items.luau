@@ -147,8 +147,9 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 255,
 	},
 	-- Itens de quest (sem modelo ainda; o Elizeu faz o modelo e a quest depois).
-	green_gem = { id = "green_gem", testOnly = true, nameKey = "item.green_gem", category = "misc", maxStack = 255 },
-	blue_gem = { id = "blue_gem", testOnly = true, nameKey = "item.blue_gem", category = "misc", maxStack = 255 },
+	-- Gemas verde e azul: prêmios de Sobreviver e Mãos Limpas (Defs/Quests), liberadas.
+	green_gem = { id = "green_gem", nameKey = "item.green_gem", category = "misc", maxStack = 255 },
+	blue_gem = { id = "blue_gem", nameKey = "item.blue_gem", category = "misc", maxStack = 255 },
 	orange_gem = { id = "orange_gem", testOnly = true, nameKey = "item.orange_gem", category = "misc", maxStack = 255 },
 	blue_cube = { id = "blue_cube", testOnly = true, nameKey = "item.blue_cube", category = "misc", maxStack = 255 },
 	lava_cube = { id = "lava_cube", testOnly = true, nameKey = "item.lava_cube", category = "misc", maxStack = 255 },
@@ -571,6 +572,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 1,
 		shield = { defense = 1, mobDefense = 2, arrowDefense = 13 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	stone_shield = {
 		id = "stone_shield",
@@ -580,6 +582,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 2,
 		shield = { defense = 2, mobDefense = 4, arrowDefense = 17 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	gold_shield = {
 		id = "gold_shield",
@@ -589,6 +592,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 3,
 		shield = { defense = 3, mobDefense = 8, arrowDefense = 21 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	diamond_shield = {
 		id = "diamond_shield",
@@ -599,6 +603,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 4,
 		shield = { defense = 4, mobDefense = 12, arrowDefense = 25 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	amethyst_shield = {
 		id = "amethyst_shield",
@@ -609,6 +614,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 5,
 		shield = { defense = 5, mobDefense = 16, arrowDefense = 29 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	reidite_shield = {
 		id = "reidite_shield",
@@ -619,6 +625,7 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		mobDamage = 6,
 		shield = { defense = 6, mobDefense = 18, arrowDefense = 33 },
+		attackAnim = "bash", -- duas mãos à frente; o golpe avança com o escudo
 	},
 	-- Chave inglesa: conserta construção aliada danificada.
 	wrench = {
@@ -1508,16 +1515,18 @@ local Items: { [string]: ItemDef } = {
 			bed = { regenFactor = 2, drainFactor = 0.5 },
 		},
 	},
-	bucket = { id = "bucket", testOnly = true, nameKey = "item.bucket", category = "misc", maxStack = 1 },
+	-- Baldes (WellService): o vazio enche perto da água (usar com ele na mão) e o
+	-- cheio enche o poço. Na mão com o modelo de Assets.Tools (handModel).
+	bucket = { id = "bucket", nameKey = "item.bucket", category = "misc", maxStack = 1, handModel = true },
 	water_bucket = {
 		id = "water_bucket",
-		testOnly = true,
 		nameKey = "item.water_bucket",
 		category = "misc",
 		maxStack = 1,
+		handModel = true,
 	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
-	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3 },
+	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3, handModel = true },
 }
 
 for _, item in Items do

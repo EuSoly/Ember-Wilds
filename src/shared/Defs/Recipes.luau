@@ -211,7 +211,8 @@ local Recipes: { [string]: RecipeDef } = {
 		ingredient("rabbit_fur", 5),
 		ingredient("thread", 6),
 	}, 10, "workbench", 49), -- wiki
-	bucket = recipe("bucket", 1, { ingredient("wood", 15) }, 5, "workbench", 50), -- provisório
+	-- Config do Starve (bucket_empty): 20 madeira + 1 linha, bancada, 5 s.
+	bucket = recipe("bucket", 1, { ingredient("wood", 20), ingredient("thread", 1) }, 5, "workbench", 50),
 
 	-- Itens de cabeça do Starve (config oficial). Os de material que o jogo ainda
 	-- não dá são testOnly (ver Items).

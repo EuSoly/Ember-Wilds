@@ -50,7 +50,6 @@ Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição 
 - **Defesa contra mob sem escala:** as mordidas daqui são mais fracas que no Starve (lobo 24 contra 40), mas o `mobDefense` entrou com o número do Starve (decisão do Elizeu). Com capacete de ouro, o lobo tira 11 e a aranha 3. Rever quando balancear os mobs.
 - **Efeitos só-dado:** roubo (capuz), fazenda (túnicas), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
 - **Peças sem receita:** os gorros de Natal e de elfo (no Starve saem do presente de Natal).
-- **Itens de quest sem modelo:** gemas, cubos, óculos de piloto, peles de lobo negro e branco, vaga-lume (a grade mostra a sigla).
 - **Chapéu de pele esquentando:** de dia na floresta ele enche o frio, mas não passa para a barra de calor (o calor só vem do fogo e do bioma).
 - **Conferir no Studio antes de liberar:** já conferido em 10/11 (Play, 1 jogador) que a peça fica no centro do corpo e com a frente certa (capacete de ouro, máscara de mergulho, capuz) e que o dono continua vendo o próprio nick com o capuz. Falta: o nick sumir para o OUTRO jogador (Test → 2 Players), a peça acompanhando golpe/morte, e os ícones na aba Armaduras do livro.
 - **Ícone das peças:** ângulo `ARMOR_TILT` (60°) escolhido sem ver todas; ajustar com `IconeGiro` nas que saírem estranhas.
@@ -176,3 +175,16 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 - Cantos de blocos girados se cruzando um pouco na tela (até os modelos finais).
 - Apertar R e soltar o clique quase juntos pode construir com o giro anterior.
 - Caso raro do botão "+" do baú segurado.
+
+## Missões (12/11)
+
+- **Ícones dos itens de quest (12/11):** os 16 do pacote `assets/resources/missing-items/` (gemas, cubos, orbes, peles, óculos, vaga-lume, peça do forcado, papel, linha azul, baldes) estão em `ReplicatedStorage.Assets.Icons` (só no place). Os deitados vieram girados 180° em relação às comidas: cada um tem `IconeGiro = (0, 180, 0)` (gira o item no eixo vertical, assim a borda de espessura fica embaixo como nas comidas; girar na tela, Z, punha a borda em cima). Salvar o place.
+
+- **Artes da tela:** enviadas na conta do Elizeu em 12/11 (ids em `MissionImages`). Três (trilho da barra, cartão em andamento, ícone do Caçador) não desenhavam e foram reenviadas com um pixel transparente mudado.
+- **Skins exclusivas das conquistas:** Lenhador, Minerador, Lenda (Mítica), Artesão (livro), Guerreiro (caixa), Fiel (mochila) e a do Cronista estão "Em breve" até o Elizeu escolher; ao escolher, tirar a skin das roletas (`inSpins = false`) e dos pacotes.
+- **11 chrono quests desligadas:** esperam biomas, mobs e o motor de objetivos (`have`, `farm`, `open`, `spend`) no `QuestService`.
+- **Diárias de comer e construir:** precisam de estatística nova antes de entrar no banco.
+- **Confete na faixa de missão completa:** ficou de fora (ParticleEmitter não roda em ScreenGui).
+- **Números para conferir:** conteúdo dos kits Caçador e Guardião da Floresta, Golden Ember das diárias/semanais, prêmios dos níveis I e II.
+- **Teste no celular:** a tela de Missões ainda não foi conferida no emulador (749×330).
+- **Arestas da revisão (12/11):** resolvidas no mesmo dia (retrato só quando muda com a janela fechada, relógio do servidor no "Renova em", som do resgate só com a confirmação, sanitize por período e sem repetidos, Validate recusa prêmio testOnly em quest ligada, missão de vida não conta a vida antes do sorteio, "Renova em" vazio antes do primeiro retrato, fantasma/protegido não quebra Mãos Limpas, virar fantasma falha as chrono quests em andamento). Falta conferir no Studio.

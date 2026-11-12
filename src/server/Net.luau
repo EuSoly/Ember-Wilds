@@ -189,9 +189,14 @@ Queue.Reliable[36] = table.create(256)
 Queue.Reliable[37] = table.create(256)
 Queue.Reliable[38] = table.create(256)
 Queue.Reliable[39] = table.create(256)
+Queue.Reliable[41] = table.create(256)
+Queue.Reliable[42] = table.create(256)
+Queue.Reliable[43] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
+export type MissionCard = { Id: string, Progress: number, Target: number, State: number, EndsAt: number }
+export type AchievementCard = { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean }
 function SerdesFunctions.WriteEVENT_InventorySync(Value: { Capacity: number, Slots: {[number]: { Id: string, Count: number }} }): ()
 	-- Allocate BLOCK: 4 bytes
 	local BLOCK_START = Allocate(4)
@@ -730,6 +735,192 @@ function SerdesFunctions.ReadEVENT_TeamLock(): (nil)
 	return nil
 end
 
+function SerdesFunctions.WriteEVENT_MissionsData(Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }): ()
+	-- Allocate BLOCK: 49 bytes
+	local BLOCK_START = Allocate(49)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 40)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Creative and 1 or 0)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.InLife and 1 or 0)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 3, #Value.Chrono)
+		-- Allocate BLOCK: 18 bytes
+	local ARRAY_START_1 = Allocate(18 * #Value.Chrono)
+	for Index = 1, #Value.Chrono do
+		local Item_1 = Value.Chrono[Index]
+		local Length = #Item_1.Id
+		-- Allocate 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Id, Length)
+		-- Allocate 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_1, Item_1.Progress)
+		-- Allocate 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_2, Item_1.Target)
+		-- Allocate 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_3, Item_1.State)
+		-- Allocate 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		buffer.writef64(SendBuffer, OPERATION_OFFSET_4, Item_1.EndsAt)
+	end
+	-- END ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 5, Value.LifeDay)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 7, #Value.Daily)
+		-- Allocate BLOCK: 18 bytes
+	local ARRAY_START_1 = Allocate(18 * #Value.Daily)
+	for Index = 1, #Value.Daily do
+		local Item_1 = Value.Daily[Index]
+		local Length = #Item_1.Id
+		-- Allocate 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Id, Length)
+		-- Allocate 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_1, Item_1.Progress)
+		-- Allocate 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_2, Item_1.Target)
+		-- Allocate 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_3, Item_1.State)
+		-- Allocate 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		buffer.writef64(SendBuffer, OPERATION_OFFSET_4, Item_1.EndsAt)
+	end
+	-- END ARRAY
+	local Length = #Value.DailyFinal.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 9, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.DailyFinal.Id, Length)
+	buffer.writeu32(SendBuffer, BLOCK_START + 10, Value.DailyFinal.Progress)
+	buffer.writeu32(SendBuffer, BLOCK_START + 14, Value.DailyFinal.Target)
+	buffer.writeu8(SendBuffer, BLOCK_START + 18, Value.DailyFinal.State)
+	buffer.writef64(SendBuffer, BLOCK_START + 19, Value.DailyFinal.EndsAt)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 27, #Value.Weekly)
+		-- Allocate BLOCK: 18 bytes
+	local ARRAY_START_1 = Allocate(18 * #Value.Weekly)
+	for Index = 1, #Value.Weekly do
+		local Item_1 = Value.Weekly[Index]
+		local Length = #Item_1.Id
+		-- Allocate 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Id, Length)
+		-- Allocate 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_1, Item_1.Progress)
+		-- Allocate 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_2, Item_1.Target)
+		-- Allocate 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_3, Item_1.State)
+		-- Allocate 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		buffer.writef64(SendBuffer, OPERATION_OFFSET_4, Item_1.EndsAt)
+	end
+	-- END ARRAY
+	local Length = #Value.WeeklyFinal.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 29, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.WeeklyFinal.Id, Length)
+	buffer.writeu32(SendBuffer, BLOCK_START + 30, Value.WeeklyFinal.Progress)
+	buffer.writeu32(SendBuffer, BLOCK_START + 34, Value.WeeklyFinal.Target)
+	buffer.writeu8(SendBuffer, BLOCK_START + 38, Value.WeeklyFinal.State)
+	buffer.writef64(SendBuffer, BLOCK_START + 39, Value.WeeklyFinal.EndsAt)
+	-- START ARRAY
+	buffer.writeu16(SendBuffer, BLOCK_START + 47, #Value.Achievements)
+		-- Allocate BLOCK: 8 bytes
+	local ARRAY_START_1 = Allocate(8 * #Value.Achievements)
+	for Index = 1, #Value.Achievements do
+		local Item_1 = Value.Achievements[Index]
+		local Length = #Item_1.Id
+		-- Allocate 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_0, Length)
+		Allocate(Length)
+		buffer.writestring(SendBuffer, SendOffset, Item_1.Id, Length)
+		-- Allocate 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		buffer.writeu32(SendBuffer, OPERATION_OFFSET_1, Item_1.Progress)
+		-- Allocate 1
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_2, Item_1.Claimed)
+		-- Allocate 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_3, Item_1.Ready and 1 or 0)
+		-- Allocate 1
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		buffer.writeu8(SendBuffer, OPERATION_OFFSET_4, Item_1.Soon and 1 or 0)
+	end
+	-- END ARRAY
+end
+
+function SerdesFunctions.ReadEVENT_WatchMissions(): (boolean)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	return Value
+end
+
+function SerdesFunctions.ReadEVENT_RequestMissions(): (nil)
+	return nil
+end
+
+function SerdesFunctions.ReadEVENT_ClaimMission(): ({ Kind: number, Id: string })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	Value.Kind = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	if Value.Kind < 1 then error(`Expected "Value.Kind" to be larger than or equal to 1, got {Value.Kind} instead.`) end
+	if Value.Kind > 4 then error(`Expected "Value.Kind" to be smaller than or equal to 4, got {Value.Kind} instead.`) end
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	Value.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Id < 1 then error(`Expected length of "Value.Id" to be larger than or equal to 1, got {#Value.Id} instead.`) end
+	if #Value.Id > 40 then error(`Expected length of "Value.Id" to be smaller than or equal to  40, got {#Value.Id} instead.`) end
+	return Value
+end
+
+function SerdesFunctions.WriteEVENT_MissionNotice(Value: { Kind: number, Id: string, Done: boolean }): ()
+	-- Allocate BLOCK: 4 bytes
+	local BLOCK_START = Allocate(4)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 44)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Kind)
+	local Length = #Value.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
+	buffer.writeu8(SendBuffer, BLOCK_START + 3, Value.Done and 1 or 0)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -894,6 +1085,27 @@ if not RunService:IsRunning() then
 	},
 	TeamLock = {
 		On = NOOP
+	},
+	MissionsData = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	WatchMissions = {
+		On = NOOP
+	},
+	RequestMissions = {
+		On = NOOP
+	},
+	ClaimMission = {
+		On = NOOP
+	},
+	MissionNotice = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -1236,6 +1448,36 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"TeamLock\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[39], {Player, Value} :: {any})
+			end
+		elseif Index == 41 then
+			local Value: boolean = SerdesFunctions.ReadEVENT_WatchMissions()
+			if Events.Reliable[41] ~= nil then
+				task.spawn(Events.Reliable[41], Player, Value)
+			else
+				if #Queue.Reliable[41] > 256 then
+					warn("[Blink]: Event queue of \"WatchMissions\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[41], {Player, Value} :: {any})
+			end
+		elseif Index == 42 then
+			local Value: nil = SerdesFunctions.ReadEVENT_RequestMissions()
+			if Events.Reliable[42] ~= nil then
+				task.spawn(Events.Reliable[42], Player, Value)
+			else
+				if #Queue.Reliable[42] > 256 then
+					warn("[Blink]: Event queue of \"RequestMissions\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[42], {Player, Value} :: {any})
+			end
+		elseif Index == 43 then
+			local Value: { Kind: number, Id: string } = SerdesFunctions.ReadEVENT_ClaimMission()
+			if Events.Reliable[43] ~= nil then
+				task.spawn(Events.Reliable[43], Player, Value)
+			else
+				if #Queue.Reliable[43] > 256 then
+					warn("[Blink]: Event queue of \"ClaimMission\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[43], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -2242,6 +2484,140 @@ local Returns = table.freeze({
 				end
 			end
 		end
+	},
+	MissionsData = {
+		Fire = function(Player: Player, Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_MissionsData(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionsData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionsData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionsData(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	WatchMissions = {
+		On = function(Listener: (Player: Player, Value: boolean) -> ()): () -> ()
+			Events.Reliable[41] = Listener
+			for Index, Arguments in Queue.Reliable[41] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[41] = {}
+			return function (): ()
+				if Events.Reliable[41] == Listener then
+					Events.Reliable[41] = nil
+				end
+			end
+		end
+	},
+	RequestMissions = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[42] = Listener
+			for Index, Arguments in Queue.Reliable[42] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[42] = {}
+			return function (): ()
+				if Events.Reliable[42] == Listener then
+					Events.Reliable[42] = nil
+				end
+			end
+		end
+	},
+	ClaimMission = {
+		On = function(Listener: (Player: Player, Value: { Kind: number, Id: string }) -> ()): () -> ()
+			Events.Reliable[43] = Listener
+			for Index, Arguments in Queue.Reliable[43] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[43] = {}
+			return function (): ()
+				if Events.Reliable[43] == Listener then
+					Events.Reliable[43] = nil
+				end
+			end
+		end
+	},
+	MissionNotice = {
+		Fire = function(Player: Player, Value: { Kind: number, Id: string, Done: boolean }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_MissionNotice(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Kind: number, Id: string, Done: boolean }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Kind: number, Id: string, Done: boolean }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Kind: number, Id: string, Done: boolean }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_MissionNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
 	},
 })
 type BLINK_EVENTS_SYMBOL = typeof(Returns)

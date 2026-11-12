@@ -53,6 +53,12 @@ return table.freeze({
 	THRUST_HOLD_BACK = 1.45, -- studs; mãos recuadas para o lado do corpo
 	THRUST_DISTANCE = 1.9, -- studs; quanto a mão avança na estocada
 	THRUST_REST_ANGLE = -8, -- graus; negativo = a ponta um pouco para dentro
+	-- Escudo (attackAnim "bash"): segurado com as duas mãos à frente do corpo,
+	-- perto do centro; no golpe as duas mãos avançam juntas com o escudo.
+	SHIELD_HAND_X = 1.05, -- studs; mãos em x = ±SHIELD_HAND_X (repouso = HAND_X)
+	SHIELD_HOLD_FORWARD = -0.35, -- studs; as mãos um pouco mais à frente que o repouso
+	SHIELD_BASH_DISTANCE = 1.2, -- studs; quanto as mãos avançam no golpe
+	SHIELD_REST_ANGLE = 0, -- graus; o escudo fica de frente (não aponta para fora)
 
 	-- Comer (mordida de SurvivalConfig.EAT_DURATION): a mão direita leva a
 	-- comida até a boca (frente do corpo, no centro), dá EAT_BITES mordidas e volta.

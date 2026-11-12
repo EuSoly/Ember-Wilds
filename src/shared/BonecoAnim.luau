@@ -1,7 +1,8 @@
 --!strict
 -- Matemática das animações do boneco: parado (respira), andar (quique e
 -- balanço das mãos), golpe com ferramenta (arco de lado, ou estocada para a
--- frente nas lanças, attackAnim "thrust"), soco alternado de mão vazia e a
+-- frente nas lanças, attackAnim "thrust"; avanço das duas mãos com o escudo,
+-- attackAnim "bash"), soco alternado de mão vazia e a
 -- mordida (mão com a comida até a boca).
 -- Pura (sem APIs do Roblox): o renderer do cliente transforma a Pose em
 -- CFrames, e os testes do Lune verificam as curvas.
@@ -11,10 +12,18 @@ local C = require("./BonecoConfig")
 -- radianos em torno do pivô do golpe (centro do corpo).
 export type HandPose = { x: number, y: number, z: number, yaw: number }
 export type Pose = { bodyY: number, left: HandPose, right: HandPose }
--- speed = studs/s no plano. thrust = o item na mão golpeia com estocada.
+-- speed = studs/s no plano. thrust = o item na mão golpeia com estocada;
+-- bash = é um escudo (duas mãos à frente, avanço no golpe).
 -- eat = progresso da mordida (0 a 1, EatRules.progress) ou nil sem comer;
 -- comendo, a mão direita leva a comida à boca e o golpe não acontece.
-export type Input = { speed: number, using: boolean, hasTool: boolean, thrust: boolean?, eat: number? }
+export type Input = {
+	speed: number,
+	using: boolean,
+	hasTool: boolean,
+	thrust: boolean?,
+	bash: boolean?,
+	eat: number?,
+}
 
 -- Estado interno de um boneco. Quem usa só passa adiante (não mexa nos campos).
 export type State = {
@@ -130,10 +139,20 @@ function BonecoAnim.step(state: State, dt: number, input: Input): Pose
 	local hold = if input.hasTool and input.thrust then C.THRUST_HOLD_BACK else 0
 	local left: HandPose = { x = 0, y = breathe, z = hold + sway, yaw = 0 }
 	local right: HandPose = { x = 0, y = breathe, z = hold - sway, yaw = 0 }
+	-- Escudo: as duas mãos para o centro e à frente, juntas (sem balançar).
+	local shield = input.hasTool and input.bash == true
+	if shield then
+		local inward = C.HAND_X - C.SHIELD_HAND_X
+		left = { x = inward, y = breathe, z = C.SHIELD_HOLD_FORWARD, yaw = 0 }
+		right = { x = -inward, y = breathe, z = C.SHIELD_HOLD_FORWARD, yaw = 0 }
+	end
 
 	if state.swingActive then
 		local c = BonecoAnim.swingCurve(state.swingTime / C.SWING_PERIOD)
-		if input.hasTool and input.thrust then
+		if shield then
+			left.z -= C.SHIELD_BASH_DISTANCE * c
+			right.z -= C.SHIELD_BASH_DISTANCE * c
+		elseif input.hasTool and input.thrust then
 			right.z -= C.THRUST_DISTANCE * c
 			left.z += C.OTHER_HAND_RECOIL * c
 		elseif input.hasTool then

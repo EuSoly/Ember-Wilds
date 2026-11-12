@@ -59,6 +59,7 @@ type Entry = {
 	expression: ExpressionState.State,
 	hasTool: boolean,
 	thrust: boolean, -- o item na mão golpeia com estocada (attackAnim "thrust")
+	bash: boolean, -- o item na mão é escudo (attackAnim "bash": duas mãos à frente)
 	food: boolean, -- o item na mão é comida (o botão come, não golpeia)
 	crumbColor: string?,
 	eatUntil: number?,
@@ -209,6 +210,7 @@ local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
 	local bookResolved = Cosmetic.resolve(Defs, BOOK_SLOT, bookCosmeticId)
 	entry.hasTool = BonecoModel.setHeldItem(entry.boneco, id, bookResolved.id)
 	entry.thrust = id ~= nil and ToolModel.attackAnimOf(id) == "thrust"
+	entry.bash = id ~= nil and ToolModel.attackAnimOf(id) == "bash"
 	local def = if id then Defs.Items[id] else nil
 	local food = def and def.food
 	entry.food = food ~= nil
@@ -331,6 +333,7 @@ local function build(character: Model, hrp: BasePart)
 		expression = ExpressionState.new(),
 		hasTool = false,
 		thrust = false,
+		bash = false,
 		food = false,
 		crumbColor = nil,
 		eatUntil = nil,
@@ -450,6 +453,7 @@ local function animate(entry: Entry, dt: number, speed: number, now: number, ser
 			and not (character == Players.LocalPlayer.Character and CraftState.isCrafting()),
 		hasTool = entry.hasTool,
 		thrust = entry.thrust,
+		bash = entry.bash,
 		eat = eat,
 	})
 	-- Golpe novo (acerte ou não): o "vupt" do braço.

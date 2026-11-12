@@ -84,4 +84,15 @@ return {
 		eq(GatherRules.HIT_REACH, 3.5, "alcance")
 		eq(GatherRules.HIT_RADIUS, 2.5, "raio do golpe")
 	end,
+
+	["bush shows one berry per fruit left"] = function()
+		-- O modelo do arbusto (berry_bush_1) tem 5 peças Berry: com reserva 5,
+		-- cada frutinha colhida apaga exatamente uma.
+		local parts = 5
+		eq(bush.amount.min, parts, "reserva mínima = bagas do modelo")
+		eq(bush.amount.max, parts, "reserva máxima = bagas do modelo")
+		for amount = 0, parts do
+			eq(GatherRules.berriesVisible(amount, bush.amount.max, parts), amount, `reserva {amount}`)
+		end
+	end,
 }

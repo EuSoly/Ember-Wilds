@@ -95,7 +95,7 @@ local Resources: { [string]: ResourceDef } = {
 			regen = { amount = 1, every = 10 },
 		}),
 	}),
-	-- 7 frutinhas: uma por bolinha Berry do modelo (o arbusto mostra quantas tem).
+	-- 5 frutinhas: uma por bolinha Berry do modelo (o arbusto mostra quantas tem).
 	berry_bush = resource("berry_bush", 4, 2.8, 1, {
 		size = 7,
 		sizeJitter = 0.15,
@@ -104,7 +104,8 @@ local Resources: { [string]: ResourceDef } = {
 			points = 2,
 			material = "leaves",
 			fixedYield = 1,
-			amount = { min = 7, max = 7 },
+			-- Uma frutinha por baga do modelo (berry_bush_1 tem 5 peças Berry).
+			amount = { min = 5, max = 5 },
 			regen = { amount = 1, every = 10 },
 		}),
 	}),

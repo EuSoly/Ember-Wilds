@@ -28,6 +28,43 @@ local LifeService = {}
 export type LifeSummary = { points: number, days: number, currency: number, xp: number }
 
 local lives: { [Player]: LifeRules.Life } = {}
+local startedListeners: { (Player) -> () } = {}
+local endedListeners: { (Player) -> () } = {}
+
+local function notify(listeners: { (Player) -> () }, player: Player)
+	for _, listener in listeners do
+		task.spawn(listener, player)
+	end
+end
+
+-- Segundos vividos na vida atual (nil sem vida ativa). Relógio do LifeRules (os.clock).
+function LifeService.lifeSeconds(player: Player): number?
+	local life = lives[player]
+	if life == nil or not life.active then
+		return nil
+	end
+	return math.max(os.clock() - life.startedAt, 0)
+end
+
+-- Identifica a vida atual (nil sem vida). Uma vida não passa de um servidor
+-- para outro (sair = morte), então o instante de início basta.
+function LifeService.lifeKey(player: Player): string?
+	local life = lives[player]
+	if life == nil or not life.active then
+		return nil
+	end
+	return string.format("%.3f", life.startedAt)
+end
+
+-- Avisos de vida começando (personagem novo) e terminando (morte ou saída).
+-- As missões da Partida (QuestService) vivem entre os dois.
+function LifeService.onStarted(listener: (Player) -> ())
+	table.insert(startedListeners, listener)
+end
+
+function LifeService.onEnded(listener: (Player) -> ())
+	table.insert(endedListeners, listener)
+end
 
 -- Pontos da vida atual: número finito e não negativo, senão 0.
 local function readScore(player: Player): number
@@ -72,6 +109,9 @@ function LifeService.endLife(player: Player): LifeSummary?
 		StatsService.add(player, "xp_total", xp)
 	end
 	RankService.addLife(player, { points = score, days = days, xp = xp })
+	-- Avisa depois de gravar score_best/days_best: as conquistas de "uma vida
+	-- só" não piscam de pronta para não pronta entre a morte e a estatística.
+	notify(endedListeners, player)
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
 	return { points = score, days = days, currency = granted, xp = xp }
@@ -81,6 +121,7 @@ local function startLifeIfNone(player: Player)
 	local life = lives[player]
 	if life == nil or not life.active then
 		lives[player] = LifeRules.start(os.clock())
+		notify(startedListeners, player)
 	end
 end
 

@@ -795,7 +795,7 @@ return {
 		expectGather("tree", "wood", 1, "wood", 20, 80, 2, 10)
 		expectGather("rock", "stone", 2, "stone", 40, 40, 2, 10)
 		expectGather("gold_vein", "gold", 3, "gold", 20, 20, 1, 10)
-		expectGather("berry_bush", "berry", 2, "leaves", 7, 7, 1, 10)
+		expectGather("berry_bush", "berry", 2, "leaves", 5, 5, 1, 10)
 		assert(Defs.Resources.tree.gather.hardness == 0, "árvore dureza 0")
 		assert(Defs.Resources.rock.gather.hardness == 1, "rocha dureza 1")
 		assert(Defs.Resources.gold_vein.gather.hardness == 2, "ouro dureza 2")
@@ -1246,8 +1246,8 @@ return {
 			"bucket",
 			"water_bucket",
 		}
-		-- Liberados em 11/11 (structureitems.spec); poço e baldes continuam de teste.
-		local stillTest = { well = true, bucket = true, water_bucket = true }
+		-- Liberados em 11/11 (structureitems.spec); baldes em 12/11; o poço continua de teste.
+		local stillTest = { well = true }
 		for _, id in ids do
 			local item = (Defs.Items :: any)[id]
 			assert(item ~= nil and (item.testOnly == true) == (stillTest[id] == true), `{id}: liberação`)
@@ -1274,7 +1274,9 @@ return {
 		assert(cost("gold_extractor").stone == 60 and cost("gold_extractor").gold == 120, "extrator de ouro")
 		assert(cost("furnace").wood == 150 and cost("furnace").stone == 50 and cost("furnace").gold == 15, "fornalha")
 		assert(cost("bridge").wood == 15 and cost("roof").wood == 30 and cost("sign").wood == 20, "madeira")
-		assert(cost("well").stone == 60 and cost("bucket").wood == 15, "poço e balde")
+		assert(cost("well").stone == 60, "poço")
+		-- Balde vazio da config do Starve: 20 madeira + 1 linha (bucket_empty).
+		assert(cost("bucket").wood == 20 and cost("bucket").thread == 1, "balde")
 		assert(cost("stone_spike_door").stone_door == 1 and cost("stone_spike_door").stone == 140, "porta espinhos")
 		local items: any = Defs.Items
 		assert(
@@ -1405,5 +1407,11 @@ return {
 			containsError(errorsFor({ kind = "wall", health = 100, heatRadius = 5 }), "heatRadius"),
 			"calor na parede"
 		)
+	end,
+	["buckets show their model in the hand"] = function()
+		local items: any = Defs.Items
+		assert(items.bucket.handModel == true and items.water_bucket.handModel == true, "baldes na mão")
+		assert(items.book.handModel == true, "livro na mão (era exceção no ToolModel)")
+		assert(items.berry.handModel ~= true, "comida não usa modelo de Assets.Tools")
 	end,
 }
