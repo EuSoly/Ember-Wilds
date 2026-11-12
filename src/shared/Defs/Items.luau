@@ -1509,16 +1509,18 @@ local Items: { [string]: ItemDef } = {
 			bed = { regenFactor = 2, drainFactor = 0.5 },
 		},
 	},
-	bucket = { id = "bucket", testOnly = true, nameKey = "item.bucket", category = "misc", maxStack = 1 },
+	-- Baldes (WellService): o vazio enche perto da água (usar com ele na mão) e o
+	-- cheio enche o poço. Na mão com o modelo de Assets.Tools (handModel).
+	bucket = { id = "bucket", nameKey = "item.bucket", category = "misc", maxStack = 1, handModel = true },
 	water_bucket = {
 		id = "water_bucket",
-		testOnly = true,
 		nameKey = "item.water_bucket",
 		category = "misc",
 		maxStack = 1,
+		handModel = true,
 	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
-	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3 },
+	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3, handModel = true },
 }
 
 for _, item in Items do

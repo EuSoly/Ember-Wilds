@@ -116,6 +116,9 @@ export type ItemDef = {
 	testOnly: boolean?,
 	nameKey: string,
 	category: ItemCategory,
+	-- Item que não é ferramenta nem arma mas aparece na mão com o modelo de
+	-- ReplicatedStorage.Assets.Tools.<id> (livro, baldes). Ver ToolModel.
+	handModel: boolean?,
 	tier: string?, -- id em Tiers; nil = moldura neutra (recursos, comida)
 	maxStack: number,
 	-- Só para category "bag": quantos slots a mochila dá quando vestida.

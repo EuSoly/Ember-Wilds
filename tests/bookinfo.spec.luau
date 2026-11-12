@@ -148,8 +148,8 @@ return {
 	end,
 
 	["test-only items hide outside studio"] = function()
-		assert(not has(BookInfo.items("tools", false), "water_bucket"), "balde de teste fora do Studio")
-		assert(has(BookInfo.items("tools", true), "water_bucket"), "balde de teste no Studio")
+		assert(not has(BookInfo.items("tools", false), "machete"), "facão de teste fora do Studio")
+		assert(has(BookInfo.items("tools", true), "machete"), "facão de teste no Studio")
 	end,
 
 	["first tab finds the tab of an ingredient"] = function()
