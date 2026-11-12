@@ -20,6 +20,8 @@ local MissionConfig = require(Shared.Missions.MissionConfig)
 local MissionData = require(Shared.Missions.MissionData)
 local PeriodRules = require(Shared.Missions.PeriodRules)
 local AchievementRules = require(Shared.Missions.AchievementRules)
+local MissionRewards = require(Shared.Missions.MissionRewards)
+local CosmeticService = require(script.Parent.CosmeticService)
 local CreativeService = require(script.Parent.CreativeService)
 local DataService = require(script.Parent.DataService)
 local LifeService = require(script.Parent.LifeService)
@@ -209,6 +211,12 @@ local function snapshotOf(player: Player): any?
 		return nil
 	end
 	local inLife = LifeService.lifeSeconds(player) ~= nil
+	-- Guarda a melhor vida antes de contar: o que aparece pronto já está salvo.
+	if inLife and not CreativeService.isOn(player) then
+		local lifeValue = lifeValueOf(player)
+		PeriodRules.observeLife(save.Daily, Defs, lifeValue)
+		PeriodRules.observeLife(save.Weekly, Defs, lifeValue)
+	end
 	if CreativeService.isOn(player) then
 		return {
 			Creative = true,
@@ -259,7 +267,12 @@ function MissionService.setChrono(hooks: ChronoHooks)
 end
 
 local function give(player: Player, rewards: { Reward }, reason: string)
-	for _, reward in rewards do
+	local function owns(id: string): boolean
+		return CosmeticService.owns(player, id)
+	end
+	for _, original in rewards do
+		-- Skin exclusiva que o jogador já tem vira Golden Ember (spec).
+		local reward = MissionRewards.resolve(original, owns)
 		local ok, problem = ShopService.give(player, reward :: any, reason)
 		if not ok then
 			warn(`[MissionService] prêmio de {reason} para {player.Name} não entregue: {problem}`)

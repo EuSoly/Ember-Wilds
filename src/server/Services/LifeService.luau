@@ -80,7 +80,6 @@ function LifeService.endLife(player: Player): LifeSummary?
 	if seconds == nil then
 		return nil
 	end
-	notify(endedListeners, player)
 	local score = readScore(player)
 	local days = LifeRules.daysSurvived(seconds)
 	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score), "life_end")
@@ -100,6 +99,9 @@ function LifeService.endLife(player: Player): LifeSummary?
 		StatsService.add(player, "xp_total", xp)
 	end
 	RankService.addLife(player, { points = score, days = days, xp = xp })
+	-- Avisa depois de gravar score_best/days_best: as conquistas de "uma vida
+	-- só" não piscam de pronta para não pronta entre a morte e a estatística.
+	notify(endedListeners, player)
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
 	return { points = score, days = days, currency = granted, xp = xp }

@@ -19,9 +19,6 @@ local MissionsState = {}
 MissionsState.data = vide.source(nil :: any) :: Source<any>
 MissionsState.open = vide.source(false) :: Source<boolean>
 MissionsState.tab = vide.source("match" :: MissionView.Tab) :: Source<MissionView.Tab>
--- Último aviso chegado (a faixa mostra um de cada vez, na ordem).
-MissionsState.notice = vide.source(nil :: Notice?) :: Source<Notice?>
-
 local queue: { Notice } = {}
 local started = false
 
@@ -38,9 +35,9 @@ function MissionsState.claim(tab: MissionView.Tab, id: string)
 	Net.ClaimMission.Fire({ Kind = KIND_OF_TAB[tab], Id = id })
 end
 
--- Próximo aviso da fila (a faixa chama quando termina o anterior).
-function MissionsState.nextNotice()
-	MissionsState.notice(table.remove(queue, 1))
+-- Tira o próximo aviso da fila (a faixa mostra um de cada vez, na ordem).
+function MissionsState.takeNotice(): Notice?
+	return table.remove(queue, 1)
 end
 
 function MissionsState.start()
@@ -54,9 +51,6 @@ function MissionsState.start()
 	end)
 	Net.MissionNotice.On(function(notice)
 		table.insert(queue, notice)
-		if vide.untrack(MissionsState.notice) == nil then
-			MissionsState.nextNotice()
-		end
 	end)
 	Net.RequestMissions.Fire()
 end

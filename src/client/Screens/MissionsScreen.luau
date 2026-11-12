@@ -34,6 +34,8 @@ local TAB_HEIGHT = 38
 local HEADER_HEIGHT = 18
 local CARD_HEIGHT = 58
 local STATE_READY, STATE_CLAIMED, STATE_FAILED, STATE_LOCKED = 1, 2, 3, 4
+-- A moldura da janela sai fina: cantos em ~45% do tamanho que teriam pela altura.
+local WINDOW_SLICE_FACTOR = 0.45
 
 local MissionsScreen = {}
 
@@ -46,7 +48,7 @@ local serverNow = vide.source(Workspace:GetServerTimeNow())
 
 -- Imagem de uma peça (9 partes se tiver slice). Os cantos acompanham a altura
 -- do elemento: SliceScale = altura na tela / altura da arte.
-local function art(piece: Piece, props: { [any]: any }): ImageLabel
+local function art(piece: Piece, props: { [any]: any }, factor: number?): ImageLabel
 	local image = create("ImageLabel")({
 		BackgroundTransparency = 1,
 		Image = piece.image,
@@ -59,7 +61,7 @@ local function art(piece: Piece, props: { [any]: any }): ImageLabel
 	if piece.slice then
 		local function fit()
 			local height = image.AbsoluteSize.Y
-			image.SliceScale = if height > 0 then math.clamp(height / piece.size[2], 0.05, 1) else 1
+			image.SliceScale = if height > 0 then math.clamp(height / piece.size[2] * (factor or 1), 0.05, 1) else 1
 		end
 		image:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
 		fit()
@@ -204,14 +206,25 @@ local function card(view: CardView, order: () -> number): Instance
 			return if state == STATE_FAILED then R.paperShadow else R.paperLight
 		end,
 		BackgroundTransparency = if hasArt(P.CARD_ACTIVE) then 1 else 0,
-		-- Resgatada ou trancada fica apagada.
-		create("CanvasGroup")({
+		-- Resgatada ou trancada fica apagada (camada de papel por cima; um
+		-- CanvasGroup aqui dentro do Root, que já é CanvasGroup, não desenhava as imagens).
+		create("Frame")({
+			Name = "Dim",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundColor3 = R.paper,
+			BackgroundTransparency = 0.45,
+			BorderSizePixel = 0,
+			ZIndex = 8,
+			Visible = function()
+				local state = view.state()
+				return state == STATE_CLAIMED or state == STATE_LOCKED
+			end,
+			create("UICorner")({ CornerRadius = UDim.new(0, 10) }),
+		}),
+		create("Frame")({
+			Name = "Content",
 			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
-			GroupTransparency = function()
-				local state = view.state()
-				return if state == STATE_CLAIMED or state == STATE_LOCKED then 0.45 else 0
-			end,
 			if hasArt(P.CARD_ACTIVE)
 				then create("ImageLabel")({
 					Size = UDim2.fromScale(1, 1),
@@ -230,7 +243,7 @@ local function card(view: CardView, order: () -> number): Instance
 			icon(view.icon, {
 				Position = UDim2.new(0, 10, 0.5, 0),
 				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.fromScale(0, 0.72),
+				Size = UDim2.fromScale(0.72, 0.72),
 				SizeConstraint = Enum.SizeConstraint.RelativeYY,
 			}),
 			create("Frame")({
@@ -327,8 +340,7 @@ local function questCard(item: () -> any, index: number): Instance
 			return MissionView.questReward(def(), Defs)
 		end,
 		fraction = function()
-			local c = item()
-			return if c.Target > 0 then c.Progress / c.Target else 0
+			return MissionView.chronoFraction(item(), serverNow())
 		end,
 		state = function()
 			return item().State
@@ -511,7 +523,7 @@ local function tabButton(tab: Tab, order: number): Instance
 		icon(TAB_ICON[tab], {
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, 6, 0.5, 0),
-			Size = UDim2.fromScale(0, 0.74),
+			Size = UDim2.fromScale(0.74, 0.74),
 			SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		}),
 		Rustic.label({
@@ -548,8 +560,8 @@ local function list(): Instance
 	end
 	return create("ScrollingFrame")({
 		Name = "List",
-		Position = UDim2.fromOffset(14, TITLE_HEIGHT / 2 + TAB_HEIGHT + HEADER_HEIGHT + 16),
-		Size = UDim2.new(1, -28, 1, -(TITLE_HEIGHT / 2 + TAB_HEIGHT + HEADER_HEIGHT + 30)),
+		Position = UDim2.fromOffset(0, TAB_HEIGHT + HEADER_HEIGHT + 10),
+		Size = UDim2.new(1, 0, 1, -(TAB_HEIGHT + HEADER_HEIGHT + 10)),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		AutomaticCanvasSize = Enum.AutomaticSize.Y,
@@ -576,6 +588,7 @@ end
 
 local function window(): Instance
 	local P = MissionImages.PIECES
+	local windowHeight = vide.source(400)
 	local tabs: { Instance } = {
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,
@@ -588,6 +601,16 @@ local function window(): Instance
 	end
 	local body: { any } = {
 		create("UISizeConstraint")({ MaxSize = PANEL_MAX }),
+		-- Segura o toque dentro da janela (senão ele passa para o "Outside"
+		-- atrás e fecha a janela).
+		create("TextButton")({
+			Name = "Blocker",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Text = "",
+			AutoButtonColor = false,
+			ZIndex = 0,
+		}),
 		Rustic.plate({
 			Name = "TitlePlate",
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -617,30 +640,49 @@ local function window(): Instance
 			Activated = close,
 		}),
 		create("Frame")({
-			Name = "Tabs",
-			Position = UDim2.fromOffset(14, TITLE_HEIGHT / 2 + 8),
-			Size = UDim2.new(1, -28, 0, TAB_HEIGHT),
-			BackgroundTransparency = 1,
-			tabs,
-		}),
-		Rustic.label({
-			Name = "Header",
-			Position = UDim2.fromOffset(18, TITLE_HEIGHT / 2 + TAB_HEIGHT + 12),
-			Size = UDim2.new(1, -36, 0, HEADER_HEIGHT),
-			FontFace = Theme.font.body,
-			Text = function()
-				local tab = MissionsState.tab()
-				return MissionView.tabHeader(
-					tab :: any,
-					MissionsState.data(),
-					if tab == "match" then serverNow() else unixNow()
-				)
+			Name = "Inner",
+			-- Com a arte: dentro da moldura (a madeira mede ~160 px dos lados e
+			-- ~110 em cima/embaixo na arte; a escala acompanha a altura).
+			Position = function()
+				if not hasArt(P.WINDOW) then
+					return UDim2.fromOffset(14, TITLE_HEIGHT / 2 + 8)
+				end
+				local scale = windowHeight() * WINDOW_SLICE_FACTOR / P.WINDOW.size[2]
+				return UDim2.fromOffset(math.round(150 * scale) + 4, math.round(100 * scale) + 4)
 			end,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			dark = hasArt(P.WINDOW),
-			maxSize = 14,
+			Size = function()
+				if not hasArt(P.WINDOW) then
+					return UDim2.new(1, -28, 1, -(TITLE_HEIGHT / 2 + 22))
+				end
+				local scale = windowHeight() * WINDOW_SLICE_FACTOR / P.WINDOW.size[2]
+				return UDim2.new(1, -2 * (math.round(150 * scale) + 4), 1, -(math.round(210 * scale) + 8))
+			end,
+			BackgroundTransparency = 1,
+			create("Frame")({
+				Name = "Tabs",
+				Size = UDim2.new(1, 0, 0, TAB_HEIGHT),
+				BackgroundTransparency = 1,
+				tabs,
+			}),
+			Rustic.label({
+				Name = "Header",
+				Position = UDim2.fromOffset(4, TAB_HEIGHT + 4),
+				Size = UDim2.new(1, -8, 0, HEADER_HEIGHT),
+				FontFace = Theme.font.body,
+				Text = function()
+					local tab = MissionsState.tab()
+					return MissionView.tabHeader(
+						tab :: any,
+						MissionsState.data(),
+						if tab == "match" then serverNow() else unixNow()
+					)
+				end,
+				TextXAlignment = Enum.TextXAlignment.Left,
+				dark = hasArt(P.WINDOW),
+				maxSize = 14,
+			}),
+			list(),
 		}),
-		list(),
 	}
 	local props = {
 		Name = "Window",
@@ -651,7 +693,13 @@ local function window(): Instance
 		body,
 	}
 	if hasArt(P.WINDOW) then
-		return art(P.WINDOW, props)
+		local frame = art(P.WINDOW, props, WINDOW_SLICE_FACTOR)
+		local function measure()
+			windowHeight(frame.AbsoluteSize.Y)
+		end
+		frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(measure)
+		measure()
+		return frame
 	end
 	props.BackgroundColor3 = R.charcoal
 	props.BorderSizePixel = 0

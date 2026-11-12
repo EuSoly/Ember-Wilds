@@ -134,4 +134,20 @@ function MissionView.questReward(quest: Types.QuestDef, defs: Types.DefsTables):
 	return Strings.format("missions.reward.item_score", { item = name, n = quest.score })
 end
 
+-- Fração da barra de uma chrono quest pelo relógio (anda entre um retrato e
+-- outro): pronta/resgatada = cheia; falhou = onde parou; senão, tempo passado
+-- do prazo (Target = prazo em s, EndsAt = fim no relógio do servidor).
+function MissionView.chronoFraction(card: any, serverNow: number): number
+	if card.State == 1 or card.State == 2 then
+		return 1
+	end
+	if card.Target <= 0 then
+		return 0
+	end
+	if card.State == 3 then
+		return math.clamp(card.Progress / card.Target, 0, 1)
+	end
+	return math.clamp((card.Target - (card.EndsAt - serverNow)) / card.Target, 0, 1)
+end
+
 return MissionView

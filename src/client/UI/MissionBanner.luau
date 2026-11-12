@@ -1,7 +1,8 @@
 --!strict
 -- Faixa de aviso das Missões: desce do topo em 0,4 s com o nome da missão que
 -- completou (ou da chrono quest que falhou), fica 2,5 s e sobe. Um aviso por
--- vez, na ordem (MissionsState.notice/nextNotice). Aparece no menu e no jogo.
+-- vez, na ordem (MissionsState.takeNotice, num laço próprio: animar de dentro
+-- de um vide.effect travava a fila no Studio). Aparece no menu e no jogo.
 -- Arte em MissionImages (BANNER_DONE / BANNER_FAILED); sem arte, uma placa.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
@@ -24,7 +25,7 @@ local R = Theme.rustic
 local SLIDE = TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 local HIDE = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
 local STAY_SECONDS = 2.5
-local SHOWN = UDim2.new(0.5, 0, 0, 8)
+local SHOWN = UDim2.new(0.5, 0, 0, 132) -- abaixo do relógio do HUD
 local HIDDEN = UDim2.new(0.5, 0, 0, -140)
 
 local MissionBanner = {}
@@ -94,30 +95,36 @@ function MissionBanner.mount(playerGui: Instance): ScreenGui
 		}),
 	}) :: Frame
 
-	vide.effect(function()
-		local notice = MissionsState.notice()
-		if notice == nil then
-			return
+	local function show(notice: MissionsState.Notice)
+		done(notice.Done)
+		local key = if notice.Id == "inventory_full"
+			then "missions.inventory_full"
+			elseif notice.Done then "missions.banner.done"
+			else "missions.banner.failed"
+		title(Strings.get(key))
+		subtitle(nameOf(notice))
+		SoundPlayer.play(if notice.Done then "notify_success" else "notify_alert")
+		banner.Position = HIDDEN
+		TweenService:Create(banner, SLIDE, { Position = SHOWN }):Play()
+		task.wait(SLIDE.Time + STAY_SECONDS)
+		TweenService:Create(banner, HIDE, { Position = HIDDEN }):Play()
+		task.wait(HIDE.Time)
+	end
+
+	task.spawn(function()
+		while true do
+			local notice = MissionsState.takeNotice()
+			if notice then
+				local ok, err = pcall(function()
+					show(notice)
+				end)
+				if not ok then
+					warn(`[MissionBanner] {err}`)
+				end
+			else
+				task.wait(0.25)
+			end
 		end
-		vide.untrack(function()
-			done(notice.Done)
-			local key = if notice.Id == "inventory_full"
-				then "missions.inventory_full"
-				elseif notice.Done then "missions.banner.done"
-				else "missions.banner.failed"
-			title(Strings.get(key))
-			subtitle(nameOf(notice))
-			SoundPlayer.play(if notice.Done then "notify_success" else "notify_alert")
-		end)
-		task.spawn(function()
-			banner.Position = HIDDEN
-			TweenService:Create(banner, SLIDE, { Position = SHOWN }):Play()
-			task.wait(SLIDE.Time + STAY_SECONDS)
-			local hide = TweenService:Create(banner, HIDE, { Position = HIDDEN })
-			hide:Play()
-			hide.Completed:Wait()
-			MissionsState.nextNotice()
-		end)
 	end)
 
 	local gui = create("ScreenGui")({

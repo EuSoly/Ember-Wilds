@@ -7,6 +7,8 @@ local MissionConfig = require("../src/shared/Missions/MissionConfig")
 local MissionData = require("../src/shared/Missions/MissionData")
 local PeriodRules = require("../src/shared/Missions/PeriodRules")
 local AchievementRules = require("../src/shared/Missions/AchievementRules")
+local MissionRewards = require("../src/shared/Missions/MissionRewards")
+local ShopConfig = require("../src/shared/Shop/ShopConfig")
 
 -- Segunda 09/11/2026 00:00:00 em Brasília (o mesmo instante do rankrules.spec).
 local MON_09_0000 = 1794193200
@@ -259,5 +261,31 @@ return {
 		assert(PeriodRules.endsAt("daily", day - 1) == MON_09_0000 - 1, "dia anterior acaba antes da meia-noite")
 		local week = RankRules.weekIndex(MON_09_0000)
 		assert(PeriodRules.endsAt("weekly", week) == RankRules.weekEnd(week), "semanal = fim da semana do ranking")
+	end,
+
+	["big user ids still roll a new day"] = function()
+		local userId = 9500000001
+		local a = PeriodRules.seedFor(userId, 20769, "daily")
+		local b = PeriodRules.seedFor(userId, 20770, "daily")
+		assert(a ~= b, "dias seguidos com a mesma semente")
+		assert(a == math.floor(a) and a < 2 ^ 53, "semente fora da faixa exata")
+		local weekly = PeriodRules.seedFor(userId, 20769, "weekly")
+		assert(weekly ~= a, "diária e semanal com a mesma semente")
+	end,
+
+	["owned exclusive skin turns into golden ember"] = function()
+		local skin = { kind = "cosmetic", id = "body_lobo" }
+		local owns = function(id: string): boolean
+			return id == "body_lobo"
+		end
+		local swapped = MissionRewards.resolve(skin, owns)
+		assert(
+			swapped.kind == "ember" and swapped.amount == ShopConfig.DUPLICATE_REFUND.paid,
+			"não virou Golden Ember"
+		)
+		local kept = MissionRewards.resolve({ kind = "cosmetic", id = "body_cervo" }, owns)
+		assert(kept.kind == "cosmetic" and kept.id == "body_cervo", "skin nova trocada")
+		local ember = MissionRewards.resolve({ kind = "ember", amount = 40 }, owns)
+		assert(ember.amount == 40, "outro prêmio mudou")
 	end,
 }

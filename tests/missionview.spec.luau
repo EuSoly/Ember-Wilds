@@ -113,4 +113,13 @@ return {
 		local text = MissionView.questReward(Defs.Quests.survive, Defs)
 		assert(text == "Gema verde · 7500 pts", text)
 	end,
+
+	["chrono bar follows the clock"] = function()
+		local c = card("survive", 0, 0, 1920, 1000)
+		assert(MissionView.chronoFraction(c, 1000 - 1920) == 0, "no começo")
+		assert(math.abs(MissionView.chronoFraction(c, 1000 - 960) - 0.5) < 1e-9, "na metade")
+		assert(MissionView.chronoFraction(c, 2000) == 1, "passou do prazo")
+		local done = card("survive", 1, 1920, 1920, 0)
+		assert(MissionView.chronoFraction(done, 0) == 1, "pronta = cheia")
+	end,
 }

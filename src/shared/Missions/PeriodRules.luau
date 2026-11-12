@@ -36,6 +36,13 @@ local function poolOf(period: Period, defs: Types.DefsTables): { string }
 	return ids
 end
 
+-- Semente do sorteio: mesma para o mesmo jogador e período. O UserId é
+-- reduzido antes de multiplicar: ids grandes (≈ 9e9) passariam de 2^53 e dias
+-- seguidos cairiam na mesma semente.
+function PeriodRules.seedFor(userId: number, index: number, period: Period): number
+	return (userId % 2 ^ 31) * 1000003 + index * (if period == "daily" then 1 else 7919)
+end
+
 -- Garante o sorteio do período `index`. Se o guardado é de outro período (ou
 -- nunca houve), sorteia COUNT missões distintas (mesma semente para o mesmo
 -- jogador e período: reconectar não muda), grava a base de cada estatística e
@@ -51,7 +58,7 @@ function PeriodRules.ensure(
 	if save.Index == index and #save.Slots > 0 then
 		return false
 	end
-	local rng = Rng.new(userId * 1000003 + index * (if period == "daily" then 1 else 7919))
+	local rng = Rng.new(PeriodRules.seedFor(userId, index, period))
 	local pool = poolOf(period, defs)
 	local picks = math.min(countOf(period), #pool)
 	-- Fisher–Yates parcial: as `picks` primeiras posições viram o sorteio.
