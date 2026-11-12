@@ -34,6 +34,8 @@ type Badge = MissionView.Badge
 local PANEL_MAX = Vector2.new(760, 520)
 local TITLE_HEIGHT = 46
 local TAB_HEIGHT = 38
+-- Largura da lateral inclinada da aba na tela (a arte sobe ~12% de cada lado).
+local TAB_SLANT = 18
 local HEADER_HEIGHT = 18
 local CARD_HEIGHT = 74
 -- Os cartões pronto e falhou têm uma fita na ponta direita da arte (de x 800 a
@@ -681,23 +683,38 @@ local function tabButton(tab: Tab, order: number): Instance
 				ScaleType = Enum.ScaleType.Stretch,
 			})
 			else create("UIStroke")({ Color = R.outline, Thickness = 2 }),
-		icon(TAB_ICON[tab], {
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 6, 0.5, 0),
-			Size = UDim2.fromScale(0.74, 0.74),
-			SizeConstraint = Enum.SizeConstraint.RelativeYY,
-		}),
-		Rustic.label({
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, TAB_HEIGHT, 0.5, 0),
-			Size = UDim2.new(1, -(TAB_HEIGHT + 6), 0.6, 0),
-			FontFace = Theme.font.number,
-			Text = Strings.get("missions.tab." .. tab),
-			TextXAlignment = Enum.TextXAlignment.Left,
-			TextColor3 = function()
-				return if active() then R.outline else R.cream
-			end,
-			maxSize = 16,
+		-- Ícone + nome centrados na parte reta da aba (as laterais da arte são
+		-- inclinadas: encostado à esquerda, o ícone ficava em cima da quina).
+		create("Frame")({
+			Name = "Content",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.54),
+			Size = UDim2.new(1, -2 * TAB_SLANT, 1, 0),
+			BackgroundTransparency = 1,
+			create("UIListLayout")({
+				FillDirection = Enum.FillDirection.Horizontal,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				Padding = UDim.new(0, 5),
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}),
+			icon(TAB_ICON[tab], {
+				LayoutOrder = 1,
+				Size = UDim2.fromOffset(math.round(TAB_HEIGHT * 0.66), math.round(TAB_HEIGHT * 0.66)),
+			}),
+			create("TextLabel")({
+				Name = "Label",
+				LayoutOrder = 2,
+				Size = UDim2.fromOffset(0, TAB_HEIGHT),
+				AutomaticSize = Enum.AutomaticSize.X,
+				BackgroundTransparency = 1,
+				FontFace = Theme.font.number,
+				TextSize = 16,
+				Text = Strings.get("missions.tab." .. tab),
+				TextColor3 = function()
+					return if active() then R.outline else R.cream
+				end,
+			}),
 		}),
 		dot(function()
 			return (MissionsState.badges() :: any)[tab]
