@@ -20,6 +20,7 @@ local LifeRules = require(Shared.Data.LifeRules)
 local ChronoRules = require(Shared.Missions.ChronoRules)
 local CharacterService = require(script.Parent.CharacterService)
 local CreativeService = require(script.Parent.CreativeService)
+local GhostService = require(script.Parent.GhostService)
 local InventoryService = require(script.Parent.InventoryService)
 local LifeService = require(script.Parent.LifeService)
 local MissionService = require(script.Parent.MissionService)
@@ -183,6 +184,20 @@ function QuestService.Start(_self)
 		local def = Defs.Mobs[mob.id]
 		if def and ChronoRules.isPeacefulTarget(def.behavior) then
 			fail(attacker, "peaceful")
+		end
+	end)
+	-- Virou fantasma: perdeu a vida (mesmo podendo ressuscitar).
+	GhostService.onGhost(function(player)
+		local state = states[player]
+		if state == nil then
+			return
+		end
+		local failed = ChronoRules.failAll(state)
+		for _, id in failed do
+			notice(player, id, false)
+		end
+		if #failed > 0 then
+			MissionService.publish(player)
 		end
 	end)
 	StructureService.onCreated(function(entry)

@@ -191,6 +191,7 @@ Queue.Reliable[38] = table.create(256)
 Queue.Reliable[39] = table.create(256)
 Queue.Reliable[41] = table.create(256)
 Queue.Reliable[42] = table.create(256)
+Queue.Reliable[43] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
@@ -883,6 +884,13 @@ function SerdesFunctions.WriteEVENT_MissionsData(Value: { Creative: boolean, InL
 	-- END ARRAY
 end
 
+function SerdesFunctions.ReadEVENT_WatchMissions(): (boolean)
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	return Value
+end
+
 function SerdesFunctions.ReadEVENT_RequestMissions(): (nil)
 	return nil
 end
@@ -904,7 +912,7 @@ end
 function SerdesFunctions.WriteEVENT_MissionNotice(Value: { Kind: number, Id: string, Done: boolean }): ()
 	-- Allocate BLOCK: 4 bytes
 	local BLOCK_START = Allocate(4)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 43)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 44)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Kind)
 	local Length = #Value.Id
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
@@ -1083,6 +1091,9 @@ if not RunService:IsRunning() then
 		FireAll = NOOP,
 		FireList = NOOP,
 		FireExcept = NOOP
+	},
+	WatchMissions = {
+		On = NOOP
 	},
 	RequestMissions = {
 		On = NOOP
@@ -1439,24 +1450,34 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 				table.insert(Queue.Reliable[39], {Player, Value} :: {any})
 			end
 		elseif Index == 41 then
-			local Value: nil = SerdesFunctions.ReadEVENT_RequestMissions()
+			local Value: boolean = SerdesFunctions.ReadEVENT_WatchMissions()
 			if Events.Reliable[41] ~= nil then
 				task.spawn(Events.Reliable[41], Player, Value)
 			else
 				if #Queue.Reliable[41] > 256 then
-					warn("[Blink]: Event queue of \"RequestMissions\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"WatchMissions\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[41], {Player, Value} :: {any})
 			end
 		elseif Index == 42 then
-			local Value: { Kind: number, Id: string } = SerdesFunctions.ReadEVENT_ClaimMission()
+			local Value: nil = SerdesFunctions.ReadEVENT_RequestMissions()
 			if Events.Reliable[42] ~= nil then
 				task.spawn(Events.Reliable[42], Player, Value)
 			else
 				if #Queue.Reliable[42] > 256 then
-					warn("[Blink]: Event queue of \"ClaimMission\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"RequestMissions\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[42], {Player, Value} :: {any})
+			end
+		elseif Index == 43 then
+			local Value: { Kind: number, Id: string } = SerdesFunctions.ReadEVENT_ClaimMission()
+			if Events.Reliable[43] ~= nil then
+				task.spawn(Events.Reliable[43], Player, Value)
+			else
+				if #Queue.Reliable[43] > 256 then
+					warn("[Blink]: Event queue of \"ClaimMission\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[43], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -2510,8 +2531,8 @@ local Returns = table.freeze({
 			end
 		end,
 	},
-	RequestMissions = {
-		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+	WatchMissions = {
+		On = function(Listener: (Player: Player, Value: boolean) -> ()): () -> ()
 			Events.Reliable[41] = Listener
 			for Index, Arguments in Queue.Reliable[41] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -2524,8 +2545,8 @@ local Returns = table.freeze({
 			end
 		end
 	},
-	ClaimMission = {
-		On = function(Listener: (Player: Player, Value: { Kind: number, Id: string }) -> ()): () -> ()
+	RequestMissions = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
 			Events.Reliable[42] = Listener
 			for Index, Arguments in Queue.Reliable[42] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -2534,6 +2555,20 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[42] == Listener then
 					Events.Reliable[42] = nil
+				end
+			end
+		end
+	},
+	ClaimMission = {
+		On = function(Listener: (Player: Player, Value: { Kind: number, Id: string }) -> ()): () -> ()
+			Events.Reliable[43] = Listener
+			for Index, Arguments in Queue.Reliable[43] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[43] = {}
+			return function (): ()
+				if Events.Reliable[43] == Listener then
+					Events.Reliable[43] = nil
 				end
 			end
 		end

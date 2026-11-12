@@ -519,6 +519,15 @@ event MissionsData {
 	}
 }
 
+-- Janela de Missões aberta (true) ou fechada (false): fechada, o servidor só
+-- manda o retrato quando muda o que aparece sem abrir (bolinhas, estados).
+event WatchMissions {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: boolean
+}
+
 event RequestMissions {
 	From: Client,
 	Type: Reliable,

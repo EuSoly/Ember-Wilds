@@ -43,7 +43,9 @@ MissionsScreen.open = MissionsState.open
 MissionsScreen.toggle = MissionsState.toggle
 
 -- Relógios da tela (andam de segundo em segundo enquanto a janela existe).
-local unixNow = vide.source(os.time())
+-- unixNow: relógio do servidor em unix (o EndsAt das diárias é unix): não
+-- depende do relógio do aparelho.
+local unixNow = vide.source(math.floor(Workspace:GetServerTimeNow()))
 local serverNow = vide.source(Workspace:GetServerTimeNow())
 
 -- Imagem de uma peça (9 partes se tiver slice). Os cantos acompanham a altura
@@ -170,10 +172,8 @@ local function claimButton(onClaim: () -> ()): Instance
 		kind = "ember",
 		text = Strings.get("missions.claim"),
 		maxSize = 16,
-		Activated = function()
-			SoundPlayer.play("level_up")
-			onClaim()
-		end,
+		-- O som toca quando o servidor confirma (MissionsState).
+		Activated = onClaim,
 	})
 end
 
@@ -712,10 +712,19 @@ end
 -- liga e desliga pelo Template.show (fade no CanvasGroup "Root").
 function MissionsScreen.mount(playerGui: Instance): ScreenGui?
 	MissionsState.start()
+	-- Aberta, o servidor manda cada mudança; fechada, só o que muda as bolinhas.
+	local watched: boolean? = nil
+	vide.effect(function()
+		local open = MissionsState.open()
+		if open ~= watched then
+			watched = open
+			MissionsState.watch(open)
+		end
+	end)
 	task.spawn(function()
 		while true do
 			task.wait(1)
-			unixNow(os.time())
+			unixNow(math.floor(Workspace:GetServerTimeNow()))
 			serverNow(Workspace:GetServerTimeNow())
 		end
 	end)

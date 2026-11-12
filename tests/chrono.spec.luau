@@ -104,4 +104,12 @@ return {
 		local fresh = ChronoRules.start(Defs)
 		assert(fresh.survive.status == "active" and fresh.clean_hands.status == "active", "vida nova não zerou")
 	end,
+
+	["becoming a ghost fails every active quest"] = function()
+		local state = ChronoRules.start(Defs)
+		ChronoRules.tick(state, Defs, 4 * DAY)
+		local failed = ChronoRules.failAll(state)
+		assert(ids(failed) == "clean_hands", `falhou {ids(failed)}`)
+		assert(state.survive.status == "done", "pronta não pode falhar")
+	end,
 }

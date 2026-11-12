@@ -288,4 +288,50 @@ return {
 		local ember = MissionRewards.resolve({ kind = "ember", amount = 40 }, owns)
 		assert(ember.amount == 40, "outro prêmio mudou")
 	end,
+
+	["life missions ignore the part of the life lived before the roll"] = function()
+		local save = MissionData.empty().Daily
+		-- Sorteio feito no meio de uma vida de 2 dias ("L1").
+		PeriodRules.ensure(save, "daily", 100, 42, reader({}), Defs, lifeOf(2, 3000), "L1")
+		local slot = { Id = "daily_days", Base = 2, Best = 0, Claimed = false, LifeKey = "L1" }
+		save.Slots = { slot }
+		local def = Defs.Missions.daily_days
+		assert(PeriodRules.progress(slot, def, reader({}), lifeOf(2, 0), "L1") == 0, "a vida antes do sorteio contou")
+		assert(PeriodRules.progress(slot, def, reader({}), lifeOf(3, 0), "L1") == 1, "1 dia depois do sorteio")
+		assert(PeriodRules.progress(slot, def, reader({}), lifeOf(1, 0), "L2") == 1, "vida nova conta inteira")
+		PeriodRules.observeLife(save, Defs, lifeOf(3, 0), "L1")
+		assert(slot.Best == 1, `Best guardou {slot.Best}`)
+	end,
+
+	["roll records the life base for life missions"] = function()
+		local save = MissionData.empty().Daily
+		PeriodRules.ensure(save, "daily", 100, 42, reader({}), Defs, lifeOf(2, 3000), "L1")
+		for _, slot in save.Slots do
+			local life = Defs.Missions[slot.Id].track.life
+			if life == "days" then
+				assert(slot.Base == 2 and slot.LifeKey == "L1", `{slot.Id}: base {slot.Base} {slot.LifeKey}`)
+			elseif life == "score" then
+				assert(slot.Base == 3000 and slot.LifeKey == "L1", `{slot.Id}: base {slot.Base}`)
+			else
+				assert(slot.LifeKey == "", `{slot.Id}: LifeKey em missão de estatística`)
+			end
+		end
+	end,
+
+	["sanitize drops slots of the wrong period and repeated ids"] = function()
+		local raw = {
+			Daily = {
+				Index = 5,
+				Slots = {
+					{ Id = "daily_wood", Base = 1, Best = 0, Claimed = false },
+					{ Id = "daily_wood", Base = 2, Best = 0, Claimed = true },
+					{ Id = "weekly_gold", Base = 0, Best = 0, Claimed = false },
+				},
+			},
+		}
+		local save = MissionData.sanitize(raw, Defs)
+		assert(#save.Daily.Slots == 1, `{#save.Daily.Slots} slots`)
+		assert(save.Daily.Slots[1].Base == 1, "ficou o repetido em vez do primeiro")
+		assert(save.Daily.Slots[1].LifeKey == "", "LifeKey padrão")
+	end,
 }

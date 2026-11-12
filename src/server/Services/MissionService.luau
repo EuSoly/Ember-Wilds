@@ -60,6 +60,10 @@ local readySeen: { [Player]: { [string]: boolean } } = {}
 local devOffset: { [Player]: { daily: number, weekly: number } } = {}
 -- Dias e pontos da vida na última volta do laço (publica quando mudam).
 local lastLife: { [Player]: string } = {}
+-- Janela aberta (Net.WatchMissions)? Fechada, o retrato só vai quando muda o
+-- que aparece sem abrir: bolinhas, estados e o sorteio (não a contagem).
+local watching: { [Player]: boolean } = {}
+local lastSignature: { [Player]: string } = {}
 
 local function missionsOf(player: Player): MissionsSave?
 	local data = DataService.data(player)
@@ -105,9 +109,13 @@ end
 -- Sorteia/vira os dois períodos se precisar. Devolve true se algo mudou.
 local function ensurePeriods(player: Player, save: MissionsSave): boolean
 	local read = readerOf(player)
+	local lifeValue, lifeKey = lifeValueOf(player), LifeService.lifeKey(player)
 	local changed = false
 	for _, period: Period in { "daily", "weekly" } :: { Period } do
-		if PeriodRules.ensure(periodSave(save, period), period, indexOf(player, period), player.UserId, read, Defs) then
+		local target = periodSave(save, period)
+		if
+			PeriodRules.ensure(target, period, indexOf(player, period), player.UserId, read, Defs, lifeValue, lifeKey)
+		then
 			changed = true
 		end
 	end
@@ -116,17 +124,18 @@ end
 
 local function periodCards(player: Player, save: PeriodSave, period: Period): ({ MissionCard }, MissionCard)
 	local read, lifeValue = readerOf(player), lifeValueOf(player)
+	local lifeKey = LifeService.lifeKey(player)
 	local endsAt = PeriodRules.endsAt(period, save.Index)
 	local cards: { MissionCard } = {}
 	for _, slot in save.Slots do
 		local def = Defs.Missions[slot.Id]
 		local state = if slot.Claimed
 			then STATE_CLAIMED
-			elseif PeriodRules.isReady(slot, def, read, lifeValue) then STATE_READY
+			elseif PeriodRules.isReady(slot, def, read, lifeValue, lifeKey) then STATE_READY
 			else STATE_ACTIVE
 		table.insert(cards, {
 			Id = slot.Id,
-			Progress = PeriodRules.progress(slot, def, read, lifeValue),
+			Progress = PeriodRules.progress(slot, def, read, lifeValue, lifeKey),
 			Target = def.target,
 			State = state,
 			EndsAt = endsAt,
@@ -213,9 +222,9 @@ local function snapshotOf(player: Player): any?
 	local inLife = LifeService.lifeSeconds(player) ~= nil
 	-- Guarda a melhor vida antes de contar: o que aparece pronto já está salvo.
 	if inLife and not CreativeService.isOn(player) then
-		local lifeValue = lifeValueOf(player)
-		PeriodRules.observeLife(save.Daily, Defs, lifeValue)
-		PeriodRules.observeLife(save.Weekly, Defs, lifeValue)
+		local lifeValue, lifeKey = lifeValueOf(player), LifeService.lifeKey(player)
+		PeriodRules.observeLife(save.Daily, Defs, lifeValue, lifeKey)
+		PeriodRules.observeLife(save.Weekly, Defs, lifeValue, lifeKey)
 	end
 	if CreativeService.isOn(player) then
 		return {
@@ -245,14 +254,34 @@ local function snapshotOf(player: Player): any?
 	}
 end
 
--- Manda o retrato completo para o dono (e avisa o que ficou pronto).
-function MissionService.publish(player: Player)
+-- O que muda o que aparece com a janela fechada (bolinhas, estados, sorteio).
+local function signatureOf(snapshot: any): string
+	local parts = { tostring(snapshot.Creative), tostring(snapshot.InLife) }
+	for _, list in { snapshot.Chrono, snapshot.Daily, snapshot.Weekly, { snapshot.DailyFinal, snapshot.WeeklyFinal } } do
+		for _, card in list do
+			table.insert(parts, `{card.Id}:{card.State}`)
+		end
+	end
+	for _, card in snapshot.Achievements do
+		table.insert(parts, `{card.Id}:{card.Claimed}:{card.Ready}`)
+	end
+	return table.concat(parts, "|")
+end
+
+-- Manda o retrato para o dono (e avisa o que ficou pronto). Com a janela
+-- fechada, só quando muda o que aparece sem abrir; `force` manda sempre.
+function MissionService.publish(player: Player, force: boolean?)
 	local snapshot = snapshotOf(player)
 	if snapshot == nil then
 		return
 	end
 	dirty[player] = nil
 	noticeReady(player, snapshot, readySeen[player] == nil)
+	local signature = signatureOf(snapshot)
+	if not force and not watching[player] and lastSignature[player] == signature then
+		return
+	end
+	lastSignature[player] = signature
 	Net.MissionsData.Fire(player, snapshot)
 end
 
@@ -292,7 +321,8 @@ local function claimPeriod(player: Player, save: MissionsSave, period: Period, i
 		end
 		return
 	end
-	local rewards = PeriodRules.claim(target, id, Defs, readerOf(player), lifeValueOf(player))
+	local rewards =
+		PeriodRules.claim(target, id, Defs, readerOf(player), lifeValueOf(player), LifeService.lifeKey(player))
 	if rewards then
 		give(player, rewards, `mission:{id}`)
 	end
@@ -337,12 +367,12 @@ local function tick(player: Player)
 	if save == nil or CreativeService.isOn(player) then
 		return
 	end
-	local lifeValue = lifeValueOf(player)
+	local lifeValue, lifeKey = lifeValueOf(player), LifeService.lifeKey(player)
 	local changed = ensurePeriods(player, save)
-	if PeriodRules.observeLife(save.Daily, Defs, lifeValue) then
+	if PeriodRules.observeLife(save.Daily, Defs, lifeValue, lifeKey) then
 		changed = true
 	end
-	if PeriodRules.observeLife(save.Weekly, Defs, lifeValue) then
+	if PeriodRules.observeLife(save.Weekly, Defs, lifeValue, lifeKey) then
 		changed = true
 	end
 	-- Missões e conquistas de vida (dias, pontos) andam sem estatística mudar.
@@ -417,9 +447,15 @@ function MissionService.Start(_self)
 	LifeService.onStarted(MissionService.markDirty)
 	LifeService.onEnded(MissionService.markDirty)
 	Net.ClaimMission.On(onClaim)
+	Net.WatchMissions.On(function(player, open)
+		watching[player] = open == true
+		if open then
+			MissionService.publish(player, true)
+		end
+	end)
 	Net.RequestMissions.On(function(player)
 		if Throttle.allow(throttle, player, "request", os.clock()) then
-			MissionService.publish(player)
+			MissionService.publish(player, true)
 		end
 	end)
 	Players.PlayerRemoving:Connect(function(player)
@@ -427,6 +463,8 @@ function MissionService.Start(_self)
 		readySeen[player] = nil
 		devOffset[player] = nil
 		lastLife[player] = nil
+		watching[player] = nil
+		lastSignature[player] = nil
 		Throttle.forget(throttle, player)
 	end)
 	task.spawn(function()

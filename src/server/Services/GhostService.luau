@@ -26,6 +26,13 @@ type Ghost = { source: GhostRules.Source, untilAt: number, cause: string }
 
 local GhostService = {}
 
+local ghostListeners: { (Player) -> () } = {}
+
+-- Aviso quando um jogador vira fantasma (as chrono quests em andamento falham).
+function GhostService.onGhost(listener: (player: Player) -> ())
+	table.insert(ghostListeners, listener)
+end
+
 local ghosts: { [Player]: Ghost } = {}
 -- Já passou pelo fantasma nesta morte (o tempo acabou): morre de verdade.
 local spent: { [Player]: boolean } = {}
@@ -115,6 +122,9 @@ function GhostService.tryGhost(player: Player, causeKey: string, killer: Player?
 	ghosts[player] = { source = source, untilAt = untilAt, cause = causeKey }
 	player:SetAttribute(StatNames.GhostUntil, untilAt)
 	player:SetAttribute(StatNames.Health, 1)
+	for _, listener in ghostListeners do
+		task.spawn(listener, player)
+	end
 	return true
 end
 

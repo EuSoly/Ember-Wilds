@@ -46,6 +46,16 @@ function LifeService.lifeSeconds(player: Player): number?
 	return math.max(os.clock() - life.startedAt, 0)
 end
 
+-- Identifica a vida atual (nil sem vida). Uma vida não passa de um servidor
+-- para outro (sair = morte), então o instante de início basta.
+function LifeService.lifeKey(player: Player): string?
+	local life = lives[player]
+	if life == nil or not life.active then
+		return nil
+	end
+	return string.format("%.3f", life.startedAt)
+end
+
 -- Avisos de vida começando (personagem novo) e terminando (morte ou saída).
 -- As missões da Partida (QuestService) vivem entre os dois.
 function LifeService.onStarted(listener: (Player) -> ())

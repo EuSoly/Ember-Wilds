@@ -174,7 +174,7 @@ Queue.Reliable[28] = table.create(256)
 Queue.Reliable[30] = table.create(256)
 Queue.Reliable[32] = table.create(256)
 Queue.Reliable[40] = table.create(256)
-Queue.Reliable[43] = table.create(256)
+Queue.Reliable[44] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
@@ -908,16 +908,23 @@ function SerdesFunctions.ReadEVENT_MissionsData(): ({ Creative: boolean, InLife:
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_WatchMissions(Value: boolean): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 41)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value and 1 or 0)
+end
+
 function SerdesFunctions.WriteEVENT_RequestMissions(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 41)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 42)
 end
 
 function SerdesFunctions.WriteEVENT_ClaimMission(Value: { Kind: number, Id: string }): ()
 	-- Allocate BLOCK: 3 bytes
 	local BLOCK_START = Allocate(3)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 42)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 43)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Kind)
 	local Length = #Value.Id
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
@@ -1068,6 +1075,9 @@ if not RunService:IsRunning() then
 	},
 	MissionsData = {
 		On = NOOP
+	},
+	WatchMissions = {
+		Fire = NOOP
 	},
 	RequestMissions = {
 		Fire = NOOP
@@ -1250,15 +1260,15 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				end
 				table.insert(Queue.Reliable[40], {Value} :: {any})
 			end
-		elseif Index == 43 then
+		elseif Index == 44 then
 			local Value: { Kind: number, Id: string, Done: boolean } = SerdesFunctions.ReadEVENT_MissionNotice()
-			if Events.Reliable[43] ~= nil then
-				task.spawn(Events.Reliable[43], Value)
+			if Events.Reliable[44] ~= nil then
+				task.spawn(Events.Reliable[44], Value)
 			else
-				if #Queue.Reliable[43] > 256 then
+				if #Queue.Reliable[44] > 256 then
 					warn("[Blink]: Event queue of \"MissionNotice\" exceeded 256, did you forget to implement a listener?")
 				end
-				table.insert(Queue.Reliable[43], {Value} :: {any})
+				table.insert(Queue.Reliable[44], {Value} :: {any})
 			end
 		end
 	end
@@ -1623,6 +1633,11 @@ local Returns = table.freeze({
 			end
 		end
 	},
+	WatchMissions = {
+		Fire = function(Value: boolean): ()
+			SerdesFunctions.WriteEVENT_WatchMissions(Value)
+		end
+	},
 	RequestMissions = {
 		Fire = function(Value: nil): ()
 			SerdesFunctions.WriteEVENT_RequestMissions(Value)
@@ -1635,14 +1650,14 @@ local Returns = table.freeze({
 	},
 	MissionNotice = {
 		On = function(Listener: (Value: { Kind: number, Id: string, Done: boolean }) -> ()): () -> ()
-			Events.Reliable[43] = Listener
-			for Index, Arguments in Queue.Reliable[43] do
+			Events.Reliable[44] = Listener
+			for Index, Arguments in Queue.Reliable[44] do
 				task.spawn(Listener, table.unpack(Arguments))
 			end
-			Queue.Reliable[43] = {}
+			Queue.Reliable[44] = {}
 			return function (): ()
-				if Events.Reliable[43] == Listener then
-					Events.Reliable[43] = nil
+				if Events.Reliable[44] == Listener then
+					Events.Reliable[44] = nil
 				end
 			end
 		end

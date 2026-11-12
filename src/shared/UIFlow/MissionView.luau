@@ -69,7 +69,10 @@ function MissionView.tabHeader(tab: Tab, data: any?, now: number): string
 		end
 		return `{Strings.get("missions.only_this_life")} · {Strings.format("missions.day_n", { n = data.LifeDay })}`
 	elseif tab == "daily" then
-		local endsAt = if data then data.DailyFinal.EndsAt else now
+		if data == nil then
+			return "" -- espera o primeiro retrato
+		end
+		local endsAt = data.DailyFinal.EndsAt
 		return Strings.format("missions.renews_in", { time = MissionView.timeLeft(endsAt - now) })
 	elseif tab == "weekly" then
 		return Strings.get("missions.renews_sunday")

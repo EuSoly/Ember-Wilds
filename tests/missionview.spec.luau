@@ -122,4 +122,8 @@ return {
 		local done = card("survive", 1, 1920, 1920, 0)
 		assert(MissionView.chronoFraction(done, 0) == 1, "pronta = cheia")
 	end,
+
+	["daily header waits for the first snapshot"] = function()
+		assert(MissionView.tabHeader("daily", nil, 0) == "", "sem dados mostrou um tempo")
+	end,
 }

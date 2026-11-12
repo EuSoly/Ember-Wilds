@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local MissionView = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("UIFlow"):WaitForChild("MissionView"))
 local Net = require(script.Parent:WaitForChild("Net"))
+local SoundPlayer = require(script.Parent:WaitForChild("Audio"):WaitForChild("SoundPlayer"))
 
 type Source<T> = (() -> T) & ((T) -> T)
 
@@ -21,9 +22,31 @@ MissionsState.open = vide.source(false) :: Source<boolean>
 MissionsState.tab = vide.source("match" :: MissionView.Tab) :: Source<MissionView.Tab>
 local queue: { Notice } = {}
 local started = false
+local claimedBefore: number? = nil
+
+-- Quantos resgates o retrato mostra (cartões resgatados + níveis de conquista).
+local function claimedCount(snapshot: any): number
+	local n = 0
+	for _, list in { snapshot.Chrono, snapshot.Daily, snapshot.Weekly, { snapshot.DailyFinal, snapshot.WeeklyFinal } } do
+		for _, card in list do
+			if card.State == 2 then
+				n += 1
+			end
+		end
+	end
+	for _, card in snapshot.Achievements do
+		n += card.Claimed
+	end
+	return n
+end
 
 function MissionsState.toggle()
 	MissionsState.open(not vide.untrack(MissionsState.open))
+end
+
+-- Avisa o servidor se a janela está aberta (chamado pela tela quando muda).
+function MissionsState.watch(open: boolean)
+	Net.WatchMissions.Fire(open)
 end
 
 function MissionsState.badges(): MissionView.Badges
@@ -47,6 +70,12 @@ function MissionsState.start()
 	started = true
 	-- Liga os ouvintes antes de pedir, para a resposta não se perder.
 	Net.MissionsData.On(function(snapshot)
+		-- Resgate confirmado pelo servidor: o som toca aqui, não no clique.
+		local claimed = claimedCount(snapshot)
+		if claimedBefore ~= nil and claimed > claimedBefore then
+			SoundPlayer.play("level_up")
+		end
+		claimedBefore = claimed
 		MissionsState.data(snapshot)
 	end)
 	Net.MissionNotice.On(function(notice)

@@ -53,7 +53,9 @@ function PeriodRules.ensure(
 	index: number,
 	userId: number,
 	read: Read,
-	defs: Types.DefsTables
+	defs: Types.DefsTables,
+	lifeValue: LifeValue?,
+	lifeKey: string?
 ): boolean
 	if save.Index == index and #save.Slots > 0 then
 		return false
@@ -69,8 +71,17 @@ function PeriodRules.ensure(
 	local slots: { SlotSave } = {}
 	for i = 1, picks do
 		local def = defs.Missions[pool[i]]
-		local base = if def.track.life then 0 else read(def.track)
-		table.insert(slots, { Id = def.id, Base = base, Best = 0, Claimed = false })
+		local life = def.track.life
+		-- Missão de vida: o que a vida em andamento já tem não conta.
+		local base = 0
+		local key = ""
+		if life == nil then
+			base = read(def.track)
+		elseif lifeValue ~= nil and lifeKey ~= nil then
+			base = math.floor(lifeValue(life))
+			key = lifeKey
+		end
+		table.insert(slots, { Id = def.id, Base = base, Best = 0, Claimed = false, LifeKey = key })
 	end
 	save.Index = index
 	save.Slots = slots
@@ -79,12 +90,29 @@ function PeriodRules.ensure(
 	return true
 end
 
--- Progresso de uma missão do sorteio, entre 0 e o alvo.
-function PeriodRules.progress(slot: SlotSave, def: MissionDef, read: Read, lifeValue: LifeValue): number
+-- Valor da vida atual para a missão: tira o que a vida já tinha no sorteio
+-- (mesma vida, LifeKey); outra vida conta inteira.
+local function lifeProgress(slot: SlotSave, life: string, lifeValue: LifeValue, lifeKey: string?): number
+	local value = math.floor(lifeValue(life))
+	if lifeKey ~= nil and slot.LifeKey ~= "" and lifeKey == slot.LifeKey then
+		value -= slot.Base
+	end
+	return value
+end
+
+-- Progresso de uma missão do sorteio, entre 0 e o alvo. `lifeKey` = a vida em
+-- andamento (LifeService), para não contar o que ela tinha antes do sorteio.
+function PeriodRules.progress(
+	slot: SlotSave,
+	def: MissionDef,
+	read: Read,
+	lifeValue: LifeValue,
+	lifeKey: string?
+): number
 	local value
 	local life = def.track.life
 	if life then
-		value = math.max(slot.Best, lifeValue(life))
+		value = math.max(slot.Best, lifeProgress(slot, life, lifeValue, lifeKey))
 	else
 		value = read(def.track) - slot.Base
 	end
@@ -93,13 +121,18 @@ end
 
 -- Guarda a vida atual como melhor vida do período nas missões de vida.
 -- Devolve true se algum Best subiu.
-function PeriodRules.observeLife(save: PeriodSave, defs: Types.DefsTables, lifeValue: LifeValue): boolean
+function PeriodRules.observeLife(
+	save: PeriodSave,
+	defs: Types.DefsTables,
+	lifeValue: LifeValue,
+	lifeKey: string?
+): boolean
 	local changed = false
 	for _, slot in save.Slots do
 		local def = defs.Missions[slot.Id]
 		local life = def and def.track.life
 		if life then
-			local value = math.floor(lifeValue(life))
+			local value = lifeProgress(slot, life, lifeValue, lifeKey)
 			if value > slot.Best then
 				slot.Best = value
 				changed = true
@@ -119,8 +152,14 @@ local function slotOf(save: PeriodSave, id: string): SlotSave?
 end
 
 -- A missão está completa e ainda não foi resgatada?
-function PeriodRules.isReady(slot: SlotSave, def: MissionDef, read: Read, lifeValue: LifeValue): boolean
-	return not slot.Claimed and PeriodRules.progress(slot, def, read, lifeValue) >= def.target
+function PeriodRules.isReady(
+	slot: SlotSave,
+	def: MissionDef,
+	read: Read,
+	lifeValue: LifeValue,
+	lifeKey: string?
+): boolean
+	return not slot.Claimed and PeriodRules.progress(slot, def, read, lifeValue, lifeKey) >= def.target
 end
 
 -- Resgata uma missão do sorteio: só completa e não resgatada. Devolve os prêmios.
@@ -129,11 +168,12 @@ function PeriodRules.claim(
 	id: string,
 	defs: Types.DefsTables,
 	read: Read,
-	lifeValue: LifeValue
+	lifeValue: LifeValue,
+	lifeKey: string?
 ): { Reward }?
 	local slot = slotOf(save, id)
 	local def = defs.Missions[id]
-	if slot == nil or def == nil or not PeriodRules.isReady(slot, def, read, lifeValue) then
+	if slot == nil or def == nil or not PeriodRules.isReady(slot, def, read, lifeValue, lifeKey) then
 		return nil
 	end
 	slot.Claimed = true

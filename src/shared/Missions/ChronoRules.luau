@@ -90,4 +90,17 @@ function ChronoRules.claim(
 	return def, nil
 end
 
+-- Todas as quests em andamento falham (virou fantasma: perdeu a vida, mesmo
+-- podendo ressuscitar). Prontas e resgatadas ficam. Devolve as que falharam.
+function ChronoRules.failAll(state: ChronoState): { string }
+	local failed: { string } = {}
+	for id, quest in state do
+		if quest.status == "active" then
+			quest.status = "failed"
+			table.insert(failed, id)
+		end
+	end
+	return failed
+end
+
 return ChronoRules

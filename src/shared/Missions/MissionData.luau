@@ -8,7 +8,9 @@ local StatsRules = require("../Data/StatsRules")
 local MissionConfig = require("./MissionConfig")
 local Types = require("../Defs/Types")
 
-export type SlotSave = { Id: string, Base: number, Best: number, Claimed: boolean }
+-- LifeKey: a vida em andamento no sorteio (só missões de vida). O que essa vida
+-- já tinha (Base) não conta; outra vida conta inteira.
+export type SlotSave = { Id: string, Base: number, Best: number, Claimed: boolean, LifeKey: string }
 export type PeriodSave = {
 	Index: number, -- dia (RankRules.dayIndex) ou semana (weekIndex) do sorteio; 0 = nunca
 	Slots: { SlotSave },
@@ -39,28 +41,33 @@ local function count(value: any): number
 	return math.floor(value)
 end
 
-local function cleanPeriod(raw: any, defs: Types.DefsTables, finalCount: number): PeriodSave
+local function cleanPeriod(raw: any, defs: Types.DefsTables, finalCount: number, period: string): PeriodSave
 	if type(raw) ~= "table" then
 		return emptyPeriod()
 	end
-	local period = emptyPeriod()
-	period.Index = count(raw.Index)
+	local result = emptyPeriod()
+	result.Index = count(raw.Index)
 	if type(raw.Slots) == "table" then
+		local seen: { [string]: boolean } = {}
 		for _, slot in raw.Slots do
-			if type(slot) == "table" and type(slot.Id) == "string" and defs.Missions[slot.Id] ~= nil then
-				table.insert(period.Slots, {
+			local def = if type(slot) == "table" and type(slot.Id) == "string" then defs.Missions[slot.Id] else nil
+			-- Só missões deste período, uma vez cada (fica a primeira).
+			if def ~= nil and def.period == period and not seen[slot.Id] then
+				seen[slot.Id] = true
+				table.insert(result.Slots, {
 					Id = slot.Id,
 					Base = count(slot.Base),
 					Best = count(slot.Best),
 					Claimed = slot.Claimed == true,
+					LifeKey = if type(slot.LifeKey) == "string" then slot.LifeKey else "",
 				})
 			end
 		end
 	end
 	local final = count(raw.FinalReward)
-	period.FinalReward = if final >= 1 and final <= finalCount then final elseif finalCount > 0 then 1 else 0
-	period.FinalClaimed = raw.FinalClaimed == true
-	return period
+	result.FinalReward = if final >= 1 and final <= finalCount then final elseif finalCount > 0 then 1 else 0
+	result.FinalClaimed = raw.FinalClaimed == true
+	return result
 end
 
 -- O Missions guardado, consertado: tipos errados viram vazio, missões e
@@ -71,8 +78,8 @@ function MissionData.sanitize(raw: any, defs: Types.DefsTables): MissionsSave
 	if type(raw) ~= "table" then
 		return save
 	end
-	save.Daily = cleanPeriod(raw.Daily, defs, #MissionConfig.DAILY_FINAL)
-	save.Weekly = cleanPeriod(raw.Weekly, defs, 0)
+	save.Daily = cleanPeriod(raw.Daily, defs, #MissionConfig.DAILY_FINAL, "daily")
+	save.Weekly = cleanPeriod(raw.Weekly, defs, 0, "weekly")
 	if type(raw.Achievements) == "table" then
 		for id, level in raw.Achievements do
 			if type(id) == "string" and defs.Achievements[id] ~= nil then

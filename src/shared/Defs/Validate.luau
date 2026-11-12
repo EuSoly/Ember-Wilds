@@ -484,6 +484,9 @@ local function validateQuests(errors: { string }, defs: Types.DefsTables, hasStr
 			table.insert(errors, `Quest "{key}": rewardItem "{quest.rewardItem}" não existe em Defs/Items`)
 		elseif not isWholeNumber(quest.rewardCount, 1) then
 			table.insert(errors, `Quest "{key}": rewardCount deve ser inteiro maior que 0`)
+		elseif quest.enabled and defs.Items[quest.rewardItem].testOnly then
+			-- Fora do Studio o inventário recusa item testOnly: o prêmio sumiria.
+			table.insert(errors, `Quest "{key}": ligada com prêmio testOnly "{quest.rewardItem}"`)
 		end
 		-- Quest ligada só pode ter as regras que o QuestService sabe vigiar.
 		if quest.enabled then

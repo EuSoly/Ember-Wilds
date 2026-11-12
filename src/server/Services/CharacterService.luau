@@ -73,11 +73,6 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		return
 	end
 	local player = Players:GetPlayerFromCharacter(character)
-	if player and kind == "player" and attacker and attacker ~= player then
-		for _, listener in attackedListeners do
-			task.spawn(listener, attacker, player)
-		end
-	end
 	-- Fantasma não leva dano (GhostService).
 	if player and GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 		return
@@ -85,6 +80,13 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	-- Tutorial: nada machuca o jogador protegido (jogador, bicho, espinho, fome...).
 	if player and TutorialService.isProtected(player) then
 		return
+	end
+	-- Acertou um jogador de verdade (não fantasma nem protegido): conta para a
+	-- quest Mãos Limpas mesmo que a defesa zere o dano.
+	if player and kind == "player" and attacker and attacker ~= player then
+		for _, listener in attackedListeners do
+			task.spawn(listener, attacker, player)
+		end
 	end
 	-- Colega de time tira só 30% (Starve; TeamService resolve os aliados).
 	if player and kind == "player" and attacker and attacker ~= player then

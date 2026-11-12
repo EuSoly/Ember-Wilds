@@ -188,4 +188,21 @@ return {
 		end
 		assert(found, "esperava erro de rewardItem: " .. table.concat(errors, " | "))
 	end,
+
+	["validate rejects a test only reward on an enabled quest"] = function()
+		local defs = table.clone(Defs :: any)
+		local quests = table.clone(defs.Quests)
+		local broken = table.clone(quests.survive)
+		broken.rewardItem = "orange_gem" -- ainda testOnly
+		quests.survive = broken
+		defs.Quests = quests
+		local errors = Validate.all(defs, alwaysHas)
+		local found = false
+		for _, message in errors do
+			if string.find(message, "survive", 1, true) and string.find(message, "testOnly", 1, true) then
+				found = true
+			end
+		end
+		assert(found, "esperava erro de prêmio testOnly: " .. table.concat(errors, " | "))
+	end,
 }
