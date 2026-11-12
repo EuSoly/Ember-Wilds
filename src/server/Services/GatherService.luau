@@ -38,6 +38,7 @@ local ArmorService = require(script.Parent.ArmorService)
 local CharacterService = require(script.Parent.CharacterService)
 local CraftService = require(script.Parent.CraftService)
 local CrateService = require(script.Parent.CrateService)
+local FarmService = require(script.Parent.FarmService)
 local InventoryService = require(script.Parent.InventoryService)
 local MapService = require(script.Parent.MapService)
 local MobService = require(script.Parent.MobService)
@@ -259,7 +260,16 @@ local function hit(player: Player, character: Model, root: BasePart)
 	-- Bateu em algo: o Chapéu de Explorador para de esconder por um tempo.
 	ArmorService.markHit(player)
 	if target.structure then
-		StructureService.hit(target.structure, player, tool)
+		-- Fazenda: regador rega, planta com fruto é colhida; o resto é golpe de construção.
+		local farm = FarmService.hit(target.structure, player, tool)
+		if farm == "full" then
+			notify(player, "gather.full")
+		elseif farm then
+			local entry = target.structure
+			sendFxAt(entry.x, entry.z, dir.X, dir.Z, if farm == "water" then "water" else "leaves")
+		else
+			StructureService.hit(target.structure, player, tool)
+		end
 		return
 	end
 	if target.crate then

@@ -191,8 +191,10 @@ function BuildRules.insideAny(x: number, z: number, circles: { Circle }, margin:
 	return false
 end
 
+-- Camada da peça. O canteiro (fazenda) fica na do piso: não colide, encaixa em
+-- grade com pisos e canteiros e não se sobrepõe a eles.
 function BuildRules.layerOf(kind: string): Layer
-	if kind == "bridge" then
+	if kind == "bridge" or kind == "plot" then
 		return "bridge"
 	elseif kind == "roof" then
 		return "roof"
@@ -224,7 +226,8 @@ end
 -- piso (camada "bridge") vai na terra e na água (11/11: deixou de ser só ponte);
 -- o resto nunca na água (o piso não torna a água construível).
 function BuildRules.waterAllows(kind: string, water: boolean): boolean
-	if BuildRules.layerOf(kind) == "bridge" then
+	-- Só o piso: o canteiro divide a camada com ele, mas fica na terra.
+	if kind == "bridge" then
 		return true
 	end
 	return not water

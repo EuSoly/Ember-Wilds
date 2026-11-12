@@ -26,7 +26,13 @@ Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição 
 - **Testes com 2 jogadores, para depois (Test → 2 Players):** entrar no time, expulsar, trancar, nick verde, portas e baús compartilhados, espinhos sem machucar colegas, máquina de esmeralda quebrada por colega (não mata).
 - **Conferir:** o tempo de fantasma acabar → morte normal com caixa; máquina de esmeralda destruída matando o dono.
 - **Vidas sem número na config:** totem 500, ponte 300 e placa 100 (escolha nossa).
-- **Terra e areia (12/11):** sem ícone e sem modelo no chão ainda (aparecem como "Te" e "Ar"). Elizeu faz os ícones. O modelo do poço mostra água mesmo vazio (o medidor do painel é o que vale).
+- **Fazenda (12/11, `guia/fazenda.md`):**
+  - Falta o ícone do fruto do arbusto de espinho (`thornbush`): hoje é o modelo maduro.
+  - O regador cheio usa o modelo do vazio (`Assets.Tools.watering_can_full` é uma cópia).
+  - O fantasma da semente fica verde na areia, mas o servidor recusa (o cliente não sabe onde é areia).
+  - O arbusto de espinho ainda não foi testado com 2 jogadores (o dono não se machuca).
+  - Próximo sistema: moinho, farinha, forno e pão, para dar uso ao trigo.
+- **Terra e areia (12/11):** ícones instalados (`Assets.Icons.ground`/`sand`). O modelo do poço mostra água mesmo vazio (o medidor do painel é o que vale).
 - **Fantasma (casos de borda):** pode levar golpe entre o fim do tempo e o próximo passo (até 0,25 s); o estado só é limpo no polling se ele morrer por outro caminho; craft ou mordida em andamento continuam; listas de perda não cobrem tiers acima de reidite (não existem ainda).
 - **Times:** membros do time desfeito pelo totem também esperam 20 s; eventos de time e de ressurreição sem limite de taxa; `DevPlace` pula os limites de totem e máquina (só Studio); ordenação dos membros no painel pode oscilar.
 - **Encaixe em grade (fantasma):** busca de vizinhas a cada quadro; cor pode atrasar 0,15 s depois de um salto; em cima da vizinha a peça pode ir para casa a ~10 studs; falta teste de "peça sem snap não encaixa".
@@ -42,13 +48,13 @@ Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição 
 - **Dano em construção das armas:** espadas, lanças e picaretas usam a nossa escala (5 a 20 e 10 a 35), não a do Starve (picareta 0 a 1, espada 4 a 11). Só os martelos usam a do Starve. Rever quando balancear as bases.
 - **Conferir no Studio:** já conferido em 11/11 (Play, servidor) que capacete + escudo de ouro tiram 21 da mordida de 24 e 7 do golpe de 22, que a fome não é reduzida, e que a espada de lava com capacete de lava dá 36. Falta, jogando de verdade: martelo de pedra numa parede de ouro (deve tirar 5) e chave inglesa consertando uma parede sua (não pude colocar parede pelo MCP).
 - **Dois `DevGive` no ServerStorage:** um deles responde "entregue" mas não põe nada no inventário (provavelmente sobra salva no place). Apagar o que não é criado pelo DevDataService.
-- **Só dado:** pás (cavar), forcados e regador (fazenda), facão (caixa de mob em dobro), lança de caranguejo (acalmar caranguejos), defesa contra flecha dos escudos.
+- **Só dado:** facão (caixa de mob em dobro), lança de caranguejo (acalmar caranguejos), defesa contra flecha dos escudos.
 - **Sem receita:** espada pirata (baú do tesouro). Orbes azul e de lava e peça do forcado não têm modelo nem quest.
 
 ## Armaduras (10/11)
 
 - **Defesa contra mob sem escala:** as mordidas daqui são mais fracas que no Starve (lobo 24 contra 40), mas o `mobDefense` entrou com o número do Starve (decisão do Elizeu). Com capacete de ouro, o lobo tira 11 e a aranha 3. Rever quando balancear os mobs.
-- **Efeitos só-dado:** roubo (capuz), fazenda (túnicas), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
+- **Efeitos só-dado:** roubo (capuz), sorte e domar (Coroa da Sorte), ressurreição (Coroa do Anjo), nevasca, tempestade de areia, lava, aceleração do avião (piloto), vassoura (bruxa) e caranguejos seguindo. Os números já estão nas peças; falta o sistema.
 - **Peças sem receita:** os gorros de Natal e de elfo (no Starve saem do presente de Natal).
 - **Chapéu de pele esquentando:** de dia na floresta ele enche o frio, mas não passa para a barra de calor (o calor só vem do fogo e do bioma).
 - **Conferir no Studio antes de liberar:** já conferido em 10/11 (Play, 1 jogador) que a peça fica no centro do corpo e com a frente certa (capacete de ouro, máscara de mergulho, capuz) e que o dono continua vendo o próprio nick com o capuz. Falta: o nick sumir para o OUTRO jogador (Test → 2 Players), a peça acompanhando golpe/morte, e os ícones na aba Armaduras do livro.

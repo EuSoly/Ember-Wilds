@@ -1015,6 +1015,8 @@ local STRUCTURE_KINDS: { [string]: boolean } = {
 	totem = true,
 	resurrection = true,
 	emerald_machine = true,
+	plot = true,
+	plant = true,
 }
 -- Bloco de dados que só vale (e é obrigatório) no seu kind: campos numéricos > 0.
 local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } } = {
@@ -1026,6 +1028,11 @@ local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } }
 	{ kind = "furnace", field = "furnace", numbers = { "burnEvery", "maxWood" } },
 	{ kind = "well", field = "well", numbers = { "drinksPerBucket", "maxDrinks", "thirstPerDrink" } },
 	{ kind = "bed", field = "bed", numbers = { "regenFactor", "drainFactor" } },
+	{
+		kind = "plant",
+		field = "plant",
+		numbers = { "growSeconds", "fruitSeconds", "waterSeconds", "lifeSeconds", "maxFruit", "fruitPoints" },
+	},
 }
 
 local function validateStructureBlocks(errors: { string }, key: string, structure: Types.StructureDef)
@@ -1060,6 +1067,16 @@ local function validateStructureBlocks(errors: { string }, key: string, structur
 			end
 			if spec.kind == "extractor" and (type(block.output) ~= "string" or block.output == "") then
 				table.insert(errors, `Item "{key}": structure.extractor.output deve ser um id de item`)
+			end
+			if spec.kind == "plant" then
+				for _, name in { "crop", "fruit" } do
+					if type(block[name]) ~= "string" or block[name] == "" then
+						table.insert(errors, `Item "{key}": structure.plant.{name} deve ser um texto`)
+					end
+				end
+				if isPositiveFinite(block.maxFruit) and block.maxFruit % 1 ~= 0 then
+					table.insert(errors, `Item "{key}": structure.plant.maxFruit deve ser inteiro`)
+				end
 			end
 		end
 	end
@@ -1098,8 +1115,13 @@ local function validateStructure(errors: { string }, key: string, item: Types.It
 			if not isPositive(structure.spikeDamage) then
 				table.insert(errors, `Item "{key}": espinho precisa de structure.spikeDamage maior que 0`)
 			end
+		elseif structure.kind == "plant" then
+			-- Arbusto de espinho: machuca quem encosta depois de maduro (opcional).
+			if structure.spikeDamage ~= nil and not isPositive(structure.spikeDamage) then
+				table.insert(errors, `Item "{key}": structure.spikeDamage deve ser maior que 0`)
+			end
 		elseif structure.spikeDamage ~= nil then
-			table.insert(errors, `Item "{key}": structure.spikeDamage só vale para kind "spike" e "spike_door"`)
+			table.insert(errors, `Item "{key}": structure.spikeDamage só vale para espinhos e plantas`)
 		end
 		if structure.kind == "fire" then
 			if not isPositive(structure.lifetime) then
@@ -1187,6 +1209,10 @@ function Validate.all(defs: Types.DefsTables, hasString: (string) -> boolean): {
 		validateFood(errors, key, item)
 		validateArmor(errors, key, item)
 		validateStructure(errors, key, item)
+		local plant = item.structure and item.structure.plant
+		if plant and type(plant.fruit) == "string" and defs.Items[plant.fruit] == nil then
+			table.insert(errors, `Item "{key}": structure.plant.fruit "{plant.fruit}" não existe em Items`)
+		end
 		local pickaxe = item.pickaxe
 		if pickaxe ~= nil then
 			if item.category ~= "tool" then

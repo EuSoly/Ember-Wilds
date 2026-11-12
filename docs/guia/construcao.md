@@ -22,7 +22,7 @@ As peças são livres, sem grade, com uma exceção: as de chão e teto (veja "E
 
 ## Encaixe em grade (chão e teto)
 
-Peças com `snap = true` no bloco `structure` do item se encaixam umas nas outras. Hoje são o telhado e a ponte; os canteiros de plantação vão usar o mesmo campo. Paredes, espinhos, portas e o resto continuam livres (decisão do Elizeu, 11/11).
+Peças com `snap = true` no bloco `structure` do item se encaixam umas nas outras. Hoje são o telhado, o piso e o canteiro (fazenda, 12/11: na camada do piso, mas fora da água; veja `fazenda.md`). Paredes, espinhos, portas e o resto continuam livres (decisão do Elizeu, 11/11).
 
 - Perto de uma peça da **mesma camada** que também tem `snap`, a nova vai para a **casa mais próxima da grade dessa vizinha**. O lado da casa é o diâmetro dela (`2 × radius`), os eixos são os dela, e a nova **copia o giro da vizinha**: forma um piso contínuo, sem fresta.
 - O ponto livre em cima da própria vizinha vai para a casa ao lado, na direção da mira.
@@ -179,7 +179,7 @@ Ponte e telhado são achados por tag (`Bridge` / `Roof`, com o atributo `PieceRa
 
 Item com `testOnly = true` em `Defs/Items.luau` só existe no Studio. Fora do Studio (`RunService:IsStudio()` falso, inclusive servidor privado) é como se não existisse: não aparece no craft nem nas listas, não é craftável, não é dado (nem pelo `InventoryService.give`) e não é colocável. O `Validate` proíbe item `testOnly` em kit e no loot de mob. O lugar único dessa regra é `src/shared/ItemAccess.luau`.
 
-Itens marcados hoje (12/11): as peças de diamante, ametista e reidite (paredes, portas, espinhos, portas com espinho e extratores), pedra da ressurreição e máquina de esmeralda. Liberados em 12/11: balde, balde cheio, poço e as pás de pedra e de ouro. Liberados em 11/11: portas com espinho de madeira a ouro, extratores de pedra e ouro, fornalha, ponte, telhado, placa, cama e totem.
+Itens marcados hoje (12/11): as peças de diamante, ametista e reidite (paredes, portas, espinhos, portas com espinho e extratores), pedra da ressurreição e máquina de esmeralda. Liberados em 12/11: balde, balde cheio, poço, as pás de pedra e de ouro, o canteiro e a semente de frutinha (as outras 8 sementes e os frutos delas seguem de teste: `fazenda.md`). Liberados em 11/11: portas com espinho de madeira a ouro, extratores de pedra e ouro, fornalha, ponte, telhado, placa, cama e totem.
 
 **Para liberar um item num update:** apague a linha `testOnly = true` do item em `Defs/Items.luau` (e do `bucket` e do `water_bucket` se for liberar o poço, senão ele não tem uso). Antes, revise os números marcados `-- provisório` da peça e da receita (em `Defs/Items.luau` e `Defs/Recipes.luau`). Rode `bash scripts/check.sh`. Não existe dado salvo para limpar: o inventário e a base não persistem.
 

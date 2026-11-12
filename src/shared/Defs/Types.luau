@@ -46,10 +46,10 @@ export type ArmorStats = {
 	explorer: boolean?, -- mobs agressivos ignoram; bater em algo desliga por um tempo
 	hungerFactor: number?, -- multiplica a queda da fome (nenhuma peça do Starve usa)
 	thirstFactor: number?, -- multiplica a queda da sede (nenhuma peça do Starve usa)
+	cropGrowth: number?, -- túnicas: a planta regada por quem veste cresce isso mais rápido (FarmService)
 	-- Só dado, para sistemas futuros (nada no jogo lê ainda):
 	blizzard: number?, -- tirado do dano da nevasca (base 26 a cada 4 s)
 	sand: { damage: number, every: number }?, -- dano da tempestade de areia com a peça
-	cropGrowth: number?, -- multiplica o crescimento das plantas (túnicas)
 	stealImmune: ("hood" | "all")?, -- imune ao roubo do capuz comum / de todos
 	tameLuck: number?, -- multiplica a chance de domar (Coroa da Sorte)
 	digLuck: number?, -- sorte da pá (Coroa da Sorte)
@@ -78,6 +78,19 @@ export type StructureKind =
 	| "totem" -- cria e guarda o time do dono (TeamService)
 	| "resurrection" -- pedra da ressurreição (GhostService)
 	| "emerald_machine" -- pontos por minuto ao dono (EmeraldService)
+	| "plot" -- canteiro: camada do chão, encaixa em grade, guarda a rega da planta (FarmService)
+	| "plant" -- semente plantada: cresce, dá fruto e é colhida (FarmService, PlantRules)
+-- Uma cultura (config oficial do Starve: grown_/born_/water_/time_life_<crop>, em s).
+export type PlantDef = {
+	crop: string, -- pasta Assets.Farming.<crop> (stage_01 a stage_04)
+	fruit: string, -- item colhido
+	growSeconds: number, -- de semente a madura (sem bônus)
+	fruitSeconds: number, -- um fruto novo a cada tanto, depois de madura
+	waterSeconds: number, -- quanto dura uma rega
+	lifeSeconds: number, -- idade em que a planta morre
+	maxFruit: number, -- frutos guardados no máximo (os do modelo stage_04)
+	fruitPoints: number, -- pontos por fruto colhido
+}
 export type ExtractorDef = {
 	output: string, -- id do item produzido
 	woodPerCycle: number,
@@ -93,7 +106,7 @@ export type StructureDef = {
 	kind: StructureKind,
 	health: number, -- vida máxima (> 0)
 	radius: number?, -- studs: raio do círculo da peça no chão; padrão BuildRules.PIECE_RADIUS
-	spikeDamage: number?, -- só kind "spike" e "spike_door" (obrigatório neles): dano ao encostar
+	spikeDamage: number?, -- kind "spike" e "spike_door" (obrigatório neles) e "plant" (arbusto de espinho, madura): dano ao encostar
 	spikeHitDamage: number?, -- só "spike" e "spike_door": dano em quem BATE na peça (Starve "hit")
 	lifetime: number?, -- segundos até sumir; só kind "fire" (obrigatório nele)
 	heatRadius: number?, -- studs; só kind "fire" e "furnace" (obrigatório neles)
@@ -103,6 +116,7 @@ export type StructureDef = {
 	furnace: FurnaceDef?, -- calor por heatRadius; queima enquanto tem madeira (sem lifetime)
 	well: WellDef?,
 	bed: BedDef?,
+	plant: PlantDef?,
 	-- Encaixa em grade nas vizinhas da mesma camada com snap (chão e teto:
 	-- telhado, ponte, canteiros). Veja BuildRules.snapPlacement.
 	snap: boolean?,
@@ -165,10 +179,10 @@ export type ItemDef = {
 	gearBonus: { set: string, damage: number }?,
 	-- Chave inglesa: golpe numa construção aliada danificada devolve essa vida.
 	repair: number?,
+	dig: number?, -- pá: quanto cava por golpe (DigRules)
+	harvest: number?, -- forcado: frutos colhidos por golpe (PlantRules.harvestOf)
+	waters: boolean?, -- regador cheio: o golpe rega planta e canteiro (FarmService)
 	-- Só dado, para sistemas futuros (nada no jogo lê ainda):
-	dig: number?, -- pá: quanto cava por golpe
-	harvest: number?, -- forcado: multiplica a colheita
-	waters: boolean?, -- regador: rega plantas
 	butcher: number?, -- facão: multiplica o que a caixa de mob dá
 	crabCalm: boolean?, -- lança de caranguejo: acalma caranguejos
 }

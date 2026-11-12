@@ -35,12 +35,15 @@ local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local Defs = require(ReplicatedStorage.Shared.Defs)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
+local PlantRules = require(ReplicatedStorage.Shared.Farm.PlantRules)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local StructureModel = require(ReplicatedStorage.Shared.Models.StructureModel)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
+local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local CraftService = require(script.Parent.CraftService)
 local InventoryService = require(script.Parent.InventoryService)
+local MapService = require(script.Parent.MapService)
 local ResourceService = require(script.Parent.ResourceService)
 local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
@@ -415,6 +418,30 @@ function StructureService.snapNeighbors(def: Defs.StructureDef, x: number, z: nu
 	return out
 end
 
+-- Semente (kind "plant"): dentro de um canteiro vai para o centro dele (e
+-- herda o giro); fora, só no chão da floresta. Devolve o ponto final ou nil.
+local function seedSpot(x: number, z: number, yaw: number): (number?, number, number)
+	local candidates: { Entry } = {}
+	local circles: { PlantRules.Circle } = {}
+	for _, other in StructureService.near(x, z, 0) do
+		if other.def.kind == "plot" then
+			table.insert(candidates, other)
+			table.insert(circles, { x = other.x, z = other.z, radius = other.radius })
+		end
+	end
+	local index = PlantRules.plotAt(x, z, circles)
+	if index then
+		local plot = candidates[index]
+		return plot.x, plot.z, plot.yaw
+	end
+	local rect = WorldConfig.PLAYABLE
+	local inPlayable = x >= rect.minX and x <= rect.maxX and z >= rect.minZ and z <= rect.maxZ
+	if not PlantRules.groundAllows(WaterSim.isWaterAt(x, z), MapService.isSandAt(x, z), inPlayable) then
+		return nil, z, yaw
+	end
+	return x, z, yaw
+end
+
 local function place(player: Player, character: Model)
 	if player.Parent ~= Players or player.Character ~= character then
 		return
@@ -476,6 +503,14 @@ local function place(player: Player, character: Model)
 	-- camada, igual ao fantasma do cliente (BuildRules.snapPlacement).
 	if def.snap then
 		x, z, yaw = BuildRules.snapPlacement(x, z, yaw, dir.X, dir.Z, StructureService.snapNeighbors(def, x, z))
+	end
+	if def.kind == "plant" then
+		local sx: number?
+		sx, z, yaw = seedSpot(x, z, yaw)
+		if sx == nil then
+			return
+		end
+		x = sx
 	end
 	if not canPlace(player, def.kind, x, z, radius) then
 		return

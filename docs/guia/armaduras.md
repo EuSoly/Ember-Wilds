@@ -26,7 +26,9 @@ Os números ficam no bloco `armor` do item (`src/shared/Defs/Items.luau`), **em 
 | `explorer` | Mobs que caçam não escolhem o jogador como alvo e largam a perseguição. Qualquer golpe dele (em mob, jogador, recurso, construção ou caixa) desliga o efeito por **10 s** (`EXPLORER_OFF`). |
 | `hungerFactor`, `thirstFactor` | Multiplicam a queda da fome e da sede. Nenhuma peça do Starve usa. |
 
-**Só dado (nada lê ainda):** `blizzard` (nevasca), `sand` (tempestade de areia), `cropGrowth` (fazenda das túnicas), `stealImmune` (roubo), `tameLuck` e `digLuck` (Coroa da Sorte), `resurrect` (Coroa do Anjo), `crabFriend` (capacete de caranguejo), `spiderImmune` (capacete de lava), `pilotAcceleration` (avião). Quando o sistema chegar, ele lê esses campos.
+**Fazenda (12/11):** `cropGrowth` das túnicas funciona: a planta regada por quem veste a túnica cresce 1,2x (camponês) ou 1,4x (inverno) enquanto durar essa rega (`fazenda.md`).
+
+**Só dado (nada lê ainda):** `blizzard` (nevasca), `sand` (tempestade de areia), `stealImmune` (roubo), `tameLuck` e `digLuck` (Coroa da Sorte), `resurrect` (Coroa do Anjo), `crabFriend` (capacete de caranguejo), `spiderImmune` (capacete de lava), `pilotAcceleration` (avião). Quando o sistema chegar, ele lê esses campos.
 
 `gearSet` (dragão, lava) já funciona: a espada ou a lança do mesmo conjunto bate mais forte com o capacete vestido (veja `ferramentas.md`).
 

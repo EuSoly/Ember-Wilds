@@ -81,6 +81,8 @@ local sounds: { [string]: Sound } = {
 	-- Cavar (pá): o mesmo som abafado das folhas, mais grave na terra.
 	hit_ground = fx(9114518386, 0.55, 1.3, { pitch = 0.15 }), -- PSE, folhas (1,3 s)
 	hit_sand = fx(9114518386, 0.45, 1.3, { pitch = 0.2 }), -- PSE, folhas (1,3 s)
+	-- Regar (FarmService): o respingo dos passos na água, um pouco mais alto.
+	hit_water = fx(9117946641, 0.45, 0.39, { pitch = 0.12 }), -- PSE "Puddle Stomps Small Water Splashes 3" (0,39 s)
 	-- Golpe em bicho, em outro jogador e em construção ou caixa.
 	hit_mob = fx(9114482141, 0.5, 0.76, { pitch = 0.1 }), -- PSE "Flesh Hits 2" (0,76 s)
 	hit_player = fx(9113573976, 0.55, 0.58, { pitch = 0.1 }), -- PSE "Boxing Hits 14" (0,58 s)

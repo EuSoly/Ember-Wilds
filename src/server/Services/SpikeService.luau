@@ -9,6 +9,9 @@
 -- Mobs vivos no chão (MobService) também levam o espinho (corpo = mob.radius + BuildRules.MOB_SPIKE_SLACK, pois o MobMove os deixa a raio + epsilon),
 -- no mesmo intervalo por par espinho/mob, sem pontos (MobService.damage, sem autor).
 --
+-- O arbusto de espinho da fazenda (planta com spikeDamage) machuca igual, mas
+-- só maduro (FarmService.hurts).
+--
 -- Fica fora do StructureService por causa do ciclo de módulos: o dano passa
 -- pelo CharacterService, que pede o DeathService, que pede o StructureService
 -- (para sumir com as peças do morto).
@@ -17,6 +20,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local CharacterService = require(script.Parent.CharacterService)
+local FarmService = require(script.Parent.FarmService)
 local MobService = require(script.Parent.MobService)
 local StructureService = require(script.Parent.StructureService)
 local TutorialService = require(script.Parent.TutorialService)
@@ -32,6 +36,17 @@ local SPIKE_MARGIN = BuildRules.PLAYER_RADIUS + 0.3
 local SPIKE_CAUSE = "death.cause.spike"
 
 local SpikeService = {}
+
+-- A peça machuca quem encosta agora? Espinhos sempre; planta só madura.
+local function hurtsNow(entry: StructureService.Entry): boolean
+	if entry.def.spikeDamage == nil then
+		return false
+	end
+	if entry.def.kind == "plant" then
+		return FarmService.hurts(entry)
+	end
+	return BuildRules.hurts(entry.def.kind)
+end
 
 -- Espinho → vítima → os.clock() do último dano dele nela.
 local lastHit: { [StructureService.Entry]: { [Player]: number } } = {}
@@ -53,7 +68,7 @@ local function stepMobs(now: number)
 		local margin = BuildRules.mobSpikeMargin(mob.radius)
 		for _, entry in StructureService.near(mob.x, mob.z, margin) do
 			local damage = entry.def.spikeDamage
-			if not BuildRules.hurts(entry.def.kind) or damage == nil then
+			if damage == nil or not hurtsNow(entry) then
 				continue
 			end
 			-- Espinho de quem está protegido no tutorial não causa dano.
@@ -97,7 +112,7 @@ local function step()
 		local px, pz = root.Position.X, root.Position.Z
 		for _, entry in StructureService.near(px, pz, SPIKE_MARGIN) do
 			local damage = entry.def.spikeDamage
-			if not BuildRules.hurts(entry.def.kind) or damage == nil then
+			if damage == nil or not hurtsNow(entry) then
 				continue
 			end
 			if BuildRules.areAllies(entry.owner.UserId, victim.UserId) then

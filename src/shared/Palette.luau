@@ -59,6 +59,12 @@ local Palette = {
 		nightFire = { "#1B2A4A", "#7F9CD6", "#FFA43A", "#FF8A1F" },
 	},
 
+	-- Fazenda (StructureModel): película da terra regada e folha seca (sem textura).
+	farm = {
+		wetSoil = "#2B1E17", -- película translúcida sobre a terra do canteiro regada
+		leafDry = "#C9A85A", -- folhas da planta seca fora do canteiro (palha)
+	},
+
 	-- Moldura de itens sem tier (comida, recursos).
 	neutralFrame = "#8A8F98",
 

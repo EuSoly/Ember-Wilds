@@ -14,4 +14,6 @@ return table.freeze({
 	-- Cavar com a pá (DigRules): terra da floresta e areia das margens.
 	ground = table.freeze({ color = Palette.biome.forest[3] }),
 	sand = table.freeze({ color = Palette.biome.ocean[1] }),
+	-- Regar com o regador (FarmService): gotas da cor da sede.
+	water = table.freeze({ color = Palette.status.thirst }),
 }) :: { [string]: MaterialFx }

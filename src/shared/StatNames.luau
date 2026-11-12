@@ -217,6 +217,10 @@ return table.freeze({
 	Wood = "Wood",
 	Stock = "Stock",
 	Drinks = "Drinks",
+	-- Fazenda (FarmService), atributos no modelo: frutos prontos na planta e se a
+	-- planta (ou o canteiro) está regada.
+	PlantFruit = "PlantFruit",
+	PlantWet = "PlantWet",
 	-- Índice do símbolo da placa (SignRules.SYMBOLS), 0 = nenhum; atributo no modelo.
 	Symbol = "Symbol",
 	-- true enquanto o extrator trabalha (o rotor gira), atributo no modelo (MachineService).

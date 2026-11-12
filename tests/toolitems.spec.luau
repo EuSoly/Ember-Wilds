@@ -46,7 +46,9 @@ local RELEASED = {
 	stone_shield = true,
 	gold_shield = true,
 	wrench = true,
-	-- Cavar (12/11): pás de pedra e de ouro.
+	-- Cavar (12/11): pás de pedra e de ouro. Fazenda (12/11): forcado e regador.
+	pitchfork = true,
+	watering_can = true,
 	stone_shovel = true,
 	gold_shovel = true,
 }

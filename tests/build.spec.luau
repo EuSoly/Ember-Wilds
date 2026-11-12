@@ -337,4 +337,15 @@ function spec.piso_encaixado_nao_conta_como_sobreposto()
 	assert(BuildRules.circlesOverlap(0, 0, 3, 5.9, 0, 3), "sobrepor de verdade continua barrado")
 end
 
+function spec.canteiro_na_camada_do_chao_mas_fora_da_agua()
+	assert(BuildRules.layerOf("plot") == "bridge", "canteiro na camada do piso")
+	assert(BuildRules.blocksPlacement("plot", "bridge"), "canteiro e piso não se sobrepõem")
+	assert(not BuildRules.blocksPlacement("plant", "plot"), "planta vai em cima do canteiro")
+	assert(not BuildRules.isSolid("plot") and not BuildRules.blockedByPlayers("plot"), "anda-se por cima")
+	assert(not BuildRules.waterAllows("plot", true), "canteiro não vai na água")
+	assert(BuildRules.waterAllows("plot", false), "canteiro na terra")
+	assert(BuildRules.waterAllows("bridge", true), "piso continua indo na água")
+	assert(BuildRules.isSolid("plant"), "planta colide como o arbusto")
+end
+
 return spec

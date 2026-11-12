@@ -18,6 +18,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local BuildRules = require(Shared:WaitForChild("Build"):WaitForChild("BuildRules"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local PlantRules = require(Shared:WaitForChild("Farm"):WaitForChild("PlantRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local StructureModel = require(Shared:WaitForChild("Models"):WaitForChild("StructureModel"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -165,6 +166,32 @@ local function snapNeighbors(def: Defs.StructureDef, px: number, pz: number): { 
 	return out
 end
 
+-- Canteiro em que a semente cairia (a mesma conta do servidor): centro e giro,
+-- ou nil fora de canteiro.
+local function plotUnder(px: number, pz: number): (number?, number, number)
+	local candidates: { { x: number, z: number, yaw: number } } = {}
+	local circles: { PlantRules.Circle } = {}
+	for _, instance in CollectionService:GetTagged(StatNames.StructureTag) do
+		if instance:IsA("PVInstance") and instance:GetAttribute(StatNames.StructureItem) == "plot" then
+			local pivot = instance:GetPivot()
+			local x, z = pivot.Position.X, pivot.Position.Z
+			local plot = structureOf("plot")
+			local radius = if plot then BuildRules.radiusOf(plot) else BuildRules.PIECE_RADIUS
+			if math.abs(x - px) <= radius and math.abs(z - pz) <= radius then
+				local _, yaw = pivot:ToOrientation()
+				table.insert(candidates, { x = x, z = z, yaw = math.deg(yaw) })
+				table.insert(circles, { x = x, z = z, radius = radius })
+			end
+		end
+	end
+	local index = PlantRules.plotAt(px, pz, circles)
+	if index == nil then
+		return nil, 0, 0
+	end
+	local plot = candidates[index]
+	return plot.x, plot.z, plot.yaw
+end
+
 -- Modelo da peça como fantasma: translúcido, sem colisão nem tags (senão o
 -- jogo acharia uma bancada, ponte ou telhado de verdade ali) e SEM textura: as
 -- peças visíveis são pintadas de verde/vermelho (o Highlight sozinho não
@@ -277,6 +304,15 @@ function BuildGhost.start()
 		if structure.snap then
 			px, pz, yaw = BuildRules.snapPlacement(px, pz, yaw, flat.X, flat.Z, snapNeighbors(structure, px, pz))
 		end
+		-- Semente em cima de canteiro: vai para o centro dele, na altura da terra.
+		local lift = 0
+		if structure.kind == "plant" then
+			local plotX, plotZ, plotYaw = plotUnder(px, pz)
+			if plotX then
+				px, pz, yaw = plotX, plotZ, plotYaw
+				lift = StructureModel.soilHeight()
+			end
+		end
 
 		-- Refaz o teste só a cada REFRESH (ou ao trocar de peça): a varredura
 		-- é cara para rodar todo quadro.
@@ -297,7 +333,7 @@ function BuildGhost.start()
 					part.Color = color
 				end
 			end
-			model:PivotTo(CFrame.new(px, 0, pz) * CFrame.Angles(0, math.rad(yaw), 0))
+			model:PivotTo(CFrame.new(px, lift, pz) * CFrame.Angles(0, math.rad(yaw), 0))
 			model.Parent = Workspace
 			return
 		end

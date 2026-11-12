@@ -10,6 +10,7 @@
 | `src/shared/Build` | `Shared.Build` | Regras puras da construção (`BuildRules`: posição livre, giro, círculos, dano, aliados) e do baú (`ChestRules`) |
 | `src/shared/Mobs` | `Shared.Mobs` | Regras puras dos mobs: `MobRules` (números), `MobBrain` (cérebro), `MobMove`, `MobSpawn`; e a matemática e a config das animações (`MobAnim`, `MobAnimConfig`) |
 | `src/shared/Missions` | `Shared.Missions` | Regras puras das missões: diárias e semanais (`PeriodRules`), conquistas (`AchievementRules`), chrono quests (`ChronoRules`) e o formato salvo (`MissionData`). Veja `missoes.md` |
+| `src/shared/Farm` | `Shared.Farm` | Regras puras da fazenda: crescer, rega, frutos, colher (`PlantRules`; veja `fazenda.md`) |
 | `src/shared/Simulation` | `Shared.Simulation` | Lógica que roda **dentro da simulação** do Server Authority |
 | `src/shared/Models` | `Shared.Models` | Modelos montados por código (ferramenta na mão, corpo do personagem) |
 | `src/shared/Data` | `Shared.Data` | Regras puras dos dados salvos (moeda, estatísticas, configurações, migrações) |

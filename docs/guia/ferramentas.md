@@ -4,11 +4,12 @@ Os modelos de `ReplicatedStorage.Assets.Tools` viram itens com os números e as 
 
 ## Liberadas e só para teste
 
-**Liberadas:** martelos de pedra e ouro, escudos de madeira, pedra e ouro, chave inglesa. Também as armas que já existiam: picaretas, espadas e lanças até o ouro.
+**Liberadas:** martelos de pedra e ouro, escudos de madeira, pedra e ouro, chave inglesa, pás de pedra e ouro, forcado e regador (fazenda, 12/11). Também as armas que já existiam: picaretas, espadas e lanças até o ouro.
 
 **Só para teste (`testOnly`):**
 - **Por falta de material:** espadas e lanças acima do ouro, inclusive dragão, lava, pirata e caranguejo; martelos e escudos de diamante para cima; Super Martelo.
-- **Por falta de sistema:** pás (cavar), forcados e regador (fazenda), facão (caixa de mob em dobro).
+- **Por falta de material:** pás de diamante e ametista; forcado de ouro (pede a Peça do Forcado, de quest).
+- **Por falta de sistema:** facão (caixa de mob em dobro).
 - **Itens de quest:** Orbe Azul (`dragon_orb`), Orbe de Lava (`lava_orb`) e Peça do Forcado (`pitchfork_part`).
 
 Para liberar, apague o `testOnly = true` do item em `src/shared/Defs/Items.luau` e dos materiais da receita.
@@ -23,7 +24,10 @@ Para liberar, apague o `testOnly = true` do item em `src/shared/Defs/Items.luau`
 | Escudo | `shield = { defense, mobDefense }`: **na mão**, soma com a defesa da peça de cabeça (`golpe − capacete − escudo`). Bate com o dano do material (1 a 6) e não deixa lento. `arrowDefense` é só dado. |
 | Animação na mão | `attackAnim`: `"swing"` (arco de lado: picaretas, espadas, martelos), `"thrust"` (estocada, mãos do lado do corpo: lanças e forcados) ou `"bash"` (escudos: seguro com as duas mãos à frente do corpo e de frente; o golpe avança as duas mãos com o escudo). Números em `BonecoConfig` (`SHIELD_HAND_X`, `SHIELD_HOLD_FORWARD`, `SHIELD_BASH_DISTANCE`). A pegada de cada modelo se ajusta na bancada (`scripts/studio/weapon-bench.luau`). |
 | Chave inglesa | `repair = 70`: golpe numa construção **sua** danificada devolve até 70 de vida, sem passar do máximo, e não abre a porta. Em construção alheia, é golpe de mão. |
-| Pá, forcado, regador, facão | `dig`, `harvest`, `waters`, `butcher`: só dado, até cavar, fazenda e caixa de mob em dobro existirem. |
+| Pá | `dig`: o golpe sem alvo cava terra ou areia (`coleta.md`). |
+| Forcado | `harvest`: frutos colhidos por golpe numa planta (forcado 2, de ouro 3; o resto colhe 1). Veja `fazenda.md`. |
+| Regador | O vazio (`watering_can`) enche segurando o botão perto da água; o cheio (`watering_can_full`, `waters`) rega planta e canteiro a cada golpe e nunca esvazia. |
+| Facão | `butcher`: só dado, até a caixa de mob em dobro existir. |
 
 O código fica em `ArmorRules.reduce` (escudo), `MobRules.damageOf` (bônus), `BuildRules.damageOf` e `BuildRules.repairAmount` (martelo e chave). No servidor, ficam em `CharacterService`, `GatherService`, `MobService` e `StructureService`. Os testes estão em `tests/toolrules.spec.luau` e `tests/toolitems.spec.luau`.
 

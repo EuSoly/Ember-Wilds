@@ -138,6 +138,18 @@ builders.station = function(model, side, color)
 	return body
 end
 
+-- Canteiro: tábua rente ao chão como o piso (não colide; anda-se por cima).
+builders.plot = function(model, side, color)
+	local deck = newPart("Deck", Vector3.new(side, 0.6, side), CFrame.new(0, 0.3, 0), darker(color), model)
+	deck.Material = Enum.Material.WoodPlanks
+	return decor(deck)
+end
+
+-- Planta: um tronco baixo que colide (como o arbusto); o visual é o estágio.
+builders.plant = function(model, side, color)
+	return newPart("Stem", Vector3.new(side * 0.6, 1.5, side * 0.6), CFrame.new(0, 0.75, 0), color, model)
+end
+
 -- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,
 -- placa, poço e cama.
 for _, kind in { "extractor", "furnace", "sign", "well", "bed", "totem", "resurrection", "emerald_machine" } do
@@ -283,6 +295,21 @@ local function rememberPanels(model: Model, visual: Model)
 	end
 end
 
+-- Fazenda (FarmService). A planta usa os modelos de Assets.Farming.<crop>
+-- (stage_01 a stage_04, mesmo pivô no chão); o canteiro, Assets.Structures.plot.
+local PLANT_STAGE = "PlantStage" -- estágio do visual atual
+local LEAF_COLOR = "LeafColor" -- cor original de cada peça de folha (para tirar o amarelado)
+local LEAF_TEXTURE = "LeafTexture" -- textura original da folha (a seca fica sem)
+local HARVEST_ALPHA = "HarvestTransparency"
+
+local function farmTemplate(crop: string, stage: number): Model?
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local farming = assets and assets:FindFirstChild("Farming")
+	local folder = farming and farming:FindFirstChild(crop)
+	local template = folder and folder:FindFirstChild(string.format("stage_%02d", stage))
+	return if template and template:IsA("Model") then template else nil
+end
+
 function StructureModel.build(itemId: string, def: StructureDef): Model
 	local model: Model
 	if def.kind == "fire" then
@@ -298,7 +325,20 @@ function StructureModel.build(itemId: string, def: StructureDef): Model
 		main.PivotOffset = main.CFrame:Inverse()
 	end
 	model.Name = itemId
-	local visual = cloneVisual(itemId)
+	local visual = if def.plant then farmTemplate(def.plant.crop, 1) else cloneVisual(itemId)
+	if visual and def.plant then
+		visual = visual:Clone()
+		visual.Name = VISUAL_NAME
+		for _, part in visual:GetDescendants() do
+			if part:IsA("BasePart") then
+				part.Anchored = true
+				part.CanCollide = false
+				part.CanQuery = false
+				part.CanTouch = false
+			end
+		end
+		model:SetAttribute(PLANT_STAGE, 1)
+	end
 	if visual then
 		hidePlaceholder(model)
 		-- Pivô do template (centro da base) no pivô da peça (centro do chão); o
@@ -402,6 +442,123 @@ function StructureModel.setOpen(model: Model, open: boolean)
 			slidePanel(part, pivot, open)
 		end
 	end
+end
+
+-- Altura do topo da terra do canteiro acima do pivô (atributo SoilHeight do
+-- modelo); a planta num canteiro sobe isso. Sem o modelo: 0.
+function StructureModel.soilHeight(): number
+	local assets = ReplicatedStorage:FindFirstChild("Assets")
+	local structures = assets and assets:FindFirstChild("Structures")
+	local plot = structures and structures:FindFirstChild("plot")
+	local height = plot and plot:GetAttribute("SoilHeight")
+	return if type(height) == "number" then height else 0
+end
+
+-- Põe na planta o visual do estágio (1 a 4), `lift` studs acima do chão (a
+-- terra do canteiro), se ainda não for esse. Sem o modelo, fica o provisório.
+function StructureModel.setPlantStage(model: Model, crop: string, stage: number, lift: number)
+	if model:GetAttribute(PLANT_STAGE) == stage then
+		return
+	end
+	local template = farmTemplate(crop, stage)
+	if template == nil then
+		return
+	end
+	local old = model:FindFirstChild(VISUAL_NAME)
+	local visual = template:Clone()
+	visual.Name = VISUAL_NAME
+	for _, part in visual:GetDescendants() do
+		if part:IsA("BasePart") then
+			part.Anchored = true
+			part.CanCollide = false
+			part.CanQuery = false
+			part.CanTouch = false
+		end
+	end
+	if old == nil then
+		hidePlaceholder(model)
+	else
+		old:Destroy()
+	end
+	visual:PivotTo(model:GetPivot() * CFrame.new(0, lift, 0))
+	visual.Parent = model
+	model:SetAttribute(PLANT_STAGE, stage)
+end
+
+-- Frutos visíveis: as peças colhíveis (Harvestable, com HarvestIndex) até `fruit`.
+function StructureModel.setPlantFruit(model: Model, fruit: number)
+	local visual = model:FindFirstChild(VISUAL_NAME)
+	if visual == nil then
+		return
+	end
+	for _, part in visual:GetDescendants() do
+		if not part:IsA("BasePart") or part:GetAttribute("Harvestable") ~= true then
+			continue
+		end
+		local original = part:GetAttribute(HARVEST_ALPHA)
+		if type(original) ~= "number" then
+			original = part.Transparency
+			part:SetAttribute(HARVEST_ALPHA, original)
+		end
+		local index = part:GetAttribute("HarvestIndex")
+		local shown = type(index) == "number" and index <= fruit
+		part.Transparency = if shown then original :: number else 1
+	end
+end
+
+-- Planta seca fora do canteiro: folhas cor de palha (Palette.farm.leafDry). O
+-- modelo usa um atlas de textura que o Color não tinge, então a folha seca perde
+-- a textura (fica chapada) e volta com ela ao regar.
+function StructureModel.setPlantDry(model: Model, dry: boolean)
+	local visual = model:FindFirstChild(VISUAL_NAME)
+	if visual == nil then
+		return
+	end
+	local dryColor = Theme.color(Palette.farm.leafDry)
+	for _, part in visual:GetDescendants() do
+		if not part:IsA("MeshPart") or part:GetAttribute("Harvestable") == true then
+			continue
+		end
+		local original = part:GetAttribute(LEAF_COLOR)
+		if typeof(original) ~= "Color3" then
+			original = part.Color
+			part:SetAttribute(LEAF_COLOR, original)
+			part:SetAttribute(LEAF_TEXTURE, part.TextureID)
+		end
+		local texture = part:GetAttribute(LEAF_TEXTURE)
+		part.Color = if dry then dryColor else original :: Color3
+		part.TextureID = if dry then "" elseif type(texture) == "string" then texture else part.TextureID
+	end
+end
+
+-- Terra do canteiro regada: uma película escura e translúcida (cópia da peça
+-- Soil sem textura, logo acima dela) que aparece molhada e some seca. O Color
+-- da terra não muda o atlas de textura, por isso a película.
+local WET_SOIL = "WetSoil"
+local WET_ALPHA = 0.5 -- transparência da película (0 = terra preta)
+function StructureModel.setSoilWet(model: Model, wet: boolean)
+	local visual = model:FindFirstChild(VISUAL_NAME)
+	local soil = visual and visual:FindFirstChild("Soil")
+	if visual == nil or soil == nil or not soil:IsA("BasePart") then
+		return
+	end
+	local existing = visual:FindFirstChild(WET_SOIL)
+	local film: BasePart
+	if existing and existing:IsA("BasePart") then
+		film = existing
+	else
+		film = soil:Clone()
+		film.Name = WET_SOIL
+		if film:IsA("MeshPart") then
+			film.TextureID = ""
+		end
+		film.Material = Enum.Material.SmoothPlastic
+		film.Color = Theme.color(Palette.farm.wetSoil)
+		film.CastShadow = false
+		film.CFrame = soil.CFrame + Vector3.new(0, 0.03, 0)
+		film.Parent = visual
+	end
+	film.Transparency = if wet then WET_ALPHA else 1
 end
 
 return StructureModel

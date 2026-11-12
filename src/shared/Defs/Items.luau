@@ -150,7 +150,13 @@ local Items: { [string]: ItemDef } = {
 	-- Gemas verde e azul: prêmios de Sobreviver e Mãos Limpas (Defs/Quests), liberadas.
 	green_gem = { id = "green_gem", nameKey = "item.green_gem", category = "resource", maxStack = 255 },
 	blue_gem = { id = "blue_gem", nameKey = "item.blue_gem", category = "resource", maxStack = 255 },
-	orange_gem = { id = "orange_gem", testOnly = true, nameKey = "item.orange_gem", category = "resource", maxStack = 255 },
+	orange_gem = {
+		id = "orange_gem",
+		testOnly = true,
+		nameKey = "item.orange_gem",
+		category = "resource",
+		maxStack = 255,
+	},
 	blue_cube = { id = "blue_cube", testOnly = true, nameKey = "item.blue_cube", category = "misc", maxStack = 255 },
 	lava_cube = { id = "lava_cube", testOnly = true, nameKey = "item.lava_cube", category = "misc", maxStack = 255 },
 	pilot_glasses = {
@@ -679,7 +685,6 @@ local Items: { [string]: ItemDef } = {
 	},
 	pitchfork = {
 		id = "pitchfork",
-		testOnly = true,
 		nameKey = "item.pitchfork",
 		category = "tool",
 		maxStack = 1,
@@ -697,10 +702,17 @@ local Items: { [string]: ItemDef } = {
 		reach = 4,
 		attackAnim = "thrust",
 	},
+	-- Regador (FarmService): o vazio enche segurando o botão perto da água (como o
+	-- balde); o cheio rega planta e canteiro a cada golpe e nunca esvazia.
 	watering_can = {
 		id = "watering_can",
-		testOnly = true,
 		nameKey = "item.watering_can",
+		category = "tool",
+		maxStack = 1,
+	},
+	watering_can_full = {
+		id = "watering_can_full",
+		nameKey = "item.watering_can_full",
 		category = "tool",
 		maxStack = 1,
 		waters = true,
@@ -1529,7 +1541,163 @@ local Items: { [string]: ItemDef } = {
 	ground = { id = "ground", nameKey = "item.ground", category = "resource", maxStack = 255 },
 	sand = { id = "sand", nameKey = "item.sand", category = "resource", maxStack = 255 },
 	book = { id = "book", nameKey = "item.book", category = "misc", maxStack = 1, craftSpeed = 3, handModel = true },
+
+	-- Fazenda (12/11, FarmService). Canteiro: camada do chão como o piso, em grade;
+	-- a terra dele mostra a rega. Vida: plot_life da config do Starve.
+	plot = {
+		id = "plot",
+		nameKey = "item.plot",
+		category = "placeable",
+		maxStack = 255,
+		structure = { kind = "plot", health = 3500, radius = 3.2, snap = true },
+	},
+	-- Frutos das culturas (comida: food_/drink_ da config do Starve). Só de teste até
+	-- as sementes deles saírem para o público.
+	wheat = { id = "wheat", testOnly = true, nameKey = "item.wheat", category = "resource", maxStack = 255 },
+	thornbush = { id = "thornbush", testOnly = true, nameKey = "item.thornbush", category = "resource", maxStack = 255 },
+	pumpkin = {
+		id = "pumpkin",
+		testOnly = true,
+		nameKey = "item.pumpkin",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 30, crumbColor = "#E8892B" },
+	},
+	carrot = {
+		id = "carrot",
+		testOnly = true,
+		nameKey = "item.carrot",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 20, crumbColor = "#F08A24" },
+	},
+	tomato = {
+		id = "tomato",
+		testOnly = true,
+		nameKey = "item.tomato",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 16, crumbColor = "#D9383A" },
+	},
+	watermelon = {
+		id = "watermelon",
+		testOnly = true,
+		nameKey = "item.watermelon",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 15, thirst = 8, crumbColor = "#E2474F" },
+	},
+	garlic = {
+		id = "garlic",
+		testOnly = true,
+		nameKey = "item.garlic",
+		category = "food",
+		maxStack = 255,
+		food = { hunger = 14, crumbColor = "#EFE6D2" },
+	},
+	-- Babosa: o efeito "heal" do Starve (3 de vida a cada 2 s por 10 s) de uma vez.
+	aloe_vera = {
+		id = "aloe_vera",
+		testOnly = true,
+		nameKey = "item.aloe_vera",
+		category = "food",
+		maxStack = 255,
+		food = { health = 15, crumbColor = "#6FAE5A" },
+	},
 }
+
+-- Sementes (structure.kind "plant"): uma por cultura, com os tempos da config
+-- oficial do Starve (grown_, born_, water_, time_life_<crop>, em segundos). max =
+-- frutos desenhados no stage_04 do modelo; fruitPoints = pontos da semente / 3.
+-- Só a de baga é pública; liberar outra = tirar o testOnly dela e do fruto.
+type Crop = {
+	crop: string,
+	fruit: string,
+	grow: number,
+	every: number,
+	water: number,
+	life: number,
+	max: number,
+	points: number,
+	spike: number?,
+	public: boolean?,
+}
+local CROPS: { Crop } = {
+	{
+		crop = "berry",
+		fruit = "berry",
+		grow = 40,
+		every = 120,
+		water = 200,
+		life = 3840,
+		max = 5,
+		points = 11,
+		public = true,
+	},
+	{ crop = "wheat", fruit = "wheat", grow = 16, every = 120, water = 200, life = 3840, max = 3, points = 11 },
+	{ crop = "pumpkin", fruit = "pumpkin", grow = 50, every = 160, water = 250, life = 3840, max = 1, points = 18 },
+	{ crop = "carrot", fruit = "carrot", grow = 30, every = 240, water = 200, life = 3840, max = 3, points = 18 },
+	{ crop = "tomato", fruit = "tomato", grow = 30, every = 240, water = 200, life = 3840, max = 3, points = 18 },
+	{
+		crop = "watermelon",
+		fruit = "watermelon",
+		grow = 180,
+		every = 240,
+		water = 200,
+		life = 2880,
+		max = 1,
+		points = 26,
+	},
+	{ crop = "garlic", fruit = "garlic", grow = 120, every = 240, water = 200, life = 3840, max = 3, points = 18 },
+	{
+		crop = "aloe_vera",
+		fruit = "aloe_vera",
+		grow = 200,
+		every = 240,
+		water = 200,
+		life = 3840,
+		max = 1,
+		points = 26,
+	},
+	-- Arbusto de espinho: maduro, machuca quem encosta como um espinho de pedra (wiki: 20).
+	{
+		crop = "thornbush",
+		fruit = "thornbush",
+		grow = 15,
+		every = 240,
+		water = 240,
+		life = 3840,
+		max = 1,
+		points = 18,
+		spike = 20,
+	},
+}
+for _, c in CROPS do
+	local id = c.crop .. "_seed"
+	Items[id] = {
+		id = id,
+		testOnly = if c.public then nil else true,
+		nameKey = "item." .. id,
+		category = "placeable",
+		maxStack = 255,
+		structure = {
+			kind = "plant",
+			health = 100,
+			radius = 1.5,
+			spikeDamage = c.spike,
+			plant = {
+				crop = c.crop,
+				fruit = c.fruit,
+				growSeconds = c.grow,
+				fruitSeconds = c.every,
+				waterSeconds = c.water,
+				lifeSeconds = c.life,
+				maxFruit = c.max,
+				fruitPoints = math.floor(c.points / 3 + 0.5),
+			},
+		},
+	}
+end
 
 for _, item in Items do
 	if item.food ~= nil then
@@ -1551,7 +1719,7 @@ for _, item in Items do
 		end
 	end
 	if item.structure ~= nil then
-		for _, field in { "extractor", "furnace", "well", "bed" } do
+		for _, field in { "extractor", "furnace", "well", "bed", "plant" } do
 			local block = (item.structure :: any)[field]
 			if block ~= nil then
 				table.freeze(block)
