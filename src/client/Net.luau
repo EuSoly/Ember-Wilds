@@ -173,9 +173,13 @@ Queue.Reliable[24] = table.create(256)
 Queue.Reliable[28] = table.create(256)
 Queue.Reliable[30] = table.create(256)
 Queue.Reliable[32] = table.create(256)
+Queue.Reliable[40] = table.create(256)
+Queue.Reliable[43] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type RankEntry = { UserId: number, Name: string, Value: number }
+export type MissionCard = { Id: string, Progress: number, Target: number, State: number, EndsAt: number }
+export type AchievementCard = { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean }
 function SerdesFunctions.ReadEVENT_InventorySync(): ({ Capacity: number, Slots: {[number]: { Id: string, Count: number }} })
 	-- Read BLOCK: 3 bytes
 	local BLOCK_START = Read(3)
@@ -724,6 +728,218 @@ function SerdesFunctions.WriteEVENT_TeamLock(Value: nil): ()
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 39)
 end
 
+function SerdesFunctions.ReadEVENT_MissionsData(): ({ Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } })
+	-- Read BLOCK: 48 bytes
+	local BLOCK_START = Read(48)
+	local Value = {} :: any
+	Value.Creative = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	Value.InLife = (buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1)
+	-- START ARRAY
+	local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 2)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Chrono = table.create(Length)
+		-- Read BLOCK: 18 bytes
+	local ARRAY_START_1 = Read(18 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_0)
+		Item_1.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Id < 1 then error(`Expected length of "Item_1.Id" to be larger than or equal to 1, got {#Item_1.Id} instead.`) end
+		if #Item_1.Id > 40 then error(`Expected length of "Item_1.Id" to be smaller than or equal to  40, got {#Item_1.Id} instead.`) end
+		-- Read 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Progress = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_1)
+		-- Read 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Target = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_2)
+		-- Read 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.State = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_3)
+		if Item_1.State < 0 then error(`Expected "Item_1.State" to be larger than or equal to 0, got {Item_1.State} instead.`) end
+		if Item_1.State > 4 then error(`Expected "Item_1.State" to be smaller than or equal to 4, got {Item_1.State} instead.`) end
+		-- Read 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		Item_1.EndsAt = buffer.readf64(RecieveBuffer, OPERATION_OFFSET_4)
+		table.insert(Value.Chrono, Item_1)
+	end
+	-- END ARRAY
+	Value.LifeDay = buffer.readu16(RecieveBuffer, BLOCK_START + 4)
+	-- START ARRAY
+	Length = buffer.readu16(RecieveBuffer, BLOCK_START + 6)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Daily = table.create(Length)
+		-- Read BLOCK: 18 bytes
+	local ARRAY_START_1 = Read(18 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_0)
+		Item_1.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Id < 1 then error(`Expected length of "Item_1.Id" to be larger than or equal to 1, got {#Item_1.Id} instead.`) end
+		if #Item_1.Id > 40 then error(`Expected length of "Item_1.Id" to be smaller than or equal to  40, got {#Item_1.Id} instead.`) end
+		-- Read 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Progress = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_1)
+		-- Read 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Target = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_2)
+		-- Read 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.State = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_3)
+		if Item_1.State < 0 then error(`Expected "Item_1.State" to be larger than or equal to 0, got {Item_1.State} instead.`) end
+		if Item_1.State > 4 then error(`Expected "Item_1.State" to be smaller than or equal to 4, got {Item_1.State} instead.`) end
+		-- Read 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		Item_1.EndsAt = buffer.readf64(RecieveBuffer, OPERATION_OFFSET_4)
+		table.insert(Value.Daily, Item_1)
+	end
+	-- END ARRAY
+	Value.DailyFinal = {} :: any
+	Length = buffer.readu8(RecieveBuffer, BLOCK_START + 8)
+	Value.DailyFinal.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.DailyFinal.Id < 1 then error(`Expected length of "Value.DailyFinal.Id" to be larger than or equal to 1, got {#Value.DailyFinal.Id} instead.`) end
+	if #Value.DailyFinal.Id > 40 then error(`Expected length of "Value.DailyFinal.Id" to be smaller than or equal to  40, got {#Value.DailyFinal.Id} instead.`) end
+	Value.DailyFinal.Progress = buffer.readu32(RecieveBuffer, BLOCK_START + 9)
+	Value.DailyFinal.Target = buffer.readu32(RecieveBuffer, BLOCK_START + 13)
+	Value.DailyFinal.State = buffer.readu8(RecieveBuffer, BLOCK_START + 17)
+	if Value.DailyFinal.State < 0 then error(`Expected "Value.DailyFinal.State" to be larger than or equal to 0, got {Value.DailyFinal.State} instead.`) end
+	if Value.DailyFinal.State > 4 then error(`Expected "Value.DailyFinal.State" to be smaller than or equal to 4, got {Value.DailyFinal.State} instead.`) end
+	Value.DailyFinal.EndsAt = buffer.readf64(RecieveBuffer, BLOCK_START + 18)
+	-- START ARRAY
+	Length = buffer.readu16(RecieveBuffer, BLOCK_START + 26)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Weekly = table.create(Length)
+		-- Read BLOCK: 18 bytes
+	local ARRAY_START_1 = Read(18 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_0)
+		Item_1.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Id < 1 then error(`Expected length of "Item_1.Id" to be larger than or equal to 1, got {#Item_1.Id} instead.`) end
+		if #Item_1.Id > 40 then error(`Expected length of "Item_1.Id" to be smaller than or equal to  40, got {#Item_1.Id} instead.`) end
+		-- Read 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Progress = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_1)
+		-- Read 4
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Target = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_2)
+		-- Read 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.State = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_3)
+		if Item_1.State < 0 then error(`Expected "Item_1.State" to be larger than or equal to 0, got {Item_1.State} instead.`) end
+		if Item_1.State > 4 then error(`Expected "Item_1.State" to be smaller than or equal to 4, got {Item_1.State} instead.`) end
+		-- Read 8
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 8
+		Item_1.EndsAt = buffer.readf64(RecieveBuffer, OPERATION_OFFSET_4)
+		table.insert(Value.Weekly, Item_1)
+	end
+	-- END ARRAY
+	Value.WeeklyFinal = {} :: any
+	Length = buffer.readu8(RecieveBuffer, BLOCK_START + 28)
+	Value.WeeklyFinal.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.WeeklyFinal.Id < 1 then error(`Expected length of "Value.WeeklyFinal.Id" to be larger than or equal to 1, got {#Value.WeeklyFinal.Id} instead.`) end
+	if #Value.WeeklyFinal.Id > 40 then error(`Expected length of "Value.WeeklyFinal.Id" to be smaller than or equal to  40, got {#Value.WeeklyFinal.Id} instead.`) end
+	Value.WeeklyFinal.Progress = buffer.readu32(RecieveBuffer, BLOCK_START + 29)
+	Value.WeeklyFinal.Target = buffer.readu32(RecieveBuffer, BLOCK_START + 33)
+	Value.WeeklyFinal.State = buffer.readu8(RecieveBuffer, BLOCK_START + 37)
+	if Value.WeeklyFinal.State < 0 then error(`Expected "Value.WeeklyFinal.State" to be larger than or equal to 0, got {Value.WeeklyFinal.State} instead.`) end
+	if Value.WeeklyFinal.State > 4 then error(`Expected "Value.WeeklyFinal.State" to be smaller than or equal to 4, got {Value.WeeklyFinal.State} instead.`) end
+	Value.WeeklyFinal.EndsAt = buffer.readf64(RecieveBuffer, BLOCK_START + 38)
+	-- START ARRAY
+	Length = buffer.readu16(RecieveBuffer, BLOCK_START + 46)
+	if Length < 0 then error(`Expected "Length" to be larger than or equal to 0, got {Length} instead.`) end
+	if Length > 65535 then error(`Expected "Length" to be smaller than or equal to 65535, got {Length} instead.`) end
+	Value.Achievements = table.create(Length)
+		-- Read BLOCK: 8 bytes
+	local ARRAY_START_1 = Read(8 * Length)
+	for Index = 1, Length do
+		local Item_1 = {} :: any
+		-- Read 1
+		local OPERATION_OFFSET_0 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Length = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_0)
+		Item_1.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Item_1.Id < 1 then error(`Expected length of "Item_1.Id" to be larger than or equal to 1, got {#Item_1.Id} instead.`) end
+		if #Item_1.Id > 40 then error(`Expected length of "Item_1.Id" to be smaller than or equal to  40, got {#Item_1.Id} instead.`) end
+		-- Read 4
+		local OPERATION_OFFSET_1 = ARRAY_START_1
+		ARRAY_START_1 += 4
+		Item_1.Progress = buffer.readu32(RecieveBuffer, OPERATION_OFFSET_1)
+		-- Read 1
+		local OPERATION_OFFSET_2 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.Claimed = buffer.readu8(RecieveBuffer, OPERATION_OFFSET_2)
+		if Item_1.Claimed < 0 then error(`Expected "Item_1.Claimed" to be larger than or equal to 0, got {Item_1.Claimed} instead.`) end
+		if Item_1.Claimed > 3 then error(`Expected "Item_1.Claimed" to be smaller than or equal to 3, got {Item_1.Claimed} instead.`) end
+		-- Read 1
+		local OPERATION_OFFSET_3 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.Ready = (buffer.readu8(RecieveBuffer, OPERATION_OFFSET_3) == 1)
+		-- Read 1
+		local OPERATION_OFFSET_4 = ARRAY_START_1
+		ARRAY_START_1 += 1
+		Item_1.Soon = (buffer.readu8(RecieveBuffer, OPERATION_OFFSET_4) == 1)
+		table.insert(Value.Achievements, Item_1)
+	end
+	-- END ARRAY
+	return Value
+end
+
+function SerdesFunctions.WriteEVENT_RequestMissions(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 41)
+end
+
+function SerdesFunctions.WriteEVENT_ClaimMission(Value: { Kind: number, Id: string }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 42)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Kind)
+	local Length = #Value.Id
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
+	Allocate(Length)
+	buffer.writestring(SendBuffer, SendOffset, Value.Id, Length)
+end
+
+function SerdesFunctions.ReadEVENT_MissionNotice(): ({ Kind: number, Id: string, Done: boolean })
+	-- Read BLOCK: 3 bytes
+	local BLOCK_START = Read(3)
+	local Value = {} :: any
+	Value.Kind = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+	if Value.Kind < 1 then error(`Expected "Value.Kind" to be larger than or equal to 1, got {Value.Kind} instead.`) end
+	if Value.Kind > 4 then error(`Expected "Value.Kind" to be smaller than or equal to 4, got {Value.Kind} instead.`) end
+	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	Value.Id = buffer.readstring(RecieveBuffer, Read(Length), Length)
+	if #Value.Id < 1 then error(`Expected length of "Value.Id" to be larger than or equal to 1, got {#Value.Id} instead.`) end
+	if #Value.Id > 40 then error(`Expected length of "Value.Id" to be smaller than or equal to  40, got {#Value.Id} instead.`) end
+	Value.Done = (buffer.readu8(RecieveBuffer, BLOCK_START + 2) == 1)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -849,6 +1065,18 @@ if not RunService:IsRunning() then
 	},
 	TeamLock = {
 		Fire = NOOP
+	},
+	MissionsData = {
+		On = NOOP
+	},
+	RequestMissions = {
+		Fire = NOOP
+	},
+	ClaimMission = {
+		Fire = NOOP
+	},
+	MissionNotice = {
+		On = NOOP
 	},
 	})
 	return Returns :: BLINK_EVENTS_SYMBOL
@@ -1011,6 +1239,26 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"SpinResult\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[32], {Value} :: {any})
+			end
+		elseif Index == 40 then
+			local Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } } = SerdesFunctions.ReadEVENT_MissionsData()
+			if Events.Reliable[40] ~= nil then
+				task.spawn(Events.Reliable[40], Value)
+			else
+				if #Queue.Reliable[40] > 256 then
+					warn("[Blink]: Event queue of \"MissionsData\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[40], {Value} :: {any})
+			end
+		elseif Index == 43 then
+			local Value: { Kind: number, Id: string, Done: boolean } = SerdesFunctions.ReadEVENT_MissionNotice()
+			if Events.Reliable[43] ~= nil then
+				task.spawn(Events.Reliable[43], Value)
+			else
+				if #Queue.Reliable[43] > 256 then
+					warn("[Blink]: Event queue of \"MissionNotice\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[43], {Value} :: {any})
 			end
 		end
 	end
@@ -1359,6 +1607,44 @@ local Returns = table.freeze({
 	TeamLock = {
 		Fire = function(Value: nil): ()
 			SerdesFunctions.WriteEVENT_TeamLock(Value)
+		end
+	},
+	MissionsData = {
+		On = function(Listener: (Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }) -> ()): () -> ()
+			Events.Reliable[40] = Listener
+			for Index, Arguments in Queue.Reliable[40] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[40] = {}
+			return function (): ()
+				if Events.Reliable[40] == Listener then
+					Events.Reliable[40] = nil
+				end
+			end
+		end
+	},
+	RequestMissions = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_RequestMissions(Value)
+		end
+	},
+	ClaimMission = {
+		Fire = function(Value: { Kind: number, Id: string }): ()
+			SerdesFunctions.WriteEVENT_ClaimMission(Value)
+		end
+	},
+	MissionNotice = {
+		On = function(Listener: (Value: { Kind: number, Id: string, Done: boolean }) -> ()): () -> ()
+			Events.Reliable[43] = Listener
+			for Index, Arguments in Queue.Reliable[43] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[43] = {}
+			return function (): ()
+				if Events.Reliable[43] == Listener then
+					Events.Reliable[43] = nil
+				end
+			end
 		end
 	},
 })

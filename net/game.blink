@@ -477,3 +477,74 @@ event TeamLock {
 	Type: Reliable,
 	Call: SingleAsync
 }
+
+-- Missões (docs/guia/missoes.md). O servidor (MissionService + QuestService)
+-- manda o retrato completo só para o dono; o cliente só pede e resgata.
+-- State: 0 em andamento, 1 pronta, 2 resgatada, 3 falhou, 4 em breve/trancada.
+-- EndsAt: fim do período (unix) nas diárias/semanais; fim do prazo (tempo do
+-- servidor, Workspace:GetServerTimeNow) na Partida.
+struct MissionCard {
+	Id: string(1..40),
+	Progress: u32,
+	Target: u32,
+	State: u8(0..4),
+	EndsAt: f64
+}
+
+-- Claimed: último nível resgatado; Ready: o próximo dá para resgatar; Soon: o
+-- próximo ainda não tem prêmio ("em breve").
+struct AchievementCard {
+	Id: string(1..40),
+	Progress: u32,
+	Claimed: u8(0..3),
+	Ready: boolean,
+	Soon: boolean
+}
+
+-- Final: Id = "final", Target = missões do sorteio, Progress = resgatadas.
+event MissionsData {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Creative: boolean,
+		InLife: boolean,
+		Chrono: MissionCard[],
+		LifeDay: u16,
+		Daily: MissionCard[],
+		DailyFinal: MissionCard,
+		Weekly: MissionCard[],
+		WeeklyFinal: MissionCard,
+		Achievements: AchievementCard[]
+	}
+}
+
+event RequestMissions {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+-- Kind: 1 Partida, 2 Diária, 3 Semanal, 4 Conquista. Id = "final" para as finais.
+event ClaimMission {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Kind: u8(1..4),
+		Id: string(1..40)
+	}
+}
+
+-- Faixa no topo: Done = completou (ou nível de conquista liberado); false =
+-- falhou. Id = "inventory_full" (Kind 1) = resgate recusado por falta de espaço.
+event MissionNotice {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Kind: u8(1..4),
+		Id: string(1..40),
+		Done: boolean
+	}
+}

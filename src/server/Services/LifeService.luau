@@ -28,6 +28,33 @@ local LifeService = {}
 export type LifeSummary = { points: number, days: number, currency: number, xp: number }
 
 local lives: { [Player]: LifeRules.Life } = {}
+local startedListeners: { (Player) -> () } = {}
+local endedListeners: { (Player) -> () } = {}
+
+local function notify(listeners: { (Player) -> () }, player: Player)
+	for _, listener in listeners do
+		task.spawn(listener, player)
+	end
+end
+
+-- Segundos vividos na vida atual (nil sem vida ativa). Relógio do LifeRules (os.clock).
+function LifeService.lifeSeconds(player: Player): number?
+	local life = lives[player]
+	if life == nil or not life.active then
+		return nil
+	end
+	return math.max(os.clock() - life.startedAt, 0)
+end
+
+-- Avisos de vida começando (personagem novo) e terminando (morte ou saída).
+-- As missões da Partida (QuestService) vivem entre os dois.
+function LifeService.onStarted(listener: (Player) -> ())
+	table.insert(startedListeners, listener)
+end
+
+function LifeService.onEnded(listener: (Player) -> ())
+	table.insert(endedListeners, listener)
+end
 
 -- Pontos da vida atual: número finito e não negativo, senão 0.
 local function readScore(player: Player): number
@@ -53,6 +80,7 @@ function LifeService.endLife(player: Player): LifeSummary?
 	if seconds == nil then
 		return nil
 	end
+	notify(endedListeners, player)
 	local score = readScore(player)
 	local days = LifeRules.daysSurvived(seconds)
 	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score), "life_end")
@@ -81,6 +109,7 @@ local function startLifeIfNone(player: Player)
 	local life = lives[player]
 	if life == nil or not life.active then
 		lives[player] = LifeRules.start(os.clock())
+		notify(startedListeners, player)
 	end
 end
 

@@ -4,6 +4,8 @@
 -- atual é o MissionService (passa `read` e `lifeValue`).
 local MissionConfig = require("./MissionConfig")
 local MissionData = require("./MissionData")
+local RankConfig = require("../Data/RankConfig")
+local RankRules = require("../Data/RankRules")
 local Rng = require("../World/Rng")
 local Types = require("../Defs/Types")
 
@@ -163,6 +165,20 @@ function PeriodRules.claimFinal(save: PeriodSave, period: Period): { Reward }?
 	end
 	save.FinalClaimed = true
 	return PeriodRules.finalRewards(save, period)
+end
+
+-- Último segundo (unix) do período: diária = 23:59:59 de Brasília do dia;
+-- semanal = domingo 23:59:59 (o mesmo corte do ranking).
+function PeriodRules.endsAt(period: Period, index: number): number
+	if period == "weekly" then
+		return RankRules.weekEnd(index)
+	end
+	return (index + 1) * RankConfig.DAY_SECONDS - RankConfig.UTC_OFFSET - 1
+end
+
+-- Índice do período no instante (unix).
+function PeriodRules.indexAt(period: Period, unixTime: number): number
+	return if period == "weekly" then RankRules.weekIndex(unixTime) else RankRules.dayIndex(unixTime)
 end
 
 return PeriodRules

@@ -252,4 +252,12 @@ return {
 		assert(not AchievementRules.isSoon(Defs.Achievements.hunter, 2), "caçador III tem kit")
 		assert(AchievementRules.claimable(Defs.Achievements.hunter, 2, 5000) == 3, "caçador III resgatável")
 	end,
+
+	["period ends at midnight and sunday in Brasilia"] = function()
+		local day = RankRules.dayIndex(MON_09_0000)
+		assert(PeriodRules.endsAt("daily", day) == MON_09_0000 + 86400 - 1, "diária acaba 23:59:59")
+		assert(PeriodRules.endsAt("daily", day - 1) == MON_09_0000 - 1, "dia anterior acaba antes da meia-noite")
+		local week = RankRules.weekIndex(MON_09_0000)
+		assert(PeriodRules.endsAt("weekly", week) == RankRules.weekEnd(week), "semanal = fim da semana do ranking")
+	end,
 }
