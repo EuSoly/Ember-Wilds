@@ -35,12 +35,15 @@ local SpinSoundConfig = {
 	land = sound(9126267413, 0.55), -- ProSoundEffects "Wood Hit Giant Wood Beam Dull Thuds Knocks 1" (0,63 s)
 	shine = sound(9116394545, 0.5), -- ProSoundEffects "Magic Glows Soft Clusters Of Chiming Hits 1" (1,43 s)
 	shineFor = table.freeze({ 0, 0, 0.5, 0.8, 1 }),
+	-- Revelação (12/11): todos da APM (licenciados pela Roblox, não somem da
+	-- loja), crescendo com a raridade. Antes, 1 a 4 eram de criadores comuns.
+	-- Escolhidos pela descrição, sem ouvir.
 	reveal = table.freeze({
-		sound(89768356509411, 0.5), -- Comum: "snd_ding"
-		sound(99980076888596, 0.5), -- Raro: "jingle chime positive"
-		sound(110445510039757, 0.6), -- Épico: "achievement"
-		sound(4757565956, 0.6), -- Lendário: "TaDa"
-		sound(1846901578, 0.6), -- Mítico: APM "Bigger Than Big 9" (orquestra)
+		sound(1839997929, 0.4), -- Comum: APM "Correct Answer 2", acerto com synth brilhante (4 s)
+		sound(1839997938, 0.5), -- Raro: APM "Correct Answer 3", acerto com brilho subindo (5 s)
+		sound(1845399641, 0.55), -- Épico: APM "Ta Dah" (5,3 s)
+		sound(1845415163, 0.6), -- Lendário: APM "Heraldic Bugle", clarim de arauto (5 s)
+		sound(1846901578, 0.6), -- Mítico: APM "Bigger Than Big 9", orquestra (5,8 s)
 	}),
 	tension = table.freeze({
 		table.freeze({ riser = 0, drum = 0 }), -- Comum

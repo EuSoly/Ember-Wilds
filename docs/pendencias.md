@@ -14,7 +14,7 @@ Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição 
 - **Som abafado embaixo do telhado** (identidade visual): não feito.
 - **Faltam sons próprios:** falcão e os bichos sem IA (usam os genéricos), tipos de construção (pedra e madeira soam igual), diamante e outros materiais ainda sem recurso no jogo, clima (inverno, deserto, lava), montaria, teia da aranha, espinho, cama e placa.
 - **Sons da roleta** continuam em `SpinSoundConfig`/`SpinSounds`, fora do `SoundPlayer` (sem o limite de sons).
-- **Roleta, ouvir e decidir (12/11):** os sons novos (`start`, `land`, `shine`) foram escolhidos só pelo nome; conferir a mistura e os volumes ouvindo, e se o freio novo do carrossel (Cubic no lugar de Quint, em `Reel.SPIN_INFO`) agrada. As revelações de Comum a Lendário (`reveal[1..4]`) são áudios de criadores comuns, não da Roblox/APM/PSE: conferir se tocam no jogo publicado. Nos giros de teste só Comum e Épico tiveram a revelação conferida de verdade: os efeitos de Lendário e Mítico foram vistos chamando o `SpinFx` à mão, e os sons deles não foram ouvidos.
+- **Roleta, ouvir e decidir (12/11):** os sons novos (`start`, `land`, `shine`) foram escolhidos só pelo nome; conferir a mistura e os volumes ouvindo, e se o freio novo do carrossel (Cubic no lugar de Quint, em `Reel.SPIN_INFO`) agrada. As revelações (`reveal[1..5]`) viraram todas da APM em 12/11, escolhidas pela descrição: ouvir e trocar a que não combinar. Nos giros de teste só Comum e Épico tiveram a revelação conferida de verdade: os efeitos de Lendário e Mítico foram vistos chamando o `SpinFx` à mão, e os sons deles não foram ouvidos.
 
 ## Construções (11/11)
 
