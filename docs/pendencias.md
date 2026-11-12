@@ -179,10 +179,12 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 
 ## Missões (12/11)
 
-- **Artes da tela:** recortadas em `assets/ui/missoes/`, mas ainda sem envio para a conta do Elizeu (ids vazios em `MissionImages`: a tela usa o desenho de reserva). Enviar com a confirmação dele.
+- **Artes da tela:** enviadas na conta do Elizeu em 12/11 (ids em `MissionImages`). Três (trilho da barra, cartão em andamento, ícone do Caçador) não desenhavam e foram reenviadas com um pixel transparente mudado.
 - **Skins exclusivas das conquistas:** Lenhador, Minerador, Lenda (Mítica), Artesão (livro), Guerreiro (caixa), Fiel (mochila) e a do Cronista estão "Em breve" até o Elizeu escolher; ao escolher, tirar a skin das roletas (`inSpins = false`) e dos pacotes.
 - **Modelos das gemas verde e azul:** liberadas como prêmio de quest, ainda sem modelo/ícone (a grade mostra a sigla). Há uma pasta `assets/resources/missing-items/` do Elizeu, fora do git, com itens que parecem incluir as gemas.
 - **11 chrono quests desligadas:** esperam biomas, mobs e o motor de objetivos (`have`, `farm`, `open`, `spend`) no `QuestService`.
 - **Diárias de comer e construir:** precisam de estatística nova antes de entrar no banco.
 - **Confete na faixa de missão completa:** ficou de fora (ParticleEmitter não roda em ScreenGui).
 - **Números para conferir:** conteúdo dos kits Caçador e Guardião da Floresta, Golden Ember das diárias/semanais, prêmios dos níveis I e II.
+- **Teste no celular:** a tela de Missões ainda não foi conferida no emulador (749×330).
+- **Arestas da revisão (12/11):** retrato das missões vai ~1×/s enquanto coleta (pontos mudam), mesmo com a janela fechada; o "Renova em" das diárias usa o relógio do cliente; o som do RESGATAR toca antes da resposta do servidor; `MissionData.sanitize` não confere período nem ids repetidos; `Validate` não recusa quest ligada com prêmio `testOnly`; missão de vida conta a vida já em andamento na virada; "Renova em 0s" antes do primeiro retrato; acertar fantasma/jogador protegido quebra Mãos Limpas; reviver como fantasma não reinicia a Partida.
