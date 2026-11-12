@@ -148,9 +148,9 @@ local Items: { [string]: ItemDef } = {
 	},
 	-- Itens de quest (sem modelo ainda; o Elizeu faz o modelo e a quest depois).
 	-- Gemas verde e azul: prêmios de Sobreviver e Mãos Limpas (Defs/Quests), liberadas.
-	green_gem = { id = "green_gem", nameKey = "item.green_gem", category = "misc", maxStack = 255 },
-	blue_gem = { id = "blue_gem", nameKey = "item.blue_gem", category = "misc", maxStack = 255 },
-	orange_gem = { id = "orange_gem", testOnly = true, nameKey = "item.orange_gem", category = "misc", maxStack = 255 },
+	green_gem = { id = "green_gem", nameKey = "item.green_gem", category = "resource", maxStack = 255 },
+	blue_gem = { id = "blue_gem", nameKey = "item.blue_gem", category = "resource", maxStack = 255 },
+	orange_gem = { id = "orange_gem", testOnly = true, nameKey = "item.orange_gem", category = "resource", maxStack = 255 },
 	blue_cube = { id = "blue_cube", testOnly = true, nameKey = "item.blue_cube", category = "misc", maxStack = 255 },
 	lava_cube = { id = "lava_cube", testOnly = true, nameKey = "item.lava_cube", category = "misc", maxStack = 255 },
 	pilot_glasses = {

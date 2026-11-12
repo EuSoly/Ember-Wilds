@@ -112,6 +112,10 @@ return {
 		for _, id in { "green_gem", "blue_gem" } do
 			assert(Defs.Items[id].testOnly ~= true, `{id} devia estar liberada (prêmio de quest)`)
 		end
+		-- Gemas são recursos (aba de recursos do livro), não objetos.
+		for _, id in { "green_gem", "blue_gem", "orange_gem" } do
+			assert(Defs.Items[id].category == "resource", `{id} devia ser recurso`)
+		end
 	end,
 
 	["starve numbers spot check"] = function()
