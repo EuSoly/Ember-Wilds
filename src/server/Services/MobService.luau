@@ -818,9 +818,20 @@ end
 
 -- Golpe do jogador com o item na mão (MobRules.damageOf). Quem está no chão
 -- não acerta mob voando. Item com knockback (lança) empurra o mob.
+local hitListeners: { (Mob, Player) -> () } = {}
+
+-- Aviso de golpe de jogador que valeu (mob vivo e ao alcance): a quest Mãos
+-- Limpas falha ao acertar manso ou neutro.
+function MobService.onHit(listener: (mob: Mob, attacker: Player) -> ())
+	table.insert(hitListeners, listener)
+end
+
 function MobService.hit(mob: Mob, attacker: Player, item: Defs.ItemDef?)
 	if mob.dead or mob.flying then
 		return
+	end
+	for _, listener in hitListeners do
+		task.spawn(listener, mob, attacker)
 	end
 	MobService.damage(mob, MobRules.damageOf(item, ArmorService.worn(attacker)), attacker)
 	local knockback = HeldItem.knockback(item)

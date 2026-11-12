@@ -66,8 +66,6 @@ local MATERIALS = {
 	"crab_claws",
 	"crab_sticks",
 	"blue_thread",
-	"green_gem",
-	"blue_gem",
 	"orange_gem",
 	"blue_cube",
 	"lava_cube",
@@ -109,6 +107,10 @@ return {
 			local def = Defs.Items[id]
 			assert(def ~= nil, `falta o material {id}`)
 			assert(def.testOnly == true, `{id} devia ser testOnly`)
+		end
+		-- Prêmios das chrono quests do lançamento (Sobreviver, Mãos Limpas): liberados.
+		for _, id in { "green_gem", "blue_gem" } do
+			assert(Defs.Items[id].testOnly ~= true, `{id} devia estar liberada (prêmio de quest)`)
 		end
 	end,
 

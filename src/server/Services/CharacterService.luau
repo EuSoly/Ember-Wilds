@@ -53,12 +53,31 @@ end
 -- Strings, ex. "death.cause.hunger"; attacker = jogador que bateu, só no golpe
 -- de jogador: quem dá o golpe final é quem matou). Bonecos de teste (sem
 -- jogador) só fazem a careta.
+local healthLostListeners: { (Player, number) -> () } = {}
+local attackedListeners: { (Player, Player) -> () } = {}
+
+-- Aviso depois que a vida de um jogador baixou (qualquer causa): player, quanto.
+function CharacterService.onHealthLost(listener: (player: Player, amount: number) -> ())
+	table.insert(healthLostListeners, listener)
+end
+
+-- Aviso quando um jogador acerta outro (antes de defesa e protetores: acertar
+-- já conta). Usado pela quest Mãos Limpas.
+function CharacterService.onPlayerAttacked(listener: (attacker: Player, victim: Player) -> ())
+	table.insert(attackedListeners, listener)
+end
+
 function CharacterService.hurt(character: Model, amount: number, causeKey: string, kind: HurtKind, attacker: Player?)
 	-- `not (amount > 0)` também recusa NaN (NaN <= 0 seria false e passaria).
 	if not (amount > 0) or character:FindFirstChildOfClass("Humanoid") == nil then
 		return
 	end
 	local player = Players:GetPlayerFromCharacter(character)
+	if player and kind == "player" and attacker and attacker ~= player then
+		for _, listener in attackedListeners do
+			task.spawn(listener, attacker, player)
+		end
+	end
 	-- Fantasma não leva dano (GhostService).
 	if player and GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
 		return
@@ -92,8 +111,14 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	if player then
 		local current = player:GetAttribute(StatNames.Health)
 		local health = if type(current) == "number" and current == current then current else StatNames.HealthMax
+		local before = health
 		health = math.max(health - amount, 0)
 		player:SetAttribute(StatNames.Health, health)
+		if health < before then
+			for _, listener in healthLostListeners do
+				task.spawn(listener, player, before - health)
+			end
+		end
 		-- Só o personagem atual morre (um antigo, já trocado, não mata o novo).
 		if health <= 0 and player.Character == character then
 			DeathService.kill(player, causeKey, attacker)
