@@ -151,8 +151,11 @@ end
 --   flash — opacidade do clarão na cor da raridade quando a janelinha abre
 --           (0 = sem clarão);
 --   rays  — raios girando atrás da janelinha;
---   ring  — onda de choque (anel que cresce e some) atrás da janelinha.
-export type Reveal = { hold: number, shake: number, flash: number, rays: boolean, ring: boolean }
+--   ring  — onda de choque (anel que cresce e some) atrás da janelinha;
+--   mystic — comemoração mística (só Mítico, pago ou não): círculo mágico com
+--           runas, aura respirando e luzinhas subindo no lugar do confete,
+--           combinando com o som etéreo da revelação (12/11).
+export type Reveal = { hold: number, shake: number, flash: number, rays: boolean, ring: boolean, mystic: boolean }
 
 local HOLD = { 0.3, 0.4, 0.55, 0.7, 0.9 }
 local SHAKE = { 0, 0, 3, 6, 9 }
@@ -161,6 +164,7 @@ local PAID_SHAKE = 3
 local PAID_FLASH = 0.15
 local RAYS_FROM = 2
 local RING_FROM = 3
+local MYSTIC_FROM = 5
 
 function SpinRules.revealFor(rarity: number, paid: boolean): Reveal
 	local r = math.clamp(rarity, 1, #HOLD)
@@ -170,6 +174,7 @@ function SpinRules.revealFor(rarity: number, paid: boolean): Reveal
 		flash = FLASH[r] + (if paid then PAID_FLASH else 0),
 		rays = paid or r >= RAYS_FROM,
 		ring = paid or r >= RING_FROM,
+		mystic = r >= MYSTIC_FROM,
 	}
 end
 

@@ -12,6 +12,9 @@
 --   celebrate(popup, rarity, paid) — a janelinha do prêmio abriu: ela "pula"
 --     (cresce com um quique), ganha a borda na cor da raridade, clarão, raios
 --     girando atrás, onda de choque e confete puxado para a cor da raridade.
+--     No Mítico (reveal.mystic), no lugar do confete: círculo mágico com
+--     runas girando atrás, aura respirando, explosão de luzinhas e vaga-lumes
+--     subindo enquanto a janelinha estiver aberta (combina com o som etéreo).
 -- Tudo some sozinho; nada fica rodando com a tela fechada.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -42,6 +45,16 @@ local POP_FROM = 0.6
 local FLASH_INFO = TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local RING_INFO = TweenInfo.new(0.65, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 local SHAKE_PATTERN = { Vector2.new(-1, 0.5), Vector2.new(0.9, -0.6), Vector2.new(-0.5, 0.4), Vector2.new(0.4, 0) }
+-- Mítico (místico)
+local VIOLET = Color3.fromHex("#8B5CF6")
+local CIRCLE_SIZE = 560 -- px do círculo mágico
+local CIRCLE_SPEED = 14 -- graus por segundo (os anéis giram em sentidos opostos)
+local RUNE_COUNT = 12
+local AURA_INFO = TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+local CIRCLE_IN = TweenInfo.new(0.9, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local BURST_COUNT = 28 -- luzinhas que saem da janelinha quando ela abre
+local MOTE_EVERY = 0.09 -- s entre dois vaga-lumes novos
+local MOTE_DRAG = 2.2 -- quanto a explosão freia por segundo
 
 local SpinFx = {}
 
@@ -322,6 +335,266 @@ local function ring(overlay: GuiObject, popup: GuiObject, color: Color3)
 	grow:Play()
 end
 
+-- Luzinha do Mítico: uma bolinha com halo que pisca de leve. `base` é o ponto
+-- de partida (UDim2 no overlay); x/y são o deslocamento em px a partir dele.
+type Mote = {
+	frame: Frame,
+	base: UDim2,
+	x: number,
+	y: number,
+	vx: number,
+	vy: number,
+	drag: number,
+	age: number,
+	life: number,
+	phase: number,
+	sway: number,
+}
+
+local function moteColor(color: Color3): Color3
+	local pick = math.random(4)
+	return if pick == 1
+		then color:Lerp(WHITE, 0.35)
+		elseif pick == 2 then VIOLET:Lerp(WHITE, 0.3)
+		elseif pick == 3 then PINK
+		else WHITE
+end
+
+local function newMote(overlay: GuiObject, base: UDim2, color: Color3, zIndex: number): Mote
+	local size = 5 + math.random() * 9
+	local frame = Instance.new("Frame")
+	frame.Name = "Mote"
+	frame.AnchorPoint = Vector2.new(0.5, 0.5)
+	frame.Position = base
+	frame.Size = UDim2.fromOffset(size, size)
+	frame.BackgroundColor3 = moteColor(color)
+	frame.BackgroundTransparency = 1
+	frame.BorderSizePixel = 0
+	frame.ZIndex = zIndex
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(1, 0)
+	corner.Parent = frame
+	local halo = Instance.new("UIStroke")
+	halo.Color = frame.BackgroundColor3
+	halo.Thickness = size * 0.6
+	halo.Transparency = 1
+	halo.Parent = frame
+	frame.Parent = overlay
+	return {
+		frame = frame,
+		base = base,
+		x = 0,
+		y = 0,
+		vx = 0,
+		vy = 0,
+		drag = 0,
+		age = 0,
+		life = 1,
+		phase = math.random() * math.pi * 2,
+		sway = 6 + math.random() * 14,
+	}
+end
+
+-- Um anel fino (fração `scale` do círculo) com a borda que aparece aos poucos.
+local function circleRing(parent: Instance, scale: number, color: Color3, thickness: number, zIndex: number): Frame
+	local frame = Instance.new("Frame")
+	frame.Name = "MagicRing"
+	frame.AnchorPoint = Vector2.new(0.5, 0.5)
+	frame.Position = UDim2.fromScale(0.5, 0.5)
+	frame.Size = UDim2.fromScale(scale, scale)
+	frame.BackgroundTransparency = 1
+	frame.ZIndex = zIndex
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(1, 0)
+	corner.Parent = frame
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = color
+	stroke.Thickness = thickness
+	stroke.Transparency = 1
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Parent = frame
+	TweenService:Create(stroke, CIRCLE_IN, { Transparency = 0.25 }):Play()
+	frame.Parent = parent
+	return frame
+end
+
+-- Comemoração mística do Mítico: círculo mágico atrás da janelinha, aura
+-- respirando, explosão de luzinhas e vaga-lumes subindo até a janelinha fechar.
+local function mystic(overlay: GuiObject, popup: GuiObject, color: Color3)
+	local behind = math.max(popup.ZIndex - 1, 1)
+	local light = color:Lerp(WHITE, 0.45)
+
+	local circle = Instance.new("Frame")
+	circle.Name = "MagicCircle"
+	circle.AnchorPoint = Vector2.new(0.5, 0.5)
+	circle.Position = popup.Position
+	circle.Size = UDim2.fromOffset(CIRCLE_SIZE, CIRCLE_SIZE)
+	circle.BackgroundTransparency = 1
+	circle.ZIndex = behind
+	local grow = Instance.new("UIScale")
+	grow.Scale = 0.55
+	grow.Parent = circle
+	TweenService:Create(grow, CIRCLE_IN, { Scale = 1 }):Play()
+
+	-- Aura: um disco na cor do Mítico puxada para o violeta, respirando.
+	local aura = Instance.new("Frame")
+	aura.Name = "Aura"
+	aura.AnchorPoint = Vector2.new(0.5, 0.5)
+	aura.Position = UDim2.fromScale(0.5, 0.5)
+	aura.Size = UDim2.fromScale(0.8, 0.8)
+	aura.BackgroundColor3 = color:Lerp(VIOLET, 0.45)
+	aura.BackgroundTransparency = 0.82
+	aura.BorderSizePixel = 0
+	aura.ZIndex = behind
+	local auraCorner = Instance.new("UICorner")
+	auraCorner.CornerRadius = UDim.new(1, 0)
+	auraCorner.Parent = aura
+	local auraFade = Instance.new("UIGradient")
+	auraFade.Transparency = NumberSequence.new({
+		NumberSequenceKeypoint.new(0, 0.6),
+		NumberSequenceKeypoint.new(0.5, 0),
+		NumberSequenceKeypoint.new(1, 0.6),
+	})
+	auraFade.Parent = aura
+	aura.Parent = circle
+	local breathe =
+		TweenService:Create(aura, AURA_INFO, { BackgroundTransparency = 0.6, Size = UDim2.fromScale(0.92, 0.92) })
+	breathe:Play()
+
+	-- Brilho suave por fora do anel: um anel largo e bem transparente.
+	local glow = circleRing(circle, 1.02, color:Lerp(VIOLET, 0.3), 14, behind)
+	local glowStroke = glow:FindFirstChildOfClass("UIStroke")
+	if glowStroke then
+		TweenService:Create(glowStroke, CIRCLE_IN, { Transparency = 0.8 }):Play()
+	end
+
+	-- Anel de fora com as runas (losangos vazados e pontinhos), girando para um
+	-- lado; os dois de dentro giram para o outro.
+	local outer = circleRing(circle, 1, light, 3, behind)
+	for i = 1, RUNE_COUNT do
+		local angle = (i - 1) * 360 / RUNE_COUNT
+		local rad = math.rad(angle)
+		local rune = Instance.new("Frame")
+		rune.Name = "Rune"
+		rune.AnchorPoint = Vector2.new(0.5, 0.5)
+		rune.Position = UDim2.fromScale(0.5 + 0.5 * math.sin(rad), 0.5 - 0.5 * math.cos(rad))
+		local big = i % 2 == 1
+		rune.Size = if big then UDim2.fromOffset(16, 16) else UDim2.fromOffset(7, 7)
+		rune.Rotation = 45 + angle
+		rune.BackgroundColor3 = if big then color:Lerp(VIOLET, 0.3) else WHITE
+		rune.BackgroundTransparency = 1
+		rune.BorderSizePixel = 0
+		rune.ZIndex = behind
+		local stroke = Instance.new("UIStroke")
+		stroke.Color = if big then WHITE else light
+		stroke.Thickness = 2
+		stroke.Transparency = 1
+		stroke.Parent = rune
+		TweenService:Create(rune, CIRCLE_IN, { BackgroundTransparency = if big then 0.35 else 0.1 }):Play()
+		TweenService:Create(stroke, CIRCLE_IN, { Transparency = 0.2 }):Play()
+		rune.Parent = outer
+	end
+	local inner = Instance.new("Frame")
+	inner.Name = "Inner"
+	inner.AnchorPoint = Vector2.new(0.5, 0.5)
+	inner.Position = UDim2.fromScale(0.5, 0.5)
+	inner.Size = UDim2.fromScale(1, 1)
+	inner.BackgroundTransparency = 1
+	inner.ZIndex = behind
+	inner.Parent = circle
+	circleRing(inner, 0.86, VIOLET:Lerp(WHITE, 0.4), 2, behind)
+	circleRing(inner, 0.8, light, 1, behind)
+	-- Estrela de seis pontas dentro do anel de 0,8: dois triângulos, cada lado
+	-- uma corda do círculo (a uma distância de meio raio do centro).
+	local radius = 0.4
+	for i = 0, 5 do
+		local angle = i * 60
+		local rad = math.rad(angle)
+		local line = Instance.new("Frame")
+		line.Name = "Line"
+		line.AnchorPoint = Vector2.new(0.5, 0.5)
+		line.Position = UDim2.fromScale(0.5 + radius / 2 * math.sin(rad), 0.5 - radius / 2 * math.cos(rad))
+		line.Size = UDim2.new(radius * math.sqrt(3), 0, 0, 2)
+		line.Rotation = angle
+		line.BackgroundColor3 = light
+		line.BackgroundTransparency = 1
+		line.BorderSizePixel = 0
+		line.ZIndex = behind
+		TweenService:Create(line, CIRCLE_IN, { BackgroundTransparency = 0.6 }):Play()
+		line.Parent = inner
+	end
+	circle.Parent = overlay
+
+	-- Explosão: luzinhas saem do centro da janelinha para todos os lados e
+	-- freiam; depois só sobem devagar.
+	local motes: { Mote } = {}
+	for _ = 1, BURST_COUNT do
+		local mote = newMote(overlay, popup.Position, color, 46)
+		local angle = math.random() * math.pi * 2
+		local speed = 260 + math.random() * 260
+		mote.vx, mote.vy = math.cos(angle) * speed, math.sin(angle) * speed
+		mote.drag = MOTE_DRAG
+		mote.life = 1.6 + math.random() * 1.2
+		table.insert(motes, mote)
+	end
+
+	local clock, sinceMote = 0, 0
+	local connection: RBXScriptConnection
+	connection = RunService.RenderStepped:Connect(function(dt)
+		if not overlay.Visible or popup.Parent == nil or circle.Parent == nil then
+			connection:Disconnect()
+			breathe:Cancel()
+			circle:Destroy()
+			for _, mote in motes do
+				mote.frame:Destroy()
+			end
+			table.clear(motes)
+			return
+		end
+		clock += dt
+		outer.Rotation = (outer.Rotation + CIRCLE_SPEED * dt) % 360
+		inner.Rotation = (inner.Rotation - CIRCLE_SPEED * 1.6 * dt) % 360
+
+		-- Vaga-lumes: nascem embaixo, em qualquer ponto, e sobem balançando.
+		sinceMote += dt
+		while sinceMote >= MOTE_EVERY do
+			sinceMote -= MOTE_EVERY
+			local mote = newMote(overlay, UDim2.fromScale(0.08 + math.random() * 0.84, 1.03), color, 46)
+			mote.vy = -(45 + math.random() * 55)
+			mote.life = 3 + math.random() * 2.5
+			table.insert(motes, mote)
+		end
+
+		for i = #motes, 1, -1 do
+			local mote = motes[i]
+			mote.age += dt
+			if mote.age >= mote.life then
+				mote.frame:Destroy()
+				table.remove(motes, i)
+				continue
+			end
+			local slow = math.exp(-mote.drag * dt)
+			mote.vx *= slow
+			-- A explosão freia até ficar subindo devagar como os outros.
+			mote.vy = mote.vy * slow + (1 - slow) * -30
+			mote.x += mote.vx * dt
+			mote.y += mote.vy * dt
+			local swing = math.sin(mote.age * 2 + mote.phase) * mote.sway
+			mote.frame.Position = mote.base + UDim2.fromOffset(mote.x + swing, mote.y)
+			-- Acende rápido, some devagar no fim e pisca de leve.
+			local fadeIn = math.min(mote.age / 0.25, 1)
+			local fadeOut = math.min((mote.life - mote.age) / (mote.life * 0.4), 1)
+			local twinkle = 0.75 + 0.25 * math.sin(mote.age * 9 + mote.phase)
+			local alpha = fadeIn * fadeOut * twinkle
+			mote.frame.BackgroundTransparency = 1 - alpha * 0.95
+			local halo = mote.frame:FindFirstChildOfClass("UIStroke")
+			if halo then
+				halo.Transparency = 1 - alpha * 0.3
+			end
+		end
+	end)
+end
+
 function SpinFx.celebrate(popup: GuiObject, rarity: number, paid: boolean)
 	local overlay = popup.Parent :: GuiObject
 	local reveal = SpinRules.revealFor(rarity, paid)
@@ -350,6 +623,11 @@ function SpinFx.celebrate(popup: GuiObject, rarity: number, paid: boolean)
 	end
 	if reveal.ring then
 		ring(overlay, popup, color)
+	end
+	if reveal.mystic then
+		-- Mítico: o círculo mágico e as luzinhas no lugar dos raios e do confete.
+		mystic(overlay, popup, color)
+		return
 	end
 	if reveal.rays then
 		-- Atrás da janelinha (irmão dela, com ZIndex menor), no mesmo centro.

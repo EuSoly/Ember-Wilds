@@ -110,6 +110,16 @@ return {
 		assert(SpinRules.revealFor(3, false).ring, "Épico normal: anel")
 	end,
 
+	["só o Mítico tem a comemoração mística, pago ou não"] = function()
+		for _, paid in { false, true } do
+			assert(SpinRules.revealFor(5, paid).mystic, "Mítico místico")
+			for r = 1, 4 do
+				assert(not SpinRules.revealFor(r, paid).mystic, `raridade {r} sem místico`)
+			end
+		end
+		assert(SpinRules.revealFor(9, false).mystic, "acima da faixa conta como Mítico")
+	end,
+
 	["tique sobe de tom e de volume conforme o giro freia"] = function()
 		assert(SpinRules.tickPitch(0, 1) == 1, "começo no tom normal")
 		assert(SpinRules.tickPitch(1, 0) > 1, "sobe mesmo sem suspense")

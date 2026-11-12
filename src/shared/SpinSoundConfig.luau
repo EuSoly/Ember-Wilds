@@ -36,15 +36,19 @@ local SpinSoundConfig = {
 	shine = sound(9116394545, 0.5), -- ProSoundEffects "Magic Glows Soft Clusters Of Chiming Hits 1" (1,43 s)
 	shineFor = table.freeze({ 0, 0, 0.5, 0.8, 1 }),
 	-- Revelação (12/11): todos da APM (licenciados pela Roblox, não somem da
-	-- loja), crescendo com a raridade. Antes, 1 a 4 eram de criadores comuns.
-	-- Escolhidos pela descrição, sem ouvir.
+	-- loja), crescendo com a raridade. O Elizeu ouviu no Studio e escolheu o
+	-- Lendário e o Mítico entre opções.
 	reveal = table.freeze({
-		sound(1839997929, 0.4), -- Comum: APM "Correct Answer 2", acerto com synth brilhante (4 s)
-		sound(1839997938, 0.5), -- Raro: APM "Correct Answer 3", acerto com brilho subindo (5 s)
+		sound(1839997929, 0.4), -- Comum: APM "Correct Answer 2", acerto com synth brilhante (4,7 s)
+		sound(1839997938, 0.5), -- Raro: APM "Correct Answer 3", acerto com brilho subindo (5,2 s)
 		sound(1845399641, 0.55), -- Épico: APM "Ta Dah" (5,3 s)
-		sound(1845415163, 0.6), -- Lendário: APM "Heraldic Bugle", clarim de arauto (5 s)
-		sound(1846901578, 0.6), -- Mítico: APM "Bigger Than Big 9", orquestra (5,8 s)
+		sound(9045742092, 0.6), -- Lendário: APM "To the Fray (sting a)", cordas e tambores épicos (7,8 s)
+		sound(1845406075, 0.6), -- Mítico: APM "Ethereal Drone", clima etéreo (7 s)
 	}),
+	-- Guardado para a raridade Incomum (entre Comum e Raro), que ainda não
+	-- existe: quando ela entrar em MockStore.RARITIES, este vai para a lista
+	-- `reveal` na posição dela (e os de `shineFor`/`tension` ganham um item).
+	revealUncommon = sound(1839997916, 0.45), -- APM "Correct Answer 1", acerto com synth subindo e eco (5 s)
 	tension = table.freeze({
 		table.freeze({ riser = 0, drum = 0 }), -- Comum
 		table.freeze({ riser = 0.2, drum = 0 }), -- Raro
@@ -64,5 +68,6 @@ return table.freeze(SpinSoundConfig) :: {
 	shine: Sound,
 	shineFor: { number },
 	reveal: { Sound },
+	revealUncommon: Sound,
 	tension: { Tension },
 }

@@ -35,10 +35,11 @@ Ficam à parte, em **`src/shared/SpinSoundConfig.luau`** (ids e volumes) e `src/
 | `tick` | Cada quadradinho que passa pelo marcador (tom e volume sobem perto do fim: `SpinRules.tickPitch`/`tickVolume`) | `87342128651257`, "Click" (0,23 s) |
 | `riser`, `drumroll` | Suspense do fim, na medida da raridade (`tension`) | `9040281024` e `1840444182`, APM |
 | `land` | O carrossel parou (o tambor continua até a janelinha abrir) | `9126267413`, PSE "Wood Hit Giant Wood Beam Dull Thuds Knocks 1" (0,63 s) |
-| `reveal[1..5]` | A janelinha do prêmio abriu, um por raridade | APM, crescendo: Comum `1839997929` "Correct Answer 2"; Raro `1839997938` "Correct Answer 3"; Épico `1845399641` "Ta Dah"; Lendário `1845415163` "Heraldic Bugle"; Mítico `1846901578` "Bigger Than Big 9" (4 a 6 s cada) |
+| `reveal[1..5]` | A janelinha do prêmio abriu, um por raridade | APM, crescendo: Comum `1839997929` "Correct Answer 2"; Raro `1839997938` "Correct Answer 3"; Épico `1845399641` "Ta Dah"; Lendário `9045742092` "To the Fray (sting a)"; Mítico `1845406075` "Ethereal Drone" (5 a 8 s cada) |
+| `revealUncommon` | Guardado para a raridade Incomum, que ainda não existe | `1839997916`, APM "Correct Answer 1" |
 | `shine` | Por cima da revelação, de Épico para cima (`shineFor`) | `9116394545`, PSE "Magic Glows Soft Clusters Of Chiming Hits 1" (1,43 s) |
 
-`start`, `land` e `shine` entraram em 12/11/2026 e foram escolhidos **só pelo nome** (são áudios que o jogo já usava em outros lugares: golpe no ar, colocar peça e ressuscitar); todos carregam no Studio, mas ninguém ouviu a mistura. Os `reveal` de Comum a Lendário eram de criadores comuns; em 12/11/2026 viraram todos da APM (licenciados pela Roblox), escolhidos pela descrição, sem ouvir. Para ouvir antes de trocar, abra `create.roblox.com/store/asset/<id>` e aperte o play.
+`start`, `land` e `shine` entraram em 12/11/2026 e foram escolhidos **só pelo nome** (são áudios que o jogo já usava em outros lugares: golpe no ar, colocar peça e ressuscitar); todos carregam no Studio, mas ninguém ouviu a mistura. Os `reveal` de Comum a Lendário eram de criadores comuns; em 12/11/2026 viraram todos da APM (licenciados pela Roblox). O Elizeu ouviu todos no Studio e escolheu o Lendário e o Mítico entre três opções cada; o Mítico ganhou a comemoração mística (círculo mágico e luzinhas) para combinar com o som etéreo. Para ouvir antes de trocar, abra `create.roblox.com/store/asset/<id>` e aperte o play.
 
 ## Como funciona
 

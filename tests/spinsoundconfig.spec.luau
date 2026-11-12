@@ -7,7 +7,7 @@ end
 
 return {
 	["todos os sons têm id e volume válidos"] = function()
-		for _, name in { "tick", "riser", "drumroll", "start", "whoosh", "land", "shine" } do
+		for _, name in { "tick", "riser", "drumroll", "start", "whoosh", "land", "shine", "revealUncommon" } do
 			local entry = (SpinSoundConfig :: any)[name] :: SpinSoundConfig.Sound
 			assert(isSound(entry), name)
 		end
