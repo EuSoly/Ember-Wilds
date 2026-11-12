@@ -795,7 +795,7 @@ return {
 		expectGather("tree", "wood", 1, "wood", 20, 80, 2, 10)
 		expectGather("rock", "stone", 2, "stone", 40, 40, 2, 10)
 		expectGather("gold_vein", "gold", 3, "gold", 20, 20, 1, 10)
-		expectGather("berry_bush", "berry", 2, "leaves", 7, 7, 1, 10)
+		expectGather("berry_bush", "berry", 2, "leaves", 5, 5, 1, 10)
 		assert(Defs.Resources.tree.gather.hardness == 0, "árvore dureza 0")
 		assert(Defs.Resources.rock.gather.hardness == 1, "rocha dureza 1")
 		assert(Defs.Resources.gold_vein.gather.hardness == 2, "ouro dureza 2")
