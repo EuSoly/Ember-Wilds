@@ -23,6 +23,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local SettingsFormat = require(Shared:WaitForChild("UIFlow"):WaitForChild("SettingsFormat"))
+local SettingsLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("SettingsLayout"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -31,6 +32,7 @@ local Net = require(Client:WaitForChild("Net"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -42,6 +44,12 @@ local HEADER_HEIGHT = 30
 local ROW_HEIGHT = 50
 local TITLE_HEIGHT = 58
 local CLOSE_HEIGHT = 50
+-- Celular deitado (17/11/2026): duas colunas sem rolar (SettingsLayout), o
+-- título dentro da janela e, na linha dele, Resetar e um X no lugar do Fechar.
+local PANEL_MAX_SHORT = Vector2.new(760, 600)
+local TITLE_ROW_SHORT = 44
+local COLUMN_GAP_SHORT = 12
+local short = ScreenMetrics.short
 local SEND_EVERY = 0.15 -- s entre pedidos enquanto arrasta um volume
 local PENDING_TIMEOUT = 1.5 -- s esperando o servidor confirmar o valor solto
 local APPLY_ON_RELEASE: { [string]: boolean } = { ui_scale = true }
@@ -356,7 +364,9 @@ local function row(def: SettingDef, order: number): Frame
 	return create("Frame")({
 		Name = def.id,
 		LayoutOrder = order,
-		Size = UDim2.new(1, 0, 0, ROW_HEIGHT),
+		Size = function()
+			return UDim2.new(1, 0, 0, if short() then SettingsLayout.ROW_COMPACT else ROW_HEIGHT)
+		end,
 		BackgroundColor3 = ROW,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = UDim.new(0, 6) }),
@@ -369,6 +379,7 @@ local function row(def: SettingDef, order: number): Frame
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Strings.get(def.nameKey),
 			maxSize = 20,
+			minSize = 12,
 		}),
 		controls,
 	}) :: Frame
@@ -378,7 +389,9 @@ local function groupHeader(id: string, order: number): TextLabel
 	return Rustic.label({
 		Name = "Group_" .. id,
 		LayoutOrder = order,
-		Size = UDim2.new(1, 0, 0, HEADER_HEIGHT),
+		Size = function()
+			return UDim2.new(1, 0, 0, if short() then SettingsLayout.HEADER_COMPACT else HEADER_HEIGHT)
+		end,
 		FontFace = Theme.font.title,
 		TextColor3 = R.emberLight,
 		TextXAlignment = Enum.TextXAlignment.Left,
@@ -388,10 +401,10 @@ local function groupHeader(id: string, order: number): TextLabel
 	})
 end
 
-local function rows(): { Instance }
+local function rows(groups: { SettingsFormat.Group }?): { Instance }
 	local list: { Instance } = {}
 	local order = 0
-	for _, group in SettingsFormat.grouped(Defs.Settings) do
+	for _, group in groups or SettingsFormat.grouped(Defs.Settings) do
 		order += 1
 		table.insert(list, groupHeader(group.id, order))
 		for _, def in group.settings do
@@ -404,6 +417,86 @@ end
 
 local function close()
 	SettingsScreen.open(false)
+end
+
+local function reset()
+	Net.RequestReset.Fire()
+	close()
+end
+
+-- Uma coluna do celular: os grupos de um lado do SettingsLayout.split.
+local function compactColumn(name: string, groups: { SettingsFormat.Group }, x: UDim): Frame
+	return create("Frame")({
+		Name = name,
+		Position = UDim2.new(x, UDim.new(0, 0)),
+		Size = UDim2.new(0.5, -COLUMN_GAP_SHORT / 2, 1, 0),
+		BackgroundTransparency = 1,
+		create("UIListLayout")({
+			SortOrder = Enum.SortOrder.LayoutOrder,
+			Padding = UDim.new(0, SettingsLayout.GAP),
+		}),
+		rows(groups),
+	}) :: Frame
+end
+
+-- Corpo do celular: título, Resetar e X numa linha; as duas colunas embaixo.
+local function compactBody(): Frame
+	local left, right = SettingsLayout.split(SettingsFormat.grouped(Defs.Settings))
+	return create("Frame")({
+		Name = "Compact",
+		Visible = short,
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		create("Frame")({
+			Name = "TitleRow",
+			Position = UDim2.fromOffset(16, 8),
+			Size = UDim2.new(1, -32, 0, TITLE_ROW_SHORT),
+			BackgroundTransparency = 1,
+			Rustic.label({
+				Name = "Title",
+				AnchorPoint = Vector2.new(0, 0.5),
+				Position = UDim2.fromScale(0, 0.5),
+				Size = UDim2.new(0.5, 0, 0, 30),
+				FontFace = Theme.font.title,
+				TextXAlignment = Enum.TextXAlignment.Left,
+				Text = Strings.get("settings.title"),
+				maxSize = 26,
+				create("UIStroke")({ Color = R.outline, Thickness = 2 }),
+			}) :: Instance,
+			Rustic.button({
+				Name = "ResetButton",
+				AnchorPoint = Vector2.new(1, 0.5),
+				Position = UDim2.new(1, -(TITLE_ROW_SHORT + 10), 0.5, 0),
+				Size = UDim2.fromOffset(120, TITLE_ROW_SHORT),
+				kind = "leather",
+				text = Strings.get("settings.reset"),
+				maxSize = 18,
+				Activated = reset,
+			}),
+			Rustic.button({
+				Name = "CloseButton",
+				AnchorPoint = Vector2.new(1, 0.5),
+				Position = UDim2.fromScale(1, 0.5),
+				Size = UDim2.fromOffset(TITLE_ROW_SHORT, TITLE_ROW_SHORT),
+				kind = "ember",
+				text = "X",
+				maxSize = 22,
+				Activated = close,
+			}),
+		}),
+		create("Frame")({
+			Name = "Columns",
+			Position = UDim2.fromOffset(16, 8 + TITLE_ROW_SHORT + 8),
+			Size = UDim2.new(1, -32, 1, -(8 + TITLE_ROW_SHORT + 8 + 12)),
+			BackgroundTransparency = 1,
+			compactColumn("Left", left, UDim.new(0, 0)),
+			compactColumn("Right", right, UDim.new(0.5, COLUMN_GAP_SHORT / 2)),
+		}),
+	}) :: Frame
+end
+
+local function notShort(): boolean
+	return not short()
 end
 
 -- Monta a janela (dentro do root Vide do ScreenController). O ScreenController
@@ -429,12 +522,22 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 			create("Frame")({
 				Name = "Window",
 				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4),
-				Size = UDim2.new(0.92, 0, 0.86, -TITLE_HEIGHT / 2),
+				Position = function()
+					return if short() then UDim2.fromScale(0.5, 0.5) else UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4)
+				end,
+				Size = function()
+					return if short()
+						then UDim2.fromScale(0.96, ScreenMetrics.SHORT_WINDOW_SHARE)
+						else UDim2.new(0.92, 0, 0.86, -TITLE_HEIGHT / 2)
+				end,
 				BackgroundColor3 = BODY,
 				BorderSizePixel = 0,
 				Active = true, -- toque dentro da janela não chega no fundo
-				create("UISizeConstraint")({ MaxSize = PANEL_MAX }),
+				create("UISizeConstraint")({
+					MaxSize = function()
+						return if short() then PANEL_MAX_SHORT else PANEL_MAX
+					end,
+				}),
 				create("UICorner")({ CornerRadius = UDim.new(0, 12) }),
 				create("UIStroke")({
 					Color = R.woodShadow,
@@ -442,8 +545,10 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 				}),
 				-- Placa com o título, pregada no alto da janela.
+				compactBody(),
 				Rustic.plate({
 					Name = "TitlePlate",
+					Visible = notShort,
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(0.5, 0),
 					Size = UDim2.new(0.62, 0, 0, TITLE_HEIGHT),
@@ -462,6 +567,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 				}),
 				create("ScrollingFrame")({
 					Name = "List",
+					Visible = notShort,
 					Position = UDim2.fromOffset(16, TITLE_HEIGHT / 2 + 10),
 					Size = UDim2.new(1, -32, 1, -(TITLE_HEIGHT / 2 + 10 + CLOSE_HEIGHT + 28)),
 					BackgroundTransparency = 1,
@@ -480,6 +586,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 				}),
 				create("Frame")({
 					Name = "Buttons",
+					Visible = notShort,
 					AnchorPoint = Vector2.new(0.5, 1),
 					Position = UDim2.new(0.5, 0, 1, -14),
 					Size = UDim2.new(1, -32, 0, CLOSE_HEIGHT),
@@ -498,10 +605,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 						kind = "leather",
 						text = Strings.get("settings.reset"),
 						maxSize = 22,
-						Activated = function()
-							Net.RequestReset.Fire()
-							close()
-						end,
+						Activated = reset,
 					}),
 					Rustic.button({
 						Name = "CloseButton",
