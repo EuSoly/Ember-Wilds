@@ -37,6 +37,8 @@ local MapService = {}
 
 local hasMap = false
 local sandShapes: { Shapes.Shape } = {}
+-- Formas de Map/Water e Map/NoSpawn (onde não nasce recurso nem jogador).
+local blockerShapes: { Shapes.Shape } = {}
 
 -- Peça puramente de marcação (zona, caminho, marcador de recurso): some no jogo.
 local function hideMarker(part: BasePart)
@@ -198,6 +200,12 @@ function MapService.isSandAt(x: number, z: number): boolean
 	return Shapes.anyContains(sandShapes, x, z)
 end
 
+-- true se (x, z) está na água (Map/Water) ou numa área sem nascimento
+-- (Map/NoSpawn). Sem mapa desenhado, sempre false.
+function MapService.isBlockedAt(x: number, z: number): boolean
+	return Shapes.anyContains(blockerShapes, x, z)
+end
+
 -- true se o place tem um mapa desenhado (Workspace.Map).
 function MapService.hasMap(): boolean
 	return hasMap
@@ -214,7 +222,7 @@ function MapService.Init(_self)
 	local started = os.clock()
 
 	-- Água e caminhos: o espalhador não põe recurso neles.
-	local blockers: { Shapes.Shape } = {}
+	local blockers = blockerShapes
 	local water = map:FindFirstChild("Water")
 	readShapes(water, function(part, shape)
 		-- Dá para atravessar a água andando (a lentidão vem do WaterSim).

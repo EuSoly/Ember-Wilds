@@ -150,6 +150,17 @@ function TeamService.sizeOf(player: Player): number
 	return if team then #team.members else 0
 end
 
+-- Onde fica o totem do time do jogador (líder ou membro), no chão (Y = 0),
+-- se ele ainda está de pé; nil sem time ou sem totem. O revive nasce perto.
+function TeamService.totemPositionOf(player: Player): Vector3?
+	local leader = leaderOf[player.UserId]
+	local totem = if leader then totemOf[leader] else nil
+	if totem == nil or StructureService.entryOf(totem.model) ~= totem then
+		return nil
+	end
+	return Vector3.new(totem.x, 0, totem.z)
+end
+
 function TeamService.Start(_self)
 	BuildRules.setTeamResolver(function(userId: number): number?
 		return leaderOf[userId]

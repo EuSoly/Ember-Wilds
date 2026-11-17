@@ -16,7 +16,9 @@ local HeldItem = require(ReplicatedStorage.Shared.HeldItem)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local InventoryConfig = require(ReplicatedStorage.Shared.InventoryConfig)
+local InventorySnapshot = require(ReplicatedStorage.Shared.InventorySnapshot)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
+local ArmorService = require(script.Parent.ArmorService)
 local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
 
@@ -258,6 +260,49 @@ function InventoryService.reset(player: Player)
 	local inv = Inventory.new(capacityFor(player))
 	inventories[player] = inv
 	selected[player] = 1
+	sendSnapshot(player, inv)
+	notifySelected(player)
+end
+
+-- Foto do inventário para o revive (InventorySnapshot): slots, mochila e
+-- armadura vestidas e slot selecionado. nil se o jogador não tem inventário.
+function InventoryService.snapshot(player: Player): InventorySnapshot.Snapshot?
+	local inv = inventories[player]
+	if inv == nil then
+		return nil
+	end
+	local armor = player:GetAttribute(StatNames.Armor)
+	return InventorySnapshot.copy(
+		inv,
+		bags[player],
+		if type(armor) == "string" then armor else nil,
+		selected[player] or 1
+	)
+end
+
+-- Volta o inventário da foto (revive): veste a mochila, recoloca cada slot no
+-- MESMO índice, veste a armadura e seleciona o slot. A capacidade é a da
+-- mochila + vantagens desta vida, mas nunca menor que a da foto (nenhum item
+-- se perde). Manda o snapshot inteiro e avisa os ouvintes de seleção.
+-- Contrato (igual ao equipBag): só põe a foto, não cobra nem confere nada.
+function InventoryService.restore(player: Player, snap: InventorySnapshot.Snapshot)
+	if player.Parent == nil then
+		return
+	end
+	local bag = snap.bag
+	if bag ~= nil and (Defs.Items[bag] == nil or Defs.Items[bag].category ~= "bag") then
+		bag = nil
+	end
+	bags[player] = bag
+	player:SetAttribute(StatNames.Bag, bag)
+	local inv = Inventory.new(capacityFor(player))
+	InventorySnapshot.apply(inv, snap)
+	inventories[player] = inv
+	local index = snap.selected
+	selected[player] = if index >= 1 and index <= HOTBAR_SLOTS and index % 1 == 0 then index else 1
+	if not ArmorService.wear(player, snap.armor) then
+		ArmorService.wear(player, nil) -- id que sumiu das Defs: sem peça
+	end
 	sendSnapshot(player, inv)
 	notifySelected(player)
 end
