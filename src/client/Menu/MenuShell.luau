@@ -604,6 +604,11 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local function notShop(): boolean
 		return not shopOpen()
 	end
+	-- Ranking aberto no celular: sobe até o topo, então o logo, o saldo e o
+	-- galho saem da frente (pedido do Elizeu, 17/11/2026).
+	local function rankingOnTop(): boolean
+		return MenuState.panel() == "ranking" and layout().compact
+	end
 
 	local pod = levelPod(layout)
 	local logoImage = logo(layout)
@@ -611,7 +616,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	vide.apply(pod)({ Visible = notShop })
 	vide.apply(logoImage)({
 		Visible = function()
-			return UiImages.has(UiImages.LOGO) and notShop()
+			return UiImages.has(UiImages.LOGO) and notShop() and not rankingOnTop()
 		end,
 	})
 	vide.apply(nav)({ Visible = notShop })
@@ -622,13 +627,13 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	-- No celular a tela do giro sobe até o topo: o card sairia por cima do X.
 	vide.apply(balance)({
 		Visible = function()
-			return not (shopOpen() and ShopState.spinType() ~= nil and shopLayout().compact)
+			return not (shopOpen() and ShopState.spinType() ~= nil and shopLayout().compact) and not rankingOnTop()
 		end,
 	})
 	-- O galho fica só no menu: na loja as folhas cobririam as abas. No celular
 	-- quem aparece é o galho do fundo (compactBranch).
 	local function branchVisible(): boolean
-		return UiImages.has(UiImages.BRANCH) and notShop()
+		return UiImages.has(UiImages.BRANCH) and notShop() and not rankingOnTop()
 	end
 	vide.apply(branchImage)({
 		Visible = function()

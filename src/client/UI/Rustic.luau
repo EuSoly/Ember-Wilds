@@ -133,17 +133,20 @@ end
 
 -- Texto do rústico: sem o contorno grosso do HUD (fica sobre superfície lisa).
 -- `dark = true` para texto carvão sobre papel ou brasa.
+-- `minSize`: menor tamanho do texto (padrão 10); telas do celular pedem 12.
 function Rustic.label(props: { [any]: any }): TextLabel
 	local maxSize = props.maxSize or TEXT_MAX
+	local minSize = props.minSize or 10
 	local dark = props.dark
 	props.maxSize = nil
+	props.minSize = nil
 	props.dark = nil
 	local label = create("TextLabel")({
 		BackgroundTransparency = 1,
 		FontFace = Theme.font.label,
 		TextColor3 = if dark then R.charcoal else R.cream,
 		TextScaled = true,
-		create("UITextSizeConstraint")({ MinTextSize = 10, MaxTextSize = maxSize }),
+		create("UITextSizeConstraint")({ MinTextSize = minSize, MaxTextSize = maxSize }),
 	}) :: TextLabel
 	return vide.apply(label)(props) :: TextLabel
 end

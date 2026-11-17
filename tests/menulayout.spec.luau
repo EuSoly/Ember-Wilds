@@ -56,6 +56,14 @@ return {
 			assert(l.bodyTop >= l.podBottom, `{w}x{h}: coluna por cima dos pods`)
 		end
 	end,
+	["ranking starts at the top on phones"] = function()
+		assert(MenuLayout.compute(749, 330).rankingTop == 8, "celular: do topo")
+		local pc = MenuLayout.compute(1280, 720)
+		assert(pc.rankingTop == pc.bodyTop, "PC: abaixo dos pods")
+		eachSize(function(w, h, l)
+			assert(l.rankingTop < l.panelBottom, `{w}x{h}: ranking sem altura`)
+		end)
+	end,
 	["pc keeps the old sizes"] = function()
 		local l = MenuLayout.compute(1280, 720)
 		assert(l.podHeight == 56, "pod do PC")

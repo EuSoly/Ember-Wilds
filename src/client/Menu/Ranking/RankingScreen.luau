@@ -106,6 +106,7 @@ local function tab(index: number, height: () -> number): TextButton
 			end,
 			Text = Strings.get("rank.tab." .. id),
 			maxSize = 20,
+			minSize = 12, -- "Jogadores" e "Criaturas" ficavam minúsculos no celular
 		}),
 		Activated = function()
 			if not selected() then
@@ -211,6 +212,7 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 			Text = countdown,
 			Visible = compact,
 			maxSize = 16,
+			minSize = 12,
 			ZIndex = 4,
 		}),
 	})
@@ -262,11 +264,11 @@ function RankingScreen.build(layout: () -> MenuLayout.Layout): Frame
 		end,
 		Position = function()
 			local l = layout()
-			return UDim2.fromOffset(l.panelX, l.bodyTop)
+			return UDim2.fromOffset(l.panelX, l.rankingTop)
 		end,
 		Size = function()
 			local l = layout()
-			return UDim2.fromOffset(l.panelWidth, l.panelBottom - l.bodyTop)
+			return UDim2.fromOffset(l.panelWidth, l.panelBottom - l.rankingTop)
 		end,
 		BackgroundTransparency = if frameArt then 1 else 0,
 		BackgroundColor3 = R.paper,

@@ -81,6 +81,7 @@ export type Layout = {
 	panelX: number,
 	panelWidth: number,
 	panelBottom: number,
+	rankingTop: number, -- topo do ranking: no celular sobe até o topo (sem logo e sem saldo)
 	contentTop: number,
 	heroCenterX: number,
 	heroBottom: number,
@@ -197,6 +198,7 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		panelX = areaLeft,
 		panelWidth = areaRight - areaLeft,
 		panelBottom = bottom,
+		rankingTop = if compact then m else bodyTop,
 		contentTop = bodyTop + MenuLayout.TITLE_ROW,
 		heroCenterX = heroCenterX,
 		heroBottom = heroBottom,

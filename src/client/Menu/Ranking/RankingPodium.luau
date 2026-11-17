@@ -94,6 +94,7 @@ local function spot(place: number): Instance
 				return if entry then RankingState.valueText(RankingState.category(), entry.Value) else ""
 			end,
 			maxSize = 26,
+			minSize = 12, -- no celular o pódio tinha textos de 10 px
 			ZIndex = 5,
 		}),
 		outlined({
@@ -106,6 +107,7 @@ local function spot(place: number): Instance
 				return if entry then entry.Name else ""
 			end,
 			maxSize = 22,
+			minSize = 12,
 			ZIndex = 5,
 		}),
 	}) :: Frame
