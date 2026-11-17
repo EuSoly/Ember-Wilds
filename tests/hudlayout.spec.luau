@@ -52,4 +52,12 @@ return {
 		assert(ringHeight == 55, "anel de 55 com slot de 44")
 		assert(HudLayout.panelLift() == HudLayout.RINGS_LIFT + 55 + HudLayout.PANEL_GAP, "acima dos anéis")
 	end,
+	["recipe column starts below the score pill on phones"] = function()
+		local bottom = HudLayout.scorePillBottom(749, 330)
+		assert(math.abs(bottom - 44.6) < 0.5, `base do selo: {bottom}`)
+		assert(HudLayout.craftTop(749, 330) >= bottom + 8, "coluna encosta no selo")
+	end,
+	["recipe column stays where it was on pc"] = function()
+		assert(HudLayout.craftTop(1280, 720) == 0.12 * 720, "PC igual")
+	end,
 }

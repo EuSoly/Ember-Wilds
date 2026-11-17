@@ -83,4 +83,19 @@ function HudLayout.panelLift(): number
 	return HudLayout.RINGS_LIFT + ringHeight + HudLayout.PANEL_GAP
 end
 
+-- Selo de pontos (UI/ScorePill): em 2% da tela, 0,21 × 0,075 com aspecto 4
+-- (cabe no menor dos dois) e no mínimo 38 de altura. Base do selo, em px.
+HudLayout.PILL_MIN_HEIGHT = 38
+function HudLayout.scorePillBottom(width: number, height: number): number
+	local pill = math.max(math.min(0.075 * height, 0.21 * width / 4), HudLayout.PILL_MIN_HEIGHT)
+	return 0.02 * height + pill
+end
+
+-- Topo da coluna de receitas (UI/CraftColumn): 12% da tela, como sempre, mas
+-- nunca antes de 8 px abaixo do selo. No celular o selo de 38 passava dos 12%
+-- e a primeira receita encostava nele (17/11/2026).
+function HudLayout.craftTop(width: number, height: number): number
+	return math.max(0.12 * height, HudLayout.scorePillBottom(width, height) + 8)
+end
+
 return HudLayout

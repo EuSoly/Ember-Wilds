@@ -40,6 +40,12 @@ function HudBottom.bind(gui: ScreenGui)
 	end
 end
 
+-- Topo da coluna de receitas (px lógicos), abaixo do selo de pontos.
+function HudBottom.craftTop(): number
+	local size = canvas()
+	return HudLayout.craftTop(size.X, size.Y)
+end
+
 function HudBottom.touch(): boolean
 	return touch()
 end

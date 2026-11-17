@@ -23,6 +23,8 @@ local function ScorePill(): Frame
 
 	return Rustic.plate({
 		Name = "ScorePill",
+		-- Mudou posição/tamanho? Atualize HudLayout.scorePillBottom (a coluna de
+		-- receitas começa abaixo do selo).
 		Position = UDim2.fromScale(0.02, 0.02),
 		Size = UDim2.fromScale(0.21, 0.075),
 		create("UIAspectRatioConstraint")({ AspectRatio = 4 }),

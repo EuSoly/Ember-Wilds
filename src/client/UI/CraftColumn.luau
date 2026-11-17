@@ -11,6 +11,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
@@ -254,8 +255,14 @@ local function CraftColumn(): Frame
 	return create("Frame")({
 		Name = "CraftColumn",
 		AnchorPoint = Vector2.new(0, 0),
-		Position = UDim2.fromScale(0.02, 0.12),
-		Size = UDim2.new(0, GRID_WIDTH + 240 + 12, 0.68, 0),
+		-- Abaixo do selo de pontos (HudLayout.craftTop); termina em 80% da
+		-- tela, como antes.
+		Position = function()
+			return UDim2.new(0.02, 0, 0, HudBottom.craftTop())
+		end,
+		Size = function()
+			return UDim2.new(0, GRID_WIDTH + 240 + 12, 0.8, -HudBottom.craftTop())
+		end,
 		BackgroundTransparency = 1,
 		create("ScrollingFrame")({
 			Name = "RecipeList",
