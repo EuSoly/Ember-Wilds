@@ -106,3 +106,12 @@ No `short()`:
 - Testes do Lune passam, incluindo os novos para os layouts compactos (menu cabe em 330, loja paginada, settings em 2 colunas, livro) e para os de PC sem mudança.
 - Capturas no emulador 749×330 de cada tela: nada cortado, nada rolando e nada sobreposto. O galho encosta no canto.
 - Captura no PC (1280×720) das mesmas telas, igual ao antes.
+
+## Ajustes depois da conferência do Elizeu (17/11)
+
+- **Kits** (não estava no pedido original): no celular o painel sobe até o topo, como o ranking, e os kits ficam em duas colunas de cartões mais baixos. Os 4 cabem sem rolar.
+- **Golden Ember:** os 5 numa fileira espremiam as moedas. Voltaram as duas fileiras do PC. A de cima ocupa a página e a de baixo aparece um pouco, mostrando que dá para rolar ("pode rolar, mas tem que mostrar que rola"). A barra de rolagem só aparece quando há o que rolar.
+- **Pacotes, Gamepasses e Giros:** não podem rolar. A página não tem mais o espaço extra embaixo, e os lados do giro descontam a folga de cima.
+- **"Você ganhou"** cabe na tela, com o quadradinho encolhendo. **"Comprado!"** com a loja aberta vira um toast embaixo.
+- **Livro:** Pegar e Fixar embaixo da grade. Na ficha eles cortavam o texto.
+- Com ranking ou kits no topo, o cartão do nível também some, porque é mais largo que a coluna e ficava cortado.

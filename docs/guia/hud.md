@@ -58,6 +58,11 @@ No toque, a faixa de baixo é calculada em px pelo `HudLayout` (testado em `test
 - No celular o "+" de canto do slot (17 px) não aparece; o botão **Guardar** do baú faz o slot inteiro virar o botão de pôr. Desliga sozinho ao se afastar.
 - Tela baixa: o tutorial, a receita fixada e os avisos ficam no topo central, embaixo do relógio (`HudColumnState.centered`). Com o painel de uma peça ou da caixa aberto, o tutorial e a receita saem do caminho até o jogador se afastar; os avisos passam por cima.
 - Falta: modo canhoto (trocar os joysticks de lado), que hoje só é salvo.
+- Coluna de receitas (17/11): começa 8 px abaixo do selo de pontos (`HudLayout.craftTop`, que repete a conta do `ScorePill` em `HudLayout.scorePillBottom`). No celular o selo de 38 px passava dos 12% da tela e a primeira receita encostava nele. No PC fica nos 12% de sempre.
+
+## Zoom da câmera (17/11/2026)
+
+O zoom é a opção **Zoom da câmera** das Configurações (`camera_zoom`, de 0 = perto a 1 = longe; o padrão 0,5 é a distância de sempre, 34). O `CameraController` lê o atributo `Setting_camera_zoom` do Player e mapeia de 28 a 40 (`CameraMath.zoomDistance`). No toque a pinça saiu: com os dois polegares nos analógicos ela disparava sem querer. No PC a roda do mouse continua ajustando durante a sessão, a partir da opção; mexer na opção volta para ela.
 
 ## Arte do HUD
 

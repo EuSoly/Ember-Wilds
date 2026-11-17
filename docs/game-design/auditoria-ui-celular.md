@@ -27,6 +27,24 @@ Capturas: `depois-16-hud.jpg`, `depois-19-bau-guardar.jpg`, `depois-20-extrator.
 
 Não verificado pelo MCP: o toque no slot com o Guardar ligado. O clique do MCP vira mouse no emulador, e no modo criativo o baú recusa itens de propósito.
 
+## Corrigido em 17/11 (branch `ui-celular`)
+
+Pedido do Elizeu: no celular, cada tela cabe inteira, sem rolar. Design em [2026-11-17-ui-celular-design.md](../superpowers/specs/2026-11-17-ui-celular-design.md), plano em [2026-11-17-ui-celular.md](../superpowers/plans/2026-11-17-ui-celular.md). Conferido no emulador (749×330, "Tamanho da interface" 95%); capturas `1711-*` em [auditoria-celular/](auditoria-celular/).
+
+| Tela | Como ficou no celular |
+|---|---|
+| Menu (1) | Botões da coluna de 40 (exceção aos 44 de toque, pedida pelo Elizeu) e cartões do topo de 48: os 6 botões cabem sem rolar |
+| Saldo | O galho fica no fundo sem área segura (`MenuBackdrop`) e encosta no canto de cima e na borda direita da tela |
+| Loja (12) | Uma página por aba. Pacotes, Gamepasses (5 numa fileira) e Giros cabem sem rolar. A Golden Ember rola: a fileira de cima ocupa a página e a de baixo aparece um pouco, e a barra de rolagem fica laranja quando há o que rolar. Com fita (POPULAR...), o número desce para baixo dela. Lados do giro sem rolar; janela "Você ganhou" cabe na tela; o aviso "Comprado!" vira um toast embaixo |
+| Ranking (13) | Sobe até o topo, sem logo, saldo, galho nem cartão do nível; textos das abas e do pódio com no mínimo 12 px |
+| Kits (9) | Sobem até o topo como o ranking, em duas colunas de cartões: os 4 kits cabem sem rolar |
+| Configurações (11) | Duas colunas (Som \| Tela + Controles), título, Resetar e X na mesma linha; nova opção **Zoom da câmera** |
+| HUD | A coluna de receitas não encosta mais no selo de pontos |
+| Livro (8) | Ocupa a tela, abas só com ícone, grade de 48; Pegar e Fixar embaixo da grade, a ficha usa a altura toda |
+| Câmera | Pinça desligada no toque; zoom pelas Configurações (no PC a roda continua) |
+
+**Com "Tamanho da interface" em 125%** (varredura automática de tudo que sai da tela, sem contar o que está dentro de listas que rolam): menu, kits, ranking, loja, giro, configurações e livro sem nada para fora. Rolam como reserva: a coluna do menu e as colunas das Configurações.
+
 ## Ruim (funciona, mas atrapalha)
 
 | # | Tela | Problema |
