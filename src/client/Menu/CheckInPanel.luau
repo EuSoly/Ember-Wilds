@@ -1,5 +1,5 @@
 --!strict
--- Check-in de 7 dias (UI): botão de calendário ao lado do saldo, com bolinha
+-- Check-in de 7 dias (UI): botão de calendário abaixo do saldo, com bolinha
 -- quando há prêmio, e a janela com 7 cartões (o dia 7 maior). Estados do
 -- cartão (CheckInRules.stateOf): resgatado, hoje (com RESGATAR), trancado
 -- (já resgatou hoje) e futuro. Tudo é lido da pasta Player.Shop (CheckInDay,
@@ -21,6 +21,8 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local TutorialState = require(Client:WaitForChild("TutorialState"))
+local MenuState = require(script.Parent:WaitForChild("MenuState"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
@@ -233,11 +235,24 @@ end
 function CheckInPanel.build(): Frame
 	local currentDay, ready = readState()
 
-	-- Abre sozinha ao entrar no menu com prêmio pronto (uma vez por sessão).
+	-- Abre sozinha ao entrar no menu com prêmio pronto (uma vez por sessão), no
+	-- menu "limpo" e sem o pop-up da roleta do tutorial na frente: só marca
+	-- como aberta quando abre de fato, e roda de novo quando o pop-up some.
 	vide.effect(function()
-		if ScreenState.current() == "menu" and ready() and not autoOpened then
+		local inMenu = ScreenState.current() == "menu"
+		if
+			inMenu
+			and ready()
+			and not autoOpened
+			and MenuState.panel() == "play"
+			and not TutorialState.popupPending()
+		then
 			autoOpened = true
 			open(true)
+		end
+		-- Saiu do menu: a janela não fica aberta para a próxima volta.
+		if not inMenu then
+			open(false)
 		end
 	end)
 

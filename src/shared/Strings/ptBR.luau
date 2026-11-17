@@ -1190,7 +1190,6 @@ return table.freeze({
 	["checkin.claimed"] = "Resgatado",
 	["checkin.locked"] = "Volte amanhã",
 	["checkin.close"] = "Fechar",
-	["checkin.button"] = "Prêmio diário",
 	["checkin.got"] = "Dia {day} resgatado: {reward}",
 	["checkin.error"] = "Não foi possível resgatar agora",
 })
