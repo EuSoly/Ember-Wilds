@@ -365,6 +365,46 @@ local function branch(layout: () -> Layout): ImageLabel
 	}) :: ImageLabel
 end
 
+-- Galho do celular (17/11/2026): no fundo sem área segura (MenuBackdrop), para
+-- encostar de verdade no canto de cima e na borda direita da tela; no
+-- celular a área segura deixava um vão entre o galho e a borda. Mede o card
+-- do saldo (mesmo espaço de coordenadas do fundo) e estica o galho do mesmo
+-- recuo à esquerda do card de sempre até a borda direita.
+type Box = { position: Vector2, size: Vector2 }
+
+local function boxOf(instance: GuiBase2d): Box
+	return { position = instance.AbsolutePosition, size = instance.AbsoluteSize }
+end
+
+local function watchBox(instance: GuiBase2d): () -> Box
+	local box = vide.source(boxOf(instance))
+	local function update()
+		box(boxOf(instance))
+	end
+	instance:GetPropertyChangedSignal("AbsolutePosition"):Connect(update)
+	instance:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
+	return box
+end
+
+local function compactBranch(card: () -> Box, screen: () -> Box, visible: () -> boolean): ImageLabel
+	return create("ImageLabel")({
+		Name = "BranchCompact",
+		Visible = visible,
+		AnchorPoint = Vector2.new(1, 0),
+		Position = UDim2.fromScale(1, 0),
+		Size = function()
+			local c, s = card(), screen()
+			local cardLeft = c.position.X - s.position.X
+			local width = (s.size.X - cardLeft) + c.size.X * (BRANCH_SHARE - 1)
+			return UDim2.fromOffset(width, width / BRANCH_ASPECT)
+		end,
+		BackgroundTransparency = 1,
+		Image = UiImages.BRANCH,
+		ScaleType = Enum.ScaleType.Fit,
+		ZIndex = 2,
+	}) :: ImageLabel
+end
+
 -- Logo maior no menu; com um painel do mockup aberto, encolhe para não cobrir o título.
 local PANEL_LOGO_HEIGHT = 56
 local function logo(layout: () -> Layout): ImageLabel
@@ -585,10 +625,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 			return not (shopOpen() and ShopState.spinType() ~= nil and shopLayout().compact)
 		end,
 	})
-	-- O galho fica só no menu: na loja as folhas cobririam as abas.
+	-- O galho fica só no menu: na loja as folhas cobririam as abas. No celular
+	-- quem aparece é o galho do fundo (compactBranch).
+	local function branchVisible(): boolean
+		return UiImages.has(UiImages.BRANCH) and notShop()
+	end
 	vide.apply(branchImage)({
 		Visible = function()
-			return UiImages.has(UiImages.BRANCH) and notShop()
+			return branchVisible() and not layout().compact
 		end,
 	})
 
@@ -680,6 +724,10 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 			ScaleType = Enum.ScaleType.Fit,
 		}),
 	}) :: ScreenGui
+	compactBranch(watchBox(balance), watchBox(backdrop), function()
+		return branchVisible() and layout().compact
+	end).Parent =
+		backdrop
 	backdrop.Parent = playerGui
 
 	-- Pop-up da roleta depois do tutorial (uma vez): ScreenGui próprio, por cima
