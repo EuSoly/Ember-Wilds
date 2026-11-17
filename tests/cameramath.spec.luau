@@ -39,10 +39,11 @@ return {
 		assert(CameraMath.smoothAlpha(12, 1 / 10) < 1, "num frame normal não deveria colar no alvo")
 	end,
 	["zoom fraction maps to the camera distance"] = function()
+		-- "Zoom 100%" é o mais perto (quem joga lê mais zoom = mais perto).
 		assert(CameraMath.zoomDistance(0.5, 28, 40) == 34, "meio = distância de sempre")
-		assert(CameraMath.zoomDistance(0, 28, 40) == 28, "perto")
-		assert(CameraMath.zoomDistance(1, 28, 40) == 40, "longe")
-		assert(CameraMath.zoomDistance(2, 28, 40) == 40, "acima de 1 prende")
-		assert(CameraMath.zoomDistance(-1, 28, 40) == 28, "abaixo de 0 prende")
+		assert(CameraMath.zoomDistance(1, 28, 40) == 28, "100% = perto")
+		assert(CameraMath.zoomDistance(0, 28, 40) == 40, "0% = longe")
+		assert(CameraMath.zoomDistance(2, 28, 40) == 28, "acima de 1 prende")
+		assert(CameraMath.zoomDistance(-1, 28, 40) == 40, "abaixo de 0 prende")
 	end,
 }

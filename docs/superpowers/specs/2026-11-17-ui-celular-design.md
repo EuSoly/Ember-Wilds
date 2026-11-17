@@ -89,7 +89,7 @@ No `short()`:
 - No PC fica como hoje.
 
 ### 8. Zoom (Defs.Settings + CameraController)
-- Nova opção `camera_zoom` (number, de 0 a 1, padrão 0,5, grupo "controls", texto "Zoom da câmera"). A barrinha vai de "perto" (0) a "longe" (1) e mapeia linearmente para a distância de 28 a 40. O padrão 0,5 fica em 34, que é o `DEFAULT_DISTANCE` de hoje, então ninguém sente diferença. O servidor valida como as outras opções.
+- Nova opção `camera_zoom` (number, de 0 a 1, padrão 0,5, grupo "controls", texto "Zoom da câmera"). A barrinha vai de "longe" (0%) a "perto" (100%; revisão final: "Zoom 100%" se lê como o mais perto) e mapeia linearmente para a distância de 28 a 40. O padrão 0,5 fica em 34, que é o `DEFAULT_DISTANCE` de hoje, então ninguém sente diferença. O servidor valida como as outras opções.
 - `CameraController` lê o atributo `Setting_camera_zoom` do Player e usa como distância-alvo, mudando quando o atributo muda.
 - Celular: a conexão do `TouchPinch` sai. **Decisão do implementador:** ela sai para todo aparelho de toque, tablets inclusive. Lá também os dois polegares ficam nos analógicos e viram "pinça" sem querer, e o zoom continua disponível pelas Configurações.
 - PC: a roda continua ajustando dentro de 28 a 40, a partir do valor da opção. Mexer na opção leva o zoom de volta ao valor dela. A roda não salva nada.

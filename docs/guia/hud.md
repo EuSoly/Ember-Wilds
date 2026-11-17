@@ -62,7 +62,7 @@ No toque, a faixa de baixo é calculada em px pelo `HudLayout` (testado em `test
 
 ## Zoom da câmera (17/11/2026)
 
-O zoom é a opção **Zoom da câmera** das Configurações (`camera_zoom`, de 0 = perto a 1 = longe; o padrão 0,5 é a distância de sempre, 34). O `CameraController` lê o atributo `Setting_camera_zoom` do Player e mapeia de 28 a 40 (`CameraMath.zoomDistance`). No toque a pinça saiu: com os dois polegares nos analógicos ela disparava sem querer. No PC a roda do mouse continua ajustando durante a sessão, a partir da opção; mexer na opção volta para ela.
+O zoom é a opção **Zoom da câmera** das Configurações (`camera_zoom`: 100% é o mais perto e 0% o mais longe, porque quem joga lê "mais zoom" como mais perto; o padrão 50% é a distância de sempre, 34). O `CameraController` lê o atributo `Setting_camera_zoom` do Player e mapeia de 28 a 40 (`CameraMath.zoomDistance`). No toque a pinça saiu: com os dois polegares nos analógicos ela disparava sem querer. No PC a roda do mouse continua ajustando durante a sessão, a partir da opção; mexer na opção volta para ela.
 
 ## Arte do HUD
 
