@@ -136,4 +136,29 @@ return {
 		local cols, cardHeight = ShopLayout.passGrid(l, 4)
 		assert(cols == 5 and cardHeight == 236, "grade do PC")
 	end,
+
+	["pc passes with a top row keep the fixed height"] = function()
+		local l = ShopLayout.compute(1280, 720)
+		local cols, h = ShopLayout.passGrid(l, 6, ShopLayout.topRowHeight(l))
+		assert(cols == 5 and h == ShopLayout.PASS_CARD_HEIGHT, "PC ignora a fileira reservada")
+	end,
+
+	["phone passes with a top row never get squeezed"] = function()
+		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 } } do
+			local l = ShopLayout.compute(size[1], size[2])
+			assert(l.paged, "celular pagina")
+			local reserved = ShopLayout.topRowHeight(l)
+			assert(reserved == ShopLayout.TOP_ROW_HEIGHT_COMPACT, "fileira baixa no celular")
+			local _, h = ShopLayout.passGrid(l, 6, reserved)
+			assert(h >= ShopLayout.PASS_CARD_MIN_PAGED, `{size[1]}x{size[2]}: cartão apertado ({h})`)
+			assert(h <= ShopLayout.PASS_CARD_HEIGHT, "nunca passa do tamanho do PC")
+		end
+	end,
+
+	["top row weights hide premium slot"] = function()
+		local vip, boost, premium = ShopLayout.topRowWeights(true)
+		assert(vip == 2 and boost == 1 and premium == 1, "com Premium")
+		local _, _, none = ShopLayout.topRowWeights(false)
+		assert(none == 0, "sem Premium, o peso some")
+	end,
 }

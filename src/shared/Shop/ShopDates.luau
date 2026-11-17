@@ -63,4 +63,32 @@ function ShopDates.isOpen(startsAt: number?, endsAt: number?, now: number): bool
 	return true
 end
 
+-- Unix (UTC) → "DD/MM" no horário de Brasília (para "VIP ativo até 17/12").
+function ShopDates.dayMonth(unix: number): string
+	local days = math.floor((unix + ShopDates.UTC_OFFSET_HOURS * 3600) / 86400)
+	local year = 1970
+	while days >= (if isLeap(year) then 366 else 365) do
+		days -= if isLeap(year) then 366 else 365
+		year += 1
+	end
+	local month = 1
+	while days >= daysInMonth(year, month) do
+		days -= daysInMonth(year, month)
+		month += 1
+	end
+	return string.format("%02d/%02d", days + 1, month)
+end
+
+-- Segundos → "mm:ss" (ou "h:mm:ss" a partir de 1 h), para o selo do boost.
+function ShopDates.clock(seconds: number): string
+	local total = math.max(math.ceil(seconds), 0)
+	local h = total // 3600
+	local m = (total % 3600) // 60
+	local s = total % 60
+	if h > 0 then
+		return string.format("%d:%02d:%02d", h, m, s)
+	end
+	return string.format("%02d:%02d", m, s)
+end
+
 return ShopDates

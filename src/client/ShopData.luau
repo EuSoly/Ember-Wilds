@@ -7,6 +7,7 @@
 -- máximo) quando a pasta muda. As funções abaixo leem dela e são reativas.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
@@ -19,12 +20,28 @@ export type Snapshot = {
 	active: string?,
 	purchased: { [string]: boolean },
 	passes: { [string]: boolean },
+	-- Vantagens (atributos Perk_* da pasta Shop; ver StatNames).
+	perks: { vip: boolean, ember2x: boolean, book: boolean, premium: boolean },
+	vipUntil: number, -- unix (servidor); 0 = sem VIP
+	xpBoostStart: number,
+	xpBoostUntil: number, -- unix (servidor); 0 = sem boost
 }
 
 type Source<T> = (() -> T) & ((T) -> T)
 
 local function empty(): Snapshot
-	return { spins = { normal = 0, paid = 0 }, balance = {}, owned = {}, active = nil, purchased = {}, passes = {} }
+	return {
+		spins = { normal = 0, paid = 0 },
+		balance = {},
+		owned = {},
+		active = nil,
+		purchased = {},
+		passes = {},
+		perks = { vip = false, ember2x = false, book = false, premium = false },
+		vipUntil = 0,
+		xpBoostStart = 0,
+		xpBoostUntil = 0,
+	}
 end
 
 local snapshot: Source<Snapshot> = vide.source(empty()) :: any
@@ -61,6 +78,34 @@ end
 function ShopData.hasPass(passId: string): boolean
 	return snapshot().passes[passId] == true
 end
+
+-- Vantagem valendo agora (Perk_*): "vip", "ember2x", "book" ou "premium".
+function ShopData.perk(name: "vip" | "ember2x" | "book" | "premium"): boolean
+	return snapshot().perks[name] == true
+end
+
+function ShopData.vipUntil(): number
+	return snapshot().vipUntil
+end
+
+function ShopData.xpBoostUntil(): number
+	return snapshot().xpBoostUntil
+end
+
+-- "Agora" na hora do servidor (unix, segundos inteiros), 1 vez por segundo.
+-- O servidor grava VipUntil/XpBoostUntil com os.time() dele; o relógio do
+-- celular do jogador pode estar adiantado ou atrasado, então a conta usa
+-- Workspace:GetServerTimeNow(), que o Roblox mantém sincronizado com o
+-- servidor. Só muda a cada segundo: quem lê recalcula no máximo 1x/s.
+local now: Source<number> = vide.source(math.floor(Workspace:GetServerTimeNow())) :: any
+ShopData.now = now
+
+task.spawn(function()
+	while true do
+		task.wait(1)
+		now(math.floor(Workspace:GetServerTimeNow()))
+	end
+end)
 
 local function numberAttribute(folder: Instance, name: string): number
 	local value = folder:GetAttribute(name)
@@ -103,6 +148,15 @@ local function read(root: Instance): Snapshot
 		active = if type(active) == "string" and active ~= "" then active else nil,
 		purchased = flags(root:FindFirstChild(StatNames.PurchasedFolder)),
 		passes = flags(root:FindFirstChild(StatNames.PassesFolder)),
+		perks = {
+			vip = root:GetAttribute(StatNames.PerkVip) == true,
+			ember2x = root:GetAttribute(StatNames.PerkEmber2x) == true,
+			book = root:GetAttribute(StatNames.PerkBook) == true,
+			premium = root:GetAttribute(StatNames.PerkPremium) == true,
+		},
+		vipUntil = numberAttribute(root, StatNames.VipUntil),
+		xpBoostStart = numberAttribute(root, StatNames.XpBoostStart),
+		xpBoostUntil = numberAttribute(root, StatNames.XpBoostUntil),
 	}
 end
 

@@ -995,6 +995,22 @@ return table.freeze({
 	["shop.pass.book"] = "Nascer com livro",
 	["shop.vip.name"] = "VIP",
 	["shop.boost.name"] = "Boost de XP",
+	-- Loja: VIP, boost de XP e Premium (Menu/Shop/VipCard, BoostCard, PremiumCard)
+	["shop.vip.perks"] = "+3 espaços na mochila · ícone VIP no nome · +50% Golden Ember · Kit VIP · 1 revive grátis por vida",
+	["shop.vip.month"] = "{price} por mês",
+	["shop.vip.active"] = "VIP ativo até {date}",
+	["shop.vip.renew"] = "Renovar \u{E002} {price}",
+	["shop.boost.desc"] = "Dobra o XP que você ganha. +1 h a cada compra.",
+	["shop.boost.left"] = "Faltam {time}",
+	["shop.premium.title"] = "Roblox Premium",
+	["shop.premium.desc"] = "+20% Golden Ember e o Kit Iniciante liberado enquanto for Premium.",
+	["shop.premium.button"] = "Assinar",
+	["hud.xpBoost"] = "XP 2× {time}",
+	-- Recompensas novas no card de um pacote (Menu/Shop/RewardView).
+	["shop.reward.vip"] = "VIP {days} dias",
+	["shop.reward.xpBoost.hours"] = "Boost de XP {n} h",
+	["shop.reward.xpBoost.minutes"] = "Boost de XP {n} min",
+	["shop.reward.reviveCredit"] = "Revive guardado ×{count}",
 	-- Loja (UI 2): tela
 	["shop.title"] = "LOJA",
 	["shop.back"] = "◀ Menu",

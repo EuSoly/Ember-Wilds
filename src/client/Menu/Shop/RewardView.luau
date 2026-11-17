@@ -41,6 +41,16 @@ function RewardView.text(reward: Reward): string
 			"shop.reward.pass",
 			{ name = if pass then Strings.get(pass.nameKey) else tostring(reward.id) }
 		)
+	elseif reward.kind == "vip" then
+		return Strings.format("shop.reward.vip", { days = reward.count or 0 })
+	elseif reward.kind == "xpBoost" then
+		local seconds = reward.count or 0
+		if seconds >= 3600 and seconds % 3600 == 0 then
+			return Strings.format("shop.reward.xpBoost.hours", { n = seconds // 3600 })
+		end
+		return Strings.format("shop.reward.xpBoost.minutes", { n = math.max(seconds // 60, 1) })
+	elseif reward.kind == "reviveCredit" then
+		return Strings.format("shop.reward.reviveCredit", { count = reward.count or 1 })
 	end
 	return `{reward.kind}:{reward.id or ""}`
 end

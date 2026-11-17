@@ -32,6 +32,7 @@ local TutorialPanel = require(script.Parent:WaitForChild("TutorialPanel"))
 local PinnedRecipe = require(script.Parent:WaitForChild("PinnedRecipe"))
 local Template = require(script.Parent.Parent:WaitForChild("UITemplates"):WaitForChild("Template"))
 local WeaponLock = require(script.Parent:WaitForChild("WeaponLock"))
+local XpBoostBadge = require(script.Parent:WaitForChild("XpBoostBadge"))
 
 local create = vide.create
 
@@ -41,6 +42,7 @@ local function App(): ScreenGui
 		ScorePill(),
 		CraftColumn(),
 		Clock(),
+		XpBoostBadge(), -- entre o selo de pontos e o relógio
 		Minimap(),
 		SettingsButton(),
 		RecipeBookButton(),

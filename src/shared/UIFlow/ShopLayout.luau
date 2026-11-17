@@ -38,6 +38,13 @@ ShopLayout.SECTION_TITLE = 36 + 10 -- título da seção + espaço até a grade 
 ShopLayout.PASS_CARD_HEIGHT = 236
 ShopLayout.PASS_MIN_WIDTH = 110 -- largura mínima de um cartão de gamepass na fileira (5 cabem na escala 1,25)
 ShopLayout.EMBER_CARD_HEIGHT = 200
+-- Fileira de cima da aba de gamepasses (VIP, boost de XP e Premium): cartões
+-- deitados. No celular a fileira é baixa e os 6 cartões de baixo não encolhem
+-- abaixo de PASS_CARD_MIN_PAGED (a página passa a rolar um pouco em vez de
+-- apertar texto e botão uns contra os outros).
+ShopLayout.TOP_ROW_HEIGHT = 140
+ShopLayout.TOP_ROW_HEIGHT_COMPACT = 76
+ShopLayout.PASS_CARD_MIN_PAGED = 170
 
 export type Layout = {
 	compact: boolean,
@@ -139,7 +146,9 @@ end
 -- Grade dos gamepasses: colunas e altura do cartão. No PC, 5 colunas de
 -- 236; na página do celular, uma fileira se couber (cartão ≥ PASS_MIN_WIDTH)
 -- e a altura dividida entre as fileiras.
-function ShopLayout.passGrid(l: Layout, count: number): (number, number)
+-- `reserved`: altura já ocupada na página por cima da grade (a fileira do VIP);
+-- com ela, a altura do cartão não desce de PASS_CARD_MIN_PAGED.
+function ShopLayout.passGrid(l: Layout, count: number, reserved: number?): (number, number)
 	if not l.paged then
 		return l.passColumns, ShopLayout.PASS_CARD_HEIGHT
 	end
@@ -147,8 +156,23 @@ function ShopLayout.passGrid(l: Layout, count: number): (number, number)
 	local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH + gap))
 	local columns = math.max(math.min(math.max(count, 1), fit), 1)
 	local rows = math.ceil(math.max(count, 1) / columns)
-	local cardHeight = math.min(ShopLayout.PASS_CARD_HEIGHT, (l.pageHeight - (rows - 1) * gap) / rows)
+	local room = l.pageHeight - (if reserved then reserved + gap else 0)
+	local cardHeight = math.min(ShopLayout.PASS_CARD_HEIGHT, (room - (rows - 1) * gap) / rows)
+	if reserved then
+		cardHeight = math.max(cardHeight, ShopLayout.PASS_CARD_MIN_PAGED)
+	end
 	return columns, cardHeight
+end
+
+-- Altura da fileira de cima (VIP, boost, Premium).
+function ShopLayout.topRowHeight(l: Layout): number
+	return if l.paged then ShopLayout.TOP_ROW_HEIGHT_COMPACT else ShopLayout.TOP_ROW_HEIGHT
+end
+
+-- Pesos de largura na fileira de cima: VIP vale 2, boost e Premium 1; sem o
+-- Premium (quem já é Premium não vê o cartão) a fileira é só VIP e boost.
+function ShopLayout.topRowWeights(premiumShown: boolean): (number, number, number)
+	return 2, 1, if premiumShown then 1 else 0
 end
 
 -- Altura dos cartões de Golden Ember na fileira única da página do celular.

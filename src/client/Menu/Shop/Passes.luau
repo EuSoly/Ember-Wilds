@@ -1,5 +1,6 @@
 --!strict
--- Gamepasses: os kits para sempre e o VIP (produtos kit_<kit> e pass_<passe>
+-- Gamepasses: no topo a fileira do VIP, do boost de XP e do Premium; embaixo
+-- os kits para sempre e as passes 2x e livro (produtos kit_<kit> e pass_<passe>
 -- de Shop/Products). Comprar = pedido ao servidor (Robux ainda não é
 -- cobrado); o kit comprado aqui é o mesmo do painel de kits (libera o "Usar").
 -- Já comprado mostra "Comprado".
@@ -11,6 +12,7 @@ local Defs = require(Shared:WaitForChild("Defs"))
 local Products = require(Shared:WaitForChild("Shop"):WaitForChild("Products"))
 local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
+local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
@@ -19,6 +21,9 @@ local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local BoostCard = require(script.Parent:WaitForChild("BoostCard"))
+local PremiumCard = require(script.Parent:WaitForChild("PremiumCard"))
+local VipCard = require(script.Parent:WaitForChild("VipCard"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -53,8 +58,14 @@ local function passOf(product: Products.Product): Pass?
 	return nil
 end
 
--- Ícone do cartão: o último item do kit (a ferramenta ou a mochila); o VIP
--- ganha uma estrela desenhada.
+-- Arte das passes novas (MonetizationImages; "" = ainda sem arte).
+local PASS_ART: { [string]: string } = {
+	ember2x = MonetizationImages.EMBER_2X,
+	book = MonetizationImages.BOOK,
+}
+
+-- Ícone do cartão: o último item do kit (a ferramenta ou a mochila); as passes
+-- sem arte ganham uma estrela desenhada.
 local function icon(pass: Pass, short: () -> boolean): GuiObject
 	local box = create("Frame")({
 		Name = "Icon",
@@ -71,6 +82,9 @@ local function icon(pass: Pass, short: () -> boolean): GuiObject
 		ZIndex = 3,
 	}) :: Frame
 	local art = ShopImages.PASS[pass.artId]
+	if not ShopImages.has(art) and MonetizationImages.has(PASS_ART[pass.artId]) then
+		art = PASS_ART[pass.artId]
+	end
 	local kit = if pass.kitId then Defs.Kits[pass.kitId] else nil
 	if ShopImages.has(art) then
 		create("ImageLabel")({
@@ -156,6 +170,38 @@ local function card(pass: Pass, order: number, short: () -> boolean): Frame
 	})
 end
 
+-- Fileira de cima: VIP (peso 2), boost e, para quem não é Premium, o Premium.
+local function topRow(layout: () -> ShopLayout.Layout): Frame
+	local gap = ShopLayout.GAP
+	-- Largura de cada cartão: a sua parte do que sobra depois dos espaços.
+	local function width(slot: number): () -> UDim2
+		return function()
+			local shown = PremiumCard.shown()
+			local weights = { ShopLayout.topRowWeights(shown) }
+			local total = weights[1] + weights[2] + weights[3]
+			local count = if shown then 3 else 2
+			local share = weights[slot] / total
+			return UDim2.new(share, -math.ceil(gap * (count - 1) * share) - 1, 1, 0)
+		end
+	end
+	return create("Frame")({
+		Name = "TopRow",
+		LayoutOrder = 1,
+		Size = function()
+			return UDim2.new(1, 0, 0, ShopLayout.topRowHeight(layout()))
+		end,
+		BackgroundTransparency = 1,
+		create("UIListLayout")({
+			FillDirection = Enum.FillDirection.Horizontal,
+			SortOrder = Enum.SortOrder.LayoutOrder,
+			Padding = UDim.new(0, gap),
+		}),
+		VipCard.build({ LayoutOrder = 1, Size = width(1) }),
+		BoostCard.build({ LayoutOrder = 2, Size = width(2) }),
+		PremiumCard.build({ LayoutOrder = 3, Size = width(3) }),
+	}) :: Frame
+end
+
 function Passes.build(layout: () -> ShopLayout.Layout): Frame
 	local passes: { Pass } = {}
 	for _, product in Products.all() do
@@ -164,15 +210,16 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 			table.insert(passes, pass)
 		end
 	end
-	-- Colunas e altura: no celular saem da página (ShopLayout.passGrid).
+	-- Colunas e altura: no celular saem da página, já descontada a fileira de cima.
 	local grid = vide.derive(function()
-		local columns, height = ShopLayout.passGrid(layout(), #passes)
+		local l = layout()
+		local columns, height = ShopLayout.passGrid(l, #passes, ShopLayout.topRowHeight(l))
 		return { columns = columns, height = height }
 	end)
 	local function short(): boolean
 		return grid().height < ShopLayout.PASS_CARD_HEIGHT
 	end
-	local children: { Instance } = {
+	local cards: { Instance } = {
 		ShopParts.grid(function()
 			return grid().columns
 		end, function()
@@ -180,14 +227,23 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 		end, ShopLayout.GAP),
 	}
 	for order, pass in passes do
-		table.insert(children, card(pass, order, short))
+		table.insert(cards, card(pass, order, short))
 	end
 	return create("Frame")({
 		Name = "Passes",
 		Size = UDim2.fromScale(1, 0),
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
-		children,
+		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, ShopLayout.GAP) }),
+		topRow(layout),
+		create("Frame")({
+			Name = "Cards",
+			LayoutOrder = 2,
+			Size = UDim2.fromScale(1, 0),
+			AutomaticSize = Enum.AutomaticSize.Y,
+			BackgroundTransparency = 1,
+			cards,
+		}),
 	}) :: Frame
 end
 

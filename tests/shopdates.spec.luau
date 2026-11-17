@@ -43,4 +43,23 @@ return {
 		assert(not ShopDates.isOpen(100, nil, 99), "antes do começo está fechado")
 		assert(ShopDates.isOpen(nil, 200, 199), "sem começo vale até o fim")
 	end,
+
+	["dayMonth shows Brasilia day"] = function()
+		local noon = ShopDates.parse("2026-12-17 12:00") :: number
+		assert(ShopDates.dayMonth(noon) == "17/12", ShopDates.dayMonth(noon))
+		-- 01:00 UTC ainda é o dia anterior em Brasília.
+		local late = ShopDates.parse("2027-03-01 00:30") :: number
+		assert(ShopDates.dayMonth(late) == "01/03", ShopDates.dayMonth(late))
+		assert(ShopDates.dayMonth(late - 3600) == "28/02", ShopDates.dayMonth(late - 3600))
+		local leap = ShopDates.parse("2028-02-29 23:59") :: number
+		assert(ShopDates.dayMonth(leap) == "29/02", "ano bissexto")
+	end,
+
+	["clock formats mm:ss and h:mm:ss"] = function()
+		assert(ShopDates.clock(0) == "00:00", "zero")
+		assert(ShopDates.clock(59.2) == "01:00", "arredonda para cima")
+		assert(ShopDates.clock(754) == "12:34", "mm:ss")
+		assert(ShopDates.clock(3600) == "1:00:00", "1 h")
+		assert(ShopDates.clock(-5) == "00:00", "negativo")
+	end,
 }
