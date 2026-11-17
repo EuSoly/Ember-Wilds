@@ -80,6 +80,16 @@ return table.freeze({
 	KitBalanceFolder = "KitBalance",
 	PurchasedFolder = "Purchased",
 	PassesFolder = "Passes",
+	-- Vantagens (PerkService), atributos no Player. Perk_* (bool) = o que vale
+	-- nesta vida (foto ao nascer; ganho com a vida ativa entra na hora).
+	-- VipUntil, XpBoostStart, XpBoostUntil (unix) = o perfil (Shop).
+	PerkVip = "Perk_vip",
+	PerkEmber2x = "Perk_ember2x",
+	PerkBook = "Perk_book",
+	PerkPremium = "Perk_premium",
+	VipUntil = "VipUntil",
+	XpBoostStart = "XpBoostStart",
+	XpBoostUntil = "XpBoostUntil",
 	-- Tutorial da primeira partida (TutorialService), atributos do Player:
 	-- TutorialStep = etapa atual (0 = fora do tutorial, 1..6); TutorialProtected =
 	-- protegido (nem leva nem causa dano); TutorialPending = o perfil ainda não

@@ -99,15 +99,15 @@ big_bag = {
 
 A grade da mochila se ajusta sozinha à nova capacidade. Para vestir, o servidor chama `InventoryService.equipBag(player, "big_bag")` (hoje só o kit de teste chama; depois, o crafting/equipamentos). Trocar por uma mochila menor, ou tirar, só funciona se os slots que vão sumir estiverem vazios, para nenhum item se perder.
 
-## Gamepass VIP (slots extras)
+## VIP (slots extras)
 
 Em `src/shared/InventoryConfig.luau`:
 
 ```lua
-vipPass = { gamePassId = 0, bonusSlots = 3 },
+vipPass = { bonusSlots = 3 },
 ```
 
-Com `gamePassId = 0` o bônus fica desligado. Para ligar: crie o gamepass no Creator Hub, copie o ID e coloque em `gamePassId`. O servidor confere o passe quando o jogador entra (`UserOwnsGamePassAsync`) e também libera na hora quando ele compra durante a partida. Os slots extras aparecem no painel da mochila, mesmo sem mochila vestida. Mantenha o bônus pequeno: slot a mais é uma vantagem leve num jogo com PvP.
+O VIP não é mais gamepass: é por tempo (`Shop.VipUntil` no perfil, comprado na loja). Quem aplica os espaços é o `PerkService`, ao nascer, pela foto das vantagens daquela vida (`InventoryService.setPerkBonus(player, slots)`, 0 tira). Comprar VIP com a vida ativa dá os +3 na hora; o VIP vencido só some na próxima vida. Os slots extras aparecem no painel da mochila, mesmo sem mochila vestida. Mantenha o bônus pequeno: slot a mais é uma vantagem leve num jogo com PvP.
 
 ## Adicionar um modelo de ferramenta
 

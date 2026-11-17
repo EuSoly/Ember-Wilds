@@ -52,7 +52,7 @@ No jogo, presentes e códigos de resgate devem entregar por `ShopService.give(pl
 
 ### VIP
 
-O passe `vip` fica salvo no perfil e dá `InventoryConfig.vipPass.bonusSlots` (+3) espaços. O gamepass real (quando existir) continua funcionando pelo caminho antigo do `InventoryService`.
+O VIP é por tempo (recompensa `{ kind = "vip", count = dias }` → `Shop.VipUntil`). O `PerkService` tira uma foto das vantagens quando a vida começa (VIP, passes `ember2x` e `book`, Premium do Roblox) e ela vale até o fim daquela vida: +3 espaços (`InventoryConfig.vipPass.bonusSlots`), Kit VIP e o bônus no multiplicador de Golden Ember. Ganhar uma vantagem com a vida ativa vale na hora; perder (VIP vencido, `DevShopRevoke(player, "vip")`) só na próxima vida. O Premium libera o `kit_starter` e dá +20% enquanto durar.
 
 ## Como criar um pacote
 

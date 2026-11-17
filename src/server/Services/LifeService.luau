@@ -28,6 +28,12 @@ local LifeService = {}
 export type LifeSummary = { points: number, days: number, currency: number, xp: number }
 
 local lives: { [Player]: LifeRules.Life } = {}
+-- Multiplicador de Golden Ember do fim de vida. Quem dá é o PerkService
+-- (setMultiplierSource): ele já depende deste serviço, então o require ao
+-- contrário faria um ciclo.
+local multiplierSource: (Player) -> number = function(_player: Player): number
+	return 1
+end
 local startedListeners: { (Player) -> () } = {}
 local endedListeners: { (Player) -> () } = {}
 
@@ -66,6 +72,11 @@ function LifeService.onEnded(listener: (Player) -> ())
 	table.insert(endedListeners, listener)
 end
 
+-- De onde vem o multiplicador de Golden Ember do fim de vida (PerkService).
+function LifeService.setMultiplierSource(source: (Player) -> number)
+	multiplierSource = source
+end
+
 -- Pontos da vida atual: número finito e não negativo, senão 0.
 local function readScore(player: Player): number
 	local score = player:GetAttribute(StatNames.Score)
@@ -92,7 +103,9 @@ function LifeService.endLife(player: Player): LifeSummary?
 	end
 	local score = readScore(player)
 	local days = LifeRules.daysSurvived(seconds)
-	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score, 1), "life_end")
+	local multiplier = multiplierSource(player)
+	local granted =
+		CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score, multiplier), "life_end")
 	if score > 0 then
 		StatsService.add(player, "score_total", score)
 	end
@@ -122,6 +135,15 @@ local function startLifeIfNone(player: Player)
 	if life == nil or not life.active then
 		lives[player] = LifeRules.start(os.clock())
 		notify(startedListeners, player)
+	end
+end
+
+-- Começa a vida agora, se ainda não começou (idempotente; o CharacterAdded
+-- depois não começa outra). O SpawnService chama logo depois de nascer, para
+-- a foto das vantagens (PerkService) existir antes do kit e dos itens.
+function LifeService.begin(player: Player)
+	if player.Parent == Players then
+		startLifeIfNone(player)
 	end
 end
 

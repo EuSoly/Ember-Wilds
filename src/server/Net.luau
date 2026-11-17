@@ -334,7 +334,7 @@ function SerdesFunctions.ReadEVENT_RequestSpawn(): ({ KitId: string?, Source: st
 		local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 		Value.Source = buffer.readstring(RecieveBuffer, Read(Length), Length)
 		if #Value.Source < 1 then error(`Expected length of "Value.Source" to be larger than or equal to 1, got {#Value.Source} instead.`) end
-		if #Value.Source > 8 then error(`Expected length of "Value.Source" to be smaller than or equal to  8, got {#Value.Source} instead.`) end
+		if #Value.Source > 12 then error(`Expected length of "Value.Source" to be smaller than or equal to  12, got {#Value.Source} instead.`) end
 	end
 	return Value
 end

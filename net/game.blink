@@ -101,15 +101,16 @@ event EquipCosmetic {
 -- Pedido para nascer (botões Jogar / Jogar de novo). KitId = id em Defs/Kits,
 -- opcional. O servidor (SpawnService) ignora se o perfil não carregou, se o
 -- jogador já está vivo ou nascendo; kit inexistente ou caro demais = nasce sem kit.
--- Source = de onde sai o kit: "points" (KitPoints) ou "balance" (saldo de 1
--- vida comprado). Sem pedido válido, vem o kit para sempre ativo (KitChoice).
+-- Source = de onde sai o kit: "points" (KitPoints), "balance" (saldo de 1
+-- vida comprado) ou "permanent" (kit para sempre, comprado ou liberado por
+-- vantagem). Sem pedido válido, vem o kit para sempre ativo (KitChoice).
 event RequestSpawn {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
 	Data: struct {
 		KitId: string(1..32)?,
-		Source: string(1..8)?
+		Source: string(1..12)?
 	}
 }
 

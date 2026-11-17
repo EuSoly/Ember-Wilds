@@ -76,6 +76,18 @@ return {
 		assert(kit == nil and source == nil, `{kit} {source}`)
 	end,
 
+	["a perk-unlocked kit resolves as permanent"] = function()
+		-- `owned` já chega com a união (KitsOwned + PerkService.unlockedKits):
+		-- aqui o kit_starter vem só do Premium e nenhum kit está ativo.
+		local premium = state({ owned = { kit_starter = true } })
+		local kit, source = KitChoice.resolve({ kitId = "kit_starter", source = "permanent" }, premium, Defs.Kits)
+		assert(kit == "kit_starter" and source == "permanent", `{kit} {source}`)
+		-- Kit só de VIP fora de `owned` (sem VIP) não sai.
+		assert(Defs.Kits.kit_vip.vipOnly == true, "kit_vip é vipOnly")
+		local vipKit, vipSource = KitChoice.resolve({ kitId = "kit_vip", source = "permanent" }, premium, Defs.Kits)
+		assert(vipKit == nil and vipSource == nil, `{vipKit} {vipSource}`)
+	end,
+
 	["auto prefers points, then balance"] = function()
 		assert(KitChoice.auto("kit_explorer", EXPLORER_PRICE, {}, Defs.Kits) == "points", "pontos primeiro")
 		assert(

@@ -2,7 +2,8 @@
 -- Qual kit vai nesta vida e de onde ele sai (puro; o servidor decide ao nascer).
 -- Vai UM kit por vida:
 --   1. o kit pedido, pela origem pedida: "points" (pontos da última vida,
---      KitPoints) ou "balance" (saldo de 1 vida comprado, gasta 1);
+--      KitPoints), "balance" (saldo de 1 vida comprado, gasta 1) ou
+--      "permanent" (kit em `owned`: comprado ou liberado por vantagem, grátis);
 --   2. se o pedido não der (sem pontos, sem saldo, kit que não existe), o kit
 --      para sempre ativo ("permanent", grátis);
 --   3. senão, nenhum.
@@ -32,6 +33,9 @@ function KitChoice.resolve(request: Request, state: State, kits: Kits): (string?
 		end
 		if request.source == "balance" and (state.balance[kitId] or 0) >= 1 then
 			return kitId, "balance"
+		end
+		if request.source == "permanent" and state.owned[kitId] == true then
+			return kitId, "permanent"
 		end
 	end
 	local active = state.active

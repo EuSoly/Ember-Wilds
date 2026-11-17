@@ -5,8 +5,7 @@
 --   serviço valida e aplica com a lógica pura de Shared/Inventory.
 -- - Toda mudança manda ao cliente apenas os slots alterados.
 -- - O inventário não é salvo: morre com a partida (spec, seção 7).
--- - Capacidade = base + mochila vestida + bônus do gamepass VIP (InventoryConfig).
-local MarketplaceService = game:GetService("MarketplaceService")
+-- - Capacidade = base + mochila vestida + bônus das vantagens (VIP, PerkService).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -22,14 +21,13 @@ local CreativeService = require(script.Parent.CreativeService)
 local Net = require(script.Parent.Parent.Net)
 
 local HOTBAR_SLOTS = InventoryConfig.HOTBAR_SLOTS
-local VIP_PASS = InventoryConfig.vipPass
 
 type Slot = Inventory.Slot
 type SelectedListener = (Player, Slot?) -> ()
 
 local inventories: { [Player]: Inventory.Inventory } = {}
 local selected: { [Player]: number } = {}
--- Mochila vestida (id do item) e slots extras do gamepass, por jogador.
+-- Mochila vestida (id do item) e slots extras das vantagens, por jogador.
 local bags: { [Player]: string? } = {}
 local passBonus: { [Player]: number } = {}
 local selectedListeners: { SelectedListener } = {}
@@ -264,27 +262,16 @@ function InventoryService.reset(player: Player)
 	notifySelected(player)
 end
 
--- Slots extras do VIP vindos da loja (ShopService: passe salvo no perfil).
--- O gamepass real (checkVipPass) continua valendo; os dois dão o mesmo bônus.
-function InventoryService.setPassBonus(player: Player, slots: number)
+-- Slots extras das vantagens desta vida (PerkService: +3 com VIP). 0 tira o
+-- bônus. Se os slots que sumiriam não estão vazios, fica como estava.
+function InventoryService.setPerkBonus(player: Player, slots: number)
 	if player.Parent == nil then
 		return
 	end
-	passBonus[player] = math.max(passBonus[player] or 0, slots)
-	refreshCapacity(player)
-end
-
--- Gamepass VIP: confere se o jogador tem o passe e soma os slots extras.
-local function checkVipPass(player: Player)
-	if VIP_PASS.gamePassId == 0 then
-		return -- gamepass ainda não criado (InventoryConfig.vipPass.gamePassId)
-	end
-	local ok, owns = pcall(function()
-		return MarketplaceService:UserOwnsGamePassAsync(player.UserId, VIP_PASS.gamePassId)
-	end)
-	if ok and owns and player.Parent then
-		passBonus[player] = VIP_PASS.bonusSlots
-		refreshCapacity(player)
+	local previous = passBonus[player]
+	passBonus[player] = math.max(slots, 0)
+	if not refreshCapacity(player) then
+		passBonus[player] = previous
 	end
 end
 
@@ -336,19 +323,11 @@ function InventoryService.Start(_self)
 
 	local function onPlayer(player: Player)
 		ensure(player)
-		task.spawn(checkVipPass, player) -- consulta a Roblox (pode demorar)
 	end
 	Players.PlayerAdded:Connect(onPlayer)
 	for _, player in Players:GetPlayers() do
 		onPlayer(player)
 	end
-	-- Comprou o passe durante a partida: libera na hora.
-	MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, gamePassId, purchased)
-		if purchased and gamePassId == VIP_PASS.gamePassId then
-			passBonus[player] = VIP_PASS.bonusSlots
-			refreshCapacity(player)
-		end
-	end)
 	Players.PlayerRemoving:Connect(function(player)
 		inventories[player] = nil
 		selected[player] = nil

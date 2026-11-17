@@ -14,7 +14,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Shared = ReplicatedStorage.Shared
-local InventoryConfig = require(Shared.InventoryConfig)
 local StatNames = require(Shared.StatNames)
 local Defs = require(Shared.Defs)
 local Products = require(Shared.Shop.Products)
@@ -27,7 +26,7 @@ local SpinRoll = require(Shared.Shop.SpinRoll)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
-local InventoryService = require(script.Parent.InventoryService)
+local PerkService = require(script.Parent.PerkService)
 local Net = require(script.Parent.Parent.Net)
 
 type Reward = ShopTypes.Reward
@@ -158,11 +157,20 @@ local GRANTS: { [string]: (player: Player, d: ShopData.ShopData, reward: Reward,
 		ShopData.addKitBalance(d, reward.id :: string, reward.count :: number)
 	end,
 	pass = function(player, d, reward, _reason)
-		local id = reward.id :: string
-		ShopData.setPass(d, id)
-		if id == "vip" then
-			InventoryService.setPassBonus(player, InventoryConfig.vipPass.bonusSlots)
-		end
+		ShopData.setPass(d, reward.id :: string)
+		PerkService.refresh(player)
+	end,
+	-- VIP por tempo: com a vida ativa, os +3 espaços entram na hora (PerkService).
+	vip = function(player, d, reward, _reason)
+		ShopData.addVipDays(d, reward.count :: number, os.time())
+		PerkService.refresh(player)
+	end,
+	xpBoost = function(player, d, reward, _reason)
+		ShopData.addBoost(d, reward.count :: number, os.time())
+		PerkService.refresh(player)
+	end,
+	reviveCredit = function(_player, d, reward, _reason)
+		d.ReviveCredits += reward.count :: number
 	end,
 }
 
@@ -192,9 +200,10 @@ function ShopService.give(player: Player, reward: Reward, reason: string): (bool
 	return true, nil
 end
 
--- Tira um kit ou passe para sempre (a posse no perfil é a verdade). O kit
--- ativo, se for o tirado, desativa. Os +3 do VIP somem na próxima entrada.
-function ShopService.revoke(player: Player, kind: "kit" | "pass", id: string): boolean
+-- Tira um kit ou passe para sempre (a posse no perfil é a verdade), ou o VIP
+-- ("vip", id ignorado: acaba agora). O kit ativo, se for o tirado, desativa.
+-- O que a vida atual já tinha (PerkService.forLife) vale até a próxima vida.
+function ShopService.revoke(player: Player, kind: "kit" | "pass" | "vip", id: string): boolean
 	local d = shopOf(player)
 	if d == nil then
 		return false
@@ -204,10 +213,13 @@ function ShopService.revoke(player: Player, kind: "kit" | "pass", id: string): b
 		if d.KitActive == id then
 			d.KitActive = ""
 		end
+	elseif kind == "vip" then
+		d.VipUntil = 0
 	else
 		d.Passes[id] = nil
 	end
 	publish(player)
+	PerkService.refresh(player)
 	DataService.save(player)
 	return true
 end
@@ -300,6 +312,7 @@ function ShopService.resetForDev(player: Player): boolean
 	end
 	data.Shop = ShopData.empty()
 	publish(player)
+	PerkService.refresh(player)
 	DataService.save(player)
 	return true
 end
@@ -352,9 +365,6 @@ function ShopService.Start(_self)
 		-- Posse no perfil é a verdade; só limpa marcas false (ShopData.clean).
 		ShopData.clean(d)
 		publish(player)
-		if d.Passes.vip == true then
-			InventoryService.setPassBonus(player, InventoryConfig.vipPass.bonusSlots)
-		end
 	end)
 	Net.RequestPurchase.On(onPurchase)
 	Net.RequestSpin.On(onSpin)
