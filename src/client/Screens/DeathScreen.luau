@@ -343,6 +343,7 @@ local function kitRow(kit: Defs.KitDef): TextButton
 	-- Dá para escolher com pontos ou com o saldo de 1 vida comprado na loja.
 	local function canBuy(): boolean
 		return KitChoice.auto(kit.id, KitList.points(), ShopData.balances(), Defs.Kits) ~= nil
+			or ShopData.kitPerkUnlocked(kit.id)
 	end
 	local function balance(): number
 		return ShopData.kitBalance(kit.id)
@@ -404,7 +405,18 @@ local function kitRow(kit: Defs.KitDef): TextButton
 			TextColor3 = R.emberShadow,
 			TextXAlignment = Enum.TextXAlignment.Right,
 			TextTransparency = fade,
-			Text = Strings.format("kit.price", { price = ProfileFormat.thousands(kit.price) }),
+			Text = function()
+				-- Kit do VIP: "Só VIP" (trancado) ou "Usar" (VIP); o do Premium leva o selo.
+				local access = ShopData.kitAccess(kit.id)
+				if access == "locked" then
+					return Strings.get("kit.vipOnly")
+				elseif access == "vip" then
+					return Strings.get("shop.vip.name")
+				elseif access == "premium" then
+					return Strings.get("kit.premiumBadge")
+				end
+				return Strings.format("kit.price", { price = ProfileFormat.thousands(kit.price) })
+			end,
 			maxSize = 18,
 		}),
 	}) :: TextButton
@@ -423,10 +435,11 @@ local function kitsColumn(layout: () -> DeathLayout.Layout, rect: () -> DeathLay
 	}
 	for _, kit in KitRules.sorted(Defs.Kits) do
 		local line = kitRow(kit)
-		-- Kit só de conquista: só aparece para quem tem a posse.
+		-- Kit só de conquista: só aparece para quem tem a posse (o do VIP aparece
+		-- para todos, trancado para quem não assina).
 		if kit.exclusive then
 			vide.effect(function()
-				line.Visible = ShopData.kitOwned(kit.id)
+				line.Visible = KitRules.shows(kit, ShopData.kitOwned(kit.id))
 			end)
 		end
 		table.insert(rows, line)

@@ -88,6 +88,7 @@ type Entry = {
 	-- Dono do personagem (nil em boneco de teste) e o selo "Tutorial" mostrado.
 	player: Player?,
 	tutorialBadge: boolean,
+	vip: boolean, -- ícone do VIP ligado (Perk_vip do dono)
 	-- Peça de cabeça vestida (atributo Armor do Player) e o modelo dela.
 	armorId: string?,
 	armorModel: Model?,
@@ -201,6 +202,7 @@ local function applyArmor(entry: Entry, id: string?)
 	entry.nameHidden = hides and owner ~= Players.LocalPlayer
 	entry.boneco.nameLabel.Visible = not entry.nameHidden
 	entry.boneco.tutorialBadge.Visible = entry.tutorialBadge and not entry.nameHidden
+	BonecoModel.setVip(entry.boneco, entry.vip)
 end
 
 local function applyEquipped(entry: Entry, id: string?, bookCosmeticId: string?)
@@ -265,6 +267,15 @@ local function syncAttributes(entry: Entry)
 	if badge ~= entry.tutorialBadge then
 		entry.tutorialBadge = badge
 		entry.boneco.tutorialBadge.Visible = badge and not entry.nameHidden
+	end
+	-- Ícone do VIP: Perk_vip está na pasta Shop do dono (replicada para todos).
+	-- Lido por polling, como o resto. Reposicionado a cada quadro enquanto ligado
+	-- (o nome pode mudar de largura); some junto com o nick (capuz).
+	local shop = if owner then owner:FindFirstChild(StatNames.ShopFolder) else nil
+	local vip = shop ~= nil and shop:GetAttribute(StatNames.PerkVip) == true
+	if vip or entry.vip then
+		entry.vip = vip
+		BonecoModel.setVip(entry.boneco, vip)
 	end
 	-- Peça de cabeça: atributo do Player (bonecos de teste não têm).
 	local armorValue = if owner then owner:GetAttribute(StatNames.Armor) else nil
@@ -355,6 +366,7 @@ local function build(character: Model, hrp: BasePart)
 		nameResolved = player ~= nil or isDevCrowd(character),
 		player = player,
 		tutorialBadge = false,
+		vip = false,
 		armorId = nil,
 		armorModel = nil,
 		nameHidden = false,

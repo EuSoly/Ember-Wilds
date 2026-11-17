@@ -146,6 +146,36 @@ local function useButton(kit: Defs.KitDef, visible: () -> boolean): TextButton
 	})
 end
 
+-- "Usar" do kit liberado pelo VIP/Premium: igual ao do kit para sempre, mas a
+-- escolha vai só no pedido de nascer (KitShop.usePerk); "Ativo" = escolhido.
+local function perkUseButton(kit: Defs.KitDef, visible: () -> boolean): TextButton
+	return Rustic.button({
+		Name = "UsePerk",
+		Size = UDim2.fromScale(1, 1),
+		Visible = visible,
+		kind = "success",
+		text = function()
+			local chosen = KitList.selected() == kit.id and KitList.source() == "permanent"
+			return Strings.get(if chosen then "kit.active" else "kit.use")
+		end,
+		Activated = function()
+			KitShop.usePerk(kit.id)
+		end,
+	})
+end
+
+-- Kit só do VIP visto por quem não assina: botão apagado, sem ação.
+local function lockedButton(visible: () -> boolean): TextButton
+	return Rustic.button({
+		Name = "Locked",
+		Size = UDim2.fromScale(1, 1),
+		Visible = visible,
+		kind = "disabled",
+		text = Strings.get("kit.vipOnly"),
+		Activated = function() end,
+	})
+end
+
 -- "Usar" do saldo de 1 vida: igual ao do kit para sempre; escolhido = "Ativo".
 local function balanceUseButton(kit: Defs.KitDef, visible: () -> boolean): TextButton
 	return Rustic.button({
@@ -237,14 +267,27 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		end
 	end)
 	-- Compras: sem nada para usar, ou quando o "+" (que só existe com saldo) abre.
+	local function access(): KitRules.Access
+		return ShopData.kitAccess(kit.id)
+	end
 	local function showBuy(): boolean
+		local a = access()
+		if a == "locked" or a == "vip" or a == "premium" then
+			return false
+		end
 		return expanded() or (not owned() and not hasBalance())
 	end
 	local function showUse(): boolean
 		return owned() and not expanded()
 	end
+	local function showPerkUse(): boolean
+		return not owned() and ShopData.kitPerkUnlocked(kit.id)
+	end
+	local function showLocked(): boolean
+		return access() == "locked"
+	end
 	local function showBalanceUse(): boolean
-		return not owned() and hasBalance() and not expanded()
+		return not owned() and not showPerkUse() and hasBalance() and not expanded()
 	end
 	local icon = create("Frame")({
 		Name = "Icon",
@@ -286,6 +329,21 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 			maxSize = 20,
 		}),
 		balanceCorner(kit, expanded),
+		-- Selo do kit liberado pelo Premium (no canto, quando não há saldo).
+		Rustic.label({
+			Name = "PremiumBadge",
+			AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.new(1, -10, 0, 8),
+			Size = UDim2.fromOffset(CORNER_WIDTH, CORNER_HEIGHT),
+			FontFace = Theme.font.number,
+			TextColor3 = R.emberShadow,
+			TextXAlignment = Enum.TextXAlignment.Right,
+			Text = Strings.get("kit.premiumBadge"),
+			Visible = function()
+				return access() == "premium" and not hasBalance()
+			end,
+			maxSize = 16,
+		}),
 		Rustic.label({
 			Name = "Items",
 			Position = UDim2.fromOffset(ICON + 20, 32),
@@ -305,6 +363,8 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 			BackgroundTransparency = 1,
 			buyButtons(kit, points, showBuy) :: Instance,
 			useButton(kit, showUse) :: Instance,
+			perkUseButton(kit, showPerkUse) :: Instance,
+			lockedButton(showLocked) :: Instance,
 			balanceUseButton(kit, showBalanceUse) :: Instance,
 		}),
 	}) :: Frame
@@ -319,10 +379,11 @@ function KitsPanel.build(): Frame
 	}
 	for _, kit in KitRules.sorted(Defs.Kits) do
 		local line = row(kit, points)
-		-- Kit só de conquista: só aparece para quem tem a posse.
+		-- Kit só de conquista: só aparece para quem tem a posse (o do VIP aparece
+		-- para todos, trancado para quem não assina).
 		if kit.exclusive then
 			vide.effect(function()
-				line.Visible = ShopData.kitOwned(kit.id)
+				line.Visible = KitRules.shows(kit, ShopData.kitOwned(kit.id))
 			end)
 		end
 		table.insert(rows, line)

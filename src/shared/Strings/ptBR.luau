@@ -909,6 +909,8 @@ return table.freeze({
 	["kit.robux"] = "\u{E002} {price}", -- \u{E002} = símbolo do Robux nas fontes do Roblox
 	["kit.use"] = "Usar",
 	["kit.active"] = "Ativo",
+	["kit.vipOnly"] = "Só VIP", -- kit do VIP visto por quem não assina
+	["kit.premiumBadge"] = "Premium", -- selo do kit liberado pelo Premium
 
 	-- Mundo
 	["world.locked"] = "Região ainda não descoberta",

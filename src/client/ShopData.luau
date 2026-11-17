@@ -12,6 +12,9 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
+local Defs = require(Shared:WaitForChild("Defs"))
+local Perks = require(Shared:WaitForChild("Shop"):WaitForChild("Perks"))
+local KitRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("KitRules"))
 
 export type Snapshot = {
 	spins: { normal: number, paid: number },
@@ -82,6 +85,24 @@ end
 -- Vantagem valendo agora (Perk_*): "vip", "ember2x", "book" ou "premium".
 function ShopData.perk(name: "vip" | "ember2x" | "book" | "premium"): boolean
 	return snapshot().perks[name] == true
+end
+
+-- Como o kit chega ao jogador sem pagar (KitRules.access): comprado, liberado
+-- pelo VIP/Premium desta vida, trancado (só VIP) ou kit comum.
+function ShopData.kitAccess(kitId: string): KitRules.Access
+	local kit = Defs.Kits[kitId]
+	if kit == nil then
+		return "none"
+	end
+	local current = snapshot()
+	return KitRules.access(kit, current.owned[kitId] == true, Perks.unlockedKits(current.perks, Defs.Kits))
+end
+
+-- Kit liberado só por vantagem (VIP/Premium), sem posse: usa-se como
+-- "permanent" na hora de nascer, sem gravar nada no perfil.
+function ShopData.kitPerkUnlocked(kitId: string): boolean
+	local access = ShopData.kitAccess(kitId)
+	return access == "vip" or access == "premium"
 end
 
 function ShopData.vipUntil(): number

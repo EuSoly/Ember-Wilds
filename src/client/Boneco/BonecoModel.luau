@@ -16,6 +16,7 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local C = require(Shared:WaitForChild("BonecoConfig"))
 local Defs = require(Shared:WaitForChild("Defs"))
+local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local Palette = require(Shared:WaitForChild("Palette"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
@@ -47,6 +48,9 @@ local NAME_SIZE = UDim2.fromOffset(200, 28)
 local NAME_HEIGHT_PX = 28 -- o nome; o selo "Tutorial" vai logo acima
 local BADGE_HEIGHT_PX = 18
 local NAME_STROKE = 1.5
+local VIP_ICON_SIZE = 22 -- lado do ícone do VIP (px), à esquerda do nome
+local VIP_ICON_GAP = 4
+local VIP_COLOR = Color3.fromRGB(255, 205, 70)
 -- Cilindro em pé: o cilindro do Roblox tem o eixo em X, então gira 90° em Z.
 local UPRIGHT = CFrame.Angles(0, 0, math.rad(90))
 
@@ -62,6 +66,8 @@ export type Boneco = {
 	nameLabel: TextLabel,
 	-- Selo "Tutorial" embaixo do nome (BonecoRenderer liga com TutorialProtected).
 	tutorialBadge: TextLabel,
+	-- Ícone do VIP à esquerda do nome (BonecoRenderer liga com Perk_vip do dono).
+	vipIcon: GuiObject,
 	-- Internos (cor, olhos, ferramenta).
 	bodyParts: { BasePart },
 	handParts: { BasePart },
@@ -221,7 +227,7 @@ local function paint(boneco: Boneco)
 	end
 end
 
-local function buildNameTag(root: BasePart, displayName: string): (TextLabel, TextLabel)
+local function buildNameTag(root: BasePart, displayName: string): (TextLabel, TextLabel, GuiObject)
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "NameTag"
 	-- Mais alto que o nome, para caber o selo em cima (embaixo, a cabeça cobre).
@@ -265,8 +271,47 @@ local function buildNameTag(root: BasePart, displayName: string): (TextLabel, Te
 	badgeStroke.Parent = badge
 	badge.Parent = billboard
 
+	-- Ícone do VIP: a arte (MonetizationImages.VIP_NICK) ou, sem ela, um "VIP"
+	-- dourado desenhado por código. Fica escondido; o renderer liga e posiciona.
+	local icon: GuiObject
+	if MonetizationImages.has(MonetizationImages.VIP_NICK) then
+		local image = Instance.new("ImageLabel")
+		image.Image = MonetizationImages.VIP_NICK
+		image.ScaleType = Enum.ScaleType.Fit
+		icon = image
+	else
+		local text = Instance.new("TextLabel")
+		text.Text = Strings.get("shop.vip.name")
+		text.FontFace = Theme.font.label
+		text.TextColor3 = VIP_COLOR
+		text.TextScaled = true
+		local iconStroke = Instance.new("UIStroke")
+		iconStroke.Color = Theme.color(Palette.ui.panel)
+		iconStroke.Thickness = NAME_STROKE
+		iconStroke.Parent = text
+		icon = text
+	end
+	icon.Name = "VipIcon"
+	icon.Visible = false
+	icon.BackgroundTransparency = 1
+	icon.AnchorPoint = Vector2.new(1, 0.5)
+	icon.Size = UDim2.fromOffset(if icon:IsA("TextLabel") then VIP_ICON_SIZE * 1.6 else VIP_ICON_SIZE, VIP_ICON_SIZE)
+	icon.Position = UDim2.new(0.5, 0, 0, BADGE_HEIGHT_PX + NAME_HEIGHT_PX / 2)
+	icon.Parent = billboard
+
 	billboard.Parent = root
-	return label, badge
+	return label, badge, icon
+end
+
+-- Liga/desliga o ícone do VIP e o encosta à esquerda do nome, que continua
+-- centralizado (sem ícone nada muda). Chamar de novo quando o nome mudar.
+function BonecoModel.setVip(boneco: Boneco, on: boolean)
+	local icon = boneco.vipIcon
+	icon.Visible = on and boneco.nameLabel.Visible
+	if on then
+		local half = boneco.nameLabel.TextBounds.X / 2
+		icon.Position = UDim2.new(0.5, -(half + VIP_ICON_GAP), 0, BADGE_HEIGHT_PX + NAME_HEIGHT_PX / 2)
+	end
 end
 
 -- Mão em `c0` (posição em relação à raiz) e o contorno soldado a ela, mais baixo.
@@ -355,7 +400,7 @@ function BonecoModel.build(displayName: string): Boneco
 	local defaultLook = Defs.Cosmetics[Defs.CosmeticSlots.body.default].body
 	assert(defaultLook ~= nil, "[BonecoModel] skin padrão do corpo sem cores")
 
-	local nameLabel, tutorialBadge = buildNameTag(root, displayName)
+	local nameLabel, tutorialBadge, vipIcon = buildNameTag(root, displayName)
 	local boneco: Boneco = {
 		model = model,
 		root = root,
@@ -365,6 +410,7 @@ function BonecoModel.build(displayName: string): Boneco
 		rightHand = rightHand,
 		nameLabel = nameLabel,
 		tutorialBadge = tutorialBadge,
+		vipIcon = vipIcon,
 		bodyParts = bodyParts,
 		handParts = { leftHand, rightHand },
 		outlineParts = outlineParts,

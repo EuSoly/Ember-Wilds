@@ -18,7 +18,7 @@ local Client = script.Parent.Parent
 local ShopData = require(Client:WaitForChild("ShopData"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 
-export type Source = "points" | "balance"
+export type Source = "points" | "balance" | "permanent"
 
 local KitList = {}
 
@@ -39,6 +39,9 @@ function KitList.choose(kitId: string, source: Source): boolean
 	local kit = Defs.Kits[kitId]
 	local ok = if source == "points"
 		then KitRules.canBuy(kit, vide.untrack(KitList.points))
+		elseif source == "permanent" then vide.untrack(function()
+			return ShopData.kitPerkUnlocked(kitId)
+		end)
 		else vide.untrack(function()
 			return ShopData.kitBalance(kitId)
 		end) >= 1
@@ -66,6 +69,12 @@ function KitList.toggle(kitId: string)
 	if source == "points" or source == "balance" then
 		KitList.selected(kitId)
 		KitList.source(source)
+	elseif vide.untrack(function()
+		return ShopData.kitPerkUnlocked(kitId)
+	end) then
+		-- Kit do VIP/Premium: sai de graça nesta vida, sem tocar no perfil.
+		KitList.selected(kitId)
+		KitList.source("permanent")
 	end
 end
 
@@ -81,6 +90,7 @@ function KitList.start()
 	vide.effect(function()
 		local points = KitList.points()
 		local balances = ShopData.balances()
+		local unlocked = ShopData.kitPerkUnlocked(vide.untrack(KitList.selected) or "")
 		local selectedId = vide.untrack(KitList.selected)
 		local source = vide.untrack(KitList.source)
 		if selectedId == nil then
@@ -88,6 +98,7 @@ function KitList.start()
 		end
 		local stillOk = if source == "points"
 			then KitRules.canBuy(Defs.Kits[selectedId], points)
+			elseif source == "permanent" then unlocked
 			else (balances[selectedId] or 0) >= 1
 		if not stillOk then
 			KitList.clear()
