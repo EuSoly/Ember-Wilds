@@ -94,9 +94,10 @@ O servidor publica os benefícios ativos como atributos do `Player` (*proposta:*
 
 **Quando aparece:** em toda morte final de jogador fora do modo criativo e fora da vida de tutorial. Se ele virar fantasma (Coração de Dragão ou Coroa do Anjo), a oferta só aparece quando o tempo de fantasma acabar e a morte for de verdade.
 
-**A janela de decisão (8 s, *chamada minha*):**
-- A tela de morte abre com a oferta: preço em Robux, contador, botão **REVIVER**. Para VIP com o revive grátis da vida sobrando, aparece o selo **GRÁTIS VIP**.
-- A caixa de morte cai **trancada** com os itens dentro: ninguém abre nem quebra, e um cadeado com o contador aparece em cima dela.
+**A decisão (Elizeu: sem contador na tela):**
+- A tela de morte abre com a oferta: preço em Robux e dois botões, **REVIVER** e **Não, obrigado**. Para VIP com o revive grátis da vida sobrando, aparece o selo **GRÁTIS VIP**. Não aparece contador.
+- *Chamada minha:* existe um **limite escondido de 30 s**. Sem ele, quem ficasse parado na oferta deixaria a caixa trancada para sempre e quem matou nunca saquearia. Passados os 30 s sem resposta, conta como "Não, obrigado".
+- A caixa de morte cai **trancada** com os itens dentro: ninguém abre nem quebra, e um cadeado aparece em cima dela.
 - As construções dele **ficam** durante a janela. `StructureService.removeOwned` só roda se a morte for final.
 - O fim de vida roda na hora, como hoje: pontos viram Golden Ember, estatísticas e ranking são gravados, e quem matou ganha o bônus de 1/4 e o abate.
 
@@ -106,13 +107,13 @@ O servidor publica os benefícios ativos como atributos do `Player` (*proposta:*
 - Vida e barras cheias, pontos em 0 e **3 s de proteção**: não leva dano, e a proteção acaba antes se ele bater. Os mobs também não o veem.
 - Começa uma vida nova para pontos, missões da Partida e ranking (`LifeService`). Os kits não entram: ele já está com os próprios itens.
 
-**Se não revive** (recusou, o tempo acabou ou saiu do jogo): morte normal. A caixa destranca para qualquer um, as construções somem e ele volta ao menu.
+**Se não revive** (Não, obrigado, passou dos 30 s ou saiu do jogo): morte normal. A caixa destranca para qualquer um, as construções somem e ele volta ao menu.
 
-**Preço:** 25 → 49 → 99 → 199 Robux, e para no 199. Cada degrau é um produto: `revive_1` a `revive_4`. O contador conta da entrada pelo menu até a morte final. O revive grátis do VIP ocupa o primeiro degrau (depois dele, o próximo custa 49) e vale 1 por vida.
+**Preço:** 25 → 49 → 99 → 199 Robux, e para no 199. Cada degrau é um produto: `revive_1` a `revive_4`. A contagem de revives vai da entrada pelo menu até a morte final. O revive grátis do VIP ocupa o primeiro degrau (depois dele, o próximo custa 49) e vale 1 por vida.
 
-**Quem matou, mesmo com Reset ou queda** (*chamada minha*): sem isso, quem está perdendo a luta aperta Reset, nega os pontos ao outro e revive com tudo. Por isso, **o último jogador que acertou o morto nos últimos 10 s conta como quem matou**, em qualquer causa de morte (Reset, queda, fome, mob). Ele ganha o bônus de 1/4 e o abate. Vale para toda morte, com ou sem revive.
+**Quem matou, mesmo com queda ou água** (*chamada minha*): o Reset é só para os testes do Elizeu e sai antes do lançamento, mas ainda dá para fugir pulando do mapa ou morrendo afogado no meio da luta, negar os pontos ao outro e reviver com tudo. Por isso, **o último jogador que acertou o morto nos últimos 10 s conta como quem matou**, em qualquer causa de morte (queda, afogamento, fome, mob). Ele ganha o bônus de 1/4 e o abate. Vale para toda morte, com ou sem revive.
 
-**Pagamento demorado** (*chamada minha*): o contador **pausa** enquanto a janela de compra do Roblox está aberta ou a compra está pendente, até 60 s no máximo. Se a confirmação chegar depois que a morte já virou final, o jogador ganha um **revive guardado** (salvo no perfil), usado de graça na próxima morte. Nunca se paga sem receber.
+**Pagamento demorado** (*chamada minha*): o limite de 30 s **pausa** enquanto a janela de compra do Roblox está aberta ou a compra está pendente, até 60 s no máximo. Se a confirmação chegar depois que a morte já virou final, o jogador ganha um **revive guardado** (salvo no perfil), usado de graça na próxima morte. Nunca se paga sem receber.
 
 **Estatísticas:** *chamada minha:* a morte com revive conta em `deaths`, porque a vida acabou para os pontos, mas **não** em `real_deaths`, o "Mortes" do Perfil, que é só a morte em que se perde tudo.
 
@@ -158,8 +159,8 @@ Pela regra do Roblox, "item aleatório pago" inclui o que se compra com Robux **
 | Tipo no Roblox | Produto | Preço |
 |---|---|---|
 | Assinatura | VIP | 99/mês |
-| Gamepass | 2× Golden Ember | *a definir* |
-| Gamepass | Nascer com livro | *a definir* |
+| Gamepass | 2× Golden Ember | 199 |
+| Gamepass | Nascer com livro | 99 |
 | Gamepass | 4 kits para sempre | 99 / 199 / 399 / 799 |
 | Produto | Golden Ember (5) | 80 / 150 / 600 / 1500 / 3500 |
 | Produto | Giros especiais (3) | 49 / 129 / 399 |
@@ -176,8 +177,8 @@ Os preços das duas gamepasses novas estão em aberto (seção 10). Ficam em `Sh
 - **Loja, VIP:** cartão próprio e maior, com os benefícios, "99 por mês" e o estado ("VIP ativo até DD/MM"). *Chamada minha:* fica no topo da aba de gamepasses.
 - **Loja, Premium:** cartão "Benefícios Premium" (seção 4.3).
 - **Loja, giros especiais:** chances visíveis e aviso de bloqueio (seção 4.10).
-- **Tela de morte:** oferta de revive com contador e preço ou selo grátis, e Golden Ember com as etiquetas do multiplicador.
-- **No mundo:** cadeado e contador em cima da caixa trancada; ícone VIP no nome; bolha de proteção de 3 s (efeito por código).
+- **Tela de morte:** oferta de revive com preço ou selo grátis, REVIVER e Não, obrigado, e Golden Ember com as etiquetas do multiplicador.
+- **No mundo:** cadeado em cima da caixa trancada; ícone VIP no nome; bolha de proteção de 3 s (efeito por código).
 - **Painel de kits:** Kit VIP com "Só VIP" e Kit Inicial com "Premium" para quem tem Premium.
 - **Check-in:** janela com os 7 dias, botão de calendário no canto e abertura automática.
 - **HUD e menu:** selo do boost de XP.
@@ -211,4 +212,3 @@ Até as artes chegarem, cada tela usa o desenho feito por código, como o resto 
 ## 10. Em aberto (do Elizeu)
 
 - O que vem no **Kit VIP**.
-- Preço das gamepasses **2× Golden Ember** e **Nascer com livro**.

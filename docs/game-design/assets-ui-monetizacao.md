@@ -23,9 +23,9 @@ Até cada arte chegar, a tela usa o desenho feito por código, então dá para m
 | 5 | **Ícone do revive** | tela de morte e produto | 1 | 512 px (coração com chama, pena de fênix ou algo assim) | essencial |
 | 6 | **Painel da oferta de revive** | tela de morte, no centro, por cima do resumo da vida | 1 | ~800×500, estica em 9 partes | essencial |
 | 7 | **Botão REVIVER** | dentro do painel | normal, apertado e desligado (cinza) | mesmo formato dos botões verdes/laranja da loja | essencial |
-| 8 | **Anel do contador** | em volta do botão ou do ícone do revive; esvazia em 8 s | trilho + preenchimento (2 camadas) | 512 px, anel com centro vazio | essencial |
+| 8 | **Botão Não, obrigado** | ao lado do REVIVER, mais discreto (madeira ou papel, não colorido) | normal e apertado | mesmo formato do REVIVER | essencial |
 | 9 | **Selo GRÁTIS VIP** | em cima do botão quando o revive é o grátis do VIP | 1 (sem a palavra; eu escrevo) | faixa ou fita, ~300×100 | essencial |
-| 10 | **Cadeado com relógio** | em cima da caixa trancada, no mundo | 1 | 512 px | essencial |
+| 10 | **Cadeado da caixa trancada** | em cima da caixa trancada, no mundo | 1 | 512 px | essencial |
 | 11 | **Janela do check-in** | abre ao entrar no menu | 1 (pode ser a mesma moldura das missões; aí não precisa) | estica em 9 partes | bom ter |
 | 12 | **Cartão de dia do check-in** | 7 na janela, dias 1 a 6 | 4 estados: resgatado (apagado + marca), hoje (brilhando), futuro (normal), ainda não liberado hoje (escuro) | ~240×300, retrato | essencial |
 | 13 | **Cartão do dia 7** | o último, maior e mais especial (5 giros especiais) | os mesmos 4 estados | ~1,5× o cartão normal | essencial |
