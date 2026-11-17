@@ -997,6 +997,9 @@ return table.freeze({
 	["shop.boost.name"] = "Boost de XP",
 	-- Loja: VIP, boost de XP e Premium (Menu/Shop/VipCard, BoostCard, PremiumCard)
 	["shop.vip.perks"] = "+3 espaços na mochila · ícone VIP no nome · +50% Golden Ember · Kit VIP · 1 revive grátis por vida",
+	["shop.vip.short"] = "+3 espaços · +50% GE · revive grátis",
+	["shop.boost.short"] = "XP em dobro por 1 h",
+	["shop.premium.short"] = "+20% Golden Ember",
 	["shop.vip.month"] = "{price} por mês",
 	["shop.vip.active"] = "VIP ativo até {date}",
 	["shop.vip.renew"] = "Renovar \u{E002} {price}",

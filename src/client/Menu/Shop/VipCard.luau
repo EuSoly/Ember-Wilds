@@ -28,7 +28,7 @@ function VipCard.active(): boolean
 	return ShopData.vipUntil() > ShopData.now()
 end
 
-function VipCard.build(frame: { [any]: any }): Frame
+function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	local product = Products.get("vip_30d")
 	assert(product, "produto vip_30d sumiu de Shop/Products")
 	local price = product.price.amount
@@ -60,6 +60,7 @@ function VipCard.build(frame: { [any]: any }): Frame
 					return Strings.get("shop.vip.name")
 				end,
 				height = 0.3,
+				compactHeight = 0.5,
 				maxSize = 26,
 				title = true,
 			},
@@ -71,7 +72,15 @@ function VipCard.build(frame: { [any]: any }): Frame
 					end
 					return Strings.format("shop.vip.month", { price = price })
 				end,
+				-- Celular: com VIP a data; sem VIP, os benefícios em poucas palavras.
+				compactText = function()
+					if VipCard.active() then
+						return Strings.format("shop.vip.active", { date = ShopDates.dayMonth(ShopData.vipUntil()) })
+					end
+					return Strings.get("shop.vip.short")
+				end,
 				height = 0.26,
+				compactHeight = 0.5,
 				maxSize = 18,
 				title = true,
 			},
@@ -83,6 +92,7 @@ function VipCard.build(frame: { [any]: any }): Frame
 				height = 0.4,
 				maxSize = 15,
 				wrapped = true,
+				hideInCompact = true,
 			},
 		},
 		button = button,
@@ -95,6 +105,7 @@ function VipCard.build(frame: { [any]: any }): Frame
 			return if VipCard.active() then MonetizationImages.VIP_CORNER_GLOW else ""
 		end,
 		frame = frame,
+		compact = compact,
 	})
 end
 

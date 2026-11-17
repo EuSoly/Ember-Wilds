@@ -34,7 +34,7 @@ function PremiumCard.shown(): boolean
 	return not ShopData.perk("premium") and not member()
 end
 
-function PremiumCard.build(frame: { [any]: any }): Frame
+function PremiumCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	local button = Rustic.button({
 		Name = "Subscribe",
 		Size = UDim2.fromScale(1, 1),
@@ -57,6 +57,7 @@ function PremiumCard.build(frame: { [any]: any }): Frame
 					return Strings.get("shop.premium.title")
 				end,
 				height = 0.34,
+				compactHeight = 0.5,
 				maxSize = 22,
 				title = true,
 			},
@@ -65,7 +66,11 @@ function PremiumCard.build(frame: { [any]: any }): Frame
 				text = function()
 					return Strings.get("shop.premium.desc")
 				end,
+				compactText = function()
+					return Strings.get("shop.premium.short")
+				end,
 				height = 0.5,
+				compactHeight = 0.5,
 				maxSize = 15,
 				wrapped = true,
 			},
@@ -76,6 +81,7 @@ function PremiumCard.build(frame: { [any]: any }): Frame
 		end,
 		slice = MonetizationImages.PREMIUM_CARD_SLICE,
 		frame = frame,
+		compact = compact,
 	})
 end
 

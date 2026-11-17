@@ -15,7 +15,9 @@ local create = vide.create
 local Banner = {}
 
 -- Uma linha de texto da coluna do meio: `text` reativo, `height` = fração da
--- altura da coluna, `maxSize` = maior tamanho da fonte.
+-- altura da coluna, `maxSize` = maior tamanho da fonte. No celular (compact)
+-- o cartão é uma faixa baixa: sem ícone, `compactText` troca o texto por um
+-- curto, `compactHeight` a altura e `hideInCompact` some com a linha.
 export type Line = {
 	name: string,
 	text: () -> string,
@@ -23,6 +25,9 @@ export type Line = {
 	maxSize: number,
 	title: boolean?,
 	wrapped: boolean?,
+	compactText: (() -> string)?,
+	compactHeight: number?,
+	hideInCompact: boolean?,
 }
 
 export type Props = {
@@ -35,6 +40,7 @@ export type Props = {
 	slice: Rect?,
 	overlay: (() -> string)?, -- brilho de canto por cima da arte ("" = nenhum)
 	frame: { [any]: any }, -- Size, LayoutOrder, Visible… do cartão
+	compact: () -> boolean, -- celular: faixa baixa (ver Line)
 }
 
 local BUTTON_SHARE = 0.3 -- largura do botão na largura do cartão
@@ -54,9 +60,20 @@ function Banner.build(p: Props): Frame
 			ShopParts.outlined({
 				Name = line.name,
 				LayoutOrder = order,
-				Size = UDim2.fromScale(1, line.height),
+				Visible = function()
+					return not (line.hideInCompact and p.compact())
+				end,
+				Size = function()
+					return UDim2.fromScale(1, if p.compact() then line.compactHeight or line.height else line.height)
+				end,
 				FontFace = if line.title then Theme.font.number else Theme.font.label,
-				Text = line.text,
+				Text = function()
+					local short = line.compactText
+					if short and p.compact() then
+						return short()
+					end
+					return line.text()
+				end,
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextWrapped = line.wrapped or false,
 				maxSize = line.maxSize,
@@ -66,6 +83,11 @@ function Banner.build(p: Props): Frame
 	end
 
 	p.icon.LayoutOrder = 1
+	vide.apply(p.icon)({
+		Visible = function()
+			return not p.compact()
+		end,
+	})
 	local textColumn = create("Frame")({
 		Name = "Texts",
 		LayoutOrder = 2,
@@ -76,7 +98,9 @@ function Banner.build(p: Props): Frame
 	local buttonBox = create("Frame")({
 		Name = "ButtonBox",
 		LayoutOrder = 3,
-		Size = UDim2.fromScale(BUTTON_SHARE, 0.62),
+		Size = function()
+			return UDim2.fromScale(BUTTON_SHARE, if p.compact() then 0.82 else 0.62)
+		end,
 		BackgroundTransparency = 1,
 		p.button,
 	}) :: Frame

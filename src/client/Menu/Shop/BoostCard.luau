@@ -22,7 +22,7 @@ local TEAL = Color3.fromHex("#2FA39A")
 
 local BoostCard = {}
 
-function BoostCard.build(frame: { [any]: any }): Frame
+function BoostCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	local product = Products.get("xpboost_1h")
 	assert(product, "produto xpboost_1h sumiu de Shop/Products")
 
@@ -41,6 +41,7 @@ function BoostCard.build(frame: { [any]: any }): Frame
 					return Strings.get("shop.boost.name")
 				end,
 				height = 0.34,
+				compactHeight = 0.5,
 				maxSize = 22,
 				title = true,
 			},
@@ -52,7 +53,14 @@ function BoostCard.build(frame: { [any]: any }): Frame
 					end
 					return Strings.get("shop.boost.desc")
 				end,
+				compactText = function()
+					if left() > 0 then
+						return Strings.format("shop.boost.left", { time = ShopDates.clock(left()) })
+					end
+					return Strings.get("shop.boost.short")
+				end,
 				height = 0.5,
+				compactHeight = 0.5,
 				maxSize = 15,
 				wrapped = true,
 			},
@@ -66,6 +74,7 @@ function BoostCard.build(frame: { [any]: any }): Frame
 			textSize = 20,
 		}),
 		frame = frame,
+		compact = compact,
 	})
 end
 

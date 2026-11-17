@@ -66,9 +66,12 @@ local PASS_ART: { [string]: string } = {
 
 -- Ícone do cartão: o último item do kit (a ferramenta ou a mochila); as passes
 -- sem arte ganham uma estrela desenhada.
-local function icon(pass: Pass, short: () -> boolean): GuiObject
+local function icon(pass: Pass, short: () -> boolean, tiny: () -> boolean): GuiObject
 	local box = create("Frame")({
 		Name = "Icon",
+		Visible = function()
+			return not tiny()
+		end,
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = function()
 			return UDim2.fromScale(0.5, if short() then 0.08 else 0.12)
@@ -117,7 +120,7 @@ end
 
 -- `short`: cartão mais baixo que o normal (página do celular): arte menor e
 -- textos mais acima, para não encostarem no botão de preço.
-local function card(pass: Pass, order: number, short: () -> boolean): Frame
+local function card(pass: Pass, order: number, short: () -> boolean, tiny: () -> boolean, low: () -> boolean): Frame
 	-- Comprado aqui ou ganho por outro caminho (ex. o kit veio num pacote).
 	local function owned(): boolean
 		if ShopData.purchased(pass.product.id) then
@@ -129,20 +132,25 @@ local function card(pass: Pass, order: number, short: () -> boolean): Frame
 		art = "orange",
 		Name = pass.artId,
 		LayoutOrder = order,
-		icon(pass, short),
+		icon(pass, short, tiny),
 		ShopParts.outlined({
 			Name = "PassName",
 			AnchorPoint = Vector2.new(0.5, 0),
 			Position = function()
-				return UDim2.fromScale(0.5, if short() then 0.49 else 0.56)
+				return UDim2.fromScale(0.5, if tiny() then 0.1 elseif short() then 0.49 else 0.56)
 			end,
-			Size = UDim2.fromScale(0.92, 0.12),
+			Size = function()
+				return UDim2.fromScale(0.92, if tiny() then 0.3 else 0.12)
+			end,
 			FontFace = Theme.font.number,
 			Text = Strings.get(pass.nameKey),
 			maxSize = 22,
 		}),
 		ShopParts.outlined({
 			Name = "Desc",
+			Visible = function()
+				return not low()
+			end,
 			AnchorPoint = Vector2.new(0.5, 0),
 			Position = function()
 				return UDim2.fromScale(0.5, if short() then 0.61 else 0.68)
@@ -155,7 +163,9 @@ local function card(pass: Pass, order: number, short: () -> boolean): Frame
 			Name = "Buy",
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new(0.5, 0, 1, -10),
-			Size = UDim2.new(0.86, 0, 0, 44),
+			Size = function()
+				return UDim2.new(0.86, 0, 0, if tiny() then 34 else 44)
+			end,
 			BackgroundTransparency = 1,
 			ZIndex = 3,
 			ShopParts.priceButton({
@@ -173,6 +183,9 @@ end
 -- Fileira de cima: VIP (peso 2), boost e, para quem não é Premium, o Premium.
 local function topRow(layout: () -> ShopLayout.Layout): Frame
 	local gap = ShopLayout.GAP
+	local function compact(): boolean
+		return layout().paged
+	end
 	-- Largura de cada cartão: a sua parte do que sobra depois dos espaços.
 	local function width(slot: number): () -> UDim2
 		return function()
@@ -196,9 +209,9 @@ local function topRow(layout: () -> ShopLayout.Layout): Frame
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Padding = UDim.new(0, gap),
 		}),
-		VipCard.build({ LayoutOrder = 1, Size = width(1) }),
-		BoostCard.build({ LayoutOrder = 2, Size = width(2) }),
-		PremiumCard.build({ LayoutOrder = 3, Size = width(3) }),
+		VipCard.build({ LayoutOrder = 1, Size = width(1) }, compact),
+		BoostCard.build({ LayoutOrder = 2, Size = width(2) }, compact),
+		PremiumCard.build({ LayoutOrder = 3, Size = width(3) }, compact),
 	}) :: Frame
 end
 
@@ -219,6 +232,13 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 	local function short(): boolean
 		return grid().height < ShopLayout.PASS_CARD_HEIGHT
 	end
+	-- Celular baixo: sem descrição (low) e, mais baixo ainda, só nome e botão (tiny).
+	local function low(): boolean
+		return grid().height < ShopLayout.PASS_CARD_SHORT
+	end
+	local function tiny(): boolean
+		return grid().height < ShopLayout.PASS_CARD_TINY
+	end
 	local cards: { Instance } = {
 		ShopParts.grid(function()
 			return grid().columns
@@ -227,7 +247,7 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 		end, ShopLayout.GAP),
 	}
 	for order, pass in passes do
-		table.insert(cards, card(pass, order, short))
+		table.insert(cards, card(pass, order, short, tiny, low))
 	end
 	return create("Frame")({
 		Name = "Passes",

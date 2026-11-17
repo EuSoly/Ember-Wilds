@@ -143,15 +143,21 @@ return {
 		assert(cols == 5 and h == ShopLayout.PASS_CARD_HEIGHT, "PC ignora a fileira reservada")
 	end,
 
-	["phone passes with a top row never get squeezed"] = function()
-		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 } } do
-			local l = ShopLayout.compute(size[1], size[2])
+	["phone passes tab fits the page without scrolling"] = function()
+		-- Fileira de cima + espaço + grade (VIP, boost, Premium + 4 kits + 2× + livro).
+		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 }, { 599, 264 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
 			assert(l.paged, "celular pagina")
-			local reserved = ShopLayout.topRowHeight(l)
-			assert(reserved == ShopLayout.TOP_ROW_HEIGHT_COMPACT, "fileira baixa no celular")
-			local _, h = ShopLayout.passGrid(l, 6, reserved)
-			assert(h >= ShopLayout.PASS_CARD_MIN_PAGED, `{size[1]}x{size[2]}: cartão apertado ({h})`)
-			assert(h <= ShopLayout.PASS_CARD_HEIGHT, "nunca passa do tamanho do PC")
+			local top = ShopLayout.topRowHeight(l)
+			assert(top == ShopLayout.TOP_ROW_HEIGHT_COMPACT, "fileira baixa no celular")
+			local cols, cardHeight = ShopLayout.passGrid(l, 6, top)
+			local rows = math.ceil(6 / cols)
+			assert(rows == 1, `{w}x{h}: gamepasses numa fileira só ({rows})`)
+			local used = top + GAP + rows * cardHeight + (rows - 1) * GAP
+			assert(used <= l.pageHeight, `{w}x{h}: aba passa da página ({used} > {l.pageHeight})`)
+			assert(cardHeight >= 80, `{w}x{h}: cartão baixo demais ({cardHeight})`)
+			assert((l.contentWidth - (cols - 1) * GAP) / cols >= ShopLayout.PASS_MIN_WIDTH, `{w}x{h}: cartão estreito`)
 		end
 	end,
 

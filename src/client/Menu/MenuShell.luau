@@ -32,6 +32,7 @@ local SettingsScreen = require(Client:WaitForChild("Screens"):WaitForChild("Sett
 local MissionsState = require(Client:WaitForChild("MissionsState"))
 local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local Kit = require(Client:WaitForChild("UI"):WaitForChild("Kit"))
+local XpBoostBadge = require(Client:WaitForChild("UI"):WaitForChild("XpBoostBadge"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
@@ -699,6 +700,21 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	)
 	table.insert(children, CheckInPanel.build())
 	table.insert(children, noticeBanner(layout))
+	-- Boost de XP correndo: contagem no centro, logo abaixo do aviso (que fica
+	-- no mesmo eixo), só no menu "limpo" como o calendário do check-in.
+	table.insert(
+		children,
+		XpBoostBadge.build({
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = function()
+				local l = layout()
+				return UDim2.fromOffset(l.noticeCenterX, l.noticeY + MenuLayout.NOTICE_HEIGHT + 4)
+			end,
+			Size = UDim2.fromOffset(112, 34),
+		}, function()
+			return MenuState.panel() == "play" and not rankingOnTop()
+		end)
+	)
 	-- Artes ainda baixando em segundo plano: contagem pequena no canto.
 	table.insert(children, AssetProgress.build())
 

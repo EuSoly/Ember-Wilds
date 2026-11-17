@@ -42,7 +42,7 @@ local function App(): ScreenGui
 		ScorePill(),
 		CraftColumn(),
 		Clock(),
-		XpBoostBadge(), -- entre o selo de pontos e o relógio
+		XpBoostBadge.hud(), -- entre o selo de pontos e o relógio
 		Minimap(),
 		SettingsButton(),
 		RecipeBookButton(),
