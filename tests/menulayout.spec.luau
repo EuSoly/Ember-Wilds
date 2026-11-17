@@ -171,4 +171,12 @@ return {
 		assert(MenuLayout.compute(667, 375, true).kitsCoverHero, "667x375 should cover")
 		assert(not MenuLayout.compute(667, 375, false).kitsCoverHero, "closed kits cover nothing")
 	end,
+	["calendar button sits under the balance, inside the screen, apart from the column"] = function()
+		eachSize(function(w, h, l)
+			assert(l.calendarSize >= 44, `{w}x{h}: botão do calendário abaixo do toque`)
+			assert(l.calendarX + l.calendarSize <= w and l.calendarY + l.calendarSize <= h, `{w}x{h}: sai da tela`)
+			assert(l.calendarY >= l.podBottom, `{w}x{h}: em cima do saldo`)
+			assert(l.calendarX >= l.columnX + l.columnWidth, `{w}x{h}: em cima da coluna`)
+		end)
+	end,
 }

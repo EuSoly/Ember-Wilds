@@ -193,6 +193,7 @@ Queue.Reliable[41] = table.create(256)
 Queue.Reliable[43] = table.create(256)
 Queue.Reliable[44] = table.create(256)
 Queue.Reliable[45] = table.create(256)
+Queue.Reliable[47] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type ReviveOffer = { Robux: number, Free: boolean }
@@ -946,6 +947,18 @@ function SerdesFunctions.WriteEVENT_MissionNotice(Value: { Kind: number, Id: str
 	buffer.writeu8(SendBuffer, BLOCK_START + 3, Value.Done and 1 or 0)
 end
 
+function SerdesFunctions.ReadEVENT_CheckInClaim(): (nil)
+	return nil
+end
+
+function SerdesFunctions.WriteEVENT_CheckInResult(Value: { Ok: boolean, Day: number }): ()
+	-- Allocate BLOCK: 3 bytes
+	local BLOCK_START = Allocate(3)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 48)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Ok and 1 or 0)
+	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Day)
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -1136,6 +1149,15 @@ if not RunService:IsRunning() then
 		On = NOOP
 	},
 	MissionNotice = {
+		Fire = NOOP,
+		FireAll = NOOP,
+		FireList = NOOP,
+		FireExcept = NOOP
+	},
+	CheckInClaim = {
+		On = NOOP
+	},
+	CheckInResult = {
 		Fire = NOOP,
 		FireAll = NOOP,
 		FireList = NOOP,
@@ -1522,6 +1544,16 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 					warn("[Blink]: Event queue of \"ClaimMission\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[45], {Player, Value} :: {any})
+			end
+		elseif Index == 47 then
+			local Value: nil = SerdesFunctions.ReadEVENT_CheckInClaim()
+			if Events.Reliable[47] ~= nil then
+				task.spawn(Events.Reliable[47], Player, Value)
+			else
+				if #Queue.Reliable[47] > 256 then
+					warn("[Blink]: Event queue of \"CheckInClaim\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[47], {Player, Value} :: {any})
 			end
 		end
 	end
@@ -2710,6 +2742,66 @@ local Returns = table.freeze({
 		FireExcept = function(Except: Player, Value: { Kind: number, Id: string, Done: boolean }): ()
 			Load()
 			SerdesFunctions.WriteEVENT_MissionNotice(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				if Player == Except then
+					continue
+				end
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+	},
+	CheckInClaim = {
+		On = function(Listener: (Player: Player, Value: nil) -> ()): () -> ()
+			Events.Reliable[47] = Listener
+			for Index, Arguments in Queue.Reliable[47] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[47] = {}
+			return function (): ()
+				if Events.Reliable[47] == Listener then
+					Events.Reliable[47] = nil
+				end
+			end
+		end
+	},
+	CheckInResult = {
+		Fire = function(Player: Player, Value: { Ok: boolean, Day: number }): ()
+			Load(PlayersMap[Player])
+			SerdesFunctions.WriteEVENT_CheckInResult(Value)
+			PlayersMap[Player] = Save()
+		end,
+		FireAll = function(Value: { Ok: boolean, Day: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CheckInResult(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in Players:GetPlayers() do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireList = function(List: {Player}, Value: { Ok: boolean, Day: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CheckInResult(Value)
+			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
+			for _, Player in List do
+				Load(PlayersMap[Player])
+				local Position = Allocate(Size)
+				buffer.copy(SendBuffer, Position, Buffer, 0, Size)
+				table.move(Instances, 1, #Instances, #SendInstances + 1, SendInstances)
+				PlayersMap[Player] = Save()
+			end
+		end,
+		FireExcept = function(Except: Player, Value: { Ok: boolean, Day: number }): ()
+			Load()
+			SerdesFunctions.WriteEVENT_CheckInResult(Value)
 			local Buffer, Size, Instances = SendBuffer, SendCursor, SendInstances
 			for _, Player in Players:GetPlayers() do
 				if Player == Except then

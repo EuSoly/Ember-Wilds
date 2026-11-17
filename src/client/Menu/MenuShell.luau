@@ -50,6 +50,7 @@ local ShopState = require(ShopFolder:WaitForChild("ShopState"))
 local MenuBoneco = require(script.Parent:WaitForChild("MenuBoneco"))
 local RankingScreen = require(script.Parent:WaitForChild("Ranking"):WaitForChild("RankingScreen"))
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
+local CheckInPanel = require(script.Parent:WaitForChild("CheckInPanel"))
 local TutorialSpinPopup = require(script.Parent:WaitForChild("TutorialSpinPopup"))
 local AssetProgress = require(script.Parent:WaitForChild("AssetProgress"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
@@ -689,6 +690,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		end)
 	)
 	table.insert(children, shop)
+	-- Check-in de 7 dias: calendário abaixo do saldo (só no menu "limpo") e a janela.
+	table.insert(
+		children,
+		CheckInPanel.button(layout, function()
+			return MenuState.panel() == "play" and not rankingOnTop()
+		end)
+	)
+	table.insert(children, CheckInPanel.build())
 	table.insert(children, noticeBanner(layout))
 	-- Artes ainda baixando em segundo plano: contagem pequena no canto.
 	table.insert(children, AssetProgress.build())

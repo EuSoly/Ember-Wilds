@@ -92,6 +92,11 @@ return table.freeze({
 	VipUntil = "VipUntil",
 	XpBoostStart = "XpBoostStart",
 	XpBoostUntil = "XpBoostUntil",
+	-- Check-in de 7 dias (ShopService escreve ao montar a pasta; CheckInService
+	-- republica na virada do dia), também atributos da pasta Shop:
+	-- CheckInDay = próximo prêmio (1..7), CheckInReady = há prêmio para resgatar hoje.
+	CheckInDay = "CheckInDay",
+	CheckInReady = "CheckInReady",
 	-- Tutorial da primeira partida (TutorialService), atributos do Player:
 	-- TutorialStep = etapa atual (0 = fora do tutorial, 1..6); TutorialProtected =
 	-- protegido (nem leva nem causa dano); TutorialPending = o perfil ainda não

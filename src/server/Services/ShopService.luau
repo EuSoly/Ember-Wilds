@@ -24,6 +24,8 @@ local ShopData = require(Shared.Shop.ShopData)
 local ShopTypes = require(Shared.Shop.Types)
 local Throttle = require(Shared.Shop.Throttle)
 local SpinRoll = require(Shared.Shop.SpinRoll)
+local CheckInRules = require(Shared.Shop.CheckInRules)
+local RankRules = require(Shared.Data.RankRules)
 local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
@@ -104,6 +106,9 @@ local function fill(player: Player, root: Folder, d: ShopData.ShopData)
 	root:SetAttribute(StatNames.SpinsNormal, d.Spins.normal)
 	root:SetAttribute(StatNames.SpinsPaid, d.Spins.paid)
 	root:SetAttribute(StatNames.KitActive, d.KitActive)
+	-- Check-in: o servidor decide se há prêmio hoje (dia de Brasília); o cliente só lê.
+	root:SetAttribute(StatNames.CheckInDay, d.CheckIn.Day)
+	root:SetAttribute(StatNames.CheckInReady, CheckInRules.canClaim(d.CheckIn, RankRules.dayIndex(os.time())))
 	syncFlags(folderIn(root, StatNames.KitsOwnedFolder), d.KitsOwned)
 	syncCounts(folderIn(root, StatNames.KitBalanceFolder), d.KitBalance)
 	syncFlags(folderIn(root, StatNames.PurchasedFolder), d.Purchased)
@@ -126,6 +131,11 @@ local function publish(player: Player)
 	root.Name = StatNames.ShopFolder
 	fill(player, root, d)
 	root.Parent = player
+end
+
+-- Republica o estado da loja (CheckInService, na virada do dia).
+function ShopService.republish(player: Player)
+	publish(player)
 end
 
 -- ===== Cobrança e entrega =====

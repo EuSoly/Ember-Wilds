@@ -61,6 +61,11 @@ MenuLayout.KIT_PANEL_MAX = 520
 MenuLayout.KIT_HEADER_HEIGHT = 64
 MenuLayout.NOTICE_HEIGHT = 36
 MenuLayout.NOTICE_MAX = 520
+-- Botão do calendário (check-in): logo abaixo do card do saldo, encostado na
+-- borda direita. O logo fica livre entre os pods; a coluna não ganha botão.
+MenuLayout.CALENDAR_SIZE = 56
+MenuLayout.CALENDAR_SIZE_COMPACT = 44 -- mínimo de toque
+MenuLayout.CALENDAR_GAP = 4
 
 export type Layout = {
 	compact: boolean,
@@ -99,6 +104,9 @@ export type Layout = {
 	noticeCenterX: number,
 	noticeY: number,
 	noticeWidth: number,
+	calendarX: number, -- borda esquerda do botão do calendário
+	calendarY: number,
+	calendarSize: number,
 }
 
 local function clamp(value: number, low: number, high: number): number
@@ -179,6 +187,8 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		noticeWidth = math.min(kitPanelWidth - 32, MenuLayout.NOTICE_MAX)
 	end
 
+	local calendarSize = if compact then MenuLayout.CALENDAR_SIZE_COMPACT else MenuLayout.CALENDAR_SIZE
+
 	return {
 		compact = compact,
 		podTop = m,
@@ -216,6 +226,9 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		noticeCenterX = noticeCenterX,
 		noticeY = noticeY,
 		noticeWidth = noticeWidth,
+		calendarX = width - m - calendarSize,
+		calendarY = m + podHeight + MenuLayout.CALENDAR_GAP,
+		calendarSize = calendarSize,
 	}
 end
 

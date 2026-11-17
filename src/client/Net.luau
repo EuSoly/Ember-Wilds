@@ -176,6 +176,7 @@ Queue.Reliable[32] = table.create(256)
 Queue.Reliable[34] = table.create(256)
 Queue.Reliable[42] = table.create(256)
 Queue.Reliable[46] = table.create(256)
+Queue.Reliable[48] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type ReviveOffer = { Robux: number, Free: boolean }
@@ -972,6 +973,21 @@ function SerdesFunctions.ReadEVENT_MissionNotice(): ({ Kind: number, Id: string,
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_CheckInClaim(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 47)
+end
+
+function SerdesFunctions.ReadEVENT_CheckInResult(): ({ Ok: boolean, Day: number })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	Value.Ok = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	Value.Day = buffer.readu8(RecieveBuffer, BLOCK_START + 1)
+	return Value
+end
+
 if not RunService:IsRunning() then
 	local NOOP = function() end
 	local Returns = table.freeze({
@@ -1117,6 +1133,12 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	MissionNotice = {
+		On = NOOP
+	},
+	CheckInClaim = {
+		Fire = NOOP
+	},
+	CheckInResult = {
 		On = NOOP
 	},
 	})
@@ -1310,6 +1332,16 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 					warn("[Blink]: Event queue of \"MissionNotice\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[46], {Value} :: {any})
+			end
+		elseif Index == 48 then
+			local Value: { Ok: boolean, Day: number } = SerdesFunctions.ReadEVENT_CheckInResult()
+			if Events.Reliable[48] ~= nil then
+				task.spawn(Events.Reliable[48], Value)
+			else
+				if #Queue.Reliable[48] > 256 then
+					warn("[Blink]: Event queue of \"CheckInResult\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[48], {Value} :: {any})
 			end
 		end
 	end
@@ -1718,6 +1750,25 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[46] == Listener then
 					Events.Reliable[46] = nil
+				end
+			end
+		end
+	},
+	CheckInClaim = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_CheckInClaim(Value)
+		end
+	},
+	CheckInResult = {
+		On = function(Listener: (Value: { Ok: boolean, Day: number }) -> ()): () -> ()
+			Events.Reliable[48] = Listener
+			for Index, Arguments in Queue.Reliable[48] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[48] = {}
+			return function (): ()
+				if Events.Reliable[48] == Listener then
+					Events.Reliable[48] = nil
 				end
 			end
 		end

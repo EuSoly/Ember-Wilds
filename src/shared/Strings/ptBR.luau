@@ -1184,4 +1184,13 @@ return table.freeze({
 	["kit.kit_hunter"] = "Caçador",
 	["kit.kit_guardian"] = "Guardião da Floresta",
 	["kit.kit_vip"] = "Kit VIP",
+	["checkin.title"] = "Prêmio diário",
+	["checkin.day"] = "Dia {day}",
+	["checkin.claim"] = "RESGATAR",
+	["checkin.claimed"] = "Resgatado",
+	["checkin.locked"] = "Volte amanhã",
+	["checkin.close"] = "Fechar",
+	["checkin.button"] = "Prêmio diário",
+	["checkin.got"] = "Dia {day} resgatado: {reward}",
+	["checkin.error"] = "Não foi possível resgatar agora",
 })

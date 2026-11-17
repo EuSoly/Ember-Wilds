@@ -591,3 +591,23 @@ event MissionNotice {
 		Done: boolean
 	}
 }
+
+-- Check-in de 7 dias: o cliente só pede; o servidor (CheckInService) confere
+-- o dia de Brasília, entrega o prêmio do dia e responde. Ok = false: já
+-- resgatou hoje (ou pedido rápido demais). Day = o dia que foi resgatado
+-- (1..7), 0 quando Ok = false.
+event CheckInClaim {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+event CheckInResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Ok: boolean,
+		Day: u8
+	}
+}
