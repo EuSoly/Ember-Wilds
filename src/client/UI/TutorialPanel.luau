@@ -107,15 +107,15 @@ local function TutorialPanel(): Frame
 
 	return Rustic.paper({
 		Name = "TutorialPanel",
-		AnchorPoint = Vector2.new(1, 0),
+		AnchorPoint = HudColumnState.anchor,
 		Position = function()
-			return UDim2.fromScale(0.98, HudColumnState.column().tutorialY)
+			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().tutorialY)
 		end,
 		Size = function()
 			return UDim2.fromScale(HudColumn.WIDTH, HudColumnState.tutorialHeight())
 		end,
 		Visible = function()
-			return TutorialState.step() > 0
+			return TutorialState.step() > 0 and not HudColumnState.yieldsToPanel()
 		end,
 		create("UIStroke")({
 			Name = "Glow",

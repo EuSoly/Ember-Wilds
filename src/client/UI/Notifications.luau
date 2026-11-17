@@ -24,6 +24,9 @@ local create = vide.create
 local MAX_VISIBLE = 2
 local LIFETIME = 3 -- segundos
 local SLIDE_TIME = 0.2
+-- Tela baixa: área dos avisos em px (cada aviso tem 45% dela: ~45 px).
+local SHORT_HEIGHT = 100
+local SHORT_MIN_WIDTH = 220
 
 export type Kind = "info" | "alert" | "success"
 type Entry = { text: string, kind: Kind }
@@ -114,17 +117,27 @@ end
 function Notifications.Component(): Frame
 	return create("Frame")({
 		Name = "Notifications",
-		AnchorPoint = Vector2.new(1, 0),
 		-- Abaixo dos botões redondos; com o quadrinho do tutorial ou a receita
-		-- fixada, abaixo deles (UI/HudColumnState).
+		-- fixada, abaixo deles (UI/HudColumnState). Na tela baixa, no topo
+		-- central, com altura mínima: a fração dava avisos de 23 px (12/11/2026).
+		AnchorPoint = HudColumnState.anchor,
 		Position = function()
-			return UDim2.fromScale(0.98, HudColumnState.column().notificationsY)
+			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().notificationsY)
 		end,
-		Size = UDim2.fromScale(0.26, 0.16),
+		Size = function()
+			return if HudColumnState.centered()
+				then UDim2.new(0.26, 0, 0, SHORT_HEIGHT)
+				else UDim2.fromScale(0.26, 0.16)
+		end,
 		BackgroundTransparency = 1,
+		create("UISizeConstraint")({ MinSize = Vector2.new(SHORT_MIN_WIDTH, 0) }),
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Vertical,
-			HorizontalAlignment = Enum.HorizontalAlignment.Right,
+			HorizontalAlignment = function()
+				return if HudColumnState.centered()
+					then Enum.HorizontalAlignment.Center
+					else Enum.HorizontalAlignment.Right
+			end,
 			Padding = UDim.new(0.05, 0),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),

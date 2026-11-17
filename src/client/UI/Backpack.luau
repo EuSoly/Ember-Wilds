@@ -18,7 +18,7 @@ local InventoryState = require(script.Parent.Parent:WaitForChild("InventoryState
 local InventoryGrid = require(script.Parent:WaitForChild("InventoryGrid"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
-local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 
 local TITLE_HEIGHT = 48 -- pixels
@@ -44,13 +44,11 @@ function Backpack.Button(): TextButton
 		Visible = function()
 			return isTouch() and BackpackState.hasBag()
 		end,
-		-- Acima do joystick direito. Na tela baixa (celular deitado) o quadrinho
-		-- do tutorial e a receita fixada da coluna da direita chegam até aqui:
-		-- desce para o vão entre os anéis de status e o joystick (10/11/2026).
-		Position = function()
-			return if ScreenMetrics.short() then UDim2.fromScale(0.7, 0.72) else UDim2.fromScale(0.78, 0.5)
-		end,
-		Size = UDim2.fromScale(0.1, 0.1),
+		-- Filho da hotbar, logo à direita dos anéis de status (HudBottom), em
+		-- qualquer tela de toque (12/11/2026).
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = HudBottom.rightOfRings,
+		Size = UDim2.fromOffset(56, 56),
 		minSize = Theme.touchMinSize + Vector2.new(12, 12),
 		maxSize = Vector2.new(76, 76),
 		Activated = BackpackState.toggle,

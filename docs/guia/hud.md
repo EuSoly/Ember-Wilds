@@ -31,13 +31,14 @@ create("TextLabel")({
 | `src/client/UI/StatusVignette.luau`, `src/shared/UIFlow/ScreenFx.luau` | Bordas da tela quando o jogador sofre (ver abaixo) |
 | `src/client/UI/Notifications.luau` | Avisos (`Notifications.push("chave.do.texto")`) |
 | `src/client/UI/Hotbar.luau`, `SlotButton.luau`, `ItemIcon.luau`, `src/client/HotbarState.luau` | Hotbar (slots 1–10 do inventário) |
-| `src/client/UI/AimStick.luau` | Joystick direito do celular |
+| `src/client/UI/AimStick.luau` | Joystick direito do celular: no canto de baixo à direita, a 12 px das bordas |
+| `src/shared/UIFlow/HudLayout.luau`, `src/client/UI/HudBottom.luau` | Faixa de baixo do HUD no toque (ver "Celular" abaixo): hotbar entre os joysticks, anéis, e onde ficam os painéis presos à hotbar |
 | `src/client/UI/Backpack.luau`, `InventoryGrid.luau`, `src/client/BackpackState.luau` | Botão e painel da mochila (só com slots além da hotbar), com a grade que cresce com a capacidade |
 | `src/client/InventoryState.luau` | Cópia do inventário vinda do servidor (veja `inventario.md`) |
 | `src/client/UI/SettingsButton.luau` | Engrenagem (canto superior direito, abaixo do minimapa): abre e fecha as configurações |
 | `src/client/UI/CraftColumn.luau`, `src/client/CraftState.luau` | Receitas disponíveis, tooltip e progresso; clique na receita ativa cancela |
 | `src/client/UI/RecipeBookButton.luau` | Abre o livro de receitas (veja `livro-receitas.md`) |
-| `src/client/UI/ChestPanel.luau`, `src/client/ChestState.luau` | Painel do baú sobre a hotbar quando há um baú perto (item guardado e quantidade; clicar tira). Veja `construcao.md` |
+| `src/client/UI/ChestPanel.luau`, `src/client/ChestState.luau` | Painel do baú acima dos anéis quando há um baú perto (item guardado e quantidade; clicar tira). No celular tem o botão **Guardar**: ligado, tocar num slot põe 1 no baú e segurar põe 10. Veja `construcao.md` |
 | `src/client/UI/CratePanel.luau`, `src/client/CrateState.luau` | Painel da caixa de itens (ver abaixo) |
 | `src/client/World/BuildGhost.luau` | Fantasma verde/vermelho no chão, girado como o servidor vai construir (aproximação; o servidor decide) |
 | `src/client/BuildRotation.luau`, `src/client/UI/RotateButton.luau` | Giro da peça: tecla R (ignorada no chat) e botão "Girar", visível só no toque com uma peça na mão; 45° por vez, vale até trocar de item |
@@ -46,6 +47,17 @@ create("TextLabel")({
 | `src/client/World/CraftBubble.luau` | Medalhão acima do **próprio** boneco enquanto crafta: arco enchendo e a engrenagem da arte girando (os outros jogadores não veem) |
 | `src/client/UI/InteractPanel.luau`, `src/client/InteractState.luau` | Painel de interação com estruturas (ver abaixo) |
 | `src/client/UI/ItemIcon.luau` | Ícone do slot: moldura na cor do tier com as iniciais; se existe modelo em `Assets.Icons/<id>`, mostra o 3D (ver abaixo) |
+
+## Celular (faixa de baixo, 12/11/2026)
+
+No toque, a faixa de baixo é calculada em px pelo `HudLayout` (testado em `tests/hudlayout.spec.luau`), seguindo a seção 8 do design system. O `HudBottom` mede a área do HUD (já dividida pelo "Tamanho da interface") e entrega as posições.
+
+- Joystick de mirar no canto de baixo à direita; o de andar é o do Roblox (borda direita em ~103 px).
+- Hotbar de slots de 44 px no vão entre os dois joysticks: uma linha de 10 se couber, senão duas de 5 (1–5 em cima). No emulador do Studio (749×330) cabe uma linha.
+- Os anéis, a trava da arma, a mochila e os painéis do baú, da caixa e da peça são **filhos da hotbar** (`Hotbar.above` no `App`): os anéis 8 px acima dela, a trava à esquerda dos anéis, a mochila à direita, e os painéis acima dos anéis (`HudBottom.above`). Assim nada se sobrepõe em tela nenhuma. No PC as mesmas peças usam as frações de sempre da hotbar.
+- No celular o "+" de canto do slot (17 px) não aparece; o botão **Guardar** do baú faz o slot inteiro virar o botão de pôr. Desliga sozinho ao se afastar.
+- Tela baixa: o tutorial, a receita fixada e os avisos ficam no topo central, embaixo do relógio (`HudColumnState.centered`). Com o painel de uma peça ou da caixa aberto, o tutorial e a receita saem do caminho até o jogador se afastar; os avisos passam por cima.
+- Falta: modo canhoto (trocar os joysticks de lado), que hoje só é salvo.
 
 ## Arte do HUD
 

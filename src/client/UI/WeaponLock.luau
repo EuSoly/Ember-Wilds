@@ -14,6 +14,7 @@ local Defs = require(Shared:WaitForChild("Defs"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local StatusRing = require(script.Parent:WaitForChild("StatusRing"))
 
@@ -52,10 +53,11 @@ local function WeaponLock(): Frame
 		Visible = function()
 			return left() > 0
 		end,
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.3, 0.86),
-		Size = UDim2.fromScale(0.08, 0.08),
-		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		-- Filho da hotbar, logo à esquerda dos anéis (HudBottom). Antes ficava em
+		-- 30% da tela, que no celular caía em cima da hotbar (12/11/2026).
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = HudBottom.besideRings,
+		Size = UDim2.fromOffset(56, 56),
 		BackgroundTransparency = 1,
 		create("UISizeConstraint")({ MinSize = Vector2.new(40, 40), MaxSize = Vector2.new(72, 72) }),
 		-- Medalhão dos anéis de status com o arco esvaziando (sem pulso: não é alerta).

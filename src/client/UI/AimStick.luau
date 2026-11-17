@@ -17,6 +17,7 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local InputNames = require(Shared:WaitForChild("InputNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 
 local create = vide.create
@@ -107,10 +108,15 @@ local function AimStick(): Frame
 	base = create("Frame")({
 		Name = "AimStick",
 		Visible = isTouch,
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.88, 0.72),
-		Size = UDim2.fromScale(0.22, 0.22),
-		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		-- No canto de baixo à direita, a 12 px das bordas (12/11/2026): a hotbar
+		-- cabe no vão entre ele e o joystick de andar (HudLayout), e a coluna
+		-- da direita (Missões, avisos) fica livre acima dele.
+		AnchorPoint = Vector2.new(1, 1),
+		Position = UDim2.new(1, -HudBottom.MARGIN, 1, -HudBottom.MARGIN),
+		Size = function()
+			local side = HudBottom.aimSize()
+			return UDim2.fromOffset(side, side)
+		end,
 		BackgroundColor3 = Theme.ui.panel,
 		-- Com a arte: aro de madeira com couro costurado (base) e o pino de couro.
 		BackgroundTransparency = if HAS_ART then 1 else 0.4,

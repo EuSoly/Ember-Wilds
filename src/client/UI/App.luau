@@ -16,6 +16,7 @@ local CraftColumn = require(script.Parent:WaitForChild("CraftColumn"))
 local DragGhost = require(script.Parent:WaitForChild("DragGhost"))
 local GhostPanel = require(script.Parent:WaitForChild("GhostPanel"))
 local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local InteractPanel = require(script.Parent:WaitForChild("InteractPanel"))
 local ItemTooltip = require(script.Parent:WaitForChild("ItemTooltip"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
@@ -46,17 +47,24 @@ local function App(): ScreenGui
 		MissionsButton(),
 		TutorialPanel(),
 		PinnedRecipe(),
-		Notifications.Component(),
 		GhostPanel(),
 		TeamPanel(),
-		ChestPanel(),
-		CratePanel(),
-		InteractPanel(),
-		Hotbar({ StatusRings() :: Instance }),
+		-- Presos à hotbar (posições em HudBottom): anéis logo acima dela; a
+		-- trava da arma e a mochila dos lados dos anéis; baú, caixa e peça
+		-- acima dos anéis.
+		Hotbar({
+			StatusRings() :: Instance,
+			WeaponLock(),
+			Backpack.Button(),
+			ChestPanel(),
+			CratePanel(),
+			InteractPanel(),
+		}),
+		-- Depois da hotbar: no celular os avisos passam por cima dos painéis
+		-- que sobem até o topo central.
+		Notifications.Component(),
 		AimStick(),
 		RotateButton(),
-		WeaponLock(),
-		Backpack.Button(),
 		Backpack.Panel(),
 		ItemTooltip(),
 		DragGhost(), -- por último: o item arrastado fica por cima de tudo
@@ -77,6 +85,8 @@ local function App(): ScreenGui
 	}) :: ScreenGui
 	-- Mesmo "Tamanho da interface" (ui_scale) das telas de molde.
 	Template.bindUiScale(hud)
+	-- Mede a área do HUD (depois do UIScale) para a faixa de baixo no toque.
+	HudBottom.bind(hud)
 	return hud
 end
 

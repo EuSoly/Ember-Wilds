@@ -23,6 +23,7 @@ local HotbarState = require(script.Parent.Parent:WaitForChild("HotbarState"))
 local InventoryState = require(script.Parent.Parent:WaitForChild("InventoryState"))
 local CrateState = require(script.Parent.Parent:WaitForChild("CrateState"))
 local InteractState = require(script.Parent.Parent:WaitForChild("InteractState"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local MachineSlots = require(script.Parent:WaitForChild("MachineSlots"))
@@ -336,9 +337,10 @@ local function InteractPanel(): Frame
 	return Kit.panel({
 		Name = "InteractPanel",
 		AnchorPoint = Vector2.new(0.5, 1),
-		-- Na base do painel do baú; sobe a altura do baú e da caixa visíveis.
+		-- Acima dos anéis (filho da hotbar, HudBottom); sobe a altura do baú e
+		-- da caixa visíveis.
 		Position = function()
-			return UDim2.new(0.5, 0, 0.77, -stackOffset())
+			return HudBottom.above(stackOffset())
 		end,
 		AutomaticSize = Enum.AutomaticSize.XY,
 		Size = UDim2.fromOffset(0, 0),

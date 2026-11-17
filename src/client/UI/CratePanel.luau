@@ -11,6 +11,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
 local CrateState = require(script.Parent.Parent:WaitForChild("CrateState"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 
@@ -25,9 +26,10 @@ local function CratePanel(): Frame
 	return Kit.panel({
 		Name = "CratePanel",
 		AnchorPoint = Vector2.new(0.5, 1),
-		-- Na base do painel do baú; sobe a altura dele só quando o baú está visível.
+		-- Acima dos anéis (filho da hotbar, HudBottom); sobe a altura do baú só
+		-- quando ele está visível.
 		Position = function()
-			return UDim2.new(0.5, 0, 0.77, if ChestState.near() ~= nil then -CHEST_SPACE else 0)
+			return HudBottom.above(if ChestState.near() ~= nil then CHEST_SPACE else 0)
 		end,
 		AutomaticSize = Enum.AutomaticSize.XY,
 		Size = UDim2.fromOffset(0, 0),

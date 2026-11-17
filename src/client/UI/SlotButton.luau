@@ -7,7 +7,8 @@
 --   item que está sendo arrastado (onde ele vai cair).
 -- - Trancado (slots da mochila sem mochila): escuro e sem toque.
 -- - Botão "+" (canto do slot com item, só com baú perto): põe 1 no baú; Shift+clique
---   põe 10; no celular, segurar 0,5 s põe 10. É um botão à parte e não inicia arrasto.
+--   põe 10. É um botão à parte e não inicia arrasto. No celular ele cobre o slot
+--   inteiro só com o "Guardar" do baú ligado: tocar põe 1, segurar 0,5 s põe 10.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
@@ -22,6 +23,7 @@ local HotbarState = require(Client:WaitForChild("HotbarState"))
 local InventoryState = require(Client:WaitForChild("InventoryState"))
 local ItemHover = require(Client:WaitForChild("ItemHover"))
 local HudArt = require(script.Parent:WaitForChild("HudArt"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 
 local create = vide.create
@@ -75,9 +77,18 @@ local function SlotButton(props: Props): TextButton
 		return drag ~= nil and drag.from == index
 	end)
 
+	-- No toque, o "+" de canto não aparece (pequeno demais e roubava o toque do
+	-- slot): com o "Guardar" do baú ligado (ChestPanel), o slot inteiro vira o
+	-- botão de pôr, com o "+" pequeno no canto só de enfeite (12/11/2026).
+	local fullSlot = vide.derive(function()
+		return HudBottom.touch() and ChestState.storing()
+	end)
 	-- O "+" só existe com baú perto e item no slot.
 	local plusVisible = vide.derive(function()
-		return ChestState.near() ~= nil and item() ~= nil and not locked()
+		return ChestState.near() ~= nil
+			and item() ~= nil
+			and not locked()
+			and (not HudBottom.touch() or ChestState.storing())
 	end)
 	-- Segurou até virar "põe 10": o Activated que vem ao soltar não põe mais 1.
 	local heldDone = false
@@ -86,17 +97,41 @@ local function SlotButton(props: Props): TextButton
 		Name = "ChestPlus",
 		AnchorPoint = Vector2.new(0, 0),
 		Position = UDim2.fromScale(0, 0),
-		Size = UDim2.fromScale(PLUS_SIZE, PLUS_SIZE),
+		Size = function()
+			return if fullSlot() then UDim2.fromScale(1, 1) else UDim2.fromScale(PLUS_SIZE, PLUS_SIZE)
+		end,
 		ZIndex = 3,
 		Visible = plusVisible,
-		Text = "+",
+		Text = function()
+			return if fullSlot() then "" else "+"
+		end,
 		TextScaled = true,
 		FontFace = Theme.font.number,
 		TextColor3 = Theme.ui.text,
 		AutoButtonColor = false,
 		BackgroundColor3 = Theme.ui.action,
+		BackgroundTransparency = function()
+			return if fullSlot() then 0.6 else 0
+		end,
 		BorderSizePixel = 0,
-		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		create("UICorner")({
+			CornerRadius = function()
+				return if fullSlot() then Theme.slotCorner else UDim.new(1, 0)
+			end,
+		}),
+		create("TextLabel")({
+			Name = "Mark",
+			Visible = fullSlot,
+			Size = UDim2.fromScale(PLUS_SIZE, PLUS_SIZE),
+			BackgroundColor3 = Theme.ui.action,
+			BorderSizePixel = 0,
+			Text = "+",
+			TextScaled = true,
+			FontFace = Theme.font.number,
+			TextColor3 = Theme.ui.text,
+			ZIndex = 4,
+			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		}),
 		InputBegan = function(input: InputObject)
 			if input.UserInputType ~= Enum.UserInputType.Touch then
 				return

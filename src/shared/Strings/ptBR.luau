@@ -85,6 +85,9 @@ return table.freeze({
 	["hud.backpack"] = "Mochila",
 	["hud.rotate"] = "Girar",
 	["hud.crate"] = "Caixa",
+	-- Botão do baú no celular: ligado, tocar num slot da hotbar guarda no baú
+	["hud.chest_store"] = "Guardar",
+	["hud.chest_store_done"] = "Pronto",
 
 	-- Painel de interação com estruturas (G8): botões das ações e estado da peça
 	["interact.put_wood"] = "Pôr madeira",

@@ -74,12 +74,12 @@ local function PinnedRecipe(): Frame
 	local lines = vide.derive(PinState.lines)
 	return Rustic.paper({
 		Name = "PinnedRecipe",
-		AnchorPoint = Vector2.new(1, 0),
+		AnchorPoint = HudColumnState.anchor,
 		Visible = function()
-			return #lines() > 0
+			return #lines() > 0 and not HudColumnState.yieldsToPanel()
 		end,
 		Position = function()
-			return UDim2.fromScale(0.98, HudColumnState.column().pinnedY)
+			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().pinnedY)
 		end,
 		Size = function()
 			return UDim2.fromScale(HudColumn.WIDTH, math.max(HudColumnState.pinnedHeight(), 0.01))

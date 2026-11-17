@@ -26,6 +26,9 @@ local ChestState = {
 	near = vide.source(nil :: Model?),
 	-- Conteúdo do baú perto (nil = vazio ou sem baú).
 	contents = vide.source(nil :: Item?),
+	-- Celular: modo "Guardar" ligado (tocar num slot põe no baú). Desliga
+	-- sozinho ao se afastar do baú.
+	storing = vide.source(false),
 }
 
 local function isChest(model: Instance): boolean
@@ -76,6 +79,9 @@ local function refresh()
 	local chest = findNearest()
 	if ChestState.near() ~= chest then
 		ChestState.near(chest)
+		if chest == nil and ChestState.storing() then
+			ChestState.storing(false)
+		end
 	end
 	local now = readContents(chest)
 	local before = ChestState.contents()

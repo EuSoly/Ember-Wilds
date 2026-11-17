@@ -12,6 +12,7 @@ local HudImages = require(Shared:WaitForChild("HudImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UIMath = require(Shared:WaitForChild("UIMath"))
+local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local Sources = require(script.Parent:WaitForChild("Sources"))
 local StatusRing = require(script.Parent:WaitForChild("StatusRing"))
 
@@ -91,9 +92,10 @@ local function StatusRings(): Frame
 	return create("Frame")({
 		Name = "StatusRings",
 		-- Vai dentro da hotbar (ver Hotbar.above): preso 8 px acima do topo dela.
+		-- No toque, tamanho em px (a hotbar pode ter duas linhas; HudBottom).
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 0, -8),
-		Size = UDim2.fromScale(0.5, 1.25),
+		Position = HudBottom.ringsPosition,
+		Size = HudBottom.ringsSize,
 		BackgroundTransparency = 1,
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,
