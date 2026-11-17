@@ -1,0 +1,55 @@
+EMBER WILDS — UI MONETIZAÇÃO EM CAMADAS — 17/11/2026
+
+FORMATO: PNG RGBA com transparência real. Nenhum texto nos assets entregues.
+
+EFEITOS (BRANCOS, PARA TINTAR)
+  37_raios_luz_brancos_1024.png — 1024×1024, raios nascem em (512,512), alfa zerado a partir do raio 449 px. Rotação lenta.
+  38_halo_branco_1024.png — 1024×1024, círculo suave no centro, alfa zerado a partir do raio 455 px. Opacidade pulsante.
+  39_faisca_estrela4_128.png — 128×128
+  39_faisca_ponto_128.png — 128×128
+  39_faisca_cruz_fina_128.png — 128×128
+  39_faisca_brasinha_128.png — 128×128
+  TODOS têm RGB branco (#FFFFFF) onde alfa > 0. Colorir com ImageColor3; não use cor na textura-fonte.
+
+CARTÕES EM CAMADAS
+  Para cada cartão, importar PNG da base e PNG da moldura separadamente.
+  Ordem sugerida no Roblox (menor ZIndex primeiro):
+   1) BASE (ImageLabel Slice)
+   2) HALO (ImageLabel quadrado central, cor via ImageColor3, transparência pulsante)
+   3) RAIOS (ImageLabel quadrado central, cor via ImageColor3, rotação lenta)
+   4) FAÍSCAS (ImageLabels quadrados individuais, cor via ImageColor3, subir + sumir)
+   5) MOLDURA (ImageLabel Slice)
+   6) ÍCONE, TEXTOS E BOTÕES (elementos por código)
+
+SIZES E SLICE CENTER: ver manifest.json. sliceCenter usa Rect.new(xMin, yMin, xMax, yMax), não largura/altura. Os quatro conjuntos foram projetados com bordas
+uniformes, centro de base liso, centro de moldura transparente, sem decorações centrais
+presas ao 9-slice. Os rebites estão nos cantos para nunca esticar.
+
+  40 VIP       1024×512, 2 arquivos (base em dourado brasa + moldura ouro/nogueira)
+  41 LOJA      1024×512, 2 arquivos (base cinza neutro + moldura nogueira) -> serve aos 5 cartões
+  43 DIA 7      360×450, 2 arquivos (base papel dourado + moldura ouro)
+  44 PREMIUM   1024×400, 2 arquivos (base papel + moldura nogueira)
+
+KITS (42)
+  Quatro ícones já identificados do projeto, fundo 100% transparente e sem brilho:
+  morango, picareta, mochila, medalha — todos 512×512.
+  A referência aos kits 30–36 não identifica os OUTROS TRÊS kits. Para não inventar itens,
+  esses três ficam pendentes de nomes ou referência visual; não incluí placeholders falsos.
+
+IMPORTANTE SOBRE TINTA
+  ImageColor3 multiplica os canais originais. Para tonalização muito livre, o branco dos efeitos
+  preserva a cor desejada sem interferência. A base da LOJA é neutra RGB cinza (R=G=B),
+  portanto pode ser tingida. Bases VIP, Dia 7 e Premium já têm paletas próprias.
+
+NOTA PARA ROTAÇÃO
+  Se os raios girarem dentro de um ImageLabel quadrado exato de 1024px, o conteúdo não toca
+  os quatro cantos nem as bordas. Com ImageLabel quadrado e clipping, mantenha efeitos
+  dentro do cartão e use ClipsDescendants conforme sua composição.
+
+EXTRAS
+  40_overlay_coroa_vip.png — reutilização do ícone VIP do lote anterior, caso deseje
+  um ornamento central e separado da moldura esticável.
+
+PRÉVIAS
+  CAPA_PREVIEW.png, preview_cartoes_em_camadas.png, preview_efeitos_brancos.png,
+  preview_kits_sem_efeitos.png. Apenas as prévias possuem fundos; assets individuais são RGBA.
