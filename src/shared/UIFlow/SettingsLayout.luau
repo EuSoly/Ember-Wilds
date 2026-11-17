@@ -12,19 +12,36 @@ local SettingsLayout = {}
 SettingsLayout.ROW_COMPACT = 40 -- altura da linha de uma opção
 SettingsLayout.HEADER_COMPACT = 24 -- altura do título do grupo
 SettingsLayout.GAP = 4 -- entre linhas
+-- Lista única do PC. Com a linha do zoom (17/11) as medidas antigas (linha
+-- 50, título 30, espaço 6) faziam a lista rolar em 1280x720 e a opção nova
+-- ficava escondida.
+SettingsLayout.ROW_PC = 44
+SettingsLayout.HEADER_PC = 24
+SettingsLayout.GAP_PC = 4
 
--- Altura de uma coluna com estes grupos (títulos, linhas e espaços).
-function SettingsLayout.columnHeight(groups: { Group }): number
+-- Altura de uma lista com estes grupos: títulos de `header`, linhas de `row`
+-- e `gap` entre cada item.
+function SettingsLayout.listHeight(groups: { Group }, row: number, header: number, gap: number): number
 	local items, height = 0, 0
 	for _, group in groups do
-		height += SettingsLayout.HEADER_COMPACT
+		height += header
 		items += 1
 		for _ in group.settings do
-			height += SettingsLayout.ROW_COMPACT
+			height += row
 			items += 1
 		end
 	end
-	return height + math.max(items - 1, 0) * SettingsLayout.GAP
+	return height + math.max(items - 1, 0) * gap
+end
+
+-- Altura de uma coluna do celular com estes grupos.
+function SettingsLayout.columnHeight(groups: { Group }): number
+	return SettingsLayout.listHeight(
+		groups,
+		SettingsLayout.ROW_COMPACT,
+		SettingsLayout.HEADER_COMPACT,
+		SettingsLayout.GAP
+	)
 end
 
 -- Esquerda e direita: o corte entre grupos que deixa a coluna mais alta menor.

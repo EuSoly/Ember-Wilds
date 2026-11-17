@@ -40,8 +40,8 @@ local R = Theme.rustic
 type SettingDef = Defs.SettingDef
 
 local PANEL_MAX = Vector2.new(560, 600)
-local HEADER_HEIGHT = 30
-local ROW_HEIGHT = 50
+local HEADER_HEIGHT = SettingsLayout.HEADER_PC
+local ROW_HEIGHT = SettingsLayout.ROW_PC
 local TITLE_HEIGHT = 58
 local CLOSE_HEIGHT = 50
 -- Celular deitado (17/11/2026): duas colunas sem rolar (SettingsLayout), o
@@ -586,7 +586,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 					ScrollingDirection = Enum.ScrollingDirection.Y,
 					create("UIListLayout")({
 						SortOrder = Enum.SortOrder.LayoutOrder,
-						Padding = UDim.new(0, 6),
+						Padding = UDim.new(0, SettingsLayout.GAP_PC),
 					}),
 					create("UIPadding")({ PaddingRight = UDim.new(0, 8) }),
 					rows(),
