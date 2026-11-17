@@ -21,6 +21,10 @@ export type Layout = {
 	canvasHeight: number,
 	summary: Rect,
 	kits: Rect,
+	-- Painel da oferta de revive: por cima do corpo e dos botões, em pixels da
+	-- janela (não do corpo). offerIcon = sobra altura para o ícone.
+	offer: Rect,
+	offerIcon: boolean,
 }
 
 DeathLayout.TITLE_HEIGHT = 58
@@ -38,7 +42,11 @@ DeathLayout.KIT_GAP = 6
 -- escolhido não ser cortado pela borda da lista.
 DeathLayout.KIT_LIST_INSET = 3
 -- Altura do resumo quando empilhado (no largo ocupa a coluna inteira).
-DeathLayout.SUMMARY_STACKED = 210
+DeathLayout.SUMMARY_STACKED = 222 -- 12 a mais: a linha das etiquetas da Golden Ember
+-- Oferta de revive (UI/ReviveOffer): altura do conteúdo com e sem o ícone.
+DeathLayout.OFFER_ICON = 44
+DeathLayout.OFFER_FULL = 222
+DeathLayout.OFFER_NO_ICON = DeathLayout.OFFER_FULL - DeathLayout.OFFER_ICON - 6
 
 local PANEL_MAX = { w = 760, h = 460 }
 local STACK_BELOW = 560 -- janela mais estreita que isso: uma coluna só
@@ -56,6 +64,18 @@ function DeathLayout.kitsHeight(kitCount: number): number
 		+ DeathLayout.KITS_PADDING
 end
 
+-- Painel da oferta de revive dentro da janela de `panelWidth` × `panelHeight`.
+local function offerRect(panelWidth: number, panelHeight: number): (Rect, boolean)
+	local h = math.max(panelHeight - DeathLayout.BODY_TOP - 16, 0)
+	local rect = {
+		x = DeathLayout.BODY_SIDE,
+		y = DeathLayout.BODY_TOP,
+		w = math.max(panelWidth - DeathLayout.BODY_SIDE * 2, 0),
+		h = h,
+	}
+	return rect, h >= DeathLayout.OFFER_FULL
+end
+
 -- Tela de `width` × `height` (pixels lógicos) com `kitCount` kits.
 function DeathLayout.compute(width: number, height: number, kitCount: number): Layout
 	-- Mesmo critério do design system: compacto = largura < 900 ou altura < 500.
@@ -67,6 +87,7 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 	local bodyWidth = math.max(panelWidth - DeathLayout.BODY_SIDE * 2, 0)
 	local bodyHeight = math.max(panelHeight - DeathLayout.BODY_TOP - DeathLayout.BODY_BOTTOM, 0)
 	local stacked = panelWidth < STACK_BELOW
+	local offer, offerIcon = offerRect(panelWidth, panelHeight)
 
 	if stacked then
 		local summary = { x = 0, y = 0, w = bodyWidth, h = DeathLayout.SUMMARY_STACKED }
@@ -82,6 +103,8 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 			canvasHeight = kits.y + kits.h,
 			summary = summary,
 			kits = kits,
+			offer = offer,
+			offerIcon = offerIcon,
 		}
 	end
 
@@ -96,6 +119,8 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 		canvasHeight = bodyHeight,
 		summary = { x = 0, y = 0, w = columnWidth, h = bodyHeight },
 		kits = { x = columnWidth + DeathLayout.COLUMN_GAP, y = 0, w = columnWidth, h = bodyHeight },
+		offer = offer,
+		offerIcon = offerIcon,
 	}
 end
 

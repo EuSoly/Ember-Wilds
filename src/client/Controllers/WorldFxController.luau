@@ -4,7 +4,8 @@
 -- tremulação das luzes de fogo (o servidor só cria a luz; tremer é visual),
 -- os efeitos da coleta, as frutinhas visíveis dos arbustos, o telhado
 -- translúcido sobre o boneco, as peças móveis das caixas 3D e, na água, as
--- ondinhas de quem anda e os brilhos.
+-- ondinhas de quem anda e os brilhos, o cadeado das caixas com revive
+-- pendente e a bolha de proteção do revive.
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -16,6 +17,8 @@ local Client = script.Parent.Parent
 local World = Client:WaitForChild("World")
 local BerryDisplay = require(World:WaitForChild("BerryDisplay"))
 local BorderWarning = require(World:WaitForChild("BorderWarning"))
+local CrateLock = require(World:WaitForChild("CrateLock"))
+local SpawnShieldFx = require(World:WaitForChild("SpawnShieldFx"))
 local CanopyFade = require(World:WaitForChild("CanopyFade"))
 local GatherFx = require(World:WaitForChild("GatherFx"))
 local OxygenBubble = require(World:WaitForChild("OxygenBubble"))
@@ -41,6 +44,8 @@ function WorldFxController.Start(_self)
 	BerryDisplay.start()
 	CraftBubble.start()
 	CrateAnimator.start()
+	CrateLock.start()
+	SpawnShieldFx.start()
 	BuildRotation.start()
 	BuildGhost.start()
 	StructureHealth.start()

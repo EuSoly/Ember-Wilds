@@ -88,4 +88,13 @@ return {
 			"sem kits: só o cabeçalho"
 		)
 	end,
+
+	["revive offer fits on phone width"] = function()
+		for _, size in SIZES do
+			local l = DeathLayout.compute(size[1], size[2], KITS)
+			assert(inside(l.offer, l.panelWidth, l.panelHeight), `{size[1]}x{size[2]}: oferta de revive fora da janela`)
+			local needed = if l.offerIcon then DeathLayout.OFFER_FULL else DeathLayout.OFFER_NO_ICON
+			assert(l.offer.h >= needed, `{size[1]}x{size[2]}: conteúdo da oferta ({needed}) não cabe em {l.offer.h}`)
+		end
+	end,
 }

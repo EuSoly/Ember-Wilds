@@ -112,4 +112,20 @@ function ReviveRules.emberBonus(perks: { ember2x: boolean, vip: boolean, premium
 	return (if perks.ember2x then 1 else 0) + (if perks.vip then 2 else 0) + (if perks.premium then 4 else 0)
 end
 
+-- Chaves de texto das etiquetas de um EmberBonus, na ordem 2×, VIP, Premium
+-- (o inverso de emberBonus; bits desconhecidos são ignorados).
+function ReviveRules.emberTagKeys(bits: number): { string }
+	local keys = {}
+	if bit32.band(bits, 1) ~= 0 then
+		table.insert(keys, "ember.tag.2x")
+	end
+	if bit32.band(bits, 2) ~= 0 then
+		table.insert(keys, "ember.tag.vip")
+	end
+	if bit32.band(bits, 4) ~= 0 then
+		table.insert(keys, "ember.tag.premium")
+	end
+	return keys
+end
+
 return ReviveRules

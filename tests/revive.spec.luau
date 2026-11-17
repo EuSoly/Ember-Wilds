@@ -107,4 +107,14 @@ return {
 		assert(ReviveRules.emberBonus({ ember2x = false, vip = false, premium = true }) == 4, "Premium")
 		assert(ReviveRules.emberBonus({ ember2x = true, vip = true, premium = true }) == 7, "todos")
 	end,
+	["ember tag keys follow the bits"] = function()
+		assert(#ReviveRules.emberTagKeys(0) == 0, "sem etiqueta")
+		local all = ReviveRules.emberTagKeys(7)
+		assert(
+			#all == 3 and all[1] == "ember.tag.2x" and all[2] == "ember.tag.vip" and all[3] == "ember.tag.premium",
+			"todas"
+		)
+		local vip = ReviveRules.emberTagKeys(2)
+		assert(#vip == 1 and vip[1] == "ember.tag.vip", "só VIP")
+	end,
 }

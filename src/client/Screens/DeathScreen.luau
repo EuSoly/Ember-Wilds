@@ -8,6 +8,9 @@
 -- Na janela estreita, uma coluna só que rola (DeathLayout). Embaixo, "Menu"
 -- (couro) e "Jogar de novo" (brasa).
 --
+-- Com revive pendente (ScreenState.reviveOffer), o painel UI/ReviveOffer cobre
+-- o corpo e os botões; a tela normal volta com a recusa ou o fim da janela.
+--
 -- Ao abrir, o mundo perde a cor (saturação até −1 em 1 s) e os pontos da vida
 -- descem até 0 enquanto a Golden Ember sobe até o ganho (CountUp, 2 s). No
 -- mesmo tempo, a barra de XP enche do XP de antes até o de agora (o nível sobe
@@ -30,6 +33,7 @@ local ProfileFormat = require(Shared:WaitForChild("UIFlow"):WaitForChild("Profil
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
+local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
@@ -39,6 +43,8 @@ local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Template = require(Client:WaitForChild("UITemplates"):WaitForChild("Template"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local KitList = require(script.Parent:WaitForChild("KitList"))
+local ReviveOffer = require(Client:WaitForChild("UI"):WaitForChild("ReviveOffer"))
+local ReviveRules = require(Shared:WaitForChild("Survival"):WaitForChild("ReviveRules"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -106,7 +112,71 @@ type Shown = {
 	xp: Source<number>,
 	xpGained: Source<number>,
 	levelUp: Source<number?>, -- nível novo, quando já pode mostrar o aviso
+	emberBonus: Source<number>, -- bits do LifeEnded.EmberBonus
 }
+
+local TAG_HEIGHT = 16
+
+-- Linha de etiquetas ao lado da Golden Ember. Três etiquetas fixas, cada uma
+-- visível pelo seu bit; com a arte (MULTIPLIER_TAG) vira 9-slice, senão é uma
+-- placa de brasa feita por código.
+local function emberTags(bonus: () -> number): Frame
+	local withArt = MonetizationImages.has(MonetizationImages.MULTIPLIER_TAG)
+	local children: { Instance } = {
+		create("UIListLayout")({
+			FillDirection = Enum.FillDirection.Horizontal,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 4),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+	}
+	local keys = { "ember.tag.2x", "ember.tag.vip", "ember.tag.premium" }
+	for index, key in keys do
+		local tag = create(if withArt then "ImageLabel" else "Frame")({
+			Name = `Tag{index}`,
+			LayoutOrder = index,
+			AutomaticSize = Enum.AutomaticSize.X,
+			Size = UDim2.fromOffset(0, TAG_HEIGHT),
+			BackgroundColor3 = R.ember,
+			BackgroundTransparency = if withArt then 1 else 0,
+			BorderSizePixel = 0,
+			Visible = function()
+				return table.find(ReviveRules.emberTagKeys(bonus()), key) ~= nil
+			end,
+			create("UICorner")({ CornerRadius = UDim.new(0, 4) }),
+			create("UIPadding")({ PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6) }),
+			Rustic.label({
+				Name = "TagLabel",
+				AutomaticSize = Enum.AutomaticSize.X,
+				Size = UDim2.fromScale(0, 1),
+				TextScaled = false,
+				TextSize = 12,
+				FontFace = Theme.font.number,
+				TextColor3 = if withArt then R.cream else R.charcoal,
+				Text = Strings.get(key),
+			}),
+		})
+		if withArt then
+			local image = tag :: ImageLabel
+			image.Image = MonetizationImages.MULTIPLIER_TAG
+			image.ScaleType = Enum.ScaleType.Slice
+			image.SliceCenter = MonetizationImages.MULTIPLIER_TAG_SLICE
+		else
+			create("UIStroke")({ Color = R.outline, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border })
+		end
+		table.insert(children, tag)
+	end
+	return create("Frame")({
+		Name = "EmberTags",
+		LayoutOrder = 5,
+		Size = function()
+			return UDim2.new(1, 0, 0, if bonus() == 0 then 6 else TAG_HEIGHT + 4)
+		end,
+		BackgroundTransparency = 1,
+		children,
+	}) :: Frame
+end
 
 local function summary(shown: Shown, rect: () -> DeathLayout.Rect): Frame
 	local progress = vide.derive(function()
@@ -197,7 +267,9 @@ local function summary(shown: Shown, rect: () -> DeathLayout.Rect): Frame
 				end,
 			}),
 		}),
-		create("Frame")({ Name = "Gap", LayoutOrder = 5, Size = UDim2.new(1, 0, 0, 6), BackgroundTransparency = 1 }),
+		-- Etiquetas das vantagens da Golden Ember (2×, VIP, Premium); sem nenhuma,
+		-- é só o espaço de antes.
+		emberTags(shown.emberBonus),
 		-- Nível à esquerda, XP ganho à direita (como a placa de nível do menu).
 		create("Frame")({
 			Name = "LevelRow",
@@ -436,6 +508,7 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 		xp = vide.source(0) :: any,
 		xpGained = vide.source(0) :: any,
 		levelUp = vide.source(nil :: number?) :: any,
+		emberBonus = vide.source(0) :: any,
 	}
 
 	local gui = create("ScreenGui")({
@@ -526,6 +599,10 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 				}),
 				create("Frame")({
 					Name = "Buttons",
+					-- Oferta de revive pendente: só ela aparece (sem Menu nem Jogar de novo).
+					Visible = function()
+						return ScreenState.reviveOffer() == nil
+					end,
 					AnchorPoint = Vector2.new(0.5, 1),
 					Position = UDim2.new(0.5, 0, 1, -16),
 					Size = UDim2.new(1, -DeathLayout.BODY_SIDE * 2, 0, BUTTONS_HEIGHT),
@@ -556,6 +633,15 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 						end,
 					}),
 				}),
+				-- Oferta de revive: por cima do resumo, dos kits e dos botões.
+				ReviveOffer.build(
+					place(function()
+						return layout().offer
+					end),
+					function()
+						return layout().offerIcon
+					end
+				),
 			}),
 		}),
 	}) :: ScreenGui
@@ -602,6 +688,7 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 			shown.days(if life then life.Days else 0)
 			shown.xpGained(xpGained)
 			shown.levelUp(nil)
+			shown.emberBonus(if life then life.EmberBonus else 0)
 			shown.points(points)
 			shown.currency(0)
 			shown.xp(xpBefore)
