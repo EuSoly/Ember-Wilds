@@ -44,8 +44,8 @@ local TITLE_HEIGHT = 50
 local GRID_SHARE = 0.52 -- fração da largura para a grade (o resto é a ficha)
 local TAB_CORNER = 12 -- px lógicos dos cantos da aba
 -- Celular deitado (17/11/2026): o livro ocupa a tela, as abas mostram só o
--- ícone, a grade tem células menores e Pegar/Fixar ficam numa faixa no fim
--- da ficha, que rola só até ela (nada cobre o "Como fazer").
+-- ícone, a grade tem células menores e Pegar/Fixar ficam embaixo da grade
+-- (na ficha eles cortavam o texto); a ficha usa a altura toda.
 local short = ScreenMetrics.short
 local SHORT_CELL = 48
 local SHORT_GAP = 6
@@ -53,7 +53,6 @@ local SHORT_TAB = 44
 local SHORT_PAD = 16
 local SHORT_GRID_SHARE = 0.46
 local SHORT_ACTION = 44
-local SHORT_ACTION_MARGIN = 12 -- da borda de baixo da ficha até os botões
 
 local function tabHeight(): number
 	return if short() then SHORT_TAB else TAB_HEIGHT
@@ -441,7 +440,9 @@ local function Book(): Frame
 					return UDim2.fromOffset(0, tabHeight() + gap() + 4)
 				end,
 				Size = function()
-					return UDim2.new(gridShare(), -gap(), 1, -tabHeight() - gap() - 4)
+					-- No celular, os botões ficam embaixo da grade.
+					local actions = if short() and (pinVisible() or giveVisible()) then SHORT_ACTION + gap() else 0
+					return UDim2.new(gridShare(), -gap(), 1, -tabHeight() - gap() - 4 - actions)
 				end,
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
@@ -472,11 +473,6 @@ local function Book(): Frame
 				Size = function()
 					return UDim2.new(1 - gridShare(), -gap(), 1, -tabHeight() - gap() - 4)
 				end,
-				bottomInset = function()
-					return if short() and (pinVisible() or giveVisible())
-						then SHORT_ACTION + SHORT_ACTION_MARGIN + 6
-						else 0
-				end,
 			}),
 			-- Fixar a receita no HUD (UI/PinnedRecipe), no canto da ficha; só
 			-- para itens com receita. Fixado: vira "Desafixar". Na tela baixa a
@@ -486,12 +482,10 @@ local function Book(): Frame
 				Name = "PinButton",
 				Visible = pinVisible,
 				AnchorPoint = function()
-					return if ScreenMetrics.short() then Vector2.new(1, 1) else Vector2.new(1, 0)
+					return if short() then Vector2.new(0, 1) else Vector2.new(1, 0)
 				end,
 				Position = function()
-					return if short()
-						then UDim2.new(1, -18, 1, -SHORT_ACTION_MARGIN)
-						else UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18)
+					return if short() then UDim2.fromScale(0, 1) else UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18)
 				end,
 				Size = function()
 					return if short() then UDim2.fromOffset(104, SHORT_ACTION) else UDim2.fromOffset(120, 38)
@@ -519,12 +513,15 @@ local function Book(): Frame
 			Rustic.button({
 				Name = "GiveButton",
 				Visible = giveVisible,
-				AnchorPoint = Vector2.new(1, 1),
+				AnchorPoint = function()
+					return if short() then Vector2.new(0, 1) else Vector2.new(1, 1)
+				end,
+				-- Celular: embaixo da grade, depois do Fixar (se ele aparece).
 				Position = function()
-					local id = RecipeBookScreen.selected()
-					local besidePin = short() and id ~= nil and Defs.Recipes[id] ~= nil
-					local shift = if besidePin then 112 else 0
-					return UDim2.new(1, -18 - shift, 1, if short() then -SHORT_ACTION_MARGIN else -12)
+					if short() then
+						return UDim2.new(0, if pinVisible() then 104 + SHORT_GAP else 0, 1, 0)
+					end
+					return UDim2.new(1, -18, 1, -12)
 				end,
 				Size = function()
 					return if short() then UDim2.fromOffset(104, SHORT_ACTION) else UDim2.fromOffset(120, 38)
