@@ -51,6 +51,14 @@ Estes aparecem no Creator Hub e na página do jogo, não dentro dele. São **512
 | 24–27 | Ícones dos **4 kits para sempre** | já temos os ícones da loja (morango, picareta, mochila, medalha); basta pôr fundo |
 | 28 | Ícones dos **produtos** (Golden Ember, giros, kits de 1 vida, revive, boost) | o Roblox não obriga ícone em produto, mas fica mais bonito; os de Golden Ember podem vir das pilhas de moedas que já temos |
 
+## 3. Fora da monetização (pedido junto, 17/11)
+
+| # | Peça | Onde aparece | Estados / variações | Tamanho sugerido | Prioridade |
+|---|---|---|---|---|---|
+| 29 | **Pergaminho da receita fixada** | substitui o fundo atual do quadro da receita fixada pelo livro, na coluna da direita do HUD (nome do item em cima, uma linha por ingrediente embaixo) | 1 | ~400×600, em pé, com rolo em cima e embaixo e papel liso no meio | essencial |
+
+O pergaminho **estica na altura**, porque a receita pode ter de 1 a 4 ingredientes. Por isso os **rolos de cima e de baixo** ficam fixos e o **papel do meio** precisa ser liso, sem mancha nem dobra que estique feio. Se quiser manchas ou queimadinhos de enfeite, mande como peça separada, que eu ponho por cima. Deixe uns 12% de margem nas laterais do papel para o texto não encostar na borda. O X de desafixar continua o mesmo.
+
 ## Já temos e vou reaproveitar
 
 Moeda Golden Ember e pilhas de moedas, botões verde e laranja, fita, fundos dos cartões da loja, fundos das raridades, cadeado do HUD, moldura e bolinha das missões, símbolo do Robux e o ícone de giro especial.

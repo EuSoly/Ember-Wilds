@@ -45,7 +45,7 @@ Boa parte da loja já existe e funciona sem cobrar (`docs/guia/loja.md`): pacote
 - **+3 espaços** (já existe: `InventoryConfig.vipPass.bonusSlots`).
 - **Ícone no nome**, na etiqueta do boneco, visível para todos.
 - **+50% de Golden Ember** (seção 4.4).
-- **Kit VIP** exclusivo: só pode ser usado enquanto a pessoa assina. Entra em `Defs.Kits` com uma marca nova (`vipOnly = true`), sem preço em Robux nem em pontos. O painel de kits mostra o kit para todos, com o cadeado "Só VIP" para quem não assina. O conteúdo é do Elizeu (seção 10).
+- **Kit VIP** exclusivo: só pode ser usado enquanto a pessoa assina. Entra em `Defs.Kits` com uma marca nova (`vipOnly = true`), sem preço em Robux nem em pontos. O painel de kits mostra o kit para todos, com o cadeado "Só VIP" para quem não assina. **Conteúdo** (o Elizeu deixou a meu critério): 20 bagas, 120 madeiras, 80 pedras, picareta de pedra, 1 fogueira grande e 8 paredes de madeira. Fica entre o Explorador e o Sobrevivente, ajuda a começar uma base e não traz arma nem armadura.
 - **1 revive grátis por vida** (seção 4.6).
 - No modo de hoje, sem cobrança, "assinar" grava no perfil uma data de fim (`Shop.VipUntil = agora + 30 dias`). Comprar de novo soma 30 dias. Quando a assinatura real entrar, a fonte passa a ser o Roblox (seção 9). A loja mostra "VIP ativo até DD/MM".
 - A assinatura em Robux existe no Roblox (mínimo de 49 por mês, com 70% para o criador; DevForum, "Let Your Players Pay for Subscriptions within Experiences in Robux"). Os 99 por mês cabem.
@@ -209,6 +209,10 @@ Até as artes chegarem, cada tela usa o desenho feito por código, como o resto 
 4. `Shop/Perks` passa a ler a assinatura (`GetUserSubscriptionStatusAsync` + `UserSubscriptionStatusChanged`) e as gamepasses.
 5. Conferir se as imagens enviadas na conta pessoal do Elizeu continuam aparecendo no jogo do grupo.
 
-## 10. Em aberto (do Elizeu)
+## 10. Junto, fora da monetização
 
-- O que vem no **Kit VIP**.
+- **Pergaminho da receita fixada** (asset 29): troca o fundo do `PinnedRecipe`. *Chamada minha:* entra **no fim** desta branch, porque o arquivo está sendo mexido na `ui-celular`.
+
+## 11. Ordem de trabalho
+
+O Elizeu cria as artes pela lista (`docs/game-design/assets-ui-monetizacao.md`), e a implementação começa quando elas chegarem.
