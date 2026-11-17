@@ -7,9 +7,17 @@
 --
 -- A morte: fim de vida da F4 (pontos → Golden Ember, estatísticas), guarda os
 -- pontos para comprar kit (KitPoints), zera o inventário e tira a mochila e a
--- armadura (no Starve a morte perde tudo), some com as peças construídas por
--- ele (StructureService.removeOwned), remove o personagem e manda ao jogador o resumo
--- (Net.LifeEnded) para a tela de morte. Quem renasce é o SpawnService, a pedido.
+-- armadura (no Starve a morte perde tudo), remove o personagem e manda ao
+-- jogador o resumo (Net.LifeEnded) para a tela de morte. Quem renasce é o
+-- SpawnService, a pedido. A parte "final" (finalize: some com as peças
+-- construídas por ele e conta o real_deaths) roda na hora, ou só quando o
+-- revive é recusado.
+--
+-- Revive (ReviveService, pelo gancho setReviveHook): depois do fantasma e
+-- antes dos ouvintes, o gancho decide se abre a oferta. Com o revive
+-- pendente, os ouvintes recebem pending = true (a caixa cai trancada), o fim
+-- de vida roda igual, mas as peças ficam de pé (o totem do time também) e o
+-- real_deaths espera: o ReviveService chama finalize se a resposta for "não".
 --
 -- Morte por jogador (G6): `killer` = quem deu o golpe final
 -- (CharacterService.hurt com attacker). Válido (no jogo e não é o próprio
@@ -26,16 +34,13 @@
 -- os personagens a cada FALL_CHECK_INTERVAL e mata quem está sem raiz ou
 -- abaixo de WorldConfig.KILL_Y (antes de o Roblox apagar a raiz).
 --
--- Futuro (spec F5, não-objetivos): revive por Robux — pagar para voltar com os
--- mesmos itens. Para caber, a morte poderia guardar o inventário da morte por
--- alguns segundos antes do reset; os pontos zeram e viram moeda normalmente.
--- As peças construídas ficam se o revive não chamar StructureService.removeOwned.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local CombatTag = require(ReplicatedStorage.Shared.Combat.CombatTag)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
+local ReviveRules = require(ReplicatedStorage.Shared.Survival.ReviveRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
@@ -44,6 +49,7 @@ local GhostService = require(script.Parent.GhostService)
 local InventoryService = require(script.Parent.InventoryService)
 local LastAttacker = require(script.Parent.LastAttacker)
 local LifeService = require(script.Parent.LifeService)
+local PerkService = require(script.Parent.PerkService)
 local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
 local ScoreService = require(script.Parent.ScoreService)
@@ -60,7 +66,13 @@ local MAX_KILLER_NAME = 64 -- bytes (KillerName: string(1..64))
 
 local DeathService = {}
 
-local deathListeners: { (Player, Model, Player?) -> () } = {}
+-- Oferta mostrada na tela de morte (Net.LifeEnded.Revive).
+export type ReviveOffer = { Robux: number, Free: boolean }
+-- Gancho do revive: true (e a oferta) = revive pendente. Não pode pausar.
+export type ReviveHook = (player: Player, character: Model, killer: Player?) -> (boolean, ReviveOffer?)
+
+local deathListeners: { (Player, Model, Player?, boolean) -> () } = {}
+local reviveHook: ReviveHook? = nil
 -- Mortes em andamento: um ouvinte de onDeath que pausa não abre espaço para
 -- uma segunda morte do mesmo personagem (caixa duplicada).
 local dying: { [Player]: boolean } = {}
@@ -108,16 +120,33 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	if GhostService.tryGhost(player, causeKey, killer) then
 		return
 	end
+	-- Morreu de verdade: se era fantasma (ex. caiu do mapa), deixa de ser já,
+	-- para o fantasma não seguir num personagem novo (revive).
+	GhostService.clear(player)
 	-- Quem matou: o killer direto ou o último que acertou em 10 s (CombatTag);
 	-- só vale se ainda está no jogo e não é o próprio morto.
 	local last, lastAt = LastAttacker.get(player)
 	local resolved: Player? = CombatTag.resolve(killer, last, lastAt, player, Workspace:GetServerTimeNow())
 	local validKiller = if resolved ~= nil and resolved.Parent == Players then resolved else nil
 
-	-- Ouvintes com o inventário, a mochila e a armadura ainda intactos.
+	-- Revive: o gancho (ReviveService) olha o inventário ainda intacto e decide
+	-- se abre a oferta. Protegido: um erro vira morte normal.
 	dying[player] = true
+	local pending, offer = false, nil :: ReviveOffer?
+	local hook = reviveHook
+	if hook ~= nil then
+		local ok, result, hookOffer = pcall(hook :: any, player, character, validKiller)
+		if ok then
+			pending = result == true
+			offer = if pending then hookOffer else nil
+		else
+			warn(`[DeathService] gancho do revive: {result}`)
+		end
+	end
+
+	-- Ouvintes com o inventário, a mochila e a armadura ainda intactos.
 	for _, listener in deathListeners do
-		local ok, err = pcall(listener :: any, player, character, validKiller)
+		local ok, err = pcall(listener :: any, player, character, validKiller, pending)
 		if not ok then
 			warn(`[DeathService] onDeath: {err}`)
 		end
@@ -143,16 +172,21 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		StatsService.add(validKiller, "players_killed", 1)
 		RankService.addKill(validKiller, "players", tostring(player.UserId))
 	end
+	-- Vantagens da vida que acabou (a foto, lida antes de o fim de vida acabar
+	-- com ela) para a tela de morte.
+	local emberBonus = ReviveRules.emberBonus(PerkService.forLife(player))
 	-- nil = sem vida ativa ou sem perfil: a tela de morte mostra zeros.
 	local summary = LifeService.endLife(player) or { points = 0, days = 0, currency = 0, xp = 0 }
-	-- Morte de verdade (sair do jogo não passa por aqui): o "Mortes" do Perfil.
-	StatsService.add(player, "real_deaths", 1)
+	-- Morte final na hora; com o revive pendente, só se ele recusar.
+	if not pending then
+		DeathService.finalize(player)
+	end
 
 	-- Pontos da vida que acabou ficam para comprar um kit antes de renascer.
 	player:SetAttribute(StatNames.KitPoints, summary.points)
+	-- Os itens estão na caixa (trancada, se pendente) e na foto do revive.
 	InventoryService.reset(player)
 	ArmorService.wear(player, nil)
-	StructureService.removeOwned(player)
 
 	-- Remove o personagem antes de avisar: o Humanoid.Died de um personagem
 	-- que já não é o atual é ignorado abaixo, então não conta duas vezes.
@@ -167,13 +201,29 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		Xp = clampInt(summary.xp, MAX_U32),
 		XpTotal = clampInt(StatsService.get(player, "xp_total"), MAX_U32),
 		KillerName = if validKiller then killerNameOf(validKiller) else nil,
+		Revive = if offer then { Robux = clampInt(offer.Robux, MAX_U16), Free = offer.Free } else nil,
+		EmberBonus = emberBonus,
 	})
 end
 
+-- A parte final da morte: as peças dele somem (o totem do time junto) e conta
+-- o "Mortes" do Perfil (real_deaths; sair do jogo não passa por aqui). Na
+-- morte sem revive roda dentro do kill; com revive pendente, quando o
+-- ReviveService recebe o "não" (recusa, tempo ou saída).
+function DeathService.finalize(player: Player)
+	StructureService.removeOwned(player)
+	StatsService.add(player, "real_deaths", 1)
+end
+
+-- O ReviveService registra o gancho no Init (este serviço não o conhece).
+function DeathService.setReviveHook(hook: ReviveHook)
+	reviveHook = hook
+end
+
 -- Chamado (sem pausa, protegido) em toda morte de jogador, antes de zerar o
--- inventário, com o personagem e quem deu o golpe final (nil se não foi outro
--- jogador ou se ele já saiu).
-function DeathService.onDeath(listener: (player: Player, character: Model, killer: Player?) -> ())
+-- inventário, com o personagem, quem deu o golpe final (nil se não foi outro
+-- jogador ou se ele já saiu) e se o revive ficou pendente.
+function DeathService.onDeath(listener: (player: Player, character: Model, killer: Player?, pending: boolean) -> ())
 	table.insert(deathListeners, listener)
 end
 

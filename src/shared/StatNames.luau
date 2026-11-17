@@ -182,6 +182,10 @@ return table.freeze({
 	-- Fantasma (GhostService): instante (relógio do servidor) em que o tempo de
 	-- fantasma acaba; nil = não é fantasma. Atributo no Player.
 	GhostUntil = "GhostUntil",
+	-- Proteção do revive (ReviveService): instante (relógio do servidor) em que
+	-- ela acaba; não leva dano e os mobs não o veem. Some antes se ele bater num
+	-- jogador ou mob (GatherService). Atributo no Player.
+	SpawnShieldUntil = "SpawnShieldUntil",
 	-- Time (TeamService): UserId do líder do time do jogador (nil = sem time),
 	-- atributo no Player. No modelo do totem: TeamLeader (UserId), TeamLocked e
 	-- TeamSize, para o cliente mostrar Entrar/Trancar.
@@ -246,6 +250,9 @@ return table.freeze({
 	-- como as peças, para a mesma barrinha aparecer; o conteúdo vai por evento
 	-- (Net.CrateContents), não por atributo.
 	CrateTag = "Crate",
+	-- true na caixa do morto com o revive pendente (CrateService.setLocked):
+	-- ninguém abre, saqueia nem quebra; o cliente mostra o cadeado. Atributo no modelo.
+	CrateLocked = "CrateLocked",
 
 	StatusMax = 100,
 	-- Teto da vida (as outras barras vão até StatusMax)

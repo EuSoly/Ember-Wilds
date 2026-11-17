@@ -34,6 +34,11 @@ local function giveKit(player: Player)
 	if player:GetAttribute(StatNames.TutorialPending) == true then
 		return
 	end
+	-- Revive (ReviveService): volta com os próprios itens, sem o kit por cima.
+	-- Se este aviso chegar antes da volta dos itens, o restore apaga o kit.
+	if player:GetAttribute(StatNames.SpawnShieldUntil) ~= nil then
+		return
+	end
 	InventoryService.equipBag(player, "leather_bag")
 	for _, item in KIT do
 		InventoryService.give(player, item.id, item.count)

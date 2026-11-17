@@ -133,6 +133,14 @@ local function clear(player: Player)
 	player:SetAttribute(StatNames.GhostUntil, nil)
 end
 
+-- Deixa de ser fantasma agora (DeathService.kill, na morte de verdade): o
+-- fantasma não segue para o personagem novo de um revive. Idempotente.
+function GhostService.clear(player: Player)
+	if ghosts[player] ~= nil or player:GetAttribute(StatNames.GhostUntil) ~= nil then
+		clear(player)
+	end
+end
+
 -- A pedra mais perto do jogador e a distância (studs) até a borda dela.
 local function nearestStone(position: Vector3): (StructureService.Entry?, number)
 	local best: StructureService.Entry? = nil

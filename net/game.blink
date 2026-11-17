@@ -156,6 +156,16 @@ event RequestReset {
 -- Xp = XP concedido de fato (após o teto por hora); XpTotal = XP total depois dele.
 -- KillerName = nome de quem deu o golpe final (morte por jogador, G6); a tela
 -- mostra o nome no lugar da causa.
+-- Revive = oferta de revive (ReviveService), nil = morte final sem oferta.
+-- Robux = preço do degrau; Free = grátis (VIP ou revive guardado). A resposta
+-- vai por RequestRevive e o fim da janela vem por ReviveClosed.
+-- EmberBonus = vantagens da vida que acabou (PerkService.forLife), em bits:
+-- 1 = 2×, 2 = VIP, 4 = Premium.
+struct ReviveOffer {
+	Robux: u16,
+	Free: boolean
+}
+
 event LifeEnded {
 	From: Server,
 	Type: Reliable,
@@ -167,7 +177,30 @@ event LifeEnded {
 		Currency: u32,
 		Xp: u32,
 		XpTotal: u32,
-		KillerName: string(1..64)?
+		KillerName: string(1..64)?,
+		Revive: ReviveOffer?,
+		EmberBonus: u8
+	}
+}
+
+-- Resposta à oferta de revive do LifeEnded (só a 1ª vale; ReviveService).
+event RequestRevive {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Accept: boolean
+	}
+}
+
+-- A janela do revive fechou: Revived = voltou (o personagem já nasceu com os
+-- itens); false = recusou, o tempo acabou ou o revive falhou (morte final).
+event ReviveClosed {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Revived: boolean
 	}
 }
 

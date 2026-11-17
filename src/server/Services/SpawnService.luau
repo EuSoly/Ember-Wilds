@@ -18,6 +18,10 @@
 -- iniciais e sem tutorial; o ponto é perto do totem do time (se de pé) ou um
 -- lugar ao acaso na floresta, longe da água, das áreas sem nascimento, das
 -- construções e dos outros jogadores vivos.
+--
+-- onSpawned: aviso depois de nascer (viaMenu = true no spawn pelo menu, false
+-- no spawnAt do revive). O ReviveService usa para zerar a contagem da corrida
+-- sem este serviço precisar dele (sem ciclo de require).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -57,6 +61,22 @@ local DROP_HEIGHT = 2
 local SpawnService = {}
 
 local spawning: { [Player]: boolean } = {}
+local spawnedListeners: { (Player, boolean) -> () } = {}
+
+-- Aviso depois de nascer: viaMenu = true no spawn (menu), false no spawnAt.
+function SpawnService.onSpawned(listener: (player: Player, viaMenu: boolean) -> ())
+	table.insert(spawnedListeners, listener)
+end
+
+-- Avisa os ouvintes, protegidos: um erro num ouvinte não impede o nascimento.
+local function notifySpawned(player: Player, viaMenu: boolean)
+	for _, listener in spawnedListeners do
+		local ok, err = pcall(listener :: any, player, viaMenu)
+		if not ok then
+			warn(`[SpawnService] onSpawned: {err}`)
+		end
+	end
+end
 
 local function isAlive(player: Player): boolean
 	local character = player.Character
@@ -217,6 +237,7 @@ function SpawnService.spawn(player: Player, kitId: string?, source: string?): bo
 	end
 	giveSpawnItems(player, given)
 	TutorialService.begin(player)
+	notifySpawned(player, true)
 	return true
 end
 
@@ -241,6 +262,7 @@ function SpawnService.spawnAt(player: Player, position: Vector3): boolean
 			else 3
 		character:PivotTo(CFrame.new(position + Vector3.new(0, rootHeight + DROP_HEIGHT, 0)))
 	end
+	notifySpawned(player, false)
 	return true
 end
 

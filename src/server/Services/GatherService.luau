@@ -276,6 +276,10 @@ local function hit(player: Player, character: Model, root: BasePart)
 		CrateService.hit(target.crate, player, tool)
 		return
 	end
+	-- Bater em mob ou jogador acaba com a proteção do revive na hora.
+	if (target.mob or target.character) and player:GetAttribute(StatNames.SpawnShieldUntil) ~= nil then
+		player:SetAttribute(StatNames.SpawnShieldUntil, nil)
+	end
 	if target.mob then
 		MobService.hit(target.mob, player, tool)
 		return

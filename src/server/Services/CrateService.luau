@@ -10,6 +10,10 @@
 --   viram a caixa, no lugar da morte. Skin = CrateRules.skinFor(skin de caixa
 --   de quem matou, a do morto). Sem item nenhum: sem caixa. Só copia: quem zera
 --   o inventário, a mochila e a armadura é o DeathService, logo depois.
+--   Revive pendente (pending): a caixa cai TRANCADA (setLocked, atributo
+--   CrateLocked): ninguém olha, pega nem quebra, e o tempo de vida não corre.
+--   O ReviveService a acha por lastPlayerCrate e, na resposta, destranca
+--   ("não") ou a tira do mundo (removeModel: os itens voltam da foto).
 -- - Mob morto (MobService.onDeath): caixa com o loot dos dados, na skin de caixa
 --   de quem matou (sem matador: a caixa padrão). Antes de 11/11 o modelo era o
 --   id do mob, que não existe em Assets.Crates e caía na caixa provisória.
@@ -80,6 +84,7 @@ export type Entry = {
 	slots: { Item }, -- em ordem, sem buracos (nunca vazia enquanto viva)
 	expiresAt: number, -- os.clock() em que some sozinha
 	dropOwner: Player?, -- caixa de item largado: quem largou (junta as próximas)
+	locked: boolean?, -- revive pendente: ninguém abre, pega nem quebra
 }
 
 type RateState = { start: number, count: number }
@@ -95,6 +100,8 @@ local watching: { [Player]: Entry } = {}
 local takeRates: { [Player]: RateState } = {}
 local watchRates: { [Player]: RateState } = {}
 local dropRates: { [Player]: RateState } = {}
+-- A caixa da última morte de cada jogador (para o revive).
+local lastCrates: { [Player]: Entry } = {}
 local folder: Folder? = nil
 
 local function getFolder(): Folder
@@ -279,6 +286,11 @@ function CrateService.spawn(
 			return
 		end
 		local left = entry.expiresAt - os.clock()
+		-- Trancada (revive pendente): espera a resposta, que vem em até
+		-- DECISION_SECONDS + PURCHASE_PAUSE_MAX, antes de poder sumir.
+		if entry.locked then
+			left = math.max(left, 1)
+		end
 		if left > 0 then
 			task.delay(left, expire)
 		else
@@ -307,7 +319,8 @@ end
 -- Golpe numa caixa. `item` = o que está na mão de quem bateu (nil = mão).
 -- Vida 0: some com tudo dentro.
 function CrateService.hit(entry: Entry, _attacker: Player, item: Defs.ItemDef?)
-	if not alive[entry] then
+	-- Trancada (revive pendente): não leva dano.
+	if not alive[entry] or entry.locked then
 		return
 	end
 	entry.health = math.max(entry.health - BuildRules.damageOf(item), 0)
@@ -330,7 +343,8 @@ local function crateInReach(player: Player, crate: Instance?, range: number): En
 	-- byModel só tem caixas vivas (um modelo forjado ou já removido não está lá).
 	local entry = byModel[crate :: any]
 	local root = rootOf(player)
-	if entry == nil or root == nil then
+	-- Trancada (revive pendente): ninguém olha nem pega.
+	if entry == nil or entry.locked or root == nil then
 		return nil
 	end
 	local dx, dz = root.Position.X - entry.x, root.Position.Z - entry.z
@@ -480,8 +494,48 @@ local function belongingsOf(player: Player): { Item }
 	return items
 end
 
+-- A caixa da última morte do jogador, se ainda está no mundo (o revive
+-- tranca, destranca ou tira esta). nil = a morte não deixou caixa.
+function CrateService.lastPlayerCrate(player: Player): Model?
+	local entry = lastCrates[player]
+	return if entry ~= nil and alive[entry] then entry.model else nil
+end
+
+-- Tranca (revive pendente) ou destranca a caixa deste modelo. Trancar tira
+-- quem estava olhando (o painel fecha no cliente quando o conteúdo some).
+function CrateService.setLocked(model: Model, locked: boolean)
+	local entry = byModel[model]
+	if entry == nil then
+		return
+	end
+	entry.locked = if locked then true else nil
+	model:SetAttribute(StatNames.CrateLocked, if locked then true else nil)
+	if locked then
+		local set = watchers[entry]
+		if set then
+			for player in set do
+				if watching[player] == entry then
+					watching[player] = nil
+				end
+			end
+			watchers[entry] = nil
+		end
+	end
+end
+
+-- Tira a caixa deste modelo do mundo, com os itens (o revive devolve os
+-- itens pela foto do inventário). Idempotente.
+function CrateService.removeModel(model: Model)
+	local entry = byModel[model]
+	if entry ~= nil then
+		remove(entry)
+	end
+end
+
 -- Ouvinte do DeathService: sem pausa (a morte espera os ouvintes).
-local function onPlayerDeath(player: Player, character: Model, killer: Player?)
+-- pending = revive pendente: a caixa já nasce trancada.
+local function onPlayerDeath(player: Player, character: Model, killer: Player?, pending: boolean)
+	lastCrates[player] = nil
 	-- Modo criativo: os itens somem com ele (não viram caixa para os outros).
 	if not CreativeRules.sharesItems(CreativeService.isOn(player)) then
 		return
@@ -495,7 +549,16 @@ local function onPlayerDeath(player: Player, character: Model, killer: Player?)
 	local position = if root and root:IsA("BasePart") then root.Position else character:GetPivot().Position
 	local killerSkin = if killer and killer.Parent == Players then CosmeticService.equipped(killer, CRATE_SLOT) else nil
 	local skin = CrateRules.skinFor(killerSkin, CosmeticService.equipped(player, CRATE_SLOT))
-	CrateService.spawn(position.X, position.Z, items, skin, CrateRules.PLAYER_LIFETIME)
+	local model = CrateService.spawn(position.X, position.Z, items, skin, CrateRules.PLAYER_LIFETIME)
+	local entry = model and byModel[model]
+	if entry == nil then
+		return
+	end
+	-- Sem pausa entre criar e trancar: ninguém alcança a caixa destrancada.
+	if pending then
+		CrateService.setLocked(entry.model, true)
+	end
+	lastCrates[player] = entry
 end
 
 local function onMobDeath(mob: MobService.Mob, killer: Player?)
@@ -555,6 +618,11 @@ function CrateService.Start(_self)
 				entry.dropOwner = nil
 			end
 		end
+		-- Depois dos outros ouvintes da saída: o ReviveService ainda destranca
+		-- a caixa desta morte (saída = "não").
+		task.defer(function()
+			lastCrates[player] = nil
+		end)
 	end)
 	if RunService:IsStudio() then
 		setupDev()

@@ -39,6 +39,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
+local ReviveRules = require(ReplicatedStorage.Shared.Survival.ReviveRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local TaggedCircles = require(ReplicatedStorage.Shared.Build.TaggedCircles)
 local DayCycle = require(ReplicatedStorage.Shared.DayCycle)
@@ -206,8 +207,14 @@ local function livingBodies(): { MobBrain.Seen }
 	for _, player in Players:GetPlayers() do
 		local character = player.Character
 		local root = rootOf(character)
-		-- Fantasma: mob não vê (GhostService).
-		if character and root and not GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then
+		-- Fantasma (GhostService) e proteção do revive (ReviveService): mob não vê.
+		local now = Workspace:GetServerTimeNow()
+		if
+			character
+			and root
+			and not GhostRules.isGhostPlayer(player, now)
+			and not ReviveRules.shielded(player:GetAttribute(StatNames.SpawnShieldUntil), now)
+		then
 			table.insert(bodies, {
 				who = character,
 				x = root.Position.X,

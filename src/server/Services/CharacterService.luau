@@ -16,6 +16,7 @@ local StarterPlayer = game:GetService("StarterPlayer")
 local Workspace = game:GetService("Workspace")
 
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
+local ReviveRules = require(ReplicatedStorage.Shared.Survival.ReviveRules)
 local ArmorRules = require(ReplicatedStorage.Shared.Survival.ArmorRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local TeamRules = require(ReplicatedStorage.Shared.Build.TeamRules)
@@ -80,6 +81,12 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	end
 	-- Tutorial: nada machuca o jogador protegido (jogador, bicho, espinho, fome...).
 	if player and TutorialService.isProtected(player) then
+		return
+	end
+	-- Proteção do revive (ReviveService): 3 s sem dano nenhum.
+	if
+		player and ReviveRules.shielded(player:GetAttribute(StatNames.SpawnShieldUntil), Workspace:GetServerTimeNow())
+	then
 		return
 	end
 	-- Acertou um jogador de verdade (não fantasma nem protegido): conta para a

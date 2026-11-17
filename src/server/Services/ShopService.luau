@@ -138,6 +138,23 @@ function ShopService.charge(player: Player, price: Price, reason: string): boole
 	return CurrencyService.spend(player, price.amount, reason)
 end
 
+-- Revives guardados no perfil (ShopData.ReviveCredits); 0 sem perfil.
+function ShopService.reviveCredits(player: Player): number
+	local d = shopOf(player)
+	return if d then d.ReviveCredits else 0
+end
+
+-- Gasta 1 revive guardado (ReviveService) e salva. false se não há.
+function ShopService.useReviveCredit(player: Player): boolean
+	local d = shopOf(player)
+	if d == nil or not (d.ReviveCredits >= 1) then
+		return false
+	end
+	d.ReviveCredits -= 1
+	DataService.save(player)
+	return true
+end
+
 -- Como cada tipo de recompensa é entregue (tipo novo = uma entrada aqui, além
 -- do validate em Shop/Rewards e do card em Menu/Shop/RewardView).
 local GRANTS: { [string]: (player: Player, d: ShopData.ShopData, reward: Reward, reason: string) -> () } = {
