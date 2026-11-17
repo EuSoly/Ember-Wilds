@@ -77,6 +77,30 @@ Os ícones de hoje (morango, picareta, mochila, medalha) são genéricos. A idei
 
 As ideias são sugestões: pode mudar o recipiente ou os itens, desde que a família continue (mesmo enquadramento, mesmo ângulo, recipiente que sobe de nível). O bom ter são os kits de conquista, que só aparecem para quem já tem.
 
+## 5. Fundos em camadas, para animar (pedido junto, 17/11)
+
+Os efeitos dos fundos vêm **separados** para animar por código: os raios giram devagar, o brilho pulsa e as faíscas sobem e somem. **Os efeitos vêm em branco**, e eu tinjo por código (`ImageColor3`), então um jogo só de efeitos serve para todas as cores: tier do kit, VIP, raridade.
+
+**Efeitos comuns (um jogo só, branco):**
+
+| # | Camada | Como fazer | Tamanho |
+|---|---|---|---|
+| 37 | **Raios de luz** | raios saindo do **centro exato**, sumindo antes da borda (nada pode encostar na borda, senão os cantos aparecem quando girar) | 1024×1024 |
+| 38 | **Brilho (halo)** | mancha redonda, mais forte no meio e sumindo suave até a borda | 1024×1024 |
+| 39 | **Faíscas** | 4 desenhos soltos: estrela de 4 pontas, ponto redondo, cruz fina e brasinha | 128×128 cada |
+
+**Por peça, o que muda (base e moldura separadas dos efeitos):**
+
+| # | Peça | Camadas | Observação |
+|---|---|---|---|
+| 40 | **Cartão do VIP** (substitui a peça 2) | base (papel/madeira com a cor do VIP) + moldura por cima | os efeitos ficam entre a base e a moldura |
+| 41 | **Cartões da loja** (os 5 de hoje: vermelho, roxo, verde, azul, laranja) | base **neutra** + moldura | com a base neutra tingida e os raios separados, os 5 viram 1 só |
+| 42 | **Ícones dos kits** (30–36) | **só o kit, sem o brilho de fundo** | o brilho do tier vem das camadas 37/38 tingidas |
+| 43 | **Cartão do dia 7** do check-in | base + moldura | raios e faíscas por código |
+| 44 | **Cartão Premium** | base + moldura | bom ter |
+
+**Regra de encaixe:** a base e a moldura de uma mesma peça vêm **do mesmo tamanho e alinhadas** (empilhadas, uma por cima da outra, se encaixam perfeito). A moldura tem o centro **vazio** (transparente).
+
 ## Já temos e vou reaproveitar
 
 Moeda Golden Ember e pilhas de moedas, botões verde e laranja, fita, fundos dos cartões da loja, fundos das raridades, cadeado do HUD, moldura e bolinha das missões, símbolo do Robux e o ícone de giro especial.
