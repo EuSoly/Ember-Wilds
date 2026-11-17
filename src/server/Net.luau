@@ -366,8 +366,8 @@ function SerdesFunctions.ReadEVENT_RequestReset(): (nil)
 end
 
 function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? }): ()
-	-- Allocate BLOCK: 19 bytes
-	local BLOCK_START = Allocate(19)
+	-- Allocate BLOCK: 21 bytes
+	local BLOCK_START = Allocate(21)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 14)
 	local Length = #Value.CauseKey
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
@@ -375,10 +375,10 @@ function SerdesFunctions.WriteEVENT_LifeEnded(Value: { CauseKey: string, Days: n
 	buffer.writestring(SendBuffer, SendOffset, Value.CauseKey, Length)
 	buffer.writeu16(SendBuffer, BLOCK_START + 2, Value.Days)
 	buffer.writeu32(SendBuffer, BLOCK_START + 4, Value.Points)
-	buffer.writeu16(SendBuffer, BLOCK_START + 8, Value.Currency)
-	buffer.writeu32(SendBuffer, BLOCK_START + 10, Value.Xp)
-	buffer.writeu32(SendBuffer, BLOCK_START + 14, Value.XpTotal)
-	buffer.writeu8(SendBuffer, BLOCK_START + 18, Value.KillerName ~= nil and 1 or 0)
+	buffer.writeu32(SendBuffer, BLOCK_START + 8, Value.Currency)
+	buffer.writeu32(SendBuffer, BLOCK_START + 12, Value.Xp)
+	buffer.writeu32(SendBuffer, BLOCK_START + 16, Value.XpTotal)
+	buffer.writeu8(SendBuffer, BLOCK_START + 20, Value.KillerName ~= nil and 1 or 0)
 	if Value.KillerName ~= nil then
 		-- Allocate BLOCK: 1 bytes
 		local BLOCK_START = Allocate(1)

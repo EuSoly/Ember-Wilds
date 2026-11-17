@@ -163,7 +163,7 @@ event LifeEnded {
 		CauseKey: string(1..48),
 		Days: u16,
 		Points: u32,
-		Currency: u16,
+		Currency: u32,
 		Xp: u32,
 		XpTotal: u32,
 		KillerName: string(1..64)?

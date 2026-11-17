@@ -17,33 +17,31 @@ local function isValidAmount(amount: any): boolean
 	return type(amount) == "number" and isFinite(amount) and amount >= 0 and amount % 1 == 0
 end
 
--- Pontos de uma vida → moeda, já com o teto por vida.
-function CurrencyRules.pointsToCurrency(points: number): number
+-- Pontos de uma vida → moeda: floor(pontos / 1000 × multiplicador), sem teto.
+-- Multiplicador inválido ou menor que 1 conta como 1.
+function CurrencyRules.pointsToCurrency(points: number, multiplier: number): number
 	if type(points) ~= "number" or not isFinite(points) or points <= 0 then
 		return 0
 	end
-	local amount = math.floor(points / DataConfig.POINTS_PER_CURRENCY)
-	return math.min(amount, DataConfig.MAX_CURRENCY_PER_LIFE)
+	local factor = multiplier
+	if type(factor) ~= "number" or not isFinite(factor) or factor < 1 then
+		factor = 1
+	end
+	return math.floor(points / DataConfig.POINTS_PER_CURRENCY * factor)
 end
 
--- Ganho vindo do jogo: aplica o teto por hora e soma no saldo.
--- Devolve quanto foi concedido de fato (0 se inválido ou teto atingido).
-function CurrencyRules.earn(data: CurrencyData, amount: number, now: number): number
+-- Ganho vindo do jogo: soma tudo no saldo, sem teto.
+-- Devolve quanto foi concedido (0 se inválido). HourWindowStart/HourEarned
+-- ficam no tipo e no perfil sem uso (sem migração).
+function CurrencyRules.earn(data: CurrencyData, amount: number, _now: number): number
 	if not isValidAmount(amount) or amount == 0 then
 		return 0
 	end
-	-- Janela fixa: começa no primeiro ganho e zera HOUR_SECONDS depois.
-	if data.HourWindowStart == 0 or now - data.HourWindowStart >= DataConfig.HOUR_SECONDS then
-		data.HourWindowStart = now
-		data.HourEarned = 0
-	end
-	local granted = math.max(math.min(amount, DataConfig.MAX_CURRENCY_PER_HOUR - data.HourEarned), 0)
-	data.HourEarned += granted
-	data.Balance += granted
-	return granted
+	data.Balance += amount
+	return amount
 end
 
--- Sem tetos (compras com Robux, comandos de dev).
+-- Compras com Robux, comandos de dev.
 function CurrencyRules.grant(data: CurrencyData, amount: number): boolean
 	if not isValidAmount(amount) then
 		return false

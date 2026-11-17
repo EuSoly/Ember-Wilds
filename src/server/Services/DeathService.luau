@@ -157,7 +157,7 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		CauseKey = causeKey,
 		Days = clampInt(summary.days, MAX_U16),
 		Points = clampInt(summary.points, MAX_U32),
-		Currency = clampInt(summary.currency, MAX_U16),
+		Currency = clampInt(summary.currency, MAX_U32),
 		Xp = clampInt(summary.xp, MAX_U32),
 		XpTotal = clampInt(StatsService.get(player, "xp_total"), MAX_U32),
 		KillerName = if validKiller then killerNameOf(validKiller) else nil,

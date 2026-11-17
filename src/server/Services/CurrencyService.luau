@@ -1,6 +1,6 @@
 --!strict
 -- Golden Ember (moeda salva no perfil). Função única para TODA mudança de saldo:
--- ninguém mexe em data.Currency direto. As regras (tetos, validação) ficam em
+-- ninguém mexe em data.Currency direto. As regras (validação) ficam em
 -- Shared/Data/CurrencyRules; aqui só aplica no perfil e publica o saldo no
 -- atributo Currency do Player (a HUD/loja da F5 lê dali).
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -37,7 +37,7 @@ function CurrencyService.balance(player: Player): number
 	return if currency then currency.Balance else 0
 end
 
--- Ganho vindo do jogo (fim de vida, prêmios de gameplay): com teto por hora.
+-- Ganho vindo do jogo (fim de vida, prêmios de gameplay): sem teto.
 -- Devolve quanto foi concedido de fato.
 function CurrencyService.earnFromGameplay(player: Player, amount: number, reason: string): number
 	local currency = currencyOf(player)
@@ -50,7 +50,7 @@ function CurrencyService.earnFromGameplay(player: Player, amount: number, reason
 	return granted
 end
 
--- Sem tetos: compras com Robux e comandos de dev.
+-- Compras com Robux e comandos de dev.
 function CurrencyService.grant(player: Player, amount: number, reason: string): boolean
 	local currency = currencyOf(player)
 	if currency == nil or not CurrencyRules.grant(currency, amount) then

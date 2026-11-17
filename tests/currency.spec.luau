@@ -6,29 +6,39 @@ local function emptyData(): CurrencyRules.CurrencyData
 end
 
 return {
-	["points convert with the per-life cap"] = function()
-		assert(CurrencyRules.pointsToCurrency(12345) == 12, `12345 → {CurrencyRules.pointsToCurrency(12345)}`)
-		assert(CurrencyRules.pointsToCurrency(800000) == 500, `800000 → {CurrencyRules.pointsToCurrency(800000)}`)
-		assert(CurrencyRules.pointsToCurrency(999) == 0, "999 pontos não dão moeda")
+	["points convert without per-life cap"] = function()
+		assert(CurrencyRules.pointsToCurrency(9_000_000, 1) == 9000, "sem teto por vida")
+		assert(CurrencyRules.pointsToCurrency(12345, 1) == 12, "12345 → 12")
+		assert(CurrencyRules.pointsToCurrency(999, 1) == 0, "999 pontos não dão moeda")
+	end,
+
+	["multiplier is applied before flooring"] = function()
+		assert(CurrencyRules.pointsToCurrency(1500, 2.7) == 4, "1,5 × 2,7 = 4,05")
+		assert(CurrencyRules.pointsToCurrency(999, 2.7) == 2, "0,999 × 2,7 = 2,69")
+	end,
+
+	["bad multiplier counts as 1"] = function()
+		assert(CurrencyRules.pointsToCurrency(5000, 0 / 0) == 5, "NaN")
+		assert(CurrencyRules.pointsToCurrency(5000, -3) == 5, "negativo")
+	end,
+
+	["bad points give zero"] = function()
+		assert(CurrencyRules.pointsToCurrency(0 / 0, 2) == 0, "NaN")
+		assert(CurrencyRules.pointsToCurrency(-10, 2) == 0, "negativo")
 	end,
 
 	["strange points never give currency"] = function()
-		assert(CurrencyRules.pointsToCurrency(-5) == 0, "negativo")
-		assert(CurrencyRules.pointsToCurrency(0 / 0) == 0, "NaN")
-		assert(CurrencyRules.pointsToCurrency(math.huge) == 0, "infinito")
-		assert(CurrencyRules.pointsToCurrency(-math.huge) == 0, "menos infinito")
+		assert(CurrencyRules.pointsToCurrency(-5, 1) == 0, "negativo")
+		assert(CurrencyRules.pointsToCurrency(0 / 0, 1) == 0, "NaN")
+		assert(CurrencyRules.pointsToCurrency(math.huge, 1) == 0, "infinito")
+		assert(CurrencyRules.pointsToCurrency(-math.huge, 1) == 0, "menos infinito")
 	end,
 
-	["earn respects the hourly cap and window"] = function()
+	["earn has no hourly cap"] = function()
 		local d = emptyData()
-		assert(CurrencyRules.earn(d, 500, 1000) == 300, "primeiro ganho limitado a 300")
-		assert(d.Balance == 300, `saldo {d.Balance}`)
-		assert(d.HourWindowStart == 1000, `janela começou em {d.HourWindowStart}`)
-		assert(CurrencyRules.earn(d, 10, 1500) == 0, "teto da hora já atingido")
-		assert(d.Balance == 300, "saldo não muda sem ganho")
-		assert(CurrencyRules.earn(d, 10, 1000 + 3600) == 10, "janela nova depois de 1 h")
-		assert(d.Balance == 310, `saldo {d.Balance}`)
-		assert(d.HourEarned == 10, `ganho da hora {d.HourEarned}`)
+		assert(CurrencyRules.earn(d, 10_000, 1000) == 10_000, "primeiro ganho inteiro")
+		assert(CurrencyRules.earn(d, 10_000, 1000) == 10_000, "segundo no mesmo instante")
+		assert(d.Balance == 20_000, `saldo {d.Balance}`)
 	end,
 
 	["earn ignores invalid amounts"] = function()
@@ -52,11 +62,10 @@ return {
 		assert(d.Balance == 30, "saldo igual depois de gastos inválidos")
 	end,
 
-	["grant ignores the hourly cap"] = function()
+	["grant adds to the balance"] = function()
 		local d = emptyData()
 		assert(CurrencyRules.grant(d, 1000) == true, "grant válido")
 		assert(d.Balance == 1000, `saldo {d.Balance}`)
-		assert(d.HourEarned == 0, "grant não conta no teto por hora")
 		assert(CurrencyRules.grant(d, -1) == false, "grant negativo falha")
 		assert(CurrencyRules.grant(d, 0 / 0) == false, "grant NaN falha")
 		assert(d.Balance == 1000, "saldo igual depois de grants inválidos")

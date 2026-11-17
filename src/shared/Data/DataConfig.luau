@@ -15,11 +15,8 @@ return table.freeze({
 	-- Pedidos no meio da espera viram um único save no fim dela (limites do DataStore).
 	MIN_SAVE_INTERVAL = 8,
 
-	-- Golden Ember: floor(pontos / POINTS_PER_CURRENCY), no máximo por vida e por hora.
+	-- Golden Ember: floor(pontos / POINTS_PER_CURRENCY × multiplicador), sem teto.
 	POINTS_PER_CURRENCY = 1000,
-	MAX_CURRENCY_PER_LIFE = 500,
-	-- Rede de segurança contra bugs/exploits; só vale para ganhos do jogo.
-	MAX_CURRENCY_PER_HOUR = 300,
 	HOUR_SECONDS = 3600,
 
 	-- Nível (LevelRules): subir do nível n para n+1 pede XP_STEP × n de XP.

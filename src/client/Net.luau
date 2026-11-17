@@ -364,8 +364,8 @@ function SerdesFunctions.WriteEVENT_RequestReset(Value: nil): ()
 end
 
 function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: number, Points: number, Currency: number, Xp: number, XpTotal: number, KillerName: string? })
-	-- Read BLOCK: 18 bytes
-	local BLOCK_START = Read(18)
+	-- Read BLOCK: 20 bytes
+	local BLOCK_START = Read(20)
 	local Value = {} :: any
 	local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	Value.CauseKey = buffer.readstring(RecieveBuffer, Read(Length), Length)
@@ -373,10 +373,10 @@ function SerdesFunctions.ReadEVENT_LifeEnded(): ({ CauseKey: string, Days: numbe
 	if #Value.CauseKey > 48 then error(`Expected length of "Value.CauseKey" to be smaller than or equal to  48, got {#Value.CauseKey} instead.`) end
 	Value.Days = buffer.readu16(RecieveBuffer, BLOCK_START + 1)
 	Value.Points = buffer.readu32(RecieveBuffer, BLOCK_START + 3)
-	Value.Currency = buffer.readu16(RecieveBuffer, BLOCK_START + 7)
-	Value.Xp = buffer.readu32(RecieveBuffer, BLOCK_START + 9)
-	Value.XpTotal = buffer.readu32(RecieveBuffer, BLOCK_START + 13)
-	if buffer.readu8(RecieveBuffer, BLOCK_START + 17) == 1 then
+	Value.Currency = buffer.readu32(RecieveBuffer, BLOCK_START + 7)
+	Value.Xp = buffer.readu32(RecieveBuffer, BLOCK_START + 11)
+	Value.XpTotal = buffer.readu32(RecieveBuffer, BLOCK_START + 15)
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 19) == 1 then
 		-- Read BLOCK: 1 bytes
 		local BLOCK_START = Read(1)
 		Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)

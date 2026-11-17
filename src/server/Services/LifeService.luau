@@ -92,7 +92,7 @@ function LifeService.endLife(player: Player): LifeSummary?
 	end
 	local score = readScore(player)
 	local days = LifeRules.daysSurvived(seconds)
-	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score), "life_end")
+	local granted = CurrencyService.earnFromGameplay(player, CurrencyRules.pointsToCurrency(score, 1), "life_end")
 	if score > 0 then
 		StatsService.add(player, "score_total", score)
 	end
