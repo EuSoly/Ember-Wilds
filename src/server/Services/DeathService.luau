@@ -32,7 +32,9 @@
 -- As peças construídas ficam se o revive não chamar StructureService.removeOwned.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
+local CombatTag = require(ReplicatedStorage.Shared.Combat.CombatTag)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
@@ -40,6 +42,7 @@ local ArmorService = require(script.Parent.ArmorService)
 local CreativeService = require(script.Parent.CreativeService)
 local GhostService = require(script.Parent.GhostService)
 local InventoryService = require(script.Parent.InventoryService)
+local LastAttacker = require(script.Parent.LastAttacker)
 local LifeService = require(script.Parent.LifeService)
 local RankService = require(script.Parent.RankService)
 local StatsService = require(script.Parent.StatsService)
@@ -105,8 +108,11 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 	if GhostService.tryGhost(player, causeKey, killer) then
 		return
 	end
-	-- Quem matou só vale se ainda está no jogo e não é o próprio morto.
-	local validKiller = if killer ~= nil and killer ~= player and killer.Parent == Players then killer else nil
+	-- Quem matou: o killer direto ou o último que acertou em 10 s (CombatTag);
+	-- só vale se ainda está no jogo e não é o próprio morto.
+	local last, lastAt = LastAttacker.get(player)
+	local resolved: Player? = CombatTag.resolve(killer, last, lastAt, player, Workspace:GetServerTimeNow())
+	local validKiller = if resolved ~= nil and resolved.Parent == Players then resolved else nil
 
 	-- Ouvintes com o inventário, a mochila e a armadura ainda intactos.
 	dying[player] = true

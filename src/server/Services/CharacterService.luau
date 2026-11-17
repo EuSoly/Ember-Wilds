@@ -25,6 +25,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local SurvivalConfig = require(ReplicatedStorage.Shared.SurvivalConfig)
 local ArmorService = require(script.Parent.ArmorService)
 local DeathService = require(script.Parent.DeathService)
+local LastAttacker = require(script.Parent.LastAttacker)
 local TutorialService = require(script.Parent.TutorialService)
 
 local CharacterService = {}
@@ -88,6 +89,12 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 			task.spawn(listener, attacker, player)
 		end
 	end
+	-- Último jogador que acertou a vítima (vale 10 s para quem matou, CombatTag):
+	-- queda, afogamento etc. no meio da luta dão o abate a quem bateu. Colega de
+	-- time também conta.
+	if player and kind == "player" and attacker and attacker ~= player then
+		LastAttacker.record(player, attacker, Workspace:GetServerTimeNow())
+	end
 	-- Colega de time tira só 30% (Starve; TeamService resolve os aliados).
 	if player and kind == "player" and attacker and attacker ~= player then
 		if BuildRules.areAllies(attacker.UserId, player.UserId) then
@@ -128,6 +135,11 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	end
 end
 
+-- Último atacante jogador da vítima e a hora (GetServerTimeNow) do golpe.
+function CharacterService.lastAttacker(player: Player): (Player?, number?)
+	return LastAttacker.get(player)
+end
+
 local function setupCharacter(character: Model)
 	local humanoid = character:WaitForChild("Humanoid") :: Humanoid
 	CharacterService.prepare(character)
@@ -137,7 +149,11 @@ local function setupCharacter(character: Model)
 end
 
 local function setupPlayer(player: Player)
-	player.CharacterAdded:Connect(setupCharacter)
+	player.CharacterAdded:Connect(function(character)
+		-- Personagem novo: o golpe do anterior não vale mais.
+		LastAttacker.clear(player)
+		setupCharacter(character)
+	end)
 	if player.Character then
 		task.spawn(setupCharacter, player.Character)
 	end
@@ -162,6 +178,7 @@ end
 
 function CharacterService.Start(_self)
 	Players.PlayerAdded:Connect(setupPlayer)
+	Players.PlayerRemoving:Connect(LastAttacker.clear)
 	-- Jogadores que entraram antes deste Start (ex.: no Play Solo do Studio).
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)
