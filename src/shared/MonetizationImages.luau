@@ -158,6 +158,30 @@ MonetizationImages.PREMIUM_LAYERS = {
 MonetizationImages.PREMIUM_LAYERS_SIZE = Vector2.new(1024, 400)
 MonetizationImages.PREMIUM_LAYERS_SLICE = Rect.new(64, 64, 960, 336)
 
+-- 30–36. Ícones dos kits (512x512, transparentes, sem brilho), por id do kit
+-- (Defs/Kits). Substituem os ícones antigos da loja (morango, picareta, mochila,
+-- medalha). Usados no cartão do kit na loja e na linha do painel de kits.
+MonetizationImages.KIT = {
+	kit_starter = "rbxassetid://80600118054893",
+	kit_explorer = "rbxassetid://102277036344773",
+	kit_survivor = "rbxassetid://71963070860118",
+	kit_veteran = "rbxassetid://127447740117120",
+	kit_vip = "rbxassetid://88509306404011",
+	kit_hunter = "rbxassetid://81698575484406",
+	kit_guardian = "rbxassetid://88131510037634",
+} :: { [string]: string }
+
+-- Brilho do tier atrás do ícone do kit (raios 37 + halo 38 tingidos).
+MonetizationImages.KIT_GLOW = {
+	kit_starter = Color3.fromHex("#D9B27C"), -- madeira clara
+	kit_explorer = Color3.fromHex("#A9B0B8"), -- cinza-pedra
+	kit_survivor = Color3.fromHex("#F08A3C"), -- laranja-brasa
+	kit_veteran = Color3.fromHex("#F5C542"), -- dourado
+	kit_vip = Color3.fromHex("#FFC66B"), -- dourado-brasa do VIP
+	kit_hunter = Color3.fromHex("#B5523B"), -- vermelho-terra
+	kit_guardian = Color3.fromHex("#4C7BD9"), -- azul-real
+} :: { [string]: Color3 }
+
 function MonetizationImages.has(id: string?): boolean
 	return id ~= nil and id ~= ""
 end

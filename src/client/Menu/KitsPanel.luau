@@ -15,6 +15,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local KitRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("KitRules"))
+local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -37,6 +38,8 @@ local POINTS_ROW = 24
 local ROW_HEIGHT = 130
 local ROW_GAP = 8
 local ICON = 52
+local GLOW_SHARE = 1.3 -- halo do tier atrás do ícone do kit, em lados do ícone
+local GLOW_TRANSPARENCY = 0.3
 local BUTTONS_HEIGHT = 48
 local BUTTON_GAP = 6
 local SELECTED_STROKE = 3
@@ -295,11 +298,42 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		Size = UDim2.fromOffset(ICON, ICON),
 		BackgroundTransparency = 1,
 	}) :: Frame
-	ItemIcon({
-		item = function()
-			return { id = iconItem(kit), count = 1 }
-		end,
-	}).Parent = icon
+	-- Ícone do kit (30–36) com o halo do tier parado atrás (barato: sem
+	-- animação); sem a arte, o item do kit em 3D, como antes.
+	local art = MonetizationImages.KIT[kit.id]
+	if MonetizationImages.has(art) then
+		local glow = MonetizationImages.KIT_GLOW[kit.id]
+		if glow and MonetizationImages.has(MonetizationImages.HALO) then
+			create("ImageLabel")({
+				Name = "Glow",
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(GLOW_SHARE, GLOW_SHARE),
+				BackgroundTransparency = 1,
+				Image = MonetizationImages.HALO,
+				ImageColor3 = glow,
+				ImageTransparency = GLOW_TRANSPARENCY,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 1,
+				Parent = icon,
+			})
+		end
+		create("ImageLabel")({
+			Name = "Art",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Image = art,
+			ScaleType = Enum.ScaleType.Fit,
+			ZIndex = 2,
+			Parent = icon,
+		})
+	else
+		ItemIcon({
+			item = function()
+				return { id = iconItem(kit), count = 1 }
+			end,
+		}).Parent = icon
+	end
 
 	return create("Frame")({
 		Name = kit.id,

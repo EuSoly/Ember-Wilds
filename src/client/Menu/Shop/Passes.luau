@@ -13,7 +13,6 @@ local Products = require(Shared:WaitForChild("Shop"):WaitForChild("Products"))
 local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
-local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
@@ -64,8 +63,16 @@ local PASS_ART: { [string]: string } = {
 	book = MonetizationImages.BOOK,
 }
 
--- Ícone do cartão: o último item do kit (a ferramenta ou a mochila); as passes
--- sem arte ganham uma estrela desenhada.
+-- Arte do cartão: o ícone do kit (30–36) ou o da passe; "" = sem arte.
+local function artOf(pass: Pass): string
+	if pass.kitId then
+		return MonetizationImages.KIT[pass.kitId] or ""
+	end
+	return PASS_ART[pass.artId] or ""
+end
+
+-- Ícone do cartão: a arte; sem ela, o último item do kit (a ferramenta ou a
+-- mochila) e, nas passes, uma estrela desenhada.
 local function icon(pass: Pass, short: () -> boolean, tiny: () -> boolean): GuiObject
 	local box = create("Frame")({
 		Name = "Icon",
@@ -84,12 +91,9 @@ local function icon(pass: Pass, short: () -> boolean, tiny: () -> boolean): GuiO
 		BackgroundTransparency = 1,
 		ZIndex = 3,
 	}) :: Frame
-	local art = ShopImages.PASS[pass.artId]
-	if not ShopImages.has(art) and MonetizationImages.has(PASS_ART[pass.artId]) then
-		art = PASS_ART[pass.artId]
-	end
+	local art = artOf(pass)
 	local kit = if pass.kitId then Defs.Kits[pass.kitId] else nil
-	if ShopImages.has(art) then
+	if MonetizationImages.has(art) then
 		create("ImageLabel")({
 			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
@@ -131,6 +135,10 @@ local function card(pass: Pass, order: number, short: () -> boolean, tiny: () ->
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",
 		fxCenter = UDim2.fromScale(0.5, 0.33), -- raios atrás do ícone
+		-- Kit com o ícone novo: o brilho na cor do tier (MonetizationImages.KIT_GLOW).
+		fxColor = if pass.kitId and MonetizationImages.has(artOf(pass))
+			then MonetizationImages.KIT_GLOW[pass.kitId]
+			else nil,
 		Name = pass.artId,
 		LayoutOrder = order,
 		icon(pass, short, tiny),

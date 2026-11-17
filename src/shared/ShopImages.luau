@@ -40,13 +40,8 @@ ShopImages.TAB = {
 	spins = "rbxassetid://119630282286077", -- roleta
 } :: { [string]: string }
 
--- Ícones das gamepasses (por id de MockStore.PASSES).
-ShopImages.PASS = {
-	kit_starter = "rbxassetid://112277672433244", -- morango
-	kit_explorer = "rbxassetid://115992262876096", -- picareta
-	kit_survivor = "rbxassetid://89195781946000", -- mochila
-	kit_veteran = "rbxassetid://90193660058023", -- medalha
-} :: { [string]: string }
+-- Os ícones dos kits (antes aqui em PASS: morango, picareta, mochila, medalha)
+-- foram trocados pelos ícones 30–36 em MonetizationImages.KIT (17/11/2026).
 
 function ShopImages.has(id: string?): boolean
 	return id ~= nil and id ~= ""

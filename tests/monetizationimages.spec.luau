@@ -3,6 +3,7 @@
 -- src/shared/MonetizationImages.luau: cada `nome = "id"` (inclusive os de dentro
 -- das tabelas de estados) e cada `NOME_SLICE = Rect.new(a, b, c, d)`.
 local fs = require("@lune/fs")
+local Kits = require("../src/shared/Defs/Kits")
 
 local SOURCE = fs.readFile("src/shared/MonetizationImages.luau")
 local SENT = fs.readFile("assets/ui/monetizacao/ids-enviados.md")
@@ -88,5 +89,14 @@ return {
 			end
 		end
 		assert(count >= 8, `poucos tamanhos lidos ({count})`)
+	end,
+
+	["monetization images: every kit has an icon and a tier glow"] = function()
+		for kitId in Kits do
+			local icon = string.match(SOURCE, "%s" .. kitId .. ' = "(rbxassetid://%d+)"')
+			assert(icon ~= nil, `{kitId}: sem ícone em MonetizationImages.KIT`)
+			local glow = string.match(SOURCE, "%s" .. kitId .. ' = Color3%.fromHex%("#(%x+)"%)')
+			assert(glow ~= nil and #glow == 6, `{kitId}: sem cor do brilho em MonetizationImages.KIT_GLOW`)
+		end
 	end,
 }

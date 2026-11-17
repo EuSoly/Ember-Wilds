@@ -85,7 +85,8 @@ end
 -- Com `art` (cor de ShopImages.CARD: "red", "purple"…), usa as camadas 41
 -- tingidas nessa cor (com os efeitos, a não ser com `fx = false`) ou, sem
 -- elas, o fundo desenhado com raios de luz em 9 partes; sem arte nenhuma, o
--- degradê da cor `theme`. `fxCenter` muda o centro dos raios (padrão 0.5, 0.4).
+-- degradê da cor `theme`. `fxCenter` muda o centro dos raios (padrão 0.5, 0.4)
+-- e `fxColor` a cor dos efeitos (ex. o brilho do tier do kit).
 local CARD_SLICE_SCALE = 0.6
 local LAYER_SLICE_SHARE = 0.8 -- moldura das camadas um pouco mais fina que a proporcional
 
@@ -125,9 +126,11 @@ function ShopParts.vividCard(theme: Color3, props: { [any]: any }): Frame
 	local art: string? = props.art
 	local withFx = props.fx ~= false
 	local fxCenter = props.fxCenter
+	local fxColor: Color3? = props.fxColor
 	props.art = nil
 	props.fx = nil
 	props.fxCenter = nil
+	props.fxColor = nil
 	local tint = if art then ShopParts.CARD_TINT[art] else nil
 	if tint and MonetizationImages.hasLayers(MonetizationImages.SHOP_CARD_LAYERS) then
 		local card = create("Frame")({
@@ -138,7 +141,7 @@ function ShopParts.vividCard(theme: Color3, props: { [any]: any }): Frame
 				MonetizationImages.SHOP_CARD_LAYERS_SIZE,
 				MonetizationImages.SHOP_CARD_LAYERS_SLICE,
 				tint,
-				if withFx then ShopParts.shade(tint, 1.3) else nil,
+				if withFx then fxColor or ShopParts.shade(tint, 1.3) else nil,
 				fxCenter
 			),
 		}) :: Frame
