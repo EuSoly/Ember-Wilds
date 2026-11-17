@@ -314,7 +314,7 @@
 Esta tarefa começa quando as artes do Elizeu chegarem (`docs/game-design/assets-ui-monetizacao.md`).
 
 **Files:**
-- Modify: `src/shared/MonetizationImages.luau` (ids), telas das Tasks 8–11, `src/client/UI/PinnedRecipe.luau` (pergaminho, asset 29; só **depois** que a `ui-celular` estiver junta nesta branch), `docs/guia/loja.md`, `docs/pendencias.md`
+- Modify: `src/shared/MonetizationImages.luau` (ids), telas das Tasks 8–11, `src/shared/ShopImages.luau` (`PASS` com os ícones novos dos kits, assets 30–36, e um `KIT` por id) + `src/client/Menu/Shop/Passes.luau` e `src/client/Menu/KitsPanel.luau:255` (ícone do kit no lugar do `ItemIcon`, quando houver arte), `src/client/UI/PinnedRecipe.luau` (pergaminho, asset 29; só **depois** que a `ui-celular` estiver junta nesta branch), `docs/guia/loja.md`, `docs/pendencias.md`
 - Create: `docs/guia/revive.md`, `assets/ui/monetizacao/` (recortes)
 - Test: `tests/monetizationimages.spec.luau` (no molde de `missionimages.spec`: todo id é `""` ou `rbxassetid://<número>`)
 - [ ] **Step 1:** Recortar as artes (script em `assets/ui/monetizacao/`, como `prepare_ranking.py`) e enviar na conta/grupo **com a confirmação do Elizeu antes de cada lote**. Gravar os ids.

@@ -48,7 +48,7 @@ Estes aparecem no Creator Hub e na página do jogo, não dentro dele. São **512
 | 21 | Ícone da **assinatura VIP** | pode ser o 1 maior e com fundo |
 | 22 | Ícone da gamepass **2× Golden Ember** | pode ser o 3 com fundo |
 | 23 | Ícone da gamepass **Nascer com livro** | pode ser o 4 com fundo |
-| 24–27 | Ícones dos **4 kits para sempre** | já temos os ícones da loja (morango, picareta, mochila, medalha); basta pôr fundo |
+| 24–27 | Ícones dos **4 kits para sempre** | os novos ícones 30–33 (seção 4), com fundo |
 | 28 | Ícones dos **produtos** (Golden Ember, giros, kits de 1 vida, revive, boost) | o Roblox não obriga ícone em produto, mas fica mais bonito; os de Golden Ember podem vir das pilhas de moedas que já temos |
 
 ## 3. Fora da monetização (pedido junto, 17/11)
@@ -58,6 +58,24 @@ Estes aparecem no Creator Hub e na página do jogo, não dentro dele. São **512
 | 29 | **Pergaminho da receita fixada** | substitui o fundo atual do quadro da receita fixada pelo livro, na coluna da direita do HUD (nome do item em cima, uma linha por ingrediente embaixo) | 1 | ~400×600, em pé, com rolo em cima e embaixo e papel liso no meio | essencial |
 
 O pergaminho **estica na altura**, porque a receita pode ter de 1 a 4 ingredientes. Por isso os **rolos de cima e de baixo** ficam fixos e o **papel do meio** precisa ser liso, sem mancha nem dobra que estique feio. Se quiser manchas ou queimadinhos de enfeite, mande como peça separada, que eu ponho por cima. Deixe uns 12% de margem nas laterais do papel para o texto não encostar na borda. O X de desafixar continua o mesmo.
+
+## 4. Ícones dos kits (pedido junto, 17/11)
+
+Os ícones de hoje (morango, picareta, mochila, medalha) são genéricos. A ideia é ter um ícone **trabalhado por kit**. *Chamada minha:* eles entram em três lugares: o cartão da gamepass na loja, a linha do kit no painel de kits do menu (hoje é o modelo 3D de um item) e, com fundo, o ícone da gamepass no site do Roblox (substituem as peças 24–27).
+
+**Para os kits parecerem da mesma família:** todos com a mesma composição, um **recipiente aberto com os itens principais saindo dele**. O recipiente e o material sobem junto com o kit: pano → couro → baú de madeira → baú reforçado de ouro. Cada um tem um **brilho de fundo na cor do tier**, que já marca o valor antes de ler o nome. Mesmas regras de sempre: 512×512, fundo transparente, sem texto, silhueta que lê pequena no celular.
+
+| # | Kit | O que vem nele | Ideia de ícone | Cor do brilho | Prioridade |
+|---|---|---|---|---|---|
+| 30 | **Inicial** (`kit_starter`) | 10 bagas, 20 madeiras, 20 pedras, picareta de madeira, fogueira | trouxa de pano amarrada num graveto, com a picareta de madeira atravessada, galhos e um raminho de bagas para fora | madeira clara | essencial |
+| 31 | **Explorador** (`kit_explorer`) | 16 bagas, 40 madeiras, 40 pedras, picareta de pedra, 2 fogueiras | mochila de couro aberta, picareta de pedra presa na lateral, pedras e toras aparecendo; uma bússola pendurada de enfeite | cinza-pedra | essencial |
+| 32 | **Sobrevivente** (`kit_survivor`) | 20 bagas, 140 madeiras, 80 pedras, picareta de ouro, 2 fogueiras grandes | baú de madeira aberto, cheio de toras e pedras, picareta de ouro por cima e uma chama da fogueira grande saindo de dentro | laranja-brasa | essencial |
+| 33 | **Veterano** (`kit_veteran`) | 30 bagas, 200 madeiras, 200 pedras, 20 de ouro, picareta e espada de ouro, 4 fogueiras grandes | baú reforçado com cantos de metal, espada e picareta de ouro cruzadas na frente, pepitas de ouro transbordando | dourado | essencial |
+| 34 | **VIP** (`kit_vip`) | 20 bagas, 120 madeiras, 80 pedras, picareta de pedra, fogueira grande, 8 paredes de madeira | baú nobre na **cor do VIP**, com uma coroa pequena ou brasão na tampa, uma parede de madeira encostada e a picareta saindo | dourado-brasa do VIP | essencial |
+| 35 | **Caçador** (`kit_hunter`, conquista) | 15 carnes assadas, lança de pedra, 10 paredes, 2 fogueiras, 10 bagas | bolsa de caça de pele, lança de pedra atravessada e um pedaço de carne assada | vermelho-terra | bom ter |
+| 36 | **Guardião** (`kit_guardian`, conquista) | 300 madeiras, 300 pedras, 60 de ouro, picareta, espada e capacete de ouro, 4 fogueiras grandes | capacete de ouro em cima de um baú, espada cravada ao lado | azul-real | bom ter |
+
+As ideias são sugestões: pode mudar o recipiente ou os itens, desde que a família continue (mesmo enquadramento, mesmo ângulo, recipiente que sobe de nível). O bom ter são os kits de conquista, que só aparecem para quem já tem.
 
 ## Já temos e vou reaproveitar
 
