@@ -16,7 +16,10 @@ Tudo que se compra é um **produto**: um id, um preço (`robux` ou `ember`), um 
 | Giros especiais | `spins_paid_<qtd>` | Robux | sem limite |
 | Kit de 1 vida | `kitonce_<kit>` | Robux | sem limite (soma no saldo do kit) |
 | Kit para sempre | `kit_<kit>` | Robux | uma vez |
-| Passe (VIP) | `pass_<passe>` | Robux | uma vez |
+| Passe (2× Golden Ember, Livro) | `pass_<passe>` (`ember2x`, `book`) | Robux | uma vez |
+| VIP por 30 dias | `vip_30d` | Robux | sem limite (soma ao renovar) |
+| Boost de XP (+1 h) | `xpboost_1h` | Robux | sem limite (soma) |
+| Degraus do revive | `revive_1`…`revive_4` | Robux | escondido (só o `ReviveService` usa; veja `revive.md`) |
 
 1. O cliente só **pede** (`Net.RequestPurchase { ProductId }`).
 2. O servidor (`ShopService.purchase`) ignora pedido rápido demais (0,3 s), confere com `PurchaseRules.check` (produto existe, está na data, não foi comprado se é `once`, tem Golden Ember), **cobra** (`ShopService.charge`: Robux = grátis por enquanto) e **entrega cada recompensa** (`ShopService.grant`). Depois marca a compra `once`, republica e salva.
@@ -50,9 +53,58 @@ SS.DevShopReset:Invoke(p)                                                    -- 
 
 No jogo, presentes e códigos de resgate devem entregar por `ShopService.give(player, recompensa, motivo)` (valida, entrega, publica e salva).
 
-### VIP
+### VIP, passes e Premium
 
-O VIP é por tempo (recompensa `{ kind = "vip", count = dias }` → `Shop.VipUntil`). O `PerkService` tira uma foto das vantagens quando a vida começa (VIP, passes `ember2x` e `book`, Premium do Roblox) e ela vale até o fim daquela vida: +3 espaços (`InventoryConfig.vipPass.bonusSlots`), Kit VIP e o bônus no multiplicador de Golden Ember. Ganhar uma vantagem com a vida ativa vale na hora; perder (VIP vencido, `DevShopRevoke(player, "vip")`) só na próxima vida. O Premium libera o `kit_starter` e dá +20% enquanto durar. O cliente lê as vantagens nos atributos da pasta `Player.Shop` (não do Player, por causa do limite de ~1 KB de atributos): `Perk_vip`, `Perk_ember2x`, `Perk_book`, `Perk_premium` (a foto da vida com vida ativa; o que vale agora quando morto ou no menu) e `VipUntil`, `XpBoostStart`, `XpBoostUntil` (do perfil).
+| Vantagem | Preço | O que dá |
+|---|---|---|
+| **VIP** (`vip_30d`) | 99 Robux por 30 dias | +3 espaços (`InventoryConfig.vipPass.bonusSlots`), ícone ao lado do nome, **Kit VIP** (`kit_vip`), +0,5 no multiplicador de Golden Ember e **1 revive grátis por corrida** |
+| **2× Golden Ember** (`ember2x`, passe) | 199 Robux, uma vez | +1 no multiplicador |
+| **Livro** (`book`, passe) | 99 Robux, uma vez | nasce com o livro de receitas |
+| **Premium** do Roblox | (do Roblox) | +0,2 no multiplicador e libera o `kit_starter` enquanto for Premium; **não grava no perfil** |
+
+O VIP é por tempo: a recompensa `{ kind = "vip", count = dias }` soma `count` dias em `Shop.VipUntil` (unix; comprar com o VIP ativo soma ao que resta). Hoje é um produto de Robux comum (`vip_30d`); a assinatura de verdade vem na fase 9 (`docs/pendencias.md`). O passe `vip` antigo saiu de `ShopConfig.PASSES`.
+
+O `PerkService` tira uma **foto das vantagens quando a vida começa** (VIP, `ember2x`, `book`, Premium) e ela vale até o fim daquela vida, inclusive na tela de morte e no revive. Ganhar uma vantagem com a vida ativa vale na hora; perder (VIP vencido, `DevShopRevoke`) só na próxima vida. A regra pura é `Shared/Shop/Perks` (testada no Lune).
+
+**Onde o cliente lê:** atributos da pasta `Player.Shop` (não do Player, por causa do limite de ~1 KB de atributos): `Perk_vip`, `Perk_ember2x`, `Perk_book`, `Perk_premium` (a foto da vida com vida ativa; o que vale agora quando morto ou no menu), `VipUntil`, `XpBoostStart`, `XpBoostUntil` (do perfil), `CheckInDay`, `CheckInReady` e `PaidRandomBlocked`. Os nomes estão em `StatNames`; o `src/client/ShopData.luau` lê tudo.
+
+### Golden Ember sem teto
+
+No fim da vida: `floor(pontos / 1000 × multiplicador)` (`CurrencyRules.pointsToCurrency`), **sem teto por vida nem por hora**. O multiplicador é **1 + bônus somados** (`Perks.emberMultiplier`, números em `ShopConfig.PERK_BONUS`):
+
+| Vantagem | Bônus |
+|---|---|
+| (base) | 1 |
+| 2× Golden Ember | +1 |
+| VIP | +0,5 |
+| Premium | +0,2 |
+
+Tudo junto: **2,7**. Só vale no fim de vida; prêmios fixos (missão, check-in, devolução de skin repetida) **não** são multiplicados. A tela de morte mostra uma etiqueta por vantagem (`LifeEnded.EmberBonus`: bits 1 = 2×, 2 = VIP, 4 = Premium). O risco de farm de abates entre amigos sem o teto está em `docs/pendencias.md`.
+
+### Boost de XP
+
+`xpboost_1h` (49 Robux, `ShopConfig.XP_BOOST`) soma 1 hora em `Shop.BoostStart` / `BoostUntil`. O XP da vida dobra **na proporção da vida que aconteceu dentro da janela** (`Data/XpBoost.factor`, de 1 a 2; boost cobrindo metade da vida dá 1,5×) e o teto de XP por hora dobra junto (`LifeService.endLife`). O **ranking soma o XP sem boost**. O cliente mostra o selo `XpBoostBadge` e o cartão `Menu/Shop/BoostCard`.
+
+### Check-in de 7 dias
+
+Prêmios em `ShopConfig.CHECKIN` (dia 1 a 7: 100 Golden Ember, 1 giro normal, 150 Golden Ember, Kit Explorador de 1 vida, 200 Golden Ember, 2 giros normais, 5 giros especiais). Um prêmio por **dia de Brasília** (`RankRules.dayIndex`), não precisa ser em sequência, e depois do 7 volta ao 1. O cliente só pede (`Net.CheckInClaim`); o `CheckInService.claim` confere o dia (`Shared/Shop/CheckInRules`, puro), entrega por `ShopService.give` e salva (`Shop.CheckIn = { Day, LastDay }`). Na virada do dia o serviço republica `CheckInReady` para quem está com o jogo aberto. Tela: `src/client/Menu/CheckInPanel.luau`.
+
+### Item aleatório pago
+
+As **chances ficam visíveis antes de comprar** (`SPIN_ODDS`). Onde a lei proíbe item aleatório pago, não se compram giros (normal e especial) nem pacotes com giros: o `ShopService` consulta `PolicyService:GetPolicyInfoForPlayerAsync` ao carregar o perfil e guarda `randomBlocked` por jogador (`ArePaidRandomItemsRestricted ~= false`, ou **consulta que falhou ou ainda sem resposta = bloqueado**). O `PurchaseRules.check` recusa com `"restricted"` e publica `PaidRandomBlocked` na pasta `Player.Shop`; a loja esconde o que tem giros. **Giros ganhos de graça** (check-in, prêmios, devolução) continuam valendo.
+
+**Dar ou tirar o resto (Studio):** `DevShopGrant` aceita qualquer recompensa (`Rewards.KINDS`), por exemplo:
+
+```lua
+SS.DevShopGrant:Invoke(p, { kind = "vip", count = 30 })           -- VIP por 30 dias
+SS.DevShopGrant:Invoke(p, { kind = "pass", id = "ember2x" })      -- passe (ou "book")
+SS.DevShopGrant:Invoke(p, { kind = "xpBoost", count = 3600 })     -- boost de XP (segundos)
+SS.DevShopGrant:Invoke(p, { kind = "reviveCredit", count = 2 })   -- revives guardados
+SS.DevShopRevoke:Invoke(p, "vip")                                  -- tira o VIP (vale na próxima vida)
+SS.DevShopRevoke:Invoke(p, "pass", "ember2x")                      -- tira um passe
+```
+
+O `DevShopGrant` já chama `PerkService.refresh`. Não há comando para forçar Premium nem o `PolicyService` (no Studio a consulta pode falhar e deixar o jogador bloqueado).
 
 ## Como criar um pacote
 
@@ -89,7 +141,7 @@ A loja mostra só os pacotes **dentro da data**, com o contador até o fim. Cada
 
 ## Como criar um tipo de item de pacote
 
-Hoje existem `cosmetic`, `ember`, `spins`, `kit`, `kitOnce` e `pass`. Para criar outro (um título, um item de jogo…), mexa em **três lugares**:
+Hoje existem `cosmetic`, `ember`, `spins`, `kit`, `kitOnce`, `pass`, `vip`, `xpBoost` e `reviveCredit`. Para criar outro (um título, um item de jogo…), mexa em **três lugares**:
 
 1. **`src/shared/Shop/Rewards.luau`**, em `KINDS`: os campos válidos (a função `validate` devolve a mensagem de erro, ou `nil`). Roda no boot e nos testes. Se for algo "para sempre", acrescente também `owned` (o jogador já tem?): assim a loja não vende de novo o que ele ganhou por outro caminho.
 2. **`src/server/Services/ShopService.luau`**, em `GRANTS`: como entregar (recebe o jogador, os dados da loja do perfil e a recompensa).
@@ -110,7 +162,12 @@ Tudo em **`src/shared/Shop/ShopConfig.luau`**:
 | Pacotes de giros (+1/+3/+10) | `SPIN_PACKS` |
 | Pacotes de Golden Ember | `EMBER_PACKS` |
 | Preço dos kits (1 vida / para sempre) | `KIT_ROBUX` (todo kit de `Defs.Kits` precisa de uma entrada) |
-| Passes (VIP) | `PASSES` |
+| Passes (2× Golden Ember, Livro) | `PASSES` |
+| VIP (preço e dias) | `VIP` |
+| Bônus de Golden Ember (2×, VIP, Premium) | `PERK_BONUS` |
+| Degraus do revive | `REVIVE_ROBUX` |
+| Boost de XP | `XP_BOOST` |
+| Prêmios do check-in (7 dias) | `CHECKIN` |
 
 ## Onde fica cada coisa
 
@@ -125,16 +182,23 @@ Tudo em **`src/shared/Shop/ShopConfig.luau`**:
 | `src/shared/Shop/SpinRoll.luau` | Sorteio de um giro |
 | `src/shared/Shop/ShopDates.luau` | Datas em horário de Brasília |
 | `src/shared/UIFlow/KitChoice.luau` | Qual kit vai na vida e de onde sai |
-| `src/server/Services/ShopService.luau` | Compra, giro, kits e a pasta `Player.Shop` |
+| `src/shared/Shop/Perks.luau` | Vantagens (VIP, passes, Premium), multiplicador e kits liberados |
+| `src/shared/Shop/CheckInRules.luau` | Regras do check-in de 7 dias |
+| `src/shared/Data/XpBoost.luau` | Fator do boost de XP |
+| `src/shared/MonetizationImages.luau` | Ids das artes da monetização (vazio = desenho por código) |
+| `src/server/Services/ShopService.luau` | Compra, giro, kits, `randomBlocked` (PolicyService) e a pasta `Player.Shop` |
+| `src/server/Services/PerkService.luau` | Foto das vantagens por vida e atributos das vantagens |
+| `src/server/Services/CheckInService.luau` | Resgate do check-in e virada do dia |
 | `src/client/ShopData.luau` | Lê a pasta `Player.Shop` (fontes Vide para as telas) |
 | `src/client/Menu/Purchase.luau` | Pede a compra e mostra a resposta |
 | `src/client/Menu/Shop/RewardView.luau` | Como cada recompensa aparece no card |
 
-Testes: `tests/shopdates.spec.luau`, `tests/shopcatalog.spec.luau`, `tests/spinroll.spec.luau`, `tests/shopdata.spec.luau`, `tests/kitchoice.spec.luau`.
+Testes: `tests/shopdates.spec.luau`, `tests/shopcatalog.spec.luau`, `tests/spinroll.spec.luau`, `tests/shopdata.spec.luau`, `tests/kitchoice.spec.luau`, `tests/monetizationimages.spec.luau` (ids e fatias das artes), `tests/xpboost.spec.luau`, `tests/revive.spec.luau`.
 
 ## Ligar o Robux de verdade (depois)
 
 1. Zerar todos os perfis (decisão do Elizeu).
 2. Criar os produtos de desenvolvedor e gamepasses no site e guardar os ids junto dos produtos.
 3. Trocar o `ShopService.charge` de Robux pelo `MarketplaceService:PromptProductPurchase` e entregar no `ProcessReceipt` (usando `PurchaseIdCache` do perfil para não entregar duas vezes), respondendo `PurchaseGranted` só depois que o perfil guardou.
-4. Gamepasses (kits para sempre, VIP): entregar pelo `UserOwnsGamePassAsync` / `PromptGamePassPurchaseFinished`.
+4. Gamepasses (kits para sempre, `ember2x`, `book`): entregar pelo `UserOwnsGamePassAsync` / `PromptGamePassPurchaseFinished`.
+5. VIP: virar **assinatura** do Roblox (status lido ao entrar; `Shop.VipUntil` acompanha). Revive: veja `docs/guia/revive.md` e a fase 9 em `docs/pendencias.md`.

@@ -194,3 +194,12 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 - **Números para conferir:** conteúdo dos kits Caçador e Guardião da Floresta, Golden Ember das diárias/semanais, prêmios dos níveis I e II.
 - **Teste no celular:** a tela de Missões ainda não foi conferida no emulador (749×330).
 - **Arestas da revisão (12/11):** resolvidas no mesmo dia (retrato só quando muda com a janela fechada, relógio do servidor no "Renova em", som do resgate só com a confirmação, sanitize por período e sem repetidos, Validate recusa prêmio testOnly em quest ligada, missão de vida não conta a vida antes do sorteio, "Renova em" vazio antes do primeiro retrato, fantasma/protegido não quebra Mãos Limpas, virar fantasma falha as chrono quests em andamento). Falta conferir no Studio.
+
+## Monetização (17/11)
+
+Guias: `docs/guia/loja.md` e `docs/guia/revive.md`.
+
+- **Farm de abates entre amigos:** sem o teto de Golden Ember por hora, dois amigos podem se matar em turnos para somar pontos e Golden Ember (o abate dá bônus de pontos ao matador). Acompanhar as estatísticas (`players_killed`, ranking de abates, Golden Ember por jogador) depois do lançamento; se aparecer, pensar numa regra escondida (ex.: o mesmo par não rende abate de novo por um tempo).
+- **Fase 9, cobrança real:** zerar todos os perfis; criar no **grupo** do Roblox os produtos, os gamepasses (`ember2x`, `book` e os kits para sempre) e a **assinatura** do VIP; trocar o `ShopService.charge` pelos prompts do `MarketplaceService`; entregar no `ProcessReceipt` com `PurchaseIdCache` do perfil (sem entregar duas vezes e só confirmando depois de salvar); ler o status da assinatura ao entrar (`Shop.VipUntil` acompanha); ligar `ReviveService.purchaseStarted` / `purchaseEnded` (pausa da janela) e `lateRevive` (pagamento confirmado depois da janela vira revive guardado).
+- **Artes que faltam** (`docs/game-design/assets-ui-monetizacao.md`): ícones dos kits (30 a 36) e os fundos em camadas (37 a 44). Os outros ids de `MonetizationImages` ainda estão vazios (artes não enviadas ao Roblox): a tela usa o desenho por código até lá; ao enviar, gravar os ids e conferir o pergaminho da receita fixada (`PinnedRecipe`, margens do texto) no celular e no PC.
+- **Teste conjunto no Studio da branch de monetização:** pendente (VIP, passes, Premium, check-in, boost, regra do aleatório e revive juntos, com 1 e com 2 jogadores, PC e celular).
