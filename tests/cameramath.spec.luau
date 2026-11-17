@@ -38,4 +38,11 @@ return {
 		end
 		assert(CameraMath.smoothAlpha(12, 1 / 10) < 1, "num frame normal não deveria colar no alvo")
 	end,
+	["zoom fraction maps to the camera distance"] = function()
+		assert(CameraMath.zoomDistance(0.5, 28, 40) == 34, "meio = distância de sempre")
+		assert(CameraMath.zoomDistance(0, 28, 40) == 28, "perto")
+		assert(CameraMath.zoomDistance(1, 28, 40) == 40, "longe")
+		assert(CameraMath.zoomDistance(2, 28, 40) == 40, "acima de 1 prende")
+		assert(CameraMath.zoomDistance(-1, 28, 40) == 28, "abaixo de 0 prende")
+	end,
 }

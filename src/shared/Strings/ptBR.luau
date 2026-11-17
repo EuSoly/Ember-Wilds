@@ -781,6 +781,7 @@ return table.freeze({
 	["setting.quality"] = "Qualidade gráfica",
 	["setting.ui_scale"] = "Tamanho da interface",
 	["setting.left_handed"] = "Modo canhoto",
+	["setting.camera_zoom"] = "Zoom da câmera",
 	["setting.quality.auto"] = "Automática",
 	["setting.quality.low"] = "Baixa",
 	["setting.quality.medium"] = "Média",

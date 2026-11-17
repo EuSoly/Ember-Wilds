@@ -40,4 +40,11 @@ return {
 		assert(defaults.left_handed == false, "canhoto desligado")
 		assert(defaults.ui_scale == 1, "escala 1")
 	end,
+	["camera zoom: missing value falls back, middle is valid"] = function()
+		local def = Defs.Settings.camera_zoom
+		assert(def ~= nil, "opção de zoom existe")
+		assert(def.default == 0.5 and def.group == "controls", "padrão 0,5 em Controles")
+		assert(SettingsRules.validate(def, nil) == false, "sem valor: o servidor usa o padrão")
+		assert(SettingsRules.validate(def, 0.5) == true, "0,5 é válido")
+	end,
 }

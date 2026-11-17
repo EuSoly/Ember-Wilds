@@ -1,6 +1,9 @@
 --!strict
 -- Câmera top-down do jogo: fixa de cima, inclinada 65°, sem girar, seguindo o
--- personagem com suavização. Zoom curto pela roda do mouse ou pinça.
+-- personagem com suavização. Zoom pela opção "Zoom da câmera" das
+-- Configurações; no PC a roda do mouse ajusta a partir dela. No toque a pinça
+-- saiu (17/11/2026): com os dois polegares nos analógicos ela disparava sem
+-- querer.
 --
 -- Sem personagem (menu e tela de morte), a câmera do menu: segue o jogador
 -- que o servidor escolheu (atributo SpectateTarget, um pouco mais alta) ou,
@@ -38,7 +41,6 @@ local CameraController = {}
 local focus: Vector3? = nil -- ponto que a câmera olha (suavizado)
 local distance = DEFAULT_DISTANCE -- distância atual (suavizada)
 local targetDistance = DEFAULT_DISTANCE
-local pinchStartDistance = DEFAULT_DISTANCE
 
 local function setTargetDistance(value: number)
 	targetDistance = math.clamp(value, MIN_DISTANCE, MAX_DISTANCE)
@@ -163,23 +165,27 @@ local function connectZoom()
 			setTargetDistance(targetDistance - input.Position.Z * WHEEL_STEP)
 		end
 	end)
+end
 
-	UserInputService.TouchPinch:Connect(function(_positions, scale, _velocity, state, gameProcessed)
-		if gameProcessed then
-			return
-		end
-		if state == Enum.UserInputState.Begin then
-			pinchStartDistance = targetDistance
-		elseif scale > 0 then
-			-- Abrir os dedos (scale > 1) aproxima a câmera.
-			setTargetDistance(pinchStartDistance / scale)
-		end
-	end)
+-- Opção salva (atributo Setting_camera_zoom do Player, publicado pelo
+-- servidor): mudar a opção leva o zoom para ela; a roda não salva nada.
+local ZOOM_SETTING = StatNames.SettingPrefix .. "camera_zoom"
+
+local function applyZoomSetting()
+	local value = Players.LocalPlayer:GetAttribute(ZOOM_SETTING)
+	local fraction = if type(value) == "number" then value else 0.5
+	setTargetDistance(CameraMath.zoomDistance(fraction, MIN_DISTANCE, MAX_DISTANCE))
+end
+
+local function connectZoomSetting()
+	applyZoomSetting()
+	Players.LocalPlayer:GetAttributeChangedSignal(ZOOM_SETTING):Connect(applyZoomSetting)
 end
 
 function CameraController.Start(_self)
 	connectDevFreecam()
 	connectZoom()
+	connectZoomSetting()
 	RunService:BindToRenderStep("TopDownCamera", Enum.RenderPriority.Camera.Value + 1, update)
 end
 

@@ -38,7 +38,8 @@ return {
 			end
 			table.insert(parts, `{group.id}:{table.concat(ids, ",")}`)
 		end
-		local expected = "sound:music_volume,ambient_volume,effects_volume|screen:ui_scale,quality|controls:left_handed"
+		local expected =
+			"sound:music_volume,ambient_volume,effects_volume|screen:ui_scale,quality|controls:left_handed,camera_zoom"
 		assert(table.concat(parts, "|") == expected, table.concat(parts, "|"))
 	end,
 
@@ -68,7 +69,7 @@ return {
 		for _, def in SettingsFormat.sorted(Defs.Settings) do
 			table.insert(ids, def.id)
 		end
-		local expected = "music_volume,ambient_volume,effects_volume,ui_scale,quality,left_handed"
+		local expected = "music_volume,ambient_volume,effects_volume,ui_scale,quality,left_handed,camera_zoom"
 		assert(table.concat(ids, ",") == expected, `ordem: {table.concat(ids, ",")}`)
 	end,
 

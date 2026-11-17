@@ -17,4 +17,10 @@ function CameraMath.smoothAlpha(k: number, dt: number): number
 	return 1 - math.exp(-k * dt)
 end
 
+-- Distância da câmera para a opção "Zoom da câmera" (0 = perto, 1 = longe):
+-- linear entre `min` e `max`, com a fração presa em [0, 1].
+function CameraMath.zoomDistance(fraction: number, min: number, max: number): number
+	return min + math.clamp(fraction, 0, 1) * (max - min)
+end
+
 return CameraMath
