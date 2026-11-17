@@ -1,0 +1,53 @@
+EMBER WILDS — ASSETS DE UI — 17/11/2026
+========================================
+Pacote de PNGs para a monetização, check-in, revive e receita fixada.
+Sem textos embutidos nos arquivos de assets, para permitir localização e atualização de preços.
+Arquivos de jogo com transparência; Creator Hub com fundo colorido circular 512x512.
+
+ESTRUTURA
+1. 01_Dentro_do_jogo/Icones: iconografia de jogo (512×512 ou 128x128 para a bolinha opcional).
+2. 01_Dentro_do_jogo/Componentes_9slice: botões, cards, janelas, fitas e variações de estado.
+3. 01_Dentro_do_jogo/Pergaminho: fundo vertical da receita fixada, 400×600.
+4. 02_Creator_Hub: capas 512x512 para assinatura, gamepasses, kits e produtos.
+5. 03_Extras_referencias: ícones extras para composição; não substituem obrigatoriamente as artes originais.
+6. Previews: folhas de conferência COM nomes apenas fora dos assets.
+
+ESTADOS
+- VIP card: normal / ativo; brilho de canto separado como overlay opcional.
+- Botão reviver: normal / apertado / desligado.
+- Botão não obrigado: normal / apertado.
+- Dias do check-in (12 e 13): resgatado / hoje / futuro / bloqueado.
+- O carimbo de resgatado (14) pode ser aplicado por cima do cartão resgatado.
+
+CONFIGURAÇÃO SUGERIDA PARA ROBLOX STUDIO
+ImageLabel.ScaleType = Enum.ScaleType.Slice
+ImageLabel.SliceCenter = Rect.new(x1, y1, x2, y2)
+
+Os valores abaixo são a primeira sugestão para teste visual, a fim de preservar os cantos:
+02_vip_card (1024x512): Rect.new(78,78,946,434)
+06_painel_revive (800x500): Rect.new(62,62,738,438)
+07/08_botoes (512x154): Rect.new(55,49,457,107)
+09_fita (300x100): Rect.new(64,35,236,65)
+11_janela_checkin (1000x700): Rect.new(60,60,940,640)
+12_checkin_dia (240x300): Rect.new(50,50,190,250)
+13_checkin_dia7 (360x450): Rect.new(56,56,304,394)
+18_premium (1024x400): Rect.new(62,62,962,338)
+19_etiqueta (200x64): Rect.new(29,24,171,41)
+29_pergaminho (400x600): Rect.new(48,112,352,506)
+
+Para o pergaminho 29, aumentar SOMENTE a altura; rolos superior/inferior devem permanecer fixos e o
+centro liso deve ser esticado. Deixar pelo menos 12% de margem lateral para texto e ingredientes.
+
+PALETA
+Contorno #211A15; nogueira #59402D; madeira #805739; papel #E8D5AE;
+brasa #E99843; brasa clara #FFC66B; VIP com dourado/brilho de brasa.
+
+ATENÇÃO ÀS ARTES EXISTENTES
+Os quatro símbolos dos kits no Creator Hub foram redesenhados a partir da lista (morango,
+picareta, mochila e medalha), pois os arquivos originais da loja não foram fornecidos.
+Para correspondência visual EXATA, substitua o miolo desses quatro ícones pelos assets atuais
+já existentes no projeto. O mesmo vale para a moeda Golden Ember e o ícone do giro especial:
+este pacote inclui aproximações novas, não uma cópia dos assets existentes.
+O símbolo oficial Premium do Roblox permanece a cargo do código, conforme pedido.
+
+As regras comerciais, preços e multiplicadores devem continuar somente no código do jogo.
