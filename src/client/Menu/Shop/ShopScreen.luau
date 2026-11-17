@@ -70,6 +70,10 @@ function ShopScreen.build(
 		local section = create("Frame")({
 			Name = "Section_" .. tab.id,
 			LayoutOrder = i,
+			-- Celular: só a seção da aba ativa (uma página por aba, 17/11/2026).
+			Visible = function()
+				return not layout().paged or active() == tab.id
+			end,
 			Size = UDim2.fromScale(1, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
 			BackgroundTransparency = 1,
@@ -111,6 +115,12 @@ function ShopScreen.build(
 	end
 
 	local function jump(id: string)
+		if vide.untrack(layout).paged then
+			-- Página: troca a seção e volta ao topo, sem rolar até ela.
+			active(id :: Section)
+			scroll.CanvasPosition = Vector2.zero
+			return
+		end
 		local maxY = math.max(scroll.AbsoluteCanvasSize.Y - scroll.AbsoluteWindowSize.Y, 0)
 		local target = math.clamp(sectionOffset(id), 0, maxY)
 		TweenService:Create(scroll, JUMP_INFO, { CanvasPosition = Vector2.new(0, target) }):Play()
@@ -118,6 +128,10 @@ function ShopScreen.build(
 
 	-- A aba ativa é a última seção cujo topo já passou do topo da lista.
 	scroll:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+		-- Na página do celular a aba ativa é a que foi tocada.
+		if vide.untrack(layout).paged then
+			return
+		end
 		local current: Section = "packs"
 		local maxY = scroll.AbsoluteCanvasSize.Y - scroll.AbsoluteWindowSize.Y
 		for _, tab in TABS do
@@ -206,6 +220,7 @@ function ShopScreen.build(
 					FontFace = Theme.font.number,
 					Text = Strings.get("shop.tab." .. tab.id),
 					maxSize = 20,
+					minSize = 12, -- "Gamepasses" e "Golden Ember" ficavam minúsculos no celular
 				}),
 			})
 		)

@@ -23,7 +23,6 @@ local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local create = vide.create
 local R = Theme.rustic
 
-local CARD_HEIGHT = 236
 local GOLD = Color3.fromHex("#E8AE2A")
 
 local Passes = {}
@@ -56,12 +55,17 @@ end
 
 -- Ícone do cartão: o último item do kit (a ferramenta ou a mochila); o VIP
 -- ganha uma estrela desenhada.
-local function icon(pass: Pass): GuiObject
+local function icon(pass: Pass, short: () -> boolean): GuiObject
 	local box = create("Frame")({
 		Name = "Icon",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.fromScale(0.5, 0.12),
-		Size = UDim2.fromScale(0.42, 0.42),
+		Position = function()
+			return UDim2.fromScale(0.5, if short() then 0.08 else 0.12)
+		end,
+		Size = function()
+			local share = if short() then 0.38 else 0.42
+			return UDim2.fromScale(share, share)
+		end,
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		BackgroundTransparency = 1,
 		ZIndex = 3,
@@ -97,7 +101,9 @@ local function icon(pass: Pass): GuiObject
 	return box
 end
 
-local function card(pass: Pass, order: number): Frame
+-- `short`: cartão mais baixo que o normal (página do celular): arte menor e
+-- textos mais acima, para não encostarem no botão de preço.
+local function card(pass: Pass, order: number, short: () -> boolean): Frame
 	-- Comprado aqui ou ganho por outro caminho (ex. o kit veio num pacote).
 	local function owned(): boolean
 		if ShopData.purchased(pass.product.id) then
@@ -109,11 +115,13 @@ local function card(pass: Pass, order: number): Frame
 		art = "orange",
 		Name = pass.artId,
 		LayoutOrder = order,
-		icon(pass),
+		icon(pass, short),
 		ShopParts.outlined({
 			Name = "PassName",
 			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.56),
+			Position = function()
+				return UDim2.fromScale(0.5, if short() then 0.49 else 0.56)
+			end,
 			Size = UDim2.fromScale(0.92, 0.12),
 			FontFace = Theme.font.number,
 			Text = Strings.get(pass.nameKey),
@@ -122,7 +130,9 @@ local function card(pass: Pass, order: number): Frame
 		ShopParts.outlined({
 			Name = "Desc",
 			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.68),
+			Position = function()
+				return UDim2.fromScale(0.5, if short() then 0.61 else 0.68)
+			end,
 			Size = UDim2.fromScale(0.92, 0.08),
 			Text = Strings.get(pass.descKey),
 			maxSize = 15,
@@ -147,18 +157,30 @@ local function card(pass: Pass, order: number): Frame
 end
 
 function Passes.build(layout: () -> ShopLayout.Layout): Frame
-	local children: { Instance } = {
-		ShopParts.grid(function()
-			return layout().passColumns
-		end, CARD_HEIGHT, ShopLayout.GAP),
-	}
-	local order = 0
+	local passes: { Pass } = {}
 	for _, product in Products.all() do
 		local pass = passOf(product)
 		if pass then
-			order += 1
-			table.insert(children, card(pass, order))
+			table.insert(passes, pass)
 		end
+	end
+	-- Colunas e altura: no celular saem da página (ShopLayout.passGrid).
+	local grid = vide.derive(function()
+		local columns, height = ShopLayout.passGrid(layout(), #passes)
+		return { columns = columns, height = height }
+	end)
+	local function short(): boolean
+		return grid().height < ShopLayout.PASS_CARD_HEIGHT
+	end
+	local children: { Instance } = {
+		ShopParts.grid(function()
+			return grid().columns
+		end, function()
+			return grid().height
+		end, ShopLayout.GAP),
+	}
+	for order, pass in passes do
+		table.insert(children, card(pass, order, short))
 	end
 	return create("Frame")({
 		Name = "Passes",

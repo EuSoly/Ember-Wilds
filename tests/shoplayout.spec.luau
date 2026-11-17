@@ -108,4 +108,32 @@ return {
 			assert(l.spinTile >= 48, `{w}x{h}: quadradinho pequeno demais`)
 		end
 	end,
+
+	["phone pages fit the screen"] = function()
+		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 }, { 599, 264 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			assert(l.paged, `{w}x{h}: devia paginar`)
+			assert(l.contentTop + ShopLayout.SECTION_TITLE + l.pageHeight <= h - 8, `{w}x{h}: página passa da tela`)
+			assert(l.bannerHeight == l.pageHeight, `{w}x{h}: banner devia ocupar a página`)
+			-- 5 gamepasses hoje (4 kits para sempre + VIP).
+			local cols, cardHeight = ShopLayout.passGrid(l, 5)
+			local rows = math.ceil(5 / cols)
+			assert(rows * cardHeight + (rows - 1) * GAP <= l.pageHeight, `{w}x{h}: gamepasses passam da página`)
+			assert(cardHeight >= 120, `{w}x{h}: cartão de gamepass baixo demais ({cardHeight})`)
+			assert(ShopLayout.emberCardHeight(l) <= l.pageHeight, `{w}x{h}: Golden Ember passa da página`)
+		end
+	end,
+
+	["phone passes: one row of 5 at 749"] = function()
+		local cols = ShopLayout.passGrid(ShopLayout.compute(749, 330), 5)
+		assert(cols == 5, `5 colunas, veio {cols}`)
+	end,
+
+	["pc shop unchanged"] = function()
+		local l = ShopLayout.compute(1280, 720)
+		assert(not l.paged, "PC não pagina")
+		local cols, cardHeight = ShopLayout.passGrid(l, 4)
+		assert(cols == 5 and cardHeight == 236, "grade do PC")
+	end,
 }

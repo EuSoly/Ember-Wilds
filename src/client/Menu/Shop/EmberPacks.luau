@@ -124,7 +124,7 @@ local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
 	})
 end
 
-local function row(columns: () -> number, height: number, cards: { Frame }, order: number): Frame
+local function row(columns: () -> number, height: number | () -> number, cards: { Frame }, order: number): Frame
 	local children: { Instance } = { ShopParts.grid(columns, height, ShopLayout.GAP) }
 	for _, c in cards do
 		table.insert(children, c)
@@ -144,25 +144,46 @@ function EmberPacks.build(layout: () -> ShopLayout.Layout): Frame
 	local bottomCount = 2
 	local top: { Frame } = {}
 	local bottom: { Frame } = {}
+	-- Página do celular (17/11/2026): todos os pacotes numa fileira só, com a
+	-- altura da página; as duas fileiras de sempre ficam no PC.
+	local single: { Frame } = {}
 	for i, pack in packs do
 		if i <= #packs - bottomCount then
 			table.insert(top, smallCard(pack, i))
 		else
 			table.insert(bottom, wideCard(pack, i))
 		end
+		table.insert(single, smallCard(pack, i))
 	end
+	local function paged(): boolean
+		return layout().paged
+	end
+	local function notPaged(): boolean
+		return not paged()
+	end
+	local topRow = row(function()
+		return layout().emberTop
+	end, TOP_HEIGHT, top, 1)
+	local bottomRow = row(function()
+		return layout().emberBottom
+	end, BOTTOM_HEIGHT, bottom, 2)
+	local singleRow = row(function()
+		return #packs
+	end, function()
+		return ShopLayout.emberCardHeight(layout())
+	end, single, 3)
+	vide.apply(topRow)({ Visible = notPaged })
+	vide.apply(bottomRow)({ Visible = notPaged })
+	vide.apply(singleRow)({ Visible = paged })
 	return create("Frame")({
 		Name = "EmberPacks",
 		Size = UDim2.fromScale(1, 0),
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
 		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, ShopLayout.GAP) }),
-		row(function()
-			return layout().emberTop
-		end, TOP_HEIGHT, top, 1),
-		row(function()
-			return layout().emberBottom
-		end, BOTTOM_HEIGHT, bottom, 2),
+		topRow,
+		bottomRow,
+		singleRow,
 	}) :: Frame
 end
 

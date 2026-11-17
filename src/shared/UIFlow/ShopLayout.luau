@@ -33,9 +33,16 @@ ShopLayout.SPIN_CARD_HEIGHT_COMPACT = 250 -- teto no celular
 ShopLayout.SPIN_CARD_MIN = 180
 ShopLayout.SPIN_CARD_MIN_WIDTH = 150 -- largura mínima para 4 numa fileira
 ShopLayout.SECTION_TITLE = 36 + 10 -- título da seção + espaço até a grade (ShopParts/ShopScreen)
+-- Celular (17/11/2026): uma página por aba, e cada seção cabe na página sem
+-- mostrar pedaço da seguinte. Os cartões saem da altura livre da página.
+ShopLayout.PASS_CARD_HEIGHT = 236
+ShopLayout.PASS_MIN_WIDTH = 110 -- largura mínima de um cartão de gamepass na fileira (5 cabem na escala 1,25)
+ShopLayout.EMBER_CARD_HEIGHT = 200
 
 export type Layout = {
 	compact: boolean,
+	paged: boolean, -- celular: uma seção por vez (a aba troca a página)
+	pageHeight: number, -- altura para os cartões de uma página (sem o título da seção)
 	top: number,
 	topHeight: number,
 	barX: number, -- começo da barra do topo (voltar, LOJA, abas): na borda da tela
@@ -84,6 +91,8 @@ function ShopLayout.compute(width: number, height: number): Layout
 		)
 		else ShopLayout.SPIN_CARD_HEIGHT
 
+	local pageHeight = math.max(height - contentTop - m - ShopLayout.SECTION_TITLE, 0)
+
 	local spinBoxTop = if compact then m else top + topHeight + m
 	local spinTitleRow = if compact then 34 else 50
 	local spinTile = if compact then 56 else 100
@@ -98,6 +107,8 @@ function ShopLayout.compute(width: number, height: number): Layout
 
 	return {
 		compact = compact,
+		paged = compact,
+		pageHeight = pageHeight,
 		top = top,
 		topHeight = topHeight,
 		barX = m,
@@ -116,13 +127,33 @@ function ShopLayout.compute(width: number, height: number): Layout
 		spinCardHeight = spinCardHeight,
 		emberTop = if compact then 2 else 3,
 		emberBottom = 2,
-		bannerHeight = if compact then math.clamp(height * 0.42, 120, 200) else math.clamp(width * 0.2, 180, 300),
+		bannerHeight = if compact then pageHeight else math.clamp(width * 0.2, 180, 300),
 		spinSideBySide = true,
 		spinBoxTop = spinBoxTop,
 		spinTitleRow = spinTitleRow,
 		spinTile = spinTile,
 		spinSideHeight = math.min(spinSideRoom, ShopLayout.SPIN_SIDE_MAX),
 	}
+end
+
+-- Grade dos gamepasses: colunas e altura do cartão. No PC, 5 colunas de
+-- 236; na página do celular, uma fileira se couber (cartão ≥ PASS_MIN_WIDTH)
+-- e a altura dividida entre as fileiras.
+function ShopLayout.passGrid(l: Layout, count: number): (number, number)
+	if not l.paged then
+		return l.passColumns, ShopLayout.PASS_CARD_HEIGHT
+	end
+	local gap = ShopLayout.GAP
+	local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH + gap))
+	local columns = math.max(math.min(math.max(count, 1), fit), 1)
+	local rows = math.ceil(math.max(count, 1) / columns)
+	local cardHeight = math.min(ShopLayout.PASS_CARD_HEIGHT, (l.pageHeight - (rows - 1) * gap) / rows)
+	return columns, cardHeight
+end
+
+-- Altura dos cartões de Golden Ember na fileira única da página do celular.
+function ShopLayout.emberCardHeight(l: Layout): number
+	return math.min(ShopLayout.EMBER_CARD_HEIGHT, l.pageHeight)
 end
 
 return ShopLayout
