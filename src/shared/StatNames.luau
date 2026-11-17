@@ -97,6 +97,9 @@ return table.freeze({
 	-- CheckInDay = próximo prêmio (1..7), CheckInReady = há prêmio para resgatar hoje.
 	CheckInDay = "CheckInDay",
 	CheckInReady = "CheckInReady",
+	-- Item aleatório pago proibido para o jogador (PolicyService), também atributo
+	-- da pasta Shop. Sem resposta ainda ou com erro = true (lado seguro).
+	PaidRandomBlocked = "PaidRandomBlocked",
 	-- Tutorial da primeira partida (TutorialService), atributos do Player:
 	-- TutorialStep = etapa atual (0 = fora do tutorial, 1..6); TutorialProtected =
 	-- protegido (nem leva nem causa dano); TutorialPending = o perfil ainda não

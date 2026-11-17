@@ -147,6 +147,9 @@ export type PriceProps = {
 	missing: (() -> number)?, -- só Golden Ember: quanto falta (0 = pode comprar)
 	-- Já comprado (produto "once"): botão verde "Comprado", sem clique.
 	owned: (() -> boolean)?,
+	-- Compra proibida (item aleatório pago): botão apagado "Indisponível"; o clique
+	-- ainda chama onClick, que só avisa.
+	blocked: (() -> boolean)?,
 	onClick: () -> (),
 	size: UDim2?,
 	position: UDim2?,
@@ -161,6 +164,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 	local function owned(): boolean
 		return if p.owned then p.owned() else false
 	end
+	local function blocked(): boolean
+		return if p.blocked then p.blocked() else false
+	end
 	local isRobux = p.robux ~= nil
 	local button = Rustic.button({
 		Name = "Price",
@@ -171,6 +177,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 			if owned() then
 				return "success"
 			end
+			if blocked() then
+				return "disabled"
+			end
 			if isRobux then
 				return "green"
 			end
@@ -179,6 +188,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		text = function()
 			if owned() then
 				return Strings.get("shop.bundle.bought")
+			end
+			if blocked() then
+				return Strings.get("shop.spin.blocked")
 			end
 			if isRobux then
 				-- Com o ícone do Robux desenhado, o texto deixa espaço para ele.
@@ -194,7 +206,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		end,
 		maxSize = p.textSize or 22,
 		Activated = function()
-			if missing() <= 0 and not owned() then
+			if (missing() <= 0 or blocked()) and not owned() then
 				p.onClick()
 			end
 		end,
@@ -203,7 +215,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		create("ImageLabel")({
 			Name = "RobuxIcon",
 			Visible = function()
-				return not owned()
+				return not owned() and not blocked()
 			end,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.fromScale(0.42, 0.46),
@@ -221,7 +233,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		create("ImageLabel")({
 			Name = "Coin",
 			Visible = function()
-				return missing() <= 0 and not owned()
+				return missing() <= 0 and not owned() and not blocked()
 			end,
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.fromScale(0.42, 0.46),

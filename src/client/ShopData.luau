@@ -28,6 +28,7 @@ export type Snapshot = {
 	vipUntil: number, -- unix (servidor); 0 = sem VIP
 	xpBoostStart: number,
 	xpBoostUntil: number, -- unix (servidor); 0 = sem boost
+	paidRandomBlocked: boolean, -- sem comprar giros (política); true até o servidor dizer false
 }
 
 type Source<T> = (() -> T) & ((T) -> T)
@@ -44,6 +45,7 @@ local function empty(): Snapshot
 		vipUntil = 0,
 		xpBoostStart = 0,
 		xpBoostUntil = 0,
+		paidRandomBlocked = true,
 	}
 end
 
@@ -72,6 +74,11 @@ end
 -- Kit para sempre ativo (nil = nenhum).
 function ShopData.kitActive(): string?
 	return snapshot().active
+end
+
+-- Comprar giros (e pacotes com giros) está bloqueado para este jogador?
+function ShopData.paidRandomBlocked(): boolean
+	return snapshot().paidRandomBlocked
 end
 
 function ShopData.purchased(productId: string): boolean
@@ -178,6 +185,7 @@ local function read(root: Instance): Snapshot
 		vipUntil = numberAttribute(root, StatNames.VipUntil),
 		xpBoostStart = numberAttribute(root, StatNames.XpBoostStart),
 		xpBoostUntil = numberAttribute(root, StatNames.XpBoostUntil),
+		paidRandomBlocked = root:GetAttribute(StatNames.PaidRandomBlocked) ~= false,
 	}
 end
 

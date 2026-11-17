@@ -11,6 +11,7 @@
 -- e subpastas com um objeto
 -- por kit possuído, saldo de kit, produto "once" comprado e passe.
 local Players = game:GetService("Players")
+local PolicyService = game:GetService("PolicyService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -43,6 +44,15 @@ local ShopService = {}
 
 local throttle = Throttle.new(REQUEST_COOLDOWN)
 local rng = Random.new()
+
+-- Item aleatório pago proibido por jogador (PolicyService). Sem resposta ainda
+-- (ou consulta falhou) = bloqueado: o lado seguro. true/false só vem da consulta.
+local randomBlocked: { [Player]: boolean } = {}
+
+-- Giros comprados (e pacotes com giros) estão bloqueados para o jogador?
+function ShopService.randomBlocked(player: Player): boolean
+	return randomBlocked[player] ~= false
+end
 
 local function shopOf(player: Player): ShopData.ShopData?
 	local data = DataService.data(player)
@@ -107,6 +117,7 @@ local function fill(player: Player, root: Folder, d: ShopData.ShopData)
 	root:SetAttribute(StatNames.SpinsPaid, d.Spins.paid)
 	root:SetAttribute(StatNames.KitActive, d.KitActive)
 	-- Check-in: o servidor decide se há prêmio hoje (dia de Brasília); o cliente só lê.
+	root:SetAttribute(StatNames.PaidRandomBlocked, ShopService.randomBlocked(player))
 	root:SetAttribute(StatNames.CheckInDay, d.CheckIn.Day)
 	root:SetAttribute(StatNames.CheckInReady, CheckInRules.canClaim(d.CheckIn, RankRules.dayIndex(os.time())))
 	syncFlags(folderIn(root, StatNames.KitsOwnedFolder), d.KitsOwned)
@@ -261,7 +272,8 @@ function ShopService.purchase(player: Player, productId: string): (boolean, stri
 		return false, "error"
 	end
 	local product = Products.get(productId)
-	local refusal = PurchaseRules.check(product, d, os.time(), CurrencyService.balance(player))
+	local refusal =
+		PurchaseRules.check(product, d, os.time(), CurrencyService.balance(player), ShopService.randomBlocked(player))
 	if refusal ~= nil or product == nil then
 		return false, refusal or "unknown"
 	end
@@ -395,12 +407,25 @@ function ShopService.Start(_self)
 		-- Posse no perfil é a verdade; só limpa marcas false (ShopData.clean).
 		ShopData.clean(d)
 		publish(player)
+		-- Consulta a política em segundo plano (não trava o carregamento). Até a
+		-- resposta, e se ela falhar, o jogador fica restrito.
+		task.spawn(function()
+			local ok, info = pcall(function()
+				return PolicyService:GetPolicyInfoForPlayerAsync(player)
+			end)
+			if not player.Parent then
+				return
+			end
+			randomBlocked[player] = not (ok and type(info) == "table" and info.ArePaidRandomItemsRestricted == false)
+			publish(player)
+		end)
 	end)
 	Net.RequestPurchase.On(onPurchase)
 	Net.RequestSpin.On(onSpin)
 	Net.SetActiveKit.On(onSetActive)
 	Players.PlayerRemoving:Connect(function(player)
 		Throttle.forget(throttle, player)
+		randomBlocked[player] = nil
 	end)
 end
 

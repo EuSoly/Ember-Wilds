@@ -197,7 +197,12 @@ local function side(
 						else function()
 							return math.max(offer.price - currency(), 0)
 						end,
+					blocked = ShopData.paidRandomBlocked,
 					onClick = function()
+						if ShopData.paidRandomBlocked() then
+							MenuState.notify(Strings.get("shop.result.restricted"))
+							return
+						end
 						Purchase.buy(`spins_{kind}_{offer.qty}`)
 					end,
 					position = UDim2.fromScale(0, 0.26),
@@ -289,6 +294,9 @@ local function side(
 				Size = UDim2.new(1, 0, 0, 22),
 				FontFace = Theme.font.number,
 				Text = function()
+					if ShopData.paidRandomBlocked() then
+						return Strings.get("shop.spin.blockedNote")
+					end
 					return Strings.format("shop.spin.have", { count = count() })
 				end,
 				maxSize = 20,

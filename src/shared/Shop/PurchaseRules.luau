@@ -5,13 +5,16 @@
 --   "closed"  fora da data (pacote que ainda não começou ou já acabou)
 --   "bought"  produto "once" que o jogador já comprou
 --   "balance" Golden Ember insuficiente
+--   "restricted" item aleatório pago proibido para este jogador (giros e
+--             pacotes com giros; regra de política do Roblox)
 -- Preço em Robux ainda não é cobrado: nunca recusa por saldo de Robux.
 local Rewards = require("./Rewards")
+local Products = require("./Products")
 local ShopData = require("./ShopData")
 local ShopDates = require("./ShopDates")
 local ShopTypes = require("./Types")
 
-export type Refusal = "unknown" | "closed" | "bought" | "balance"
+export type Refusal = "unknown" | "closed" | "bought" | "balance" | "restricted"
 
 local PurchaseRules = {}
 
@@ -19,11 +22,15 @@ function PurchaseRules.check(
 	product: ShopTypes.Product?,
 	d: ShopData.ShopData,
 	now: number,
-	emberBalance: number
+	emberBalance: number,
+	randomBlocked: boolean?
 ): Refusal?
 	-- Produto escondido (revive): só o serviço dele usa; para a loja não existe.
 	if product == nil or product.hidden == true then
 		return "unknown"
+	end
+	if randomBlocked == true and Products.hasRandom(product) then
+		return "restricted"
 	end
 	if not ShopDates.isOpen(product.startsAt, product.endsAt, now) then
 		return "closed"

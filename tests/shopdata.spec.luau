@@ -119,6 +119,43 @@ return {
 		assert(PurchaseRules.check(product("spins_paid_10"), ShopData.empty(), 0, 0) == nil, "Robux não é cobrado")
 	end,
 
+	["restricted blocks spin packs of both kinds"] = function()
+		local d = ShopData.empty()
+		assert(PurchaseRules.check(product("spins_normal_1"), d, 0, 1000, true) == "restricted", "normal")
+		assert(PurchaseRules.check(product("spins_paid_1"), d, 0, 0, true) == "restricted", "especial")
+		assert(Products.hasRandom(product("spins_paid_1")), "hasRandom spins")
+	end,
+
+	["restricted blocks bundles with spins only"] = function()
+		local withSpins, withoutSpins = nil, nil
+		for _, p in Products.all() do
+			if p.kind == "bundle" then
+				if Products.hasRandom(p) then
+					withSpins = withSpins or p
+				else
+					withoutSpins = withoutSpins or p
+				end
+			end
+		end
+		assert(withSpins ~= nil, "há pacote com giros")
+		local at = withSpins.startsAt :: number
+		assert(PurchaseRules.check(withSpins, ShopData.empty(), at, 0, true) == "restricted", "com giros")
+		assert(PurchaseRules.check(withSpins, ShopData.empty(), at, 0, false) == nil, "liberado compra")
+		if withoutSpins ~= nil then
+			assert(
+				PurchaseRules.check(withoutSpins, ShopData.empty(), withoutSpins.startsAt :: number, 0, true) == nil,
+				"sem giros passa"
+			)
+		end
+		assert(PurchaseRules.check(product("pack_300"), ShopData.empty(), 0, 0, true) == nil, "outros passam")
+	end,
+
+	["unrestricted buys normally"] = function()
+		local d = ShopData.empty()
+		assert(PurchaseRules.check(product("spins_paid_1"), d, 0, 0, false) == nil, "false")
+		assert(PurchaseRules.check(product("spins_paid_1"), d, 0, 0, nil) == nil, "nil")
+	end,
+
 	["a bad balance never pays"] = function()
 		local spins = product("spins_normal_1")
 		assert(PurchaseRules.check(spins, ShopData.empty(), 0, 0 / 0) == "balance", "NaN não paga")

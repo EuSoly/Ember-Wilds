@@ -225,6 +225,17 @@ function Products.get(id: string): Product?
 	return BY_ID[id]
 end
 
+-- Compra de item aleatório pago: giros (normal = Golden Ember, que se compra com
+-- Robux; especial = Robux) ou pacote com giros. Bloqueado onde a lei proíbe.
+function Products.hasRandom(product: Product): boolean
+	for _, reward in product.rewards do
+		if reward.kind == "spins" then
+			return true
+		end
+	end
+	return false
+end
+
 -- O pacote como escrito em Shop/Bundles (para a tela: tema, raridade...).
 function Products.bundleDef(bundleId: string): BundleDef?
 	for _, bundle in Bundles do

@@ -175,8 +175,12 @@ function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): F
 	-- Ids dos pacotes abertos agora, na ordem de Shop/Bundles.
 	local openIds = vide.derive(function(): { string }
 		local ids: { string } = {}
+		local blocked = ShopData.paidRandomBlocked()
 		for _, product in Products.bundles(now()) do
-			table.insert(ids, product.id)
+			-- Pacote com giros não aparece onde item aleatório pago é proibido.
+			if not (blocked and Products.hasRandom(product)) then
+				table.insert(ids, product.id)
+			end
 		end
 		return ids
 	end)
