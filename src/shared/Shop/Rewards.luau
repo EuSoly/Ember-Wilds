@@ -84,7 +84,7 @@ local KINDS: { [string]: KindDef } = {
 			return nil
 		end,
 	},
-	-- Passe para sempre (ShopConfig.PASSES; ex. "vip").
+	-- Passe para sempre (ShopConfig.PASSES; ex. "ember2x").
 	pass = {
 		validate = function(reward: Reward, _defs: Defs): string?
 			if type(reward.id) ~= "string" or ShopConfig.PASSES[reward.id] == nil then
@@ -94,6 +94,33 @@ local KINDS: { [string]: KindDef } = {
 		end,
 		owned = function(reward: Reward, d: ShopData.ShopData): boolean
 			return reward.id ~= nil and d.Passes[reward.id] == true
+		end,
+	},
+	-- VIP por tempo: `count` dias.
+	vip = {
+		validate = function(reward: Reward, _defs: Defs): string?
+			if not positiveInt(reward.count) then
+				return `vip: count (dias) precisa ser inteiro ≥ 1 (veio {reward.count})`
+			end
+			return nil
+		end,
+	},
+	-- Boost de XP: `count` segundos.
+	xpBoost = {
+		validate = function(reward: Reward, _defs: Defs): string?
+			if not positiveInt(reward.count) then
+				return `xpBoost: count (segundos) precisa ser inteiro ≥ 1 (veio {reward.count})`
+			end
+			return nil
+		end,
+	},
+	-- Revive de cortesia guardado.
+	reviveCredit = {
+		validate = function(reward: Reward, _defs: Defs): string?
+			if not positiveInt(reward.count) then
+				return `reviveCredit: count precisa ser inteiro ≥ 1 (veio {reward.count})`
+			end
+			return nil
 		end,
 	},
 }

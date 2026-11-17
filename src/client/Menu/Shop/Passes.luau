@@ -159,7 +159,7 @@ end
 function Passes.build(layout: () -> ShopLayout.Layout): Frame
 	local passes: { Pass } = {}
 	for _, product in Products.all() do
-		local pass = passOf(product)
+		local pass = if product.hidden then nil else passOf(product)
 		if pass then
 			table.insert(passes, pass)
 		end

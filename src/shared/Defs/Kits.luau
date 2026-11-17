@@ -95,6 +95,23 @@ local Kits: { [string]: KitDef } = {
 			{ id = "big_campfire", count = 4 },
 		},
 	},
+	-- Só do VIP (Shop/Perks.unlockedKits): fora da loja; aparece para todos, só o VIP usa.
+	kit_vip = {
+		id = "kit_vip",
+		nameKey = "kit.kit_vip",
+		order = 7,
+		price = 0,
+		exclusive = true,
+		vipOnly = true,
+		items = {
+			{ id = "berry", count = 20 },
+			{ id = "wood", count = 120 },
+			{ id = "stone", count = 80 },
+			{ id = "stone_pickaxe", count = 1 },
+			{ id = "big_campfire", count = 1 },
+			{ id = "wood_wall", count = 8 },
+		},
+	},
 }
 
 for _, kit in Kits do

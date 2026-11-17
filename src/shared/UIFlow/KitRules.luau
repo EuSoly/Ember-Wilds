@@ -20,11 +20,12 @@ function KitRules.sorted(kits: { [string]: KitDef }): { KitDef }
 end
 
 -- Kits que o jogador vê, na ordem da tela: os exclusivos (só de conquista)
--- só para quem tem a posse (Shop.KitsOwned).
+-- só para quem tem a posse (Shop.KitsOwned). Os vipOnly aparecem para todos
+-- (vitrine do VIP); quem pode usar é decidido por Shop/Perks.
 function KitRules.visible(kits: { [string]: KitDef }, owned: { [string]: boolean }): { KitDef }
 	local list: { KitDef } = {}
 	for _, kit in KitRules.sorted(kits) do
-		if not kit.exclusive or owned[kit.id] == true then
+		if not kit.exclusive or kit.vipOnly == true or owned[kit.id] == true then
 			table.insert(list, kit)
 		end
 	end

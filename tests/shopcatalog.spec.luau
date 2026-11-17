@@ -50,7 +50,7 @@ return {
 		assert(rewardError({ kind = "spins", spin = "paid", count = 2 }) == nil, "spins")
 		assert(rewardError({ kind = "kit", id = "kit_explorer" }) == nil, "kit")
 		assert(rewardError({ kind = "kitOnce", id = "kit_explorer", count = 1 }) == nil, "kitOnce")
-		assert(rewardError({ kind = "pass", id = "vip" }) == nil, "pass")
+		assert(rewardError({ kind = "pass", id = "ember2x" }) == nil, "pass")
 	end,
 
 	["invalid rewards are refused with the field name"] = function()
@@ -120,8 +120,8 @@ return {
 		assert(paid ~= nil and paid.price.currency == "robux" and paid.rewards[1].count == 10, "10 especiais")
 		local pack = Products.get("pack_2600")
 		assert(pack ~= nil and pack.rewards[1].kind == "ember" and pack.rewards[1].amount == 2600, "pacote de moeda")
-		local vip = Products.get("pass_vip")
-		assert(vip ~= nil and vip.once and vip.price.currency == "robux", "VIP é Robux e uma vez")
+		local vip = Products.get("pass_ember2x")
+		assert(vip ~= nil and vip.once and vip.price.currency == "robux", "2× é Robux e uma vez")
 		assert(Products.get("nada") == nil, "produto inexistente")
 	end,
 
@@ -173,7 +173,7 @@ return {
 		for i, pack in ShopConfig.EMBER_PACKS do
 			assert(pack.amount == expected[i][1] and pack.robux == expected[i][2], `pacote {i}`)
 		end
-		assert(ShopConfig.PASSES.vip.robux == 149, "VIP de 149")
+		assert(ShopConfig.VIP.robux == 99 and ShopConfig.VIP.days == 30, "VIP de 99 por 30 dias")
 	end,
 
 	["spin odds and refunds"] = function()
@@ -187,5 +187,53 @@ return {
 		local def = Products.bundleDef("brasa")
 		assert(brasa ~= nil and def ~= nil and def.startsAt ~= nil, "pacote de exemplo")
 		assert(brasa.startsAt == ShopDates.parse(def.startsAt :: string), "início convertido")
+	end,
+
+	["vip pass is gone, ember2x and book exist"] = function()
+		assert(Products.get("pass_vip") == nil, "pass_vip ainda existe")
+		local ember2x = Products.get("pass_ember2x")
+		local book = Products.get("pass_book")
+		assert(ember2x ~= nil and ember2x.price.amount == 199, "pass_ember2x de 199")
+		assert(book ~= nil and book.price.amount == 99, "pass_book de 99")
+	end,
+
+	["vip and boost products"] = function()
+		local vip = Products.get("vip_30d")
+		assert(vip ~= nil and vip.price.amount == 99 and vip.once == false, "vip_30d")
+		assert(vip.rewards[1].kind == "vip" and vip.rewards[1].count == 30, "30 dias")
+		local boost = Products.get("xpboost_1h")
+		assert(boost ~= nil and boost.price.amount == 49, "xpboost_1h")
+		assert(boost.rewards[1].kind == "xpBoost" and boost.rewards[1].count == 3600, "1 hora")
+	end,
+
+	["revive products are hidden and priced by step"] = function()
+		local prices = { 25, 49, 99, 199 }
+		for step, robux in prices do
+			local product = Products.get(`revive_{step}`)
+			assert(product ~= nil and product.hidden == true, `revive_{step} escondido`)
+			assert(product.price.amount == robux, `revive_{step}: {product.price.amount}`)
+		end
+		assert(Products.get("revive_3").hidden == true, "revive_3")
+	end,
+
+	["checkin rewards are valid"] = function()
+		assert(#ShopConfig.CHECKIN == 7, "7 dias")
+		for day, reward in ShopConfig.CHECKIN do
+			local message = rewardError(reward)
+			assert(message == nil, `dia {day}: {message}`)
+		end
+	end,
+
+	["new reward kinds validate counts"] = function()
+		for _, kind in { "vip", "xpBoost", "reviveCredit" } do
+			assert(rewardError({ kind = kind, count = 1 }) == nil, `{kind} válido`)
+			assert(rewardError({ kind = kind }) ~= nil, `{kind} sem count`)
+			assert(rewardError({ kind = kind, count = 0 }) ~= nil, `{kind} count 0`)
+		end
+	end,
+
+	["perk bonus config"] = function()
+		assert(ShopConfig.PERK_BONUS.ember2x == 1 and ShopConfig.PERK_BONUS.vip == 0.5, "bônus")
+		assert(ShopConfig.PERK_BONUS.premium == 0.2, "premium")
 	end,
 }

@@ -25,7 +25,7 @@ export type BundleDef = {
 }
 
 export type Price = { currency: "robux" | "ember", amount: number }
-export type ProductKind = "bundle" | "pack" | "spins" | "kitOnce" | "kit" | "pass"
+export type ProductKind = "bundle" | "pack" | "spins" | "kitOnce" | "kit" | "pass" | "vip" | "boost" | "revive"
 
 -- Tudo que se compra. `once` = cada jogador compra uma vez só.
 export type Product = {
@@ -38,6 +38,7 @@ export type Product = {
 	rewards: { Reward },
 	nameKey: string?,
 	order: number,
+	hidden: boolean?, -- não aparece na loja nem se compra pelo RequestPurchase (ex. revive)
 }
 
 return nil

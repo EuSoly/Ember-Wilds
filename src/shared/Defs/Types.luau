@@ -286,6 +286,8 @@ export type KitDef = {
 	-- Só de conquista (Defs/Achievements): fora da loja e dos pontos; só
 	-- aparece e só vem para quem tem a posse (Shop.KitsOwned).
 	exclusive: boolean?,
+	-- Só para quem é VIP (Shop.VipUntil > agora); ver Shop/Perks.unlockedKits.
+	vipOnly: boolean?,
 }
 
 -- Recursos do mundo (árvore, rocha...). radius = espaço que ocupa (para o

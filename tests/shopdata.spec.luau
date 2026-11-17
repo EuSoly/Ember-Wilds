@@ -97,8 +97,8 @@ return {
 
 	["pass already owned by another path is refused"] = function()
 		local d = ShopData.empty()
-		ShopData.setPass(d, "vip")
-		assert(PurchaseRules.check(product("pass_vip"), d, 0, 0) == "bought", "já tem o VIP")
+		ShopData.setPass(d, "ember2x")
+		assert(PurchaseRules.check(product("pass_ember2x"), d, 0, 0) == "bought", "já tem o 2×")
 	end,
 
 	["bundle is not refused because part of it is owned"] = function()
@@ -122,5 +122,33 @@ return {
 	["a bad balance never pays"] = function()
 		local spins = product("spins_normal_1")
 		assert(PurchaseRules.check(spins, ShopData.empty(), 0, 0 / 0) == "balance", "NaN não paga")
+	end,
+
+	["vip days stack from the later of now and VipUntil"] = function()
+		local d = ShopData.empty()
+		ShopData.addVipDays(d, 30, 1000)
+		assert(d.VipUntil == 1000 + 30 * 86400, `veio {d.VipUntil}`)
+		ShopData.addVipDays(d, 30, 2000)
+		assert(d.VipUntil == 1000 + 60 * 86400, `veio {d.VipUntil}`)
+	end,
+
+	["boost restarts after expiring"] = function()
+		local d = ShopData.empty()
+		ShopData.addBoost(d, 3600, 0)
+		assert(d.BoostStart == 0 and d.BoostUntil == 3600, `{d.BoostStart}/{d.BoostUntil}`)
+		ShopData.addBoost(d, 3600, 5000)
+		assert(d.BoostStart == 5000 and d.BoostUntil == 8600, `{d.BoostStart}/{d.BoostUntil}`)
+		ShopData.addBoost(d, 3600, 8000)
+		assert(d.BoostStart == 5000 and d.BoostUntil == 12200, `{d.BoostStart}/{d.BoostUntil}`)
+	end,
+
+	["new profile fields start empty"] = function()
+		local d = ShopData.empty()
+		assert(d.VipUntil == 0 and d.BoostStart == 0 and d.BoostUntil == 0 and d.ReviveCredits == 0, "zeros")
+		assert(d.CheckIn.Day == 1 and d.CheckIn.LastDay == 0, "check-in")
+	end,
+
+	["hidden product is unknown for the shop"] = function()
+		assert(PurchaseRules.check(product("revive_1"), ShopData.empty(), 0, 0) == "unknown", "revive escondido")
 	end,
 }

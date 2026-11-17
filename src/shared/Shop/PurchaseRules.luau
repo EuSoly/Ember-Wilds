@@ -1,7 +1,7 @@
 --!strict
 -- Pode comprar? (puro). O servidor chama antes de cobrar e entregar; a tela
 -- usa os mesmos motivos para explicar a recusa.
---   "unknown" produto que não existe
+--   "unknown" produto que não existe (ou escondido: hidden)
 --   "closed"  fora da data (pacote que ainda não começou ou já acabou)
 --   "bought"  produto "once" que o jogador já comprou
 --   "balance" Golden Ember insuficiente
@@ -21,7 +21,8 @@ function PurchaseRules.check(
 	now: number,
 	emberBalance: number
 ): Refusal?
-	if product == nil then
+	-- Produto escondido (revive): só o serviço dele usa; para a loja não existe.
+	if product == nil or product.hidden == true then
 		return "unknown"
 	end
 	if not ShopDates.isOpen(product.startsAt, product.endsAt, now) then

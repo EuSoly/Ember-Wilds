@@ -2,6 +2,8 @@
 -- Kits falsos montados aqui: os preços e itens reais (Defs/Kits) vão mudar.
 local KitRules = require("../src/shared/UIFlow/KitRules")
 local Types = require("../src/shared/Defs/Types")
+local Defs = require("../src/shared/Defs")
+local Products = require("../src/shared/Shop/Products")
 
 type KitDef = Types.KitDef
 
@@ -44,5 +46,12 @@ return {
 		assert(ok2 == false and left2 == 5000, `comprou {ok2}, sobrou {left2}`)
 		local ok3, left3 = KitRules.buy(nil, 300)
 		assert(ok3 == false and left3 == 300, `comprou {ok3}, sobrou {left3}`)
+	end,
+
+	["kit_vip is vipOnly and not sold"] = function()
+		assert(Defs.Kits.kit_vip.vipOnly == true and Defs.Kits.kit_vip.exclusive == true, "flags")
+		assert(Products.get("kit_kit_vip") == nil, "kit_vip à venda")
+		assert(Products.get("kitonce_kit_vip") == nil, "kit_vip à venda (1 vida)")
+		assert(not KitRules.canBuy(Defs.Kits.kit_vip, 999999), "kit_vip comprável com pontos")
 	end,
 }

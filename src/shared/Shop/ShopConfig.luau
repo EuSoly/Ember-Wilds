@@ -46,9 +46,37 @@ ShopConfig.KIT_ROBUX = table.freeze({
 
 export type PassDef = { nameKey: string, descKey: string, robux: number }
 -- Passes (vantagens para sempre). O efeito de cada um fica no servidor
--- (vip: +InventoryConfig.vipPass.bonusSlots espaços).
+-- (ember2x: +1 no multiplicador de Golden Ember; book: nasce com o livro).
 ShopConfig.PASSES = table.freeze({
-	vip = { nameKey = "shop.pass.vip", descKey = "shop.pass.vip.desc", robux = 149 },
+	ember2x = { nameKey = "shop.pass.ember2x", descKey = "shop.pass.ember2x.desc", robux = 199 },
+	book = { nameKey = "shop.pass.book", descKey = "shop.pass.book.desc", robux = 99 },
 }) :: { [string]: PassDef }
+
+-- VIP por tempo (não é gamepass): Robux por `days` dias.
+ShopConfig.VIP = table.freeze({ robux = 99, days = 30 })
+
+-- Bônus somados no multiplicador de Golden Ember (base 1): 1 + 1 + 0,5 + 0,2 = 2,7.
+ShopConfig.PERK_BONUS = table.freeze({ ember2x = 1, vip = 0.5, premium = 0.2 })
+
+-- Preço de cada degrau do revive (para no último).
+ShopConfig.REVIVE_ROBUX = table.freeze({ 25, 49, 99, 199 })
+
+-- Boost de XP: cada compra soma `seconds`.
+ShopConfig.XP_BOOST = table.freeze({ robux = 49, seconds = 3600 })
+
+-- Prêmios do check-in diário (dia 1..7; depois do 7 volta ao 1).
+local checkin: { ShopTypes.Reward } = {
+	{ kind = "ember", amount = 100 },
+	{ kind = "spins", spin = "normal", count = 1 },
+	{ kind = "ember", amount = 150 },
+	{ kind = "kitOnce", id = "kit_explorer", count = 1 },
+	{ kind = "ember", amount = 200 },
+	{ kind = "spins", spin = "normal", count = 2 },
+	{ kind = "spins", spin = "paid", count = 5 },
+}
+for _, reward in checkin do
+	table.freeze(reward)
+end
+ShopConfig.CHECKIN = table.freeze(checkin)
 
 return ShopConfig

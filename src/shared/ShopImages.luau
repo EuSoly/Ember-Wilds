@@ -46,7 +46,6 @@ ShopImages.PASS = {
 	kit_explorer = "rbxassetid://115992262876096", -- picareta
 	kit_survivor = "rbxassetid://89195781946000", -- mochila
 	kit_veteran = "rbxassetid://90193660058023", -- medalha
-	vip = "rbxassetid://109684898286867", -- estrela
 } :: { [string]: string }
 
 function ShopImages.has(id: string?): boolean

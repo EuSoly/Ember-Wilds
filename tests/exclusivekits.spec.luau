@@ -50,4 +50,10 @@ return {
 		local otherId = KitChoice.resolve({ kitId = "kit_guardian", source = "points" }, notOwned, Defs.Kits)
 		assert(otherId == nil, "kit exclusivo veio por pontos")
 	end,
+
+	["vipOnly kit is visible without ownership"] = function()
+		local without = ids(KitRules.visible(Defs.Kits, {}))
+		assert(without.kit_vip, "kit_vip some sem posse")
+		assert(not without.kit_hunter, "kit de conquista continua escondido")
+	end,
 }

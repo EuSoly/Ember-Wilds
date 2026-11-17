@@ -982,7 +982,10 @@ return table.freeze({
 	["shop.pass.kit_explorer"] = "Kit Explorador",
 	["shop.pass.kit_survivor"] = "Kit Sobrevivente",
 	["shop.pass.kit_veteran"] = "Kit Veterano",
-	["shop.pass.vip"] = "VIP",
+	["shop.pass.ember2x"] = "2× Golden Ember",
+	["shop.pass.book"] = "Nascer com livro",
+	["shop.vip.name"] = "VIP",
+	["shop.boost.name"] = "Boost de XP",
 	-- Loja (UI 2): tela
 	["shop.title"] = "LOJA",
 	["shop.back"] = "◀ Menu",
@@ -1015,7 +1018,8 @@ return table.freeze({
 	["shop.rarity.epic"] = "Épico",
 	["shop.rarity.legendary"] = "Lendário",
 	["shop.rarity.mythic"] = "Mítico",
-	["shop.pass.vip.desc"] = "+3 espaços no inventário",
+	["shop.pass.ember2x.desc"] = "Dobra a Golden Ember que você ganha jogando.",
+	["shop.pass.book.desc"] = "Você nasce sempre com o livro de craft.",
 	["mock.tag.popular"] = "Popular",
 	["mock.tag.off30"] = "30% off",
 	["mock.tag.best"] = "Melhor oferta",
@@ -1170,4 +1174,5 @@ return table.freeze({
 	["stat.chrono_completed"] = "Chrono quests",
 	["kit.kit_hunter"] = "Caçador",
 	["kit.kit_guardian"] = "Guardião da Floresta",
+	["kit.kit_vip"] = "Kit VIP",
 })

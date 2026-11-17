@@ -167,7 +167,7 @@ end
 function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): Frame
 	local all: { Products.Product } = {}
 	for _, product in Products.all() do
-		if product.kind == "bundle" then
+		if product.kind == "bundle" and not product.hidden then
 			table.insert(all, product)
 		end
 	end

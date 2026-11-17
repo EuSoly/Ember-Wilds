@@ -12,6 +12,9 @@
 --   kitonce_<kit>           +1 no saldo de 1 vida do kit
 --   kit_<kit>               kit para sempre (uma vez)
 --   pass_<passe>            passe para sempre (uma vez)
+--   vip_30d                 VIP por 30 dias (soma ao renovar)
+--   xpboost_1h              +1 h de boost de XP (soma)
+--   revive_1..revive_4      degraus do revive (hidden: só o ReviveService usa)
 local Defs = require("../Defs")
 local DefsTypes = require("../Defs/Types")
 local Strings = require("../Strings")
@@ -174,6 +177,35 @@ local function build(): { Product }
 			rewards = { { kind = "pass", id = passId } },
 			nameKey = pass.nameKey,
 			order = 0,
+		})
+	end
+	add({
+		id = "vip_30d",
+		kind = "vip",
+		price = { currency = "robux", amount = ShopConfig.VIP.robux },
+		once = false,
+		rewards = { { kind = "vip", count = ShopConfig.VIP.days } },
+		nameKey = "shop.vip.name",
+		order = 0,
+	})
+	add({
+		id = "xpboost_1h",
+		kind = "boost",
+		price = { currency = "robux", amount = ShopConfig.XP_BOOST.robux },
+		once = false,
+		rewards = { { kind = "xpBoost", count = ShopConfig.XP_BOOST.seconds } },
+		nameKey = "shop.boost.name",
+		order = 0,
+	})
+	for step, robux in ShopConfig.REVIVE_ROBUX do
+		add({
+			id = `revive_{step}`,
+			kind = "revive",
+			price = { currency = "robux", amount = robux },
+			once = false,
+			rewards = {},
+			order = 0,
+			hidden = true,
 		})
 	end
 	return list

@@ -10,7 +10,12 @@ export type ShopData = {
 	KitsOwned: { [string]: boolean }, -- kits para sempre
 	KitBalance: { [string]: number }, -- saldo de 1 vida por kit (sem a chave = 0)
 	KitActive: string, -- kit para sempre ativo ("" = nenhum; o perfil não guarda nil)
-	Passes: { [string]: boolean }, -- passes (ex. vip)
+	Passes: { [string]: boolean }, -- passes (ex. ember2x, book)
+	VipUntil: number, -- unix em que o VIP acaba (0 = nunca teve)
+	BoostStart: number, -- unix em que o boost de XP atual começou
+	BoostUntil: number, -- unix em que o boost de XP acaba (<= agora = sem boost)
+	ReviveCredits: number, -- revives de cortesia guardados
+	CheckIn: { Day: number, LastDay: number }, -- Day = próximo prêmio (1..7); LastDay = RankRules.dayIndex do último resgate (0 = nunca)
 }
 
 local ShopData = {}
@@ -24,6 +29,11 @@ function ShopData.empty(): ShopData
 		KitBalance = {},
 		KitActive = "",
 		Passes = {},
+		VipUntil = 0,
+		BoostStart = 0,
+		BoostUntil = 0,
+		ReviveCredits = 0,
+		CheckIn = { Day = 1, LastDay = 0 },
 	}
 end
 
@@ -78,6 +88,20 @@ end
 
 function ShopData.setPass(d: ShopData, passId: string)
 	d.Passes[passId] = true
+end
+
+-- Soma `days` de VIP a partir do mais tarde entre agora e o fim atual.
+function ShopData.addVipDays(d: ShopData, days: number, now: number)
+	d.VipUntil = math.max(now, d.VipUntil) + days * 86400
+end
+
+-- Soma `seconds` de boost de XP. Boost que já tinha acabado recomeça agora;
+-- boost em andamento só estende o fim.
+function ShopData.addBoost(d: ShopData, seconds: number, now: number)
+	if d.BoostUntil <= now then
+		d.BoostStart = now
+	end
+	d.BoostUntil = math.max(now, d.BoostUntil) + seconds
 end
 
 function ShopData.markPurchased(d: ShopData, productId: string)
