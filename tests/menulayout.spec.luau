@@ -30,11 +30,38 @@ return {
 		eachSize(function(_, _, l)
 			local room = l.columnBottom - l.bodyTop
 			assert(l.columnScrolls == (l.columnContentHeight > room), "scroll flag wrong")
-			assert(l.buttonHeight >= 44, "buttons below touch min")
-			assert(l.columnContentHeight >= MenuLayout.NAV_COUNT * 44, "buttons below touch min")
+			-- Compacto: 40 de altura, exceção pedida pelo Elizeu (17/11/2026) para
+			-- os 6 botões caberem no celular deitado.
+			local minButton = if l.compact then 40 else 44
+			assert(l.buttonHeight >= minButton, "buttons below touch min")
+			local expected = MenuLayout.NAV_COUNT * l.buttonHeight + (MenuLayout.NAV_COUNT - 1) * l.buttonGap
+			assert(l.columnContentHeight == expected, "content height ignores the gap")
 		end)
 		-- No menor caso de PC (800x400) os 6 botões ainda cabem sem rolar.
 		assert(not MenuLayout.compute(800, 400).columnScrolls, "800x400 should fit")
+	end,
+	["phone sizes fit the column without scrolling"] = function()
+		for _, s in { { 749, 330 }, { 844, 390 }, { 667, 375 } } do
+			local l = MenuLayout.compute(s[1], s[2])
+			assert(not l.columnScrolls, `{s[1]}x{s[2]}: coluna rola`)
+			assert(l.buttonHeight == 40, `{s[1]}x{s[2]}: botão compacto`)
+		end
+		assert(MenuLayout.compute(749, 330).bodyTop == 64, "corpo começa em 64 no celular")
+	end,
+	["small phone and big ui scale keep the column inside"] = function()
+		for _, s in { { 568, 320 }, { 599, 264 } } do
+			local w, h = s[1], s[2]
+			local l = MenuLayout.compute(w, h)
+			assert(l.columnBottom <= h, `{w}x{h}: coluna sai por baixo`)
+			assert(l.bodyTop >= l.podBottom, `{w}x{h}: coluna por cima dos pods`)
+		end
+	end,
+	["pc keeps the old sizes"] = function()
+		local l = MenuLayout.compute(1280, 720)
+		assert(l.podHeight == 56, "pod do PC")
+		assert(l.buttonHeight == 52, "botão do PC")
+		assert(l.buttonGap == 4, "espaço do PC")
+		assert(l.bodyTop == MenuLayout.BODY_TOP, "corpo do PC")
 	end,
 	["title row holds a touch-size close button"] = function()
 		assert(MenuLayout.TITLE_ROW >= 44, "title row too short")

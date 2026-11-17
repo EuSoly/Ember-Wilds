@@ -10,6 +10,10 @@ local MenuLayout = {}
 
 MenuLayout.MARGIN = 8
 MenuLayout.POD_HEIGHT = 56 -- dois pods nos cantos; o centro fica livre para o logo
+-- Celular deitado (17/11/2026): pods, botões e espaço menores para os 6 botões
+-- da coluna caberem sem rolar em 330 px de altura. Os botões ficam com 40
+-- (abaixo dos 44 de toque): exceção pedida pelo Elizeu; são largos (144).
+MenuLayout.POD_HEIGHT_COMPACT = 48
 MenuLayout.POD_WIDTH = 0.24 -- fração da largura
 MenuLayout.POD_MIN = 200 -- os pods não encolhem abaixo disto (nível + XP + selo)
 MenuLayout.POD_MAX = 320
@@ -23,8 +27,9 @@ MenuLayout.TREE_ASPECT = 589 / 916
 MenuLayout.COLUMN_WIDTH = 200 -- design system §8: 200 no PC
 MenuLayout.COLUMN_WIDTH_COMPACT = 144 -- e 144 no compacto
 MenuLayout.BUTTON_HEIGHT = 52 -- botão padrão
-MenuLayout.BUTTON_HEIGHT_COMPACT = 44 -- mínimo de toque
+MenuLayout.BUTTON_HEIGHT_COMPACT = 40
 MenuLayout.BUTTON_GAP = 4
+MenuLayout.BUTTON_GAP_COMPACT = 3
 MenuLayout.NAV_COUNT = 6 -- Perfil, Cosméticos, Loja, Missões, Ranking, Configurações
 -- Linha do título do painel: título e Fechar (44 px de toque) cabem nela, e o
 -- conteúdo do painel começa logo abaixo.
@@ -61,6 +66,7 @@ export type Layout = {
 	compact: boolean,
 	podTop: number,
 	podBottom: number,
+	podHeight: number,
 	podWidth: number,
 	logoTop: number,
 	logoHeight: number,
@@ -69,6 +75,7 @@ export type Layout = {
 	columnWidth: number,
 	columnBottom: number,
 	buttonHeight: number,
+	buttonGap: number,
 	columnContentHeight: number,
 	columnScrolls: boolean,
 	panelX: number,
@@ -102,13 +109,15 @@ end
 function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): Layout
 	local m = MenuLayout.MARGIN
 	local compact = width < MenuLayout.COMPACT_WIDTH or height < MenuLayout.COMPACT_HEIGHT
-	local bodyTop = MenuLayout.BODY_TOP
+	local podHeight = if compact then MenuLayout.POD_HEIGHT_COMPACT else MenuLayout.POD_HEIGHT
+	local bodyTop = m + podHeight + m
 	local bottom = height - m
 
 	-- Coluna.
 	local columnWidth = if compact then MenuLayout.COLUMN_WIDTH_COMPACT else MenuLayout.COLUMN_WIDTH
 	local buttonHeight = if compact then MenuLayout.BUTTON_HEIGHT_COMPACT else MenuLayout.BUTTON_HEIGHT
-	local contentHeight = MenuLayout.NAV_COUNT * buttonHeight + (MenuLayout.NAV_COUNT - 1) * MenuLayout.BUTTON_GAP
+	local buttonGap = if compact then MenuLayout.BUTTON_GAP_COMPACT else MenuLayout.BUTTON_GAP
+	local contentHeight = MenuLayout.NAV_COUNT * buttonHeight + (MenuLayout.NAV_COUNT - 1) * buttonGap
 	local areaLeft = m + columnWidth + m
 	local areaRight = width - m
 
@@ -135,7 +144,10 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 	local heroRight = if kitsOpen and not kitsCover then kitPanelX - m else areaRight
 	local heroAreaWidth = heroRight - areaLeft
 	local heroBottom = actionsY - MenuLayout.HERO_GAP
-	local heroSize = math.min(heroBottom - bodyTop, heroAreaWidth * MenuLayout.HERO_WIDTH_SHARE, MenuLayout.HERO_MAX)
+	-- O boneco começa onde começava antes dos pods compactos (BODY_TOP): os 8 px
+	-- ganhos são da coluna; o aviso e o logo continuam acima da cabeça dele.
+	local heroTop = math.max(bodyTop, MenuLayout.BODY_TOP)
+	local heroSize = math.min(heroBottom - heroTop, heroAreaWidth * MenuLayout.HERO_WIDTH_SHARE, MenuLayout.HERO_MAX)
 
 	-- Boneco e JOGAR no meio da tela (pedido do Elizeu, 10/11/2026); com os kits
 	-- abertos ao lado, no meio da área livre. O JOGAR fica embaixo do boneco e o
@@ -169,7 +181,8 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 	return {
 		compact = compact,
 		podTop = m,
-		podBottom = m + MenuLayout.POD_HEIGHT,
+		podBottom = m + podHeight,
+		podHeight = podHeight,
 		podWidth = podWidth,
 		logoTop = logoTop,
 		logoHeight = logoHeight,
@@ -178,6 +191,7 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		columnWidth = columnWidth,
 		columnBottom = bottom,
 		buttonHeight = buttonHeight,
+		buttonGap = buttonGap,
 		columnContentHeight = contentHeight,
 		columnScrolls = contentHeight > bottom - bodyTop,
 		panelX = areaLeft,

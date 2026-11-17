@@ -88,6 +88,21 @@ local BRANCH_SHARE = 1.45 -- largura do galho em relação ao card
 local BRANCH_LIFT = 0.22 -- quanto do galho fica acima do topo do card
 local COIN_SIZE = 40
 
+-- Pods no celular (48 de altura, 17/11/2026): avatar, moeda e "+" encolhem
+-- junto; o "+" fica com 40 (a mesma exceção de toque dos botões da coluna).
+local function avatarSide(l: Layout): number
+	return l.podHeight - 12
+end
+local function textLeft(l: Layout): number
+	return avatarSide(l) + 14
+end
+local function coinSide(l: Layout): number
+	return math.min(COIN_SIZE, l.podHeight - 12)
+end
+local function buySide(l: Layout): number
+	return if l.compact then math.max(l.podHeight - 8, 40) else TOUCH
+end
+
 -- "Nenhum" ou o nome do kit da próxima vida ("Explorador").
 local function kitLabel(): string
 	local id = KitShop.current()
@@ -138,7 +153,9 @@ local function column(layout: () -> Layout): ScrollingFrame
 	local children: { Instance } = {
 		create("UIListLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
-			Padding = UDim.new(0, MenuLayout.BUTTON_GAP),
+			Padding = function()
+				return UDim.new(0, layout().buttonGap)
+			end,
 		}) :: Instance,
 		create("UIPadding")({ PaddingTop = UDim.new(0, 2), PaddingLeft = UDim.new(0, 2) }) :: Instance,
 	}
@@ -182,13 +199,16 @@ local function levelPod(layout: () -> Layout): Frame
 		end,
 		Size = function()
 			local l = layout()
-			return UDim2.fromOffset(podWidth(l), MenuLayout.POD_HEIGHT)
+			return UDim2.fromOffset(podWidth(l), l.podHeight)
 		end,
 		-- Rosto do avatar do Roblox do jogador, numa moldura de madeira.
 		create("Frame")({
 			Name = "Avatar",
 			Position = UDim2.fromOffset(6, 6),
-			Size = UDim2.fromOffset(44, 44),
+			Size = function()
+				local side = avatarSide(layout())
+				return UDim2.fromOffset(side, side)
+			end,
 			BackgroundColor3 = R.walnut,
 			BorderSizePixel = 0,
 			create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
@@ -204,8 +224,13 @@ local function levelPod(layout: () -> Layout): Frame
 		}),
 		Rustic.label({
 			Name = "PlayerName",
-			Position = UDim2.fromOffset(58, 5),
-			Size = UDim2.new(0.58, -58, 0, 20),
+			Position = function()
+				return UDim2.fromOffset(textLeft(layout()), if layout().compact then 4 else 5)
+			end,
+			Size = function()
+				local left = textLeft(layout())
+				return UDim2.new(0.58, -left, 0, if layout().compact then 18 else 20)
+			end,
 			FontFace = Theme.font.number,
 			Text = Players.LocalPlayer.DisplayName,
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -215,8 +240,12 @@ local function levelPod(layout: () -> Layout): Frame
 		Rustic.label({
 			Name = "LevelText",
 			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, -10, 0, 5),
-			Size = UDim2.new(0.42, -10, 0, 20),
+			Position = function()
+				return UDim2.new(1, -10, 0, if layout().compact then 4 else 5)
+			end,
+			Size = function()
+				return UDim2.new(0.42, -10, 0, if layout().compact then 18 else 20)
+			end,
 			FontFace = Theme.font.number,
 			TextColor3 = R.emberLight,
 			Text = function()
@@ -229,8 +258,13 @@ local function levelPod(layout: () -> Layout): Frame
 		-- Barra de XP do nível atual.
 		Rustic.bar({
 			Name = "XpBar",
-			Position = UDim2.fromOffset(58, 30),
-			Size = UDim2.new(1, -68, 0, 18),
+			Position = function()
+				return UDim2.fromOffset(textLeft(layout()), if layout().compact then 26 else 30)
+			end,
+			Size = function()
+				local left = textLeft(layout())
+				return UDim2.new(1, -(left + 10), 0, if layout().compact then 16 else 18)
+			end,
 			fraction = function()
 				local p = progress()
 				return p.into / p.need
@@ -257,14 +291,18 @@ local function balancePod(layout: () -> Layout): Frame
 			return UDim2.new(1, -MARGIN, 0, l.podTop)
 		end,
 		Size = function()
-			return UDim2.fromOffset(podWidth(layout()), MenuLayout.POD_HEIGHT)
+			local l = layout()
+			return UDim2.fromOffset(podWidth(l), l.podHeight)
 		end,
 		create("ImageLabel")({
 			Name = "Coin",
 			Visible = UiImages.has(UiImages.COIN),
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, 14, 0.5, -1),
-			Size = UDim2.fromOffset(COIN_SIZE, COIN_SIZE),
+			Size = function()
+				local side = coinSide(layout())
+				return UDim2.fromOffset(side, side)
+			end,
 			BackgroundTransparency = 1,
 			Image = UiImages.COIN,
 			ScaleType = Enum.ScaleType.Fit,
@@ -273,8 +311,13 @@ local function balancePod(layout: () -> Layout): Frame
 		Rustic.label({
 			Name = "Balance",
 			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 14 + COIN_SIZE + 8, 0.5, 0),
-			Size = UDim2.new(1, -(TOUCH + 34 + COIN_SIZE), 0.6, 0),
+			Position = function()
+				return UDim2.new(0, 14 + coinSide(layout()) + 8, 0.5, 0)
+			end,
+			Size = function()
+				local l = layout()
+				return UDim2.new(1, -(buySide(l) + 34 + coinSide(l)), 0.6, 0)
+			end,
 			FontFace = Theme.font.number,
 			Text = function()
 				return thousands(currency())
@@ -287,7 +330,10 @@ local function balancePod(layout: () -> Layout): Frame
 			Name = "BuyButton",
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -10, 0.5, 0),
-			Size = UDim2.fromOffset(TOUCH, TOUCH),
+			Size = function()
+				local side = buySide(layout())
+				return UDim2.fromOffset(side, side)
+			end,
 			kind = "ember",
 			text = "+",
 			maxSize = 26,
