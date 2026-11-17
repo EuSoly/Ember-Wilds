@@ -42,8 +42,9 @@ function LevelRules.progress(xp: number): Progress
 end
 
 -- XP de uma vida: pontos arredondados para baixo, dentro do teto por hora.
--- Muta `data` (janela da hora) e devolve o XP concedido de fato.
-function LevelRules.earn(data: XpData, points: number, now: number): number
+-- Muta `data` (janela da hora) e devolve o XP concedido de fato. `capFactor`
+-- (boost de XP, 1 a 2) multiplica o teto por hora; sem ele, vale 1.
+function LevelRules.earn(data: XpData, points: number, now: number, capFactor: number?): number
 	if not isFinite(points) or points < 1 then
 		return 0
 	end
@@ -53,7 +54,9 @@ function LevelRules.earn(data: XpData, points: number, now: number): number
 		data.HourWindowStart = now
 		data.HourEarned = 0
 	end
-	local granted = math.max(math.min(amount, DataConfig.MAX_XP_PER_HOUR - data.HourEarned), 0)
+	local factor = if isFinite(capFactor) and (capFactor :: number) >= 1 then capFactor :: number else 1
+	local cap = math.floor(DataConfig.MAX_XP_PER_HOUR * factor)
+	local granted = math.max(math.min(amount, cap - data.HourEarned), 0)
 	data.HourEarned += granted
 	return granted
 end

@@ -16,6 +16,7 @@ local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local CurrencyRules = require(ReplicatedStorage.Shared.Data.CurrencyRules)
 local LifeRules = require(ReplicatedStorage.Shared.Data.LifeRules)
 local LevelRules = require(ReplicatedStorage.Shared.Data.LevelRules)
+local XpBoost = require(ReplicatedStorage.Shared.Data.XpBoost)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local RankService = require(script.Parent.RankService)
@@ -24,10 +25,14 @@ local StatsService = require(script.Parent.StatsService)
 local LifeService = {}
 
 -- Resumo de uma vida terminada (tela de morte): pontos, dias vividos
--- (LifeRules.daysSurvived), Golden Ember e XP concedidos de fato (depois dos tetos).
-export type LifeSummary = { points: number, days: number, currency: number, xp: number }
+-- (LifeRules.daysSurvived), Golden Ember e XP concedidos de fato (depois dos tetos
+-- e do boost). `xpBase` é o XP sem boost (o que o ranking soma).
+export type LifeSummary = { points: number, days: number, currency: number, xp: number, xpBase: number }
 
 local lives: { [Player]: LifeRules.Life } = {}
+-- Início de cada vida em tempo unix (o relógio da vida é os.clock): o boost de
+-- XP é uma janela em segundos unix, então precisa dos dois.
+local lifeStartsUnix: { [Player]: number } = {}
 -- Multiplicador de Golden Ember do fim de vida. Quem dá é o PerkService
 -- (setMultiplierSource): ele já depende deste serviço, então o require ao
 -- contrário faria um ciclo.
@@ -91,7 +96,8 @@ end
 function LifeService.endLife(player: Player): LifeSummary?
 	-- Sem perfil (carregando, falhou ou já fechou) não há onde contabilizar:
 	-- a vida continua ativa e os pontos ficam, para não sumirem sem virar moeda.
-	if DataService.data(player) == nil then
+	local profile = DataService.data(player)
+	if profile == nil then
 		if lives[player] ~= nil and lives[player].active then
 			warn(`[LifeService] fim de vida de {player.Name} sem perfil carregado: ignorado`)
 		end
@@ -115,25 +121,32 @@ function LifeService.endLife(player: Player): LifeSummary?
 	if days > 0 then
 		StatsService.add(player, "days_total", days)
 	end
-	-- XP = pontos da vida, com teto por hora (LevelRules).
+	-- XP = pontos da vida, com teto por hora (LevelRules). O boost dobra o XP na
+	-- proporção da vida dentro da janela e dobra o teto junto; o ranking soma o
+	-- XP sem boost (limitado ao que foi concedido).
+	local now = os.time()
+	local shop = profile.Shop
+	local factor = XpBoost.factor(lifeStartsUnix[player] or now, now, shop.BoostStart, shop.BoostUntil)
+	local xpBase = math.floor(score)
 	local xpData = StatsService.xpData(player)
-	local xp = if xpData then LevelRules.earn(xpData, score, os.time()) else 0
+	local xp = if xpData then LevelRules.earn(xpData, math.floor(score * factor), now, factor) else 0
 	if xp > 0 then
 		StatsService.add(player, "xp_total", xp)
 	end
-	RankService.addLife(player, { points = score, days = days, xp = xp })
+	RankService.addLife(player, { points = score, days = days, xp = math.min(xpBase, xp) })
 	-- Avisa depois de gravar score_best/days_best: as conquistas de "uma vida
 	-- só" não piscam de pronta para não pronta entre a morte e a estatística.
 	notify(endedListeners, player)
 	player:SetAttribute(StatNames.Score, 0)
 	DataService.save(player)
-	return { points = score, days = days, currency = granted, xp = xp }
+	return { points = score, days = days, currency = granted, xp = xp, xpBase = xpBase }
 end
 
 local function startLifeIfNone(player: Player)
 	local life = lives[player]
 	if life == nil or not life.active then
 		lives[player] = LifeRules.start(os.clock())
+		lifeStartsUnix[player] = os.time()
 		notify(startedListeners, player)
 	end
 end
@@ -161,6 +174,7 @@ function LifeService.Start(_self)
 	DataService.onUnloading(function(player)
 		LifeService.endLife(player)
 		lives[player] = nil
+		lifeStartsUnix[player] = nil
 	end)
 
 	Players.PlayerAdded:Connect(setupPlayer)
@@ -172,6 +186,7 @@ function LifeService.Start(_self)
 	Players.PlayerRemoving:Connect(function(player)
 		task.defer(function()
 			lives[player] = nil
+			lifeStartsUnix[player] = nil
 		end)
 	end)
 end

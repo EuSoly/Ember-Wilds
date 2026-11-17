@@ -43,6 +43,12 @@ return {
 		assert(LevelRules.earn(d, 5000, 100 + 3600) == 5000, "janela nova")
 	end,
 
+	["cap scales with factor"] = function()
+		local d = fresh()
+		assert(LevelRules.earn(d, 250000, 100, 2) == 200000, "teto dobra com o boost")
+		assert(LevelRules.earn(fresh(), 250000, 100) == 100000, "sem fator o teto é o normal")
+	end,
+
 	["earn com sair e voltar no mesmo minuto ainda respeita o teto"] = function()
 		local d = fresh()
 		assert(LevelRules.earn(d, 90000, 1000) == 90000, "primeira")
