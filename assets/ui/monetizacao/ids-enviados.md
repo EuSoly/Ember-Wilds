@@ -50,4 +50,14 @@
 | jogo/02_vip_card_normal_9slice.png | rbxassetid://101676598300493 |
 | jogo/02_vip_card_ativo_9slice.png | rbxassetid://77537388165789 |
 
-Não enviados: kits 42 (temas antigos; aguardando os ícones novos 30–36) e os do Creator Hub (fase 9).
+| kits/30_kit_inicial.png | rbxassetid://80600118054893 |
+| kits/31_kit_explorador.png | rbxassetid://102277036344773 |
+| kits/32_kit_sobrevivente.png | rbxassetid://71963070860118 |
+| kits/33_kit_veterano.png | rbxassetid://127447740117120 |
+| kits/34_kit_vip.png | rbxassetid://88509306404011 |
+| kits/35_kit_cacador.png | rbxassetid://81698575484406 |
+| kits/36_kit_guardiao.png | rbxassetid://88131510037634 |
+
+Os kits 30–36 foram recortados de uma imagem do ChatGPT com fundo xadrez desenhado (scratchpad, `cutkits.py`) e ampliados de ~370 para 512 px.
+
+Não enviados: kits 42 (temas antigos, substituídos pelos 30–36) e os do Creator Hub (fase 9).
