@@ -52,7 +52,7 @@ No jogo, presentes e códigos de resgate devem entregar por `ShopService.give(pl
 
 ### VIP
 
-O VIP é por tempo (recompensa `{ kind = "vip", count = dias }` → `Shop.VipUntil`). O `PerkService` tira uma foto das vantagens quando a vida começa (VIP, passes `ember2x` e `book`, Premium do Roblox) e ela vale até o fim daquela vida: +3 espaços (`InventoryConfig.vipPass.bonusSlots`), Kit VIP e o bônus no multiplicador de Golden Ember. Ganhar uma vantagem com a vida ativa vale na hora; perder (VIP vencido, `DevShopRevoke(player, "vip")`) só na próxima vida. O Premium libera o `kit_starter` e dá +20% enquanto durar.
+O VIP é por tempo (recompensa `{ kind = "vip", count = dias }` → `Shop.VipUntil`). O `PerkService` tira uma foto das vantagens quando a vida começa (VIP, passes `ember2x` e `book`, Premium do Roblox) e ela vale até o fim daquela vida: +3 espaços (`InventoryConfig.vipPass.bonusSlots`), Kit VIP e o bônus no multiplicador de Golden Ember. Ganhar uma vantagem com a vida ativa vale na hora; perder (VIP vencido, `DevShopRevoke(player, "vip")`) só na próxima vida. O Premium libera o `kit_starter` e dá +20% enquanto durar. O cliente lê as vantagens nos atributos da pasta `Player.Shop` (não do Player, por causa do limite de ~1 KB de atributos): `Perk_vip`, `Perk_ember2x`, `Perk_book`, `Perk_premium` (a foto da vida com vida ativa; o que vale agora quando morto ou no menu) e `VipUntil`, `XpBoostStart`, `XpBoostUntil` (do perfil).
 
 ## Como criar um pacote
 

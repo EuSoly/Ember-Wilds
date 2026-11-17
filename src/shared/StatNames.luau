@@ -80,9 +80,11 @@ return table.freeze({
 	KitBalanceFolder = "KitBalance",
 	PurchasedFolder = "Purchased",
 	PassesFolder = "Passes",
-	-- Vantagens (PerkService), atributos no Player. Perk_* (bool) = o que vale
-	-- nesta vida (foto ao nascer; ganho com a vida ativa entra na hora).
-	-- VipUntil, XpBoostStart, XpBoostUntil (unix) = o perfil (Shop).
+	-- Vantagens (PerkService), atributos da pasta Shop acima (não do Player:
+	-- limite de ~1 KB). Perk_* (bool) = o que vale nesta vida enquanto há vida
+	-- ativa (foto ao nascer; ganho com a vida ativa entra na hora), e o que
+	-- vale agora quando morto / no menu. VipUntil, XpBoostStart, XpBoostUntil
+	-- (unix) = o perfil.
 	PerkVip = "Perk_vip",
 	PerkEmber2x = "Perk_ember2x",
 	PerkBook = "Perk_book",

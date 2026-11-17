@@ -7,7 +7,8 @@
 -- em Robux. É o único lugar onde a cobrança real (MarketplaceService) entra.
 --
 -- O estado vai para o cliente na pasta Player.Shop (StatNames.ShopFolder):
--- atributos com os saldos de giros e o kit ativo, e subpastas com um objeto
+-- atributos com os saldos de giros, o kit ativo e as vantagens (PerkService),
+-- e subpastas com um objeto
 -- por kit possuído, saldo de kit, produto "once" comprado e passe.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -97,7 +98,9 @@ local function syncCounts(folder: Folder, counts: { [string]: number })
 	end
 end
 
-local function fill(root: Folder, d: ShopData.ShopData)
+local function fill(player: Player, root: Folder, d: ShopData.ShopData)
+	-- Vantagens (Perk_*, VipUntil, XpBoost*): escritas pelo PerkService.
+	PerkService.writeAttributes(player, root)
 	root:SetAttribute(StatNames.SpinsNormal, d.Spins.normal)
 	root:SetAttribute(StatNames.SpinsPaid, d.Spins.paid)
 	root:SetAttribute(StatNames.KitActive, d.KitActive)
@@ -116,12 +119,12 @@ local function publish(player: Player)
 	end
 	local existing = player:FindFirstChild(StatNames.ShopFolder)
 	if existing and existing:IsA("Folder") then
-		fill(existing, d)
+		fill(player, existing, d)
 		return
 	end
 	local root = Instance.new("Folder")
 	root.Name = StatNames.ShopFolder
-	fill(root, d)
+	fill(player, root, d)
 	root.Parent = player
 end
 
