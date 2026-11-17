@@ -115,7 +115,7 @@ type Shown = {
 	emberBonus: Source<number>, -- bits do LifeEnded.EmberBonus
 }
 
-local TAG_HEIGHT = 16
+local TAG_HEIGHT = DeathLayout.EMBER_TAGS_ROW - 4
 
 -- Linha de etiquetas ao lado da Golden Ember. Três etiquetas fixas, cada uma
 -- visível pelo seu bit; com a arte (MULTIPLIER_TAG) vira 9-slice, senão é uma
@@ -163,7 +163,12 @@ local function emberTags(bonus: () -> number): Frame
 			image.ScaleType = Enum.ScaleType.Slice
 			image.SliceCenter = MonetizationImages.MULTIPLIER_TAG_SLICE
 		else
-			create("UIStroke")({ Color = R.outline, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border })
+			local stroke = create("UIStroke")({
+				Color = R.outline,
+				Thickness = 1.5,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			})
+			stroke.Parent = tag
 		end
 		table.insert(children, tag)
 	end
@@ -171,7 +176,9 @@ local function emberTags(bonus: () -> number): Frame
 		Name = "EmberTags",
 		LayoutOrder = 5,
 		Size = function()
-			return UDim2.new(1, 0, 0, if bonus() == 0 then 6 else TAG_HEIGHT + 4)
+			-- Alturas do DeathLayout (o resumo empilhado conta com elas).
+			local h = if bonus() == 0 then DeathLayout.EMBER_TAGS_EMPTY else DeathLayout.EMBER_TAGS_ROW
+			return UDim2.new(1, 0, 0, h)
 		end,
 		BackgroundTransparency = 1,
 		children,
@@ -653,6 +660,9 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 					end),
 					function()
 						return layout().offerIcon
+					end,
+					function()
+						return layout().offerRow
 					end
 				),
 			}),

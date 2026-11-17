@@ -83,9 +83,11 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 	if player and TutorialService.isProtected(player) then
 		return
 	end
-	-- Proteção do revive (ReviveService): 3 s sem dano nenhum.
+	-- Proteção do revive (ReviveService): 3 s sem dano nenhum (atributo no
+	-- modelo do personagem).
 	if
-		player and ReviveRules.shielded(player:GetAttribute(StatNames.SpawnShieldUntil), Workspace:GetServerTimeNow())
+		player
+		and ReviveRules.shielded(character:GetAttribute(StatNames.SpawnShieldUntil), Workspace:GetServerTimeNow())
 	then
 		return
 	end

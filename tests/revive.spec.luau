@@ -26,12 +26,14 @@ return {
 		local next = ReviveRules.offer(1, false, 0)
 		assert(next.robux == 49 and next.free == false, "depois do grátis, 49")
 	end,
-	["credit is used first"] = function()
+	["vip free is used before the stored credit"] = function()
+		-- Sem grátis do VIP: o revive guardado paga.
 		local offer = ReviveRules.offer(2, false, 1)
 		assert(offer.free == true and offer.credit == true, "crédito")
-		-- Crédito vem antes do grátis do VIP (o grátis fica guardado).
+		-- Com o grátis do VIP sobrando: ele vai primeiro (o crédito persiste no
+		-- perfil, o grátis só vale nesta corrida).
 		local vip = ReviveRules.offer(0, true, 2)
-		assert(vip.free == true and vip.credit == true, "crédito antes do VIP")
+		assert(vip.free == true and vip.credit == false, "grátis do VIP antes do crédito")
 	end,
 	["window expires after 30s"] = function()
 		assert(ReviveRules.expired(ReviveRules.open(0), 29.9) == false, "29,9 s aberta")
@@ -86,6 +88,60 @@ return {
 		local q = ReviveRules.open(0)
 		ReviveRules.answer(q, true)
 		assert(ReviveRules.onLeave(q) == nil, "já respondido")
+	end,
+	["hard cap is the decision time plus the purchase pause"] = function()
+		assert(ReviveRules.HARD_CAP == 90, "teto 90 s")
+		assert(ReviveRules.HARD_CAP == ReviveRules.DECISION_SECONDS + ReviveRules.PURCHASE_PAUSE_MAX, "30 + 60")
+	end,
+	["unanswered window times out with the decision clock"] = function()
+		local p = ReviveRules.open(0)
+		assert(ReviveRules.timedOut(p, 29.9) == false, "29,9 aberta")
+		assert(ReviveRules.timedOut(p, 30) == true, "30 fecha")
+	end,
+	["accepted window that never finishes closes at the hard cap"] = function()
+		local p = ReviveRules.open(0)
+		assert(ReviveRules.answer(p, true) == "revive", "aceitou")
+		-- Aceita (pagando / nascendo): o relógio da decisão não vale mais...
+		assert(ReviveRules.timedOut(p, 30) == false, "aceita não expira em 30 s")
+		assert(ReviveRules.timedOut(p, 89.9) == false, "89,9 ainda aberta")
+		-- ...mas o teto duro vale.
+		assert(ReviveRules.timedOut(p, 90) == true, "teto de 90 s")
+		assert(ReviveRules.capped(p, 90) == true and ReviveRules.capped(p, 89.9) == false, "capped")
+	end,
+	["hard cap counts paused time"] = function()
+		-- Pausa sem fim (compra aberta) numa janela aceita: o teto não pausa.
+		local p = ReviveRules.open(0)
+		ReviveRules.answer(p, true)
+		ReviveRules.pause(p, 10)
+		assert(ReviveRules.timedOut(p, 89.9) == false, "89,9 aberta")
+		assert(ReviveRules.timedOut(p, 90) == true, "pausada, fecha no teto")
+		-- Várias pausas também não empurram o teto.
+		local q = ReviveRules.open(0)
+		ReviveRules.pause(q, 0)
+		ReviveRules.resume(q, 50)
+		ReviveRules.answer(q, true)
+		ReviveRules.pause(q, 60)
+		ReviveRules.resume(q, 85)
+		assert(ReviveRules.timedOut(q, 90) == true, "pausas não passam do teto")
+	end,
+	["cancelled purchase reopens the window"] = function()
+		local p = ReviveRules.open(0)
+		assert(ReviveRules.answer(p, true) == "revive", "aceitou")
+		ReviveRules.pause(p, 5) -- compra aberta
+		ReviveRules.resume(p, 15) -- compra cancelada
+		assert(ReviveRules.reopen(p) == true, "volta para sem resposta")
+		assert(p.answer == nil, "sem resposta")
+		-- O relógio da decisão volta a valer, descontando os 10 s pausados.
+		assert(ReviveRules.timedOut(p, 39.9) == false, "39,9 aberta")
+		assert(ReviveRules.timedOut(p, 40) == true, "40 expira")
+		-- Pode responder de novo.
+		assert(ReviveRules.answer(p, true) == "revive", "aceita de novo")
+		-- Reabrir só vale para uma janela aceita.
+		local q = ReviveRules.open(0)
+		assert(ReviveRules.reopen(q) == false, "sem resposta: nada")
+		ReviveRules.answer(q, false)
+		assert(ReviveRules.reopen(q) == false, "recusa não reabre")
+		assert(ReviveRules.answer(q, true) == nil, "recusa continua valendo")
 	end,
 	["not eligible in creative, tutorial, without profile or items"] = function()
 		assert(ReviveRules.eligible(false, false, true, true) == true, "elegível")

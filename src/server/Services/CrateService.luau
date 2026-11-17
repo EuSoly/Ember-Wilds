@@ -11,9 +11,12 @@
 --   de quem matou, a do morto). Sem item nenhum: sem caixa. Só copia: quem zera
 --   o inventário, a mochila e a armadura é o DeathService, logo depois.
 --   Revive pendente (pending): a caixa cai TRANCADA (setLocked, atributo
---   CrateLocked): ninguém olha, pega nem quebra, e o tempo de vida não corre.
+--   CrateLocked): ninguém olha, pega nem quebra, e o tempo de vida não corre
+--   (ao destrancar, o prazo anda o tempo que ficou trancada).
 --   O ReviveService a acha por lastPlayerCrate e, na resposta, destranca
---   ("não") ou a tira do mundo (removeModel: os itens voltam da foto).
+--   ("não") ou a tira do mundo (removeModel: os itens voltam da foto). Rede
+--   de segurança: trancada por mais de ReviveRules.HARD_CAP (o teto de toda
+--   janela do revive) destranca sozinha e volta à vida normal de caixa.
 -- - Mob morto (MobService.onDeath): caixa com o loot dos dados, na skin de caixa
 --   de quem matou (sem matador: a caixa padrão). Antes de 11/11 o modelo era o
 --   id do mob, que não existe em Assets.Crates e caía na caixa provisória.
@@ -43,6 +46,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local GhostRules = require(ReplicatedStorage.Shared.Survival.GhostRules)
+local ReviveRules = require(ReplicatedStorage.Shared.Survival.ReviveRules)
 local BuildRules = require(ReplicatedStorage.Shared.Build.BuildRules)
 local CrateModel = require(ReplicatedStorage.Shared.Models.CrateModel)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
@@ -85,6 +89,7 @@ export type Entry = {
 	expiresAt: number, -- os.clock() em que some sozinha
 	dropOwner: Player?, -- caixa de item largado: quem largou (junta as próximas)
 	locked: boolean?, -- revive pendente: ninguém abre, pega nem quebra
+	lockedAt: number?, -- os.clock() em que trancou (nil = destrancada)
 }
 
 type RateState = { start: number, count: number }
@@ -287,7 +292,8 @@ function CrateService.spawn(
 		end
 		local left = entry.expiresAt - os.clock()
 		-- Trancada (revive pendente): espera a resposta, que vem em até
-		-- DECISION_SECONDS + PURCHASE_PAUSE_MAX, antes de poder sumir.
+		-- ReviveRules.HARD_CAP (depois disso a própria caixa destranca), antes
+		-- de poder sumir.
 		if entry.locked then
 			left = math.max(left, 1)
 		end
@@ -503,24 +509,54 @@ end
 
 -- Tranca (revive pendente) ou destranca a caixa deste modelo. Trancar tira
 -- quem estava olhando (o painel fecha no cliente quando o conteúdo some).
+-- Trancada fica no máximo ReviveRules.HARD_CAP: depois destranca sozinha.
+-- Destrancar devolve ao prazo o tempo que ficou trancada. Idempotente.
 function CrateService.setLocked(model: Model, locked: boolean)
 	local entry = byModel[model]
 	if entry == nil then
 		return
 	end
-	entry.locked = if locked then true else nil
-	model:SetAttribute(StatNames.CrateLocked, if locked then true else nil)
-	if locked then
-		local set = watchers[entry]
-		if set then
-			for player in set do
-				if watching[player] == entry then
-					watching[player] = nil
-				end
-			end
-			watchers[entry] = nil
+	if not locked then
+		local lockedAt = entry.lockedAt
+		entry.locked = nil
+		entry.lockedAt = nil
+		if lockedAt ~= nil then
+			entry.expiresAt += math.max(os.clock() - lockedAt, 0)
 		end
+		model:SetAttribute(StatNames.CrateLocked, nil)
+		return
 	end
+	if entry.locked then
+		return
+	end
+	local lockedAt = os.clock()
+	entry.locked = true
+	entry.lockedAt = lockedAt
+	model:SetAttribute(StatNames.CrateLocked, true)
+	local set = watchers[entry]
+	if set then
+		for player in set do
+			if watching[player] == entry then
+				watching[player] = nil
+			end
+		end
+		watchers[entry] = nil
+	end
+	-- Rede de segurança: a janela do revive sempre fecha até o teto (contado
+	-- da abertura, que vem antes desta tranca); se mesmo assim a caixa seguir
+	-- trancada, destranca e volta à vida normal.
+	task.delay(ReviveRules.HARD_CAP, function()
+		if alive[entry] and entry.locked and entry.lockedAt == lockedAt then
+			warn(`[CrateService] caixa trancada passou de {ReviveRules.HARD_CAP} s: destrancando`)
+			CrateService.setLocked(entry.model, false)
+		end
+	end)
+end
+
+-- true se a caixa deste modelo está viva e trancada (revive pendente).
+function CrateService.isLocked(model: Model): boolean
+	local entry = byModel[model]
+	return entry ~= nil and alive[entry] == true and entry.locked == true
 end
 
 -- Tira a caixa deste modelo do mundo, com os itens (o revive devolve os

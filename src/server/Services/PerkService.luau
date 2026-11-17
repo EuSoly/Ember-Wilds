@@ -32,6 +32,9 @@ type PerkSet = Perks.PerkSet
 
 local PerkService = {}
 
+-- Segundos entre as conferências do VIP vencido (republica o Perk_vip).
+local EXPIRY_WATCH_SECONDS = 20
+
 local snapshots: { [Player]: PerkSet } = {}
 
 local function shopOf(player: Player): ShopData.ShopData?
@@ -73,9 +76,13 @@ end
 -- ShopService chama ao montar a pasta, antes de ela ir para o Player: ele é o
 -- único que cria a pasta. Com vida ativa, Perk_* = a foto da vida; sem vida
 -- (morto, menu), o que vale agora.
-function PerkService.writeAttributes(player: Player, folder: Instance)
+local function shown(player: Player): PerkSet
 	local snapshot = snapshots[player]
-	local set = if snapshot ~= nil and LifeService.lifeKey(player) ~= nil then snapshot else PerkService.current(player)
+	return if snapshot ~= nil and LifeService.lifeKey(player) ~= nil then snapshot else PerkService.current(player)
+end
+
+function PerkService.writeAttributes(player: Player, folder: Instance)
+	local set = shown(player)
 	folder:SetAttribute(StatNames.PerkVip, set.vip)
 	folder:SetAttribute(StatNames.PerkEmber2x, set.ember2x)
 	folder:SetAttribute(StatNames.PerkBook, set.book)
@@ -137,8 +144,28 @@ function PerkService.Init(_self)
 	LifeService.onEnded(publish)
 end
 
+-- O VIP vence sozinho (VipUntil passa) e nada é comprado nem muda de vida:
+-- sem vida ativa (morto, menu), o Perk_vip publicado ficaria velho e o menu
+-- ainda ofereceria o Kit VIP. Laço leve: republica só quem mudou.
+local function watchVipExpiry()
+	while true do
+		task.wait(EXPIRY_WATCH_SECONDS)
+		for _, player in Players:GetPlayers() do
+			local folder = player:FindFirstChild(StatNames.ShopFolder)
+			if
+				folder ~= nil
+				and folder:IsA("Folder")
+				and folder:GetAttribute(StatNames.PerkVip) ~= shown(player).vip
+			then
+				publish(player)
+			end
+		end
+	end
+end
+
 function PerkService.Start(_self)
 	Players.PlayerMembershipChanged:Connect(PerkService.refresh)
+	task.spawn(watchVipExpiry)
 	-- task.defer: o fim de vida da saída (DataService.onUnloading) ainda lê a foto.
 	Players.PlayerRemoving:Connect(function(player)
 		task.defer(function()

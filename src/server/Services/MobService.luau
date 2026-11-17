@@ -213,7 +213,7 @@ local function livingBodies(): { MobBrain.Seen }
 			character
 			and root
 			and not GhostRules.isGhostPlayer(player, now)
-			and not ReviveRules.shielded(player:GetAttribute(StatNames.SpawnShieldUntil), now)
+			and not ReviveRules.shielded(character:GetAttribute(StatNames.SpawnShieldUntil), now)
 		then
 			table.insert(bodies, {
 				who = character,

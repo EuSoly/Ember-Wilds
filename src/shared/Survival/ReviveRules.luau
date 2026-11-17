@@ -5,13 +5,19 @@
 -- - offer: o preço da próxima volta. `usedThisRun` = revives já usados nesta
 --   "corrida" (da entrada pelo menu até a morte final), CONTANDO os grátis:
 --   o grátis do VIP ocupa o degrau 1, então depois dele o próximo custa 49.
---   Ordem: revive guardado (crédito) primeiro; senão o grátis do VIP; senão o
---   degrau min(usedThisRun + 1, 4) de ShopConfig.REVIVE_ROBUX.
+--   Ordem: o grátis do VIP primeiro (só vale nesta corrida); senão o revive
+--   guardado (crédito, que fica no perfil); senão o degrau
+--   min(usedThisRun + 1, 4) de ShopConfig.REVIVE_ROBUX.
 -- - Pending: a janela da decisão. Limite escondido de DECISION_SECONDS; o
 --   tempo pausado (compra do Roblox aberta ou pendente) não conta, até
 --   PURCHASE_PAUSE_MAX somados na janela toda. Só a 1ª resposta vale (o tempo
 --   acabar e sair do jogo também são respostas: "decline").
--- - Proteção do revive: atributo SpawnShieldUntil (relógio do servidor).
+-- - "revive" é "aceito, pagando/nascendo", não "resolvido": uma compra
+--   cancelada (reopen) volta a janela para sem resposta. Toda janela, aceita ou
+--   não, fecha no teto duro HARD_CAP (DECISION_SECONDS + PURCHASE_PAUSE_MAX,
+--   contado da abertura, pausas inclusas).
+-- - Proteção do revive: atributo SpawnShieldUntil no MODELO do personagem
+--   (relógio do servidor).
 local ShopConfig = require("../Shop/ShopConfig")
 
 local ReviveRules = {}
@@ -19,6 +25,9 @@ local ReviveRules = {}
 ReviveRules.DECISION_SECONDS = 30
 ReviveRules.PURCHASE_PAUSE_MAX = 60
 ReviveRules.SHIELD_SECONDS = 3
+-- Teto duro de qualquer janela (aceita ou não), contado da abertura; a caixa
+-- trancada também destranca depois dele (CrateService).
+ReviveRules.HARD_CAP = ReviveRules.DECISION_SECONDS + ReviveRules.PURCHASE_PAUSE_MAX
 
 -- step 1..4; robux = preço do degrau (quando free, só informativo).
 export type Offer = { step: number, robux: number, free: boolean, credit: boolean }
@@ -37,11 +46,11 @@ function ReviveRules.offer(usedThisRun: number, vipFreeLeft: boolean, credits: n
 	local used = if usedThisRun == usedThisRun and usedThisRun > 0 then math.floor(usedThisRun) else 0
 	local step = math.min(used + 1, #prices)
 	local robux = prices[step]
-	if credits >= 1 then
-		return { step = step, robux = robux, free = true, credit = true }
-	end
 	if vipFreeLeft then
 		return { step = step, robux = robux, free = true, credit = false }
+	end
+	if credits >= 1 then
+		return { step = step, robux = robux, free = true, credit = true }
 	end
 	return { step = step, robux = robux, free = false, credit = false }
 end
@@ -81,6 +90,30 @@ function ReviveRules.expired(p: Pending, now: number): boolean
 	return now - p.openedAt - pausedUntil(p, now) >= ReviveRules.DECISION_SECONDS
 end
 
+-- true quando a janela passou do teto duro (pausas não adiam o teto).
+function ReviveRules.capped(p: Pending, now: number): boolean
+	return now - p.openedAt >= ReviveRules.HARD_CAP
+end
+
+-- true quando a janela tem de fechar agora: sem resposta, pelo relógio da
+-- decisão; aceita (pagando/nascendo), só pelo teto duro.
+function ReviveRules.timedOut(p: Pending, now: number): boolean
+	if p.answer == nil and ReviveRules.expired(p, now) then
+		return true
+	end
+	return ReviveRules.capped(p, now)
+end
+
+-- Compra cancelada: uma janela aceita volta para sem resposta (o jogador
+-- escolhe de novo). true se reabriu; recusa e sem resposta não mudam.
+function ReviveRules.reopen(p: Pending): boolean
+	if p.answer ~= "revive" then
+		return false
+	end
+	p.answer = nil
+	return true
+end
+
 -- Registra a resposta. Devolve a resposta só na 1ª vez; depois, nil.
 function ReviveRules.answer(p: Pending, accept: boolean): Answer?
 	if p.answer ~= nil then
@@ -102,7 +135,8 @@ function ReviveRules.eligible(creative: boolean, tutorial: boolean, hasProfile: 
 	return not creative and not tutorial and hasProfile and hasItems
 end
 
--- true enquanto a proteção do revive vale (`untilAt` = atributo SpawnShieldUntil).
+-- true enquanto a proteção do revive vale (`untilAt` = atributo
+-- SpawnShieldUntil do modelo do personagem).
 function ReviveRules.shielded(untilAt: any, now: number): boolean
 	return type(untilAt) == "number" and now < untilAt
 end

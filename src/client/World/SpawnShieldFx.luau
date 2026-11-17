@@ -1,8 +1,9 @@
 --!strict
 -- Bolha de proteção do revive: uma esfera translúcida em volta de quem tem o
 -- atributo SpawnShieldUntil no futuro (relógio do servidor). O atributo vem
--- do Player e é lido por POLLING a cada quadro (regra do projeto: com Server
--- Authority o sinal de mudança não é confiável). A esfera é só do cliente.
+-- do MODELO do personagem e é lido por POLLING a cada quadro (regra do
+-- projeto: com Server Authority o sinal de mudança não é confiável). A esfera
+-- é só do cliente.
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -52,8 +53,8 @@ function SpawnShieldFx.start()
 	RunService.RenderStepped:Connect(function()
 		local now = Workspace:GetServerTimeNow()
 		for _, player in Players:GetPlayers() do
-			local untilAt = player:GetAttribute(StatNames.SpawnShieldUntil)
 			local character = player.Character
+			local untilAt = character and character:GetAttribute(StatNames.SpawnShieldUntil)
 			local root = character and character:FindFirstChild("HumanoidRootPart")
 			if ReviveRules.shielded(untilAt, now) and root and root:IsA("BasePart") then
 				local bubble: Part = bubbles[player] or newBubble()

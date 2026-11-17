@@ -192,7 +192,8 @@ return table.freeze({
 	GhostUntil = "GhostUntil",
 	-- Proteção do revive (ReviveService): instante (relógio do servidor) em que
 	-- ela acaba; não leva dano e os mobs não o veem. Some antes se ele bater num
-	-- jogador ou mob (GatherService). Atributo no Player.
+	-- jogador ou mob (GatherService). Atributo no MODELO do personagem (não no
+	-- Player, que tem o limite de ~1 KB de atributos): some com o corpo.
 	SpawnShieldUntil = "SpawnShieldUntil",
 	-- Time (TeamService): UserId do líder do time do jogador (nil = sem time),
 	-- atributo no Player. No modelo do totem: TeamLeader (UserId), TeamLocked e

@@ -191,8 +191,11 @@ local function hit(player: Player, character: Model, root: BasePart)
 		table.insert(if BuildRules.isSolid(structure.def.kind) then candidates else overlays, candidate)
 	end
 	-- Caixas: como as peças, near já conta o raio (CrateRules.RADIUS) de cada uma.
+	-- Trancada (revive pendente) não é alvo: não leva dano e engoliria o golpe.
 	for _, crate in CrateService.near(px, pz, GatherRules.HIT_RADIUS) do
-		table.insert(candidates, { x = crate.x, z = crate.z, radius = crate.radius, crate = crate })
+		if not crate.locked then
+			table.insert(candidates, { x = crate.x, z = crate.z, radius = crate.radius, crate = crate })
+		end
 	end
 	-- Mobs no chão (voando e mortos ficam de fora): folga de 3 studs na busca.
 	for _, mob in MobService.near(px, pz, GatherRules.HIT_RADIUS + 3) do
@@ -276,9 +279,15 @@ local function hit(player: Player, character: Model, root: BasePart)
 		CrateService.hit(target.crate, player, tool)
 		return
 	end
-	-- Bater em mob ou jogador acaba com a proteção do revive na hora.
-	if (target.mob or target.character) and player:GetAttribute(StatNames.SpawnShieldUntil) ~= nil then
-		player:SetAttribute(StatNames.SpawnShieldUntil, nil)
+	-- Bater em mob ou jogador acaba com a proteção do revive na hora (o
+	-- atributo fica no modelo do personagem, não no Player).
+	local ownCharacter = player.Character
+	if
+		(target.mob or target.character)
+		and ownCharacter
+		and ownCharacter:GetAttribute(StatNames.SpawnShieldUntil) ~= nil
+	then
+		ownCharacter:SetAttribute(StatNames.SpawnShieldUntil, nil)
 	end
 	if target.mob then
 		MobService.hit(target.mob, player, tool)

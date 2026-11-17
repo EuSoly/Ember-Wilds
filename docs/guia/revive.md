@@ -5,14 +5,16 @@ Ao morrer, o jogador pode **reviver na hora**: volta com **todos os itens** e vi
 ## Como funciona
 
 1. **A oferta** aparece por cima do resumo da tela de morte (`src/client/UI/ReviveOffer.luau`): ícone, preço em Robux (ou a fita **GRÁTIS**), botão **REVIVER** e **Não, obrigado**. Sem contador na tela.
-2. **A caixa cai trancada.** Enquanto a oferta está aberta, a caixa da morte não abre, não se pega nada e não leva dano (`CrateService.setLocked`). As peças construídas e o totem do time **ficam de pé** e o `real_deaths` espera.
-3. **Limite escondido de 30 s** (`ReviveRules.DECISION_SECONDS`): passou, vale como "não". O tempo **pausa** durante uma compra do Roblox aberta ou pendente (até 60 s somados, `PURCHASE_PAUSE_MAX`); hoje ninguém pausa porque a cobrança é instantânea.
-4. **Só a 1ª resposta vale:**
-   - **Aceitar:** cobra, nasce, **tira a caixa do mundo**, devolve a foto do inventário e enche vida e barras. Os itens nunca duplicam: a caixa some antes de a foto voltar. Se o nascimento falhar, a cobrança volta (revive guardado, ou o grátis do VIP) e conta como "não".
-   - **Recusar, o tempo acabar ou sair do jogo:** destranca a caixa para qualquer um, as peças somem e conta a morte de verdade (`DeathService.finalize`).
-   - **Nascer pelo menu** com a oferta aberta também conta como "não".
-5. **Volta** perto do **totem do time** (se está de pé) ou num **ponto aleatório da floresta**, longe da água, das áreas sem nascimento, das construções e de outros jogadores vivos (`SpawnService.reviveSpot`); sem mapa desenhado, no `WorldConfig.SPAWN`.
-6. **3 s de proteção** (`ReviveRules.SHIELD_SECONDS`, atributo `SpawnShieldUntil` no Player).
+2. **A caixa cai trancada.** Enquanto a oferta está aberta, a caixa da morte não abre, não se pega nada, não leva dano e não é alvo do golpe (`CrateService.setLocked`; o `GatherService` pula a trancada). O prazo de vida dela não corre enquanto está trancada. Rede de segurança: trancada por mais do **teto** (90 s) destranca sozinha e volta a ser caixa normal. As peças construídas e o totem do time **ficam de pé** e o `real_deaths` espera.
+3. **Limite escondido de 30 s** (`ReviveRules.DECISION_SECONDS`): passou sem resposta, vale como "não". O tempo **pausa** durante uma compra do Roblox aberta ou pendente (até 60 s somados, `PURCHASE_PAUSE_MAX`), também com o "sim" já dado; hoje ninguém pausa porque a cobrança é instantânea.
+4. **Teto duro de 90 s** (`ReviveRules.HARD_CAP` = 30 + 60, contado da abertura, pausas inclusas): **toda** janela fecha até ele, inclusive um "sim" que não terminou (cobrança ou nascimento travado). Fecha como "não" e devolve o que foi cobrado.
+5. **Respostas** ("sim" quer dizer "aceito, pagando", não "resolvido"):
+   - **Aceitar:** cobra, nasce, **tira a caixa do mundo**, devolve a foto do inventário e enche vida e barras. Os itens nunca duplicam: a caixa some antes de a foto voltar, e só se ainda estava trancada. Se o nascimento falhar, der erro no meio (o aceite roda protegido) ou passar do teto, a cobrança volta (revive guardado, ou o grátis do VIP) e conta como "não".
+   - **Compra cancelada** (fase 9, `purchaseEnded(player, false)`): o "sim" sem nada cobrado volta para **sem resposta** e o jogador escolhe de novo.
+   - **Recusar, o tempo acabar ou sair do jogo:** destranca a caixa para qualquer um, as peças somem e conta a morte de verdade (`DeathService.finalize`). Quem fecha a janela devolve o que foi cobrado e não entregue, uma vez só; ao sair, isso acontece no `DataService.onUnloading`, com o perfil ainda carregado.
+   - **Nascer pelo menu** com a oferta aberta (respondida ou não) também conta como "não".
+6. **Volta** perto do **totem do time** (se está de pé) ou num **ponto aleatório da floresta**, longe da água, das áreas sem nascimento, das construções e de outros jogadores vivos (`SpawnService.reviveSpot`); sem mapa desenhado, no `WorldConfig.SPAWN`.
+7. **3 s de proteção** (`ReviveRules.SHIELD_SECONDS`, atributo `SpawnShieldUntil` no **modelo do personagem**, não no Player): não leva dano (`CharacterService.hurt`), os mobs não o veem (`MobService`), some se ele bater em jogador ou mob (`GatherService`); a bolha do cliente (`SpawnShieldFx`) lê o atributo por polling.
 
 Quem **não** vê a oferta (`ReviveRules.eligible`): modo criativo, vida de tutorial, perfil não carregado ou sem nenhum item (slots, mochila ou armadura).
 
@@ -22,8 +24,8 @@ Os degraus ficam em `ShopConfig.REVIVE_ROBUX`: **25, 49, 99, 199** (para no 199)
 
 | Situação | Preço |
 |---|---|
-| Tem **revive guardado** (crédito no perfil, `Shop.ReviveCredits`) | grátis, gasta o crédito (vem primeiro) |
-| **VIP**, ainda sem o grátis da corrida | grátis (1 por corrida); ocupa o degrau 1 |
+| **VIP**, ainda sem o grátis da corrida | grátis (1 por corrida); ocupa o degrau 1 (vem primeiro: só vale nesta corrida) |
+| Tem **revive guardado** (crédito no perfil, `Shop.ReviveCredits`) | grátis, gasta o crédito (o crédito não vence, então fica para depois do grátis do VIP) |
 | Senão | degrau `min(revives usados na corrida + 1, 4)`: 25, 49, 99, 199 |
 
 A contagem e o grátis do VIP zeram quando o jogador **nasce pelo menu**, não no revive. O VIP vale pela foto da vida (`PerkService.forLife`).
@@ -66,4 +68,4 @@ Depois, na tela de morte: **REVIVER** (volta no totem ou na floresta, com os ite
 
 ## Fase 9 (cobrança real)
 
-`ReviveService.purchaseStarted` / `purchaseEnded` (pausam a janela) e `lateRevive` já existem, mas ninguém os chama: ligar quando o `MarketplaceService` entrar. Veja `docs/pendencias.md`.
+`ReviveService.purchaseStarted` / `purchaseEnded(player, paid)` (pausam a janela, com ou sem "sim"; `paid = false` reabre a resposta) e `lateRevive` já existem, mas ninguém os chama: ligar quando o `MarketplaceService` entrar. Falta no cliente: ao cancelar a compra (`PromptProductPurchaseFinished` sem compra), reativar os botões da oferta (`ScreenState.reviveSending(false)`), porque o servidor não manda aviso de reabertura. Veja `docs/pendencias.md`.
