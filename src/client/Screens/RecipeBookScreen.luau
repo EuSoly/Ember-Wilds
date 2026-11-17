@@ -43,6 +43,30 @@ local PAD = 30 -- da borda do painel (passa da moldura de madeira)
 local TITLE_HEIGHT = 50
 local GRID_SHARE = 0.52 -- fração da largura para a grade (o resto é a ficha)
 local TAB_CORNER = 12 -- px lógicos dos cantos da aba
+-- Celular deitado (17/11/2026): o livro ocupa a tela, as abas mostram só o
+-- ícone, a grade tem células menores e Pegar/Fixar ficam numa faixa no fim
+-- da ficha, que rola só até ela (nada cobre o "Como fazer").
+local short = ScreenMetrics.short
+local SHORT_CELL = 48
+local SHORT_GAP = 6
+local SHORT_TAB = 44
+local SHORT_PAD = 16
+local SHORT_GRID_SHARE = 0.46
+local SHORT_ACTION = 44
+local SHORT_ACTION_MARGIN = 12 -- da borda de baixo da ficha até os botões
+
+local function tabHeight(): number
+	return if short() then SHORT_TAB else TAB_HEIGHT
+end
+local function gap(): number
+	return if short() then SHORT_GAP else GAP
+end
+local function gridShare(): number
+	return if short() then SHORT_GRID_SHARE else GRID_SHARE
+end
+local function pad(): number
+	return if short() then SHORT_PAD else PAD
+end
 
 type Tab = BookInfo.Tab
 type Source<T> = (() -> T) & ((T) -> T)
@@ -127,9 +151,17 @@ local function TabButton(tab: Tab): TextButton
 			children,
 			HudArt.image(icon, {
 				Name = "Icon",
-				AnchorPoint = Vector2.new(0, 0.5),
-				Position = UDim2.new(0, 10, 0.5, 0),
-				Size = UDim2.fromOffset(TAB_HEIGHT - 18, TAB_HEIGHT - 18),
+				-- Celular: só o ícone, no meio da aba.
+				AnchorPoint = function()
+					return if short() then Vector2.new(0.5, 0.5) else Vector2.new(0, 0.5)
+				end,
+				Position = function()
+					return if short() then UDim2.fromScale(0.5, 0.5) else UDim2.new(0, 10, 0.5, 0)
+				end,
+				Size = function()
+					local side = if short() then SHORT_TAB - 14 else TAB_HEIGHT - 18
+					return UDim2.fromOffset(side, side)
+				end,
 				ZIndex = 2,
 			})
 		)
@@ -139,6 +171,9 @@ local function TabButton(tab: Tab): TextButton
 		children,
 		Kit.text({
 			Name = "Label",
+			Visible = function()
+				return not short() or not BookImages.has(icon)
+			end,
 			Position = UDim2.fromOffset(textLeft, 6),
 			Size = UDim2.new(1, -textLeft - 8, 1, -12),
 			FontFace = Theme.font.number,
@@ -160,7 +195,9 @@ local function TabButton(tab: Tab): TextButton
 		Name = "Tab_" .. tab,
 		Text = "",
 		AutoButtonColor = false,
-		Size = UDim2.new(1 / #BookInfo.TABS, -GAP, 1, 0),
+		Size = function()
+			return UDim2.new(1 / #BookInfo.TABS, -gap(), 1, 0)
+		end,
 		BackgroundColor3 = function()
 			return if active() then Theme.ui.action else Theme.rustic.walnut
 		end,
@@ -253,6 +290,15 @@ local function Cell(item: () -> string, index: number): TextButton
 	}) :: TextButton
 end
 
+-- No PC o X fica para fora do canto do livro; no celular, dentro, na ponta
+-- da linha das abas.
+local function closePosition(): UDim2
+	return if short() then UDim2.new(1, -SHORT_PAD, 0, SHORT_PAD) else UDim2.new(1, 14, 0, -14)
+end
+local function closeSize(): UDim2
+	return if short() then UDim2.fromOffset(SHORT_TAB, SHORT_TAB) else UDim2.fromOffset(52, 52)
+end
+
 local function CloseButton(): GuiButton
 	local function close()
 		RecipeBookScreen.open(false)
@@ -261,8 +307,8 @@ local function CloseButton(): GuiButton
 		return create("ImageButton")({
 			Name = "CloseButton",
 			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, 14, 0, -14),
-			Size = UDim2.fromOffset(52, 52),
+			Position = closePosition,
+			Size = closeSize,
 			BackgroundTransparency = 1,
 			Image = BookImages.CLOSE,
 			ScaleType = Enum.ScaleType.Fit,
@@ -275,13 +321,22 @@ local function CloseButton(): GuiButton
 		icon = "",
 		fallback = "X",
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, 14, 0, -14),
-		Size = UDim2.fromOffset(52, 52),
+		Position = closePosition,
+		Size = closeSize,
 		SizeConstraint = Enum.SizeConstraint.RelativeXY,
 		Activated = close,
 		minSize = Vector2.new(44, 44),
 		maxSize = Vector2.new(60, 60),
 	})
+end
+
+-- Fixar só para item com receita; Pegar só no modo criativo.
+local function pinVisible(): boolean
+	local id = RecipeBookScreen.selected()
+	return id ~= nil and Defs.Recipes[id] ~= nil
+end
+local function giveVisible(): boolean
+	return CreativeState.on() and RecipeBookScreen.selected() ~= nil
 end
 
 local function Book(): Frame
@@ -321,18 +376,17 @@ local function Book(): Frame
 		-- Tela baixa (celular deitado): quase toda a altura, com a placa do
 		-- título ainda dentro da tela (10/11/2026).
 		Position = function()
-			return if ScreenMetrics.short()
-				then UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4)
-				else UDim2.fromScale(0.5, 0.52)
+			return if short() then UDim2.fromScale(0.5, 0.5) else UDim2.fromScale(0.5, 0.52)
 		end,
 		Size = function()
-			return if ScreenMetrics.short()
-				then UDim2.new(0.9, 0, ScreenMetrics.SHORT_WINDOW_SHARE, -TITLE_HEIGHT / 2)
-				else UDim2.fromScale(0.9, 0.84)
+			return if short() then UDim2.new(1, -16, 1, -16) else UDim2.fromScale(0.9, 0.84)
 		end,
 		create("UISizeConstraint")({ MaxSize = Vector2.new(980, 620) }),
 		Rustic.plate({
 			Name = "Title",
+			Visible = function()
+				return not short()
+			end,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0),
 			Size = UDim2.fromOffset(300, TITLE_HEIGHT),
@@ -352,24 +406,43 @@ local function Book(): Frame
 		CloseButton(),
 		create("Frame")({
 			Name = "Body",
-			Position = UDim2.fromOffset(PAD, PAD + TITLE_HEIGHT / 2 - 8),
-			Size = UDim2.new(1, -2 * PAD, 1, -2 * PAD - TITLE_HEIGHT / 2 + 8),
+			Position = function()
+				return if short()
+					then UDim2.fromOffset(pad(), pad())
+					else UDim2.fromOffset(PAD, PAD + TITLE_HEIGHT / 2 - 8)
+			end,
+			Size = function()
+				return if short()
+					then UDim2.new(1, -2 * pad(), 1, -2 * pad())
+					else UDim2.new(1, -2 * PAD, 1, -2 * PAD - TITLE_HEIGHT / 2 + 8)
+			end,
 			BackgroundTransparency = 1,
 			create("Frame")({
 				Name = "Tabs",
-				Size = UDim2.new(1, GAP, 0, TAB_HEIGHT),
+				-- Celular: o X fica na ponta direita desta linha.
+				Size = function()
+					return if short()
+						then UDim2.new(1, -(SHORT_TAB + SHORT_GAP), 0, SHORT_TAB)
+						else UDim2.new(1, GAP, 0, TAB_HEIGHT)
+				end,
 				BackgroundTransparency = 1,
 				create("UIListLayout")({
 					FillDirection = Enum.FillDirection.Horizontal,
-					Padding = UDim.new(0, GAP),
+					Padding = function()
+						return UDim.new(0, gap())
+					end,
 					SortOrder = Enum.SortOrder.LayoutOrder,
 				}),
 				tabs,
 			}),
 			create("ScrollingFrame")({
 				Name = "Grid",
-				Position = UDim2.fromOffset(0, TAB_HEIGHT + GAP + 4),
-				Size = UDim2.new(GRID_SHARE, -GAP, 1, -TAB_HEIGHT - GAP - 4),
+				Position = function()
+					return UDim2.fromOffset(0, tabHeight() + gap() + 4)
+				end,
+				Size = function()
+					return UDim2.new(gridShare(), -gap(), 1, -tabHeight() - gap() - 4)
+				end,
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
 				ScrollBarThickness = 6,
@@ -379,8 +452,13 @@ local function Book(): Frame
 				ScrollingDirection = Enum.ScrollingDirection.Y,
 				create("UIPadding")({ PaddingTop = UDim.new(0, 4), PaddingLeft = UDim.new(0, 4) }),
 				create("UIGridLayout")({
-					CellSize = UDim2.fromOffset(CELL, CELL),
-					CellPadding = UDim2.fromOffset(GAP, GAP),
+					CellSize = function()
+						local side = if short() then SHORT_CELL else CELL
+						return UDim2.fromOffset(side, side)
+					end,
+					CellPadding = function()
+						return UDim2.fromOffset(gap(), gap())
+					end,
 					SortOrder = Enum.SortOrder.LayoutOrder,
 				}),
 				vide.indexes(items, Cell),
@@ -388,8 +466,17 @@ local function Book(): Frame
 			BookSheet({
 				item = RecipeBookScreen.selected,
 				onShow = RecipeBookScreen.show,
-				Position = UDim2.new(GRID_SHARE, GAP, 0, TAB_HEIGHT + GAP + 4),
-				Size = UDim2.new(1 - GRID_SHARE, -GAP, 1, -TAB_HEIGHT - GAP - 4),
+				Position = function()
+					return UDim2.new(gridShare(), gap(), 0, tabHeight() + gap() + 4)
+				end,
+				Size = function()
+					return UDim2.new(1 - gridShare(), -gap(), 1, -tabHeight() - gap() - 4)
+				end,
+				bottomInset = function()
+					return if short() and (pinVisible() or giveVisible())
+						then SHORT_ACTION + SHORT_ACTION_MARGIN + 6
+						else 0
+				end,
 			}),
 			-- Fixar a receita no HUD (UI/PinnedRecipe), no canto da ficha; só
 			-- para itens com receita. Fixado: vira "Desafixar". Na tela baixa a
@@ -397,20 +484,17 @@ local function Book(): Frame
 			-- de baixo (a ficha rola por baixo dele).
 			Rustic.button({
 				Name = "PinButton",
-				Visible = function()
-					local id = RecipeBookScreen.selected()
-					return id ~= nil and Defs.Recipes[id] ~= nil
-				end,
+				Visible = pinVisible,
 				AnchorPoint = function()
 					return if ScreenMetrics.short() then Vector2.new(1, 1) else Vector2.new(1, 0)
 				end,
 				Position = function()
-					return if ScreenMetrics.short()
-						then UDim2.new(1, -18, 1, -12)
+					return if short()
+						then UDim2.new(1, -18, 1, -SHORT_ACTION_MARGIN)
 						else UDim2.new(1, -18, 0, TAB_HEIGHT + GAP + 18)
 				end,
 				Size = function()
-					return if ScreenMetrics.short() then UDim2.fromOffset(104, 38) else UDim2.fromOffset(120, 38)
+					return if short() then UDim2.fromOffset(104, SHORT_ACTION) else UDim2.fromOffset(120, 38)
 				end,
 				ZIndex = 6,
 				kind = function()
@@ -434,18 +518,16 @@ local function Book(): Frame
 			-- item); na tela baixa, ao lado do Fixar, que também fica embaixo.
 			Rustic.button({
 				Name = "GiveButton",
-				Visible = function()
-					return CreativeState.on() and RecipeBookScreen.selected() ~= nil
-				end,
+				Visible = giveVisible,
 				AnchorPoint = Vector2.new(1, 1),
 				Position = function()
 					local id = RecipeBookScreen.selected()
-					local besidePin = ScreenMetrics.short() and id ~= nil and Defs.Recipes[id] ~= nil
+					local besidePin = short() and id ~= nil and Defs.Recipes[id] ~= nil
 					local shift = if besidePin then 112 else 0
-					return UDim2.new(1, -18 - shift, 1, -12)
+					return UDim2.new(1, -18 - shift, 1, if short() then -SHORT_ACTION_MARGIN else -12)
 				end,
 				Size = function()
-					return if ScreenMetrics.short() then UDim2.fromOffset(104, 38) else UDim2.fromOffset(120, 38)
+					return if short() then UDim2.fromOffset(104, SHORT_ACTION) else UDim2.fromOffset(120, 38)
 				end,
 				ZIndex = 6,
 				kind = "ember",

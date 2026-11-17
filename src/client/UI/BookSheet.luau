@@ -38,8 +38,11 @@ local SECTION_COLOR = Color3.fromRGB(122, 84, 46) -- título de seção: marrom 
 export type Props = {
 	item: () -> string?,
 	onShow: (string) -> (), -- abre a ficha de outro item (ingrediente, "serve para")
-	Position: UDim2,
-	Size: UDim2,
+	Position: UDim2 | () -> UDim2,
+	Size: UDim2 | () -> UDim2,
+	-- Px no fim da ficha reservados para os botões (Pegar/Fixar do celular):
+	-- o texto rola só até ali e nada fica por cima dele.
+	bottomInset: (() -> number)?,
 }
 
 local function text(props: { [any]: any }): TextLabel
@@ -357,7 +360,10 @@ local function BookSheet(props: Props): Frame
 	local list = create("ScrollingFrame")({
 		Name = "Content",
 		Position = UDim2.fromOffset(PAD_X, PAD_Y),
-		Size = UDim2.new(1, -2 * PAD_X + 10, 1, -2 * PAD_Y),
+		Size = function()
+			local inset = if props.bottomInset then props.bottomInset() else 0
+			return UDim2.new(1, -2 * PAD_X + 10, 1, -2 * PAD_Y - inset)
+		end,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ScrollBarThickness = 6,
