@@ -183,4 +183,37 @@ return {
 			assert(not l.offerBig, `{size[1]}x{size[2]}: celular sem a oferta grande`)
 		end
 	end,
+
+	["revive offer content fits inside the drawn panel"] = function()
+		-- Teste no Studio (17/11/2026): a arte do painel entrou na lista como uma
+		-- peça e o conteúdo (~550 px) vazou do painel de 321. A pilha de peças
+		-- (sem a arte, que é o fundo) tem de caber no painel desenhado.
+		for _, size in SIZES do
+			local l = DeathLayout.compute(size[1], size[2], KITS)
+			local tag = `{size[1]}x{size[2]}`
+			local s = DeathLayout.offerSizes(l.offerBig)
+			local stack = DeathLayout.offerStackHeight(l.offerBig, l.offerIcon, l.offerRow)
+			assert(stack <= l.offerCard.h + 0.01, `{tag}: pilha ({stack}) passa do painel ({l.offerCard.h})`)
+			assert(
+				math.abs(stack - DeathLayout.offerContent(l.offerBig, l.offerIcon, l.offerRow)) < 0.01,
+				`{tag}: pilha diferente da altura do conteúdo`
+			)
+			-- Largura: a fita GRÁTIS e os botões cabem entre os recuos laterais.
+			local inner = l.offerCard.w - 2 * s.inset
+			local cell = if l.offerRow then (inner - s.gap) / 2 else inner
+			assert(cell >= s.ribbon, `{tag}: fita mais larga que o lugar ({cell})`)
+			assert(cell >= 120, `{tag}: botão estreito ({cell})`)
+			if l.offerIcon and not l.offerRow then
+				assert(s.icon <= inner, `{tag}: ícone mais largo que o painel`)
+			end
+		end
+	end,
+
+	["revive offer stack lists icon, header and buttons"] = function()
+		local big = DeathLayout.offerStack(true, true, false)
+		assert(#big == 3 and big[1] == DeathLayout.OFFER_ICON_BIG, "grande: ícone, cabeçalho, botões")
+		local row = DeathLayout.offerStack(false, false, true)
+		assert(#row == 2 and row[1] == DeathLayout.OFFER_PRICE and row[2] == DeathLayout.OFFER_BUTTON, "em linha")
+		assert(#DeathLayout.offerStack(false, false, false) == 2, "sem ícone")
+	end,
 }

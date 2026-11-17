@@ -30,6 +30,7 @@ local SPARK_SHARE = 0.13 -- lado da faísca no lado menor do cartão
 local SPARK_PERIOD = { 2.4, 3.6 } -- s para uma faísca subir e sumir
 local SPARK_FROM, SPARK_TO = 0.9, 0.18 -- altura (fração) em que nasce e some
 local SPARK_KINDS = { "ember", "star4", "dot", "cross" }
+local SHOWN_EVERY = 0.25 -- s entre duas leituras de "o cartão está à vista?"
 
 type Spark = { image: ImageLabel, period: number, offset: number, x: number, last: number }
 type Entry = {
@@ -40,12 +41,14 @@ type Entry = {
 	sparks: { Spark },
 	phase: number,
 	alive: boolean,
+	shown: boolean, -- o cartão e todos os pais visíveis (lido a cada SHOWN_EVERY)
 }
 
 local entries: { Entry } = {}
 local activeKeys: { [string]: boolean } = {}
 local connection: RBXScriptConnection? = nil
 local clock = 0
+local sinceShown = SHOWN_EVERY -- lê na primeira volta
 local rng = Random.new()
 
 local function anyActive(): boolean
@@ -55,6 +58,19 @@ local function anyActive(): boolean
 		end
 	end
 	return false
+end
+
+-- O cartão e todos os pais até a ScreenGui estão visíveis? (Seção da loja ou
+-- página escondida para os efeitos dela.)
+local function onScreen(object: GuiObject): boolean
+	local current: Instance? = object
+	while current and not current:IsA("LayerCollector") do
+		if current:IsA("GuiObject") and not (current :: GuiObject).Visible then
+			return false
+		end
+		current = current.Parent
+	end
+	return current ~= nil
 end
 
 local function update(entry: Entry)
@@ -84,17 +100,33 @@ end
 
 local function step(dt: number)
 	clock += dt
+	sinceShown += dt
+	local recheck = sinceShown >= SHOWN_EVERY
+	if recheck then
+		sinceShown = 0
+	end
 	for i = #entries, 1, -1 do
 		local entry = entries[i]
 		if not entry.alive then
 			table.remove(entries, i)
-		elseif activeKeys[entry.key] and entry.holder.Visible then
-			update(entry)
+		elseif activeKeys[entry.key] then
+			if recheck then
+				entry.shown = onScreen(entry.holder)
+			end
+			if entry.shown then
+				update(entry)
+			end
 		end
 	end
 end
 
 local function refresh()
+	-- Tira da lista os cartões já destruídos.
+	for i = #entries, 1, -1 do
+		if not entries[i].alive then
+			table.remove(entries, i)
+		end
+	end
 	local wanted = #entries > 0 and anyActive()
 	if wanted and not connection then
 		connection = RunService.RenderStepped:Connect(step)
@@ -109,6 +141,7 @@ end
 function CardFx.run(key: string, active: () -> boolean)
 	vide.effect(function()
 		activeKeys[key] = active()
+		sinceShown = SHOWN_EVERY -- relê o "à vista" logo na próxima volta
 		refresh()
 	end)
 	vide.cleanup(function()
@@ -196,6 +229,7 @@ function CardFx.layers(p: LayersProps): Frame
 		sparks = {},
 		phase = rng:NextNumber(),
 		alive = true,
+		shown = false,
 	}
 	if MonetizationImages.has(MonetizationImages.HALO) then
 		local halo = square("Halo", MonetizationImages.HALO, color, center, 2)
@@ -240,6 +274,7 @@ function CardFx.layers(p: LayersProps): Frame
 	table.insert(entries, entry)
 	holder.Destroying:Connect(function()
 		entry.alive = false
+		refresh()
 	end)
 	refresh()
 	return holder

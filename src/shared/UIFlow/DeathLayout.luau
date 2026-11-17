@@ -133,6 +133,74 @@ local function offerRect(panelWidth: number, panelHeight: number): (Rect, boolea
 	return rect, h >= DeathLayout.OFFER_FULL, h < DeathLayout.OFFER_NO_ICON
 end
 
+-- Medidas das peças do painel (UI/ReviveOffer usa estas mesmas): as normais
+-- ou as grandes do PC. `inset` = recuo do conteúdo nas laterais do painel;
+-- `ribbon` = largura da fita GRÁTIS.
+export type OfferSizes = {
+	padding: number,
+	inset: number,
+	gap: number,
+	icon: number,
+	title: number,
+	price: number,
+	button: number,
+	decline: number,
+	ribbon: number,
+}
+DeathLayout.OFFER_INSET = 24
+DeathLayout.OFFER_SIZES = table.freeze({
+	padding = DeathLayout.OFFER_PADDING,
+	inset = DeathLayout.OFFER_INSET,
+	gap = DeathLayout.OFFER_GAP,
+	icon = DeathLayout.OFFER_ICON,
+	title = DeathLayout.OFFER_TITLE,
+	price = DeathLayout.OFFER_PRICE,
+	button = DeathLayout.OFFER_BUTTON,
+	decline = DeathLayout.OFFER_DECLINE,
+	ribbon = 150,
+} :: OfferSizes)
+DeathLayout.OFFER_SIZES_BIG = table.freeze({
+	padding = DeathLayout.OFFER_PADDING_BIG,
+	inset = DeathLayout.OFFER_INSET,
+	gap = DeathLayout.OFFER_GAP_BIG,
+	icon = DeathLayout.OFFER_ICON_BIG,
+	title = DeathLayout.OFFER_TITLE_BIG,
+	price = DeathLayout.OFFER_PRICE_BIG,
+	button = DeathLayout.OFFER_BUTTON_BIG,
+	decline = DeathLayout.OFFER_DECLINE_BIG,
+	ribbon = 200,
+} :: OfferSizes)
+
+function DeathLayout.offerSizes(big: boolean): OfferSizes
+	return if big then DeathLayout.OFFER_SIZES_BIG else DeathLayout.OFFER_SIZES
+end
+
+-- Alturas das peças empilhadas no painel, na ordem: ícone (se aparece),
+-- cabeçalho (título e preço, um embaixo do outro ou lado a lado) e botões
+-- (REVIVER e "Não, obrigado", idem). A arte do painel é o fundo, não entra.
+function DeathLayout.offerStack(big: boolean, icon: boolean, row: boolean): { number }
+	local s = DeathLayout.offerSizes(big)
+	local items = {}
+	if icon and not row then
+		table.insert(items, s.icon)
+	end
+	table.insert(items, if row then s.price else s.title + s.gap + s.price)
+	table.insert(items, if row then s.button else s.button + s.gap + s.decline)
+	return items
+end
+
+-- Altura que a pilha ocupa no painel: preenchimento em cima e embaixo, peças
+-- e os espaços entre elas.
+function DeathLayout.offerStackHeight(big: boolean, icon: boolean, row: boolean): number
+	local s = DeathLayout.offerSizes(big)
+	local items = DeathLayout.offerStack(big, icon, row)
+	local total = 2 * s.padding + (#items - 1) * s.gap
+	for _, h in items do
+		total += h
+	end
+	return total
+end
+
 -- Altura do conteúdo da oferta em cada composição.
 function DeathLayout.offerContent(big: boolean, icon: boolean, row: boolean): number
 	if big then

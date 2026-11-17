@@ -4,9 +4,11 @@
 -- REVIVER e "Não, obrigado". Sem contador (o limite é escondido, do servidor).
 -- Cada peça usa a arte de MonetizationImages quando o id existe e, senão, o
 -- desenho feito por código (mesmo padrão da loja com ShopImages).
--- O retângulo da oferta (DeathLayout.offer) é só o escurecido que come o
--- toque; o painel desenhado (arte 06 em 9 partes) tem o tamanho do conteúdo e
--- fica no meio dele (DeathLayout.offerCard), sem espaço morto.
+-- O retângulo da oferta (DeathLayout.offer) é um fundo opaco que cobre o
+-- resumo e come o toque; o painel desenhado (arte 06 em 9 partes, como FUNDO
+-- do painel, fora da lista) tem o tamanho do conteúdo e fica no meio dele
+-- (DeathLayout.offerCard). A pilha de peças usa as medidas de
+-- DeathLayout.offerSizes/offerStack, as mesmas que o teste confere.
 -- Composições (DeathLayout): em coluna (PC grande, com ícone de ~96 px;
 -- telas médias com o ícone pequeno ou sem ele) e em linha (celular deitado na
 -- maior escala): título e preço lado a lado, REVIVER e "Não, obrigado" lado a
@@ -28,47 +30,13 @@ local create = vide.create
 local R = Theme.rustic
 
 local PANEL_BODY = Color3.fromHex("#2B2018")
-local COVER = Color3.fromHex("#140E0A")
+local COVER = Color3.fromHex("#1E1611") -- opaco: só a oferta aparece na janela
 local PANEL_SLICE_SHARE = 0.5 -- borda do painel mais fina que a proporcional
-local RIBBON_WIDTH = 150
-local RIBBON_WIDTH_BIG = 200
 
 local ReviveOffer = {}
 
 type Source<T> = (() -> T) & ((T) -> T)
-
--- Medidas de uma composição: as normais ou as grandes do PC.
-type Sizes = {
-	padding: number,
-	gap: number,
-	icon: number,
-	title: number,
-	price: number,
-	button: number,
-	decline: number,
-	ribbon: number,
-}
-
-local NORMAL: Sizes = {
-	padding = DeathLayout.OFFER_PADDING,
-	gap = DeathLayout.OFFER_GAP,
-	icon = DeathLayout.OFFER_ICON,
-	title = DeathLayout.OFFER_TITLE,
-	price = DeathLayout.OFFER_PRICE,
-	button = DeathLayout.OFFER_BUTTON,
-	decline = DeathLayout.OFFER_DECLINE,
-	ribbon = RIBBON_WIDTH,
-}
-local BIG: Sizes = {
-	padding = DeathLayout.OFFER_PADDING_BIG,
-	gap = DeathLayout.OFFER_GAP_BIG,
-	icon = DeathLayout.OFFER_ICON_BIG,
-	title = DeathLayout.OFFER_TITLE_BIG,
-	price = DeathLayout.OFFER_PRICE_BIG,
-	button = DeathLayout.OFFER_BUTTON_BIG,
-	decline = DeathLayout.OFFER_DECLINE_BIG,
-	ribbon = RIBBON_WIDTH_BIG,
-}
+type Sizes = DeathLayout.OfferSizes
 
 local function answer(accept: boolean)
 	-- Uma resposta só: os botões ficam desligados até o ReviveClosed.
@@ -110,15 +78,12 @@ local function offerButton(props: {
 	end)
 	if MonetizationImages.has(props.art.normal) then
 		local down: Source<boolean> = vide.source(false) :: any
-		local button = create("ImageButton")({
-			Name = props.name,
-			LayoutOrder = props.order,
-			Size = size,
+		-- A arte é uma ImageLabel filha (atrás do texto), no mesmo jeito das
+		-- placas do Rustic; o botão em si é transparente.
+		local art = create("ImageLabel")({
+			Name = "Art",
+			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
-			AutoButtonColor = false,
-			Active = function()
-				return not sending()
-			end,
 			Image = function()
 				if sending() and MonetizationImages.has(props.art.disabled) then
 					return props.art.disabled
@@ -132,6 +97,20 @@ local function offerButton(props: {
 			end,
 			ScaleType = Enum.ScaleType.Slice,
 			SliceCenter = MonetizationImages.BUTTON_SLICE,
+			ZIndex = 0,
+		}) :: ImageLabel
+		Rustic.fitSlice(art, MonetizationImages.BUTTON_SIZE)
+		return create("TextButton")({
+			Name = props.name,
+			LayoutOrder = props.order,
+			Size = size,
+			Text = "",
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			AutoButtonColor = false,
+			Active = function()
+				return not sending()
+			end,
 			MouseButton1Down = function()
 				down(true)
 			end,
@@ -144,6 +123,7 @@ local function offerButton(props: {
 			Activated = function()
 				answer(props.accept)
 			end,
+			art :: Instance,
 			Rustic.label({
 				Name = "Label",
 				AnchorPoint = Vector2.new(0.5, 0.5),
@@ -158,15 +138,14 @@ local function offerButton(props: {
 				end,
 				Text = props.text,
 				maxSize = props.maxSize,
+				ZIndex = 1,
 				create("UIStroke")({
 					Color = R.outline,
 					Thickness = 1.5,
 					ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
 				}),
 			}),
-		}) :: ImageButton
-		Rustic.fitSlice(button, MonetizationImages.BUTTON_SIZE)
-		return button
+		}) :: GuiButton
 	end
 	return Rustic.button({
 		Name = props.name,
@@ -272,7 +251,13 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 		return layout().offerRow
 	end
 	local function sizes(): Sizes
-		return if layout().offerBig then BIG else NORMAL
+		return DeathLayout.offerSizes(layout().offerBig)
+	end
+	-- Alturas do cabeçalho e dos botões: as duas últimas peças da pilha.
+	local function stackItem(fromEnd: number): number
+		local l = layout()
+		local items = DeathLayout.offerStack(l.offerBig, l.offerIcon, l.offerRow)
+		return items[#items - fromEnd]
 	end
 
 	local iconFrame = icon(1, sizes)
@@ -301,27 +286,13 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 	}) :: ImageLabel
 	Rustic.fitSlice(art, MonetizationImages.REVIVE_PANEL_SIZE, PANEL_SLICE_SHARE)
 
-	local card = create("Frame")({
-		Name = "Panel",
-		Position = function()
-			local c = layout().offerCard
-			return UDim2.fromOffset(c.x, c.y)
-		end,
-		Size = function()
-			local c = layout().offerCard
-			return UDim2.fromOffset(c.w, c.h)
-		end,
-		BackgroundColor3 = PANEL_BODY,
-		BackgroundTransparency = if hasPanelArt then 1 else 0,
-		BorderSizePixel = 0,
-		create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
-		create("UIStroke")({
-			Enabled = not hasPanelArt,
-			Color = R.woodLight,
-			Thickness = 3,
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-		}),
-		art,
+	-- O conteúdo (ícone, cabeçalho, botões) num Frame próprio com a lista e o
+	-- preenchimento; a arte fica fora da lista, como fundo do painel.
+	local content = create("Frame")({
+		Name = "Content",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		ZIndex = 1,
 		create("UIPadding")({
 			PaddingTop = function()
 				return UDim.new(0, sizes().padding)
@@ -329,8 +300,12 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 			PaddingBottom = function()
 				return UDim.new(0, sizes().padding)
 			end,
-			PaddingLeft = UDim.new(0, 24),
-			PaddingRight = UDim.new(0, 24),
+			PaddingLeft = function()
+				return UDim.new(0, sizes().inset)
+			end,
+			PaddingRight = function()
+				return UDim.new(0, sizes().inset)
+			end,
 		}),
 		create("UIListLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
@@ -346,9 +321,7 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 			Name = "Header",
 			LayoutOrder = 2,
 			Size = function()
-				local s = sizes()
-				local h = if row() then s.price else s.title + s.gap + s.price
-				return UDim2.new(1, 0, 0, h)
+				return UDim2.new(1, 0, 0, stackItem(1))
 			end,
 			BackgroundTransparency = 1,
 			create("UIListLayout")({
@@ -409,9 +382,7 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 			Name = "Buttons",
 			LayoutOrder = 3,
 			Size = function()
-				local s = sizes()
-				local h = if row() then s.button else s.button + s.gap + s.decline
-				return UDim2.new(1, 0, 0, h)
+				return UDim2.new(1, 0, 0, stackItem(0))
 			end,
 			BackgroundTransparency = 1,
 			create("UIListLayout")({
@@ -454,7 +425,32 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 		}),
 	}) :: Frame
 
-	-- O retângulo da oferta: escurece o resumo e come o toque; o painel no meio.
+	local card = create("Frame")({
+		Name = "Panel",
+		Position = function()
+			local c = layout().offerCard
+			return UDim2.fromOffset(c.x, c.y)
+		end,
+		Size = function()
+			local c = layout().offerCard
+			return UDim2.fromOffset(c.w, c.h)
+		end,
+		BackgroundColor3 = PANEL_BODY,
+		BackgroundTransparency = if hasPanelArt then 1 else 0,
+		BorderSizePixel = 0,
+		create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
+		create("UIStroke")({
+			Enabled = not hasPanelArt,
+			Color = R.woodLight,
+			Thickness = 3,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+		}),
+		art,
+		content,
+	}) :: Frame
+
+	-- O retângulo da oferta: cobre o resumo, os kits e os botões da janela (opaco,
+	-- como antes da arte) e come o toque; o painel fica no meio.
 	local cover = create("Frame")({
 		Name = "ReviveOffer",
 		Visible = function()
@@ -463,7 +459,7 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 		ZIndex = 20,
 		Active = true, -- come o toque: nada por baixo reage
 		BackgroundColor3 = COVER,
-		BackgroundTransparency = 0.15,
+		BackgroundTransparency = 0,
 		BorderSizePixel = 0,
 		create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
 		card,
