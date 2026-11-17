@@ -64,6 +64,14 @@ return {
 			assert(l.rankingTop < l.panelBottom, `{w}x{h}: ranking sem altura`)
 		end)
 	end,
+	["kits start at the top on phones"] = function()
+		local phone = MenuLayout.compute(749, 330, true)
+		assert(phone.kitPanelTop == 8, "celular: kits do topo")
+		local pc = MenuLayout.compute(1280, 720, true)
+		assert(pc.kitPanelTop == pc.bodyTop, "PC: kits abaixo dos pods")
+		-- O aviso de compra fica dentro do painel, abaixo do título e do fechar.
+		assert(phone.noticeY >= phone.kitPanelTop + MenuLayout.KIT_HEADER_HEIGHT, "aviso por cima do título dos kits")
+	end,
 	["pc keeps the old sizes"] = function()
 		local l = MenuLayout.compute(1280, 720)
 		assert(l.podHeight == 56, "pod do PC")
@@ -125,9 +133,9 @@ return {
 			local l = MenuLayout.compute(w, h, true)
 			local left, right = l.noticeCenterX - l.noticeWidth / 2, l.noticeCenterX + l.noticeWidth / 2
 			local top, bottom = l.noticeY, l.noticeY + MenuLayout.NOTICE_HEIGHT
-			local headerBottom = l.bodyTop + MenuLayout.KIT_HEADER_HEIGHT
+			local headerBottom = l.kitPanelTop + MenuLayout.KIT_HEADER_HEIGHT
 			local overlapsX = left < l.kitPanelX + l.kitPanelWidth and right > l.kitPanelX
-			local overlapsY = top < headerBottom and bottom > l.bodyTop
+			local overlapsY = top < headerBottom and bottom > l.kitPanelTop
 			assert(not (overlapsX and overlapsY), `{w}x{h}: aviso cobre o título/fechar dos kits`)
 			assert(left >= 0 and right <= w and bottom <= h, `{w}x{h}: aviso fora da tela`)
 			assert(l.noticeWidth > 0, `{w}x{h}: aviso sem largura`)

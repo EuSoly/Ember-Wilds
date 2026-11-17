@@ -42,6 +42,15 @@ local BUTTON_GAP = 6
 local SELECTED_STROKE = 3
 local CORNER_WIDTH = 92 -- canto do saldo: "×N" e o botão "+"
 local CORNER_HEIGHT = 24
+-- Celular deitado (ajuste do Elizeu, 17/11/2026): o painel sobe até o topo e
+-- os kits ficam em duas colunas de cartões mais baixos, para os 4 caberem sem
+-- rolar. Com kits de conquista a mais, a lista rola.
+local COMPACT_PADDING = 12
+local COMPACT_POINTS_ROW = 20
+local COMPACT_ICON = 36
+local COMPACT_BUTTONS = 40
+local COMPACT_ROW_MIN = 96
+local COMPACT_ROWS = 2
 
 local KitsPanel = {}
 
@@ -217,7 +226,7 @@ local function balanceCorner(kit: Defs.KitDef, expanded: (() -> boolean) & ((boo
 	}) :: Frame
 end
 
-local function row(kit: Defs.KitDef, points: () -> number): Frame
+local function row(kit: Defs.KitDef, points: () -> number, compact: () -> boolean): Frame
 	local function isCurrent(): boolean
 		local id = KitShop.current()
 		return id == kit.id
@@ -246,10 +255,20 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 	local function showBalanceUse(): boolean
 		return not owned() and hasBalance() and not expanded()
 	end
+	local function iconSide(): number
+		return if compact() then COMPACT_ICON else ICON
+	end
+	local function textLeft(): number
+		return iconSide() + (if compact() then 16 else 20)
+	end
 	local icon = create("Frame")({
 		Name = "Icon",
-		Position = UDim2.fromOffset(10, 8),
-		Size = UDim2.fromOffset(ICON, ICON),
+		Position = function()
+			return if compact() then UDim2.fromOffset(8, 6) else UDim2.fromOffset(10, 8)
+		end,
+		Size = function()
+			return UDim2.fromOffset(iconSide(), iconSide())
+		end,
 		BackgroundTransparency = 1,
 	}) :: Frame
 	ItemIcon({
@@ -278,8 +297,12 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		Rustic.label({
 			Name = "Name",
 			dark = true,
-			Position = UDim2.fromOffset(ICON + 20, 8),
-			Size = UDim2.new(1, -(ICON + 30 + CORNER_WIDTH), 0, 24),
+			Position = function()
+				return UDim2.fromOffset(textLeft(), if compact() then 4 else 8)
+			end,
+			Size = function()
+				return UDim2.new(1, -(textLeft() + 10 + CORNER_WIDTH), 0, if compact() then 20 else 24)
+			end,
 			FontFace = Theme.font.number,
 			Text = Strings.get(kit.nameKey),
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -288,8 +311,13 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		balanceCorner(kit, expanded),
 		Rustic.label({
 			Name = "Items",
-			Position = UDim2.fromOffset(ICON + 20, 32),
-			Size = UDim2.new(1, -(ICON + 30), 0, 32), -- até 2 linhas; encolhe se precisar
+			Position = function()
+				return UDim2.fromOffset(textLeft(), if compact() then 24 else 32)
+			end,
+			-- Até 2 linhas; encolhe se precisar.
+			Size = function()
+				return UDim2.new(1, -(textLeft() + 10), 0, if compact() then 28 else 32)
+			end,
 			FontFace = Theme.font.body,
 			TextColor3 = R.textSecondaryLight,
 			Text = itemsText(kit),
@@ -300,8 +328,14 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 		}),
 		create("Frame")({
 			Name = "Actions",
-			Position = UDim2.new(0, 10, 1, -(BUTTONS_HEIGHT + 8)),
-			Size = UDim2.new(1, -20, 0, BUTTONS_HEIGHT),
+			Position = function()
+				return if compact()
+					then UDim2.new(0, 6, 1, -(COMPACT_BUTTONS + 6))
+					else UDim2.new(0, 10, 1, -(BUTTONS_HEIGHT + 8))
+			end,
+			Size = function()
+				return if compact() then UDim2.new(1, -12, 0, COMPACT_BUTTONS) else UDim2.new(1, -20, 0, BUTTONS_HEIGHT)
+			end,
 			BackgroundTransparency = 1,
 			buyButtons(kit, points, showBuy) :: Instance,
 			useButton(kit, showUse) :: Instance,
@@ -310,15 +344,44 @@ local function row(kit: Defs.KitDef, points: () -> number): Frame
 	}) :: Frame
 end
 
--- Monta o painel (chamar dentro de um root Vide).
-function KitsPanel.build(): Frame
+-- Monta o painel (chamar dentro de um root Vide). `compact`: celular deitado;
+-- `height`: altura do painel em px lógicos (quem chama posiciona).
+function KitsPanel.build(compact: () -> boolean, height: () -> number): Frame
 	local points = Sources.attribute(Players.LocalPlayer, StatNames.KitPoints, 0)
+	local function pad(): number
+		return if compact() then COMPACT_PADDING else PADDING
+	end
+	local function pointsRow(): number
+		return if compact() then COMPACT_POINTS_ROW else POINTS_ROW
+	end
+	-- Do topo do painel até a lista (título, pontos e folgas).
+	local function listTop(): number
+		return pad() + HEADER + pointsRow() + (if compact() then 0 else 8)
+	end
+	local function pointsTop(): number
+		return pad() + HEADER - (if compact() then 4 else 0)
+	end
+	local function listHeight(): number
+		return height() - listTop() - pad()
+	end
+	-- Uma coluna no PC (linhas de ROW_HEIGHT); duas no celular, com a altura
+	-- dividida entre duas fileiras.
 	local rows: { Instance } = {
-		create("UIListLayout")({ Padding = UDim.new(0, ROW_GAP), SortOrder = Enum.SortOrder.LayoutOrder }),
+		create("UIGridLayout")({
+			CellPadding = UDim2.fromOffset(ROW_GAP, ROW_GAP),
+			CellSize = function()
+				if not compact() then
+					return UDim2.new(1, 0, 0, ROW_HEIGHT)
+				end
+				local rowHeight = (listHeight() - (COMPACT_ROWS - 1) * ROW_GAP) / COMPACT_ROWS
+				return UDim2.new(0.5, -ROW_GAP / 2 - 1, 0, math.max(rowHeight, COMPACT_ROW_MIN))
+			end,
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
 		create("UIPadding")({ PaddingRight = UDim.new(0, 6) }), -- espaço da barra de rolagem
 	}
 	for _, kit in KitRules.sorted(Defs.Kits) do
-		local line = row(kit, points)
+		local line = row(kit, points, compact)
 		-- Kit só de conquista: só aparece para quem tem a posse.
 		if kit.exclusive then
 			vide.effect(function()
@@ -332,8 +395,12 @@ function KitsPanel.build(): Frame
 		Rustic.label({
 			Name = "Title",
 			dark = true,
-			Position = UDim2.fromOffset(PADDING, PADDING - 4),
-			Size = UDim2.new(1, -(PADDING * 2 + HEADER + 8), 0, HEADER),
+			Position = function()
+				return UDim2.fromOffset(pad(), pad() - 4)
+			end,
+			Size = function()
+				return UDim2.new(1, -(pad() * 2 + HEADER + 8), 0, HEADER)
+			end,
 			FontFace = Theme.font.title,
 			Text = Strings.get("kit.panel.title"),
 			TextXAlignment = Enum.TextXAlignment.Left,
@@ -342,7 +409,9 @@ function KitsPanel.build(): Frame
 		Rustic.button({
 			Name = "Close",
 			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.new(1, -PADDING, 0, PADDING - 4),
+			Position = function()
+				return UDim2.new(1, -pad(), 0, pad() - 4)
+			end,
 			Size = UDim2.fromOffset(HEADER, HEADER),
 			kind = "wood",
 			text = "X",
@@ -353,8 +422,12 @@ function KitsPanel.build(): Frame
 		Rustic.label({
 			Name = "Points",
 			dark = true,
-			Position = UDim2.fromOffset(PADDING, PADDING + HEADER),
-			Size = UDim2.new(1, -PADDING * 2, 0, POINTS_ROW),
+			Position = function()
+				return UDim2.fromOffset(pad(), pointsTop())
+			end,
+			Size = function()
+				return UDim2.new(1, -pad() * 2, 0, pointsRow())
+			end,
 			FontFace = Theme.font.label,
 			TextColor3 = R.textSecondaryLight,
 			Text = function()
@@ -365,8 +438,12 @@ function KitsPanel.build(): Frame
 		}),
 		create("ScrollingFrame")({
 			Name = "List",
-			Position = UDim2.fromOffset(PADDING, PADDING + HEADER + POINTS_ROW + 8),
-			Size = UDim2.new(1, -PADDING * 2, 1, -(PADDING * 2 + HEADER + POINTS_ROW + 8)),
+			Position = function()
+				return UDim2.fromOffset(pad(), listTop())
+			end,
+			Size = function()
+				return UDim2.new(1, -pad() * 2, 1, -(listTop() + pad()))
+			end,
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			CanvasSize = UDim2.fromScale(0, 0),
