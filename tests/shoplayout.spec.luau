@@ -121,7 +121,7 @@ return {
 			local rows = math.ceil(5 / cols)
 			assert(rows * cardHeight + (rows - 1) * GAP <= l.pageHeight, `{w}x{h}: gamepasses passam da página`)
 			assert(cardHeight >= 120, `{w}x{h}: cartão de gamepass baixo demais ({cardHeight})`)
-			assert(ShopLayout.emberCardHeight(l) <= l.pageHeight, `{w}x{h}: Golden Ember passa da página`)
+			assert(l.listBottomPad == 0, `{w}x{h}: página sem espaço extra embaixo`)
 		end
 	end,
 
@@ -135,5 +135,32 @@ return {
 		assert(not l.paged, "PC não pagina")
 		local cols, cardHeight = ShopLayout.passGrid(l, 4)
 		assert(cols == 5 and cardHeight == 236, "grade do PC")
+	end,
+	["phone golden ember: first row fills the page and the next one peeks"] = function()
+		for _, size in { { 749, 330 }, { 788, 347 }, { 667, 375 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local top, bottom = ShopLayout.emberHeights(l)
+			local firstEnd = l.contentTop + ShopLayout.SECTION_TITLE + top
+			local listEnd = h - ShopLayout.MARGIN
+			assert(firstEnd < listEnd, `{w}x{h}: primeira fileira passa da página`)
+			-- A fileira de baixo aparece um pouco: mostra que dá para rolar.
+			local peek = listEnd - (firstEnd + ShopLayout.GAP)
+			assert(peek >= 12 and peek <= 30, `{w}x{h}: pedaço da fileira de baixo ({peek})`)
+			assert(bottom >= 120, `{w}x{h}: fileira de baixo baixa demais`)
+		end
+		local pcTop, pcBottom = ShopLayout.emberHeights(ShopLayout.compute(1280, 720))
+		assert(pcTop == 200 and pcBottom == 170, "PC igual")
+	end,
+
+	["phone spin sides fit without scrolling"] = function()
+		for _, size in { { 749, 330 }, { 788, 347 }, { 844, 390 }, { 667, 375 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local boxInner = h - l.spinBoxTop - ShopLayout.MARGIN - 2 * ShopLayout.SPIN_PADDING
+			local sides = boxInner
+				- (l.spinTitleRow + l.spinTile + ShopLayout.SPIN_REEL_EXTRA + 2 * ShopLayout.SPIN_GAP)
+			assert(ShopLayout.SPIN_SIDES_PAD + l.spinSideHeight <= sides, `{w}x{h}: lados do giro rolam`)
+		end
 	end,
 }

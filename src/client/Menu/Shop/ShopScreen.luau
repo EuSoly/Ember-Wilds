@@ -62,7 +62,12 @@ function ShopScreen.build(
 
 	local scrollChildren: { Instance } = {
 		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, SECTION_GAP) }),
-		create("UIPadding")({ PaddingRight = UDim.new(0, 10), PaddingBottom = UDim.new(0, 16) }),
+		create("UIPadding")({
+			PaddingRight = UDim.new(0, 10),
+			PaddingBottom = function()
+				return UDim.new(0, layout().listBottomPad)
+			end,
+		}),
 	}
 	for i, tab in TABS do
 		local builder = builders[tab.id]
@@ -88,6 +93,8 @@ function ShopScreen.build(
 		table.insert(scrollChildren, section)
 	end
 
+	-- A página passa da altura da lista (tem o que rolar)?
+	local overflows = vide.source(false)
 	local scroll = create("ScrollingFrame")({
 		Name = "List",
 		BackgroundTransparency = 1,
@@ -103,10 +110,25 @@ function ShopScreen.build(
 		CanvasSize = UDim2.fromScale(0, 0),
 		AutomaticCanvasSize = Enum.AutomaticSize.Y,
 		ScrollingDirection = Enum.ScrollingDirection.Y,
-		ScrollBarThickness = 6,
-		ScrollBarImageColor3 = R.woodEdge,
+		-- Na página do celular a barra é mais grossa e clara, e só aparece
+		-- quando a página rola (Golden Ember): aí dá para ver que tem mais.
+		ScrollBarThickness = function()
+			if layout().paged then
+				return if overflows() then 8 else 0
+			end
+			return 6
+		end,
+		ScrollBarImageColor3 = function()
+			return if layout().paged then R.emberLight else R.woodEdge
+		end,
 		scrollChildren,
 	}) :: ScrollingFrame
+
+	local function measureOverflow()
+		overflows(scroll.AbsoluteCanvasSize.Y > scroll.AbsoluteWindowSize.Y + 1)
+	end
+	scroll:GetPropertyChangedSignal("AbsoluteCanvasSize"):Connect(measureOverflow)
+	scroll:GetPropertyChangedSignal("AbsoluteWindowSize"):Connect(measureOverflow)
 
 	-- Topo da seção dentro da lista (em pixels do canvas).
 	local function sectionOffset(id: string): number

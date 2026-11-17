@@ -21,6 +21,7 @@ ShopLayout.TABS_MAX = 640
 ShopLayout.SPIN_PADDING = 10
 ShopLayout.SPIN_GAP = 8
 ShopLayout.SPIN_REEL_EXTRA = 20 -- a janela do carrossel = quadradinho + isto
+ShopLayout.SPIN_SIDES_PAD = 6 -- folga em cima dos lados (o selo "+ CHANCE" passa da borda)
 ShopLayout.SPIN_SIDE_MIN = 250 -- altura que um lado completo precisa
 ShopLayout.SPIN_SIDE_MIN_COMPACT = 130 -- lado compacto: 3 linhas
 ShopLayout.SPIN_SIDE_MAX = 300
@@ -37,12 +38,19 @@ ShopLayout.SECTION_TITLE = 36 + 10 -- título da seção + espaço até a grade 
 -- mostrar pedaço da seguinte. Os cartões saem da altura livre da página.
 ShopLayout.PASS_CARD_HEIGHT = 236
 ShopLayout.PASS_MIN_WIDTH = 110 -- largura mínima de um cartão de gamepass na fileira (5 cabem na escala 1,25)
-ShopLayout.EMBER_CARD_HEIGHT = 200
+ShopLayout.EMBER_TOP_HEIGHT = 200
+ShopLayout.EMBER_BOTTOM_HEIGHT = 170
+-- Golden Ember no celular (ajuste do Elizeu, 17/11): os 5 numa fileira
+-- espremiam as moedas. Volta às duas fileiras do PC; a de cima ocupa a
+-- página e a de baixo aparece um pouco, mostrando que dá para rolar.
+ShopLayout.EMBER_PEEK = 24
+ShopLayout.LIST_BOTTOM_PAD = 16 -- respiro no fim da lista contínua (PC)
 
 export type Layout = {
 	compact: boolean,
 	paged: boolean, -- celular: uma seção por vez (a aba troca a página)
 	pageHeight: number, -- altura para os cartões de uma página (sem o título da seção)
+	listBottomPad: number, -- espaço no fim da lista (0 na página: senão ela rola)
 	top: number,
 	topHeight: number,
 	barX: number, -- começo da barra do topo (voltar, LOJA, abas): na borda da tela
@@ -104,11 +112,13 @@ function ShopLayout.compute(width: number, height: number): Layout
 		- spinTile
 		- ShopLayout.SPIN_REEL_EXTRA
 		- 2 * ShopLayout.SPIN_GAP
+		- ShopLayout.SPIN_SIDES_PAD
 
 	return {
 		compact = compact,
 		paged = compact,
 		pageHeight = pageHeight,
+		listBottomPad = if compact then 0 else ShopLayout.LIST_BOTTOM_PAD,
 		top = top,
 		topHeight = topHeight,
 		barX = m,
@@ -125,7 +135,7 @@ function ShopLayout.compute(width: number, height: number): Layout
 		-- largo; 2x2 só quando não cabe.
 		spinColumns = if not compact or fourFit then 4 else 2,
 		spinCardHeight = spinCardHeight,
-		emberTop = if compact then 2 else 3,
+		emberTop = 3,
 		emberBottom = 2,
 		bannerHeight = if compact then pageHeight else math.clamp(width * 0.2, 180, 300),
 		spinSideBySide = true,
@@ -151,9 +161,14 @@ function ShopLayout.passGrid(l: Layout, count: number): (number, number)
 	return columns, cardHeight
 end
 
--- Altura dos cartões de Golden Ember na fileira única da página do celular.
-function ShopLayout.emberCardHeight(l: Layout): number
-	return math.min(ShopLayout.EMBER_CARD_HEIGHT, l.pageHeight)
+-- Altura das duas fileiras de Golden Ember (de cima, de baixo). No PC as de
+-- sempre; na página do celular a de cima vai até quase o fim da página.
+function ShopLayout.emberHeights(l: Layout): (number, number)
+	if not l.paged then
+		return ShopLayout.EMBER_TOP_HEIGHT, ShopLayout.EMBER_BOTTOM_HEIGHT
+	end
+	local top = math.max(l.pageHeight - ShopLayout.EMBER_PEEK, 0)
+	return top, math.min(ShopLayout.EMBER_BOTTOM_HEIGHT, math.max(top, 120))
 end
 
 return ShopLayout
