@@ -5,6 +5,7 @@
 local fs = require("@lune/fs")
 
 local SOURCE = fs.readFile("src/shared/MonetizationImages.luau")
+local SENT = fs.readFile("assets/ui/monetizacao/ids-enviados.md")
 
 -- Tamanho da arte de cada peça 9-slice (LEIA-ME de assets/ui/monetizacao).
 local SLICE_SIZES: { [string]: { number } } = {
@@ -18,6 +19,11 @@ local SLICE_SIZES: { [string]: { number } } = {
 	PREMIUM_CARD_SLICE = { 1024, 400 },
 	MULTIPLIER_TAG_SLICE = { 200, 64 },
 	RECIPE_SCROLL_SLICE = { 400, 600 },
+	-- Camadas (assets/ui/monetizacao/camadas/LEIA-ME.txt).
+	VIP_LAYERS_SLICE = { 1024, 512 },
+	SHOP_CARD_LAYERS_SLICE = { 1024, 512 },
+	DAY7_LAYERS_SLICE = { 360, 450 },
+	PREMIUM_LAYERS_SLICE = { 1024, 400 },
 }
 
 -- Linhas sem comentário, para não ler texto entre aspas dos comentários.
@@ -61,5 +67,26 @@ return {
 		for name in SLICE_SIZES do
 			assert(seen[name], `{name}: não achei o Rect no módulo`)
 		end
+	end,
+
+	["monetization images: every filled id is one of the sent arts"] = function()
+		for _, line in codeLines() do
+			for name, id in string.gmatch(line, '([%w_%.]+) = "(rbxassetid://%d+)"') do
+				assert(string.find(SENT, id, 1, true) ~= nil, `{name}: {id} não está em ids-enviados.md`)
+			end
+		end
+	end,
+
+	["monetization images: art sizes match the slice table"] = function()
+		local count = 0
+		for _, line in codeLines() do
+			local name, w, h = string.match(line, "%.([%w_]+)_SIZE = Vector2%.new%((%d+), (%d+)%)")
+			local size = if name then SLICE_SIZES[name .. "_SLICE"] else nil
+			if name and size then
+				count += 1
+				assert(tonumber(w) == size[1] and tonumber(h) == size[2], `{name}_SIZE diferente do tamanho da arte`)
+			end
+		end
+		assert(count >= 8, `poucos tamanhos lidos ({count})`)
 	end,
 }

@@ -130,6 +130,7 @@ local function card(pass: Pass, order: number, short: () -> boolean, tiny: () ->
 	end
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",
+		fxCenter = UDim2.fromScale(0.5, 0.33), -- raios atrás do ícone
 		Name = pass.artId,
 		LayoutOrder = order,
 		icon(pass, short, tiny),
@@ -180,7 +181,8 @@ local function card(pass: Pass, order: number, short: () -> boolean, tiny: () ->
 	})
 end
 
--- Fileira de cima: VIP (peso 2), boost e, para quem não é Premium, o Premium.
+-- Fileira de cima: VIP (peso 2), boost e, para quem não é Premium, o Premium
+-- (as larguras são as de ShopLayout.topRowWidths, em fração da lista).
 local function topRow(layout: () -> ShopLayout.Layout): Frame
 	local gap = ShopLayout.GAP
 	local function compact(): boolean

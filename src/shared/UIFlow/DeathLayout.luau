@@ -28,6 +28,11 @@ export type Layout = {
 	offer: Rect,
 	offerIcon: boolean,
 	offerRow: boolean,
+	-- O painel desenhado (arte 06) dentro de `offer`, do tamanho do conteúdo e
+	-- centralizado (o resto de `offer` é só o escurecido que come o toque).
+	-- offerBig = PC: tudo maior (ícone de OFFER_ICON_BIG).
+	offerCard: Rect,
+	offerBig: boolean,
 }
 
 DeathLayout.TITLE_HEIGHT = 58
@@ -76,6 +81,27 @@ DeathLayout.OFFER_ROW = DeathLayout.OFFER_PADDING * 2
 	+ DeathLayout.OFFER_BUTTON
 -- Largura mínima da oferta em linha (dois botões de toque lado a lado).
 DeathLayout.OFFER_ROW_MIN_WIDTH = 300
+-- PC (teste de 17/11/2026, 1128×793): o painel ocupava a janela toda com o
+-- conteúdo pequeno no meio, sobrando espaço vazio. Agora o painel tem o
+-- tamanho do conteúdo, e no PC tudo cresce (ícone de ~96 px).
+DeathLayout.OFFER_PADDING_BIG = 20
+DeathLayout.OFFER_GAP_BIG = 8
+DeathLayout.OFFER_ICON_BIG = 96
+DeathLayout.OFFER_TITLE_BIG = 32
+DeathLayout.OFFER_PRICE_BIG = 42
+DeathLayout.OFFER_BUTTON_BIG = 54
+DeathLayout.OFFER_DECLINE_BIG = 42
+DeathLayout.OFFER_FULL_BIG = DeathLayout.OFFER_PADDING_BIG * 2
+	+ DeathLayout.OFFER_ICON_BIG
+	+ DeathLayout.OFFER_TITLE_BIG
+	+ DeathLayout.OFFER_PRICE_BIG
+	+ DeathLayout.OFFER_BUTTON_BIG
+	+ DeathLayout.OFFER_DECLINE_BIG
+	+ 4 * DeathLayout.OFFER_GAP_BIG
+-- Largura do painel: em coluna (grande e normal) e em linha.
+DeathLayout.OFFER_CARD_BIG = 400
+DeathLayout.OFFER_CARD = 340
+DeathLayout.OFFER_CARD_ROW = 520
 
 local PANEL_MAX = { w = 760, h = 460 }
 local STACK_BELOW = 560 -- janela mais estreita que isso: uma coluna só
@@ -107,6 +133,31 @@ local function offerRect(panelWidth: number, panelHeight: number): (Rect, boolea
 	return rect, h >= DeathLayout.OFFER_FULL, h < DeathLayout.OFFER_NO_ICON
 end
 
+-- Altura do conteúdo da oferta em cada composição.
+function DeathLayout.offerContent(big: boolean, icon: boolean, row: boolean): number
+	if big then
+		return DeathLayout.OFFER_FULL_BIG
+	elseif row then
+		return DeathLayout.OFFER_ROW
+	elseif icon then
+		return DeathLayout.OFFER_FULL
+	end
+	return DeathLayout.OFFER_NO_ICON
+end
+
+-- O painel desenhado dentro de `offer` (relativo a ele): do tamanho do
+-- conteúdo, centralizado. No PC (`big`) cresce quando a janela tem altura.
+local function offerCard(offer: Rect, icon: boolean, row: boolean): (Rect, boolean)
+	local big = not row and offer.h >= DeathLayout.OFFER_FULL_BIG
+	local maxWidth = if big
+		then DeathLayout.OFFER_CARD_BIG
+		elseif row then DeathLayout.OFFER_CARD_ROW
+		else DeathLayout.OFFER_CARD
+	local w = math.min(offer.w, maxWidth)
+	local h = math.min(offer.h, DeathLayout.offerContent(big, icon, row))
+	return { x = (offer.w - w) / 2, y = (offer.h - h) / 2, w = w, h = h }, big
+end
+
 -- Tela de `width` × `height` (pixels lógicos) com `kitCount` kits.
 function DeathLayout.compute(width: number, height: number, kitCount: number): Layout
 	-- Mesmo critério do design system: compacto = largura < 900 ou altura < 500.
@@ -119,6 +170,7 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 	local bodyHeight = math.max(panelHeight - DeathLayout.BODY_TOP - DeathLayout.BODY_BOTTOM, 0)
 	local stacked = panelWidth < STACK_BELOW
 	local offer, offerIcon, offerRow = offerRect(panelWidth, panelHeight)
+	local card, offerBig = offerCard(offer, offerIcon, offerRow)
 
 	if stacked then
 		local summary = { x = 0, y = 0, w = bodyWidth, h = DeathLayout.SUMMARY_STACKED }
@@ -137,6 +189,8 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 			offer = offer,
 			offerIcon = offerIcon,
 			offerRow = offerRow,
+			offerCard = card,
+			offerBig = offerBig,
 		}
 	end
 
@@ -154,6 +208,8 @@ function DeathLayout.compute(width: number, height: number, kitCount: number): L
 		offer = offer,
 		offerIcon = offerIcon,
 		offerRow = offerRow,
+		offerCard = card,
+		offerBig = offerBig,
 	}
 end
 

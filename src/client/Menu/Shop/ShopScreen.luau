@@ -16,6 +16,7 @@ local UiImages = require(Shared:WaitForChild("UiImages"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local CardFx = require(Client:WaitForChild("UI"):WaitForChild("CardFx"))
 local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 
@@ -59,6 +60,8 @@ function ShopScreen.build(
 	-- Fonte Vide tipada (sem o tipo, o vide.source alarga "packs" para string).
 	local active: (() -> Section) & ((Section) -> Section) = vide.source("packs" :: Section) :: any
 	local sectionFrames: { [string]: Frame } = {}
+	-- Efeitos dos cartões em camadas (raios, halo, faíscas): só com a loja aberta.
+	CardFx.run("shop", visible)
 
 	local scrollChildren: { Instance } = {
 		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, SECTION_GAP) }),

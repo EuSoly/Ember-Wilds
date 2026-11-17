@@ -243,6 +243,7 @@ local function side(
 
 	return ShopParts.vividCard(if paid then PAID_THEME else NORMAL_THEME, {
 		art = if paid then "purple" else nil,
+		fx = false, -- a tela do giro tem os efeitos dela (SpinFx)
 		Name = if paid then "Paid" else "Normal",
 		LayoutOrder = order,
 		if paid then ShopParts.ribbon(Strings.get("shop.spin.chance"), Theme.tier.gold, R.charcoal) else nil,

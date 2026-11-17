@@ -5,7 +5,11 @@
 -- (já resgatou hoje) e futuro. Tudo é lido da pasta Player.Shop (CheckInDay,
 -- CheckInReady, escritos pelo servidor); RESGATAR só pede (Net.CheckInClaim).
 -- Abre sozinha ao entrar no menu com prêmio, uma vez por sessão.
--- Artes em MonetizationImages (id vazio = desenho por código).
+-- Artes em MonetizationImages (id vazio = desenho por código): janela 11,
+-- cartões 12/13 nos 4 estados, carimbo 14, calendário 15 e bolinha 16. O dia 7,
+-- enquanto ainda vale (hoje ou futuro), usa as camadas 43 com os efeitos
+-- dourados (UI/CardFx, canal "checkin", só com a janela aberta). As artes são
+-- de papel claro: por cima delas o texto vai escuro.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -25,6 +29,7 @@ local TutorialState = require(Client:WaitForChild("TutorialState"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
+local CardFx = require(Client:WaitForChild("UI"):WaitForChild("CardFx"))
 local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local RewardView = require(script.Parent:WaitForChild("Shop"):WaitForChild("RewardView"))
@@ -42,6 +47,9 @@ local GOT_SECONDS = 4
 local DAYS = #ShopConfig.CHECKIN
 
 local BODY = Color3.fromHex("#2B2018")
+local DAY7_GLOW = Color3.fromHex("#FFD45A") -- efeitos do dia 7: dourado
+local WINDOW_SLICE_SHARE = 0.5 -- borda da janela e dos cartões mais fina que a proporcional
+local CARD_SLICE_SHARE = 0.6
 local FACE: { [CardState]: Color3 } = {
 	future = Color3.fromHex("#3A2B20"),
 	locked = Color3.fromHex("#241A13"),
@@ -95,16 +103,20 @@ local function claim()
 	Net.CheckInClaim.Fire()
 end
 
--- Imagem 9-slice da arte (some se o id está vazio).
-local function sliced(image: () -> string, slice: Rect, props: { [any]: any }): ImageLabel
+-- Imagem 9-slice da arte (some se o id está vazio), com o SliceScale
+-- acompanhando o tamanho da peça (arte de `size` px, fração `share`).
+local function sliced(image: () -> string, slice: Rect, size: Vector2, share: number, props: { [any]: any }): ImageLabel
 	props.BackgroundTransparency = 1
 	props.Image = image
+	local visible = props.Visible
 	props.Visible = function()
-		return MonetizationImages.has(image())
+		return MonetizationImages.has(image()) and (visible == nil or visible())
 	end
 	props.ScaleType = Enum.ScaleType.Slice
 	props.SliceCenter = slice
-	return create("ImageLabel")(props) :: ImageLabel
+	local label = create("ImageLabel")(props) :: ImageLabel
+	Rustic.fitSlice(label, size, share)
+	return label
 end
 
 -- Um cartão de dia (o 7 usa a arte e a letra maiores).
@@ -113,14 +125,41 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 	local function state(): CardState
 		return CheckInRules.stateOf(day, currentDay(), ready())
 	end
+	-- Dia 7 hoje ou no futuro: as camadas 43 com os efeitos (se enviadas).
+	local function layered(): boolean
+		local s = state()
+		return big and (s == "today" or s == "future") and MonetizationImages.hasLayers(MonetizationImages.DAY7_LAYERS)
+	end
 	local function art(): string
+		if layered() then
+			return MonetizationImages.DAY7_LAYERS.base
+		end
 		local set = if big then MonetizationImages.CHECKIN_DAY7 else MonetizationImages.CHECKIN_DAY
 		return set[state()] or ""
 	end
 	local slice = if big then MonetizationImages.CHECKIN_DAY7_SLICE else MonetizationImages.CHECKIN_DAY_SLICE
+	local artSize = if big then MonetizationImages.CHECKIN_DAY7_SIZE else MonetizationImages.CHECKIN_DAY_SIZE
 	local rewardText = RewardView.text(ShopConfig.CHECKIN[day])
+	-- Com a arte, só o "trancado" é escuro; os outros são papel claro.
 	local function textColor(): Color3
+		if MonetizationImages.has(art()) then
+			return if state() == "locked" then R.cream else R.charcoal
+		end
 		return if state() == "today" then R.charcoal else R.cream
+	end
+	local layers: Instance? = nil
+	if big and MonetizationImages.hasLayers(MonetizationImages.DAY7_LAYERS) then
+		layers = CardFx.layers({
+			key = "checkin",
+			base = MonetizationImages.DAY7_LAYERS.base,
+			frame = MonetizationImages.DAY7_LAYERS.frame,
+			size = MonetizationImages.DAY7_LAYERS_SIZE,
+			slice = MonetizationImages.DAY7_LAYERS_SLICE,
+			fx = DAY7_GLOW,
+			center = UDim2.fromScale(0.5, 0.42),
+			visible = layered,
+			sliceShare = CARD_SLICE_SHARE,
+		})
 	end
 	return create("Frame")({
 		Name = "Day" .. day,
@@ -145,7 +184,15 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			end,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		}),
-		sliced(art, slice, { Name = "Art", Size = UDim2.fromScale(1, 1), ZIndex = 1 }),
+		sliced(art, slice, artSize, CARD_SLICE_SHARE, {
+			Name = "Art",
+			Visible = function()
+				return not layered()
+			end,
+			Size = UDim2.fromScale(1, 1),
+			ZIndex = 1,
+		}),
+		layers,
 		Rustic.label({
 			Name = "DayLabel",
 			Position = UDim2.fromScale(0.06, 0.04),
@@ -234,6 +281,8 @@ end
 -- em grade 3x2 à esquerda, o dia 7 maior à direita, aviso do prêmio e Fechar.
 function CheckInPanel.build(): Frame
 	local currentDay, ready = readState()
+	-- Efeitos do dia 7 só com a janela aberta.
+	CardFx.run("checkin", open)
 
 	-- Abre sozinha ao entrar no menu com prêmio pronto (uma vez por sessão), no
 	-- menu "limpo" e sem o pop-up da roleta do tutorial na frente: só marca
@@ -294,9 +343,19 @@ function CheckInPanel.build(): Frame
 			Thickness = 4,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 		}),
-		sliced(function()
-			return MonetizationImages.CHECKIN_WINDOW
-		end, MonetizationImages.CHECKIN_WINDOW_SLICE, { Name = "Art", Size = UDim2.fromScale(1, 1), ZIndex = 0 }),
+		sliced(
+			function()
+				return MonetizationImages.CHECKIN_WINDOW
+			end,
+			MonetizationImages.CHECKIN_WINDOW_SLICE,
+			MonetizationImages.CHECKIN_WINDOW_SIZE,
+			WINDOW_SLICE_SHARE,
+			{
+				Name = "Art",
+				Size = UDim2.fromScale(1, 1),
+				ZIndex = 0,
+			}
+		),
 		Rustic.plate({
 			Name = "TitlePlate",
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -333,7 +392,8 @@ function CheckInPanel.build(): Frame
 			Position = UDim2.new(0, 16, 1, -12),
 			Size = UDim2.new(1, -200, 0, CLOSE_HEIGHT),
 			TextXAlignment = Enum.TextXAlignment.Left,
-			TextColor3 = R.emberLight,
+			-- Sobre o papel da janela (arte 11) o aviso vai escuro.
+			TextColor3 = if MonetizationImages.has(MonetizationImages.CHECKIN_WINDOW) then R.charcoal else R.emberLight,
 			Text = gotText,
 			maxSize = 20,
 			ZIndex = 3,

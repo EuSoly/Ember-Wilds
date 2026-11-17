@@ -9,6 +9,7 @@ local SIZES = {
 	{ 844, 390 },
 	{ 667, 375 },
 	{ 568, 320 },
+	{ 749, 330 },
 	-- Celular deitado na maior escala (749×330 com UIScale 1,25).
 	{ 599, 264 },
 	{ 390, 844 },
@@ -143,5 +144,43 @@ return {
 			DeathLayout.SUMMARY_STACKED == 210 + DeathLayout.EMBER_TAGS_ROW - DeathLayout.EMBER_TAGS_EMPTY,
 			`resumo empilhado {DeathLayout.SUMMARY_STACKED}`
 		)
+	end,
+
+	["revive offer panel wraps its content, no dead space"] = function()
+		for _, size in SIZES do
+			local l = DeathLayout.compute(size[1], size[2], KITS)
+			local card = l.offerCard
+			local tag = `{size[1]}x{size[2]}`
+			assert(inside(card, l.offer.w, l.offer.h), `{tag}: painel fora da oferta`)
+			local needed = DeathLayout.offerContent(l.offerBig, l.offerIcon, l.offerRow)
+			assert(math.abs(card.h - needed) < 0.01, `{tag}: painel ({card.h}) diferente do conteúdo ({needed})`)
+			assert(math.abs(card.x - (l.offer.w - card.w) / 2) < 0.01, `{tag}: painel fora do centro (x)`)
+			assert(math.abs(card.y - (l.offer.h - card.h) / 2) < 0.01, `{tag}: painel fora do centro (y)`)
+			if l.offerRow then
+				assert(card.w >= DeathLayout.OFFER_ROW_MIN_WIDTH, `{tag}: botões lado a lado sem largura`)
+			end
+			assert(not (l.offerBig and l.offerRow), `{tag}: grande só em coluna`)
+		end
+	end,
+
+	["pc revive offer is big with a ~96 px icon"] = function()
+		assert(DeathLayout.OFFER_ICON_BIG >= 96, "ícone grande no PC")
+		local pad = DeathLayout.OFFER_PADDING_BIG * 2
+		local full = pad
+			+ DeathLayout.OFFER_ICON_BIG
+			+ DeathLayout.OFFER_TITLE_BIG
+			+ DeathLayout.OFFER_PRICE_BIG
+			+ DeathLayout.OFFER_BUTTON_BIG
+			+ DeathLayout.OFFER_DECLINE_BIG
+			+ 4 * DeathLayout.OFFER_GAP_BIG
+		assert(DeathLayout.OFFER_FULL_BIG == full, `grande {full}`)
+		for _, size in { { 1128, 793 }, { 1280, 720 }, { 1920, 1080 } } do
+			local l = DeathLayout.compute(size[1], size[2], KITS)
+			assert(l.offerBig and l.offerIcon and not l.offerRow, `{size[1]}x{size[2]}: PC com a oferta grande`)
+		end
+		for _, size in { { 599, 264 }, { 749, 330 } } do
+			local l = DeathLayout.compute(size[1], size[2], KITS)
+			assert(not l.offerBig, `{size[1]}x{size[2]}: celular sem a oferta grande`)
+		end
 	end,
 }

@@ -658,12 +658,7 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 					place(function()
 						return layout().offer
 					end),
-					function()
-						return layout().offerIcon
-					end,
-					function()
-						return layout().offerRow
-					end
+					layout
 				),
 			}),
 		}),

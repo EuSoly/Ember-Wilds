@@ -140,7 +140,90 @@ return {
 	["pc passes with a top row keep the fixed height"] = function()
 		local l = ShopLayout.compute(1280, 720)
 		local cols, h = ShopLayout.passGrid(l, 6, ShopLayout.topRowHeight(l))
-		assert(cols == 5 and h == ShopLayout.PASS_CARD_HEIGHT, "PC ignora a fileira reservada")
+		assert(cols == 6 and h == ShopLayout.PASS_CARD_HEIGHT, "PC ignora a fileira reservada")
+	end,
+
+	["pc passes: the 6 cards fit one row"] = function()
+		-- Teste no Studio de 17/11/2026 (1128×793): 4 kits + 2× + livro iam para 2 fileiras.
+		for _, size in { { 1128, 793 }, { 1024, 640 }, { 1280, 720 }, { 1920, 1080 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			assert(not l.paged, `{w}x{h}: PC não pagina`)
+			local cols, cardHeight = ShopLayout.passGrid(l, 6, ShopLayout.topRowHeight(l))
+			assert(cols == 6, `{w}x{h}: 6 numa fileira, veio {cols}`)
+			assert(cardHeight == ShopLayout.PASS_CARD_HEIGHT, `{w}x{h}: altura do PC`)
+			assert(cardWidth(l, cols) >= ShopLayout.PASS_MIN_WIDTH_PC, `{w}x{h}: cartão estreito`)
+		end
+		-- Com até 5 cartões o PC continua com as 5 colunas de antes.
+		local cols = ShopLayout.passGrid(ShopLayout.compute(1128, 793), 4)
+		assert(cols == 5, "4 cartões: 5 colunas")
+	end,
+
+	["pc tab fits 1128x793 without scrolling"] = function()
+		local l = ShopLayout.compute(1128, 793)
+		local _, cardHeight = ShopLayout.passGrid(l, 6, ShopLayout.topRowHeight(l))
+		local used = l.contentTop + ShopLayout.SECTION_TITLE + ShopLayout.topRowHeight(l) + GAP + cardHeight
+		assert(used <= 793 - ShopLayout.MARGIN, `aba de gamepasses passa da tela ({used})`)
+	end,
+
+	["top row widths add up the row"] = function()
+		for _, shown in { true, false } do
+			local vip, boost, premium = ShopLayout.topRowWidths(1000, shown)
+			local count = if shown then 3 else 2
+			assert(math.abs(vip + boost + premium + GAP * (count - 1) - 1000) < 0.01, "soma da fileira")
+			assert(vip > boost, "VIP maior")
+			assert((premium == 0) == not shown, "Premium some sem o cartão")
+		end
+	end,
+
+	["pc banners: readable text, nothing overlaps"] = function()
+		local function inside(b: ShopLayout.Box, w: number, h: number): boolean
+			return b.x >= 0 and b.y >= 0 and b.x + b.w <= w + 0.01 and b.y + b.h <= h + 0.01
+		end
+		local function apart(a: ShopLayout.Box, b: ShopLayout.Box): boolean
+			return a.x + a.w <= b.x + 0.01
+				or b.x + b.w <= a.x + 0.01
+				or a.y + a.h <= b.y + 0.01
+				or b.y + b.h <= a.y + 0.01
+		end
+		for _, size in { { 1128, 793 }, { 1024, 640 }, { 1280, 720 }, { 1920, 1080 } } do
+			local l = ShopLayout.compute(size[1], size[2])
+			local height = ShopLayout.topRowHeight(l)
+			-- A lista tem 10 px de folga à direita (ShopScreen).
+			for _, shown in { true, false } do
+				local widths = { ShopLayout.topRowWidths(l.contentWidth - 10, shown) }
+				for slot, width in widths do
+					if width > 0 then
+						local parts = ShopLayout.bannerParts(width, height, false)
+						local tag = `{size[1]}x{size[2]} cartão {slot}`
+						local icon = parts.icon
+						assert(icon ~= nil, `{tag}: PC tem ícone`)
+						-- Título (≥ 18 px) e descrição em 2 linhas (≥ 13 px) cabem na coluna.
+						assert(parts.text.w >= 150, `{tag}: coluna de texto estreita ({parts.text.w})`)
+						assert(parts.text.h >= 80, `{tag}: coluna de texto baixa ({parts.text.h})`)
+						assert(parts.button.w >= 88 and parts.button.h >= 40, `{tag}: botão pequeno`)
+						for _, b in { icon, parts.text, parts.button } do
+							assert(inside(b, width, height), `{tag}: peça fora do cartão`)
+						end
+						assert(apart(icon, parts.text) and apart(icon, parts.button), `{tag}: ícone por cima`)
+						assert(apart(parts.text, parts.button), `{tag}: texto por cima do botão`)
+					end
+				end
+			end
+		end
+	end,
+
+	["phone banners keep the low strip"] = function()
+		for _, size in { { 749, 330 }, { 599, 264 }, { 667, 375 } } do
+			local l = ShopLayout.compute(size[1], size[2])
+			local height = ShopLayout.topRowHeight(l)
+			for _, width in { ShopLayout.topRowWidths(l.contentWidth - 10, true) } do
+				local parts = ShopLayout.bannerParts(width, height, true)
+				assert(parts.icon == nil and not parts.stacked, "celular: faixa sem ícone")
+				assert(parts.text.x + parts.text.w <= parts.button.x, "texto antes do botão")
+				assert(parts.button.y + parts.button.h <= height, "botão dentro da faixa")
+			end
+		end
 	end,
 
 	["phone passes tab fits the page without scrolling"] = function()

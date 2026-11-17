@@ -37,16 +37,43 @@ ShopLayout.SECTION_TITLE = 36 + 10 -- título da seção + espaço até a grade 
 -- mostrar pedaço da seguinte. Os cartões saem da altura livre da página.
 ShopLayout.PASS_CARD_HEIGHT = 236
 ShopLayout.PASS_MIN_WIDTH = 88 -- largura mínima de um cartão de gamepass na fileira do celular (6 cabem em 599 px)
+-- PC (teste de 17/11/2026, 1128×793): os 6 cartões (4 kits + 2× + livro) iam
+-- para 2 fileiras e a aba rolava. Agora a fileira passa das 5 colunas se cada
+-- cartão ainda tiver esta largura.
+ShopLayout.PASS_MIN_WIDTH_PC = 150
 ShopLayout.EMBER_CARD_HEIGHT = 200
 -- Fileira de cima da aba de gamepasses (VIP, boost de XP e Premium): cartões
 -- deitados. No celular ela é uma faixa baixa (título, linha curta e botão) e
 -- a grade de baixo fica numa fileira só com o que sobra da página: nada rola.
 -- Cartão de gamepass mais baixo que PASS_CARD_SHORT esconde a descrição; mais
 -- baixo que PASS_CARD_TINY fica só nome e botão.
-ShopLayout.TOP_ROW_HEIGHT = 140
+ShopLayout.TOP_ROW_HEIGHT = 156 -- 140 até 17/11/2026: o boost e o Premium empilhados pedem mais
 ShopLayout.TOP_ROW_HEIGHT_COMPACT = 44
 ShopLayout.PASS_CARD_SHORT = 170
 ShopLayout.PASS_CARD_TINY = 120
+-- Composição de cada cartão da fileira de cima (bannerParts). No PC os textos
+-- ficavam com ~8 px (17/11/2026): a coluna do meio esticava por UIFlexItem e
+-- sobrava quase nada. Agora as caixas saem daqui, em pixels. Cartão do PC mais
+-- estreito que BANNER_STACK_BELOW (boost, Premium) empilha: ícone e textos em
+-- cima, o botão embaixo na largura toda; o largo (VIP) fica em linha: ícone,
+-- textos e botão.
+ShopLayout.BANNER_PAD = 10
+ShopLayout.BANNER_GAP = 8
+ShopLayout.BANNER_STACK_BELOW = 420
+ShopLayout.BANNER_STACK_ICON = 56
+ShopLayout.BANNER_STACK_BUTTON = 40
+ShopLayout.BANNER_BUTTON_SHARE = 0.3 -- largura do botão em linha
+-- Menor letra dos textos da fileira no PC (título e descrição).
+ShopLayout.BANNER_TITLE_MIN = 18
+ShopLayout.BANNER_DESC_MIN = 13
+
+export type Box = { x: number, y: number, w: number, h: number }
+export type BannerParts = {
+	icon: Box?, -- nil = sem ícone (faixa baixa do celular)
+	text: Box,
+	button: Box,
+	stacked: boolean,
+}
 
 export type Layout = {
 	compact: boolean,
@@ -145,15 +172,17 @@ function ShopLayout.compute(width: number, height: number): Layout
 	}
 end
 
--- Grade dos gamepasses: colunas e altura do cartão. No PC, 5 colunas de
--- 236; na página do celular, uma fileira se couber (cartão ≥ PASS_MIN_WIDTH)
--- e a altura dividida entre as fileiras.
+-- Grade dos gamepasses: colunas e altura do cartão. No PC, cartões de 236 em
+-- pelo menos 5 colunas, e todos numa fileira se cada um ainda tiver
+-- PASS_MIN_WIDTH_PC; na página do celular, uma fileira se couber (cartão ≥
+-- PASS_MIN_WIDTH) e a altura dividida entre as fileiras.
 -- `reserved`: altura já ocupada na página por cima da grade (a fileira do VIP).
 function ShopLayout.passGrid(l: Layout, count: number, reserved: number?): (number, number)
-	if not l.paged then
-		return l.passColumns, ShopLayout.PASS_CARD_HEIGHT
-	end
 	local gap = ShopLayout.GAP
+	if not l.paged then
+		local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH_PC + gap))
+		return math.max(l.passColumns, math.min(count, fit)), ShopLayout.PASS_CARD_HEIGHT
+	end
 	local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH + gap))
 	local columns = math.max(math.min(math.max(count, 1), fit), 1)
 	local rows = math.ceil(math.max(count, 1) / columns)
@@ -171,6 +200,57 @@ end
 -- Premium (quem já é Premium não vê o cartão) a fileira é só VIP e boost.
 function ShopLayout.topRowWeights(premiumShown: boolean): (number, number, number)
 	return 2, 1, if premiumShown then 1 else 0
+end
+
+-- Largura (px) de cada cartão da fileira de cima numa lista de `width`: VIP,
+-- boost e Premium (0 quando o Premium não aparece).
+function ShopLayout.topRowWidths(width: number, premiumShown: boolean): (number, number, number)
+	local vip, boost, premium = ShopLayout.topRowWeights(premiumShown)
+	local total = vip + boost + premium
+	local count = if premiumShown then 3 else 2
+	local room = width - ShopLayout.GAP * (count - 1)
+	return room * vip / total, room * boost / total, room * premium / total
+end
+
+-- Caixas de um cartão da fileira de cima de `width` × `height` (px, relativas
+-- ao cartão). `compact`: faixa baixa do celular, sem ícone, textos e botão
+-- lado a lado.
+local function box(x: number, y: number, w: number, h: number): Box
+	return { x = x, y = y, w = math.max(w, 0), h = math.max(h, 0) }
+end
+
+function ShopLayout.bannerParts(width: number, height: number, compact: boolean): BannerParts
+	local pad = ShopLayout.BANNER_PAD
+	local gap = ShopLayout.BANNER_GAP
+	local innerW = math.max(width - 2 * pad, 0)
+	if compact then
+		local vpad = 4
+		local innerH = math.max(height - 2 * vpad, 0)
+		local buttonW = innerW * ShopLayout.BANNER_BUTTON_SHARE
+		local buttonH = innerH * 0.82
+		local text = box(pad, vpad, innerW - buttonW - gap, innerH)
+		local button = box(width - pad - buttonW, (height - buttonH) / 2, buttonW, buttonH)
+		return { icon = nil, text = text, button = button, stacked = false }
+	end
+	if width < ShopLayout.BANNER_STACK_BELOW then
+		local side = math.min(ShopLayout.BANNER_STACK_ICON, height * 0.4)
+		local buttonH = ShopLayout.BANNER_STACK_BUTTON
+		local textX = pad + side + gap
+		local icon = box(pad, pad, side, side)
+		local text = box(textX, pad, width - textX - pad, height - 2 * pad - buttonH - gap)
+		local button = box(pad, height - pad - buttonH, innerW, buttonH)
+		return { icon = icon, text = text, button = button, stacked = true }
+	end
+	local innerH = math.max(height - 2 * pad, 0)
+	local side = innerH * 0.8
+	local buttonW = innerW * ShopLayout.BANNER_BUTTON_SHARE
+	local buttonH = innerH * 0.5
+	local textX = pad + side + gap
+	local buttonX = width - pad - buttonW
+	local icon = box(pad, (height - side) / 2, side, side)
+	local text = box(textX, pad, buttonX - gap - textX, innerH)
+	local button = box(buttonX, (height - buttonH) / 2, buttonW, buttonH)
+	return { icon = icon, text = text, button = button, stacked = false }
 end
 
 -- Altura dos cartões de Golden Ember na fileira única da página do celular.

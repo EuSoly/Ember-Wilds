@@ -20,6 +20,12 @@ local Banner = require(script.Parent:WaitForChild("Banner"))
 local R = Theme.rustic
 
 local BLUE = Color3.fromHex("#3E7BD6")
+-- Efeitos do Premium: neutro quente.
+local WARM = Color3.fromHex("#FFE6BD")
+-- Símbolo oficial do Premium: o caractere \u{E001} das fontes do Roblox
+-- (como o \u{E002} do Robux nos textos), na Builder Sans.
+local PREMIUM_GLYPH = "\u{E001}"
+local GLYPH_FONT = Font.fromEnum(Enum.Font.BuilderSans)
 
 local PremiumCard = {}
 
@@ -49,7 +55,7 @@ function PremiumCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	return Banner.build({
 		name = "Premium",
 		theme = BLUE,
-		icon = Banner.icon("", "P+", R.emberLight),
+		icon = Banner.icon("", PREMIUM_GLYPH, R.cream, GLYPH_FONT),
 		lines = {
 			{
 				name = "PremiumName",
@@ -57,6 +63,7 @@ function PremiumCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 					return Strings.get("shop.premium.title")
 				end,
 				height = 0.34,
+				stackedHeight = 0.3,
 				compactHeight = 0.5,
 				maxSize = 22,
 				title = true,
@@ -70,12 +77,19 @@ function PremiumCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 					return Strings.get("shop.premium.short")
 				end,
 				height = 0.5,
+				stackedHeight = 0.6, -- três linhas no PC estreito
 				compactHeight = 0.5,
 				maxSize = 15,
 				wrapped = true,
 			},
 		},
 		button = button,
+		layers = {
+			set = MonetizationImages.PREMIUM_LAYERS,
+			size = MonetizationImages.PREMIUM_LAYERS_SIZE,
+			slice = MonetizationImages.PREMIUM_LAYERS_SLICE,
+			fx = WARM,
+		},
 		art = function()
 			return MonetizationImages.PREMIUM_CARD
 		end,

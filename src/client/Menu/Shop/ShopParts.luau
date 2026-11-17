@@ -1,8 +1,9 @@
 --!strict
 -- Peças repetidas da Loja: título de seção, cartão vibrante (fundo colorido
 -- com brilho), botão de preço (Robux ou Golden Ember), fita e selo.
--- Enquanto as artes da loja não chegam, o brilho dos cartões é desenhado
--- com UIGradient; quando chegarem, só este arquivo muda.
+-- Cartão vibrante: com as camadas 41 (MonetizationImages.SHOP_CARD_LAYERS), a
+-- base neutra tingida na cor do cartão, os efeitos animados (UI/CardFx) e a
+-- moldura; sem elas, o fundo com raios de ShopImages.CARD; sem esse, o degradê.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -11,8 +12,10 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
+local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local CardFx = require(Client:WaitForChild("UI"):WaitForChild("CardFx"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -79,13 +82,68 @@ end
 
 -- Cartão de cor viva: degradê da cor `theme`, brilho no alto e contorno
 -- escuro. `props` vai para o Frame (tamanho, filhos…).
--- Com `art` (cor de ShopImages.CARD: "red", "purple"…), usa o fundo desenhado
--- com raios de luz em 9 partes; sem a arte, o degradê da cor `theme`.
+-- Com `art` (cor de ShopImages.CARD: "red", "purple"…), usa as camadas 41
+-- tingidas nessa cor (com os efeitos, a não ser com `fx = false`) ou, sem
+-- elas, o fundo desenhado com raios de luz em 9 partes; sem arte nenhuma, o
+-- degradê da cor `theme`. `fxCenter` muda o centro dos raios (padrão 0.5, 0.4).
 local CARD_SLICE_SCALE = 0.6
+local LAYER_SLICE_SHARE = 0.8 -- moldura das camadas um pouco mais fina que a proporcional
+
+-- Cor de cada fundo de ShopImages.CARD, para tingir a base neutra 41.
+ShopParts.CARD_TINT = table.freeze({
+	red = Color3.fromHex("#E0553A"),
+	purple = Color3.fromHex("#8E62E0"),
+	green = Color3.fromHex("#4FB52B"),
+	blue = Color3.fromHex("#3E7BD6"),
+	orange = Color3.fromHex("#EE9A2C"),
+} :: { [string]: Color3 })
+
+-- Pilha de camadas de um cartão da loja (canal "shop" do CardFx). `fx` nil =
+-- sem efeitos.
+function ShopParts.layers(
+	set: { [string]: string },
+	size: Vector2,
+	slice: Rect,
+	tint: Color3?,
+	fx: Color3?,
+	center: (UDim2 | () -> UDim2)?
+): Frame
+	return CardFx.layers({
+		key = "shop",
+		base = set.base,
+		frame = set.frame,
+		size = size,
+		slice = slice,
+		baseTint = tint,
+		fx = fx,
+		center = center,
+		sliceShare = LAYER_SLICE_SHARE,
+	})
+end
 
 function ShopParts.vividCard(theme: Color3, props: { [any]: any }): Frame
 	local art: string? = props.art
+	local withFx = props.fx ~= false
+	local fxCenter = props.fxCenter
 	props.art = nil
+	props.fx = nil
+	props.fxCenter = nil
+	local tint = if art then ShopParts.CARD_TINT[art] else nil
+	if tint and MonetizationImages.hasLayers(MonetizationImages.SHOP_CARD_LAYERS) then
+		local card = create("Frame")({
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			ShopParts.layers(
+				MonetizationImages.SHOP_CARD_LAYERS,
+				MonetizationImages.SHOP_CARD_LAYERS_SIZE,
+				MonetizationImages.SHOP_CARD_LAYERS_SLICE,
+				tint,
+				if withFx then ShopParts.shade(tint, 1.3) else nil,
+				fxCenter
+			),
+		}) :: Frame
+		return vide.apply(card)(props) :: Frame
+	end
 	local image = if art then ShopImages.CARD[art] else nil
 	if ShopImages.has(image) then
 		local card = create("Frame")({

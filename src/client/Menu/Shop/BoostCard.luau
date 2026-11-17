@@ -73,6 +73,14 @@ function BoostCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 			size = UDim2.fromScale(1, 1),
 			textSize = 20,
 		}),
+		-- Cartão genérico da loja (camadas 41) tingido de verde-água.
+		layers = {
+			set = MonetizationImages.SHOP_CARD_LAYERS,
+			size = MonetizationImages.SHOP_CARD_LAYERS_SIZE,
+			slice = MonetizationImages.SHOP_CARD_LAYERS_SLICE,
+			tint = TEAL,
+			fx = ShopParts.shade(TEAL, 1.4),
+		},
 		frame = frame,
 		compact = compact,
 	})

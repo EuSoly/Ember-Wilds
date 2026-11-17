@@ -2,7 +2,9 @@
 -- Cartão do VIP (topo da aba de gamepasses): benefícios, "99 por mês" e, com o
 -- VIP ativo, "VIP ativo até DD/MM" (a data de VipUntil no horário de Brasília).
 -- Comprar de novo soma mais 30 dias ("Renovar"). Quem decide e entrega é o
--- servidor (produto vip_30d); aqui só se pede.
+-- servidor (produto vip_30d); aqui só se pede. Fundo: as camadas 40 com os
+-- efeitos em dourado-brasa e a coroa (overlay 40) no lugar do ícone; com o
+-- VIP ativo, o brilho de canto por cima.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -20,6 +22,8 @@ local Banner = require(script.Parent:WaitForChild("Banner"))
 local R = Theme.rustic
 
 local PURPLE = Color3.fromHex("#8E62E0")
+-- Cor do VIP nos efeitos (raios, halo, faíscas): dourado-brasa.
+local VIP_GLOW = Color3.fromHex("#FFC66B")
 
 local VipCard = {}
 
@@ -52,7 +56,13 @@ function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	return Banner.build({
 		name = "Vip",
 		theme = PURPLE,
-		icon = Banner.icon(MonetizationImages.VIP_NICK, "★", R.emberLight),
+		icon = Banner.icon(
+			if MonetizationImages.has(MonetizationImages.VIP_CROWN_OVERLAY)
+				then MonetizationImages.VIP_CROWN_OVERLAY
+				else MonetizationImages.VIP_NICK,
+			"★",
+			R.emberLight
+		),
 		lines = {
 			{
 				name = "VipName",
@@ -96,6 +106,12 @@ function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 			},
 		},
 		button = button,
+		layers = {
+			set = MonetizationImages.VIP_LAYERS,
+			size = MonetizationImages.VIP_LAYERS_SIZE,
+			slice = MonetizationImages.VIP_LAYERS_SLICE,
+			fx = VIP_GLOW,
+		},
 		art = function()
 			local art = MonetizationImages.VIP_CARD
 			return if VipCard.active() then art.active else art.normal

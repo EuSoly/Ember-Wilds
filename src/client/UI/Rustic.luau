@@ -104,6 +104,29 @@ local function sliceImage(art: SliceArt, visible: boolean | () -> boolean, tint:
 	return image
 end
 
+-- Encaixa o SliceScale de uma imagem 9-slice (arte de `artSize` px) no
+-- tamanho dela: as pontas crescem e encolhem com a peça, na razão entre o lado
+-- menor da peça e o lado menor da arte (vezes `share`, 1 = proporcional). Como
+-- no sliceImage, desconta o UIScale da tela (senão a escala entra duas vezes).
+function Rustic.fitSlice(image: GuiObject, artSize: Vector2, share: number?)
+	local k = share or 1
+	local artSide = math.min(artSize.X, artSize.Y)
+	local function fit()
+		local size = image.AbsoluteSize
+		if size.X <= 0 or size.Y <= 0 then
+			return
+		end
+		local gui = image:FindFirstAncestorOfClass("ScreenGui")
+		local uiScale = gui and gui:FindFirstChildOfClass("UIScale")
+		local factor = if uiScale and uiScale.Scale > 0 then uiScale.Scale else 1
+		-- ImageLabel ou ImageButton: os dois têm SliceScale.
+		(image :: any).SliceScale = math.max(math.min(size.X, size.Y) / factor / artSide * k, 0.02)
+	end
+	image:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+	image.AncestryChanged:Connect(fit)
+	fit()
+end
+
 -- Faixas duras (sem degradê suave): luz, face e espessura.
 local function bevel(light: Color3, face: Color3, shadow: Color3): ColorSequence
 	return ColorSequence.new({
