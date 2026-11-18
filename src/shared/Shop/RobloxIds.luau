@@ -1,8 +1,8 @@
 --!strict
 -- Ids no Roblox de cada produto da loja (Shop/Products), criados em 18/11/2026
--- no universo 10773601314 (conta do Elizeu). TODOS FORA DE VENDA até ligar a
--- cobrança (fase 9): pôr à venda = PATCH isForSale nas APIs de game-passes e
--- developer-products (veja docs/guia/loja.md, "Ligar o Robux de verdade").
+-- no universo 10773601314 (conta do Elizeu). Criados FORA DE VENDA pela API;
+-- a venda é ligada no Creator Hub (Monetização do Ember Wilds) ou por
+-- PATCH isForSale. Item fora de venda não abre a janela de compra.
 --
 -- GAME_PASS: compra única para sempre (kits para sempre e passes).
 -- PRODUCT: produto de desenvolvedor (pacotes, giros especiais, kit de 1 vida,
@@ -49,7 +49,30 @@ RobloxIds.PRODUCT = table.freeze({
 
 -- Produtos de presente ("Presente: X"): mesmo id da loja, comprado por um
 -- jogador para outro (GiftService). VIP e revive não têm.
-RobloxIds.GIFT = table.freeze({}) :: { [string]: number }
+RobloxIds.GIFT = table.freeze({
+	kit_kit_starter = 3733075488,
+	kit_kit_explorer = 3733075532,
+	kit_kit_survivor = 3733075544,
+	kit_kit_veteran = 3733075557,
+	pass_ember2x = 3733075612,
+	pass_book = 3733075624,
+	pack_300 = 3733075636,
+	pack_600 = 3733075645,
+	pack_2600 = 3733075695,
+	pack_7000 = 3733075707,
+	pack_20000 = 3733075716,
+	spins_paid_1 = 3733075721,
+	spins_paid_3 = 3733075779,
+	spins_paid_10 = 3733075789,
+	kitonce_kit_starter = 3733075801,
+	kitonce_kit_explorer = 3733075811,
+	kitonce_kit_survivor = 3733075868,
+	kitonce_kit_veteran = 3733075878,
+	xpboost_1h = 3733075886,
+	bundle_mar = 3733075894,
+	bundle_gelo = 3733075924,
+	bundle_floresta = 3733075933,
+}) :: { [string]: number }
 
 RobloxIds.SUBSCRIPTION = table.freeze({
 	vip_30d = "EXP-7043584435712819724",

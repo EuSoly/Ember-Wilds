@@ -1,0 +1,32 @@
+{
+  "className": "ImageLabel",
+  "properties": {
+    "Image": "rbxassetid://103763320529638",
+    "BackgroundTransparency": 1,
+    "Size": {
+      "UDim2": [
+        [
+          0,
+          700
+        ],
+        [
+          0,
+          110
+        ]
+      ]
+    },
+    "ScaleType": "Slice",
+    "SliceCenter": {
+      "Rect": [
+        [
+          26,
+          26
+        ],
+        [
+          674,
+          84
+        ]
+      ]
+    }
+  }
+}
