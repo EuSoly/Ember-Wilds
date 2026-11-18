@@ -31,10 +31,14 @@ local ShopService = require(script.Parent.ShopService)
 local Net = require(script.Parent.Parent.Net)
 
 local REQUEST_COOLDOWN = 0.3
+-- Pedir um presente grava o perfil na hora: no máximo um pedido a cada 3 s
+-- (rajada de pedidos não gasta o limite de gravações do servidor).
+local GIFT_COOLDOWN = 3
 
 local GiftService = {}
 
 local throttle = Throttle.new(REQUEST_COOLDOWN)
+local giftThrottle = Throttle.new(GIFT_COOLDOWN)
 
 local function shopOf(player: Player): ShopData.ShopData?
 	local data = DataService.data(player)
@@ -85,7 +89,7 @@ end
 
 local function onRequest(player: Player, request: { ProductId: string, RecipientUserId: number })
 	local productId = request.ProductId
-	if not Throttle.allow(throttle, player, "gift", os.clock()) then
+	if not Throttle.allow(giftThrottle, player, "gift", os.clock()) then
 		return
 	end
 	local payerShop = shopOf(player)
@@ -113,7 +117,12 @@ local function onRequest(player: Player, request: { ProductId: string, Recipient
 	end
 	ShopData.setGiftPending(payerShop, productId, recipient.UserId, recipient.DisplayName)
 	-- O destinatário precisa estar salvo antes de alguém pagar.
-	if not DataService.saveAsync(player) then
+	local recipientId = recipient.UserId
+	local saved = DataService.saveAsync(player, function(snapshot: any): boolean
+		local pending = snapshot.Shop and snapshot.Shop.GiftPending and snapshot.Shop.GiftPending[productId]
+		return type(pending) == "table" and pending.to == recipientId
+	end)
+	if not saved then
 		fail(player, productId, "error")
 		return
 	end
@@ -138,7 +147,11 @@ local function onGift(payer: Player, productId: string, purchaseId: string)
 	local recipientShop = if recipient then shopOf(recipient) else nil
 	if recipient ~= nil and recipientShop ~= nil then
 		receive(recipient, recipientShop, productId, payer.DisplayName, purchaseId)
-		assert(DataService.saveAsync(recipient), "o perfil de quem recebe não salvou")
+		local saved = DataService.saveAsync(recipient, function(snapshot: any): boolean
+			local ids = snapshot.Shop and snapshot.Shop.GiftIds
+			return type(ids) == "table" and table.find(ids, purchaseId) ~= nil
+		end)
+		assert(saved, "o perfil de quem recebe não salvou")
 	else
 		local sent = DataService.messageAsync(pending.to, {
 			kind = "gift",
@@ -148,7 +161,8 @@ local function onGift(payer: Player, productId: string, purchaseId: string)
 		})
 		assert(sent, "a mensagem do presente não foi")
 	end
-	ShopData.takeGiftPending(payerShop, productId)
+	-- Só este pendente: outra janela aberta no meio guardou um destinatário novo.
+	ShopData.clearGiftPending(payerShop, productId, pending)
 	Net.GiftResult.Fire(payer, { ProductId = productId, Ok = true, To = pending.name })
 end
 
@@ -221,6 +235,7 @@ function GiftService.Start(_self)
 	Net.RequestOpenGift.On(onOpen)
 	Players.PlayerRemoving:Connect(function(player)
 		Throttle.forget(throttle, player)
+		Throttle.forget(giftThrottle, player)
 	end)
 end
 

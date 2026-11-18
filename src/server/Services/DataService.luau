@@ -286,18 +286,26 @@ function DataService.messageAsync(userId: number, message: { [string]: any }): b
 	return result ~= false
 end
 
--- Grava já e espera o save terminar (pausa). false se o perfil fechou antes.
-function DataService.saveAsync(player: Player): boolean
+-- Grava já e espera um save que contenha a mudança (pausa): `saved(dados
+-- gravados)` diz se ela está lá; sem `saved`, vale o primeiro save. Um save que
+-- já estava a caminho (feito antes da mudança) não conta: pede outro. false se
+-- o perfil fechou antes.
+function DataService.saveAsync(player: Player, saved: ((snapshot: any) -> boolean)?): boolean
 	local profile = profiles[player]
 	if profile == nil or not profile:IsActive() then
 		return false
 	end
-	lastSaveAt[player] = os.clock()
 	-- O tipo exportado do pacote só declara Connect; o sinal tem Wait.
 	local afterSave: any = profile.OnAfterSave
-	profile:Save()
-	afterSave:Wait()
-	return profile:IsActive()
+	while profile:IsActive() do
+		lastSaveAt[player] = os.clock()
+		profile:Save()
+		local snapshot = afterSave:Wait()
+		if saved == nil or saved(snapshot) then
+			return profile:IsActive()
+		end
+	end
+	return false
 end
 
 -- Compras com Robux guardadas no perfil (padrão do ProfileStore para recibos).

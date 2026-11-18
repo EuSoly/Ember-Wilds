@@ -136,6 +136,15 @@ function ShopData.takeGiftPending(d: ShopData, productId: string): GiftPending?
 	return pending
 end
 
+-- Tira o pendente `pending` do presente `productId`, só se ainda é ele: um
+-- pedido mais novo para o mesmo produto (outra janela aberta no meio do
+-- recibo) continua guardado.
+function ShopData.clearGiftPending(d: ShopData, productId: string, pending: GiftPending)
+	if d.GiftPending[productId] == pending then
+		d.GiftPending[productId] = nil
+	end
+end
+
 -- Guarda o PurchaseId de um presente entregue. false se já estava (recibo
 -- repetido: não entregar de novo).
 function ShopData.rememberGift(d: ShopData, purchaseId: string): boolean

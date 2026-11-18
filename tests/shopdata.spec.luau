@@ -231,4 +231,16 @@ return {
 		assert(second ~= nil and second.from == "Bia", "segundo")
 		assert(ShopData.popInbox(d) == nil, "vazia")
 	end,
+
+	["clearGiftPending keeps a newer recipient"] = function()
+		local d = ShopData.empty()
+		ShopData.setGiftPending(d, "pack_300", 1, "Um")
+		local first = d.GiftPending.pack_300
+		ShopData.setGiftPending(d, "pack_300", 2, "Dois") -- outra janela no meio do recibo
+		ShopData.clearGiftPending(d, "pack_300", first :: any)
+		local kept = d.GiftPending.pack_300
+		assert(kept ~= nil and kept.to == 2, "o pendente novo continua")
+		ShopData.clearGiftPending(d, "pack_300", kept :: any)
+		assert(d.GiftPending.pack_300 == nil, "o mesmo pendente sai")
+	end,
 }
