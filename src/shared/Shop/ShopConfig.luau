@@ -40,8 +40,8 @@ export type KitRobux = { once: number, forever: number }
 ShopConfig.KIT_ROBUX = table.freeze({
 	kit_starter = { once = 15, forever = 99 },
 	kit_explorer = { once = 25, forever = 199 },
-	kit_survivor = { once = 49, forever = 399 },
-	kit_veteran = { once = 99, forever = 799 },
+	kit_survivor = { once = 49, forever = 299 },
+	kit_veteran = { once = 67, forever = 399 },
 }) :: { [string]: KitRobux }
 
 export type PassDef = { nameKey: string, descKey: string, robux: number }

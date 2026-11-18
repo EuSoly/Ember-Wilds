@@ -9,6 +9,14 @@ local function product(id: string): Products.Product
 	return found
 end
 
+-- Pacote real com datas de teste (os pacotes da loja podem não ter datas).
+local function dated(id: string): Products.Product
+	local copy = table.clone(product(id))
+	copy.startsAt = 1_000_000
+	copy.endsAt = 2_000_000
+	return copy
+end
+
 return {
 	["spins start at zero and cannot go negative"] = function()
 		local d = ShopData.empty()
@@ -43,15 +51,15 @@ return {
 	["passes and purchases are remembered"] = function()
 		local d = ShopData.empty()
 		ShopData.setPass(d, "vip")
-		ShopData.markPurchased(d, "bundle_brasa")
-		assert(d.Passes.vip == true and d.Purchased.bundle_brasa == true, "guardados")
+		ShopData.markPurchased(d, "bundle_mar")
+		assert(d.Passes.vip == true and d.Purchased.bundle_mar == true, "guardados")
 	end,
 
 	["cleaning drops false marks and never grants from purchases"] = function()
 		local d = ShopData.empty()
 		-- A posse do perfil é a verdade: tirada à mão (false), não volta pela compra.
 		d.KitsOwned = { kit_veteran = false, kit_starter = true }
-		d.Purchased = { kit_kit_veteran = true, bundle_musgo = true }
+		d.Purchased = { kit_kit_veteran = true, bundle_floresta = true }
 		d.Passes = { vip = false }
 		ShopData.clean(d)
 		assert(d.KitsOwned.kit_veteran == nil, "false some")
@@ -71,7 +79,7 @@ return {
 	end,
 
 	["bundle outside its dates is refused"] = function()
-		local brasa = product("bundle_brasa")
+		local brasa = dated("bundle_mar")
 		local d = ShopData.empty()
 		assert(PurchaseRules.check(brasa, d, (brasa.startsAt :: number) - 1, 0) == "closed", "antes do começo")
 		assert(PurchaseRules.check(brasa, d, brasa.endsAt :: number, 0) == "closed", "no fim")
@@ -79,9 +87,9 @@ return {
 	end,
 
 	["once products cannot be bought twice"] = function()
-		local brasa = product("bundle_brasa")
+		local brasa = dated("bundle_mar")
 		local d = ShopData.empty()
-		ShopData.markPurchased(d, "bundle_brasa")
+		ShopData.markPurchased(d, "bundle_mar")
 		assert(PurchaseRules.check(brasa, d, brasa.startsAt :: number, 0) == "bought", "pacote já comprado")
 		local once = product("kitonce_kit_explorer")
 		ShopData.markPurchased(d, "kitonce_kit_explorer")
@@ -102,7 +110,7 @@ return {
 	end,
 
 	["bundle is not refused because part of it is owned"] = function()
-		local musgo = product("bundle_musgo")
+		local musgo = dated("bundle_floresta")
 		local d = ShopData.empty()
 		ShopData.ownKit(d, "kit_explorer")
 		assert(PurchaseRules.check(musgo, d, musgo.startsAt :: number, 0) == nil, "o resto do pacote ainda entra")

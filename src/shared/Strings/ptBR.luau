@@ -968,9 +968,9 @@ return table.freeze({
 	["shop.type.book"] = "Livro",
 	["shop.type.crate"] = "Caixa",
 	-- Pacotes em destaque (Shop/Bundles): o nome de cada pacote.
-	["shop.bundle.brasa"] = "Pacote Brasa",
-	["shop.bundle.geada"] = "Pacote Geada",
-	["shop.bundle.musgo"] = "Pacote Musgo",
+	["shop.bundle.mar"] = "Pacote Mar",
+	["shop.bundle.gelo"] = "Pacote Gelo",
+	["shop.bundle.floresta"] = "Pacote Floresta",
 	["shop.bundle.bought"] = "Comprado",
 	["shop.bundle.none"] = "Nenhum pacote em destaque agora",
 	-- Itens de um pacote no card (Menu/Shop/RewardView).

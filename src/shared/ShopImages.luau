@@ -32,6 +32,11 @@ ShopImages.RIBBON_SIZE = Vector2.new(240, 94)
 ShopImages.RIBBON_SLICE = Rect.new(44, 20, 196, 74)
 ShopImages.COIN_STACK_2 = "rbxassetid://80796565256376"
 ShopImages.COIN_STACK_3 = "rbxassetid://107961956032893"
+-- Ícones dos 5 pacotes de Golden Ember (ShopConfig.EMBER_PACKS, na ordem):
+-- moeda, duas moedas, pilha, saco e baú (folha do Elizeu de 18/11/2026,
+-- assets/ui/loja/golden-ember/pacote_N.png, quadrados de 512 px). Id vazio =
+-- cai nas moedas antigas (COIN / COIN_STACK_2 / COIN_STACK_3).
+ShopImages.EMBER_PACK = { "", "", "", "", "" } :: { string }
 
 -- Ícones das abas.
 ShopImages.TAB = {

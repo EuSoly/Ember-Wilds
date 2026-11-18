@@ -24,7 +24,7 @@ end
 local function bundle(changes: { [string]: any }): Products.BundleDef
 	local base: { [string]: any } = {
 		id = "teste",
-		nameKey = "shop.bundle.brasa",
+		nameKey = "shop.bundle.mar",
 		theme = "#B8361A",
 		rarity = 3,
 		robux = 99,
@@ -125,17 +125,26 @@ return {
 		assert(Products.get("nada") == nil, "produto inexistente")
 	end,
 
-	["bundles are bought once and only listed while open"] = function()
-		local brasa = Products.get("bundle_brasa")
-		assert(brasa ~= nil and brasa.once and brasa.kind == "bundle", "pacote compra uma vez")
-		assert(brasa.endsAt ~= nil, "pacote de exemplo tem fim")
-		local listedNow = false
-		for _, product in Products.bundles(brasa.endsAt - 1) do
-			listedNow = listedNow or product.id == "bundle_brasa"
+	["bundles are bought once and listed while open"] = function()
+		for _, id in { "bundle_mar", "bundle_gelo", "bundle_floresta" } do
+			local found = Products.get(id)
+			assert(found ~= nil and found.once and found.kind == "bundle", `{id}: compra uma vez`)
 		end
-		assert(listedNow, "aberto um segundo antes do fim")
-		for _, product in Products.bundles(brasa.endsAt) do
-			assert(product.id ~= "bundle_brasa", "fechado no fim")
+		-- Sem datas: aberto sempre. Com datas, Products.bundles segue o ShopDates.isOpen.
+		for _, product in Products.all() do
+			if product.kind == "bundle" then
+				local listed = false
+				local now = product.startsAt or 0
+				for _, open in Products.bundles(now) do
+					listed = listed or open.id == product.id
+				end
+				assert(listed, `{product.id}: listado no começo`)
+				if product.endsAt then
+					for _, open in Products.bundles(product.endsAt) do
+						assert(open.id ~= product.id, `{product.id}: fechado no fim`)
+					end
+				end
+			end
 		end
 	end,
 
@@ -157,8 +166,8 @@ return {
 		local expected = {
 			kit_starter = { 15, 99 },
 			kit_explorer = { 25, 199 },
-			kit_survivor = { 49, 399 },
-			kit_veteran = { 99, 799 },
+			kit_survivor = { 49, 299 },
+			kit_veteran = { 67, 399 },
 		}
 		for id, prices in expected do
 			local entry = ShopConfig.KIT_ROBUX[id]
@@ -183,10 +192,14 @@ return {
 	end,
 
 	["bundle dates use ShopDates"] = function()
-		local brasa = Products.get("bundle_brasa")
-		local def = Products.bundleDef("brasa")
-		assert(brasa ~= nil and def ~= nil and def.startsAt ~= nil, "pacote de exemplo")
-		assert(brasa.startsAt == ShopDates.parse(def.startsAt :: string), "início convertido")
+		for _, product in Products.all() do
+			if product.kind == "bundle" then
+				local def = Products.bundleDef(string.sub(product.id, #"bundle_" + 1))
+				assert(def ~= nil, `{product.id}: sem pacote`)
+				local expected = if def.startsAt then ShopDates.parse(def.startsAt) else nil
+				assert(product.startsAt == expected, `{product.id}: início convertido`)
+			end
+		end
 	end,
 
 	["vip pass is gone, ember2x and book exist"] = function()

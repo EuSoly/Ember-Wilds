@@ -26,31 +26,31 @@
 -- data mal escrita, fim antes do começo, texto faltando...).
 local Types = require("./Types")
 
+-- 18/11/2026 (Elizeu): Gelo, Floresta e Mar no lugar de Geada, Musgo e Brasa
+-- (essas três já tinham acabado). Sem datas: ficam abertos até mudar aqui.
+-- Cada pacote é um produto de desenvolvedor no Roblox (Shop/RobloxIds):
+-- pacote NOVO precisa de produto novo (o id do pacote é o do produto).
 local Bundles: { Types.BundleDef } = {
 	{
-		id = "brasa",
-		nameKey = "shop.bundle.brasa",
-		theme = "#B8361A",
+		id = "mar",
+		nameKey = "shop.bundle.mar",
+		theme = "#1A5F9E",
 		rarity = 5,
 		robux = 399,
-		startsAt = "2026-11-09 00:00",
-		endsAt = "2026-11-11 10:00",
 		rewards = {
-			{ kind = "cosmetic", id = "body_chama" },
-			{ kind = "cosmetic", id = "book_lava" },
-			{ kind = "cosmetic", id = "bag_chamas_fogo" },
-			{ kind = "cosmetic", id = "crate_magma" },
+			{ kind = "cosmetic", id = "body_tubarao" },
+			{ kind = "cosmetic", id = "book_ondas" },
+			{ kind = "cosmetic", id = "bag_recife_coral" },
+			{ kind = "cosmetic", id = "crate_kraken" },
 			{ kind = "ember", amount = 500 },
 		},
 	},
 	{
-		id = "geada",
-		nameKey = "shop.bundle.geada",
-		theme = "#2F7FD8",
+		id = "gelo",
+		nameKey = "shop.bundle.gelo",
+		theme = "#5FB8E0",
 		rarity = 4,
 		robux = 349,
-		startsAt = "2026-11-09 00:00",
-		endsAt = "2026-11-14 02:40",
 		rewards = {
 			{ kind = "cosmetic", id = "body_espirito_gelo" },
 			{ kind = "cosmetic", id = "book_gelo" },
@@ -60,13 +60,11 @@ local Bundles: { Types.BundleDef } = {
 		},
 	},
 	{
-		id = "musgo",
-		nameKey = "shop.bundle.musgo",
+		id = "floresta",
+		nameKey = "shop.bundle.floresta",
 		theme = "#4E9A2E",
 		rarity = 2,
 		robux = 299,
-		startsAt = "2026-11-09 00:00",
-		endsAt = "2026-11-10 12:05",
 		rewards = {
 			{ kind = "cosmetic", id = "body_arbusto_florido" },
 			{ kind = "cosmetic", id = "book_floresta" },

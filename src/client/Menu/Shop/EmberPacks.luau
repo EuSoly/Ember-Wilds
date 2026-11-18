@@ -29,9 +29,14 @@ local function buy(pack: ShopConfig.EmberPack)
 	Purchase.buy(`pack_{pack.amount}`)
 end
 
--- Moeda dos pacotes (índice 1..5): uma moeda, depois duas, depois a pilha,
--- cada vez maior (como na referência).
+-- Arte dos pacotes (índice 1..5): o ícone próprio de cada um (moeda, duas
+-- moedas, pilha, saco, baú; quadrado); sem ele, as moedas antigas, cada vez
+-- maiores (como na referência).
 local function coinArt(index: number): (string, number)
+	local own = ShopImages.EMBER_PACK[index]
+	if ShopImages.has(own) then
+		return own, 1
+	end
 	if index >= 3 and ShopImages.has(ShopImages.COIN_STACK_3) then
 		return ShopImages.COIN_STACK_3, 1.45 -- pilha: mais larga que alta
 	elseif index == 2 and ShopImages.has(ShopImages.COIN_STACK_2) then

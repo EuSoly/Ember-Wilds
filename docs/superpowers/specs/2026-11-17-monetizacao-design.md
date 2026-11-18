@@ -161,7 +161,7 @@ Pela regra do Roblox, "item aleatório pago" inclui o que se compra com Robux **
 | Assinatura | VIP | 99/mês |
 | Gamepass | 2× Golden Ember | 199 |
 | Gamepass | Nascer com livro | 99 |
-| Gamepass | 4 kits para sempre | 99 / 199 / 399 / 799 |
+| Gamepass | 4 kits para sempre | 99 / 199 / 299 / 399 (18/11: Sobrevivente 299, Veterano 399; 1 vida do Veterano 67) |
 | Produto | Golden Ember (5) | 80 / 150 / 600 / 1500 / 3500 |
 | Produto | Giros especiais (3) | 49 / 129 / 399 |
 | Produto | Kits de 1 vida (4) | 15 / 25 / 49 / 99 |
