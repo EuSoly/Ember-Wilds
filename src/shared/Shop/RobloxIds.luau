@@ -8,6 +8,7 @@
 -- PRODUCT: produto de desenvolvedor (pacotes, giros especiais, kit de 1 vida,
 --   boost de XP, revive, pacotes em destaque).
 -- SUBSCRIPTION: assinatura (o VIP; criada à mão no Creator Hub).
+-- Quem cobra e entrega é o RobuxService (servidor).
 --
 -- Produto NOVO na loja (pacote em destaque novo, preço novo de pacote...)
 -- precisa de um id aqui; o teste tests/robloxids.spec.luau avisa o que falta.
@@ -49,5 +50,45 @@ RobloxIds.PRODUCT = table.freeze({
 RobloxIds.SUBSCRIPTION = table.freeze({
 	vip_30d = "EXP-7043584435712819724",
 }) :: { [string]: string }
+
+export type Home = "pass" | "product" | "subscription"
+
+-- Onde um produto da loja (Shop/Products, pelo `kind`) vive no Roblox.
+function RobloxIds.homeOf(kind: string): Home
+	if kind == "kit" or kind == "pass" then
+		return "pass"
+	elseif kind == "vip" then
+		return "subscription"
+	end
+	return "product"
+end
+
+local productById: { [number]: string } = {}
+for productId, id in RobloxIds.PRODUCT do
+	productById[id] = productId
+end
+local passById: { [number]: string } = {}
+for productId, id in RobloxIds.GAME_PASS do
+	passById[id] = productId
+end
+local subscriptionById: { [string]: string } = {}
+for productId, id in RobloxIds.SUBSCRIPTION do
+	subscriptionById[id] = productId
+end
+
+-- Id da loja de um produto de desenvolvedor do Roblox (nil = não é nosso).
+function RobloxIds.fromProduct(robloxId: number): string?
+	return productById[robloxId]
+end
+
+-- Id da loja de uma gamepass do Roblox.
+function RobloxIds.fromGamePass(robloxId: number): string?
+	return passById[robloxId]
+end
+
+-- Id da loja de uma assinatura do Roblox.
+function RobloxIds.fromSubscription(robloxId: string): string?
+	return subscriptionById[robloxId]
+end
 
 return table.freeze(RobloxIds)

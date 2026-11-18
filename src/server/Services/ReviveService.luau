@@ -26,12 +26,14 @@
 -- - Corrida: da entrada pelo menu até a morte final. A contagem de revives
 --   (grátis inclusos, para o degrau) e o grátis do VIP usado zeram no
 --   nascimento pelo menu (SpawnService.onSpawned com viaMenu), não no revive.
--- - Compra do Roblox (fase 9): purchaseStarted/purchaseEnded pausam a janela,
---   aceita ou não (até PURCHASE_PAUSE_MAX); purchaseEnded(player, false) =
---   compra cancelada: a janela aceita, sem nada cobrado, volta para sem
---   resposta (o jogador escolhe de novo). Pagamento confirmado com a janela já
---   fechada = lateRevive (1 revive guardado no perfil). Nesta branch a
---   cobrança é instantânea e ninguém chama esses três.
+-- - Compra do Roblox (desde 18/11/2026): o "sim" com Robux abre a janela de
+--   compra (RobuxService.awaitProduct, produto revive_<degrau>) e espera;
+--   purchaseStarted/purchaseEnded pausam a janela do revive enquanto isso
+--   (até PURCHASE_PAUSE_MAX). Compra cancelada = purchaseEnded(player, false):
+--   a janela aceita, sem nada cobrado, volta para sem resposta (o jogador
+--   escolhe de novo; o cliente reativa os botões com o PurchaseResult
+--   "cancelled"). Pagamento que chega com a janela já fechada vira 1 revive
+--   guardado (o ShopService entrega o recibo do revive_N assim).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -45,6 +47,7 @@ local DataService = require(script.Parent.DataService)
 local DeathService = require(script.Parent.DeathService)
 local InventoryService = require(script.Parent.InventoryService)
 local PerkService = require(script.Parent.PerkService)
+local RobuxService = require(script.Parent.RobuxService)
 local ShopService = require(script.Parent.ShopService)
 local SpawnService = require(script.Parent.SpawnService)
 local TutorialService = require(script.Parent.TutorialService)
@@ -129,8 +132,11 @@ local function pay(player: Player, offer: ReviveRules.Offer): Paid?
 		vipFreeUsed[player] = true
 		return "vip" :: Paid
 	end
-	local charged =
-		ShopService.charge(player, { currency = "robux", amount = offer.robux } :: any, `revive_{offer.step}`)
+	-- Robux: a janela do Roblox abre e esta tentativa espera a resposta, com o
+	-- tempo da janela do revive pausado.
+	ReviveService.purchaseStarted(player)
+	local charged = RobuxService.awaitProduct(player, `revive_{offer.step}`)
+	ReviveService.purchaseEnded(player, charged)
 	return if charged then "robux" :: Paid else nil
 end
 

@@ -246,6 +246,55 @@ local function clearSaveState(player: Player)
 	lastSaveAt[player] = nil
 end
 
+-- Compras com Robux guardadas no perfil (padrão do ProfileStore para recibos).
+local PURCHASE_ID_CACHE_SIZE = 100
+
+-- Entrega um recibo do Roblox UMA vez: se `purchaseId` ainda não está no
+-- perfil, roda `grant` (sem pausa: mexe só no perfil) e guarda o id; depois
+-- espera o save que leva o id e só então responde PurchaseGranted. Sem perfil
+-- ativo, erro no grant ou sessão perdida: NotProcessedYet (o Roblox tenta de
+-- novo, até em outra visita). Pode pausar (espera o save).
+function DataService.receiptAsync(player: Player, purchaseId: string, grant: () -> ()): Enum.ProductPurchaseDecision
+	local profile = profiles[player]
+	if profile == nil or not profile:IsActive() then
+		return Enum.ProductPurchaseDecision.NotProcessedYet
+	end
+	local data = profile.Data :: Data
+	if type(data.PurchaseIdCache) ~= "table" then
+		data.PurchaseIdCache = {}
+	end
+	local cache = data.PurchaseIdCache :: { string }
+	if table.find(cache, purchaseId) == nil then
+		local ok, err = pcall(grant :: any)
+		if not ok then
+			warn(`[DataService] recibo {purchaseId} de {player.UserId} falhou: {err}`)
+			return Enum.ProductPurchaseDecision.NotProcessedYet
+		end
+		while #cache >= PURCHASE_ID_CACHE_SIZE do
+			table.remove(cache, 1)
+		end
+		table.insert(cache, purchaseId)
+	end
+	local function saved(snapshot: any): boolean
+		local list = if type(snapshot) == "table" then snapshot.PurchaseIdCache else nil
+		return type(list) == "table" and table.find(list, purchaseId) ~= nil
+	end
+	if saved(profile.LastSavedData) then
+		return Enum.ProductPurchaseDecision.PurchaseGranted
+	end
+	-- Grava já (sem o limite do DataService.save: dinheiro não espera).
+	lastSaveAt[player] = os.clock()
+	profile:Save()
+	while profile:IsActive() do
+		-- O tipo exportado do pacote só declara Connect; o sinal tem Wait.
+		local snapshot = (profile.OnAfterSave :: any):Wait()
+		if saved(snapshot) then
+			return Enum.ProductPurchaseDecision.PurchaseGranted
+		end
+	end
+	return Enum.ProductPurchaseDecision.NotProcessedYet
+end
+
 -- false quando o ProfileStore caiu no modo Mock (sem acesso às APIs).
 function DataService.isUsingRealStore(): boolean
 	return ProfileStore.DataStoreState == "Access"

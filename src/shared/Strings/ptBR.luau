@@ -988,6 +988,7 @@ return table.freeze({
 	["shop.result.restricted"] = "Compra de giros indisponível para a sua conta",
 	["shop.result.unknown"] = "Produto não encontrado",
 	["shop.result.error"] = "Não deu para comprar agora; tente de novo",
+	["shop.result.cancelled"] = "Compra cancelada",
 	["shop.spin.duplicate"] = "Repetida: +{amount} Golden Ember",
 	["shop.spin.failed"] = "Sem giros desse tipo",
 	["shop.pass.kit_starter"] = "Kit Iniciante",

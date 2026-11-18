@@ -3,8 +3,10 @@
 -- roleta e kits (saldo de 1 vida, para sempre, ativo). Tudo o que vem do
 -- cliente é só o pedido; preço, conteúdo, sorteio e saldo são daqui.
 --
--- Robux AINDA NÃO É COBRADO: `charge` entrega de graça os produtos com preço
--- em Robux. É o único lugar onde a cobrança real (MarketplaceService) entra.
+-- Robux é cobrado de verdade (desde 18/11/2026) pelo RobuxService: a compra
+-- com Robux só abre a janela do Roblox; a entrega vem depois (recibo pago,
+-- gamepass comprada, assinatura ativa) por deliver / passOwned / subscription.
+-- Golden Ember continua sendo cobrada aqui (charge).
 --
 -- O estado vai para o cliente na pasta Player.Shop (StatNames.ShopFolder):
 -- atributos com os saldos de giros, o kit ativo e as vantagens (PerkService),
@@ -31,6 +33,7 @@ local CosmeticService = require(script.Parent.CosmeticService)
 local CurrencyService = require(script.Parent.CurrencyService)
 local DataService = require(script.Parent.DataService)
 local PerkService = require(script.Parent.PerkService)
+local RobuxService = require(script.Parent.RobuxService)
 local Net = require(script.Parent.Parent.Net)
 
 type Reward = ShopTypes.Reward
@@ -48,6 +51,8 @@ local rng = Random.new()
 -- Item aleatório pago proibido por jogador (PolicyService). Sem resposta ainda
 -- (ou consulta falhou) = bloqueado: o lado seguro. true/false só vem da consulta.
 local randomBlocked: { [Player]: boolean } = {}
+-- Abriu a janela da assinatura do VIP: a próxima ativação avisa "Comprado!".
+local vipPrompted: { [Player]: boolean } = {}
 
 -- Giros comprados (e pacotes com giros) estão bloqueados para o jogador?
 function ShopService.randomBlocked(player: Player): boolean
@@ -151,10 +156,11 @@ end
 
 -- ===== Cobrança e entrega =====
 
--- Cobra o preço. Robux: grátis por enquanto (aqui entra o MarketplaceService).
+-- Cobra um preço em Golden Ember. Robux não passa por aqui: é a janela do
+-- Roblox (RobuxService.prompt / awaitProduct) e a entrega vem pelo recibo.
 function ShopService.charge(player: Player, price: Price, reason: string): boolean
 	if price.currency == "robux" then
-		return true
+		return false
 	end
 	return CurrencyService.spend(player, price.amount, reason)
 end
@@ -282,6 +288,16 @@ function ShopService.purchase(player: Player, productId: string): (boolean, stri
 			return false, "error" -- tipo sem entrega no servidor: não cobra nada
 		end
 	end
+	-- Robux: abre a janela do Roblox; a entrega vem pelo recibo (deliver).
+	if product.price.currency == "robux" then
+		if not RobuxService.prompt(player, product.id) then
+			return false, "error"
+		end
+		if product.kind == "vip" then
+			vipPrompted[player] = true
+		end
+		return false, "prompt"
+	end
 	local reason = `shop:{product.id}`
 	if not ShopService.charge(player, product.price, reason) then
 		return false, "balance"
@@ -295,6 +311,81 @@ function ShopService.purchase(player: Player, productId: string): (boolean, stri
 	publish(player)
 	DataService.save(player)
 	return true, nil
+end
+
+-- Entrega o produto `productId` pago com Robux (recibo do RobuxService, já
+-- dentro do DataService.receiptAsync, que salva). Sem pausa. Revive pago sem
+-- ninguém esperando (janela fechada, outra visita) vira 1 revive guardado.
+local function deliver(player: Player, productId: string)
+	local d = shopOf(player)
+	local product = Products.get(productId)
+	assert(d ~= nil and product ~= nil, `entrega sem perfil ou produto: {productId}`)
+	local reason = `robux:{productId}`
+	if product.kind == "revive" then
+		ShopService.grant(player, { kind = "reviveCredit", count = 1 } :: any, reason)
+	else
+		for _, reward in product.rewards do
+			ShopService.grant(player, reward, reason)
+		end
+	end
+	if product.once then
+		ShopData.markPurchased(d, product.id)
+	end
+	publish(player)
+	if product.kind ~= "revive" then
+		Net.PurchaseResult.Fire(player, { ProductId = productId, Ok = true })
+	end
+end
+
+-- Gamepass possuída: entrega o que ainda não está no perfil e salva.
+local function passOwned(player: Player, productId: string, boughtNow: boolean)
+	local d = shopOf(player)
+	local product = Products.get(productId)
+	if d == nil or product == nil then
+		return
+	end
+	local fresh = false
+	for _, reward in product.rewards do
+		local has = if reward.kind == "kit"
+			then d.KitsOwned[reward.id :: string] == true
+			elseif reward.kind == "pass" then d.Passes[reward.id :: string] == true
+			else false
+		if not has then
+			ShopService.grant(player, reward, `gamepass:{productId}`)
+			fresh = true
+		end
+	end
+	if product.once then
+		ShopData.markPurchased(d, product.id)
+	end
+	if fresh then
+		publish(player)
+		DataService.save(player)
+	end
+	if boughtNow then
+		Net.PurchaseResult.Fire(player, { ProductId = productId, Ok = true })
+	end
+end
+
+-- Status da assinatura do VIP: o fim do período pago vira o VipUntil (o
+-- resto do jogo lê só ele). Sem assinatura, o VipUntil fica como está e
+-- vence sozinho.
+local function subscription(player: Player, productId: string, untilUnix: number?)
+	local d = shopOf(player)
+	if d == nil or untilUnix == nil then
+		return
+	end
+	local was = d.VipUntil
+	if untilUnix > was then
+		d.VipUntil = untilUnix
+		publish(player)
+		PerkService.refresh(player)
+		DataService.save(player)
+	end
+	if vipPrompted[player] and was <= os.time() then
+		vipPrompted[player] = nil
+		Net.PurchaseResult.Fire(player, { ProductId = productId, Ok = true })
+	end
 end
 
 -- Gira a roleta `typeId` gastando um giro do saldo `kind`. nil = não girou
@@ -420,12 +511,16 @@ function ShopService.Start(_self)
 			publish(player)
 		end)
 	end)
+	RobuxService.onDeliver(deliver)
+	RobuxService.onPassOwned(passOwned)
+	RobuxService.onSubscription(subscription)
 	Net.RequestPurchase.On(onPurchase)
 	Net.RequestSpin.On(onSpin)
 	Net.SetActiveKit.On(onSetActive)
 	Players.PlayerRemoving:Connect(function(player)
 		Throttle.forget(throttle, player)
 		randomBlocked[player] = nil
+		vipPrompted[player] = nil
 	end)
 end
 
