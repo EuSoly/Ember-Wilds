@@ -31,8 +31,10 @@ local function byRarityThenId(a: CosmeticDef, b: CosmeticDef): boolean
 	return a.id < b.id
 end
 
--- Todas as skins do slot, com a padrão primeiro e depois da mais comum para a mais rara.
-function CosmeticCatalog.items(slot: string): { CosmeticDef }
+-- Todas as skins do slot: a padrão primeiro; com `owns`, as que o jogador já
+-- liberou vêm antes das trancadas (pedido do Elizeu, 18/11/2026); cada grupo
+-- da mais comum para a mais rara.
+function CosmeticCatalog.items(slot: string, owns: ((id: string) -> boolean)?): { CosmeticDef }
 	local slotDef = Defs.CosmeticSlots[slot]
 	local defaultId = slotDef and slotDef.default
 	local list: { CosmeticDef } = {}
@@ -44,6 +46,12 @@ function CosmeticCatalog.items(slot: string): { CosmeticDef }
 	table.sort(list, function(a: CosmeticDef, b: CosmeticDef): boolean
 		if (a.id == defaultId) ~= (b.id == defaultId) then
 			return a.id == defaultId
+		end
+		if owns then
+			local ownsA, ownsB = owns(a.id), owns(b.id)
+			if ownsA ~= ownsB then
+				return ownsA
+			end
 		end
 		return byRarityThenId(a, b)
 	end)

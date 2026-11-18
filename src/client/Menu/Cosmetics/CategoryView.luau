@@ -5,7 +5,7 @@
 -- Esquerda: a vitrine com a skin selecionada (corpo/mochila → o boneco com
 -- ela; caixa → a prévia da caixa; livro → o boneco com o livro), o nome e a
 -- raridade (na cor da raridade) e o Voltar. Direita: placa com a categoria,
--- grade 3×3 das skins do slot (CosmeticCatalog.items: da Comum à Mítica) e as
+-- grade 3×3 das skins do slot (CosmeticCatalog.items: liberadas primeiro, cada grupo da Comum à Mítica) e as
 -- setas das páginas, desativadas nas pontas.
 --
 -- Cada quadradinho: fundo na cor da raridade, o item em 3D e o nome. A
@@ -271,8 +271,13 @@ local function view(
 	local slot = category.slot :: string
 	local player = Players.LocalPlayer
 	local default = Defs.CosmeticSlots[slot].default
-	local items = CosmeticCatalog.items(slot)
 	local owned = Sources.childNames(player, StatNames.OwnedFolder)
+	-- Liberadas na frente (a ordem é da abertura: uma skin ganha com a tela
+	-- aberta não pula de lugar até reabrir).
+	local ownedNow = vide.untrack(owned)
+	local items = CosmeticCatalog.items(slot, function(id: string): boolean
+		return ownedNow[id] == true
+	end)
 	local equipped = Sources.attribute(player, StatNames.CosmeticPrefix .. slot, default)
 	local state: Slot = {
 		slot = slot,

@@ -19,6 +19,25 @@ return {
 		end
 	end,
 
+	["owned skins come first, then rarity"] = function()
+		-- Pedido do Elizeu (18/11/2026): as liberadas na frente, cada grupo por raridade.
+		local all = CosmeticCatalog.items("body")
+		local mine: { [string]: boolean } = {}
+		-- Possui uma Mítica e uma Comum (as duas últimas e a segunda da lista).
+		mine[all[#all].id] = true
+		mine[all[2].id] = true
+		local items = CosmeticCatalog.items("body", function(id: string): boolean
+			return mine[id] == true
+		end)
+		assert(items[1].id == "body_default", "a padrão continua primeiro")
+		assert(mine[items[2].id] and mine[items[3].id], "as liberadas logo depois")
+		assert(items[2].rarity <= items[3].rarity, "liberadas por raridade")
+		for i = 5, #items do
+			assert(not mine[items[i].id], "trancada no meio das liberadas")
+			assert(items[i].rarity >= items[i - 1].rarity, "trancadas por raridade")
+		end
+	end,
+
 	["spinItems body has no default"] = function()
 		for _, item in CosmeticCatalog.spinItems("body") do
 			assert(item.id ~= "body_default", "padrão não entra no giro")
