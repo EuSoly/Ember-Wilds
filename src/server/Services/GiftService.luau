@@ -17,6 +17,8 @@
 --   tira o primeiro (o pop-up do cliente abriu).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local ServerStorage = game:GetService("ServerStorage")
 
 local Shared = ReplicatedStorage.Shared
 local GiftRules = require(Shared.Shop.GiftRules)
@@ -68,8 +70,15 @@ local function receive(
 	if not ShopData.rememberGift(d, purchaseId) then
 		return false
 	end
+	-- Já tinha o item de uma vez: ganhou Golden Ember no lugar, e é isso que a
+	-- caixa mostra ("ember:<quantidade>").
+	local product = Products.get(productId)
+	local shown = productId
+	if product ~= nil and product.once and GiftRules.alreadyHas(product, d) then
+		shown = `ember:{GiftRules.emberFallback(product.price.amount)}`
+	end
 	ShopService.deliverTo(recipient, productId, `gift:{purchaseId}`)
-	ShopData.pushInbox(d, from, productId)
+	ShopData.pushInbox(d, from, shown)
 	sendInbox(recipient)
 	return true
 end
@@ -180,7 +189,28 @@ local function onOpen(player: Player, request: { ProductId: string })
 	sendInbox(player)
 end
 
+-- SÓ Studio: ServerStorage.DevGift:Invoke(player, productId, deQuem) simula
+-- um presente recebido (entrega, fila e a caixa no menu), sem compra.
+local function devGift()
+	if not RunService:IsStudio() then
+		return
+	end
+	local fn = Instance.new("BindableFunction")
+	fn.Name = "DevGift"
+	fn.OnInvoke = function(player: Player, productId: string, from: string?): boolean
+		local d = shopOf(player)
+		if d == nil or Products.get(productId) == nil then
+			return false
+		end
+		receive(player, d, productId, from or "Studio", `dev:{os.clock()}`)
+		DataService.save(player)
+		return true
+	end
+	fn.Parent = ServerStorage
+end
+
 function GiftService.Start(_self)
+	devGift()
 	RobuxService.onGift(onGift)
 	RobuxService.onGiftCancelled(onCancelled)
 	DataService.onMessage(onMessage)

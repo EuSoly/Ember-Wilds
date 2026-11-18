@@ -13,11 +13,21 @@ local RewardBadge = require(Shared:WaitForChild("Shop"):WaitForChild("RewardBadg
 local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Strings = require(Shared:WaitForChild("Strings"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
+
+-- "ember:<quantidade>": presente que virou Golden Ember (quem recebeu já tinha).
+local function emberAmount(productId: string): number?
+	local amount = string.match(productId, "^ember:(%d+)$")
+	return if amount then tonumber(amount) else nil
+end
 
 local GiftItem = {}
 
 -- Imagem do item ("" se não há).
 function GiftItem.icon(productId: string): string
+	if emberAmount(productId) then
+		return UiImages.COIN
+	end
 	local product = Products.get(productId)
 	if product == nil then
 		return ""
@@ -47,6 +57,11 @@ end
 
 -- Nome do item para quem lê.
 function GiftItem.name(productId: string): string
+	local ember = emberAmount(productId)
+	if ember then
+		local badge = RewardBadge.of({ kind = "ember", amount = ember } :: any)
+		return `{badge.amount} {badge.label}`
+	end
 	local product = Products.get(productId)
 	if product == nil then
 		return productId

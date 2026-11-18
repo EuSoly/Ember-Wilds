@@ -53,6 +53,7 @@ local RankingScreen = require(script.Parent:WaitForChild("Ranking"):WaitForChild
 local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local CheckInPanel = require(script.Parent:WaitForChild("CheckInPanel"))
 local GiftPanel = require(script.Parent:WaitForChild("Shop"):WaitForChild("GiftPanel"))
+local GiftPopup = require(script.Parent:WaitForChild("GiftPopup"))
 local TutorialSpinPopup = require(script.Parent:WaitForChild("TutorialSpinPopup"))
 local AssetProgress = require(script.Parent:WaitForChild("AssetProgress"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
@@ -723,6 +724,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	)
 	table.insert(children, CheckInPanel.build())
 	table.insert(children, GiftPanel.build())
+	table.insert(children, GiftPopup.build())
 	table.insert(
 		children,
 		noticeBanner(layout, function()
