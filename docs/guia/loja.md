@@ -195,10 +195,24 @@ Tudo em **`src/shared/Shop/ShopConfig.luau`**:
 
 Testes: `tests/shopdates.spec.luau`, `tests/shopcatalog.spec.luau`, `tests/spinroll.spec.luau`, `tests/shopdata.spec.luau`, `tests/kitchoice.spec.luau`, `tests/monetizationimages.spec.luau` (ids e fatias das artes), `tests/xpboost.spec.luau`, `tests/revive.spec.luau`.
 
-## Ligar o Robux de verdade (depois)
+## Robux de verdade (desde 18/11/2026)
 
-1. Zerar todos os perfis (decisão do Elizeu).
-2. ~~Criar os produtos de desenvolvedor e gamepasses no site e guardar os ids junto dos produtos.~~ **Feito em 18/11/2026**: 6 gamepasses, 20 produtos de desenvolvedor (criados pela API do Open Cloud) e a assinatura do VIP (criada à mão pelo Elizeu, `EXP-7043584435712819724`), todos no universo 10773601314 e **fora de venda**. Os ids ficam em `src/shared/Shop/RobloxIds.luau`; o teste `tests/robloxids.spec.luau` avisa produto da loja sem id. Pôr à venda: `PATCH isForSale=true` em cada um (APIs `game-passes` e `developer-products`) junto com o passo 3. Produto novo (pacote em destaque novo, outro pacote de moeda) precisa de um produto novo no Roblox; preço mudado no código precisa mudar também no Creator Hub.
-3. Trocar o `ShopService.charge` de Robux pelo `MarketplaceService:PromptProductPurchase` e entregar no `ProcessReceipt` (usando `PurchaseIdCache` do perfil para não entregar duas vezes), respondendo `PurchaseGranted` só depois que o perfil guardou.
-4. Gamepasses (kits para sempre, `ember2x`, `book`): entregar pelo `UserOwnsGamePassAsync` / `PromptGamePassPurchaseFinished`.
-5. VIP: virar **assinatura** do Roblox (status lido ao entrar; `Shop.VipUntil` acompanha). Revive: veja `docs/guia/revive.md` e a fase 9 em `docs/pendencias.md`.
+- **Perfis zerados:** o store do perfil passou a `PlayerData_v2` (`DataConfig.STORE_NAME`). Os perfis antigos ficam no store `PlayerData`, sem uso.
+- **Ids no Roblox:** `src/shared/Shop/RobloxIds.luau` (6 gamepasses, 20 produtos, 22 presentes e a assinatura do VIP `EXP-7043584435712819724`, universo 10773601314). O teste `tests/robloxids.spec.luau` avisa produto com Robux sem id. Criados **fora de venda** pela API; a venda é ligada no Creator Hub (Monetização do Ember Wilds). Item fora de venda não abre a janela de compra.
+- **Quem cobra:** `RobuxService`. A compra com Robux só abre a janela do Roblox; a entrega vem no `ProcessReceipt` pelo `DataService.receiptAsync` (uma vez por `PurchaseId`, guardado no `PurchaseIdCache` do perfil, e `PurchaseGranted` só depois do save). Jogador fora do servidor: o Roblox tenta de novo na próxima visita.
+- **Gamepasses** (kits para sempre, `ember2x`, `book`): entregues na compra e ao entrar (`UserOwnsGamePassAsync`, para quem comprou pelo site).
+- **VIP:** assinatura; ao entrar e quando o status muda, o fim do período pago vira o `Shop.VipUntil`.
+- **Revive:** o "sim" com Robux abre a compra e pausa a janela; cancelada reabre a escolha; pago com a janela fechada vira revive guardado (`docs/guia/revive.md`).
+- **Preço mudou no código:** mudar também no Creator Hub (o preço cobrado é o de lá), inclusive no produto de presente.
+- **Item novo com Robux** (pacote em destaque novo, outro pacote de moeda): criar o produto no Roblox (e o "Presente: X", se puder ser presente) e pôr os ids em `RobloxIds`.
+
+## Presentes (desde 18/11/2026)
+
+Um jogador compra um item da loja para outro **do mesmo servidor**. Spec: `docs/superpowers/specs/2026-11-18-presentes-design.md`.
+
+- Presenteáveis: os 22 de `RobloxIds.GIFT` (kits para sempre, 2×, livro, Golden Ember, giros especiais, kits de 1 vida, boost de XP, pacotes em destaque). **VIP e revive não.** Cada um é um produto "Presente: X" no Roblox (gamepass sempre fica com quem paga).
+- Na loja, o ícone de presente fica no canto do botão de preço (`GiftPanel.attach`). A janela **Presentear** (`Menu/Shop/GiftPanel`) lista quem está no servidor; quem já tem o item de uma vez aparece apagado ("Já tem").
+- Regras (`Shop/GiftRules`): não pode a si mesmo; giros (e pacotes com giros) recusados se quem paga **ou** quem recebe está onde a lei proíbe item aleatório pago; o resto das regras da compra vale contra o perfil de quem recebe.
+- Servidor (`GiftService`): guarda no perfil de quem paga para quem é o próximo presente (`Shop.GiftPending`), abre a compra, e no recibo entrega no perfil de quem recebe (uma vez por `PurchaseId`, `Shop.GiftIds`). Quem recebe saiu do servidor: o presente vai como **mensagem do ProfileStore** e chega quando ele voltar. Item de uma vez que ele já tem na hora: vira Golden Ember (`GiftRules.emberFallback`: 3,75 por Robux).
+- Quem recebe: fila no perfil (`Shop.GiftInbox`). No menu, a caixa abre (`Menu/GiftPopup`); jogando, só um aviso, e a caixa espera o menu.
+- Testar no Studio sem compra: `game.ServerStorage.DevGift:Invoke(player, "pack_300", "Fulano")`.
