@@ -16,6 +16,7 @@ local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local ScreenMetrics = require(script.Parent.Parent.Parent:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 
 local create = vide.create
 
@@ -100,7 +101,7 @@ function Banner.build(p: Props): Frame
 				Name = line.name,
 				LayoutOrder = order,
 				Visible = function()
-					return not (line.hideInCompact and p.compact())
+					return not (line.hideInCompact and (p.compact() or ScreenMetrics.short()))
 				end,
 				Size = function()
 					local share = if p.compact()
@@ -111,8 +112,9 @@ function Banner.build(p: Props): Frame
 				end,
 				FontFace = if line.title then Theme.font.number else Theme.font.label,
 				Text = function()
+					-- Celular: o texto curto também no cartão inteiro (a coluna é estreita).
 					local short = line.compactText
-					if short and p.compact() then
+					if short and (p.compact() or ScreenMetrics.short()) then
 						return short()
 					end
 					return line.text()
@@ -123,6 +125,10 @@ function Banner.build(p: Props): Frame
 				minSize = function()
 					if p.compact() then
 						return 9
+					end
+					-- Celular: os mínimos do PC estouravam a coluna (teste de 18/11/2026).
+					if ScreenMetrics.short() then
+						return if line.title then 12 else 10
 					end
 					return if line.title then ShopLayout.BANNER_TITLE_MIN else ShopLayout.BANNER_DESC_MIN
 				end,
