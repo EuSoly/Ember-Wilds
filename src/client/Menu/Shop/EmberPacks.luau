@@ -32,21 +32,21 @@ end
 -- Arte dos pacotes (índice 1..5): o ícone próprio de cada um (moeda, duas
 -- moedas, pilha, saco, baú; quadrado); sem ele, as moedas antigas, cada vez
 -- maiores (como na referência).
-local function coinArt(index: number): (string, number)
+local function coinArt(index: number): (string, number, boolean)
 	local own = ShopImages.EMBER_PACK[index]
 	if ShopImages.has(own) then
-		return own, 1
+		return own, 1, true
 	end
 	if index >= 3 and ShopImages.has(ShopImages.COIN_STACK_3) then
-		return ShopImages.COIN_STACK_3, 1.45 -- pilha: mais larga que alta
+		return ShopImages.COIN_STACK_3, 1.45, false -- pilha: mais larga que alta
 	elseif index == 2 and ShopImages.has(ShopImages.COIN_STACK_2) then
-		return ShopImages.COIN_STACK_2, 1.45
+		return ShopImages.COIN_STACK_2, 1.45, false
 	end
-	return UiImages.COIN, 1
+	return UiImages.COIN, 1, false
 end
 
 local function coin(index: number, props: { [any]: any }): ImageLabel
-	local image, aspect = coinArt(index)
+	local image, aspect, own = coinArt(index)
 	local label = create("ImageLabel")({
 		Name = "Coin",
 		Visible = image ~= "",
@@ -56,7 +56,9 @@ local function coin(index: number, props: { [any]: any }): ImageLabel
 		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		ZIndex = 3,
 	}) :: ImageLabel
-	local side = 0.32 + index * 0.05
+	-- O ícone próprio é quadrado (as pilhas antigas eram mais largas): começa
+	-- maior para ocupar o mesmo espaço (teste de 18/11/2026: ficava pequeno).
+	local side = (if own then 0.46 else 0.32) + index * 0.05
 	local shrink = props.shrink
 	props.shrink = nil
 	props.Size = function()

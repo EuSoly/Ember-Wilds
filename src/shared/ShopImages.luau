@@ -35,8 +35,15 @@ ShopImages.COIN_STACK_3 = "rbxassetid://107961956032893"
 -- Ícones dos 5 pacotes de Golden Ember (ShopConfig.EMBER_PACKS, na ordem):
 -- moeda, duas moedas, pilha, saco e baú (folha do Elizeu de 18/11/2026,
 -- assets/ui/loja/golden-ember/pacote_N.png, quadrados de 512 px). Id vazio =
--- cai nas moedas antigas (COIN / COIN_STACK_2 / COIN_STACK_3).
-ShopImages.EMBER_PACK = { "", "", "", "", "" } :: { string }
+-- cai nas moedas antigas (COIN / COIN_STACK_2 / COIN_STACK_3). Os ids são os
+-- ícones dos produtos de Golden Ember criados no Roblox (mesmos arquivos).
+ShopImages.EMBER_PACK = {
+	"rbxassetid://125748812322291", -- 300: uma moeda
+	"rbxassetid://76991887748328", -- 600: duas moedas
+	"rbxassetid://122192657335505", -- 2.600: pilha
+	"rbxassetid://87071462894052", -- 7.000: saco
+	"rbxassetid://121053600270590", -- 20.000: baú
+} :: { string }
 
 -- Ícones das abas.
 ShopImages.TAB = {
