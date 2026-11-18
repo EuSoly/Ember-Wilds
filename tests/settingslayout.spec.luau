@@ -30,4 +30,15 @@ return {
 		local left, right = SettingsLayout.split(only)
 		assert(ids(left) == "sound" and #right == 0, "um grupo só fica à esquerda")
 	end,
+	["pc list fits a 1280x720 window without scrolling"] = function()
+		-- Área da janela do PC: 720 menos a barra do Roblox (58) = 662; janela
+		-- 0,86 da altura menos metade do título (29); lista = janela menos o
+		-- título e a faixa do Fechar (117). Com a linha do zoom, a lista rolava.
+		local room = 0.86 * (720 - 58) - 29 - 117
+		local groups = SettingsFormat.grouped(Defs.Settings)
+		local height =
+			SettingsLayout.listHeight(groups, SettingsLayout.ROW_PC, SettingsLayout.HEADER_PC, SettingsLayout.GAP_PC)
+		assert(height <= room, `lista de {height} não cabe em {room}`)
+		assert(SettingsLayout.ROW_PC >= 44, "linha do PC com alvo de toque")
+	end,
 }

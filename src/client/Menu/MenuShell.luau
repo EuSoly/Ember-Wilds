@@ -541,18 +541,23 @@ local function home(layout: () -> Layout): { Instance }
 end
 
 local function kitsPanel(layout: () -> Layout): Frame
-	local panel = KitsPanel.build()
+	local panel = KitsPanel.build(function()
+		return layout().compact
+	end, function()
+		local l = layout()
+		return l.panelBottom - l.kitPanelTop
+	end)
 	vide.apply(panel)({
 		Visible = function()
 			return MenuState.panel() == "kits"
 		end,
 		Position = function()
 			local l = layout()
-			return UDim2.fromOffset(l.kitPanelX, l.bodyTop)
+			return UDim2.fromOffset(l.kitPanelX, l.kitPanelTop)
 		end,
 		Size = function()
 			local l = layout()
-			return UDim2.fromOffset(l.kitPanelWidth, l.panelBottom - l.bodyTop)
+			return UDim2.fromOffset(l.kitPanelWidth, l.panelBottom - l.kitPanelTop)
 		end,
 		ZIndex = 2,
 	})
@@ -560,7 +565,9 @@ local function kitsPanel(layout: () -> Layout): Frame
 end
 
 -- Aviso do menu (resultado de compra...): faixa no alto, abaixo dos pods; só enquanto há texto.
-local function noticeBanner(layout: () -> Layout): Frame
+-- `bottom`: loja aberta no celular. O aviso vira um toast embaixo, no meio:
+-- no alto ele caía em cima da roleta do giro (17/11/2026).
+local function noticeBanner(layout: () -> Layout, bottom: () -> boolean, screenSize: () -> Vector2): Frame
 	return Kit.pill({
 		Name = "Notice",
 		Visible = function()
@@ -570,10 +577,17 @@ local function noticeBanner(layout: () -> Layout): Frame
 		AnchorPoint = Vector2.new(0.5, 0),
 		-- Onde fica vem do MenuLayout: nunca cobre o título nem o fechar dos kits.
 		Position = function()
+			if bottom() then
+				local size = screenSize()
+				return UDim2.fromOffset(size.X / 2, size.Y - MenuLayout.MARGIN - MenuLayout.NOTICE_HEIGHT)
+			end
 			local l = layout()
 			return UDim2.fromOffset(l.noticeCenterX, l.noticeY)
 		end,
 		Size = function()
+			if bottom() then
+				return UDim2.fromOffset(math.min(screenSize().X - 32, 360), MenuLayout.NOTICE_HEIGHT)
+			end
 			return UDim2.fromOffset(layout().noticeWidth, MenuLayout.NOTICE_HEIGHT)
 		end,
 		BackgroundColor3 = Theme.ui.warning,
@@ -606,16 +620,24 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local function notShop(): boolean
 		return not shopOpen()
 	end
-	-- Ranking aberto no celular: sobe até o topo, então o logo, o saldo e o
-	-- galho saem da frente (pedido do Elizeu, 17/11/2026).
+	-- Ranking ou kits abertos no celular: sobem até o topo, então o logo, o
+	-- saldo, o galho e o cartão do nível saem da frente (pedido do Elizeu,
+	-- 17/11/2026).
 	local function rankingOnTop(): boolean
-		return MenuState.panel() == "ranking" and layout().compact
+		local panel = MenuState.panel()
+		return (panel == "ranking" or panel == "kits") and layout().compact
 	end
 
 	local pod = levelPod(layout)
 	local logoImage = logo(layout)
 	local nav = column(layout)
-	vide.apply(pod)({ Visible = notShop })
+	-- O cartão do nível (200) é mais largo que a coluna (144): com o painel
+	-- subindo até o topo no celular, ele ficaria cortado por baixo do painel.
+	vide.apply(pod)({
+		Visible = function()
+			return notShop() and not rankingOnTop()
+		end,
+	})
 	vide.apply(logoImage)({
 		Visible = function()
 			return UiImages.has(UiImages.LOGO) and notShop() and not rankingOnTop()
@@ -699,7 +721,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 		end)
 	)
 	table.insert(children, CheckInPanel.build())
-	table.insert(children, noticeBanner(layout))
+	table.insert(
+		children,
+		noticeBanner(layout, function()
+			return shopOpen() and layout().compact
+		end, function()
+			return screenSize()
+		end)
+	)
 	-- Boost de XP correndo: contagem no centro, logo abaixo do aviso (que fica
 	-- no mesmo eixo), só no menu "limpo" como o calendário do check-in.
 	table.insert(

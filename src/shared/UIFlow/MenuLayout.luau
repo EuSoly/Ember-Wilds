@@ -99,6 +99,7 @@ export type Layout = {
 	playButtonWidth: number,
 	actionsGap: number,
 	kitPanelX: number,
+	kitPanelTop: number, -- no celular sobe até o topo, como o ranking
 	kitPanelWidth: number,
 	kitsCoverHero: boolean,
 	noticeCenterX: number,
@@ -178,12 +179,15 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		math.max(math.min(if compact then MenuLayout.LOGO_HEIGHT_COMPACT else MenuLayout.LOGO_HEIGHT, logoRoom), 0)
 
 	local covering = kitsOpen == true and kitsCover
+	-- Kits no celular (ajuste do Elizeu, 17/11): sobem até o topo, sem logo e
+	-- sem saldo, para caber duas fileiras de kits sem rolar.
+	local kitPanelTop = if compact then m else bodyTop
 	local noticeCenterX = areaLeft + heroAreaWidth / 2
 	local noticeY = math.max(bodyTop, logoTop + logoHeight) + 4
 	local noticeWidth = math.min(heroAreaWidth - 16, MenuLayout.NOTICE_MAX)
 	if covering then
 		noticeCenterX = kitPanelX + kitPanelWidth / 2
-		noticeY = bodyTop + MenuLayout.KIT_HEADER_HEIGHT + 4
+		noticeY = kitPanelTop + MenuLayout.KIT_HEADER_HEIGHT + 4
 		noticeWidth = math.min(kitPanelWidth - 32, MenuLayout.NOTICE_MAX)
 	end
 
@@ -221,6 +225,7 @@ function MenuLayout.compute(width: number, height: number, kitsOpen: boolean?): 
 		playButtonWidth = playWidth,
 		actionsGap = gap,
 		kitPanelX = kitPanelX,
+		kitPanelTop = kitPanelTop,
 		kitPanelWidth = kitPanelWidth,
 		kitsCoverHero = covering,
 		noticeCenterX = noticeCenterX,

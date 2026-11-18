@@ -38,6 +38,12 @@ local R = Theme.rustic
 local BOX_MAX_WIDTH = 980
 local TILE_GAP = 8
 local WON_TILE = 170
+-- Janela do prêmio: título em cima, o quadradinho a 20% da altura, o nome
+-- (52) logo abaixo e o Pegar (48) no fim. WON_BELOW_TILE = o que vem depois
+-- do quadradinho.
+local WON_POPUP_HEIGHT = 392
+local WON_TILE_TOP_SHARE = 0.2
+local WON_BELOW_TILE = 10 + 52 + 8 + 48 + 14
 local RESULT_TIMEOUT = 8 -- s esperando o resultado do giro antes de destravar
 local NORMAL_THEME = Color3.fromHex("#6B4A2E")
 local PAID_THEME = Color3.fromHex("#7A4FD8")
@@ -526,18 +532,36 @@ function SpinScreen.build(
 	end)
 
 	-- Janelinha do prêmio: refeita a cada prêmio.
+	-- No celular a janela do prêmio (392 de altura) passava da tela e o Pegar
+	-- sumia (17/11/2026): ela cabe na tela e o quadradinho encolhe para caber.
+	local function popupHeight(): number
+		return math.min(WON_POPUP_HEIGHT, screenSize().Y - 2 * ShopLayout.MARGIN)
+	end
+	local function tileTop(): number
+		return popupHeight() * WON_TILE_TOP_SHARE
+	end
+	local function wonTile(): number
+		return math.clamp(popupHeight() - tileTop() - WON_BELOW_TILE, 80, WON_TILE)
+	end
 	local prizeHolder = create("Frame")({
 		Name = "Prize",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.fromScale(0.5, 0.2),
-		Size = UDim2.fromOffset(WON_TILE, WON_TILE),
+		Position = function()
+			return UDim2.new(0.5, 0, 0, tileTop())
+		end,
+		Size = function()
+			local tileSide = wonTile()
+			return UDim2.fromOffset(tileSide, tileSide)
+		end,
 		BackgroundTransparency = 1,
 		ZIndex = 32,
 	}) :: Frame
 	local prizeName = ShopParts.outlined({
 		Name = "PrizeName",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0.2, WON_TILE + 10),
+		Position = function()
+			return UDim2.new(0.5, 0, 0, tileTop() + wonTile() + 10)
+		end,
 		Size = UDim2.new(0.9, 0, 0, 52), -- nome e, se repetida, a devolução
 		FontFace = Theme.font.number,
 		RichText = true,
@@ -549,7 +573,10 @@ function SpinScreen.build(
 		Name = "WonPopup",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(340, 392), -- espaço para a linha da devolução acima do Pegar
+		-- Espaço para a linha da devolução acima do Pegar.
+		Size = function()
+			return UDim2.fromOffset(340, popupHeight())
+		end,
 		BackgroundColor3 = Color3.fromHex("#2B2018"),
 		BorderSizePixel = 0,
 		ZIndex = 30,
@@ -591,7 +618,7 @@ function SpinScreen.build(
 		if result == nil then
 			return
 		end
-		local tile = SpinTile.build(result.item, WON_TILE)
+		local tile = SpinTile.build(result.item, vide.untrack(wonTile))
 		tile.ZIndex = 32
 		tile.Parent = prizeHolder
 		local rarityName = Strings.get(MockStore.RARITIES[result.item.rarity].nameKey)
@@ -704,7 +731,7 @@ function SpinScreen.build(
 			ScrollBarThickness = 5,
 			ScrollBarImageColor3 = R.woodEdge,
 			create("UIPadding")({
-				PaddingTop = UDim.new(0, 6),
+				PaddingTop = UDim.new(0, ShopLayout.SPIN_SIDES_PAD),
 				PaddingLeft = UDim.new(0, 4),
 				PaddingRight = UDim.new(0, 4),
 			}),

@@ -66,8 +66,8 @@ local Settings: { [string]: SettingDef } = {
 		kind = "boolean",
 		default = false,
 	},
-	-- Zoom da câmera (17/11/2026): 0 = perto, 1 = longe; o meio é a distância
-	-- de sempre. No toque é o único zoom (a pinça saiu); no PC a roda do
+	-- Zoom da câmera (17/11/2026): 1 (100%) = mais perto, 0 = mais longe; o
+	-- meio é a distância de sempre. No toque é o único zoom (a pinça saiu); no PC a roda do
 	-- mouse ajusta a partir dele (CameraController).
 	camera_zoom = {
 		id = "camera_zoom",

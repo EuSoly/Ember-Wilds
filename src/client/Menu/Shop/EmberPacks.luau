@@ -18,9 +18,10 @@ local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 
 local create = vide.create
 
-local TOP_HEIGHT = 200
-local BOTTOM_HEIGHT = 170
 local GOLD = Color3.fromHex("#F0A12A")
+local TAGGED_AMOUNT_TOP = 40 -- px: logo abaixo da fita
+local TAGGED_COIN_SHARE = 0.7
+local TAGGED_COIN_Y = 0.57
 
 local EmberPacks = {}
 
@@ -51,7 +52,12 @@ local function coin(index: number, props: { [any]: any }): ImageLabel
 		ZIndex = 3,
 	}) :: ImageLabel
 	local side = 0.32 + index * 0.05
-	props.Size = UDim2.fromScale(side * aspect, side)
+	local shrink = props.shrink
+	props.shrink = nil
+	props.Size = function()
+		local share = if shrink and shrink() then side * TAGGED_COIN_SHARE else side
+		return UDim2.fromScale(share * aspect, share)
+	end
 	return vide.apply(label)(props) :: ImageLabel
 end
 
@@ -63,7 +69,12 @@ local function amountText(amount: number): string
 	return Strings.format("shop.ember.amount", { amount = ShopParts.thousands(amount) })
 end
 
-local function smallCard(pack: ShopConfig.EmberPack, index: number): Frame
+-- `paged`: página do celular. Lá o cartão é estreito e a fita (POPULAR...)
+-- cobria o número: com fita, o número desce para baixo dela e a moeda encolhe.
+local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () -> boolean): Frame
+	local function tagged(): boolean
+		return pack.tag ~= nil and paged()
+	end
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",
 		fxCenter = UDim2.fromScale(0.5, 0.5), -- raios atrás da moeda
@@ -72,13 +83,23 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number): Frame
 		ribbon(pack),
 		ShopParts.outlined({
 			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.fromScale(0.5, 0.06),
-			Size = UDim2.fromScale(0.9, 0.2),
+			Position = function()
+				return if tagged() then UDim2.new(0.5, 0, 0, TAGGED_AMOUNT_TOP) else UDim2.fromScale(0.5, 0.06)
+			end,
+			Size = function()
+				return if tagged() then UDim2.fromScale(0.9, 0.17) else UDim2.fromScale(0.9, 0.2)
+			end,
 			FontFace = Theme.font.title,
 			Text = amountText(pack.amount),
 			maxSize = 34,
 		}),
-		coin(index, { AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5) }),
+		coin(index, {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = function()
+				return UDim2.fromScale(0.5, if tagged() then TAGGED_COIN_Y else 0.5)
+			end,
+			shrink = tagged,
+		}),
 		ShopParts.priceButton({
 			robux = pack.robux,
 			onClick = function()
@@ -146,48 +167,39 @@ function EmberPacks.build(layout: () -> ShopLayout.Layout): Frame
 	-- Os últimos `emberBottom` pacotes vão na fileira de baixo (cartões largos).
 	local packs = ShopConfig.EMBER_PACKS
 	local bottomCount = 2
-	local top: { Frame } = {}
-	local bottom: { Frame } = {}
-	-- Página do celular (17/11/2026): todos os pacotes numa fileira só, com a
-	-- altura da página; as duas fileiras de sempre ficam no PC.
-	local single: { Frame } = {}
-	for i, pack in packs do
-		if i <= #packs - bottomCount then
-			table.insert(top, smallCard(pack, i))
-		else
-			table.insert(bottom, wideCard(pack, i))
-		end
-		table.insert(single, smallCard(pack, i))
-	end
 	local function paged(): boolean
 		return layout().paged
 	end
-	local function notPaged(): boolean
-		return not paged()
+	local top: { Frame } = {}
+	local bottom: { Frame } = {}
+	for i, pack in packs do
+		if i <= #packs - bottomCount then
+			table.insert(top, smallCard(pack, i, paged))
+		else
+			table.insert(bottom, wideCard(pack, i))
+		end
 	end
-	local topRow = row(function()
-		return layout().emberTop
-	end, TOP_HEIGHT, top, 1)
-	local bottomRow = row(function()
-		return layout().emberBottom
-	end, BOTTOM_HEIGHT, bottom, 2)
-	local singleRow = row(function()
-		return #packs
-	end, function()
-		return ShopLayout.emberCardHeight(layout())
-	end, single, 3)
-	vide.apply(topRow)({ Visible = notPaged })
-	vide.apply(bottomRow)({ Visible = notPaged })
-	vide.apply(singleRow)({ Visible = paged })
+	-- Alturas: as de sempre no PC; na página do celular a fileira de cima
+	-- ocupa a página e a de baixo aparece um pouco (ShopLayout.emberHeights).
+	local function topHeight(): number
+		return (ShopLayout.emberHeights(layout()))
+	end
+	local function bottomHeight(): number
+		local _, height = ShopLayout.emberHeights(layout())
+		return height
+	end
 	return create("Frame")({
 		Name = "EmberPacks",
 		Size = UDim2.fromScale(1, 0),
 		AutomaticSize = Enum.AutomaticSize.Y,
 		BackgroundTransparency = 1,
 		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, ShopLayout.GAP) }),
-		topRow,
-		bottomRow,
-		singleRow,
+		row(function()
+			return layout().emberTop
+		end, topHeight, top, 1),
+		row(function()
+			return layout().emberBottom
+		end, bottomHeight, bottom, 2),
 	}) :: Frame
 end
 

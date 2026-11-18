@@ -89,7 +89,7 @@ No `short()`:
 - No PC fica como hoje.
 
 ### 8. Zoom (Defs.Settings + CameraController)
-- Nova opção `camera_zoom` (number, de 0 a 1, padrão 0,5, grupo "controls", texto "Zoom da câmera"). A barrinha vai de "perto" (0) a "longe" (1) e mapeia linearmente para a distância de 28 a 40. O padrão 0,5 fica em 34, que é o `DEFAULT_DISTANCE` de hoje, então ninguém sente diferença. O servidor valida como as outras opções.
+- Nova opção `camera_zoom` (number, de 0 a 1, padrão 0,5, grupo "controls", texto "Zoom da câmera"). A barrinha vai de "longe" (0%) a "perto" (100%; revisão final: "Zoom 100%" se lê como o mais perto) e mapeia linearmente para a distância de 28 a 40. O padrão 0,5 fica em 34, que é o `DEFAULT_DISTANCE` de hoje, então ninguém sente diferença. O servidor valida como as outras opções.
 - `CameraController` lê o atributo `Setting_camera_zoom` do Player e usa como distância-alvo, mudando quando o atributo muda.
 - Celular: a conexão do `TouchPinch` sai. **Decisão do implementador:** ela sai para todo aparelho de toque, tablets inclusive. Lá também os dois polegares ficam nos analógicos e viram "pinça" sem querer, e o zoom continua disponível pelas Configurações.
 - PC: a roda continua ajustando dentro de 28 a 40, a partir do valor da opção. Mexer na opção leva o zoom de volta ao valor dela. A roda não salva nada.
@@ -106,3 +106,12 @@ No `short()`:
 - Testes do Lune passam, incluindo os novos para os layouts compactos (menu cabe em 330, loja paginada, settings em 2 colunas, livro) e para os de PC sem mudança.
 - Capturas no emulador 749×330 de cada tela: nada cortado, nada rolando e nada sobreposto. O galho encosta no canto.
 - Captura no PC (1280×720) das mesmas telas, igual ao antes.
+
+## Ajustes depois da conferência do Elizeu (17/11)
+
+- **Kits** (não estava no pedido original): no celular o painel sobe até o topo, como o ranking, e os kits ficam em duas colunas de cartões mais baixos. Os 4 cabem sem rolar.
+- **Golden Ember:** os 5 numa fileira espremiam as moedas. Voltaram as duas fileiras do PC. A de cima ocupa a página e a de baixo aparece um pouco, mostrando que dá para rolar ("pode rolar, mas tem que mostrar que rola"). A barra de rolagem só aparece quando há o que rolar.
+- **Pacotes, Gamepasses e Giros:** não podem rolar. A página não tem mais o espaço extra embaixo, e os lados do giro descontam a folga de cima.
+- **"Você ganhou"** cabe na tela, com o quadradinho encolhendo. **"Comprado!"** com a loja aberta vira um toast embaixo.
+- **Livro:** Pegar e Fixar embaixo da grade. Na ficha eles cortavam o texto.
+- Com ranking ou kits no topo, o cartão do nível também some, porque é mais largo que a coluna e ficava cortado.

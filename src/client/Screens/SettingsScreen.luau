@@ -40,8 +40,8 @@ local R = Theme.rustic
 type SettingDef = Defs.SettingDef
 
 local PANEL_MAX = Vector2.new(560, 600)
-local HEADER_HEIGHT = 30
-local ROW_HEIGHT = 50
+local HEADER_HEIGHT = SettingsLayout.HEADER_PC
+local ROW_HEIGHT = SettingsLayout.ROW_PC
 local TITLE_HEIGHT = 58
 local CLOSE_HEIGHT = 50
 -- Celular deitado (17/11/2026): duas colunas sem rolar (SettingsLayout), o
@@ -424,19 +424,26 @@ local function reset()
 	close()
 end
 
--- Uma coluna do celular: os grupos de um lado do SettingsLayout.split.
-local function compactColumn(name: string, groups: { SettingsFormat.Group }, x: UDim): Frame
-	return create("Frame")({
+-- Uma coluna do celular: os grupos de um lado do SettingsLayout.split. Rola
+-- só como reserva (tela ainda menor ou "Tamanho da interface" grande).
+local function compactColumn(name: string, groups: { SettingsFormat.Group }, x: UDim): ScrollingFrame
+	return create("ScrollingFrame")({
 		Name = name,
 		Position = UDim2.new(x, UDim.new(0, 0)),
 		Size = UDim2.new(0.5, -COLUMN_GAP_SHORT / 2, 1, 0),
 		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		CanvasSize = UDim2.new(),
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
+		ScrollingDirection = Enum.ScrollingDirection.Y,
+		ScrollBarThickness = 4,
+		ScrollBarImageColor3 = R.woodLight,
 		create("UIListLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			Padding = UDim.new(0, SettingsLayout.GAP),
 		}),
 		rows(groups),
-	}) :: Frame
+	}) :: ScrollingFrame
 end
 
 -- Corpo do celular: título, Resetar e X numa linha; as duas colunas embaixo.
@@ -579,7 +586,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 					ScrollingDirection = Enum.ScrollingDirection.Y,
 					create("UIListLayout")({
 						SortOrder = Enum.SortOrder.LayoutOrder,
-						Padding = UDim.new(0, 6),
+						Padding = UDim.new(0, SettingsLayout.GAP_PC),
 					}),
 					create("UIPadding")({ PaddingRight = UDim.new(0, 8) }),
 					rows(),
