@@ -8,6 +8,7 @@
 -- Como o Kit, cada função recebe uma tabela de propriedades do Vide (valores
 -- fixos ou funções reativas) e devolve a instância criada.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
@@ -57,6 +58,10 @@ local OUTLINE = 2
 local LIGHT_EDGE = 0.1 -- fração da altura com a luz da borda de cima
 local SHADOW_EDGE = 0.82 -- daqui para baixo, a espessura escura
 local TEXT_MAX = 22
+-- Mouse por cima: o botão cresce um pouco (teste de 18/11/2026: o Fechar do
+-- check-in e as placas com arte não davam sinal nenhum; o AutoButtonColor só
+-- escurece o fundo, que fica transparente quando há arte).
+local HOVER_SCALE = 1.05
 local SUBTEXT_MAX = 14
 
 -- Madeira e couro usam a imagem da placa (com veio e pregos); o couro é a mesma
@@ -286,8 +291,29 @@ function Rustic.button(props: { [any]: any }): TextButton
 		}) :: UIStroke
 	end
 
+	-- Hover só com mouse: no toque o MouseLeave pode não vir e o botão ficaria
+	-- grande. O clique desfaz (o botão pode sumir sem o mouse sair dele, como o
+	-- Fechar de uma janela); mexer o mouse por cima liga de novo.
+	local hovered = vide.source(false)
+	local function hover(on: boolean)
+		return function()
+			if UserInputService.MouseEnabled then
+				hovered(on)
+			end
+		end
+	end
+
 	local button = create("TextButton")({
 		Text = "",
+		MouseEnter = hover(true),
+		MouseMoved = hover(true),
+		MouseLeave = hover(false),
+		create("UIScale")({
+			Name = "Hover",
+			Scale = function()
+				return if hovered() and not inert(read(kind)) then HOVER_SCALE else 1
+			end,
+		}),
 		AutoButtonColor = function()
 			return not inert(read(kind))
 		end,
@@ -362,7 +388,25 @@ function Rustic.button(props: { [any]: any }): TextButton
 			textStroke(),
 		}),
 	}) :: TextButton
-	return vide.apply(button)(props) :: TextButton
+	vide.apply(button)(props)
+	button.Activated:Connect(function()
+		hovered(false)
+	end)
+	-- Quem já põe um UIScale no botão (ex. animação de entrada) fica sem o
+	-- hover: dois UIScale no mesmo objeto não somam.
+	local scales = 0
+	for _, child in button:GetChildren() do
+		if child:IsA("UIScale") then
+			scales += 1
+		end
+	end
+	if scales > 1 then
+		local mine = button:FindFirstChild("Hover")
+		if mine then
+			mine:Destroy()
+		end
+	end
+	return button
 end
 
 -- Barra de progresso (XP): trilho escuro com contorno carvão, preenchimento

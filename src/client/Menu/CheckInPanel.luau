@@ -59,12 +59,22 @@ local DAY7_GLOW = Color3.fromHex("#FFD45A") -- efeitos do dia 7: dourado
 local WINDOW_SLICE_SHARE = 0.5 -- borda da janela e dos cartões mais fina que a proporcional
 local CARD_SLICE_SHARE = 0.6
 -- Recuo do conteúdo no cartão (fração do lado): o texto não encosta na borda
--- desenhada da arte (~34 px de 240 na arte 12).
+-- desenhada da arte (~34 px de 240 na arte 12). Em cima é maior: com 0,07 o
+-- contorno do "DIA 3" encostava na moldura (teste de 18/11/2026).
 local CARD_INSET_X = 0.09
-local CARD_INSET_Y = 0.07
+local CARD_INSET_TOP = 0.1
+local CARD_INSET_BOTTOM = 0.07
+-- Faixas do conteúdo (fração da altura útil do cartão): título do dia, ícone,
+-- quantidade, nome do prêmio e o rodapé do estado (RESGATAR, "Volte amanhã"
+-- ou o selo de resgatado). O rodapé tem lugar próprio: o selo não cobre mais
+-- o ícone do prêmio.
+type Bands = { day: number, icon: number, amount: number, label: number, footer: number }
+local SMALL_BANDS: Bands = { day = 0.17, icon = 0.3, amount = 0.15, label = 0.13, footer = 0.23 }
+local BIG_BANDS: Bands = { day = 0.13, icon = 0.42, amount = 0.13, label = 0.1, footer = 0.18 }
 -- Menor letra no PC (no celular baixo, ScreenMetrics.short, vale 10).
 local DAY_TITLE_MIN = 18
 local AMOUNT_MIN = 16
+local LABEL_MIN = 12
 local FACE: { [CardState]: Color3 } = {
 	future = Color3.fromHex("#3A2B20"),
 	locked = Color3.fromHex("#241A13"),
@@ -186,6 +196,12 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 		local s = state()
 		return if s == "future" or s == "locked" then 0.2 else 0
 	end
+	-- Posição vertical de cada faixa (fração da altura útil).
+	local bands = if big then BIG_BANDS else SMALL_BANDS
+	local iconY = bands.day + 0.02
+	local amountY = iconY + bands.icon
+	local labelY = amountY + bands.amount
+	local footerY = 1 - bands.footer
 	local layers: Instance? = nil
 	if big and MonetizationImages.hasLayers(MonetizationImages.DAY7_LAYERS) then
 		layers = CardFx.layers({
@@ -232,7 +248,8 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			ZIndex = 1,
 		}),
 		layers,
-		-- Conteúdo dentro da borda da arte: título e selo do prêmio.
+		-- Conteúdo dentro da borda da arte, de cima para baixo: dia, ícone,
+		-- quantidade, nome do prêmio e o rodapé do estado.
 		create("Frame")({
 			Name = "Content",
 			Size = UDim2.fromScale(1, 1),
@@ -241,25 +258,24 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			create("UIPadding")({
 				PaddingLeft = UDim.new(CARD_INSET_X, 0),
 				PaddingRight = UDim.new(CARD_INSET_X, 0),
-				PaddingTop = UDim.new(CARD_INSET_Y, 0),
-				PaddingBottom = UDim.new(CARD_INSET_Y, 0),
+				PaddingTop = UDim.new(CARD_INSET_TOP, 0),
+				PaddingBottom = UDim.new(CARD_INSET_BOTTOM, 0),
 			}),
 			ShopParts.outlined({
 				Name = "DayLabel",
-				Size = UDim2.fromScale(1, 0.18),
+				Size = UDim2.fromScale(1, bands.day),
 				FontFace = Theme.font.title,
 				Text = Strings.format("checkin.day", { day = day }),
 				maxSize = if big then 30 else 22,
 				minSize = minSize(DAY_TITLE_MIN),
 				ZIndex = 2,
 			}),
-			-- Selo: o ícone do prêmio e a quantidade embaixo.
 			create("ImageLabel")({
 				Name = "RewardIcon",
 				Visible = hasIcon,
 				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.fromScale(0.5, 0.2),
-				Size = UDim2.fromScale(1, if big then 0.4 else 0.36),
+				Position = UDim2.fromScale(0.5, iconY),
+				Size = UDim2.fromScale(1, bands.icon),
 				BackgroundTransparency = 1,
 				Image = icon,
 				ImageTransparency = dimmed,
@@ -269,8 +285,8 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			ShopParts.outlined({
 				Name = "Amount",
 				Visible = hasIcon,
-				Position = UDim2.fromScale(0, if big then 0.6 else 0.56),
-				Size = UDim2.fromScale(1, if big then 0.16 else 0.17),
+				Position = UDim2.fromScale(0, amountY),
+				Size = UDim2.fromScale(1, bands.amount),
 				FontFace = Theme.font.title,
 				Text = badge.amount,
 				TextTransparency = dimmed,
@@ -278,12 +294,25 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 				minSize = minSize(AMOUNT_MIN),
 				ZIndex = 2,
 			}),
+			-- O que é o prêmio ("Golden Ember", "Giros especiais", "Kit Explorador").
+			ShopParts.outlined({
+				Name = "RewardName",
+				Visible = hasIcon,
+				Position = UDim2.fromScale(0, labelY),
+				Size = UDim2.fromScale(1, bands.label),
+				FontFace = Theme.font.title,
+				Text = badge.label,
+				TextTransparency = dimmed,
+				maxSize = if big then 24 else 16,
+				minSize = minSize(LABEL_MIN),
+				ZIndex = 2,
+			}),
 			-- Prêmio sem ícone: o texto inteiro.
 			ShopParts.outlined({
 				Name = "Reward",
 				Visible = not hasIcon,
-				Position = UDim2.fromScale(0, 0.22),
-				Size = UDim2.fromScale(1, 0.48),
+				Position = UDim2.fromScale(0, iconY),
+				Size = UDim2.fromScale(1, footerY - iconY - 0.02),
 				FontFace = Theme.font.title,
 				TextWrapped = true,
 				TextTransparency = dimmed,
@@ -291,69 +320,68 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 				maxSize = if big then 26 else 18,
 				ZIndex = 2,
 			}),
-		}),
-		Rustic.button({
-			Name = "Claim",
-			Visible = function()
-				return state() == "today"
-			end,
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 1 - CARD_INSET_Y),
-			Size = UDim2.fromScale(1 - 2 * CARD_INSET_X, 0.22),
-			kind = function()
-				return if pending() then "disabled" else "ember"
-			end,
-			text = Strings.get("checkin.claim"),
-			maxSize = 18,
-			ZIndex = 3,
-			Activated = claim,
-		}),
-		Rustic.label({
-			Name = "Locked",
-			Visible = function()
-				return state() == "locked"
-			end,
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 1 - CARD_INSET_Y),
-			Size = UDim2.fromScale(1 - 2 * CARD_INSET_X, 0.16),
-			TextColor3 = R.emberLight,
-			Text = Strings.get("checkin.locked"),
-			maxSize = 16,
-			ZIndex = 3,
-		}),
-		-- Carimbo "resgatado" por cima do cartão: a arte, ou o texto girado.
-		create("ImageLabel")({
-			Name = "StampArt",
-			Visible = function()
-				return state() == "claimed" and MonetizationImages.has(MonetizationImages.CLAIMED_STAMP)
-			end,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.62),
-			Size = UDim2.fromScale(0.8, 0.42),
-			BackgroundTransparency = 1,
-			Image = MonetizationImages.CLAIMED_STAMP,
-			ScaleType = Enum.ScaleType.Fit,
-			ZIndex = 4,
-		}),
-		Rustic.label({
-			Name = "Stamp",
-			Visible = function()
-				return state() == "claimed" and not MonetizationImages.has(MonetizationImages.CLAIMED_STAMP)
-			end,
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.74),
-			Size = UDim2.fromScale(0.84, 0.24),
-			Rotation = -10,
-			FontFace = Theme.font.title,
-			TextColor3 = R.emberLight,
-			Text = string.upper(Strings.get("checkin.claimed")),
-			maxSize = 22,
-			ZIndex = 4,
+			-- Rodapé: um por estado (futuro fica vazio). Antes o selo de
+			-- resgatado ficava por cima do ícone do prêmio (teste de 18/11/2026).
+			Rustic.button({
+				Name = "Claim",
+				Visible = function()
+					return state() == "today"
+				end,
+				Position = UDim2.fromScale(0, footerY),
+				Size = UDim2.fromScale(1, bands.footer),
+				kind = function()
+					return if pending() then "disabled" else "ember"
+				end,
+				text = Strings.get("checkin.claim"),
+				maxSize = 18,
+				ZIndex = 3,
+				Activated = claim,
+			}),
+			-- "Volte amanhã" na letra de título com contorno, como o resto do cartão.
+			ShopParts.outlined({
+				Name = "Locked",
+				Visible = function()
+					return state() == "locked"
+				end,
+				Position = UDim2.fromScale(0, footerY),
+				Size = UDim2.fromScale(1, bands.footer),
+				FontFace = Theme.font.title,
+				Text = Strings.get("checkin.locked"),
+				maxSize = if big then 22 else 16,
+				minSize = minSize(LABEL_MIN),
+				ZIndex = 3,
+			}),
+			-- Resgatado: o selo (arte 14) pequeno no rodapé, ou o texto.
+			create("ImageLabel")({
+				Name = "StampArt",
+				Visible = function()
+					return state() == "claimed" and MonetizationImages.has(MonetizationImages.CLAIMED_STAMP)
+				end,
+				Position = UDim2.fromScale(0, footerY),
+				Size = UDim2.fromScale(1, bands.footer),
+				BackgroundTransparency = 1,
+				Image = MonetizationImages.CLAIMED_STAMP,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 3,
+			}),
+			ShopParts.outlined({
+				Name = "Stamp",
+				Visible = function()
+					return state() == "claimed" and not MonetizationImages.has(MonetizationImages.CLAIMED_STAMP)
+				end,
+				Position = UDim2.fromScale(0, footerY),
+				Size = UDim2.fromScale(1, bands.footer),
+				FontFace = Theme.font.title,
+				Text = Strings.get("checkin.claimed"),
+				maxSize = if big then 22 else 16,
+				minSize = minSize(LABEL_MIN),
+				ZIndex = 3,
+			}),
 		}),
 	}) :: Frame
 end
 
--- A janela: fundo escurecido (tocar fora fecha), placa de título, 6 cartões
+-- A janela: fundo escurecido (segura os cliques; fecha só no Fechar), placa de título, 6 cartões
 -- em grade 3x2 à esquerda, o dia 7 maior à direita, aviso do prêmio e Fechar.
 function CheckInPanel.build(): Frame
 	local currentDay, ready = readState()
@@ -509,16 +537,15 @@ function CheckInPanel.build(): Frame
 			BorderSizePixel = 0,
 			ZIndex = 0,
 		}),
-		-- Tocar fora da janela fecha.
+		-- Segura os cliques por trás da janela (o menu não reage), mas não
+		-- fecha: fechar é só no Fechar. Antes tocar fora fechava, e o clique
+		-- dentro da janela também chegava aqui (teste de 18/11/2026).
 		create("TextButton")({
 			Name = "Outside",
 			Size = UDim2.fromScale(1, 1),
 			BackgroundTransparency = 1,
 			Text = "",
 			AutoButtonColor = false,
-			Activated = function()
-				open(false)
-			end,
 		}),
 		window,
 	}) :: Frame

@@ -1223,4 +1223,10 @@ return table.freeze({
 	["checkin.amount.count"] = "×{count}",
 	["checkin.amount.life"] = "1 vida",
 	["checkin.amount.lives"] = "{count} vidas",
+	["checkin.label.ember"] = "Golden Ember",
+	["checkin.label.spin"] = "Giro",
+	["checkin.label.spins"] = "Giros",
+	["checkin.label.spinPaid"] = "Giro especial",
+	["checkin.label.spinsPaid"] = "Giros especiais",
+	["checkin.label.kit"] = "Kit {name}",
 })
