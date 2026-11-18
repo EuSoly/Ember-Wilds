@@ -15,6 +15,7 @@ local UiImages = require(Shared:WaitForChild("UiImages"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 
 local create = vide.create
 
@@ -107,15 +108,18 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () ->
 			end,
 			shrink = tagged,
 		}),
-		ShopParts.priceButton({
-			robux = pack.robux,
-			onClick = function()
-				buy(pack)
-			end,
-			anchor = Vector2.new(0.5, 1),
-			position = UDim2.new(0.5, 0, 1, -10),
-			size = UDim2.new(0.86, 0, 0, 46),
-		}),
+		GiftPanel.attach(
+			`pack_{pack.amount}`,
+			ShopParts.priceButton({
+				robux = pack.robux,
+				onClick = function()
+					buy(pack)
+				end,
+				anchor = Vector2.new(0.5, 1),
+				position = UDim2.new(0.5, 0, 1, -10),
+				size = UDim2.new(0.86, 0, 0, 46),
+			})
+		),
 	})
 end
 
@@ -143,15 +147,18 @@ local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 18,
 		}),
-		ShopParts.priceButton({
-			robux = pack.robux,
-			onClick = function()
-				buy(pack)
-			end,
-			anchor = Vector2.new(0, 1),
-			position = UDim2.new(0.05, 0, 1, -12),
-			size = UDim2.new(0.4, 0, 0, 46),
-		}),
+		GiftPanel.attach(
+			`pack_{pack.amount}`,
+			ShopParts.priceButton({
+				robux = pack.robux,
+				onClick = function()
+					buy(pack)
+				end,
+				anchor = Vector2.new(0, 1),
+				position = UDim2.new(0.05, 0, 1, -12),
+				size = UDim2.new(0.4, 0, 0, 46),
+			})
+		),
 		coin(index, { AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.fromScale(0.94, 0.52) }),
 	})
 end

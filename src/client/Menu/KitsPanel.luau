@@ -27,6 +27,7 @@ local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local KitShop = require(script.Parent:WaitForChild("KitShop"))
+local GiftPanel = require(script.Parent:WaitForChild("Shop"):WaitForChild("GiftPanel"))
 local MenuState = require(script.Parent:WaitForChild("MenuState"))
 
 local create = vide.create
@@ -112,34 +113,40 @@ local function buyButtons(kit: Defs.KitDef, points: () -> number, visible: () ->
 				end
 			end,
 		}),
-		third(2, {
-			Name = "RobuxOnce",
-			kind = "leather",
-			text = Strings.format("kit.robux", { price = if robux then robux.once else 0 }),
-			subtext = Strings.get("kit.once"),
-			Activated = function()
-				KitShop.buyOnce(kit.id)
-			end,
-		}),
+		GiftPanel.attach(
+			`kitonce_{kit.id}`,
+			third(2, {
+				Name = "RobuxOnce",
+				kind = "leather",
+				text = Strings.format("kit.robux", { price = if robux then robux.once else 0 }),
+				subtext = Strings.get("kit.once"),
+				Activated = function()
+					KitShop.buyOnce(kit.id)
+				end,
+			})
+		),
 		-- Já tem o kit para sempre (o "+" abriu as compras para mais saldo): "Comprado".
-		third(3, {
-			Name = "RobuxForever",
-			kind = function()
-				return if ShopData.kitOwned(kit.id) then "disabled" else "wood"
-			end,
-			text = function()
-				if ShopData.kitOwned(kit.id) then
-					return Strings.get("shop.bundle.bought")
-				end
-				return Strings.format("kit.robux", { price = if robux then robux.forever else 0 })
-			end,
-			subtext = Strings.get("kit.forever"),
-			Activated = function()
-				if not ShopData.kitOwned(kit.id) then
-					KitShop.buyForever(kit.id)
-				end
-			end,
-		}),
+		GiftPanel.attach(
+			`kit_{kit.id}`,
+			third(3, {
+				Name = "RobuxForever",
+				kind = function()
+					return if ShopData.kitOwned(kit.id) then "disabled" else "wood"
+				end,
+				text = function()
+					if ShopData.kitOwned(kit.id) then
+						return Strings.get("shop.bundle.bought")
+					end
+					return Strings.format("kit.robux", { price = if robux then robux.forever else 0 })
+				end,
+				subtext = Strings.get("kit.forever"),
+				Activated = function()
+					if not ShopData.kitOwned(kit.id) then
+						KitShop.buyForever(kit.id)
+					end
+				end,
+			})
+		),
 	}) :: Frame
 end
 

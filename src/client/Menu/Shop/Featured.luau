@@ -19,6 +19,7 @@ local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local RewardView = require(script.Parent:WaitForChild("RewardView"))
 
@@ -147,19 +148,22 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 			BackgroundTransparency = 1,
 			list,
 		}),
-		ShopParts.priceButton({
-			robux = product.price.amount,
-			owned = function()
-				return ShopData.purchased(product.id)
-			end,
-			onClick = function()
-				Purchase.buy(product.id)
-			end,
-			anchor = Vector2.new(1, 1),
-			position = UDim2.new(1, RIGHT_EDGE, 0.9, 0),
-			size = UDim2.fromScale(0.22, 0.2),
-			textSize = 28,
-		}),
+		GiftPanel.attach(
+			product.id,
+			ShopParts.priceButton({
+				robux = product.price.amount,
+				owned = function()
+					return ShopData.purchased(product.id)
+				end,
+				onClick = function()
+					Purchase.buy(product.id)
+				end,
+				anchor = Vector2.new(1, 1),
+				position = UDim2.new(1, RIGHT_EDGE, 0.9, 0),
+				size = UDim2.fromScale(0.22, 0.2),
+				textSize = 28,
+			})
+		),
 	})
 end
 

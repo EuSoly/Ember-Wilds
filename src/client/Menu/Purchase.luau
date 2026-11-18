@@ -37,4 +37,14 @@ Net.PurchaseResult.On(function(result: { ProductId: string, Ok: boolean, Reason:
 	MenuState.notify(Strings.get(if Strings.has(key) then key else "shop.result.error"))
 end)
 
+-- Presente (GiftService): "Presente enviado para Fulano!" ou o motivo da recusa.
+Net.GiftResult.On(function(result: { ProductId: string, Ok: boolean, Reason: string?, To: string? })
+	if result.Ok then
+		MenuState.notify(Strings.format("gift.result.sent", { name = result.To or "" }))
+		return
+	end
+	local key = `gift.result.{result.Reason or "error"}`
+	MenuState.notify(Strings.get(if Strings.has(key) then key else "gift.result.error"))
+end)
+
 return Purchase

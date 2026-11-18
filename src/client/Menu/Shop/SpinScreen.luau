@@ -28,6 +28,7 @@ local Net = require(Client:WaitForChild("Net"))
 local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
 local Reel = require(script.Parent:WaitForChild("Reel"))
@@ -195,26 +196,29 @@ local function side(
 					Text = Strings.format("shop.spin.buy", { qty = offer.qty }),
 					maxSize = 18,
 				}) :: Instance,
-				ShopParts.priceButton({
-					robux = if paid then offer.price else nil,
-					ember = if paid then nil else offer.price,
-					missing = if paid
-						then nil
-						else function()
-							return math.max(offer.price - currency(), 0)
+				GiftPanel.attach(
+					`spins_{kind}_{offer.qty}`,
+					ShopParts.priceButton({
+						robux = if paid then offer.price else nil,
+						ember = if paid then nil else offer.price,
+						missing = if paid
+							then nil
+							else function()
+								return math.max(offer.price - currency(), 0)
+							end,
+						blocked = ShopData.paidRandomBlocked,
+						onClick = function()
+							if ShopData.paidRandomBlocked() then
+								MenuState.notify(Strings.get("shop.result.restricted"))
+								return
+							end
+							Purchase.buy(`spins_{kind}_{offer.qty}`)
 						end,
-					blocked = ShopData.paidRandomBlocked,
-					onClick = function()
-						if ShopData.paidRandomBlocked() then
-							MenuState.notify(Strings.get("shop.result.restricted"))
-							return
-						end
-						Purchase.buy(`spins_{kind}_{offer.qty}`)
-					end,
-					position = UDim2.fromScale(0, 0.26),
-					size = UDim2.fromScale(1, 0.74),
-					textSize = 20,
-				}),
+						position = UDim2.fromScale(0, 0.26),
+						size = UDim2.fromScale(1, 0.74),
+						textSize = 20,
+					})
+				),
 			})
 		)
 	end

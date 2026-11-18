@@ -21,6 +21,7 @@ local ShopData = require(Client:WaitForChild("ShopData"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 local BoostCard = require(script.Parent:WaitForChild("BoostCard"))
 local PremiumCard = require(script.Parent:WaitForChild("PremiumCard"))
 local VipCard = require(script.Parent:WaitForChild("VipCard"))
@@ -186,14 +187,17 @@ local function card(pass: Pass, order: number, compact: () -> boolean): Frame
 	buyProps.ZIndex = 3
 	table.insert(
 		buyProps,
-		ShopParts.priceButton({
-			robux = pass.product.price.amount,
-			owned = owned,
-			onClick = function()
-				Purchase.buy(pass.product.id)
-			end,
-			size = UDim2.fromScale(1, 1),
-		})
+		GiftPanel.attach(
+			pass.product.id,
+			ShopParts.priceButton({
+				robux = pass.product.price.amount,
+				owned = owned,
+				onClick = function()
+					Purchase.buy(pass.product.id)
+				end,
+				size = UDim2.fromScale(1, 1),
+			})
+		)
 	)
 
 	local cardFrame = ShopParts.vividCard(GOLD, {

@@ -15,6 +15,7 @@ local ShopData = require(Client:WaitForChild("ShopData"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local Banner = require(script.Parent:WaitForChild("Banner"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 
 local R = Theme.rustic
 
@@ -65,14 +66,17 @@ function BoostCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 				wrapped = true,
 			},
 		},
-		button = ShopParts.priceButton({
-			robux = product.price.amount,
-			onClick = function()
-				Purchase.buy(product.id)
-			end,
-			size = UDim2.fromScale(1, 1),
-			textSize = 20,
-		}),
+		button = GiftPanel.attach(
+			product.id,
+			ShopParts.priceButton({
+				robux = product.price.amount,
+				onClick = function()
+					Purchase.buy(product.id)
+				end,
+				size = UDim2.fromScale(1, 1),
+				textSize = 20,
+			})
+		),
 		-- Cartão genérico da loja (camadas 41) tingido de verde-água.
 		layers = {
 			set = MonetizationImages.SHOP_CARD_LAYERS,
