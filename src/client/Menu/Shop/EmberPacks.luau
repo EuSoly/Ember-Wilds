@@ -66,6 +66,7 @@ end
 local function smallCard(pack: ShopConfig.EmberPack, index: number): Frame
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",
+		fxCenter = UDim2.fromScale(0.5, 0.5), -- raios atrás da moeda
 		Name = "Pack" .. index,
 		LayoutOrder = index,
 		ribbon(pack),
@@ -93,6 +94,9 @@ end
 local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
 	return ShopParts.vividCard(GOLD, {
 		art = "orange",
+		-- Raios atrás da pilha de moedas, que fica à direita (presa em 0,94 e
+		-- com ~0,8 da altura do cartão de largura: o meio cai perto de 0,82).
+		fxCenter = UDim2.fromScale(0.82, 0.52),
 		Name = "Pack" .. index,
 		LayoutOrder = index,
 		ribbon(pack),

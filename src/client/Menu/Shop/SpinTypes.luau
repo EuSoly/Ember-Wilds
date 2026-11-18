@@ -215,6 +215,13 @@ local function card(
 	table.insert(wheels, disc)
 	return ShopParts.vividCard(Color3.fromHex(spinType.theme), {
 		art = CARD_ART[spinType.id],
+		-- Raios atrás da roleta: o meio dela fica WHEEL_BOTTOM + meia altura
+		-- acima da base do cartão (mesma conta do WheelBox).
+		fxCenter = function(): UDim2
+			local height = cardHeight()
+			local wheelSize = wheelShare(height) * height
+			return UDim2.new(0.5, 0, 1, -(WHEEL_BOTTOM + wheelSize / 2))
+		end,
 		Name = spinType.id,
 		LayoutOrder = order,
 		ShopParts.outlined({
