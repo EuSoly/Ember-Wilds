@@ -116,18 +116,12 @@ return {
 			assert(l.paged, `{w}x{h}: devia paginar`)
 			assert(l.contentTop + ShopLayout.SECTION_TITLE + l.pageHeight <= h - 8, `{w}x{h}: página passa da tela`)
 			assert(l.bannerHeight == l.pageHeight, `{w}x{h}: banner devia ocupar a página`)
-			-- 5 gamepasses hoje (4 kits para sempre + VIP).
-			local cols, cardHeight = ShopLayout.passGrid(l, 5)
-			local rows = math.ceil(5 / cols)
-			assert(rows * cardHeight + (rows - 1) * GAP <= l.pageHeight, `{w}x{h}: gamepasses passam da página`)
-			assert(cardHeight >= 120, `{w}x{h}: cartão de gamepass baixo demais ({cardHeight})`)
+			-- Cada fileira de gamepasses cabe na página com a seguinte aparecendo.
+			local _, cardHeight = ShopLayout.passGrid(l, 6)
+			assert(cardHeight + GAP + ShopLayout.PASS_PEEK <= l.pageHeight, `{w}x{h}: fileira passa da página`)
+			assert(cardHeight >= 100, `{w}x{h}: cartão de gamepass baixo demais ({cardHeight})`)
 			assert(l.listBottomPad == 0, `{w}x{h}: página sem espaço extra embaixo`)
 		end
-	end,
-
-	["phone passes: one row of 5 at 749"] = function()
-		local cols = ShopLayout.passGrid(ShopLayout.compute(749, 330), 5)
-		assert(cols == 5, `5 colunas, veio {cols}`)
 	end,
 
 	["pc shop unchanged"] = function()
@@ -210,37 +204,6 @@ return {
 					end
 				end
 			end
-		end
-	end,
-
-	["phone banners keep the low strip"] = function()
-		for _, size in { { 749, 330 }, { 599, 264 }, { 667, 375 } } do
-			local l = ShopLayout.compute(size[1], size[2])
-			local height = ShopLayout.topRowHeight(l)
-			for _, width in { ShopLayout.topRowWidths(l.contentWidth - 10, true) } do
-				local parts = ShopLayout.bannerParts(width, height, true)
-				assert(parts.icon == nil and not parts.stacked, "celular: faixa sem ícone")
-				assert(parts.text.x + parts.text.w <= parts.button.x, "texto antes do botão")
-				assert(parts.button.y + parts.button.h <= height, "botão dentro da faixa")
-			end
-		end
-	end,
-
-	["phone passes tab fits the page without scrolling"] = function()
-		-- Fileira de cima + espaço + grade (VIP, boost, Premium + 4 kits + 2× + livro).
-		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 }, { 599, 264 } } do
-			local w, h = size[1], size[2]
-			local l = ShopLayout.compute(w, h)
-			assert(l.paged, "celular pagina")
-			local top = ShopLayout.topRowHeight(l)
-			assert(top == ShopLayout.TOP_ROW_HEIGHT_COMPACT, "fileira baixa no celular")
-			local cols, cardHeight = ShopLayout.passGrid(l, 6, top)
-			local rows = math.ceil(6 / cols)
-			assert(rows == 1, `{w}x{h}: gamepasses numa fileira só ({rows})`)
-			local used = top + GAP + rows * cardHeight + (rows - 1) * GAP
-			assert(used <= l.pageHeight, `{w}x{h}: aba passa da página ({used} > {l.pageHeight})`)
-			assert(cardHeight >= 80, `{w}x{h}: cartão baixo demais ({cardHeight})`)
-			assert((l.contentWidth - (cols - 1) * GAP) / cols >= ShopLayout.PASS_MIN_WIDTH, `{w}x{h}: cartão estreito`)
 		end
 	end,
 
@@ -358,6 +321,29 @@ return {
 			local middle = ShopLayout.packArt(2, inner)
 			local big = ShopLayout.packArt(3, inner)
 			assert(small < middle and middle < big, `{height}: cada pacote um pouco maior`)
+		end
+	end,
+
+	["phone passes: banners fill the page and the cards peek below"] = function()
+		-- Teste do Elizeu de 18/11/2026: a faixa baixa e os 6 cartões numa
+		-- fileira ficavam espremidos. Agora a página rola, mostrando um pedaço.
+		for _, size in { { 749, 330 }, { 844, 390 }, { 667, 375 }, { 599, 264 } } do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local top = ShopLayout.topRowHeight(l)
+			local peek = l.pageHeight - (top + GAP)
+			assert(peek >= 12 and peek <= ShopLayout.PASS_PEEK + 1, `{w}x{h}: pedaço dos cartões ({peek})`)
+			local cols, cardHeight = ShopLayout.passGrid(l, 6, top)
+			assert(cols == ShopLayout.PASS_PHONE_COLUMNS, `{w}x{h}: {cols} colunas`)
+			assert(cardHeight >= 100, `{w}x{h}: cartão baixo ({cardHeight})`)
+			local passWidth = cardWidth(l, cols)
+			assert(passWidth >= 150, `{w}x{h}: cartão estreito ({passWidth})`)
+			-- A faixa do topo no tamanho de cartão (ícone, texto e botão), não a faixa baixa.
+			for _, width in { ShopLayout.topRowWidths(l.contentWidth - 10, true) } do
+				local parts = ShopLayout.bannerParts(width, top, false)
+				assert(parts.icon ~= nil, `{w}x{h}: faixa com ícone`)
+				assert(parts.button.h >= 36, `{w}x{h}: botão baixo`)
+			end
 		end
 	end,
 }

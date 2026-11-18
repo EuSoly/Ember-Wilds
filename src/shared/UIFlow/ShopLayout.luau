@@ -42,6 +42,10 @@ ShopLayout.PASS_MIN_WIDTH = 88 -- largura mínima de um cartão de gamepass na f
 -- para 2 fileiras e a aba rolava. Agora a fileira passa das 5 colunas se cada
 -- cartão ainda tiver esta largura.
 ShopLayout.PASS_MIN_WIDTH_PC = 150
+-- Celular (18/11/2026): cartões de gamepass em 3 colunas, uma fileira por
+-- página, com PASS_PEEK px da próxima aparecendo embaixo (a página rola).
+ShopLayout.PASS_PHONE_COLUMNS = 3
+ShopLayout.PASS_PEEK = 24
 -- Fileira de cima da aba de gamepasses (VIP, boost de XP e Premium): cartões
 -- deitados. No celular ela é uma faixa baixa (título, linha curta e botão) e
 -- a grade de baixo fica numa fileira só com o que sobra da página: nada rola.
@@ -210,17 +214,21 @@ function ShopLayout.passGrid(l: Layout, count: number, reserved: number?): (numb
 		local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH_PC + gap))
 		return math.max(l.passColumns, math.min(count, fit)), ShopLayout.PASS_CARD_HEIGHT
 	end
-	local fit = math.floor((l.contentWidth + gap) / (ShopLayout.PASS_MIN_WIDTH + gap))
-	local columns = math.max(math.min(math.max(count, 1), fit), 1)
-	local rows = math.ceil(math.max(count, 1) / columns)
-	local room = l.pageHeight - (if reserved then reserved + gap else 0)
-	local cardHeight = math.min(ShopLayout.PASS_CARD_HEIGHT, (room - (rows - 1) * gap) / rows)
+	-- Celular: PASS_PHONE_COLUMNS colunas, cada fileira do tamanho da página
+	-- menos o pedaço da seguinte (a página rola; teste de 18/11/2026).
+	local _ = reserved
+	local columns = math.max(math.min(math.max(count, 1), ShopLayout.PASS_PHONE_COLUMNS), 1)
+	local cardHeight = math.min(ShopLayout.PASS_CARD_HEIGHT, l.pageHeight - gap - ShopLayout.PASS_PEEK)
 	return columns, cardHeight
 end
 
--- Altura da fileira de cima (VIP, boost, Premium).
+-- Altura da fileira de cima (VIP, boost, Premium). No celular ela ocupa a
+-- página menos o pedaço dos cartões que aparece embaixo (mostra que rola).
 function ShopLayout.topRowHeight(l: Layout): number
-	return if l.paged then ShopLayout.TOP_ROW_HEIGHT_COMPACT else ShopLayout.TOP_ROW_HEIGHT
+	if l.paged then
+		return math.max(l.pageHeight - ShopLayout.GAP - ShopLayout.PASS_PEEK, ShopLayout.TOP_ROW_HEIGHT_COMPACT)
+	end
+	return ShopLayout.TOP_ROW_HEIGHT
 end
 
 -- Pesos de largura na fileira de cima: VIP vale 2, boost e Premium 1; sem o

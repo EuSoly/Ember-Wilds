@@ -87,16 +87,23 @@ end
 -- Roleta: com a arte, disco (gira) + moldura (+ ponteiro, se houver camada à
 -- parte; a moldura atual já traz o ponteiro); sem ela, o desenho
 -- feito por código com um pino de texto. Devolve a roleta e o que gira.
-local WHEEL_BOTTOM = 62 -- espaço do botão embaixo da roleta
+local WHEEL_BOTTOM = 54 -- espaço do botão (46 px) embaixo da roleta
 local SAMPLES_BOTTOM = 0.35 -- fim da faixa da skin de amostra (fração do cartão)
+-- Celular: sem a skin de amostra (ficava minúscula e ilegível), a roleta vai
+-- do título até o botão (teste do Elizeu de 18/11/2026: o cartão ficava
+-- grande e a arte pequena).
+local TITLE_BOTTOM = 0.2
 
--- Altura da roleta (fração do cartão): até 40%, mas no cartão baixo do celular
--- encolhe para não cobrir a skin de amostra.
-local function wheelShare(cardHeight: number): number
+-- Altura da roleta (fração do cartão): até 40% com a amostra em cima; no
+-- celular, sem ela, até 62%.
+local function wheelShare(cardHeight: number, compact: boolean): number
+	if compact then
+		return math.clamp(1 - TITLE_BOTTOM - WHEEL_BOTTOM / cardHeight, 0.2, 0.62)
+	end
 	return math.clamp(1 - SAMPLES_BOTTOM - WHEEL_BOTTOM / cardHeight, 0.2, 0.4)
 end
 
-local function roulette(cardHeight: () -> number): (Frame, GuiObject)
+local function roulette(cardHeight: () -> number, compact: () -> boolean): (Frame, GuiObject)
 	if ShopImages.has(ShopImages.WHEEL_DISC) then
 		local disc = layer("Disc", ShopImages.WHEEL_DISC, 3)
 		local pointer: Instance? = if ShopImages.has(ShopImages.WHEEL_POINTER)
@@ -110,7 +117,7 @@ local function roulette(cardHeight: () -> number): (Frame, GuiObject)
 			-- Cabe no menor lado: até 78% da largura e até 40% da altura do
 			-- cartão (em tela larga, só pela largura ela cobria o título).
 			Size = function()
-				return UDim2.fromScale(0.78, wheelShare(cardHeight()))
+				return UDim2.fromScale(if compact() then 0.9 else 0.78, wheelShare(cardHeight(), compact()))
 			end,
 			BackgroundTransparency = 1,
 			ZIndex = 3,
@@ -152,9 +159,12 @@ end
 -- Faixa abaixo do título: UMA skin em destaque do tipo, em 3D — sorteada entre
 -- as Míticas (ou as mais raras, se não houver Mítica) a cada vez que a loja
 -- abre. Parada (sem trabalho por quadro). Tipo sem skins ("Em breve") fica vazio.
-local function samples(spinType: MockStore.SpinType, open: () -> boolean): Frame
+local function samples(spinType: MockStore.SpinType, open: () -> boolean, compact: () -> boolean): Frame
 	local strip = create("Frame")({
 		Name = "Samples",
+		Visible = function()
+			return not compact()
+		end,
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.fromScale(0.5, 0.17),
 		Size = UDim2.fromScale(0.9, 0.17),
@@ -209,9 +219,10 @@ local function card(
 	order: number,
 	wheels: { GuiObject },
 	open: () -> boolean,
-	cardHeight: () -> number
+	cardHeight: () -> number,
+	compact: () -> boolean
 ): Frame
-	local wheelBox, disc = roulette(cardHeight)
+	local wheelBox, disc = roulette(cardHeight, compact)
 	table.insert(wheels, disc)
 	return ShopParts.vividCard(Color3.fromHex(spinType.theme), {
 		art = CARD_ART[spinType.id],
@@ -219,7 +230,7 @@ local function card(
 		-- acima da base do cartão (mesma conta do WheelBox).
 		fxCenter = function(): UDim2
 			local height = cardHeight()
-			local wheelSize = wheelShare(height) * height
+			local wheelSize = wheelShare(height, compact()) * height
 			return UDim2.new(0.5, 0, 1, -(WHEEL_BOTTOM + wheelSize / 2))
 		end,
 		Name = spinType.id,
@@ -233,7 +244,7 @@ local function card(
 			maxSize = 28,
 		}),
 		wheelBox,
-		samples(spinType, open),
+		samples(spinType, open, compact),
 		bottomButton(spinType),
 	})
 end
@@ -253,6 +264,8 @@ function SpinTypes.build(layout: () -> ShopLayout.Layout, open: () -> boolean): 
 			children,
 			card(spinType, i, wheels, open, function()
 				return layout().spinCardHeight
+			end, function()
+				return layout().paged
 			end)
 		)
 	end

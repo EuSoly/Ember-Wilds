@@ -52,6 +52,36 @@ function ScreenMetrics.short(): boolean
 	return size().Y < CosmeticsLayout.SHORT_HEIGHT
 end
 
+-- Janelas por cima do menu (check-in, Presentear, presente recebido). No
+-- celular baixo ficam entre a fileira de cima do menu (perfil e saldo, até
+-- SHORT_MODAL_TOP px) e a borda de baixo: antes cobriam o perfil e o Fechar
+-- encostava embaixo (teste de 18/11/2026). `titleHalf` = quanto a placa do
+-- título passa da janela para cima. No PC: o centro e a fração de sempre.
+ScreenMetrics.SHORT_MODAL_TOP = 54
+ScreenMetrics.SHORT_MODAL_BOTTOM = 8
+
+local function shortModal(titleHalf: number): (number, number)
+	local top = ScreenMetrics.SHORT_MODAL_TOP + titleHalf
+	local bottom = ScreenMetrics.guiHeight() - ScreenMetrics.SHORT_MODAL_BOTTOM
+	return top, bottom
+end
+
+function ScreenMetrics.modalPosition(titleHalf: number): UDim2
+	if ScreenMetrics.short() then
+		local top, bottom = shortModal(titleHalf)
+		return UDim2.new(0.5, 0, 0, (top + bottom) / 2)
+	end
+	return UDim2.new(0.5, 0, 0.5, titleHalf / 2)
+end
+
+function ScreenMetrics.modalSize(widthShare: number, titleHalf: number): UDim2
+	if ScreenMetrics.short() then
+		local top, bottom = shortModal(titleHalf)
+		return UDim2.new(widthShare, 0, 0, bottom - top)
+	end
+	return UDim2.new(widthShare, 0, ScreenMetrics.windowShare(), -titleHalf)
+end
+
 -- Altura da janela (escala da tela) para o padrão das janelas do menu.
 function ScreenMetrics.windowShare(): number
 	return if ScreenMetrics.short() then ScreenMetrics.SHORT_WINDOW_SHARE else ScreenMetrics.WINDOW_SHARE

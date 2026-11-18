@@ -54,7 +54,7 @@ function AssetProgress.build(): Frame
 		BackgroundColor3 = R.outline,
 		BackgroundTransparency = 0.35,
 		BorderSizePixel = 0,
-		ZIndex = 15,
+		ZIndex = 9, -- abaixo das janelas por cima do menu (check-in 11, Presentear 12)
 		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 		Rustic.label({
 			Size = UDim2.new(1, -20, 1, -8),

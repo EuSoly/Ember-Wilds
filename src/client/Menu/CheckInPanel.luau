@@ -324,8 +324,10 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			-- resgatado ficava por cima do ícone do prêmio (teste de 18/11/2026).
 			Rustic.button({
 				Name = "Claim",
+				-- No celular baixo o RESGATAR fica embaixo da janela, no meio
+				-- (o cartão estreito espremia o conteúdo; 18/11/2026).
 				Visible = function()
-					return state() == "today"
+					return state() == "today" and not ScreenMetrics.short()
 				end,
 				Position = UDim2.fromScale(0, footerY),
 				Size = UDim2.fromScale(1, bands.footer),
@@ -409,14 +411,22 @@ function CheckInPanel.build(): Frame
 		end
 	end)
 
+	-- PC: os dias 1–6 em 3x2 e o 7 à direita. Celular baixo: a janela é baixa
+	-- e as duas fileiras espremiam os cartões (teste de 18/11/2026); os 6 vão
+	-- numa fileira só, cada um alto e estreito como a arte, e o 7 ao lado.
+	local short = ScreenMetrics.short
 	local grid = create("Frame")({
 		Name = "Grid",
-		Size = UDim2.new(0.62, -6, 1, 0),
+		Size = function()
+			return if short() then UDim2.new(0.76, -6, 1, 0) else UDim2.new(0.62, -6, 1, 0)
+		end,
 		BackgroundTransparency = 1,
 		create("UIGridLayout")({
 			SortOrder = Enum.SortOrder.LayoutOrder,
 			CellPadding = UDim2.fromOffset(8, 8),
-			CellSize = UDim2.new(1 / 3, -6, 0.5, -4),
+			CellSize = function()
+				return if short() then UDim2.new(1 / 6, -7, 1, 0) else UDim2.new(1 / 3, -6, 0.5, -4)
+			end,
 		}),
 	}) :: Frame
 	for day = 1, DAYS - 1 do
@@ -425,14 +435,20 @@ function CheckInPanel.build(): Frame
 	local bigCard = dayCard(DAYS, currentDay, ready)
 	bigCard.AnchorPoint = Vector2.new(1, 0)
 	bigCard.Position = UDim2.fromScale(1, 0)
-	bigCard.Size = UDim2.new(0.38, -6, 1, 0)
+	vide.apply(bigCard)({
+		Size = function()
+			return if short() then UDim2.new(0.24, -6, 1, 0) else UDim2.new(0.38, -6, 1, 0)
+		end,
+	})
 
 	local window = create("Frame")({
 		Name = "Window",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4),
+		Position = function()
+			return ScreenMetrics.modalPosition(TITLE_HEIGHT / 2)
+		end,
 		Size = function()
-			return UDim2.new(0.94, 0, ScreenMetrics.windowShare(), -TITLE_HEIGHT / 2)
+			return ScreenMetrics.modalSize(0.94, TITLE_HEIGHT / 2)
 		end,
 		BackgroundColor3 = BODY,
 		BackgroundTransparency = if MonetizationImages.has(MonetizationImages.CHECKIN_WINDOW) then 1 else 0,
@@ -501,6 +517,23 @@ function CheckInPanel.build(): Frame
 			Text = gotText,
 			maxSize = 20,
 			ZIndex = 3,
+		}),
+		-- Celular baixo: o RESGATAR do dia, embaixo no meio (no PC fica no cartão).
+		Rustic.button({
+			Name = "ClaimBottom",
+			Visible = function()
+				return ScreenMetrics.short() and ready()
+			end,
+			AnchorPoint = Vector2.new(0.5, 1),
+			Position = UDim2.new(0.5, 0, 1, -12),
+			Size = UDim2.fromOffset(180, CLOSE_HEIGHT),
+			kind = function()
+				return if pending() then "disabled" else "ember"
+			end,
+			text = Strings.get("checkin.claim"),
+			maxSize = 20,
+			ZIndex = 3,
+			Activated = claim,
 		}),
 		Rustic.button({
 			Name = "Close",

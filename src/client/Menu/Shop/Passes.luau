@@ -235,8 +235,10 @@ end
 -- (as larguras são as de ShopLayout.topRowWidths, em fração da lista).
 local function topRow(layout: () -> ShopLayout.Layout): Frame
 	local gap = ShopLayout.GAP
+	-- No celular as faixas também são cartões inteiros (ícone, texto e botão):
+	-- ocupam a página e os cartões de baixo aparecem um pouco (18/11/2026).
 	local function compact(): boolean
-		return layout().paged
+		return false
 	end
 	-- Largura de cada cartão: a sua parte do que sobra depois dos espaços.
 	local function width(slot: number): () -> UDim2

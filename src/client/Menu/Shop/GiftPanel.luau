@@ -286,9 +286,11 @@ function GiftPanel.build(): Frame
 	local window = create("Frame")({
 		Name = "Window",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, TITLE_HEIGHT / 4),
+		Position = function()
+			return ScreenMetrics.modalPosition(TITLE_HEIGHT / 2)
+		end,
 		Size = function()
-			return UDim2.new(0.94, 0, ScreenMetrics.windowShare(), -TITLE_HEIGHT / 2)
+			return ScreenMetrics.modalSize(0.94, TITLE_HEIGHT / 2)
 		end,
 		BackgroundColor3 = BODY,
 		BackgroundTransparency = 1,

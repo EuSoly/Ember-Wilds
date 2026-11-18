@@ -23,6 +23,7 @@ local TutorialState = require(Client:WaitForChild("TutorialState"))
 local Notifications = require(Client:WaitForChild("UI"):WaitForChild("Notifications"))
 local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 local CheckInPanel = require(script.Parent:WaitForChild("CheckInPanel"))
 local GiftItem = require(script.Parent:WaitForChild("Shop"):WaitForChild("GiftItem"))
 local ShopParts = require(script.Parent:WaitForChild("Shop"):WaitForChild("ShopParts"))
@@ -155,8 +156,12 @@ function GiftPopup.build(): Frame
 	local panel = create("ImageLabel")({
 		Name = "Panel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.9, PANEL_SHARE),
+		Position = function()
+			return ScreenMetrics.modalPosition(0)
+		end,
+		Size = function()
+			return if ScreenMetrics.short() then ScreenMetrics.modalSize(0.9, 0) else UDim2.fromScale(0.9, PANEL_SHARE)
+		end,
 		BackgroundTransparency = 1,
 		Image = GiftImages.PANEL,
 		ScaleType = Enum.ScaleType.Slice,
