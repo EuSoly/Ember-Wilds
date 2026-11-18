@@ -478,6 +478,31 @@ event RequestOpenGift {
 	}
 }
 
+-- Códigos de resgate (CodeService): o jogador digita no menu; o servidor
+-- confere (Shop/Codes, uma vez por jogador) e entrega.
+event RequestCode {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Code: string(1..32)
+	}
+}
+
+-- Resultado do código. Ok: Code = o código resgatado (o cliente mostra os
+-- prêmios pela lista de Shop/Codes). Reason = CodeRules.Refusal, "wait",
+-- "inGame" ou "error".
+event CodeResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Ok: boolean,
+		Reason: string(1..16)?,
+		Code: string(0..32)?
+	}
+}
+
 -- Girar a roleta TypeId (body, bag, book, crate...) gastando um giro normal
 -- (Paid = false) ou especial (Paid = true).
 event RequestSpin {

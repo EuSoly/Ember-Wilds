@@ -22,6 +22,7 @@ export type ShopData = {
 	GiftPending: { [string]: GiftPending },
 	GiftInbox: { GiftEntry },
 	GiftIds: { string },
+	Codes: { [string]: boolean }, -- códigos de resgate já usados (Shop/Codes)
 }
 
 export type GiftPending = { to: number, name: string }
@@ -49,6 +50,7 @@ function ShopData.empty(): ShopData
 		GiftPending = {},
 		GiftInbox = {},
 		GiftIds = {},
+		Codes = {},
 	}
 end
 
@@ -166,6 +168,11 @@ end
 -- Tira o primeiro presente da fila (nil se vazia).
 function ShopData.popInbox(d: ShopData): GiftEntry?
 	return table.remove(d.GiftInbox, 1)
+end
+
+-- Marca o código de resgate `code` como usado por este jogador.
+function ShopData.useCode(d: ShopData, code: string)
+	d.Codes[code] = true
 end
 
 -- Ao carregar o perfil: marcas que não são `true` (ex. alguém tirou um kit

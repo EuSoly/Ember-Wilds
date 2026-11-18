@@ -248,6 +248,26 @@ function ShopService.give(player: Player, reward: Reward, reason: string): (bool
 	return true, nil
 end
 
+-- Dá vários prêmios de uma vez (código de resgate): valida todos antes, entrega,
+-- publica e salva uma vez. (false, mensagem) se algum é inválido (nada entra).
+function ShopService.giveAll(player: Player, rewards: { Reward }, reason: string): (boolean, string?)
+	for _, reward in rewards do
+		local problem = Rewards.validate(reward, Defs)
+		if problem ~= nil then
+			return false, problem
+		end
+	end
+	if shopOf(player) == nil then
+		return false, "sem perfil"
+	end
+	for _, reward in rewards do
+		ShopService.grant(player, reward, reason)
+	end
+	publish(player)
+	DataService.save(player)
+	return true, nil
+end
+
 -- Tira um kit ou passe para sempre (a posse no perfil é a verdade), ou o VIP
 -- ("vip", id ignorado: acaba agora). O kit ativo, se for o tirado, desativa.
 -- O que a vida atual já tinha (PerkService.forLife) vale até a próxima vida.
