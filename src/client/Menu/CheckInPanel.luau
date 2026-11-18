@@ -69,8 +69,8 @@ local CARD_INSET_BOTTOM = 0.07
 -- ou o selo de resgatado). O rodapé tem lugar próprio: o selo não cobre mais
 -- o ícone do prêmio.
 type Bands = { day: number, icon: number, amount: number, label: number, footer: number }
-local SMALL_BANDS: Bands = { day = 0.17, icon = 0.3, amount = 0.15, label = 0.13, footer = 0.23 }
-local BIG_BANDS: Bands = { day = 0.13, icon = 0.42, amount = 0.13, label = 0.1, footer = 0.18 }
+local SMALL_BANDS: Bands = { day = 0.16, icon = 0.36, amount = 0.14, label = 0.11, footer = 0.21 }
+local BIG_BANDS: Bands = { day = 0.12, icon = 0.44, amount = 0.12, label = 0.09, footer = 0.17 }
 -- Menor letra no PC (no celular baixo, ScreenMetrics.short, vale 10).
 local DAY_TITLE_MIN = 18
 local AMOUNT_MIN = 16
