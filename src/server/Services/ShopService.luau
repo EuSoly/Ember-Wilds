@@ -20,6 +20,7 @@ local RunService = game:GetService("RunService")
 local Shared = ReplicatedStorage.Shared
 local StatNames = require(Shared.StatNames)
 local Defs = require(Shared.Defs)
+local GiftRules = require(Shared.Shop.GiftRules)
 local Products = require(Shared.Shop.Products)
 local Rewards = require(Shared.Shop.Rewards)
 local PurchaseRules = require(Shared.Shop.PurchaseRules)
@@ -313,16 +314,20 @@ function ShopService.purchase(player: Player, productId: string): (boolean, stri
 	return true, nil
 end
 
--- Entrega o produto `productId` pago com Robux (recibo do RobuxService, já
--- dentro do DataService.receiptAsync, que salva). Sem pausa. Revive pago sem
--- ninguém esperando (janela fechada, outra visita) vira 1 revive guardado.
-local function deliver(player: Player, productId: string)
+-- Entrega o produto `productId` pago com Robux no perfil de `player` (quem
+-- comprou ou quem ganhou de presente). Sem pausa e sem aviso; quem chama salva.
+-- Revive vira 1 revive guardado. Item de uma vez que `player` já tem vira
+-- Golden Ember no valor do preço (GiftRules.emberFallback). false sem perfil.
+function ShopService.deliverTo(player: Player, productId: string, reason: string): boolean
 	local d = shopOf(player)
 	local product = Products.get(productId)
-	assert(d ~= nil and product ~= nil, `entrega sem perfil ou produto: {productId}`)
-	local reason = `robux:{productId}`
+	if d == nil or product == nil then
+		return false
+	end
 	if product.kind == "revive" then
 		ShopService.grant(player, { kind = "reviveCredit", count = 1 } :: any, reason)
+	elseif product.once and GiftRules.alreadyHas(product, d) then
+		CurrencyService.grant(player, GiftRules.emberFallback(product.price.amount), reason)
 	else
 		for _, reward in product.rewards do
 			ShopService.grant(player, reward, reason)
@@ -332,7 +337,15 @@ local function deliver(player: Player, productId: string)
 		ShopData.markPurchased(d, product.id)
 	end
 	publish(player)
-	if product.kind ~= "revive" then
+	return true
+end
+
+-- Recibo de compra própria (RobuxService, dentro do DataService.receiptAsync,
+-- que salva).
+local function deliver(player: Player, productId: string)
+	assert(ShopService.deliverTo(player, productId, `robux:{productId}`), `entrega sem perfil: {productId}`)
+	local product = Products.get(productId)
+	if product and product.kind ~= "revive" then
 		Net.PurchaseResult.Fire(player, { ProductId = productId, Ok = true })
 	end
 end

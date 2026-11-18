@@ -425,6 +425,59 @@ event PurchaseResult {
 	}
 }
 
+-- Presentes (GiftService): comprar um item da loja para outro jogador do
+-- mesmo servidor. O servidor confere, guarda o destinatário e abre a compra
+-- do "Presente: X"; a entrega vem no recibo.
+event RequestGift {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ProductId: string(1..48),
+		RecipientUserId: f64
+	}
+}
+
+-- Resultado do presente para quem deu. Ok = pago e entregue (To = nome de
+-- quem recebeu); Reason = GiftRules.Refusal, "gone", "cancelled" ou "error".
+event GiftResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ProductId: string(1..48),
+		Ok: boolean,
+		Reason: string(1..16)?,
+		To: string(0..40)?
+	}
+}
+
+-- Um presente recebido e ainda não aberto.
+struct GiftEntry {
+	From: string(0..40),
+	ProductId: string(1..48)
+}
+
+-- Fila inteira dos presentes não abertos (ao entrar e quando muda).
+event GiftInbox {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Gifts: GiftEntry[]
+	}
+}
+
+-- Abriu o primeiro presente da fila (ProductId confere que é o mesmo).
+event RequestOpenGift {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		ProductId: string(1..48)
+	}
+}
+
 -- Girar a roleta TypeId (body, bag, book, crate...) gastando um giro normal
 -- (Paid = false) ou especial (Paid = true).
 event RequestSpin {

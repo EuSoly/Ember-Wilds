@@ -41,6 +41,8 @@ local RobuxService = {}
 local deliverHandler: ((player: Player, productId: string) -> ())? = nil
 local passHandler: ((player: Player, productId: string, boughtNow: boolean) -> ())? = nil
 local subscriptionHandler: ((player: Player, productId: string, untilUnix: number?) -> ())? = nil
+local giftHandler: ((payer: Player, productId: string, purchaseId: string) -> ())? = nil
+local giftCancelHandler: ((payer: Player, productId: string) -> ())? = nil
 
 local waiters: { [Player]: Waiter } = {}
 
@@ -57,6 +59,31 @@ end
 -- Status da assinatura: `untilUnix` = fim do período (nil = não assina).
 function RobuxService.onSubscription(handler: (player: Player, productId: string, untilUnix: number?) -> ())
 	subscriptionHandler = handler
+end
+
+-- Recibo de um "Presente: X" (GiftService entrega a quem recebe; pode pausar).
+function RobuxService.onGift(handler: (payer: Player, productId: string, purchaseId: string) -> ())
+	giftHandler = handler
+end
+
+-- A janela de compra de um presente fechou sem compra.
+function RobuxService.onGiftCancelled(handler: (payer: Player, productId: string) -> ())
+	giftCancelHandler = handler
+end
+
+-- Abre a compra do "Presente: <productId>". false sem produto de presente.
+function RobuxService.promptGift(player: Player, productId: string): boolean
+	local id = RobloxIds.GIFT[productId]
+	if id == nil then
+		return false
+	end
+	local ok, err = pcall(function()
+		MarketplaceService:PromptProductPurchase(player, id)
+	end)
+	if not ok then
+		warn(`[RobuxService] não abriu o presente {productId} para {player.Name}: {err}`)
+	end
+	return ok
 end
 
 -- Abre a janela de compra do Roblox para o produto da loja. false se o
@@ -125,12 +152,19 @@ local function processReceipt(receipt: { [string]: any }): Enum.ProductPurchaseD
 	if player == nil then
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
-	local productId = RobloxIds.fromProduct(receipt.ProductId)
+	local productId, isGift = RobloxIds.fromProduct(receipt.ProductId)
 	if productId == nil then
 		warn(`[RobuxService] recibo de produto desconhecido {receipt.ProductId}`)
 		return Enum.ProductPurchaseDecision.NotProcessedYet
 	end
-	return DataService.receiptAsync(player, tostring(receipt.PurchaseId), function()
+	local purchaseId = tostring(receipt.PurchaseId)
+	if isGift then
+		return DataService.receiptAsync(player, purchaseId, function()
+			assert(giftHandler ~= nil, "sem entrega de presente registrada")
+			giftHandler(player, productId, purchaseId)
+		end)
+	end
+	return DataService.receiptAsync(player, purchaseId, function()
 		local waiter = waiters[player]
 		if waiter ~= nil and not waiter.done and waiter.productId == productId then
 			-- Alguém espera este pagamento (revive): segue de lá.
@@ -145,8 +179,14 @@ end
 -- A janela de compra de produto fechou.
 local function onProductFinished(userId: number, robloxId: number, purchased: boolean)
 	local player = Players:GetPlayerByUserId(userId)
-	local productId = RobloxIds.fromProduct(robloxId)
+	local productId, isGift = RobloxIds.fromProduct(robloxId)
 	if player == nil or productId == nil then
+		return
+	end
+	if isGift then
+		if not purchased and giftCancelHandler then
+			giftCancelHandler(player, productId)
+		end
 		return
 	end
 	local waiter = waiters[player]
