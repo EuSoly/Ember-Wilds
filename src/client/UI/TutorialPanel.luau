@@ -21,6 +21,7 @@ local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
+local Scroll = require(script.Parent:WaitForChild("Scroll"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -105,7 +106,11 @@ local function TutorialPanel(): Frame
 		return #needs() > 0
 	end
 
-	return Rustic.paper({
+	-- Fundo de pergaminho (UI/Scroll), o mesmo da receita fixada; a altura já
+	-- soma os rolos (HudColumn.tutorialHeight). Mudou de etapa: o papel brilha
+	-- dourado e volta.
+	local white = Color3.new(1, 1, 1)
+	return Scroll.panel({
 		Name = "TutorialPanel",
 		AnchorPoint = HudColumnState.anchor,
 		Position = function()
@@ -117,19 +122,7 @@ local function TutorialPanel(): Frame
 		Visible = function()
 			return TutorialState.step() > 0 and not HudColumnState.yieldsToPanel()
 		end,
-		create("UIStroke")({
-			Name = "Glow",
-			Color = R.emberLight,
-			Thickness = 4,
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			Transparency = glowSpring,
-		}),
-		create("UIPadding")({
-			PaddingLeft = UDim.new(0.05, 0),
-			PaddingRight = UDim.new(0.05, 0),
-			PaddingTop = UDim.new(0.1, 0),
-			PaddingBottom = UDim.new(0.1, 0),
-		}),
+	}, {
 		Rustic.label({
 			Name = "Header",
 			Size = function()
@@ -167,7 +160,9 @@ local function TutorialPanel(): Frame
 			}),
 			vide.indexes(needs, NeedEntry),
 		}),
-	}) :: Frame
+	}, function()
+		return white:Lerp(R.emberLight, math.clamp(1 - glowSpring(), 0, 1))
+	end)
 end
 
 return TutorialPanel

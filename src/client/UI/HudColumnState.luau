@@ -46,7 +46,7 @@ function HudColumnState.pinnedHeight(): number
 end
 
 -- Função comum (não derive): pode ser lida fora de um escopo do Vide; a conta é barata.
--- Topo da coluna: logo abaixo do livro e da engrenagem (CornerLayout, em px).
+-- Topo da coluna: abaixo do livro, da engrenagem e das Missões (CornerLayout, em px).
 local BELOW_BUTTONS = 10 -- px
 -- Relógio (Clock.luau): 2% do topo, altura de 7,5% da tela ou o mínimo de 38 px.
 local CLOCK_TOP = 0.02
@@ -77,8 +77,11 @@ function HudColumnState.column(): HudColumn.Column
 		local clockBottom = CLOCK_TOP * height + math.max(CLOCK_HEIGHT * height, CLOCK_MIN_PX)
 		top = (clockBottom + BELOW_CLOCK) / height
 	else
+		-- Abaixo da segunda fileira (o botão das Missões, embaixo da engrenagem,
+		-- CornerLayout.secondRowPosition): antes o quadrinho cobria esse botão.
 		local layout = CornerLayout.get()
-		top = (layout.buttonTop + layout.buttonSize + BELOW_BUTTONS) / height
+		local gap = math.max(math.round(layout.buttonSize * 0.15), 4)
+		top = (layout.buttonTop + 2 * layout.buttonSize + gap + BELOW_BUTTONS) / height
 	end
 	return HudColumn.compute(HudColumnState.tutorialHeight(), HudColumnState.pinnedHeight(), top)
 end

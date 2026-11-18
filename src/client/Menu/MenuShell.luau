@@ -733,17 +733,14 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 			return screenSize()
 		end)
 	)
-	-- Boost de XP correndo: contagem no centro, logo abaixo do aviso (que fica
-	-- no mesmo eixo), só no menu "limpo" como o calendário do check-in.
+	-- Boost de XP correndo: ícone e contagem no canto de baixo à esquerda (o
+	-- centro fica livre), só no menu "limpo" como o calendário do check-in.
 	table.insert(
 		children,
 		XpBoostBadge.build({
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = function()
-				local l = layout()
-				return UDim2.fromOffset(l.noticeCenterX, l.noticeY + MenuLayout.NOTICE_HEIGHT + 4)
-			end,
-			Size = UDim2.fromOffset(112, 34),
+			AnchorPoint = Vector2.new(0, 1),
+			Position = UDim2.new(0, MenuLayout.MARGIN * 2, 1, -MenuLayout.MARGIN * 2),
+			Size = UDim2.fromOffset(XpBoostBadge.MENU_WIDTH, XpBoostBadge.MENU_HEIGHT),
 		}, function()
 			return MenuState.panel() == "play" and not rankingOnTop()
 		end)

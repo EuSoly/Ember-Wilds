@@ -27,6 +27,35 @@ HudColumn.PINNED_HEADER_MIN_PX = 28
 HudColumn.PINNED_ROW_MIN_PX = 24
 HudColumn.PINNED_PADDING_MIN_PX = 10
 
+-- Fundo de pergaminho (arte 29, 400x600, MonetizationImages.RECIPE_SCROLL) no
+-- quadrinho do tutorial e na receita fixada (18/11/2026): os rolos de cima e
+-- de baixo são partes fixas do 9-slice (112 e 94 px da arte) e não podem ser
+-- amassados (o painel antigo, baixo demais, juntava os dois rolos). O painel
+-- ganha a altura deles (scrollExtra, em px) por cima da altura do texto; o
+-- texto começa abaixo do rolo de cima (SCROLL_TEXT_TOP) e para acima do de
+-- baixo (SCROLL_TEXT_BOTTOM). Escala da arte: menor no celular baixo.
+HudColumn.SCROLL_SLICE_TOP = 112
+HudColumn.SCROLL_SLICE_BOTTOM = 94
+HudColumn.SCROLL_TEXT_TOP = 92
+HudColumn.SCROLL_TEXT_BOTTOM = 78
+HudColumn.SCROLL_SHORT_SCREEN = 500 -- px: abaixo disto, rolos mais finos
+
+function HudColumn.scrollScale(screenHeight: number): number
+	return if screenHeight < HudColumn.SCROLL_SHORT_SCREEN then 0.2 else 0.3
+end
+
+-- Altura (px) que os rolos somam ao painel.
+function HudColumn.scrollExtra(screenHeight: number): number
+	return math.ceil((HudColumn.SCROLL_SLICE_TOP + HudColumn.SCROLL_SLICE_BOTTOM) * HudColumn.scrollScale(screenHeight))
+end
+
+local function rolls(screenHeight: number?): number
+	if screenHeight == nil or screenHeight <= 0 then
+		return 0
+	end
+	return HudColumn.scrollExtra(screenHeight) / screenHeight
+end
+
 -- A fração `share`, mas nunca menos que `px` numa tela de `screenHeight` px
 -- (sem a altura da tela, só a fração).
 local function atLeast(share: number, px: number, screenHeight: number?): number
@@ -40,8 +69,9 @@ end
 function HudColumn.tutorialHeight(hasNeeds: boolean, screenHeight: number?): number
 	if hasNeeds then
 		return atLeast(HudColumn.TUTORIAL_HEIGHT_NEEDS, HudColumn.TUTORIAL_NEEDS_MIN_PX, screenHeight)
+			+ rolls(screenHeight)
 	end
-	return atLeast(HudColumn.TUTORIAL_HEIGHT, HudColumn.TUTORIAL_MIN_PX, screenHeight)
+	return atLeast(HudColumn.TUTORIAL_HEIGHT, HudColumn.TUTORIAL_MIN_PX, screenHeight) + rolls(screenHeight)
 end
 
 function HudColumn.pinnedHeight(rows: number, screenHeight: number?): number
@@ -51,6 +81,7 @@ function HudColumn.pinnedHeight(rows: number, screenHeight: number?): number
 	return atLeast(HudColumn.PINNED_HEADER, HudColumn.PINNED_HEADER_MIN_PX, screenHeight)
 		+ rows * atLeast(HudColumn.PINNED_ROW, HudColumn.PINNED_ROW_MIN_PX, screenHeight)
 		+ atLeast(HudColumn.PINNED_PADDING, HudColumn.PINNED_PADDING_MIN_PX, screenHeight)
+		+ rolls(screenHeight)
 end
 
 export type Column = { tutorialY: number, pinnedY: number, notificationsY: number }
