@@ -82,7 +82,7 @@ local function PinnedRecipe(): Frame
 			return #lines() > 0 and not HudColumnState.yieldsToPanel()
 		end,
 		Position = function()
-			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().pinnedY)
+			return UDim2.fromScale(HudColumnState.pinnedX(), HudColumnState.column().pinnedY)
 		end,
 		Size = function()
 			return UDim2.fromScale(HudColumn.WIDTH, math.max(HudColumnState.pinnedHeight(), 0.01))

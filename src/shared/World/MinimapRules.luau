@@ -16,6 +16,7 @@ export type Layout = {
 	buttonSize: number, -- px do lado de cada botão
 	buttonTop: number, -- px do topo da tela até os botões
 	rowWidth: number, -- px da fileira de botões (livro na esquerda, engrenagem na direita)
+	markerSize: number, -- px da seta do jogador
 }
 
 local BUTTON_MIN = 44 -- mínimo de toque (Theme.touchMinSize)
@@ -59,8 +60,10 @@ end
 function MinimapRules.layout(width: number, height: number, short: boolean): Layout
 	local margin = math.round(width * 0.02)
 	local top = math.round(height * 0.02)
+	-- Celular: 22% da altura dava um mapa de 73 px em que não dava para se
+	-- localizar (teste de 18/11/2026); agora ~34%.
 	local mapSize = if short
-		then math.clamp(math.round(height * 0.22), 72, 120)
+		then math.clamp(math.round(height * 0.34), 96, 140)
 		else math.clamp(math.round(height * 0.25), 150, 210)
 	local gap = 8
 	local buttonSize = math.clamp(math.round(mapSize * 0.34), BUTTON_MIN, BUTTON_MAX)
@@ -72,6 +75,8 @@ function MinimapRules.layout(width: number, height: number, short: boolean): Lay
 		buttonSize = buttonSize,
 		buttonTop = top + mapSize + gap,
 		rowWidth = math.max(mapSize, 2 * buttonSize + gap),
+		-- Seta do jogador: 18 px no PC; no mapa menor do celular, ~12% do lado.
+		markerSize = if short then math.clamp(math.round(mapSize * 0.12), 10, 18) else 18,
 	}
 end
 

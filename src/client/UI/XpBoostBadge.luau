@@ -18,14 +18,13 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local ShopData = require(script.Parent.Parent:WaitForChild("ShopData"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
+local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 
 local create = vide.create
 local R = Theme.rustic
 
--- HUD: o selo de pontos (ScorePill) fica em 2% do topo com 7,5% da altura (ou
--- o mínimo de Theme.hudPillMinSize); o boost vem logo embaixo.
-local PILL_TOP = 0.02
-local PILL_HEIGHT = 0.075
+-- HUD: embaixo do selo de pontos (HudColumn.PILL_*); no celular, ao lado
+-- dele (embaixo fica a coluna do tutorial e da receita fixada).
 local HUD_GAP = 6
 local HUD_HEIGHT = 30
 local WIDTH_PER_HEIGHT = 4.4 -- ícone quadrado + "XP 2× 00:00"
@@ -84,8 +83,13 @@ function XpBoostBadge.hud(): Frame
 	return XpBoostBadge.build({
 		Position = function()
 			local h = ScreenMetrics.guiHeight()
-			local pill = math.max(PILL_HEIGHT * h, Theme.hudPillMinSize.Y)
-			return UDim2.new(PILL_TOP, 0, PILL_TOP, pill + HUD_GAP)
+			if ScreenMetrics.short() then
+				local w = ScreenMetrics.size().X
+				local pillHeight = HudColumn.pillBottom(h) - HudColumn.PILL_TOP * h
+				local x = (HudColumn.PILL_LEFT + HudColumn.PILL_WIDTH) * w + HUD_GAP
+				return UDim2.fromOffset(x, HudColumn.PILL_TOP * h + (pillHeight - HUD_HEIGHT) / 2)
+			end
+			return UDim2.new(HudColumn.PILL_LEFT, 0, 0, HudColumn.pillBottom(h) + HUD_GAP)
 		end,
 		Size = UDim2.fromOffset(HUD_HEIGHT * WIDTH_PER_HEIGHT, HUD_HEIGHT),
 	})

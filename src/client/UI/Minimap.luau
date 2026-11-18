@@ -24,7 +24,6 @@ local Kit = require(script.Parent:WaitForChild("Kit"))
 local create = vide.create
 
 local REFRESH = 0.1 -- 10 vezes por segundo
-local MARKER = 18 -- px da seta do jogador
 local OUTLINE = Color3.fromRGB(45, 28, 16)
 local OVERLAP = 0.035 -- fração do lado que o mapa entra por baixo da moldura
 
@@ -63,7 +62,10 @@ local function Marker(position: () -> UDim2, rotation: () -> number): Frame
 		Name = "PlayerMarker",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = position,
-		Size = UDim2.fromOffset(MARKER, MARKER),
+		Size = function()
+			local side = CornerLayout.get().markerSize
+			return UDim2.fromOffset(side, side)
+		end,
 		Rotation = rotation,
 		BackgroundTransparency = 1,
 		ZIndex = 3,

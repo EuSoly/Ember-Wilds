@@ -49,4 +49,19 @@ function spec.no_pc_o_mapa_e_maior_e_os_botoes_alinham_nas_bordas()
 	assert(pc.buttonTop == pc.top + pc.mapSize + pc.gap, "botões logo embaixo do mapa")
 end
 
+function spec.no_celular_o_mapa_da_para_ler_e_a_seta_e_pequena()
+	-- Teste do Elizeu de 18/11/2026: mapa de 73 px e seta de 18 px (um quarto dele).
+	for _, size in { { 749, 330 }, { 667, 375 }, { 599, 264 } } do
+		local phone = MinimapRules.layout(size[1], size[2], true)
+		assert(phone.mapSize >= 96, `{size[1]}x{size[2]}: mapa pequeno ({phone.mapSize})`)
+		assert(phone.markerSize <= phone.mapSize * 0.14, `{size[1]}x{size[2]}: seta grande demais`)
+		assert(phone.markerSize >= 10, `{size[1]}x{size[2]}: seta some`)
+		-- Os botões (duas fileiras) ainda cabem acima da metade de baixo da tela.
+		local secondRowBottom = phone.buttonTop + 2 * phone.buttonSize + phone.gap
+		assert(secondRowBottom <= size[2] * 0.8, `{size[1]}x{size[2]}: botões descem demais ({secondRowBottom})`)
+	end
+	local pc = MinimapRules.layout(1280, 720, false)
+	assert(pc.markerSize == 18, "PC igual")
+end
+
 return spec

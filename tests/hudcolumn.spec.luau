@@ -73,4 +73,18 @@ return {
 		end
 		assert(HudColumn.scrollScale(330) < HudColumn.scrollScale(1022), "rolos mais finos no celular")
 	end,
+
+	["side by side: pinned next to the tutorial, notifications below the taller"] = function()
+		-- Celular (18/11/2026): empilhados, a receita descia até o joystick de andar.
+		local c = HudColumn.compute(0.3, 0.2, 0.15, true)
+		assert(c.pinnedBeside, "receita ao lado")
+		assert(c.pinnedY == c.tutorialY, "mesma altura do tutorial")
+		assert(math.abs(c.notificationsY - (0.15 + 0.3 + HudColumn.GAP)) < 1e-9, "avisos embaixo do mais alto")
+		-- Sem o tutorial, a receita fica no topo da coluna.
+		local alone = HudColumn.compute(0, 0.2, 0.15, true)
+		assert(not alone.pinnedBeside and alone.pinnedY == 0.15, "sozinha no topo")
+		-- PC: empilhados como sempre.
+		local pc = HudColumn.compute(0.1, 0.12)
+		assert(not pc.pinnedBeside, "PC empilha")
+	end,
 }

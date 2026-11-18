@@ -48,34 +48,39 @@ end
 -- Função comum (não derive): pode ser lida fora de um escopo do Vide; a conta é barata.
 -- Topo da coluna: abaixo do livro, da engrenagem e das Missões (CornerLayout, em px).
 local BELOW_BUTTONS = 10 -- px
--- Relógio (Clock.luau): 2% do topo, altura de 7,5% da tela ou o mínimo de 38 px.
-local CLOCK_TOP = 0.02
-local CLOCK_HEIGHT = 0.075
-local CLOCK_MIN_PX = 38
-local BELOW_CLOCK = 8 -- px
+local BELOW_PILL = 8 -- px entre o selo de pontos e a coluna (celular)
 
--- Tela baixa (celular deitado): a coluna vai para o topo central, embaixo do
--- relógio (12/11/2026). Na direita ela batia no botão das Missões e no
--- joystick de mirar, e o quadrinho do tutorial ficava cortado.
-function HudColumnState.centered(): boolean
+-- Tela baixa (celular deitado): a coluna fica à esquerda, logo abaixo do
+-- selo de pontos (18/11/2026). Na direita ela batia no botão das Missões e no
+-- joystick de mirar; no topo central (12/11) cobria o meio da tela e, com a
+-- receita fixada, descia por cima dos anéis.
+function HudColumnState.left(): boolean
 	return ScreenMetrics.short()
 end
 
--- X e âncora das peças da coluna (direita no PC, centro na tela baixa).
+-- X e âncora das peças da coluna (direita no PC, esquerda na tela baixa).
 function HudColumnState.x(): number
-	return if HudColumnState.centered() then 0.5 else 0.98
+	return if HudColumnState.left() then HudColumn.PILL_LEFT else 0.98
+end
+
+-- X da receita fixada: na coluna, ou ao lado do tutorial (celular, os dois
+-- juntos: HudColumn.compute com sideBySide).
+function HudColumnState.pinnedX(): number
+	if HudColumnState.column().pinnedBeside then
+		return HudColumnState.x() + HudColumn.WIDTH + HudColumn.GAP
+	end
+	return HudColumnState.x()
 end
 
 function HudColumnState.anchor(): Vector2
-	return if HudColumnState.centered() then Vector2.new(0.5, 0) else Vector2.new(1, 0)
+	return if HudColumnState.left() then Vector2.new(0, 0) else Vector2.new(1, 0)
 end
 
 function HudColumnState.column(): HudColumn.Column
 	local height = ScreenMetrics.guiHeight()
 	local top
-	if HudColumnState.centered() then
-		local clockBottom = CLOCK_TOP * height + math.max(CLOCK_HEIGHT * height, CLOCK_MIN_PX)
-		top = (clockBottom + BELOW_CLOCK) / height
+	if HudColumnState.left() then
+		top = (HudColumn.pillBottom(height) + BELOW_PILL) / height
 	else
 		-- Abaixo da segunda fileira (o botão das Missões, embaixo da engrenagem,
 		-- CornerLayout.secondRowPosition): antes o quadrinho cobria esse botão.
@@ -83,7 +88,7 @@ function HudColumnState.column(): HudColumn.Column
 		local gap = math.max(math.round(layout.buttonSize * 0.15), 4)
 		top = (layout.buttonTop + 2 * layout.buttonSize + gap + BELOW_BUTTONS) / height
 	end
-	return HudColumn.compute(HudColumnState.tutorialHeight(), HudColumnState.pinnedHeight(), top)
+	return HudColumn.compute(HudColumnState.tutorialHeight(), HudColumnState.pinnedHeight(), top, HudColumnState.left())
 end
 
 return HudColumnState

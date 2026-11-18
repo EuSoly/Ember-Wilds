@@ -118,25 +118,21 @@ function Notifications.Component(): Frame
 	return create("Frame")({
 		Name = "Notifications",
 		-- Abaixo dos botões redondos; com o quadrinho do tutorial ou a receita
-		-- fixada, abaixo deles (UI/HudColumnState). Na tela baixa, no topo
-		-- central, com altura mínima: a fração dava avisos de 23 px (12/11/2026).
+		-- fixada, abaixo deles (UI/HudColumnState). Na tela baixa, à esquerda,
+		-- com altura mínima: a fração dava avisos de 23 px (12/11/2026).
 		AnchorPoint = HudColumnState.anchor,
 		Position = function()
 			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().notificationsY)
 		end,
 		Size = function()
-			return if HudColumnState.centered()
-				then UDim2.new(0.26, 0, 0, SHORT_HEIGHT)
-				else UDim2.fromScale(0.26, 0.16)
+			return if HudColumnState.left() then UDim2.new(0.26, 0, 0, SHORT_HEIGHT) else UDim2.fromScale(0.26, 0.16)
 		end,
 		BackgroundTransparency = 1,
 		create("UISizeConstraint")({ MinSize = Vector2.new(SHORT_MIN_WIDTH, 0) }),
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Vertical,
 			HorizontalAlignment = function()
-				return if HudColumnState.centered()
-					then Enum.HorizontalAlignment.Center
-					else Enum.HorizontalAlignment.Right
+				return if HudColumnState.left() then Enum.HorizontalAlignment.Left else Enum.HorizontalAlignment.Right
 			end,
 			Padding = UDim.new(0.05, 0),
 			SortOrder = Enum.SortOrder.LayoutOrder,

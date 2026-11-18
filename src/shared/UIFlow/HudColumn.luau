@@ -9,6 +9,20 @@ HudColumn.GAP = 0.01
 HudColumn.NOTIFICATIONS_ALONE = 0.4 -- onde os avisos ficam quando não há mais nada
 HudColumn.WIDTH = 0.24 -- largura dos painéis (fração da largura da tela)
 
+-- Selo de pontos (UI/ScorePill), no canto de cima à esquerda: 2% do topo e da
+-- esquerda, 21% da largura e 7,5% da altura (ou PILL_MIN_HEIGHT px). No
+-- celular a coluna começa logo abaixo dele e o boost de XP fica ao lado.
+HudColumn.PILL_LEFT = 0.02
+HudColumn.PILL_TOP = 0.02
+HudColumn.PILL_WIDTH = 0.21
+HudColumn.PILL_HEIGHT = 0.075
+HudColumn.PILL_MIN_HEIGHT = 38
+
+-- Base do selo de pontos (px) numa tela de `screenHeight` px.
+function HudColumn.pillBottom(screenHeight: number): number
+	return HudColumn.PILL_TOP * screenHeight + math.max(HudColumn.PILL_HEIGHT * screenHeight, HudColumn.PILL_MIN_HEIGHT)
+end
+
 -- Altura do quadrinho do tutorial: só o texto, ou com a linha do que pegar.
 HudColumn.TUTORIAL_HEIGHT = 0.1
 HudColumn.TUTORIAL_HEIGHT_NEEDS = 0.155
@@ -84,13 +98,23 @@ function HudColumn.pinnedHeight(rows: number, screenHeight: number?): number
 		+ rolls(screenHeight)
 end
 
-export type Column = { tutorialY: number, pinnedY: number, notificationsY: number }
+-- pinnedBeside: a receita fixada fica AO LADO do tutorial (mesma altura), não
+-- embaixo dele (celular: empilhados desciam até o joystick de andar).
+export type Column = { tutorialY: number, pinnedY: number, notificationsY: number, pinnedBeside: boolean }
 
 -- Onde cada peça começa, dadas as alturas (0 = não aparece). `top` = onde a
 -- coluna começa (fração da tela; padrão TOP): desde 11/11 o minimapa e os botões
 -- têm tamanho em px (MinimapRules.layout), e a coluna começa logo abaixo deles.
-function HudColumn.compute(tutorialHeight: number, pinnedHeight: number, top: number?): Column
+function HudColumn.compute(tutorialHeight: number, pinnedHeight: number, top: number?, sideBySide: boolean?): Column
 	local start = top or HudColumn.TOP
+	if sideBySide and tutorialHeight > 0 and pinnedHeight > 0 then
+		return {
+			tutorialY = start,
+			pinnedY = start,
+			notificationsY = start + math.max(tutorialHeight, pinnedHeight) + HudColumn.GAP,
+			pinnedBeside = true,
+		}
+	end
 	local y = start
 	local tutorialY = y
 	if tutorialHeight > 0 then
@@ -101,7 +125,7 @@ function HudColumn.compute(tutorialHeight: number, pinnedHeight: number, top: nu
 		y += pinnedHeight + HudColumn.GAP
 	end
 	local notificationsY = if y == start then math.max(HudColumn.NOTIFICATIONS_ALONE, start) else y
-	return { tutorialY = tutorialY, pinnedY = pinnedY, notificationsY = notificationsY }
+	return { tutorialY = tutorialY, pinnedY = pinnedY, notificationsY = notificationsY, pinnedBeside = false }
 end
 
 return HudColumn
