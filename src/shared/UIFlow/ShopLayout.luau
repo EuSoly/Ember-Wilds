@@ -51,6 +51,16 @@ ShopLayout.TOP_ROW_HEIGHT = 156 -- 140 até 17/11/2026: o boost e o Premium empi
 ShopLayout.TOP_ROW_HEIGHT_COMPACT = 44
 ShopLayout.PASS_CARD_SHORT = 170
 ShopLayout.PASS_CARD_TINY = 120
+-- Peças do cartão de gamepass (passCardParts). Teste de 18/11/2026 no PC: os
+-- nomes encostavam na moldura em 6 colunas e a descrição saía minúscula e
+-- cortada. Agora os textos ficam recuados da borda, o nome pode quebrar em
+-- duas linhas e a descrição tem duas linhas ou não aparece.
+ShopLayout.PASS_PAD = 10 -- embaixo do botão
+ShopLayout.PASS_BUTTON = 44
+ShopLayout.PASS_BUTTON_TINY = 34
+ShopLayout.PASS_DESC_MIN = 30 -- duas linhas de ≥ 13 px
+ShopLayout.PASS_DESC_MAX = 40
+ShopLayout.PASS_TEXT_MIN_PC = 13 -- menor letra da descrição no PC
 -- Composição de cada cartão da fileira de cima (bannerParts). No PC os textos
 -- ficavam com ~8 px (17/11/2026): a coluna do meio esticava por UIFlexItem e
 -- sobrava quase nada. Agora as caixas saem daqui, em pixels. Cartão do PC mais
@@ -68,6 +78,13 @@ ShopLayout.BANNER_TITLE_MIN = 18
 ShopLayout.BANNER_DESC_MIN = 13
 
 export type Box = { x: number, y: number, w: number, h: number }
+export type PassCardParts = {
+	icon: Box?, -- nil = cartão baixo demais (só nome e botão)
+	name: Box,
+	desc: Box?, -- nil = sem lugar para duas linhas
+	button: Box,
+}
+
 export type BannerParts = {
 	icon: Box?, -- nil = sem ícone (faixa baixa do celular)
 	text: Box,
@@ -217,6 +234,46 @@ end
 -- lado a lado.
 local function box(x: number, y: number, w: number, h: number): Box
 	return { x = x, y = y, w = math.max(w, 0), h = math.max(h, 0) }
+end
+
+-- Recuo dos textos nas laterais do cartão de gamepass: longe da moldura.
+function ShopLayout.passInset(width: number): number
+	return math.clamp(width * 0.08, 8, 16)
+end
+
+-- Caixas do cartão de gamepass de `width` × `height` (px, relativas ao
+-- cartão): ícone em cima, nome, descrição (se couber em duas linhas) e o
+-- botão de preço embaixo.
+function ShopLayout.passCardParts(width: number, height: number): PassCardParts
+	local inset = ShopLayout.passInset(width)
+	local textW = width - 2 * inset
+	local tiny = height < ShopLayout.PASS_CARD_TINY
+	local buttonH = if tiny then ShopLayout.PASS_BUTTON_TINY else ShopLayout.PASS_BUTTON
+	local buttonW = width * 0.86
+	local buttonY = height - ShopLayout.PASS_PAD - buttonH
+	local button = box((width - buttonW) / 2, buttonY, buttonW, buttonH)
+	if tiny then
+		local nameY = height * 0.1
+		return { icon = nil, name = box(inset, nameY, textW, buttonY - 4 - nameY), desc = nil, button = button }
+	end
+	local top = height * 0.06
+	local nameH = math.clamp(height * 0.12, 18, 28)
+	local room = buttonY - 6 - top -- do alto até acima do botão
+	local maxIcon = math.min(width * 0.6, height * 0.42)
+	local iconSide = math.min(height * 0.36, maxIcon)
+	local descRoom = room - iconSide - 4 - nameH - 2
+	local showDesc = height >= ShopLayout.PASS_CARD_SHORT and descRoom >= ShopLayout.PASS_DESC_MIN
+	if not showDesc then
+		-- Sem descrição, o ícone usa o lugar dela.
+		iconSide = math.max(math.min(room - 4 - nameH, maxIcon), 0)
+	end
+	local icon = box((width - iconSide) / 2, top, iconSide, iconSide)
+	local nameY = top + iconSide + 4
+	local name = box(inset, nameY, textW, nameH)
+	local desc = if showDesc
+		then box(inset, nameY + nameH + 2, textW, math.min(descRoom, ShopLayout.PASS_DESC_MAX))
+		else nil
+	return { icon = icon, name = name, desc = desc, button = button }
 end
 
 function ShopLayout.bannerParts(width: number, height: number, compact: boolean): BannerParts

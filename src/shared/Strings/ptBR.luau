@@ -1053,6 +1053,9 @@ return table.freeze({
 	["shop.rarity.mythic"] = "Mítico",
 	["shop.pass.ember2x.desc"] = "Dobra a Golden Ember que você ganha jogando.",
 	["shop.pass.book.desc"] = "Você nasce sempre com o livro de craft.",
+	-- Versões curtas para o cartão da loja (duas linhas no cartão estreito).
+	["shop.pass.ember2x.card"] = "Dobra a Golden Ember da partida",
+	["shop.pass.book.card"] = "Nasce sempre com o livro",
 	["mock.tag.popular"] = "Popular",
 	["mock.tag.off30"] = "30% off",
 	["mock.tag.best"] = "Melhor oferta",

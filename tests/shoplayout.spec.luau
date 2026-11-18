@@ -250,4 +250,51 @@ return {
 		local _, _, none = ShopLayout.topRowWeights(false)
 		assert(none == 0, "sem Premium, o peso some")
 	end,
+
+	["pass cards: texts inside the frame, desc two lines or none"] = function()
+		local function inside(b: ShopLayout.Box, w: number, h: number): boolean
+			return b.x >= 0 and b.y >= 0 and b.x + b.w <= w + 0.01 and b.y + b.h <= h + 0.01
+		end
+		local function below(a: ShopLayout.Box, b: ShopLayout.Box): boolean
+			return a.y + a.h <= b.y + 0.01
+		end
+		for _, size in
+			{ { 1128, 793 }, { 1024, 640 }, { 1920, 1080 }, { 844, 390 }, { 749, 330 }, { 667, 375 }, { 599, 264 } }
+		do
+			local w, h = size[1], size[2]
+			local l = ShopLayout.compute(w, h)
+			local cols, cardH = ShopLayout.passGrid(l, 6, ShopLayout.topRowHeight(l))
+			-- A lista tem 10 px de folga à direita (ShopScreen).
+			local cardW = (l.contentWidth - 10 - (cols - 1) * GAP) / cols
+			local parts = ShopLayout.passCardParts(cardW, cardH)
+			local tag = `{w}x{h} ({math.floor(cardW)}x{math.floor(cardH)})`
+			local inset = ShopLayout.passInset(cardW)
+			assert(inset >= 8, `{tag}: texto sem recuo`)
+			for _, b in { parts.name, parts.button } do
+				assert(inside(b, cardW, cardH), `{tag}: peça fora do cartão`)
+			end
+			assert(
+				parts.name.x >= inset - 0.01 and parts.name.x + parts.name.w <= cardW - inset + 0.01,
+				`{tag}: nome na moldura`
+			)
+			assert(parts.name.h >= 18, `{tag}: nome baixo ({parts.name.h})`)
+			assert(below(parts.name, parts.button), `{tag}: nome por cima do botão`)
+			local icon = parts.icon
+			if icon then
+				assert(inside(icon, cardW, cardH) and below(icon, parts.name), `{tag}: ícone`)
+			end
+			local desc = parts.desc
+			if desc then
+				assert(desc.h >= ShopLayout.PASS_DESC_MIN, `{tag}: descrição sem duas linhas`)
+				assert(below(parts.name, desc) and below(desc, parts.button), `{tag}: descrição fora do lugar`)
+				assert(
+					desc.x >= inset - 0.01 and desc.x + desc.w <= cardW - inset + 0.01,
+					`{tag}: descrição na moldura`
+				)
+			end
+			if not l.paged then
+				assert(desc ~= nil and icon ~= nil, `{tag}: PC com ícone e descrição`)
+			end
+		end
+	end,
 }

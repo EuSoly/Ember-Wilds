@@ -206,7 +206,8 @@ export type PriceProps = {
 	robux: number?,
 	ember: number?,
 	missing: (() -> number)?, -- só Golden Ember: quanto falta (0 = pode comprar)
-	-- Já comprado (produto "once"): botão verde "Comprado", sem clique.
+	-- Já comprado (produto "once"): o mesmo botão verde, apagado ("owned" do
+	-- Rustic), com "Comprado" e sem clique.
 	owned: (() -> boolean)?,
 	-- Compra proibida (item aleatório pago): botão apagado "Indisponível"; o clique
 	-- ainda chama onClick, que só avisa.
@@ -236,7 +237,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		AnchorPoint = p.anchor,
 		kind = function()
 			if owned() then
-				return "success"
+				return "owned"
 			end
 			if blocked() then
 				return "disabled"

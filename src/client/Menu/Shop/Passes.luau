@@ -18,6 +18,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local BoostCard = require(script.Parent:WaitForChild("BoostCard"))
@@ -28,6 +29,8 @@ local create = vide.create
 local R = Theme.rustic
 
 local GOLD = Color3.fromHex("#E8AE2A")
+
+type Source<T> = (() -> T) & ((T) -> T)
 
 local Passes = {}
 
@@ -71,23 +74,17 @@ local function artOf(pass: Pass): string
 	return PASS_ART[pass.artId] or ""
 end
 
+-- Descrição curta do cartão (cabe em duas linhas); sem entrada, a do passe.
+local CARD_DESC: { [string]: string } = {
+	ember2x = "shop.pass.ember2x.card",
+	book = "shop.pass.book.card",
+}
+
 -- Ícone do cartão: a arte; sem ela, o último item do kit (a ferramenta ou a
--- mochila) e, nas passes, uma estrela desenhada.
-local function icon(pass: Pass, short: () -> boolean, tiny: () -> boolean): GuiObject
+-- mochila) e, nas passes, uma estrela desenhada. Posição e tamanho vêm do card.
+local function icon(pass: Pass): Frame
 	local box = create("Frame")({
 		Name = "Icon",
-		Visible = function()
-			return not tiny()
-		end,
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = function()
-			return UDim2.fromScale(0.5, if short() then 0.08 else 0.12)
-		end,
-		Size = function()
-			local share = if short() then 0.38 else 0.42
-			return UDim2.fromScale(share, share)
-		end,
-		SizeConstraint = Enum.SizeConstraint.RelativeYY,
 		BackgroundTransparency = 1,
 		ZIndex = 3,
 	}) :: Frame
@@ -122,9 +119,27 @@ local function icon(pass: Pass, short: () -> boolean, tiny: () -> boolean): GuiO
 	return box
 end
 
--- `short`: cartão mais baixo que o normal (página do celular): arte menor e
--- textos mais acima, para não encostarem no botão de preço.
-local function card(pass: Pass, order: number, short: () -> boolean, tiny: () -> boolean, low: () -> boolean): Frame
+local function place(box: () -> ShopLayout.Box?): { [any]: any }
+	return {
+		Visible = function()
+			return box() ~= nil
+		end,
+		Position = function()
+			local b = box()
+			return if b then UDim2.fromOffset(b.x, b.y) else UDim2.new()
+		end,
+		Size = function()
+			local b = box()
+			return if b then UDim2.fromOffset(b.w, b.h) else UDim2.new()
+		end,
+	}
+end
+
+-- Um cartão. As caixas (ícone, nome, descrição, botão) saem de
+-- ShopLayout.passCardParts no tamanho real do cartão: os textos ficam
+-- recuados da moldura, o nome pode quebrar em duas linhas e a descrição
+-- aparece em duas linhas ou some (celular baixo).
+local function card(pass: Pass, order: number, compact: () -> boolean): Frame
 	-- Comprado aqui ou ganho por outro caminho (ex. o kit veio num pacote).
 	local function owned(): boolean
 		if ShopData.purchased(pass.product.id) then
@@ -132,61 +147,84 @@ local function card(pass: Pass, order: number, short: () -> boolean, tiny: () ->
 		end
 		return if pass.kitId then ShopData.kitOwned(pass.kitId) else ShopData.hasPass(pass.artId)
 	end
-	return ShopParts.vividCard(GOLD, {
+	local size: Source<Vector2> = vide.source(Vector2.zero) :: any
+	local parts = vide.derive(function()
+		local s = size()
+		return ShopLayout.passCardParts(s.X, s.Y)
+	end)
+	local iconBox = vide.apply(icon(pass))(place(function()
+		return parts().icon
+	end))
+	local nameProps = place(function()
+		return parts().name
+	end)
+	nameProps.Name = "PassName"
+	nameProps.FontFace = Theme.font.number
+	nameProps.Text = Strings.get(pass.nameKey)
+	nameProps.TextWrapped = true -- "Kit Sobrevivente" em duas linhas no cartão estreito
+	nameProps.maxSize = 22
+	nameProps.minSize = function()
+		return if compact() then 9 else 12
+	end
+	nameProps.ZIndex = 3
+	local descProps = place(function()
+		return parts().desc
+	end)
+	descProps.Name = "Desc"
+	descProps.Text = Strings.get(CARD_DESC[pass.artId] or pass.descKey)
+	descProps.TextWrapped = true
+	descProps.maxSize = 15
+	descProps.minSize = function()
+		return if compact() then 10 else ShopLayout.PASS_TEXT_MIN_PC
+	end
+	descProps.ZIndex = 3
+	local buyProps = place(function()
+		return parts().button
+	end)
+	buyProps.Name = "Buy"
+	buyProps.BackgroundTransparency = 1
+	buyProps.ZIndex = 3
+	table.insert(
+		buyProps,
+		ShopParts.priceButton({
+			robux = pass.product.price.amount,
+			owned = owned,
+			onClick = function()
+				Purchase.buy(pass.product.id)
+			end,
+			size = UDim2.fromScale(1, 1),
+		})
+	)
+
+	local cardFrame = ShopParts.vividCard(GOLD, {
 		art = "orange",
-		fxCenter = UDim2.fromScale(0.5, 0.33), -- raios atrás do ícone
+		-- Raios atrás do ícone (ou no alto, no cartão sem ícone).
+		fxCenter = function()
+			local b = parts().icon
+			if b then
+				return UDim2.fromOffset(b.x + b.w / 2, b.y + b.h / 2)
+			end
+			return UDim2.fromScale(0.5, 0.33)
+		end,
 		-- Kit com o ícone novo: o brilho na cor do tier (MonetizationImages.KIT_GLOW).
 		fxColor = if pass.kitId and MonetizationImages.has(artOf(pass))
 			then MonetizationImages.KIT_GLOW[pass.kitId]
 			else nil,
 		Name = pass.artId,
 		LayoutOrder = order,
-		icon(pass, short, tiny),
-		ShopParts.outlined({
-			Name = "PassName",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = function()
-				return UDim2.fromScale(0.5, if tiny() then 0.1 elseif short() then 0.49 else 0.56)
-			end,
-			Size = function()
-				return UDim2.fromScale(0.92, if tiny() then 0.3 else 0.12)
-			end,
-			FontFace = Theme.font.number,
-			Text = Strings.get(pass.nameKey),
-			maxSize = 22,
-		}),
-		ShopParts.outlined({
-			Name = "Desc",
-			Visible = function()
-				return not low()
-			end,
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = function()
-				return UDim2.fromScale(0.5, if short() then 0.61 else 0.68)
-			end,
-			Size = UDim2.fromScale(0.92, 0.08),
-			Text = Strings.get(pass.descKey),
-			maxSize = 15,
-		}),
-		create("Frame")({
-			Name = "Buy",
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -10),
-			Size = function()
-				return UDim2.new(0.86, 0, 0, if tiny() then 34 else 44)
-			end,
-			BackgroundTransparency = 1,
-			ZIndex = 3,
-			ShopParts.priceButton({
-				robux = pass.product.price.amount,
-				owned = owned,
-				onClick = function()
-					Purchase.buy(pass.product.id)
-				end,
-				size = UDim2.fromScale(1, 1),
-			}),
-		}),
+		iconBox,
+		ShopParts.outlined(nameProps),
+		ShopParts.outlined(descProps),
+		create("Frame")(buyProps),
 	})
+	-- Tamanho do cartão em pixels lógicos (sem os UIScale do caminho).
+	local function read()
+		size(cardFrame.AbsoluteSize / Rustic.uiScaleOf(cardFrame))
+	end
+	cardFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(read)
+	cardFrame.AncestryChanged:Connect(read)
+	read()
+	return cardFrame
 end
 
 -- Fileira de cima: VIP (peso 2), boost e, para quem não é Premium, o Premium
@@ -239,16 +277,6 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 		local columns, height = ShopLayout.passGrid(l, #passes, ShopLayout.topRowHeight(l))
 		return { columns = columns, height = height }
 	end)
-	local function short(): boolean
-		return grid().height < ShopLayout.PASS_CARD_HEIGHT
-	end
-	-- Celular baixo: sem descrição (low) e, mais baixo ainda, só nome e botão (tiny).
-	local function low(): boolean
-		return grid().height < ShopLayout.PASS_CARD_SHORT
-	end
-	local function tiny(): boolean
-		return grid().height < ShopLayout.PASS_CARD_TINY
-	end
 	local cards: { Instance } = {
 		ShopParts.grid(function()
 			return grid().columns
@@ -257,7 +285,12 @@ function Passes.build(layout: () -> ShopLayout.Layout): Frame
 		end, ShopLayout.GAP),
 	}
 	for order, pass in passes do
-		table.insert(cards, card(pass, order, short, tiny, low))
+		table.insert(
+			cards,
+			card(pass, order, function()
+				return layout().paged
+			end)
+		)
 	end
 	return create("Frame")({
 		Name = "Passes",

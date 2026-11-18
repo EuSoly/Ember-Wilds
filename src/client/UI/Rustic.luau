@@ -20,7 +20,7 @@ local R = Theme.rustic
 
 local Rustic = {}
 
-export type Kind = "wood" | "leather" | "ember" | "green" | "success" | "disabled"
+export type Kind = "wood" | "leather" | "ember" | "green" | "owned" | "success" | "disabled"
 
 -- Cores de cada material: luz (borda de cima), face e espessura (embaixo).
 local MATERIAL: { [Kind]: { light: Color3, face: Color3, shadow: Color3, text: Color3 } } = {
@@ -36,7 +36,21 @@ local MATERIAL: { [Kind]: { light: Color3, face: Color3, shadow: Color3, text: C
 		text = R.charcoal,
 	},
 	disabled = { light = R.disabled, face = R.disabled, shadow = R.disabled, text = R.disabledText },
+	-- Já comprado (loja): o mesmo botão verde do Robux, apagado e sem clique.
+	owned = {
+		light = Color3.fromHex("#B7CFA6"),
+		face = Color3.fromHex("#8DAA7A"),
+		shadow = Color3.fromHex("#5A7348"),
+		text = R.charcoal,
+	},
 }
+-- Tinta da arte verde no "owned": mais escura e menos viva que a de comprar.
+local OWNED_TINT = Color3.fromRGB(176, 196, 166)
+
+-- Botão sem clique (cinza ou já comprado).
+local function inert(kind: Kind): boolean
+	return kind == "disabled" or kind == "owned"
+end
 
 local CORNER = UDim.new(0, 4) -- o design system usa chanfro; o canto curto imita
 local OUTLINE = 2
@@ -64,7 +78,7 @@ end
 
 -- O verde do Robux usa a mesma arte chanfrada, em verde.
 local function usesGreenImage(kind: Kind): boolean
-	return ShopImages.has(ShopImages.BUTTON_GREEN) and kind == "green"
+	return ShopImages.has(ShopImages.BUTTON_GREEN) and (kind == "green" or kind == "owned")
 end
 
 type SliceArt = { image: string, size: Vector2, slice: Rect }
@@ -275,10 +289,10 @@ function Rustic.button(props: { [any]: any }): TextButton
 	local button = create("TextButton")({
 		Text = "",
 		AutoButtonColor = function()
-			return read(kind) ~= "disabled"
+			return not inert(read(kind))
 		end,
 		Active = function()
-			return read(kind) ~= "disabled"
+			return not inert(read(kind))
 		end,
 		BackgroundColor3 = Color3.new(1, 1, 1),
 		BackgroundTransparency = function()
@@ -309,7 +323,9 @@ function Rustic.button(props: { [any]: any }): TextButton
 			return if read(kind) == "leather" then PLANK_TINT.leather else PLANK_TINT.wood
 		end),
 		sliceImage(EMBER_ART, emberArt, Color3.new(1, 1, 1)),
-		sliceImage(GREEN_ART, greenArt, Color3.new(1, 1, 1)),
+		sliceImage(GREEN_ART, greenArt, function()
+			return if read(kind) == "owned" then OWNED_TINT else Color3.new(1, 1, 1)
+		end),
 		Rustic.label({
 			Name = "Label",
 			AnchorPoint = Vector2.new(0.5, 0.5),
