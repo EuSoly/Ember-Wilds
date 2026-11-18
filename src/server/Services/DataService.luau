@@ -28,6 +28,7 @@ type Data = { [string]: any }
 type Profile = ProfileStore.Profile<Data>
 type LoadedListener = (player: Player, data: Data) -> ()
 type PlayerListener = (player: Player) -> ()
+type MessageListener = (player: Player, message: { [string]: any }) -> boolean
 
 local DataService = {}
 
@@ -47,6 +48,7 @@ local warnedMock = false
 local loadedListeners: { LoadedListener } = {}
 local unloadingListeners: { PlayerListener } = {}
 local beforeSaveListeners: { LoadedListener } = {}
+local messageListeners: { MessageListener } = {}
 
 -- Chama cada ouvinte numa thread própria, protegido: um serviço com erro não
 -- derruba os outros. task.spawn roda na hora, então mudanças feitas por
@@ -180,6 +182,24 @@ local function loadProfile(player: Player)
 	-- (SpawnService) esperam por esta marca.
 	player:SetAttribute(StatNames.DataReady, true)
 	callAll(loadedListeners, "onLoaded", player, profile.Data)
+
+	-- Mensagens deixadas no perfil por outro servidor ou enquanto o jogador
+	-- estava fora (DataService.messageAsync), depois dos onLoaded: quem trata
+	-- já tem o perfil pronto. Marca como processada se algum ouvinte tratou.
+	profile:MessageHandler(function(message: any, processed: () -> ())
+		if profiles[player] ~= profile or type(message) ~= "table" then
+			return
+		end
+		for _, listener in messageListeners do
+			local fine, handled = pcall(listener, player, message)
+			if not fine then
+				warn(`[DataService] erro num ouvinte de mensagem: {handled}`)
+			elseif handled == true then
+				processed()
+				return
+			end
+		end
+	end)
 end
 
 -- Dados do perfil, se está carregado e ativo (nil enquanto carrega ou depois de fechar).
@@ -244,6 +264,40 @@ local function clearSaveState(player: Player)
 	end
 	pendingSave[player] = nil
 	lastSaveAt[player] = nil
+end
+
+-- Ouvinte das mensagens de perfil (messageAsync). Devolve true quando tratou
+-- a mensagem (ela some do perfil); false deixa para outro ouvinte.
+function DataService.onMessage(listener: MessageListener)
+	table.insert(messageListeners, listener)
+end
+
+-- Deixa uma mensagem no perfil de `userId`, esteja ele onde estiver (outro
+-- servidor ou fora do jogo): chega na próxima vez que o perfil abrir ou no
+-- servidor dele. Pode pausar. false se não deu.
+function DataService.messageAsync(userId: number, message: { [string]: any }): boolean
+	local ok, result = pcall(function()
+		return (store :: any):MessageAsync(DataConfig.KEY_PREFIX .. userId, message)
+	end)
+	if not ok then
+		warn(`[DataService] mensagem para {userId} falhou: {result}`)
+		return false
+	end
+	return result ~= false
+end
+
+-- Grava já e espera o save terminar (pausa). false se o perfil fechou antes.
+function DataService.saveAsync(player: Player): boolean
+	local profile = profiles[player]
+	if profile == nil or not profile:IsActive() then
+		return false
+	end
+	lastSaveAt[player] = os.clock()
+	-- O tipo exportado do pacote só declara Connect; o sinal tem Wait.
+	local afterSave: any = profile.OnAfterSave
+	profile:Save()
+	afterSave:Wait()
+	return profile:IsActive()
 end
 
 -- Compras com Robux guardadas no perfil (padrão do ProfileStore para recibos).
