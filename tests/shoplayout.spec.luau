@@ -325,4 +325,39 @@ return {
 			assert(ShopLayout.SPIN_SIDES_PAD + l.spinSideHeight <= sides, `{w}x{h}: lados do giro rolam`)
 		end
 	end,
+
+	["card inset clears the frame's inner line"] = function()
+		-- Linha de dentro da moldura (camadas 41): 44 px dos 512 do lado menor, x 0,8.
+		for _, size in { { 180, 200 }, { 250, 330 }, { 1000, 160 }, { 120, 236 }, { 88, 120 } } do
+			local w, h = size[1], size[2]
+			local line = math.min(w, h) * 44 / 512 * 0.8
+			assert(
+				ShopLayout.cardInset(w, h) >= line + 2,
+				`{w}x{h}: margem {ShopLayout.cardInset(w, h)} < linha {line}`
+			)
+		end
+	end,
+
+	["ember pack art stays between the amount and the price button"] = function()
+		for _, height in { 200, 170, 140, 120 } do
+			local inner = height - 2 * ShopLayout.cardInset(300, height)
+			for index = 1, 3 do
+				local side, centerY = ShopLayout.packArt(index, inner)
+				local top = (centerY - side / 2) * inner
+				local bottom = (centerY + side / 2) * inner
+				assert(
+					top >= ShopLayout.PACK_AMOUNT_BOTTOM * inner - 0.01,
+					`{height} #{index}: arte em cima do número`
+				)
+				assert(
+					bottom <= inner - ShopLayout.PRICE_BUTTON_HEIGHT - 2,
+					`{height} #{index}: arte em cima do botão`
+				)
+			end
+			local small = ShopLayout.packArt(1, inner)
+			local middle = ShopLayout.packArt(2, inner)
+			local big = ShopLayout.packArt(3, inner)
+			assert(small < middle and middle < big, `{height}: cada pacote um pouco maior`)
+		end
+	end,
 }

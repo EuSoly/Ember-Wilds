@@ -15,6 +15,7 @@ local ShopImages = require(Shared:WaitForChild("ShopImages"))
 local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
+local ShopLayoutForInset = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local CardFx = require(Client:WaitForChild("UI"):WaitForChild("CardFx"))
 
 local create = vide.create
@@ -99,6 +100,54 @@ ShopParts.CARD_TINT = table.freeze({
 	orange = Color3.fromHex("#EE9A2C"),
 } :: { [string]: Color3 })
 
+-- Margem de dentro do cartão (ShopLayout.cardInset): um UIPadding que empurra
+-- TODO o conteúdo para dentro da linha de dentro da moldura, refeito quando o
+-- cartão muda de tamanho. O fundo (`bleed`) e o que tem o atributo CardBleed
+-- (a fita) continuam até a borda. O cartão guarda a margem no atributo
+-- CardInset (px lógicos), para quem calcula caixas em pixels (Passes, Banner).
+function ShopParts.applyInset(card: GuiObject, bleed: GuiObject)
+	local padding = create("UIPadding")({ Name = "Inset" }) :: UIPadding
+	padding.Parent = card
+	local bases: { [Instance]: UDim2 } = {}
+	local function fit()
+		local factor = Rustic.uiScaleOf(card)
+		local size = card.AbsoluteSize / factor
+		if size.X <= 0 or size.Y <= 0 then
+			return
+		end
+		local pad = ShopLayoutForInset.cardInset(size.X, size.Y)
+		local inset = UDim.new(0, pad)
+		padding.PaddingLeft = inset
+		padding.PaddingRight = inset
+		padding.PaddingTop = inset
+		padding.PaddingBottom = inset
+		bleed.Position = UDim2.fromOffset(-pad, -pad)
+		bleed.Size = UDim2.new(1, 2 * pad, 1, 2 * pad)
+		for _, child in card:GetChildren() do
+			if child:IsA("GuiObject") and child:GetAttribute("CardBleed") == true then
+				local base = bases[child] or child.Position
+				bases[child] = base
+				child.Position = base + UDim2.fromOffset(pad, -pad)
+			end
+		end
+		card:SetAttribute("CardInset", pad)
+	end
+	card:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+	card.AncestryChanged:Connect(fit)
+	card.ChildAdded:Connect(function()
+		task.defer(fit)
+	end)
+	fit()
+end
+
+-- Tamanho de dentro de um cartão (sem a margem do applyInset), em px lógicos.
+function ShopParts.innerSize(card: GuiObject): Vector2
+	local size = card.AbsoluteSize / Rustic.uiScaleOf(card)
+	local pad = card:GetAttribute("CardInset")
+	local inset = if type(pad) == "number" then pad else 0
+	return Vector2.new(math.max(size.X - 2 * inset, 0), math.max(size.Y - 2 * inset, 0))
+end
+
 -- Pilha de camadas de um cartão da loja (canal "shop" do CardFx). `fx` nil =
 -- sem efeitos.
 function ShopParts.layers(
@@ -133,37 +182,43 @@ function ShopParts.vividCard(theme: Color3, props: { [any]: any }): Frame
 	props.fxColor = nil
 	local tint = if art then ShopParts.CARD_TINT[art] else nil
 	if tint and MonetizationImages.hasLayers(MonetizationImages.SHOP_CARD_LAYERS) then
+		local layers = ShopParts.layers(
+			MonetizationImages.SHOP_CARD_LAYERS,
+			MonetizationImages.SHOP_CARD_LAYERS_SIZE,
+			MonetizationImages.SHOP_CARD_LAYERS_SLICE,
+			tint,
+			if withFx then fxColor or ShopParts.shade(tint, 1.3) else nil,
+			fxCenter
+		)
 		local card = create("Frame")({
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
-			ShopParts.layers(
-				MonetizationImages.SHOP_CARD_LAYERS,
-				MonetizationImages.SHOP_CARD_LAYERS_SIZE,
-				MonetizationImages.SHOP_CARD_LAYERS_SLICE,
-				tint,
-				if withFx then fxColor or ShopParts.shade(tint, 1.3) else nil,
-				fxCenter
-			),
+			layers,
 		}) :: Frame
-		return vide.apply(card)(props) :: Frame
+		vide.apply(card)(props)
+		ShopParts.applyInset(card, layers)
+		return card
 	end
 	local image = if art then ShopImages.CARD[art] else nil
 	if ShopImages.has(image) then
+		local background = create("ImageLabel")({
+			Name = "Background",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Image = image :: string,
+			ScaleType = Enum.ScaleType.Slice,
+			SliceCenter = ShopImages.CARD_SLICE,
+			SliceScale = CARD_SLICE_SCALE,
+			ZIndex = 0,
+		}) :: ImageLabel
 		local card = create("Frame")({
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
-			create("ImageLabel")({
-				Name = "Background",
-				Size = UDim2.fromScale(1, 1),
-				BackgroundTransparency = 1,
-				Image = image :: string,
-				ScaleType = Enum.ScaleType.Slice,
-				SliceCenter = ShopImages.CARD_SLICE,
-				SliceScale = CARD_SLICE_SCALE,
-				ZIndex = 0,
-			}),
+			background,
 		}) :: Frame
-		return vide.apply(card)(props) :: Frame
+		vide.apply(card)(props)
+		ShopParts.applyInset(card, background)
+		return card
 	end
 	local card = create("Frame")({
 		BackgroundColor3 = Color3.new(1, 1, 1),
@@ -203,7 +258,7 @@ end
 -- Botão de preço. Robux: verde com o símbolo do Robux. Golden Ember: botão
 -- laranja com a moeda; com `missing` > 0 fica apagado mostrando "faltam N".
 export type PriceProps = {
-	robux: number?,
+	robux: (number | () -> number)?, -- fixo ou reativo (ex. janela Presentear)
 	ember: number?,
 	missing: (() -> number)?, -- só Golden Ember: quanto falta (0 = pode comprar)
 	-- Já comprado (produto "once"): o mesmo botão verde, apagado ("owned" do
@@ -212,6 +267,8 @@ export type PriceProps = {
 	-- Compra proibida (item aleatório pago): botão apagado "Indisponível"; o clique
 	-- ainda chama onClick, que só avisa.
 	blocked: (() -> boolean)?,
+	-- Desligado (ex. Presentear sem ninguém escolhido): apagado, com o preço, sem clique.
+	disabled: (() -> boolean)?,
 	onClick: () -> (),
 	size: UDim2?,
 	position: UDim2?,
@@ -230,6 +287,13 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		return if p.blocked then p.blocked() else false
 	end
 	local isRobux = p.robux ~= nil
+	local function robux(): number
+		local value = p.robux
+		return if type(value) == "function" then value() else (value :: number?) or 0
+	end
+	local function disabled(): boolean
+		return if p.disabled then p.disabled() else false
+	end
 	local button = Rustic.button({
 		Name = "Price",
 		Size = p.size or UDim2.new(1, 0, 0, 48),
@@ -239,7 +303,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 			if owned() then
 				return "owned"
 			end
-			if blocked() then
+			if blocked() or disabled() then
 				return "disabled"
 			end
 			if isRobux then
@@ -257,9 +321,9 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 			if isRobux then
 				-- Com o ícone do Robux desenhado, o texto deixa espaço para ele.
 				if ShopImages.has(ShopImages.ROBUX) then
-					return `      {p.robux}`
+					return `      {robux()}`
 				end
-				return Strings.format("kit.robux", { price = p.robux :: number })
+				return Strings.format("kit.robux", { price = robux() })
 			end
 			if missing() > 0 then
 				return Strings.format("shop.missing", { amount = missing() })
@@ -268,7 +332,7 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 		end,
 		maxSize = p.textSize or 22,
 		Activated = function()
-			if (missing() <= 0 or blocked()) and not owned() then
+			if (missing() <= 0 or blocked()) and not owned() and not disabled() then
 				p.onClick()
 			end
 		end,
@@ -311,8 +375,16 @@ function ShopParts.priceButton(p: PriceProps): TextButton
 	return button
 end
 
--- Fita no canto de cima à direita ("POPULAR", "+ CHANCE"…).
+-- Fita no canto de cima à direita ("POPULAR", "+ CHANCE"…). Fica no canto do
+-- cartão, por cima da moldura: marcada CardBleed (fora da margem do cartão).
+local ribbonPiece
 function ShopParts.ribbon(text: string, color: Color3?, textColor: Color3?): Frame
+	local ribbon = ribbonPiece(text, color, textColor)
+	ribbon:SetAttribute("CardBleed", true)
+	return ribbon
+end
+
+function ribbonPiece(text: string, color: Color3?, textColor: Color3?): Frame
 	-- A arte da fita é vermelha: as fitas vermelhas usam a imagem.
 	if color == nil and ShopImages.has(ShopImages.RIBBON) then
 		return create("ImageLabel")({

@@ -16,7 +16,6 @@ local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
-local Rustic = require(script.Parent.Parent.Parent:WaitForChild("UI"):WaitForChild("Rustic"))
 
 local create = vide.create
 
@@ -72,9 +71,10 @@ end
 -- Acompanha o tamanho do cartão em pixels lógicos (sem o UIScale da tela).
 local function trackSize(card: GuiObject, size: Source<Vector2>)
 	local function read()
-		size(card.AbsoluteSize / Rustic.uiScaleOf(card))
+		size(ShopParts.innerSize(card))
 	end
 	card:GetPropertyChangedSignal("AbsoluteSize"):Connect(read)
+	card:GetAttributeChangedSignal("CardInset"):Connect(read)
 	card.AncestryChanged:Connect(read)
 	read()
 end
@@ -176,18 +176,21 @@ function Banner.build(p: Props): Frame
 	local layers = p.layers
 	local layered = layers ~= nil and MonetizationImages.hasLayers(layers.set)
 	local children: { Instance } = {}
+	local background: Frame? = nil
+	-- Margem do cartão (ShopParts.applyInset): as caixas são de dentro dela, e o
+	-- fundo começa `inset` px antes.
+	local inset: Source<number> = vide.source(0) :: any
 	if layers and layered then
 		-- Raios e halo atrás do ícone (no celular, sem ícone, no meio do cartão).
-		table.insert(
-			children,
-			ShopParts.layers(layers.set, layers.size, layers.slice, layers.tint, layers.fx, function()
-				local icon = parts().icon
-				if icon then
-					return UDim2.fromOffset(icon.x + icon.w / 2, icon.y + icon.h / 2)
-				end
-				return UDim2.fromScale(0.5, 0.5)
-			end)
-		)
+		background = ShopParts.layers(layers.set, layers.size, layers.slice, layers.tint, layers.fx, function()
+			local icon = parts().icon
+			if icon then
+				local pad = inset()
+				return UDim2.fromOffset(icon.x + icon.w / 2 + pad, icon.y + icon.h / 2 + pad)
+			end
+			return UDim2.fromScale(0.5, 0.5)
+		end)
+		table.insert(children, background :: Frame)
 	else
 		table.insert(
 			children,
@@ -243,9 +246,19 @@ function Banner.build(p: Props): Frame
 	if layered then
 		-- O fundo são as camadas: o vividCard sem `art` desenharia o degradê por baixo.
 		card = vide.apply(create("Frame")({ BackgroundTransparency = 1, BorderSizePixel = 0 }))(props) :: Frame
+		if background then
+			-- Os botões e textos não passam da linha de dentro da moldura (VIP, Premium).
+			ShopParts.applyInset(card, background)
+		end
 	else
 		card = ShopParts.vividCard(p.theme, props)
 	end
+	local function readInset()
+		local pad = card:GetAttribute("CardInset")
+		inset(if type(pad) == "number" then pad else 0)
+	end
+	card:GetAttributeChangedSignal("CardInset"):Connect(readInset)
+	readInset()
 	trackSize(card, size)
 	return card
 end

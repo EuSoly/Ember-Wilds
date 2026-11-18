@@ -330,4 +330,33 @@ function ShopLayout.emberHeights(l: Layout): (number, number)
 	return top, math.min(ShopLayout.EMBER_BOTTOM_HEIGHT, math.max(top, 120))
 end
 
+-- Margem de dentro dos cartões da loja. A moldura (camadas 41) estica com o
+-- lado menor do cartão e a linha de dentro dela fica a 44 px dos 512 da arte
+-- (x 0,8 da espessura): nada do conteúdo (botão, arte) passa dela. Teste do
+-- Elizeu de 18/11/2026: os botões de baixo encostavam na linha.
+ShopLayout.CARD_INSET_SHARE = 44 / 512 * 0.8
+ShopLayout.CARD_INSET_EXTRA = 4
+function ShopLayout.cardInset(width: number, height: number): number
+	return math.ceil(math.min(width, height) * ShopLayout.CARD_INSET_SHARE) + ShopLayout.CARD_INSET_EXTRA
+end
+
+-- Pacote de Golden Ember (cartão da fileira de cima, sem fita): o número em
+-- cima vai até PACK_AMOUNT_BOTTOM da altura de dentro e o botão de preço tem
+-- PRICE_BUTTON_HEIGHT px embaixo. A arte (ícone quadrado) fica na faixa livre
+-- entre os dois, cada pacote um pouco maior, sem encostar em nenhum.
+ShopLayout.PACK_AMOUNT_BOTTOM = 0.26
+ShopLayout.PRICE_BUTTON_HEIGHT = 46
+ShopLayout.PACK_ART_GAP = 4 -- px entre a arte e o botão
+ShopLayout.PACK_ART_MAX = 0.62 -- em página alta (celular) a arte não cresce sem fim
+
+-- Lado (fração da altura de dentro) e centro vertical da arte do pacote `index`.
+function ShopLayout.packArt(index: number, innerHeight: number): (number, number)
+	local top = ShopLayout.PACK_AMOUNT_BOTTOM
+	local bottom = 1 - (ShopLayout.PRICE_BUTTON_HEIGHT + ShopLayout.PACK_ART_GAP) / math.max(innerHeight, 1)
+	local band = math.max(bottom - top, 0)
+	-- Cada pacote ocupa um pouco mais da faixa (84%, 92%, 100%), até PACK_ART_MAX.
+	local side = math.min(band * (0.76 + 0.08 * index), ShopLayout.PACK_ART_MAX)
+	return side, (top + bottom) / 2
+end
+
 return ShopLayout

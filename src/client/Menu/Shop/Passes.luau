@@ -18,7 +18,6 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local ShopData = require(Client:WaitForChild("ShopData"))
-local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
@@ -223,9 +222,10 @@ local function card(pass: Pass, order: number, compact: () -> boolean): Frame
 	})
 	-- Tamanho do cartão em pixels lógicos (sem os UIScale do caminho).
 	local function read()
-		size(cardFrame.AbsoluteSize / Rustic.uiScaleOf(cardFrame))
+		size(ShopParts.innerSize(cardFrame))
 	end
 	cardFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(read)
+	cardFrame:GetAttributeChangedSignal("CardInset"):Connect(read)
 	cardFrame.AncestryChanged:Connect(read)
 	read()
 	return cardFrame

@@ -193,8 +193,8 @@ local function bottomButton(spinType: MockStore.SpinType): Instance
 	return Rustic.button({
 		Name = if soon then "Soon" else "Choose",
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -10),
-		Size = UDim2.new(0.86, 0, 0, 46),
+		Position = UDim2.fromScale(0.5, 1),
+		Size = UDim2.new(0.9, 0, 0, 46),
 		ZIndex = 4,
 		kind = if soon then "disabled" else "ember",
 		text = Strings.get(if soon then "cosmetics.soon" else "shop.choose"),

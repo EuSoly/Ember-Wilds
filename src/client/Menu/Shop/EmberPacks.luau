@@ -19,6 +19,8 @@ local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 
 local create = vide.create
 
+type Source<T> = (() -> T) & ((T) -> T)
+
 local GOLD = Color3.fromHex("#F0A12A")
 local TAGGED_AMOUNT_TOP = 40 -- px: logo abaixo da fita
 local TAGGED_COIN_SHARE = 0.7
@@ -61,10 +63,28 @@ local function coin(index: number, props: { [any]: any }): ImageLabel
 	-- maior para ocupar o mesmo espaço (teste de 18/11/2026: ficava pequeno).
 	local side = (if own then 0.46 else 0.32) + index * 0.05
 	local shrink = props.shrink
+	-- `fit`: lado e centro vindos de ShopLayout.packArt (cartão de cima, sem
+	-- fita, ícone próprio): a arte fica entre o número e o botão de preço.
+	local fit: (() -> (number?, number?))? = props.fit
 	props.shrink = nil
+	props.fit = nil
 	props.Size = function()
+		local fitted = if fit then fit() else nil
+		if own and fitted then
+			return UDim2.fromScale(fitted, fitted)
+		end
 		local share = if shrink and shrink() then side * TAGGED_COIN_SHARE else side
 		return UDim2.fromScale(share * aspect, share)
+	end
+	if fit then
+		local position = props.Position
+		props.Position = function()
+			local fitted, centerY = fit()
+			if own and fitted and centerY then
+				return UDim2.fromScale(0.5, centerY)
+			end
+			return if type(position) == "function" then position() else position
+		end
 	end
 	return vide.apply(label)(props) :: ImageLabel
 end
@@ -83,7 +103,16 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () ->
 	local function tagged(): boolean
 		return pack.tag ~= nil and paged()
 	end
-	return ShopParts.vividCard(GOLD, {
+	-- Altura de dentro do cartão (sem a margem da moldura), para a arte.
+	local innerHeight: Source<number> = vide.source(0) :: any
+	local function fit(): (number?, number?)
+		local h = innerHeight()
+		if tagged() or h <= 0 then
+			return nil, nil
+		end
+		return ShopLayout.packArt(index, h)
+	end
+	local card = ShopParts.vividCard(GOLD, {
 		art = "orange",
 		fxCenter = UDim2.fromScale(0.5, 0.5), -- raios atrás da moeda
 		Name = "Pack" .. index,
@@ -107,6 +136,7 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () ->
 				return UDim2.fromScale(0.5, if tagged() then TAGGED_COIN_Y else 0.5)
 			end,
 			shrink = tagged,
+			fit = fit,
 		}),
 		GiftPanel.attach(
 			`pack_{pack.amount}`,
@@ -116,11 +146,18 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () ->
 					buy(pack)
 				end,
 				anchor = Vector2.new(0.5, 1),
-				position = UDim2.new(0.5, 0, 1, -10),
-				size = UDim2.new(0.86, 0, 0, 46),
+				position = UDim2.fromScale(0.5, 1),
+				size = UDim2.new(0.9, 0, 0, ShopLayout.PRICE_BUTTON_HEIGHT),
 			})
 		),
 	})
+	local function read()
+		innerHeight(ShopParts.innerSize(card).Y)
+	end
+	card:GetPropertyChangedSignal("AbsoluteSize"):Connect(read)
+	card:GetAttributeChangedSignal("CardInset"):Connect(read)
+	read()
+	return card
 end
 
 local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
@@ -155,8 +192,8 @@ local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
 					buy(pack)
 				end,
 				anchor = Vector2.new(0, 1),
-				position = UDim2.new(0.05, 0, 1, -12),
-				size = UDim2.new(0.4, 0, 0, 46),
+				position = UDim2.fromScale(0.03, 1),
+				size = UDim2.new(0.4, 0, 0, ShopLayout.PRICE_BUTTON_HEIGHT),
 			})
 		),
 		coin(index, { AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.fromScale(0.94, 0.52) }),

@@ -36,7 +36,10 @@ local DIM_BLEED = 200
 local TITLE_HEIGHT = 52
 local HEADER_HEIGHT = 56
 local FOOTER_HEIGHT = 46
-local ROW_HEIGHT = 52
+local ROW_HEIGHT = 56
+-- Foto na linha: dentro da borda da arte 48 (26 px de 110 na altura).
+local AVATAR_SIDE = ROW_HEIGHT - 18
+local AVATAR_LEFT = 12
 local ROW_GAP = 6
 local BODY = Color3.fromHex("#2B2018")
 
@@ -153,43 +156,42 @@ local function row(player: Player): TextButton
 				chosen(player.UserId)
 			end
 		end,
-		create("ImageLabel")({
+		sliced(GiftImages.ROW.normal, GiftImages.ROW_SIZE, GiftImages.ROW_SLICE, {
 			Name = "Art",
 			Size = UDim2.fromScale(1, 1),
-			BackgroundTransparency = 1,
-			ScaleType = Enum.ScaleType.Slice,
-			SliceCenter = GiftImages.ROW_SLICE,
 			Image = function()
 				return GiftImages.ROW[state()]
 			end,
 			ZIndex = 1,
-		}),
+		}) :: Instance,
+		-- Foto dentro da moldura redonda, as duas dentro da linha.
 		create("ImageLabel")({
-			Name = "Avatar",
+			Name = "AvatarFrame",
 			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 10, 0.5, 0),
-			Size = UDim2.fromOffset(ROW_HEIGHT - 12, ROW_HEIGHT - 12),
+			Position = UDim2.new(0, AVATAR_LEFT, 0.5, 0),
+			Size = UDim2.fromOffset(AVATAR_SIDE, AVATAR_SIDE),
 			BackgroundTransparency = 1,
-			Image = headshot,
-			ImageTransparency = function()
-				return if refusal() ~= nil then 0.4 else 0
-			end,
-			ZIndex = 2,
-			create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+			Image = GiftImages.AVATAR_FRAME,
+			ScaleType = Enum.ScaleType.Fit,
+			ZIndex = 3,
 			create("ImageLabel")({
-				Name = "Frame",
+				Name = "Avatar",
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.fromScale(1.18, 1.18),
+				Size = UDim2.fromScale(0.8, 0.8),
 				BackgroundTransparency = 1,
-				Image = GiftImages.AVATAR_FRAME,
-				ZIndex = 3,
+				Image = headshot,
+				ImageTransparency = function()
+					return if refusal() ~= nil then 0.4 else 0
+				end,
+				ZIndex = 2,
+				create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
 			}),
 		}),
 		ShopParts.outlined({
 			Name = "PlayerName",
-			Position = UDim2.fromOffset(ROW_HEIGHT + 8, 0),
-			Size = UDim2.new(1, -(ROW_HEIGHT + 8 + 120), 1, 0),
+			Position = UDim2.fromOffset(AVATAR_LEFT + AVATAR_SIDE + 10, 0),
+			Size = UDim2.new(1, -(AVATAR_LEFT + AVATAR_SIDE + 10 + 120), 1, 0),
 			FontFace = Theme.font.title,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextTransparency = function()
@@ -414,25 +416,17 @@ function GiftPanel.build(): Frame
 			ZIndex = 3,
 			Activated = close,
 		}),
-		Rustic.button({
-			Name = "Send",
-			AnchorPoint = Vector2.new(1, 1),
-			Position = UDim2.new(1, -16, 1, -12),
-			Size = UDim2.fromOffset(190, FOOTER_HEIGHT),
-			kind = function()
-				return if canSend() then "green" else "disabled"
+		-- O mesmo botão verde de Robux da loja; apagado até escolher alguém.
+		vide.apply(ShopParts.priceButton({
+			robux = price,
+			disabled = function()
+				return not canSend()
 			end,
-			text = function()
-				return Strings.format("gift.pay", { price = Strings.format("kit.robux", { price = price() }) })
-			end,
-			maxSize = 20,
-			ZIndex = 3,
-			Activated = function()
-				if canSend() then
-					send()
-				end
-			end,
-		}),
+			onClick = send,
+			anchor = Vector2.new(1, 1),
+			position = UDim2.new(1, -16, 1, -12),
+			size = UDim2.fromOffset(170, FOOTER_HEIGHT),
+		}))({ Name = "Send", ZIndex = 3 }),
 	}) :: Frame
 
 	return create("Frame")({
