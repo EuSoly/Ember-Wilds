@@ -1216,4 +1216,8 @@ return table.freeze({
 	["checkin.close"] = "Fechar",
 	["checkin.got"] = "Dia {day} resgatado: {reward}",
 	["checkin.error"] = "Não foi possível resgatar agora",
+	-- Quantidade ao lado do ícone do prêmio no cartão (Shop/RewardBadge).
+	["checkin.amount.count"] = "×{count}",
+	["checkin.amount.life"] = "1 vida",
+	["checkin.amount.lives"] = "{count} vidas",
 })

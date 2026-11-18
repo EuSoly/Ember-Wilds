@@ -281,11 +281,23 @@ function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): F
 
 	return create("Frame")({
 		Name = "Featured",
+		-- Sem pacote para mostrar, no PC a seção some inteira (ShopScreen esconde
+		-- a seção junto); na página do celular fica o aviso, sem a moldura.
+		Visible = function()
+			return count() > 0 or layout().paged
+		end,
 		Size = function()
 			return UDim2.new(1, 0, 0, layout().bannerHeight)
 		end,
 		BackgroundTransparency = 1,
-		create("UIStroke")({ Color = R.emberLight, Thickness = 3, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+		create("UIStroke")({
+			Enabled = function()
+				return count() > 0
+			end,
+			Color = R.emberLight,
+			Thickness = 3,
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+		}),
 		create("UICorner")({ CornerRadius = UDim.new(0, 12) }),
 		children,
 		-- Nenhum pacote dentro da data agora.

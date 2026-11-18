@@ -4,7 +4,10 @@
 -- faíscas subindo e sumindo → moldura (centro transparente). O conteúdo do
 -- cartão vai por cima (a pilha fica num Frame de ZIndex 0, e a tela usa
 -- ZIndexBehavior.Sibling). Os efeitos vêm brancos e são tingidos por
--- ImageColor3.
+-- ImageColor3. Os efeitos ficam num Frame recortado DENTRO da moldura (o
+-- miolo, descontada a borda da arte): nada passa do canto arredondado do
+-- cartão. Os raios giram (e peça girada não é recortada pelo Roblox), então o
+-- quadrado deles é calculado para o disco girando caber nesse miolo.
 --
 -- Uma animação só para todas as peças: um RenderStepped que passa por todos
 -- os cartões de um canal ativo (CardFx.run, ex. "shop" com a loja aberta). Sem
@@ -31,6 +34,9 @@ local SPARK_PERIOD = { 2.4, 3.6 } -- s para uma faísca subir e sumir
 local SPARK_FROM, SPARK_TO = 0.9, 0.18 -- altura (fração) em que nasce e some
 local SPARK_KINDS = { "ember", "star4", "dot", "cross" }
 local SHOWN_EVERY = 0.25 -- s entre duas leituras de "o cartão está à vista?"
+local FRAME_BORDER = 44 -- px da borda da moldura nas artes das camadas (40, 41, 43, 44)
+local RAY_REACH = 0.88 -- os raios somem a 88% do raio do quadrado (LEIA-ME das camadas)
+local FX_SHARE = 0.9 -- lado do quadrado dos raios no lado menor do miolo
 
 type Spark = { image: ImageLabel, period: number, offset: number, x: number, last: number }
 type Entry = {
@@ -163,27 +169,32 @@ export type LayersProps = {
 	sliceShare: number?, -- fração do encaixe do SliceScale (moldura mais fina < 1)
 }
 
--- Imagem quadrada de efeito (raios, halo), do lado menor do cartão.
-local function square(name: string, image: string, color: Color3, center: UDim2 | () -> UDim2, z: number): ImageLabel
+-- Imagem quadrada de efeito (raios, halo); posição e tamanho vêm do arrumar().
+local function square(name: string, image: string, color: Color3, z: number): ImageLabel
 	return create("ImageLabel")({
 		Name = name,
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = center,
-		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
 		Image = image,
 		ImageColor3 = color,
 		ImageTransparency = RAY_TRANSPARENCY,
 		ScaleType = Enum.ScaleType.Fit,
 		ZIndex = z,
-		create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
 	}) :: ImageLabel
+end
+
+local function readCenter(center: UDim2 | () -> UDim2): UDim2
+	if type(center) == "function" then
+		return (center :: () -> UDim2)()
+	end
+	return center :: UDim2
 end
 
 -- A pilha base → efeitos → moldura cobrindo o pai (ZIndex 0). Os efeitos só
 -- entram se as artes deles existem.
 function CardFx.layers(p: LayersProps): Frame
-	local center = p.center or UDim2.fromScale(0.5, 0.4)
+	local center: UDim2 | () -> UDim2 = p.center or UDim2.fromScale(0.5, 0.4)
+	local share = p.sliceShare or 1
 	local base = create("ImageLabel")({
 		Name = "Base",
 		Size = UDim2.fromScale(1, 1),
@@ -203,8 +214,8 @@ function CardFx.layers(p: LayersProps): Frame
 		SliceCenter = p.slice,
 		ZIndex = 5,
 	}) :: ImageLabel
-	Rustic.fitSlice(base, p.size, p.sliceShare)
-	Rustic.fitSlice(frame, p.size, p.sliceShare)
+	Rustic.fitSlice(base, p.size, share)
+	Rustic.fitSlice(frame, p.size, share)
 
 	local holder = create("Frame")({
 		Name = "Layers",
@@ -221,6 +232,14 @@ function CardFx.layers(p: LayersProps): Frame
 	if not color then
 		return holder
 	end
+	-- Miolo recortado: os efeitos não passam da moldura.
+	local inner = create("Frame")({
+		Name = "Effects",
+		BackgroundTransparency = 1,
+		ClipsDescendants = true,
+		ZIndex = 2,
+		Parent = holder,
+	}) :: Frame
 	local entry: Entry = {
 		key = p.key,
 		holder = holder,
@@ -231,19 +250,62 @@ function CardFx.layers(p: LayersProps): Frame
 		alive = true,
 		shown = false,
 	}
+	local halo: ImageLabel? = nil
 	if MonetizationImages.has(MonetizationImages.HALO) then
-		local halo = square("Halo", MonetizationImages.HALO, color, center, 2)
-		halo.Size = UDim2.fromScale(1.1, 1.1)
-		halo.Parent = holder
-		entry.halo = halo
+		local image = square("Halo", MonetizationImages.HALO, color, 1)
+		image.Parent = inner
+		halo = image
+		entry.halo = image
 	end
+	local rays: ImageLabel? = nil
 	if MonetizationImages.has(MonetizationImages.RAYS) then
-		-- Os raios somem a 88% do raio do quadrado: girando, não passam do lado
-		-- menor do cartão (o recorte não vale para peça girada).
-		local rays = square("Rays", MonetizationImages.RAYS, color, center, 3)
-		rays.Parent = holder
-		entry.rays = rays
+		local image = square("Rays", MonetizationImages.RAYS, color, 2)
+		image.Parent = inner
+		rays = image
+		entry.rays = image
 	end
+
+	-- Arruma o miolo e o quadrado dos raios no tamanho atual do cartão (pixels
+	-- lógicos: sem o UIScale da tela).
+	local artSide = math.min(p.size.X, p.size.Y)
+	local function arrange()
+		local abs = holder.AbsoluteSize
+		if abs.X <= 0 or abs.Y <= 0 then
+			return
+		end
+		local factor = Rustic.uiScaleOf(holder)
+		local w, h = abs.X / factor, abs.Y / factor
+		-- Mesma escala do fitSlice da moldura: a borda da arte em pixels lógicos.
+		local border = FRAME_BORDER * math.min(w, h) / artSide * share
+		local iw, ih = math.max(w - 2 * border, 1), math.max(h - 2 * border, 1)
+		inner.Position = UDim2.fromOffset(border, border)
+		inner.Size = UDim2.fromOffset(iw, ih)
+		-- Centro pedido, puxado para dentro até o disco dos raios caber.
+		local c = readCenter(center)
+		local side = math.min(iw, ih) * FX_SHARE
+		local reach = side / 2 * RAY_REACH
+		local cx = math.clamp(c.X.Scale * w + c.X.Offset - border, reach, math.max(iw - reach, reach))
+		local cy = math.clamp(c.Y.Scale * h + c.Y.Offset - border, reach, math.max(ih - reach, reach))
+		if rays then
+			rays.Position = UDim2.fromOffset(cx, cy)
+			rays.Size = UDim2.fromOffset(side, side)
+		end
+		if halo then
+			halo.Position = UDim2.fromOffset(cx, cy)
+			halo.Size = UDim2.fromOffset(side * 1.15, side * 1.15)
+		end
+	end
+	holder:GetPropertyChangedSignal("AbsoluteSize"):Connect(arrange)
+	holder.AncestryChanged:Connect(arrange)
+	if type(center) == "function" then
+		-- Centro reativo (ex. o ícone do Banner): rearruma quando ele muda.
+		vide.effect(function()
+			readCenter(center)
+			arrange()
+		end)
+	end
+	arrange()
+
 	for i = 1, SPARK_COUNT do
 		local id = MonetizationImages.SPARKS[SPARK_KINDS[(i - 1) % #SPARK_KINDS + 1]]
 		if MonetizationImages.has(id) then
@@ -257,9 +319,9 @@ function CardFx.layers(p: LayersProps): Frame
 				ImageColor3 = color:Lerp(Color3.new(1, 1, 1), 0.35),
 				ImageTransparency = 1,
 				ScaleType = Enum.ScaleType.Fit,
-				ZIndex = 4,
+				ZIndex = 3,
 				create("UIAspectRatioConstraint")({ AspectRatio = 1 }),
-				Parent = holder,
+				Parent = inner,
 			}) :: ImageLabel
 			local period = rng:NextNumber(SPARK_PERIOD[1], SPARK_PERIOD[2])
 			table.insert(entry.sparks, {

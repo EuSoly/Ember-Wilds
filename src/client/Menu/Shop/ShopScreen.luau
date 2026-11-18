@@ -67,15 +67,25 @@ function ShopScreen.build(
 		create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, SECTION_GAP) }),
 		create("UIPadding")({ PaddingRight = UDim.new(0, 10), PaddingBottom = UDim.new(0, 16) }),
 	}
+	local hasContent: { [string]: () -> boolean } = {}
 	for i, tab in TABS do
 		local builder = builders[tab.id]
 		local content = if builder then builder() else nil
+		-- Conteúdo escondido (ex. nenhum pacote em destaque) esconde a seção
+		-- inteira, com o título: sem caixa vazia nem buraco na lista.
+		local shown: (() -> boolean) & ((boolean) -> boolean) = vide.source(content == nil or content.Visible) :: any
+		if content then
+			content:GetPropertyChangedSignal("Visible"):Connect(function()
+				shown(content.Visible)
+			end)
+		end
+		hasContent[tab.id] = shown
 		local section = create("Frame")({
 			Name = "Section_" .. tab.id,
 			LayoutOrder = i,
 			-- Celular: só a seção da aba ativa (uma página por aba, 17/11/2026).
 			Visible = function()
-				return not layout().paged or active() == tab.id
+				return shown() and (not layout().paged or active() == tab.id)
 			end,
 			Size = UDim2.fromScale(1, 0),
 			AutomaticSize = Enum.AutomaticSize.Y,
@@ -135,10 +145,17 @@ function ShopScreen.build(
 		if vide.untrack(layout).paged then
 			return
 		end
+		-- Começa na primeira seção que aparece (a de pacotes some sem pacotes).
 		local current: Section = "packs"
+		for _, tab in TABS do
+			if vide.untrack(hasContent[tab.id]) then
+				current = tab.id
+				break
+			end
+		end
 		local maxY = scroll.AbsoluteCanvasSize.Y - scroll.AbsoluteWindowSize.Y
 		for _, tab in TABS do
-			if sectionOffset(tab.id) <= scroll.CanvasPosition.Y + ACTIVE_SLACK then
+			if vide.untrack(hasContent[tab.id]) and sectionOffset(tab.id) <= scroll.CanvasPosition.Y + ACTIVE_SLACK then
 				current = tab.id
 			end
 		end

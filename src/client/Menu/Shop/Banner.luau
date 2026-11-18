@@ -5,8 +5,9 @@
 -- em linha; no PC estreito (boost, Premium) ícone e textos em cima e o botão
 -- embaixo; no celular é uma faixa baixa sem ícone. (Até 17/11/2026 a coluna
 -- do meio esticava por UIFlexItem e os textos saíam com ~8 px no PC.)
--- Fundo, na ordem: as camadas (base → efeitos → moldura, UI/CardFx), a arte
--- 9-slice inteira, ou o degradê do vividCard.
+-- Fundo, na ordem: as camadas (base → efeitos → moldura, UI/CardFx, com os
+-- efeitos recortados dentro da moldura), a arte 9-slice inteira (com o
+-- brilho de canto), ou o degradê do vividCard.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -15,6 +16,7 @@ local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local ShopLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("ShopLayout"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local Rustic = require(script.Parent.Parent.Parent:WaitForChild("UI"):WaitForChild("Rustic"))
 
 local create = vide.create
 
@@ -70,10 +72,7 @@ end
 -- Acompanha o tamanho do cartão em pixels lógicos (sem o UIScale da tela).
 local function trackSize(card: GuiObject, size: Source<Vector2>)
 	local function read()
-		local gui = card:FindFirstAncestorOfClass("ScreenGui")
-		local uiScale = gui and gui:FindFirstChildOfClass("UIScale")
-		local factor = if uiScale and uiScale.Scale > 0 then uiScale.Scale else 1
-		size(card.AbsoluteSize / factor)
+		size(card.AbsoluteSize / Rustic.uiScaleOf(card))
 	end
 	card:GetPropertyChangedSignal("AbsoluteSize"):Connect(read)
 	card.AncestryChanged:Connect(read)
@@ -208,24 +207,29 @@ function Banner.build(p: Props): Frame
 			})
 		)
 	end
-	table.insert(
-		children,
-		create("ImageLabel")({
-			Name = "Overlay",
-			Visible = function()
-				return p.overlay ~= nil and p.overlay() ~= ""
-			end,
-			AnchorPoint = Vector2.new(1, 0),
-			Position = UDim2.fromScale(1, 0),
-			Size = UDim2.fromScale(0.5, 0.5),
-			BackgroundTransparency = 1,
-			Image = function()
-				return if p.overlay then p.overlay() else ""
-			end,
-			ScaleType = Enum.ScaleType.Fit,
-			ZIndex = 2,
-		})
-	)
+	-- Brilho de canto (VIP ativo) só com a arte inteira: nas camadas ele saía
+	-- por cima da moldura e da borda do cartão (teste de 18/11/2026); lá o
+	-- "VIP ativo até" já diz o estado.
+	if not layered then
+		table.insert(
+			children,
+			create("ImageLabel")({
+				Name = "Overlay",
+				Visible = function()
+					return p.overlay ~= nil and p.overlay() ~= ""
+				end,
+				AnchorPoint = Vector2.new(1, 0),
+				Position = UDim2.fromScale(1, 0),
+				Size = UDim2.fromScale(0.5, 0.5),
+				BackgroundTransparency = 1,
+				Image = function()
+					return if p.overlay then p.overlay() else ""
+				end,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 2,
+			})
+		)
+	end
 	table.insert(children, p.icon)
 	table.insert(children, textColumn)
 	table.insert(children, buttonBox)

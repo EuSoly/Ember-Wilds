@@ -104,10 +104,29 @@ local function sliceImage(art: SliceArt, visible: boolean | () -> boolean, tint:
 	return image
 end
 
+-- Escala total que os UIScale aplicam a `object`: o da tela (tamanho da
+-- interface) vezes os do caminho (ex. o PopIn das janelas, durante a abertura).
+function Rustic.uiScaleOf(object: Instance): number
+	local factor = 1
+	local current: Instance? = object
+	while current do
+		local scale = current:FindFirstChildOfClass("UIScale")
+		if scale and scale.Scale > 0 then
+			factor *= scale.Scale
+		end
+		if current:IsA("LayerCollector") then
+			break
+		end
+		current = current.Parent
+	end
+	return factor
+end
+
 -- Encaixa o SliceScale de uma imagem 9-slice (arte de `artSize` px) no
 -- tamanho dela: as pontas crescem e encolhem com a peça, na razão entre o lado
--- menor da peça e o lado menor da arte (vezes `share`, 1 = proporcional). Como
--- no sliceImage, desconta o UIScale da tela (senão a escala entra duas vezes).
+-- menor da peça e o lado menor da arte (vezes `share`, 1 = proporcional).
+-- Desconta os UIScale do caminho (o Roblox também os aplica às pontas; sem
+-- descontar, a escala entraria duas vezes).
 function Rustic.fitSlice(image: GuiObject, artSize: Vector2, share: number?)
 	local k = share or 1
 	local artSide = math.min(artSize.X, artSize.Y)
@@ -116,11 +135,10 @@ function Rustic.fitSlice(image: GuiObject, artSize: Vector2, share: number?)
 		if size.X <= 0 or size.Y <= 0 then
 			return
 		end
-		local gui = image:FindFirstAncestorOfClass("ScreenGui")
-		local uiScale = gui and gui:FindFirstChildOfClass("UIScale")
-		local factor = if uiScale and uiScale.Scale > 0 then uiScale.Scale else 1
+		local factor = Rustic.uiScaleOf(image)
 		-- ImageLabel ou ImageButton: os dois têm SliceScale.
-		(image :: any).SliceScale = math.max(math.min(size.X, size.Y) / factor / artSide * k, 0.02)
+		local sliced: any = image
+		sliced.SliceScale = math.max(math.min(size.X, size.Y) / factor / artSide * k, 0.02)
 	end
 	image:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
 	image.AncestryChanged:Connect(fit)

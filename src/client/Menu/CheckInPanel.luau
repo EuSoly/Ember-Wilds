@@ -8,8 +8,10 @@
 -- Artes em MonetizationImages (id vazio = desenho por código): janela 11,
 -- cartões 12/13 nos 4 estados, carimbo 14, calendário 15 e bolinha 16. O dia 7,
 -- enquanto ainda vale (hoje ou futuro), usa as camadas 43 com os efeitos
--- dourados (UI/CardFx, canal "checkin", só com a janela aberta). As artes são
--- de papel claro: por cima delas o texto vai escuro.
+-- dourados (UI/CardFx, canal "checkin", só com a janela aberta).
+-- Cada cartão mostra o prêmio em selo (Shop/RewardBadge): o ícone (moeda,
+-- roleta, giro especial, kit) e a quantidade, na letra de título com contorno
+-- (lê sobre o papel claro e sobre o cartão escuro).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -18,6 +20,10 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local MenuLayout = require(Shared:WaitForChild("UIFlow"):WaitForChild("MenuLayout"))
 local CheckInRules = require(Shared:WaitForChild("Shop"):WaitForChild("CheckInRules"))
+local RewardBadge = require(Shared:WaitForChild("Shop"):WaitForChild("RewardBadge"))
+local MissionImages = require(Shared:WaitForChild("MissionImages"))
+local ShopImages = require(Shared:WaitForChild("ShopImages"))
+local UiImages = require(Shared:WaitForChild("UiImages"))
 local ShopConfig = require(Shared:WaitForChild("Shop"):WaitForChild("ShopConfig"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
@@ -33,6 +39,7 @@ local CardFx = require(Client:WaitForChild("UI"):WaitForChild("CardFx"))
 local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local RewardView = require(script.Parent:WaitForChild("Shop"):WaitForChild("RewardView"))
+local ShopParts = require(script.Parent:WaitForChild("Shop"):WaitForChild("ShopParts"))
 
 local create = vide.create
 local R = Theme.rustic
@@ -41,6 +48,7 @@ type Source<T> = (() -> T) & ((T) -> T)
 type CardState = CheckInRules.CardState
 
 local WINDOW_MAX = Vector2.new(720, 440)
+local DIM_BLEED = 200 -- px que o escurecido passa da área segura para cada lado
 local TITLE_HEIGHT = 52
 local CLOSE_HEIGHT = 46
 local GOT_SECONDS = 4
@@ -50,6 +58,13 @@ local BODY = Color3.fromHex("#2B2018")
 local DAY7_GLOW = Color3.fromHex("#FFD45A") -- efeitos do dia 7: dourado
 local WINDOW_SLICE_SHARE = 0.5 -- borda da janela e dos cartões mais fina que a proporcional
 local CARD_SLICE_SHARE = 0.6
+-- Recuo do conteúdo no cartão (fração do lado): o texto não encosta na borda
+-- desenhada da arte (~34 px de 240 na arte 12).
+local CARD_INSET_X = 0.09
+local CARD_INSET_Y = 0.07
+-- Menor letra no PC (no celular baixo, ScreenMetrics.short, vale 10).
+local DAY_TITLE_MIN = 18
+local AMOUNT_MIN = 16
 local FACE: { [CardState]: Color3 } = {
 	future = Color3.fromHex("#3A2B20"),
 	locked = Color3.fromHex("#241A13"),
@@ -119,6 +134,28 @@ local function sliced(image: () -> string, slice: Rect, size: Vector2, share: nu
 	return label
 end
 
+-- Imagem do ícone de um selo de prêmio ("" = sem ícone: vale o texto inteiro).
+local function badgeImage(badge: RewardBadge.Badge): string
+	local icon = badge.icon
+	if icon == "coin" then
+		return UiImages.COIN
+	elseif icon == "spinNormal" then
+		return ShopImages.TAB.spins or ""
+	elseif icon == "spinPaid" then
+		return MissionImages.ICON.premio_giro_especial or ""
+	elseif icon == "kit" and badge.kitId then
+		return MonetizationImages.KIT[badge.kitId] or ""
+	end
+	return ""
+end
+
+-- Menor letra: a do PC, ou 10 no celular baixo (os cartões ficam com ~85 px).
+local function minSize(pc: number): () -> number
+	return function()
+		return if ScreenMetrics.short() then 10 else pc
+	end
+end
+
 -- Um cartão de dia (o 7 usa a arte e a letra maiores).
 local function dayCard(day: number, currentDay: () -> number, ready: () -> boolean): Frame
 	local big = day == DAYS
@@ -139,13 +176,15 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 	end
 	local slice = if big then MonetizationImages.CHECKIN_DAY7_SLICE else MonetizationImages.CHECKIN_DAY_SLICE
 	local artSize = if big then MonetizationImages.CHECKIN_DAY7_SIZE else MonetizationImages.CHECKIN_DAY_SIZE
-	local rewardText = RewardView.text(ShopConfig.CHECKIN[day])
-	-- Com a arte, só o "trancado" é escuro; os outros são papel claro.
-	local function textColor(): Color3
-		if MonetizationImages.has(art()) then
-			return if state() == "locked" then R.cream else R.charcoal
-		end
-		return if state() == "today" then R.charcoal else R.cream
+	local reward = ShopConfig.CHECKIN[day]
+	local rewardText = RewardView.text(reward)
+	local badge = RewardBadge.of(reward)
+	local icon = badgeImage(badge)
+	local hasIcon = icon ~= ""
+	-- Futuro e trancado ficam um pouco apagados.
+	local function dimmed(): number
+		local s = state()
+		return if s == "future" or s == "locked" then 0.2 else 0
 	end
 	local layers: Instance? = nil
 	if big and MonetizationImages.hasLayers(MonetizationImages.DAY7_LAYERS) then
@@ -193,28 +232,65 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 			ZIndex = 1,
 		}),
 		layers,
-		Rustic.label({
-			Name = "DayLabel",
-			Position = UDim2.fromScale(0.06, 0.04),
-			Size = UDim2.fromScale(0.88, 0.2),
-			FontFace = Theme.font.number,
-			TextColor3 = textColor,
-			Text = Strings.format("checkin.day", { day = day }),
-			maxSize = if big then 26 else 20,
+		-- Conteúdo dentro da borda da arte: título e selo do prêmio.
+		create("Frame")({
+			Name = "Content",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
 			ZIndex = 2,
-		}),
-		Rustic.label({
-			Name = "Reward",
-			Position = UDim2.fromScale(0.06, 0.26),
-			Size = UDim2.fromScale(0.88, 0.34),
-			TextColor3 = textColor,
-			TextTransparency = function()
-				local s = state()
-				return if s == "future" or s == "locked" then 0.25 else 0
-			end,
-			Text = rewardText,
-			maxSize = if big then 24 else 17,
-			ZIndex = 2,
+			create("UIPadding")({
+				PaddingLeft = UDim.new(CARD_INSET_X, 0),
+				PaddingRight = UDim.new(CARD_INSET_X, 0),
+				PaddingTop = UDim.new(CARD_INSET_Y, 0),
+				PaddingBottom = UDim.new(CARD_INSET_Y, 0),
+			}),
+			ShopParts.outlined({
+				Name = "DayLabel",
+				Size = UDim2.fromScale(1, 0.18),
+				FontFace = Theme.font.title,
+				Text = Strings.format("checkin.day", { day = day }),
+				maxSize = if big then 30 else 22,
+				minSize = minSize(DAY_TITLE_MIN),
+				ZIndex = 2,
+			}),
+			-- Selo: o ícone do prêmio e a quantidade embaixo.
+			create("ImageLabel")({
+				Name = "RewardIcon",
+				Visible = hasIcon,
+				AnchorPoint = Vector2.new(0.5, 0),
+				Position = UDim2.fromScale(0.5, 0.2),
+				Size = UDim2.fromScale(1, if big then 0.4 else 0.36),
+				BackgroundTransparency = 1,
+				Image = icon,
+				ImageTransparency = dimmed,
+				ScaleType = Enum.ScaleType.Fit,
+				ZIndex = 2,
+			}),
+			ShopParts.outlined({
+				Name = "Amount",
+				Visible = hasIcon,
+				Position = UDim2.fromScale(0, if big then 0.6 else 0.56),
+				Size = UDim2.fromScale(1, if big then 0.16 else 0.17),
+				FontFace = Theme.font.title,
+				Text = badge.amount,
+				TextTransparency = dimmed,
+				maxSize = if big then 36 else 24,
+				minSize = minSize(AMOUNT_MIN),
+				ZIndex = 2,
+			}),
+			-- Prêmio sem ícone: o texto inteiro.
+			ShopParts.outlined({
+				Name = "Reward",
+				Visible = not hasIcon,
+				Position = UDim2.fromScale(0, 0.22),
+				Size = UDim2.fromScale(1, 0.48),
+				FontFace = Theme.font.title,
+				TextWrapped = true,
+				TextTransparency = dimmed,
+				Text = rewardText,
+				maxSize = if big then 26 else 18,
+				ZIndex = 2,
+			}),
 		}),
 		Rustic.button({
 			Name = "Claim",
@@ -222,8 +298,8 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 				return state() == "today"
 			end,
 			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 0.94),
-			Size = UDim2.fromScale(0.84, 0.28),
+			Position = UDim2.fromScale(0.5, 1 - CARD_INSET_Y),
+			Size = UDim2.fromScale(1 - 2 * CARD_INSET_X, 0.22),
 			kind = function()
 				return if pending() then "disabled" else "ember"
 			end,
@@ -238,11 +314,11 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 				return state() == "locked"
 			end,
 			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.fromScale(0.5, 0.92),
-			Size = UDim2.fromScale(0.88, 0.22),
+			Position = UDim2.fromScale(0.5, 1 - CARD_INSET_Y),
+			Size = UDim2.fromScale(1 - 2 * CARD_INSET_X, 0.16),
 			TextColor3 = R.emberLight,
 			Text = Strings.get("checkin.locked"),
-			maxSize = 15,
+			maxSize = 16,
 			ZIndex = 3,
 		}),
 		-- Carimbo "resgatado" por cima do cartão: a arte, ou o texto girado.
@@ -252,8 +328,8 @@ local function dayCard(day: number, currentDay: () -> number, ready: () -> boole
 				return state() == "claimed" and MonetizationImages.has(MonetizationImages.CLAIMED_STAMP)
 			end,
 			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.7),
-			Size = UDim2.fromScale(0.8, 0.4),
+			Position = UDim2.fromScale(0.5, 0.62),
+			Size = UDim2.fromScale(0.8, 0.42),
 			BackgroundTransparency = 1,
 			Image = MonetizationImages.CLAIMED_STAMP,
 			ScaleType = Enum.ScaleType.Fit,
@@ -417,10 +493,22 @@ function CheckInPanel.build(): Frame
 		Name = "CheckIn",
 		Visible = open,
 		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.new(0, 0, 0),
-		BackgroundTransparency = 0.45,
+		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ZIndex = 11, -- acima do aviso do menu (10)
+		-- Escurecido da tela inteira: o menu respeita a área segura (barra do
+		-- Roblox em cima, entalhe dos lados), então o fundo passa dela para
+		-- cobrir também atrás da barra (teste de 18/11/2026: sobrava uma faixa
+		-- clara em cima). A ScreenGui não recorta o que sai dela.
+		create("Frame")({
+			Name = "Dim",
+			Position = UDim2.fromOffset(-DIM_BLEED, -DIM_BLEED),
+			Size = UDim2.new(1, 2 * DIM_BLEED, 1, 2 * DIM_BLEED),
+			BackgroundColor3 = Color3.new(0, 0, 0),
+			BackgroundTransparency = 0.45,
+			BorderSizePixel = 0,
+			ZIndex = 0,
+		}),
 		-- Tocar fora da janela fecha.
 		create("TextButton")({
 			Name = "Outside",
