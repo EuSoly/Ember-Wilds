@@ -198,7 +198,7 @@ Testes: `tests/shopdates.spec.luau`, `tests/shopcatalog.spec.luau`, `tests/spinr
 ## Ligar o Robux de verdade (depois)
 
 1. Zerar todos os perfis (decisão do Elizeu).
-2. Criar os produtos de desenvolvedor e gamepasses no site e guardar os ids junto dos produtos.
+2. ~~Criar os produtos de desenvolvedor e gamepasses no site e guardar os ids junto dos produtos.~~ **Feito em 18/11/2026**: 6 gamepasses, 20 produtos de desenvolvedor (criados pela API do Open Cloud) e a assinatura do VIP (criada à mão pelo Elizeu, `EXP-7043584435712819724`), todos no universo 10773601314 e **fora de venda**. Os ids ficam em `src/shared/Shop/RobloxIds.luau`; o teste `tests/robloxids.spec.luau` avisa produto da loja sem id. Pôr à venda: `PATCH isForSale=true` em cada um (APIs `game-passes` e `developer-products`) junto com o passo 3. Produto novo (pacote em destaque novo, outro pacote de moeda) precisa de um produto novo no Roblox; preço mudado no código precisa mudar também no Creator Hub.
 3. Trocar o `ShopService.charge` de Robux pelo `MarketplaceService:PromptProductPurchase` e entregar no `ProcessReceipt` (usando `PurchaseIdCache` do perfil para não entregar duas vezes), respondendo `PurchaseGranted` só depois que o perfil guardou.
 4. Gamepasses (kits para sempre, `ember2x`, `book`): entregar pelo `UserOwnsGamePassAsync` / `PromptGamePassPurchaseFinished`.
 5. VIP: virar **assinatura** do Roblox (status lido ao entrar; `Shop.VipUntil` acompanha). Revive: veja `docs/guia/revive.md` e a fase 9 em `docs/pendencias.md`.
