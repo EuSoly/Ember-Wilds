@@ -196,4 +196,39 @@ return {
 	["hidden product is unknown for the shop"] = function()
 		assert(PurchaseRules.check(product("revive_1"), ShopData.empty(), 0, 0) == "unknown", "revive escondido")
 	end,
+
+	["rememberGift ignores a repeated purchase id"] = function()
+		local d = ShopData.empty()
+		assert(ShopData.rememberGift(d, "p1"), "primeira vez")
+		assert(not ShopData.rememberGift(d, "p1"), "repetido")
+	end,
+
+	["rememberGift keeps 100"] = function()
+		local d = ShopData.empty()
+		for i = 1, 101 do
+			ShopData.rememberGift(d, `p{i}`)
+		end
+		assert(#d.GiftIds == 100, `guardou {#d.GiftIds}`)
+		assert(table.find(d.GiftIds, "p1") == nil and d.GiftIds[100] == "p101", "o mais velho saiu")
+	end,
+
+	["setGiftPending replaces the previous recipient"] = function()
+		local d = ShopData.empty()
+		ShopData.setGiftPending(d, "pack_300", 1, "Um")
+		ShopData.setGiftPending(d, "pack_300", 2, "Dois")
+		local pending = ShopData.takeGiftPending(d, "pack_300")
+		assert(pending ~= nil and pending.to == 2 and pending.name == "Dois", "o último vence")
+		assert(ShopData.takeGiftPending(d, "pack_300") == nil, "lido e apagado")
+	end,
+
+	["inbox is first in first out"] = function()
+		local d = ShopData.empty()
+		ShopData.pushInbox(d, "Ana", "pack_300")
+		ShopData.pushInbox(d, "Bia", "pass_book")
+		local first = ShopData.popInbox(d)
+		assert(first ~= nil and first.from == "Ana" and first.productId == "pack_300", "primeiro")
+		local second = ShopData.popInbox(d)
+		assert(second ~= nil and second.from == "Bia", "segundo")
+		assert(ShopData.popInbox(d) == nil, "vazia")
+	end,
 }

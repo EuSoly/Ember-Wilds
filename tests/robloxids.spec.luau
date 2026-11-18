@@ -27,6 +27,15 @@ return {
 		assert(RobloxIds.fromProduct(1) == nil, "id de fora")
 	end,
 
+	["gift ids map back with the gift flag"] = function()
+		local id, gift = RobloxIds.fromProduct(RobloxIds.PRODUCT.pack_300)
+		assert(id == "pack_300" and gift == false, "produto normal não é presente")
+		for productId, robloxId in RobloxIds.GIFT do
+			local back, isGift = RobloxIds.fromProduct(robloxId)
+			assert(back == productId and isGift == true, `{productId}: presente`)
+		end
+	end,
+
 	["no stale ids and no id used twice"] = function()
 		local seen: { [number]: string } = {}
 		for _, list in { RobloxIds.GAME_PASS, RobloxIds.PRODUCT } do

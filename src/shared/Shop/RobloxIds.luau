@@ -47,6 +47,10 @@ RobloxIds.PRODUCT = table.freeze({
 	bundle_floresta = 3733055827,
 }) :: { [string]: number }
 
+-- Produtos de presente ("Presente: X"): mesmo id da loja, comprado por um
+-- jogador para outro (GiftService). VIP e revive não têm.
+RobloxIds.GIFT = table.freeze({}) :: { [string]: number }
+
 RobloxIds.SUBSCRIPTION = table.freeze({
 	vip_30d = "EXP-7043584435712819724",
 }) :: { [string]: string }
@@ -67,6 +71,10 @@ local productById: { [number]: string } = {}
 for productId, id in RobloxIds.PRODUCT do
 	productById[id] = productId
 end
+local giftById: { [number]: string } = {}
+for productId, id in RobloxIds.GIFT do
+	giftById[id] = productId
+end
 local passById: { [number]: string } = {}
 for productId, id in RobloxIds.GAME_PASS do
 	passById[id] = productId
@@ -76,9 +84,14 @@ for productId, id in RobloxIds.SUBSCRIPTION do
 	subscriptionById[id] = productId
 end
 
--- Id da loja de um produto de desenvolvedor do Roblox (nil = não é nosso).
-function RobloxIds.fromProduct(robloxId: number): string?
-	return productById[robloxId]
+-- Id da loja de um produto de desenvolvedor do Roblox (nil = não é nosso) e
+-- se é o produto de presente dele.
+function RobloxIds.fromProduct(robloxId: number): (string?, boolean)
+	local gift = giftById[robloxId]
+	if gift ~= nil then
+		return gift, true
+	end
+	return productById[robloxId], false
 end
 
 -- Id da loja de uma gamepass do Roblox.

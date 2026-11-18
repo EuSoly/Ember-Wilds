@@ -16,7 +16,19 @@ export type ShopData = {
 	BoostUntil: number, -- unix em que o boost de XP acaba (<= agora = sem boost)
 	ReviveCredits: number, -- revives de cortesia guardados
 	CheckIn: { Day: number, LastDay: number }, -- Day = próximo prêmio (1..7); LastDay = RankRules.dayIndex do último resgate (0 = nunca)
+	-- Presentes (GiftService): para quem é o próximo "Presente: X" que este
+	-- jogador pagar (um por produto), presentes recebidos ainda não abertos
+	-- (fila) e PurchaseIds de presentes já entregues a ele (sem entregar 2×).
+	GiftPending: { [string]: GiftPending },
+	GiftInbox: { GiftEntry },
+	GiftIds: { string },
 }
+
+export type GiftPending = { to: number, name: string }
+export type GiftEntry = { from: string, productId: string }
+
+-- Quantos PurchaseIds de presente o perfil guarda (os mais velhos saem).
+local GIFT_IDS_MAX = 100
 
 local ShopData = {}
 
@@ -34,6 +46,9 @@ function ShopData.empty(): ShopData
 		BoostUntil = 0,
 		ReviveCredits = 0,
 		CheckIn = { Day = 1, LastDay = 0 },
+		GiftPending = {},
+		GiftInbox = {},
+		GiftIds = {},
 	}
 end
 
@@ -106,6 +121,42 @@ end
 
 function ShopData.markPurchased(d: ShopData, productId: string)
 	d.Purchased[productId] = true
+end
+
+-- O próximo "Presente: <productId>" que este jogador pagar vai para `toUserId`
+-- (substitui o anterior do mesmo produto).
+function ShopData.setGiftPending(d: ShopData, productId: string, toUserId: number, toName: string)
+	d.GiftPending[productId] = { to = toUserId, name = toName }
+end
+
+-- Lê e apaga o destinatário do presente `productId` (nil se não há).
+function ShopData.takeGiftPending(d: ShopData, productId: string): GiftPending?
+	local pending = d.GiftPending[productId]
+	d.GiftPending[productId] = nil
+	return pending
+end
+
+-- Guarda o PurchaseId de um presente entregue. false se já estava (recibo
+-- repetido: não entregar de novo).
+function ShopData.rememberGift(d: ShopData, purchaseId: string): boolean
+	if table.find(d.GiftIds, purchaseId) ~= nil then
+		return false
+	end
+	while #d.GiftIds >= GIFT_IDS_MAX do
+		table.remove(d.GiftIds, 1)
+	end
+	table.insert(d.GiftIds, purchaseId)
+	return true
+end
+
+-- Presente recebido e ainda não aberto vai para o fim da fila.
+function ShopData.pushInbox(d: ShopData, from: string, productId: string)
+	table.insert(d.GiftInbox, { from = from, productId = productId })
+end
+
+-- Tira o primeiro presente da fila (nil se vazia).
+function ShopData.popInbox(d: ShopData): GiftEntry?
+	return table.remove(d.GiftInbox, 1)
 end
 
 -- Ao carregar o perfil: marcas que não são `true` (ex. alguém tirou um kit
