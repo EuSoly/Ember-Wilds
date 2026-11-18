@@ -54,6 +54,7 @@ local ProfilePanel = require(script.Parent:WaitForChild("ProfilePanel"))
 local CheckInPanel = require(script.Parent:WaitForChild("CheckInPanel"))
 local GiftPanel = require(script.Parent:WaitForChild("Shop"):WaitForChild("GiftPanel"))
 local GiftPopup = require(script.Parent:WaitForChild("GiftPopup"))
+local CodePanel = require(script.Parent:WaitForChild("CodePanel"))
 local TutorialSpinPopup = require(script.Parent:WaitForChild("TutorialSpinPopup"))
 local AssetProgress = require(script.Parent:WaitForChild("AssetProgress"))
 local CosmeticsScreen = require(script.Parent:WaitForChild("Cosmetics"):WaitForChild("CosmeticsScreen"))
@@ -722,7 +723,15 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 			return MenuState.panel() == "play" and not rankingOnTop()
 		end)
 	)
+	-- Códigos de resgate: botão embaixo do calendário, com a mesma visibilidade.
+	table.insert(
+		children,
+		CodePanel.button(layout, function()
+			return MenuState.panel() == "play" and not rankingOnTop() and not CheckInPanel.open()
+		end)
+	)
 	table.insert(children, CheckInPanel.build())
+	table.insert(children, CodePanel.build())
 	table.insert(children, GiftPanel.build())
 	table.insert(children, GiftPopup.build())
 	table.insert(

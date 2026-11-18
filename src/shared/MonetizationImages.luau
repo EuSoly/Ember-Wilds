@@ -89,6 +89,8 @@ MonetizationImages.CHECKIN_CALENDAR = "rbxassetid://116858363197191"
 MonetizationImages.NOTICE_DOT = "rbxassetid://100592441558127"
 
 -- 17. Ícone do boost de XP.
+-- Ícone do botão de códigos de resgate (arte do Elizeu; vazio = o de presente).
+MonetizationImages.CODES_ICON = ""
 MonetizationImages.XP_BOOST = "rbxassetid://83488962407228"
 
 -- 18. Cartão de benefícios do Premium (1024x400). Com as camadas 44
