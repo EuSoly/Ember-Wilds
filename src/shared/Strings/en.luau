@@ -1054,7 +1054,7 @@ return table.freeze({
 	["shop.vip.name"] = "VIP",
 	["shop.boost.name"] = "XP Boost",
 	-- Loja: VIP, boost de XP e Premium (Menu/Shop/VipCard, BoostCard, PremiumCard)
-	["shop.vip.perks"] = "+3 bag slots · VIP icon on your name · +50% Golden Ember · VIP Kit · 1 free revive per life",
+	["shop.vip.perks"] = "+3 inventory slots ·VIP icon on your name · +50% Golden Ember · VIP Kit · 1 free revive per life",
 	["shop.vip.short"] = "+3 slots · +50% GE · free revive",
 	["shop.boost.short"] = "Double XP for 1 h",
 	["shop.premium.short"] = "+20% Golden Ember",

@@ -26,6 +26,7 @@ local Kit = require(script.Parent:WaitForChild("Kit"))
 local create = vide.create
 
 local REFRESH = 0.1 -- 10 vezes por segundo
+local DOTS_REFRESH = 1 -- segundos entre as atualizações dos pontos das construções
 local OUTLINE = Color3.fromRGB(45, 28, 16)
 local OWN_DOT_COLOR = Theme.rustic.cream
 local TEAM_DOT_COLOR = Color3.fromRGB(120, 230, 120)
@@ -142,6 +143,7 @@ local function Minimap(): Frame
 	end))
 
 	vide.cleanup(task.spawn(function()
+		local lastDots = -math.huge
 		while true do
 			-- Sempre o personagem atual: depois do respawn segue o novo.
 			local me = Players.LocalPlayer
@@ -163,6 +165,14 @@ local function Minimap(): Frame
 				rotation(MinimapRules.heading(look.X, look.Z))
 			end
 			-- Construções do jogador (e do time) no bioma mostrado, limitadas a 200 (as mais perto).
+			-- Só a cada DOTS_REFRESH: percorre todas as peças do servidor e as
+			-- peças quase não mudam (a seta do jogador continua a cada REFRESH).
+			local now = os.clock()
+			if now - lastDots < DOTS_REFRESH then
+				task.wait(REFRESH)
+				continue
+			end
+			lastDots = now
 			local myId = me.UserId
 			local myTeam = me:GetAttribute(StatNames.Team)
 			local teamMembers: { [number]: boolean } = {}

@@ -28,6 +28,7 @@ local PANEL_WIDTH = 210
 local TITLE_HEIGHT = 22
 local ROW_HEIGHT = 18
 local GAP = 4
+local REBUILD_EVERY = 0.5 -- segundos: no máximo 2 atualizações da lista por segundo
 
 local function formatScore(n: number): string
 	local s = tostring(math.floor(math.max(n, 0)))
@@ -110,11 +111,25 @@ local function Leaderboard(): Frame
 		rows(LeaderboardRules.top(entries, LeaderboardRules.LIMIT, myId))
 	end
 
+	-- Os pontos mudam a cada golpe de coleta de qualquer jogador: junta as
+	-- mudanças e refaz a lista no máximo a cada REBUILD_EVERY.
+	local pending = false
+	local function scheduleRebuild()
+		if pending then
+			return
+		end
+		pending = true
+		task.delay(REBUILD_EVERY, function()
+			pending = false
+			rebuild()
+		end)
+	end
+
 	local function watchPlayer(p: Player)
 		if playerConns[p] then
 			playerConns[p]:Disconnect()
 		end
-		playerConns[p] = p:GetAttributeChangedSignal(StatNames.Score):Connect(rebuild)
+		playerConns[p] = p:GetAttributeChangedSignal(StatNames.Score):Connect(scheduleRebuild)
 	end
 
 	for _, p in Players:GetPlayers() do

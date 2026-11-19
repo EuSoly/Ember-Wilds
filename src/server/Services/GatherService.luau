@@ -252,20 +252,12 @@ local function hit(player: Player, character: Model, root: BasePart)
 	end
 	-- Golpe em área (19/11): acerta todos os mobs, jogadores, peças sólidas e
 	-- caixas no círculo; recurso continua um só por golpe (o mais perto).
-	-- Colega de time não leva dano do golpe em área (e fantasma já ficou de fora).
+	-- Colega de time continua no golpe: o CharacterService.hurt aplica a regra
+	-- de sempre (TeamRules.TEAM_DAMAGE, 30%). Fantasma já ficou de fora acima.
 	local nonResources: { Candidate } = {}
 	local resources: { Candidate } = {}
 	for _, candidate in candidates do
-		if candidate.resource then
-			table.insert(resources, candidate)
-		elseif candidate.character then
-			local other = Players:GetPlayerFromCharacter(candidate.character)
-			if other == nil or not BuildRules.areAllies(player.UserId, other.UserId) then
-				table.insert(nonResources, candidate)
-			end
-		else
-			table.insert(nonResources, candidate)
-		end
+		table.insert(if candidate.resource then resources else nonResources, candidate)
 	end
 	local targets = GatherRules.pickTargets(nonResources, px, pz, GatherRules.HIT_RADIUS)
 	local bestResource = GatherRules.pickTarget(resources, px, pz, GatherRules.HIT_RADIUS)
