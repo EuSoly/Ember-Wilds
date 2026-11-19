@@ -1,7 +1,8 @@
 --!strict
 -- Desliga partes da interface padrão do Roblox que o jogo substitui:
 -- a mochila (temos hotbar e inventário próprios) e a barra de vida (temos os anéis).
--- O botão "Reset Character" do menu do Roblox passa pelo DeathService do jogo.
+-- O botão "Reset Character" do menu do Roblox passa pelo DeathService do jogo,
+-- que só reseta depois de 10 s parado; a contagem fica em UI/ResetCountdown.
 -- O chat padrão continua ligado.
 local StarterGui = game:GetService("StarterGui")
 

@@ -33,6 +33,7 @@ local PinnedRecipe = require(script.Parent:WaitForChild("PinnedRecipe"))
 local Template = require(script.Parent.Parent:WaitForChild("UITemplates"):WaitForChild("Template"))
 local WeaponLock = require(script.Parent:WaitForChild("WeaponLock"))
 local XpBoostBadge = require(script.Parent:WaitForChild("XpBoostBadge"))
+local ResetCountdown = require(script.Parent:WaitForChild("ResetCountdown"))
 
 local create = vide.create
 
@@ -43,6 +44,7 @@ local function App(): ScreenGui
 		CraftColumn(),
 		Clock(),
 		XpBoostBadge.hud(), -- logo abaixo do selo de pontos
+		ResetCountdown(), -- reset pelo menu do Roblox: 10 s parado
 		Minimap(),
 		SettingsButton(),
 		RecipeBookButton(),

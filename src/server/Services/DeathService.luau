@@ -39,6 +39,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local CombatTag = require(ReplicatedStorage.Shared.Combat.CombatTag)
+local ResetRules = require(ReplicatedStorage.Shared.Survival.ResetRules)
 local CrateRules = require(ReplicatedStorage.Shared.Crate.CrateRules)
 local ReviveRules = require(ReplicatedStorage.Shared.Survival.ReviveRules)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -273,12 +274,49 @@ local function checkFalls()
 	end
 end
 
-function DeathService.Start(_self)
-	Net.RequestReset.On(function(player: Player)
-		if player.Character ~= nil then
-			DeathService.kill(player, "death.cause.dev")
+-- Reset pelo menu do Roblox: só depois de ResetRules.SECONDS parado (andar
+-- mais que ResetRules.MOVE_TOLERANCE cancela). Um pedido por vez.
+local resetting: { [Player]: boolean } = {}
+local RESET_TICK = 0.25
+
+local function rootOf(character: Model?): BasePart?
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	return if root and root:IsA("BasePart") then root else nil
+end
+
+local function onResetRequest(player: Player)
+	local character = player.Character
+	local root = rootOf(character)
+	if resetting[player] or character == nil or root == nil then
+		return
+	end
+	resetting[player] = true
+	Net.ResetStatus.Fire(player, "started")
+	local x0, z0 = root.Position.X, root.Position.Z
+	local started = os.clock()
+	task.spawn(function()
+		while true do
+			task.wait(RESET_TICK)
+			local now = rootOf(player.Character)
+			-- Morreu, saiu ou trocou de personagem no meio: para sem avisar.
+			if player.Parent ~= Players or player.Character ~= character or now == nil then
+				break
+			end
+			if ResetRules.moved(x0, z0, now.Position.X, now.Position.Z) then
+				Net.ResetStatus.Fire(player, "cancelled")
+				break
+			end
+			if ResetRules.done(os.clock() - started) then
+				DeathService.kill(player, "death.cause.reset")
+				break
+			end
 		end
+		resetting[player] = nil
 	end)
+end
+
+function DeathService.Start(_self)
+	Net.RequestReset.On(onResetRequest)
 	Players.PlayerAdded:Connect(setupPlayer)
 	for _, player in Players:GetPlayers() do
 		setupPlayer(player)

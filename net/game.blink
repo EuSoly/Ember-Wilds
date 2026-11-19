@@ -143,11 +143,21 @@ event TutorialDone {
 	}
 }
 
--- Pedido de reset do personagem (botão de teste em Configurações).
+-- Pedido de reset do personagem ("Reset Character" do menu do Roblox). O
+-- servidor só reseta depois de ResetRules.SECONDS parado (DeathService).
 event RequestReset {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync
+}
+
+-- Andamento do reset, para o aviso na tela: "started" (fique parado),
+-- "cancelled" (se mexeu).
+event ResetStatus {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: string(1..12)
 }
 
 -- Resumo da vida que acabou, para a tela de morte (DeathService.kill).

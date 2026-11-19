@@ -419,11 +419,6 @@ local function close()
 	SettingsScreen.open(false)
 end
 
-local function reset()
-	Net.RequestReset.Fire()
-	close()
-end
-
 -- Uma coluna do celular: os grupos de um lado do SettingsLayout.split. Rola
 -- só como reserva (tela ainda menor ou "Tamanho da interface" grande).
 local function compactColumn(name: string, groups: { SettingsFormat.Group }, x: UDim): ScrollingFrame
@@ -446,7 +441,8 @@ local function compactColumn(name: string, groups: { SettingsFormat.Group }, x: 
 	}) :: ScrollingFrame
 end
 
--- Corpo do celular: título, Resetar e X numa linha; as duas colunas embaixo.
+-- Corpo do celular: título e X numa linha; as duas colunas embaixo. (O Resetar
+-- saiu em 18/11/2026: o reset é pelo menu do Roblox, com 10 s parado.)
 local function compactBody(): Frame
 	local left, right = SettingsLayout.split(SettingsFormat.grouped(Defs.Settings))
 	return create("Frame")({
@@ -470,16 +466,6 @@ local function compactBody(): Frame
 				maxSize = 26,
 				create("UIStroke")({ Color = R.outline, Thickness = 2 }),
 			}) :: Instance,
-			Rustic.button({
-				Name = "ResetButton",
-				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.new(1, -(TITLE_ROW_SHORT + 10), 0.5, 0),
-				Size = UDim2.fromOffset(120, TITLE_ROW_SHORT),
-				kind = "leather",
-				text = Strings.get("settings.reset"),
-				maxSize = 18,
-				Activated = reset,
-			}),
 			Rustic.button({
 				Name = "CloseButton",
 				AnchorPoint = Vector2.new(1, 0.5),
@@ -604,15 +590,6 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 						VerticalAlignment = Enum.VerticalAlignment.Center,
 						Padding = UDim.new(0, 16),
 						SortOrder = Enum.SortOrder.LayoutOrder,
-					}),
-					Rustic.button({
-						Name = "ResetButton",
-						LayoutOrder = 1,
-						Size = UDim2.fromOffset(150, CLOSE_HEIGHT),
-						kind = "leather",
-						text = Strings.get("settings.reset"),
-						maxSize = 22,
-						Activated = reset,
 					}),
 					Rustic.button({
 						Name = "CloseButton",
