@@ -19,6 +19,7 @@ local Hotbar = require(script.Parent:WaitForChild("Hotbar"))
 local HudBottom = require(script.Parent:WaitForChild("HudBottom"))
 local InteractPanel = require(script.Parent:WaitForChild("InteractPanel"))
 local ItemTooltip = require(script.Parent:WaitForChild("ItemTooltip"))
+local Leaderboard = require(script.Parent:WaitForChild("Leaderboard"))
 local Minimap = require(script.Parent:WaitForChild("Minimap"))
 local MissionsButton = require(script.Parent:WaitForChild("MissionsButton"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
@@ -49,6 +50,7 @@ local function App(): ScreenGui
 		SettingsButton(),
 		RecipeBookButton(),
 		MissionsButton(),
+		Leaderboard(),
 		TutorialPanel(),
 		PinnedRecipe(),
 		GhostPanel(),

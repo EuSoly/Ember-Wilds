@@ -82,6 +82,7 @@ return table.freeze({
 	["hud.rank"] = "#{rank}",
 	["hud.nightComing"] = "Night is coming",
 	["hud.backpack"] = "Inventory",
+	["hud.players"] = "Players",
 	["hud.rotate"] = "Rotate",
 	["hud.crate"] = "Crate",
 	-- Botão do baú no celular: ligado, tocar num slot da hotbar guarda no baú
