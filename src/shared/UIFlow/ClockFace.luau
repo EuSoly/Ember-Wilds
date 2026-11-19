@@ -23,8 +23,17 @@ local SKY: { { at: number, top: string, bottom: string } } = {
 	{ at = 24, top = "#0B1440", bottom = "#1D2A6B" },
 }
 
+-- AM/PM vale para quem joga em inglês. Mesma escolha de idioma dos textos
+-- (Strings.languageOf: "pt*" → português, o resto → inglês), para o relógio
+-- nunca mostrar "Dia 3 · 2:30 PM" nem "Day 3 · 14:30". Sem LocaleId: 24 h.
 function ClockFace.isEnglish(localeId: string): boolean
-	return string.lower(string.sub(localeId, 1, 2)) == "en"
+	local prefix = string.lower(string.sub(localeId, 1, 2))
+	return prefix ~= "" and prefix ~= "pt"
+end
+
+-- O mesmo, a partir do idioma já escolhido pelo Strings.
+function ClockFace.twelveHour(language: string): boolean
+	return language == "en"
 end
 
 -- "14:30" (24 h) ou "2:30 PM" (12 h), de 10 em 10 minutos.

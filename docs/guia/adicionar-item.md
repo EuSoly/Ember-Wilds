@@ -88,11 +88,14 @@ Itens `category = "misc"` podem ter `craftSpeed` maior que 1. Esse valor divide 
 
 O `id` vai para o save do jogador, então **nunca renomeie um id já publicado**. Se precisar, crie um novo e faça uma migração.
 
-## 2. O texto — `src/shared/Strings/ptBR.luau`
+## 2. O texto — `src/shared/Strings/ptBR.luau` e `en.luau`
 
 ```lua
-["item.diamond_pickaxe"] = "Picareta de Diamante",
+["item.diamond_pickaxe"] = "Picareta de Diamante", -- ptBR.luau
+["item.diamond_pickaxe"] = "Diamond Pickaxe", -- en.luau
 ```
+
+As duas línguas são obrigatórias: o `tests/strings.spec.luau` falha se a chave faltar no `en.luau` (veja "Textos e idiomas" em `telas.md`).
 
 ## 3. Verificar
 

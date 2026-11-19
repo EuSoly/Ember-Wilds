@@ -22,6 +22,7 @@ local locks: { [Model]: BillboardGui } = {}
 local function buildGui(): BillboardGui
 	local gui = Instance.new("BillboardGui")
 	gui.Name = "CrateLock"
+	gui.AutoLocalize = false -- tela nossa: o Roblox não traduz nada aqui
 	gui.Size = SIZE
 	gui.StudsOffset = OFFSET
 	gui.AlwaysOnTop = true

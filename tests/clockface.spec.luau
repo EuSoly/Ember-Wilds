@@ -31,7 +31,17 @@ return {
 
 	["english for any en locale"] = function()
 		assert(ClockFace.isEnglish("en-us") and ClockFace.isEnglish("en-gb") and ClockFace.isEnglish("EN"), "en-*")
-		assert(not ClockFace.isEnglish("pt-br") and not ClockFace.isEnglish(""), "outros: 24 h")
+		assert(not ClockFace.isEnglish("pt-br") and not ClockFace.isEnglish(""), "português e vazio: 24 h")
+	end,
+
+	-- Mesma escolha do Strings: quem não é "pt" joga em inglês, então AM/PM.
+	["same language rule as Strings"] = function()
+		local Strings = require("../src/shared/Strings")
+		for _, locale in { "pt-br", "pt-pt", "en-us", "es-es", "fr-fr", "" } do
+			local english = Strings.languageOf(locale) == "en"
+			assert(ClockFace.isEnglish(locale) == english, `locale {locale}`)
+		end
+		assert(ClockFace.twelveHour("en") and not ClockFace.twelveHour("ptBR"), "twelveHour pelo idioma")
 	end,
 
 	["sky colors by time of day"] = function()

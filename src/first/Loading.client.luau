@@ -16,7 +16,8 @@
 -- Root (CanvasGroup, fade), Art (ImageLabel: a arte de fundo), Night
 -- (CanvasGroup do céu noturno), Track (trilho de madeira), Fill (a barra),
 -- Sun e Moon (ImageLabel; sem imagem viram um círculo), StatusLabel.
--- Os textos ficam fixos aqui e no molde: o Strings ainda não chegou ao cliente.
+-- Os textos ficam fixos em LoadingMath (português e inglês, pelo LocaleId do
+-- jogador): o Strings ainda não chegou ao cliente. O molde traz o português.
 local Players = game:GetService("Players")
 local ReplicatedFirst = game:GetService("ReplicatedFirst")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -44,7 +45,14 @@ local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local gui = script.Parent:WaitForChild("LoadingScreen"):Clone() :: ScreenGui
 gui.ResetOnSpawn = false
+gui.AutoLocalize = false -- os textos já vêm no idioma do jogador (abaixo)
 gui.Parent = playerGui
+
+-- Idioma pelo LocaleId do jogador (mesma regra do Strings: LoadingMath.isEnglish).
+local localeOk, localeId = pcall(function(): string
+	return player.LocaleId
+end)
+local english = LoadingMath.isEnglish(if localeOk then localeId else nil)
 
 local function find<T>(name: string, className: string): T?
 	local instance = gui:FindFirstChild(name, true)
@@ -60,6 +68,10 @@ local night = find("Night", "CanvasGroup") :: CanvasGroup?
 local sun = find("Sun", "ImageLabel") :: ImageLabel?
 local moon = find("Moon", "ImageLabel") :: ImageLabel?
 local status = find("StatusLabel", "TextLabel") :: TextLabel?
+local tip = find("TipLabel", "TextLabel") :: TextLabel?
+if tip then
+	tip.Text = LoadingMath.tip(english) -- o molde vem com a dica em português
+end
 
 -- Imagem ainda sem id (ou que falhou): mostra um círculo da mesma cor.
 local function fallbackCircle(orb: ImageLabel?, color: Color3)
@@ -117,8 +129,8 @@ local function render(progress: number)
 		status.Text = if preloader
 				and preloader.blockingCounting()
 				and progress < 1
-			then LoadingMath.assetStatus(preloader.blockingLoaded(), preloader.blockingTotal())
-			else LoadingMath.status(progress)
+			then LoadingMath.assetStatus(preloader.blockingLoaded(), preloader.blockingTotal(), english)
+			else LoadingMath.status(progress, english)
 	end
 end
 
@@ -131,7 +143,7 @@ skip.AnchorPoint = Vector2.new(1, 1)
 skip.Position = UDim2.new(1, -24, 1, -24)
 skip.Size = UDim2.fromOffset(150, 52)
 skip.BackgroundColor3 = DAY_FILL
-skip.Text = "Pular"
+skip.Text = LoadingMath.skip(english)
 skip.FontFace = Font.fromEnum(Enum.Font.FredokaOne)
 skip.TextSize = 28
 skip.TextColor3 = Color3.fromHex("#29241F") -- charcoal

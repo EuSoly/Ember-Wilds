@@ -102,6 +102,31 @@ Qualquer `TextLabel` ou `TextButton` de um molde com o atributo **`TextKey`** re
 
 Textos com dados (saldo, pontos, dias) são escritos pelo código nos elementos combinados. O que vier escrito no molde é só exemplo para o design.
 
+## Textos e idiomas (português e inglês)
+
+O jogo tem duas línguas: **português** (`src/shared/Strings/ptBR.luau`, a referência) e **inglês** (`src/shared/Strings/en.luau`). Nenhuma tela escreve texto direto no código: tudo passa por `Strings.get(chave)` / `Strings.format(chave, { var = valor })`.
+
+### Como adicionar (ou mudar) um texto
+
+1. Escreva a chave em `ptBR.luau`: `["hud.nightComing"] = "A noite está chegando",`.
+2. Escreva **a mesma chave** em `en.luau`, no mesmo lugar: `["hud.nightComing"] = "Night is coming",`. Tom de jogo de sobrevivência em inglês: casual e curto. Nomes próprios (Ember Wilds, Golden Ember) ficam iguais.
+3. As variáveis `{x}` têm que ser **as mesmas nas duas línguas** (o código preenche pelo nome): `"Dia {day}"` ↔ `"Day {day}"`. A ordem na frase pode mudar.
+4. Rode os testes (`lune run tests/run`). O `tests/strings.spec.luau` **falha** se uma chave do ptBR faltar no en, se o en tiver chave que não existe no ptBR, ou se as variáveis forem diferentes, e mostra a lista do que corrigir.
+
+Se mesmo assim faltar uma chave no en (ex.: jogo publicado sem rodar os testes), o jogador em inglês vê o texto em português. Só depois disso aparece `[chave]` na tela.
+
+### Como o idioma é escolhido
+
+- **Pelo idioma do Roblox do jogador** (`Player.LocaleId`): começa com `pt` (pt-br, pt-pt) → português; **qualquer outro** → inglês. Sem LocaleId → português. A regra fica em `Strings.languageOf` (testada no Lune).
+- **No cliente**, `Strings.get` usa o idioma do `LocalPlayer`, lido uma vez. Ainda não há seletor de idioma nas Configurações; quando houver, ele chama `Strings.setLanguage("en" | "ptBR")` (as telas já montadas só mudam ao reabrir).
+- **No servidor** não existe "o jogador": `Strings.get` fica em português. Texto que o servidor monta pronto para alguém (kick, aviso) usa **`Strings.getFor(player, chave)`** / `Strings.formatFor(player, chave, vars)`. Hoje são os kicks do `DataService`. O resto o servidor manda como **chave** e o cliente traduz (ex.: a causa da morte, as respostas da loja).
+- **Relógio:** quem joga em inglês vê `Day 3 · 2:30 PM`; em português, `Dia 3 · 14:30` (`ClockFace.twelveHour(Strings.language())`).
+- **Tela de carregamento:** roda antes de o `Strings` chegar ao cliente, então os poucos textos dela ficam em `src/first/LoadingMath.luau` nas duas línguas, com a mesma regra repetida (`LoadingMath.isEnglish`; o teste confere que bate com o `Strings`).
+
+### Tradução automática do Roblox: desligada
+
+Toda `ScreenGui`, `BillboardGui` e `SurfaceGui` do jogo tem **`AutoLocalize = false`**: nas criadas por código (Vide `create("ScreenGui")` ou `Instance.new`) e nos moldes (`assets/ui/RecipeBook.model.json`, `src/first/LoadingScreen.model.json`). Assim o Roblox não tenta traduzir de novo um texto que já vem traduzido (nem nomes de jogador e de skin). **Tela nova:** ponha `AutoLocalize = false` nela. Molde novo: marque a propriedade no `ScreenGui` antes de salvar. Basta no `ScreenGui`, porque os filhos seguem o pai.
+
 ## O que o código anima
 
 - **Abrir/fechar tela:** fade do `Root` com leve escala (0,15 s).

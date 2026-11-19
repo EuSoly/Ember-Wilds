@@ -77,6 +77,7 @@ local function App(): ScreenGui
 	local hud = create("ScreenGui")({
 		Name = "Hud",
 		ResetOnSpawn = false, -- o HUD sobrevive ao respawn
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		-- Só jogando: no carregamento, menu e morte quem aparece são as telas.
 		Enabled = function()
 			return ScreenFlow.hudVisible(ScreenState.current())

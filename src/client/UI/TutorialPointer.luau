@@ -51,6 +51,7 @@ local function TutorialPointer(): ScreenGui
 	local gui = create("ScreenGui")({
 		Name = "TutorialPointer",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		DisplayOrder = 20, -- acima do HUD e do livro de receitas (5)
 		IgnoreGuiInset = false,
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,

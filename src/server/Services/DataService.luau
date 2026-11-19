@@ -84,7 +84,8 @@ end
 
 local function kickIfPresent(player: Player, key: string)
 	if player.Parent == Players then
-		player:Kick(Strings.get(key))
+		-- Texto montado no servidor: no idioma de quem sai, não no do servidor.
+		player:Kick(Strings.getFor(player, key))
 	end
 end
 
@@ -168,7 +169,7 @@ local function loadProfile(player: Player)
 		profile:EndSession()
 		if result ~= "" and player.Parent == Players then
 			-- O PlayerRemoving do kick limpa a marca endedByUs.
-			player:Kick(Strings.get(result))
+			player:Kick(Strings.getFor(player, result))
 		else
 			-- Já saiu (o PlayerRemoving já rodou): os sinais do EndSession são
 			-- síncronos, então as marcas podem ser limpas aqui sem vazar.
@@ -383,7 +384,7 @@ function DataService.resetForDev(player: Player): boolean
 	end
 	profiles[player] = nil
 	profile:EndSession()
-	player:Kick(Strings.get("data.devReset"))
+	player:Kick(Strings.getFor(player, "data.devReset"))
 	return true
 end
 

@@ -910,6 +910,7 @@ function MissionsScreen.mount(playerGui: Instance): ScreenGui?
 	local gui = create("ScreenGui")({
 		Name = "Missions",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		Enabled = false,
 		DisplayOrder = 20, -- acima do menu e da HUD
 		IgnoreGuiInset = false,

@@ -560,6 +560,7 @@ function DeathScreen.mount(playerGui: Instance): ScreenGui?
 	local gui = create("ScreenGui")({
 		Name = "Death",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		Enabled = false,
 		DisplayOrder = 10,
 		IgnoreGuiInset = true,

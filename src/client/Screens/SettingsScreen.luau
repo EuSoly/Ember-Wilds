@@ -498,6 +498,7 @@ function SettingsScreen.mount(playerGui: Instance): ScreenGui?
 	local gui = create("ScreenGui")({
 		Name = "Settings",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		Enabled = false,
 		DisplayOrder = 20, -- acima do menu e da HUD
 		-- A mesma área do menu (abaixo da barra do Roblox), para a janela ficar

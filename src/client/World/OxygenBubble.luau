@@ -27,6 +27,7 @@ function OxygenBubble.start()
 	local player = Players.LocalPlayer
 	local gui = Instance.new("BillboardGui")
 	gui.Name = "OxygenBubble"
+	gui.AutoLocalize = false -- tela nossa: o Roblox não traduz nada aqui
 	gui.Size = SIZE
 	gui.StudsOffset = OFFSET
 	-- AlwaysOnTop = false de propósito: testado no Studio (29/10), com true a

@@ -30,6 +30,7 @@ type Bubble = { gui: BillboardGui, gear: GuiObject, progress: (number) -> (), cl
 local function build(adornee: BasePart): Bubble
 	local gui = Instance.new("BillboardGui")
 	gui.Name = "CraftBubble"
+	gui.AutoLocalize = false -- tela nossa: o Roblox não traduz nada aqui
 	gui.Size = SIZE
 	gui.StudsOffset = OFFSET
 	gui.AlwaysOnTop = false

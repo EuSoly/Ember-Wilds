@@ -62,7 +62,7 @@ Regras:
 - **Defs** (`src/shared/Defs`): tabelas congeladas com ids em `snake_case`. A validação roda no boot. Veja `adicionar-item.md`.
 - **Palette** (`src/shared/Palette.luau`): todas as cores do jogo em hex. É a única fonte de cor.
 - **Theme** (`src/shared/Theme.luau`): a Palette em `Color3`, mais as fontes e medidas da UI. A interface usa só o Theme.
-- **Strings** (`src/shared/Strings`): todo texto exibido. `Strings.get("tier.gold") → "Ouro"`.
+- **Strings** (`src/shared/Strings`): todo texto exibido, em português (`ptBR.luau`) e inglês (`en.luau`). `Strings.get("tier.gold") → "Ouro"` ou `"Gold"`, conforme o idioma do Roblox do jogador. Texto novo vai nas duas línguas (o teste cobra). Veja "Textos e idiomas" em `telas.md`.
 
 ## Server Authority: regras do projeto
 

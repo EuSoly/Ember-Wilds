@@ -44,6 +44,7 @@ local function newDot(folder: Folder): Dot
 	part.Parent = folder
 
 	local gui = Instance.new("SurfaceGui")
+	gui.AutoLocalize = false -- tela nossa: o Roblox não traduz nada aqui
 	gui.Face = Enum.NormalId.Top
 	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
 	gui.PixelsPerStud = PIXELS_PER_STUD

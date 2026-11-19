@@ -41,6 +41,7 @@ end
 local function makeGui(piece: Instance, adornee: BasePart, parent: Instance): (BillboardGui, Frame)
 	local gui = Instance.new("BillboardGui")
 	gui.Name = "StructureHealth"
+	gui.AutoLocalize = false -- tela nossa: o Roblox não traduz nada aqui
 	gui.Size = BAR_SIZE
 	gui.StudsOffset = Vector3.new(0, heightOf(piece) / 2 + 1.5, 0)
 	gui.AlwaysOnTop = false

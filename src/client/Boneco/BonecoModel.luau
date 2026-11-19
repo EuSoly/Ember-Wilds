@@ -231,6 +231,7 @@ end
 local function buildNameTag(root: BasePart, displayName: string): (TextLabel, TextLabel, GuiObject)
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "NameTag"
+	billboard.AutoLocalize = false -- nome de jogador não se traduz
 	-- Mais alto que o nome, para caber o selo em cima (embaixo, a cabeça cobre).
 	-- O SizeOffset sobe a etiqueta meio selo, para o nome ficar onde sempre esteve.
 	billboard.Size = NAME_SIZE + UDim2.fromOffset(0, BADGE_HEIGHT_PX)

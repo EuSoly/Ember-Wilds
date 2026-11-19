@@ -44,15 +44,52 @@ function LoadingMath.assetTarget(loaded: number, total: number): number
 	return LoadingMath.ASSET_START + (LoadingMath.WAITING_TARGET - LoadingMath.ASSET_START) * share
 end
 
-local function thousands(value: number): string
+-- Idioma da tela de carregamento. É a mesma regra de Strings.languageOf
+-- ("pt*" → português, o resto → inglês, vazio → português), repetida aqui
+-- porque o Strings ainda não chegou ao cliente; o teste loadingmath.spec
+-- confere que as duas dão o mesmo resultado.
+function LoadingMath.isEnglish(localeId: string?): boolean
+	if type(localeId) ~= "string" or localeId == "" then
+		return false
+	end
+	return string.lower(string.sub(localeId, 1, 2)) ~= "pt"
+end
+
+-- Textos fixos da tela (o resto do jogo usa Strings/ptBR e Strings/en).
+local TEXT = {
+	pt = {
+		assets = "Carregando artes",
+		ready = "Pronto!",
+		night = "Acendendo as fogueiras…",
+		day = "Carregando o mundo…",
+		tip = "Dica: fique perto da fogueira à noite para não congelar.",
+		skip = "Pular",
+	},
+	en = {
+		assets = "Loading art",
+		ready = "Ready!",
+		night = "Lighting the campfires…",
+		day = "Loading the world…",
+		tip = "Tip: stay close to a campfire at night so you don't freeze.",
+		skip = "Skip",
+	},
+}
+
+local function texts(english: boolean?)
+	return if english then TEXT.en else TEXT.pt
+end
+
+-- Milhar com ponto em português (1.730) e vírgula em inglês (1,730).
+local function thousands(value: number, english: boolean?): string
+	local sep = if english then "," else "."
 	local digits = tostring(math.floor(math.max(value, 0)))
-	local out = digits:reverse():gsub("(%d%d%d)", "%1."):reverse()
-	return (out:gsub("^%.", ""))
+	local out = digits:reverse():gsub("(%d%d%d)", "%1" .. sep):reverse()
+	return (out:gsub("^%" .. sep, ""))
 end
 
 -- Texto da contagem das artes ("Carregando artes 312/1.730").
-function LoadingMath.assetStatus(loaded: number, total: number): string
-	return `Carregando artes {thousands(loaded)}/{thousands(total)}`
+function LoadingMath.assetStatus(loaded: number, total: number, english: boolean?): string
+	return `{texts(english).assets} {thousands(loaded, english)}/{thousands(total, english)}`
 end
 
 function LoadingMath.isNight(progress: number): boolean
@@ -61,13 +98,23 @@ end
 
 -- Texto embaixo da barra. Fixo aqui (e não no Strings) porque o Strings ainda
 -- não chegou ao cliente nessa hora.
-function LoadingMath.status(progress: number): string
+function LoadingMath.status(progress: number, english: boolean?): string
+	local t = texts(english)
 	if progress >= 1 then
-		return "Pronto!"
+		return t.ready
 	elseif LoadingMath.isNight(progress) then
-		return "Acendendo as fogueiras…"
+		return t.night
 	end
-	return "Carregando o mundo…"
+	return t.day
+end
+
+-- Dica embaixo da tela e o botão Pular.
+function LoadingMath.tip(english: boolean?): string
+	return texts(english).tip
+end
+
+function LoadingMath.skip(english: boolean?): string
+	return texts(english).skip
 end
 
 return LoadingMath

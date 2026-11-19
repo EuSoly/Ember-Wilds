@@ -3,10 +3,9 @@
 -- de madeira com uma janelinha de céu à esquerda e "Dia N · 14:30" à direita.
 -- O céu muda de cor com a hora (amanhecer, dia, entardecer, noite: ClockFace),
 -- o sol atravessa a janelinha de dia e a lua de noite, e as estrelas acendem
--- à noite. Com o Roblox em inglês, mostra "Day N · 2:30 PM".
+-- à noite. Para quem joga em inglês (Strings.language), mostra "Day N · 2:30 PM".
 -- Nos 30 s antes da noite a placa ganha o brilho de alerta e dispara o aviso
 -- "A noite está chegando".
-local LocalizationService = game:GetService("LocalizationService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -29,16 +28,11 @@ local ARC = 0.42 -- quanto o sol sobe no meio do caminho (fração da altura)
 local STARS =
 	{ { 0.12, 0.2 }, { 0.3, 0.12 }, { 0.48, 0.3 }, { 0.66, 0.16 }, { 0.82, 0.32 }, { 0.22, 0.42 }, { 0.9, 0.1 } }
 
-local function english(): boolean
-	local ok, locale = pcall(function()
-		return LocalizationService.RobloxLocaleId
-	end)
-	return ok and type(locale) == "string" and ClockFace.isEnglish(locale)
-end
-
 local function Clock(): Frame
 	local cycle = Sources.cycle()
-	local twelveHour = english()
+	-- AM/PM segue o idioma dos textos (Strings.language, pelo LocaleId do
+	-- jogador): quem vê "Day 3" vê "2:30 PM"; quem vê "Dia 3", "14:30".
+	local twelveHour = ClockFace.twelveHour(Strings.language())
 	local nightSoon = vide.derive(function()
 		return cycle().nightSoon
 	end)
@@ -157,8 +151,8 @@ local function Clock(): Frame
 			ZIndex = 2,
 			Text = function()
 				local state = cycle()
-				local dayKey = if twelveHour then "hud.dayEnglish" else "hud.day"
-				return `{Strings.format(dayKey, { day = state.day })} · {ClockFace.timeText(state.hours, twelveHour)}`
+				-- "hud.day" já vem no idioma do jogador ("Dia 3" / "Day 3").
+				return `{Strings.format("hud.day", { day = state.day })} · {ClockFace.timeText(state.hours, twelveHour)}`
 			end,
 		}),
 	}) :: Frame

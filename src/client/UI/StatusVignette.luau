@@ -149,6 +149,7 @@ local function StatusVignette(): ScreenGui
 	return create("ScreenGui")({
 		Name = "StatusVignette",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- tela nossa: o Roblox não traduz nada aqui
 		IgnoreGuiInset = true,
 		ScreenInsets = Enum.ScreenInsets.None,
 		DisplayOrder = -1, -- atrás do HUD

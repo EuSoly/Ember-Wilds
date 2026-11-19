@@ -760,6 +760,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local gui = create("ScreenGui")({
 		Name = "MenuShell",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		-- Abaixo da janela de Configurações (que abre por cima, com o menu escurecido).
 		DisplayOrder = 1,
 		Enabled = function()
@@ -777,6 +778,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local backdrop = create("ScreenGui")({
 		Name = "MenuBackdrop",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- tela nossa: o Roblox não traduz nada aqui
 		DisplayOrder = 0,
 		IgnoreGuiInset = true,
 		ScreenInsets = Enum.ScreenInsets.None,
@@ -805,6 +807,7 @@ function MenuShell.mount(playerGui: Instance): ScreenGui
 	local popup = create("ScreenGui")({
 		Name = "TutorialSpinPopup",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		DisplayOrder = 2,
 		IgnoreGuiInset = true,
 		ScreenInsets = Enum.ScreenInsets.None,

@@ -33,6 +33,7 @@ local function buildLabels(model: Model): { TextLabel }
 	for _, face in FACES do
 		local gui = Instance.new("SurfaceGui")
 		gui.Name = "SymbolGui" .. face.Name
+		gui.AutoLocalize = false -- símbolo da placa (seta, caveira...), não é texto para traduzir
 		gui.Face = face
 		gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
 		gui.PixelsPerStud = 50

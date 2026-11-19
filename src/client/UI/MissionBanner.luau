@@ -135,6 +135,7 @@ function MissionBanner.mount(playerGui: Instance): ScreenGui
 	local gui = create("ScreenGui")({
 		Name = "MissionBanner",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		DisplayOrder = 25, -- acima das janelas
 		IgnoreGuiInset = false,
 		ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets,

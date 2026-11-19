@@ -543,6 +543,7 @@ function RecipeBookScreen.mount(playerGui: Instance): ScreenGui?
 	local gui = create("ScreenGui")({
 		Name = "RecipeBook",
 		ResetOnSpawn = false,
+		AutoLocalize = false, -- os textos já vêm traduzidos do Strings
 		Enabled = false,
 		DisplayOrder = 5, -- acima do HUD
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,

@@ -77,4 +77,21 @@ return {
 		assert(LoadingMath.assetStatus(312, 1730) == "Carregando artes 312/1.730", LoadingMath.assetStatus(312, 1730))
 		assert(LoadingMath.assetStatus(0, 12) == "Carregando artes 0/12", "sem milhar")
 	end,
+
+	["english texts use a thousands comma"] = function()
+		local text = LoadingMath.assetStatus(312, 1730, true)
+		assert(text == "Loading art 312/1,730", text)
+		assert(LoadingMath.status(1, true) == "Ready!", LoadingMath.status(1, true))
+		assert(LoadingMath.skip(true) == "Skip" and LoadingMath.skip(false) == "Pular", "botão Pular")
+	end,
+
+	-- O carregamento não alcança o Strings: a regra repetida tem que bater.
+	["same language rule as Strings"] = function()
+		local Strings = require("../src/shared/Strings")
+		for _, locale in { "pt-br", "pt-pt", "PT", "en-us", "es-es", "ja-jp", "" } do
+			local english = Strings.languageOf(locale) == "en"
+			assert(LoadingMath.isEnglish(locale) == english, `locale {locale}`)
+		end
+		assert(LoadingMath.isEnglish(nil) == false, "sem locale: português")
+	end,
 }
