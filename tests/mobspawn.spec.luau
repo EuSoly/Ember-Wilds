@@ -6,9 +6,9 @@ local MobSpawn = require("../src/shared/Mobs/MobSpawn")
 return {
 	["targets use the forest day and night population"] = function()
 		local day = MobSpawn.targets(Defs.Mobs, "forest", false)
-		assert(day.rabbit == 40 and day.wolf == 10 and day.spider == 8 and day.boar == 8 and day.hawk == 6, "dia")
+		assert(day.rabbit == 50 and day.wolf == 13 and day.spider == 10 and day.boar == 10 and day.hawk == 8, "dia")
 		local night = MobSpawn.targets(Defs.Mobs, "forest", true)
-		assert(night.rabbit == 15 and night.wolf == 20 and night.spider == 16, "noite")
+		assert(night.rabbit == 19 and night.wolf == 25 and night.spider == 20, "noite")
 	end,
 
 	["targets are empty for a biome without population"] = function()
