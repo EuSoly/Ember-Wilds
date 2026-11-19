@@ -42,7 +42,11 @@ function HudColumnState.pinnedHeight(): number
 	if HudColumnState.yieldsToPanel() then
 		return 0
 	end
-	return HudColumn.pinnedHeight(#PinState.lines(), ScreenMetrics.guiHeight())
+	local rows = #PinState.lines()
+	if rows <= 0 then
+		return 0
+	end
+	return HudColumn.pinnedHeight(rows + #PinState.stations(), ScreenMetrics.guiHeight())
 end
 
 -- Função comum (não derive): pode ser lida fora de um escopo do Vide; a conta é barata.

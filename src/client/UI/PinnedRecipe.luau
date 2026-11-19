@@ -9,11 +9,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local BookImages = require(Shared:WaitForChild("BookImages"))
+local BookInfo = require(Shared:WaitForChild("UIFlow"):WaitForChild("BookInfo"))
 local Defs = require(Shared:WaitForChild("Defs"))
 local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 local PinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("PinRules"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
+local CraftState = require(script.Parent.Parent:WaitForChild("CraftState"))
 local PinState = require(script.Parent.Parent:WaitForChild("PinState"))
 local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
 local ItemIcon = require(script.Parent:WaitForChild("ItemIcon"))
@@ -30,14 +33,17 @@ local function itemName(id: string): string
 	return if def then Strings.get(def.nameKey) else id
 end
 
--- Uma linha: ícone e "Madeira 15/10".
+local function totalRows(): number
+	return math.max(#PinState.lines() + #PinState.stations(), 1)
+end
+
+-- Uma linha de ingrediente: ícone e "Madeira 15/10".
 local function Line(line: () -> PinRules.Line, index: number): Frame
 	return create("Frame")({
 		Name = "Line",
 		LayoutOrder = index,
 		Size = function()
-			local rows = math.max(#PinState.lines(), 1)
-			return UDim2.fromScale(1, 1 / rows)
+			return UDim2.fromScale(1, 1 / totalRows())
 		end,
 		BackgroundTransparency = 1,
 		create("Frame")({
@@ -73,8 +79,61 @@ local function Line(line: () -> PinRules.Line, index: number): Frame
 	}) :: Frame
 end
 
+-- Uma linha de estação exigida (bancada, fogo, água): ícone e nome; verde quando perto.
+local function StationLine(stationId: () -> string, index: number): Frame
+	local iconId = function(): string
+		local station = BookInfo.STATIONS[stationId()]
+		return (station and BookImages.STATION[station.icon]) or ""
+	end
+	return create("Frame")({
+		Name = "StationLine",
+		LayoutOrder = function()
+			return #PinState.lines() + index
+		end,
+		Size = function()
+			return UDim2.fromScale(1, 1 / totalRows())
+		end,
+		BackgroundTransparency = 1,
+		create("Frame")({
+			Name = "IconBox",
+			Size = UDim2.fromScale(0.9, 0.9),
+			Position = UDim2.fromScale(0, 0.05),
+			SizeConstraint = Enum.SizeConstraint.RelativeYY,
+			BackgroundTransparency = 1,
+			create("ImageLabel")({
+				Name = "Badge",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				ScaleType = Enum.ScaleType.Fit,
+				Image = iconId,
+				Visible = function()
+					return BookImages.has(iconId())
+				end,
+			}),
+		}),
+		Rustic.label({
+			Name = "StationName",
+			dark = true,
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.fromScale(1, 0.5),
+			Size = UDim2.fromScale(0.8, 0.8),
+			FontFace = Theme.font.number,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			maxSize = 16,
+			TextColor3 = function()
+				return if CraftState.near()[stationId()] then DONE_COLOR else R.charcoal
+			end,
+			Text = function()
+				local station = BookInfo.STATIONS[stationId()]
+				return if station then Strings.get(station.key) else stationId()
+			end,
+		}),
+	}) :: Frame
+end
+
 local function PinnedRecipe(): Frame
 	local lines = vide.derive(PinState.lines)
+	local stations = vide.derive(PinState.stations)
 	local props: { [any]: any } = {
 		Name = "PinnedRecipe",
 		Active = true,
@@ -98,7 +157,7 @@ local function PinnedRecipe(): Frame
 				TextXAlignment = Enum.TextXAlignment.Left,
 				maxSize = 18,
 				TextColor3 = function()
-					return if PinState.ready() then DONE_COLOR else R.emberShadow
+					return if PinState.ready(CraftState.near()) then DONE_COLOR else R.emberShadow
 				end,
 				Text = function()
 					local id = PinState.pinned()
@@ -138,6 +197,7 @@ local function PinnedRecipe(): Frame
 				BackgroundTransparency = 1,
 				create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder }),
 				vide.indexes(lines, Line),
+				vide.indexes(stations, StationLine),
 			}),
 		}
 	end

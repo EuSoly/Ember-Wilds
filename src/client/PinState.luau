@@ -5,6 +5,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local BookInfo = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("UIFlow"):WaitForChild("BookInfo"))
 local PinRules = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("UIFlow"):WaitForChild("PinRules"))
 local InventoryState = require(script.Parent:WaitForChild("InventoryState"))
 
@@ -35,10 +36,33 @@ function PinState.lines(): { PinRules.Line }
 	return if id then PinRules.lines(id, counts()) else {}
 end
 
--- true se já dá para fazer a receita fixada.
-function PinState.ready(): boolean
+-- Estações exigidas pela receita fixada; vazio sem receita ou sem estação.
+function PinState.stations(): { string }
 	local id = PinState.pinned()
-	return id ~= nil and PinRules.ready(id, counts())
+	local craft = if id then BookInfo.craft(id) else nil
+	local out: { string } = {}
+	if craft then
+		for _, station in craft.stations do
+			table.insert(out, station)
+		end
+	end
+	return out
+end
+
+-- true se já dá para fazer a receita fixada (ingredientes; e estações se `near` for dado).
+function PinState.ready(near: { [string]: boolean }?): boolean
+	local id = PinState.pinned()
+	if id == nil or not PinRules.ready(id, counts()) then
+		return false
+	end
+	if near then
+		for _, station in PinState.stations() do
+			if not near[station] then
+				return false
+			end
+		end
+	end
+	return true
 end
 
 return PinState

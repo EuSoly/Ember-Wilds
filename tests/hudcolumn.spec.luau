@@ -45,9 +45,10 @@ return {
 		assert(math.abs(HudColumn.pinnedHeight(2, pc) - (HudColumn.pinnedHeight(2) + rolls)) < 1e-9, "PC mudou")
 	end,
 
-	["pinned panel height grows with the ingredients"] = function()
+	["pinned panel height grows with the ingredients and stations"] = function()
 		assert(HudColumn.pinnedHeight(0) == 0, "sem receita fixada: 0")
 		assert(HudColumn.pinnedHeight(3) > HudColumn.pinnedHeight(1), "mais itens, mais alto")
+		assert(HudColumn.pinnedHeight(4) > HudColumn.pinnedHeight(3), "ingredientes + estação somam linhas")
 	end,
 
 	["column starts where it is told (below the round buttons)"] = function()
