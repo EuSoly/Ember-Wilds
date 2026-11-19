@@ -34,7 +34,7 @@ local RATE_WINDOW = 1
 type Entry = StructureService.Entry
 type RateState = { start: number, count: number }
 
-local contents: { [Entry]: ChestRules.Contents } = {}
+local contents: { [Entry]: ChestRules.Chest } = {}
 local rates: { [Player]: RateState } = {}
 
 local ChestService = {}
@@ -99,19 +99,22 @@ local function validChest(player: Player, chest: Instance?): Entry?
 	return entry
 end
 
-local function contentsOf(entry: Entry): ChestRules.Contents
-	local c = contents[entry]
-	if c == nil then
-		c = { id = nil, count = 0 }
-		contents[entry] = c
+local function contentsOf(entry: Entry): ChestRules.Chest
+	local chest = contents[entry]
+	if chest == nil then
+		chest = ChestRules.new()
+		contents[entry] = chest
 	end
-	return c
+	return chest
 end
 
--- Copia o conteúdo para os atributos do modelo (todos veem).
-local function publish(entry: Entry, c: ChestRules.Contents)
-	entry.model:SetAttribute(StatNames.ChestItem, c.id)
-	entry.model:SetAttribute(StatNames.ChestCount, c.count)
+-- Copia o conteúdo dos 3 slots para os atributos do modelo (todos veem).
+local function publish(entry: Entry, chest: ChestRules.Chest)
+	for i = 1, ChestRules.SLOTS do
+		local c = chest[i]
+		entry.model:SetAttribute(StatNames.chestItem(i), if c then c.id else nil)
+		entry.model:SetAttribute(StatNames.chestCount(i), if c then c.count else 0)
+	end
 end
 
 -- Pôr `Count` (1 ou 10) do slot `Slot` no baú. Sem pausa até o fim.
@@ -137,35 +140,42 @@ local function onPut(player: Player, data: { Chest: Instance?, Slot: number, Cou
 		return
 	end
 	local id = slot.id
-	local c = contentsOf(entry)
-	-- canPut já corta no teto e devolve 0 para outro tipo de item.
-	local amount = ChestRules.canPut(c, id, math.min(wanted, slot.count))
+	local chest = contentsOf(entry)
+	-- canPutAny já corta no teto e devolve 0 se os 3 slots já têm outros tipos.
+	local amount = ChestRules.canPutAny(chest, id, math.min(wanted, slot.count))
 	if amount <= 0 then
 		return
 	end
 	if not InventoryService.takeAt(player, index, amount) then
 		return
 	end
-	local put = ChestRules.put(c, id, amount)
+	local put = ChestRules.putAny(chest, id, amount)
 	if put < amount then
-		-- Não acontece (nada mudou entre canPut e put); se acontecer, devolve.
+		-- Não acontece (nada mudou entre canPutAny e putAny); se acontecer, devolve.
 		InventoryService.give(player, id, amount - put)
 	end
-	publish(entry, c)
+	publish(entry, chest)
 end
 
--- Tirar do baú o quanto couber no inventário. Sem pausa até o fim.
-local function onTake(player: Player, chest: Instance?)
-	if chest == nil then
+-- Tirar do slot do baú o quanto couber no inventário. Sem pausa até o fim.
+local function onTake(player: Player, data: any)
+	-- Aceita tanto { Chest, Slot } quanto Instance puro (clientes antigos durante update -> slot 1).
+	local chestInstance: Instance? = if typeof(data) == "Instance"
+		then data
+		elseif type(data) == "table" then data.Chest
+		else nil
+	local slotIndex: number = if type(data) == "table" and type(data.Slot) == "number" then data.Slot else 1
+	if chestInstance == nil then
 		return
 	end
-	local entry = validChest(player, chest)
+	local entry = validChest(player, chestInstance)
 	if entry == nil then
 		return
 	end
-	local c = contents[entry]
+	local chest = contents[entry]
+	local c = chest and chest[slotIndex]
 	local id = c and c.id
-	if c == nil or id == nil then
+	if chest == nil or c == nil or id == nil then
 		return
 	end
 	-- Quanto cabe é calculado sem mudar o inventário; só depois tira e dá.
@@ -175,7 +185,7 @@ local function onTake(player: Player, chest: Instance?)
 		return
 	end
 	local hadMore = amount < c.count
-	local takenId, taken = ChestRules.take(c, amount)
+	local takenId, taken = ChestRules.takeAt(chest, slotIndex, amount)
 	if takenId == nil or taken <= 0 then
 		return
 	end
@@ -187,7 +197,7 @@ local function onTake(player: Player, chest: Instance?)
 	elseif hadMore then
 		Net.CraftNotice.Fire(player, "inventory.full")
 	end
-	publish(entry, c)
+	publish(entry, chest)
 end
 
 function ChestService.Start(_self)

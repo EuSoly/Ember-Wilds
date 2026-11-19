@@ -521,11 +521,12 @@ function SerdesFunctions.WriteEVENT_ChestPut(Value: { Chest: Instance?, Slot: nu
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, Value.Count)
 end
 
-function SerdesFunctions.WriteEVENT_ChestTake(Value: Instance?): ()
-	-- Allocate BLOCK: 1 bytes
-	local BLOCK_START = Allocate(1)
+function SerdesFunctions.WriteEVENT_ChestTake(Value: { Chest: Instance?, Slot: number }): ()
+	-- Allocate BLOCK: 2 bytes
+	local BLOCK_START = Allocate(2)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 24)
-	table.insert(SendInstances, Value or Null)
+	table.insert(SendInstances, Value.Chest or Null)
+	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Slot)
 end
 
 function SerdesFunctions.WriteEVENT_CrateWatch(Value: Instance?): ()
@@ -1787,7 +1788,7 @@ local Returns = table.freeze({
 		end
 	},
 	ChestTake = {
-		Fire = function(Value: Instance?): ()
+		Fire = function(Value: { Chest: Instance?, Slot: number }): ()
 			SerdesFunctions.WriteEVENT_ChestTake(Value)
 		end
 	},

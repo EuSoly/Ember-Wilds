@@ -520,15 +520,18 @@ function SerdesFunctions.ReadEVENT_ChestPut(): ({ Chest: Instance?, Slot: number
 	return Value
 end
 
-function SerdesFunctions.ReadEVENT_ChestTake(): (Instance?)
-	local Value
+function SerdesFunctions.ReadEVENT_ChestTake(): ({ Chest: Instance?, Slot: number })
+	-- Read BLOCK: 1 bytes
+	local BLOCK_START = Read(1)
+	local Value = {} :: any
 	RecieveInstanceCursor += 1
 	if typeof(RecieveInstances[RecieveInstanceCursor]) == "Instance" then
 		RecieveInstanceCursor -= 1
 		RecieveInstanceCursor += 1
-		Value = RecieveInstances[RecieveInstanceCursor]
-		if typeof(Value) ~= "Instance" then error(`Expected an Instance, got {typeof(Value)} instead.`) end
+		Value.Chest = RecieveInstances[RecieveInstanceCursor]
+		if typeof(Value.Chest) ~= "Instance" then error(`Expected an Instance, got {typeof(Value.Chest)} instead.`) end
 	end
+	Value.Slot = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
 	return Value
 end
 
@@ -1529,7 +1532,7 @@ Reliable.OnServerEvent:Connect(function(Player: Player, Buffer: buffer, Instance
 				table.insert(Queue.Reliable[23], {Player, Value} :: {any})
 			end
 		elseif Index == 24 then
-			local Value: Instance? = SerdesFunctions.ReadEVENT_ChestTake()
+			local Value: { Chest: Instance?, Slot: number } = SerdesFunctions.ReadEVENT_ChestTake()
 			if Events.Reliable[24] ~= nil then
 				task.spawn(Events.Reliable[24], Player, Value)
 			else
@@ -2467,7 +2470,7 @@ local Returns = table.freeze({
 		end
 	},
 	ChestTake = {
-		On = function(Listener: (Player: Player, Value: Instance?) -> ()): () -> ()
+		On = function(Listener: (Player: Player, Value: { Chest: Instance?, Slot: number }) -> ()): () -> ()
 			Events.Reliable[24] = Listener
 			for Index, Arguments in Queue.Reliable[24] do
 				task.spawn(Listener, table.unpack(Arguments))

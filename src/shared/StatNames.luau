@@ -231,11 +231,15 @@ return table.freeze({
 	PieceRadius = "PieceRadius",
 	-- true com a porta aberta (as peças dela não colidem), atributo no modelo da porta.
 	DoorOpen = "DoorOpen",
-	-- Conteúdo do baú, atributos no modelo do baú (ChestService; todos veem):
-	-- id do item guardado (nil = vazio) e quantidade. Baú que ninguém mexeu
-	-- ainda não tem os atributos: sem atributo = vazio.
-	ChestItem = "ChestItem",
-	ChestCount = "ChestCount",
+	-- Conteúdo do baú (3 slots, ChestRules.SLOTS), atributos no modelo do baú
+	-- (ChestService; todos veem): ChestItem1..3 (nil = vazio) e ChestCount1..3.
+	-- Baú que ninguém mexeu ainda não tem os atributos: sem atributo = vazio.
+	chestItem = function(slot: number): string
+		return `ChestItem{slot}`
+	end,
+	chestCount = function(slot: number): string
+		return `ChestCount{slot}`
+	end,
 	-- Estado das estruturas de usar de perto (G8), atributos no modelo da peça
 	-- (todos veem; o painel de interação mostra só os que existem): madeira
 	-- dentro (extrator e fornalha), estoque pronto (extrator) e goles (poço).

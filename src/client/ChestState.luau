@@ -20,11 +20,14 @@ local Net = require(script.Parent:WaitForChild("Net"))
 local REFRESH = 0.25 -- segundos entre conferências
 
 export type Item = { id: string, count: number }
+export type Slots = { [number]: Item? }
 
 local ChestState = {
 	-- Baú mais perto dentro do alcance, ou nil.
 	near = vide.source(nil :: Model?),
-	-- Conteúdo do baú perto (nil = vazio ou sem baú).
+	-- Conteúdo dos 3 slots do baú perto (1..ChestRules.SLOTS; nil no slot = vazio).
+	slots = vide.source({} :: Slots),
+	-- Compatibilidade: o primeiro slot ocupado, ou nil se todos vazios.
 	contents = vide.source(nil :: Item?),
 	-- Celular: modo "Guardar" ligado (tocar num slot põe no baú). Desliga
 	-- sozinho ao se afastar do baú.
@@ -62,17 +65,17 @@ local function findNearest(): Model?
 	return best
 end
 
-local function readContents(chest: Model?): Item?
-	if chest == nil then
-		return nil
-	end
-	local id = chest:GetAttribute(StatNames.ChestItem)
-	local count = chest:GetAttribute(StatNames.ChestCount)
-	-- Baú novo não tem os atributos até o primeiro "pôr": conta como vazio.
+local function readSlot(chest: Model, slot: number): Item?
+	local id = chest:GetAttribute(StatNames.chestItem(slot))
+	local count = chest:GetAttribute(StatNames.chestCount(slot))
 	if type(id) ~= "string" or type(count) ~= "number" or count <= 0 then
 		return nil
 	end
 	return { id = id, count = count }
+end
+
+local function sameItem(a: Item?, b: Item?): boolean
+	return (a == nil and b == nil) or (a ~= nil and b ~= nil and a.id == b.id and a.count == b.count)
 end
 
 local function refresh()
@@ -83,12 +86,30 @@ local function refresh()
 			ChestState.storing(false)
 		end
 	end
-	local now = readContents(chest)
-	local before = ChestState.contents()
-	local same = (now == nil and before == nil)
-		or (now ~= nil and before ~= nil and now.id == before.id and now.count == before.count)
-	if not same then
-		ChestState.contents(now)
+	local nowSlots: Slots = {}
+	local first: Item? = nil
+	if chest ~= nil then
+		for i = 1, ChestRules.SLOTS do
+			local item = readSlot(chest, i)
+			nowSlots[i] = item
+			if first == nil and item ~= nil then
+				first = item
+			end
+		end
+	end
+	local beforeSlots = ChestState.slots()
+	local changed = false
+	for i = 1, ChestRules.SLOTS do
+		if not sameItem(nowSlots[i], beforeSlots[i]) then
+			changed = true
+			break
+		end
+	end
+	if changed then
+		ChestState.slots(nowSlots)
+	end
+	if not sameItem(first, ChestState.contents()) then
+		ChestState.contents(first)
 	end
 end
 
@@ -100,11 +121,11 @@ function ChestState.put(slot: number, count: number)
 	end
 end
 
--- Pede ao servidor para tirar do baú perto o quanto couber no inventário.
-function ChestState.take()
+-- Pede ao servidor para tirar do slot `slot` (1..3) do baú perto o quanto couber no inventário.
+function ChestState.take(slot: number?)
 	local chest = vide.untrack(ChestState.near)
 	if chest then
-		Net.ChestTake.Fire(chest)
+		Net.ChestTake.Fire({ Chest = chest, Slot = slot or 1 })
 	end
 end
 

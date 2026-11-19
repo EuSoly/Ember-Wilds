@@ -11,6 +11,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local ChestRules = require(Shared:WaitForChild("Build"):WaitForChild("ChestRules"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ChestState = require(script.Parent.Parent:WaitForChild("ChestState"))
@@ -25,10 +26,13 @@ local SIZE = 64 -- px (acima do mínimo de toque); o InteractPanel empilha por e
 local STORE_WIDTH = 104 -- px do botão Guardar
 local GAP = 8
 
-local function ChestSlot(): TextButton
+local function ChestSlot(slotIndex: number): TextButton
+	local slotItem = vide.derive(function()
+		return ChestState.slots()[slotIndex]
+	end)
 	return create("TextButton")({
-		Name = "Slot",
-		LayoutOrder = 1,
+		Name = `Slot{slotIndex}`,
+		LayoutOrder = slotIndex,
 		Size = UDim2.fromOffset(SIZE, SIZE),
 		Text = "",
 		AutoButtonColor = false,
@@ -45,9 +49,9 @@ local function ChestSlot(): TextButton
 		}),
 		if HudArt.HAS_SLOT then { HudArt.slotBack() } else {},
 		Activated = function()
-			ChestState.take()
+			ChestState.take(slotIndex)
 		end,
-		vide.show(ChestState.contents, function(current)
+		vide.show(slotItem, function(current)
 			return if HudArt.HAS_SLOT
 				then HudArt.inSlot(ItemIcon({ item = current, bare = true }))
 				else ItemIcon({ item = current })
@@ -56,6 +60,10 @@ local function ChestSlot(): TextButton
 end
 
 local function ChestPanel(): Frame
+	local slots: { Instance } = {}
+	for i = 1, ChestRules.SLOTS do
+		table.insert(slots, ChestSlot(i))
+	end
 	return create("Frame")({
 		Name = "ChestPanel",
 		Active = true,
@@ -75,10 +83,10 @@ local function ChestPanel(): Frame
 			Padding = UDim.new(0, GAP),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
-		ChestSlot(),
+		slots,
 		Rustic.button({
 			Name = "Store",
-			LayoutOrder = 2,
+			LayoutOrder = ChestRules.SLOTS + 1,
 			Visible = HudBottom.touch,
 			Size = UDim2.fromOffset(STORE_WIDTH, 48),
 			kind = function()

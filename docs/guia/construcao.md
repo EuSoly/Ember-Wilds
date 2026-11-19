@@ -103,9 +103,9 @@ A fogueira colocada esquenta, queima quem pisa no centro e serve de estação `"
 
 ## Baú
 
-- Guarda **um tipo de item só**, até 9999 (`ChestRules.MAX`). Vazio aceita qualquer item.
-- Chegando perto (até 8 studs do centro, `ChestRules.RANGE`), o painel do baú aparece sobre a hotbar e cada slot ganha um **"+"**.
-- Clicar no "+" põe 1; Shift+clique põe 10 (no celular, segurar o "+"). Clicar no item do baú tira o que couber no inventário.
+- Guarda **3 tipos de item** (`ChestRules.SLOTS = 3`), cada um uma pilha até 9999 (`ChestRules.MAX`). Pôr um item soma no slot que já tem aquele tipo; se não houver, usa o primeiro slot vazio (`ChestRules.putAny`).
+- Chegando perto (até 8 studs do centro, `ChestRules.RANGE`), o painel do baú aparece sobre a hotbar com 3 slots lado a lado, e cada slot do inventário ganha um **"+"**.
+- Clicar no "+" põe 1; Shift+clique põe 10 (no celular, segurar o "+"). Clicar num slot do baú tira daquele slot (`ChestTake { Chest, Slot }`) o que couber no inventário.
 - Qualquer jogador pode usar (baú sem cadeado). Vários ao mesmo tempo veem a quantidade atualizada.
 - O conteúdo some junto com o baú (destruído, dono morto ou saído).
 - O servidor (`ChestService`) é o dono do conteúdo. Os eventos `ChestPut` e `ChestTake` só pedem; ele confere distância, posse, tipo e quantidade (inteiro positivo), tem limite de taxa e troca tudo sem pausa no meio, o que serializa dois jogadores no mesmo baú.

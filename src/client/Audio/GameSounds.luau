@@ -22,6 +22,7 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Audio = Shared:WaitForChild("Audio")
+local ChestRules = require(Shared:WaitForChild("Build"):WaitForChild("ChestRules"))
 local SoundConfig = require(Audio:WaitForChild("SoundConfig"))
 local SoundRules = require(Audio:WaitForChild("SoundRules"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
@@ -154,12 +155,20 @@ local function positionOf(instance: Instance): Vector3?
 	return nil
 end
 
+local function chestCountOf(instance: Instance): number
+	local total = 0
+	for i = 1, ChestRules.SLOTS do
+		total += numberOf(instance, StatNames.chestCount(i)) or 0
+	end
+	return total
+end
+
 local function read(instance: Instance, piece: Piece)
 	piece.health = numberOf(instance, StatNames.StructureHealth)
 	piece.door = instance:GetAttribute(StatNames.DoorOpen) == true
 	piece.wood = numberOf(instance, StatNames.Wood)
 	piece.stock = numberOf(instance, StatNames.Stock)
-	piece.chest = numberOf(instance, StatNames.ChestCount)
+	piece.chest = chestCountOf(instance)
 	piece.drinks = numberOf(instance, StatNames.Drinks)
 end
 
@@ -238,8 +247,8 @@ local function pollPieces()
 		if stock and piece.stock and stock < piece.stock then
 			SoundPlayer.play("machine_collect", position)
 		end
-		local chest = numberOf(instance, StatNames.ChestCount)
-		if (chest or 0) ~= (piece.chest or 0) then
+		local chest = chestCountOf(instance)
+		if chest ~= (piece.chest or 0) then
 			SoundPlayer.play("chest_item", position)
 		end
 		local drinks = numberOf(instance, StatNames.Drinks)

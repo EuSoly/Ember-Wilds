@@ -295,12 +295,15 @@ event ChestPut {
 	}
 }
 
--- Tirar do baú o quanto couber no inventário.
+-- Tirar do slot `Slot` (1..3) do baú o quanto couber no inventário.
 event ChestTake {
 	From: Client,
 	Type: Reliable,
 	Call: SingleAsync,
-	Data: Instance?
+	Data: struct {
+		Chest: Instance?,
+		Slot: u8
+	}
 }
 
 -- Caixas de itens (G6). Todo morto (jogador ou mob) vira uma caixa que qualquer
