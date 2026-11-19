@@ -13,8 +13,8 @@ Na G6 os jogadores passaram a brigar entre si e **todo mundo que morre, jogador 
 
 É o mesmo golpe da coleta (`GatherService`, um a cada 0,5 s). Agora, além de recurso, peça, mob e caixa, **jogadores vivos** também são alvos:
 
-- Leva o golpe o que estiver **mais perto à frente** (`GatherRules.pickTarget`), seja o que for. Um recurso na frente de um jogador protege o jogador.
-- **Quem bate nunca é alvo de si mesmo.**
+- O golpe acerta **todos** os mobs, jogadores, peças sólidas e caixas que encostam no círculo do golpe (`GatherRules.pickTargets`, do mais perto ao mais longe). Recurso (árvore, pedra) continua **um só por golpe** (o mais perto, `GatherRules.pickTarget`), mesmo quando outros alvos são acertados junto. Ponte/telhado só levam o golpe se não houver nenhum outro alvo no círculo.
+- **Quem bate nunca é alvo de si mesmo**, e colegas de time e fantasmas não levam dano do golpe em área.
 - O dano é o mesmo do golpe em mob (`mobDamage` do item, ou 5 de mão): espadas 12 / 19 / 22, lanças 10 / 14 / 15, picaretas 4 a 14. Veja a tabela em `mobs.md`.
 - A peça de cabeça protege como no Starve: **tira um número fixo** do golpe (`golpe − defesa`, nunca abaixo de 0). Contra jogador (e espinho) vale `defense`, contra mob vale `mobDefense`. O capacete de ouro, por exemplo, é 4 / 13. Veja `armaduras.md`.
 - A lança alcança mais longe, mas **nunca empurra jogador** (decisão do Elizeu).

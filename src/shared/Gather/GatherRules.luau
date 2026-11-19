@@ -102,4 +102,29 @@ function GatherRules.pickTarget<T>(candidates: { T }, px: number, pz: number, hi
 	return best
 end
 
+-- Todos os candidatos cuja borda encosta no círculo do golpe (distância − radius ≤ hitRadius),
+-- ordenados do mais perto ao mais longe.
+function GatherRules.pickTargets<T>(candidates: { T }, px: number, pz: number, hitRadius: number): { T }
+	local entries: { { item: T, gap: number, order: number } } = {}
+	for index, candidate in candidates do
+		local c = candidate :: any
+		local distance = math.sqrt((c.x - px) ^ 2 + (c.z - pz) ^ 2)
+		local gap = distance - c.radius
+		if gap <= hitRadius then
+			table.insert(entries, { item = candidate, gap = gap, order = index })
+		end
+	end
+	table.sort(entries, function(a, b)
+		if a.gap ~= b.gap then
+			return a.gap < b.gap
+		end
+		return a.order < b.order
+	end)
+	local out: { T } = {}
+	for _, entry in entries do
+		table.insert(out, entry.item)
+	end
+	return out
+end
+
 return GatherRules

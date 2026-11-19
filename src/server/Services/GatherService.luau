@@ -250,10 +250,36 @@ local function hit(player: Player, character: Model, root: BasePart)
 		candidates = only(candidates)
 		overlays = only(overlays)
 	end
+	-- Golpe em área (19/11): acerta todos os mobs, jogadores, peças sólidas e
+	-- caixas no círculo; recurso continua um só por golpe (o mais perto).
+	-- Colega de time não leva dano do golpe em área (e fantasma já ficou de fora).
+	local nonResources: { Candidate } = {}
+	local resources: { Candidate } = {}
+	for _, candidate in candidates do
+		if candidate.resource then
+			table.insert(resources, candidate)
+		elseif candidate.character then
+			local other = Players:GetPlayerFromCharacter(candidate.character)
+			if other == nil or not BuildRules.areAllies(player.UserId, other.UserId) then
+				table.insert(nonResources, candidate)
+			end
+		else
+			table.insert(nonResources, candidate)
+		end
+	end
+	local targets = GatherRules.pickTargets(nonResources, px, pz, GatherRules.HIT_RADIUS)
+	local bestResource = GatherRules.pickTarget(resources, px, pz, GatherRules.HIT_RADIUS)
+	if bestResource then
+		table.insert(targets, bestResource)
+	end
 	-- Ponte/telhado só leva o golpe se não houver mais nada ao alcance.
-	local target = GatherRules.pickTarget(candidates, px, pz, GatherRules.HIT_RADIUS)
-		or GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
-	if target == nil then
+	if #targets == 0 then
+		local overlay = GatherRules.pickTarget(overlays, px, pz, GatherRules.HIT_RADIUS)
+		if overlay then
+			table.insert(targets, overlay)
+		end
+	end
+	if #targets == 0 then
 		-- Pá sem nada à frente: cava o chão onde o golpe cai.
 		if tool and DigRules.canDig(tool) then
 			dig(player, tool, px, pz, dir)
@@ -262,76 +288,78 @@ local function hit(player: Player, character: Model, root: BasePart)
 	end
 	-- Bateu em algo: o Chapéu de Explorador para de esconder por um tempo.
 	ArmorService.markHit(player)
-	if target.structure then
-		-- Fazenda: regador rega, planta com fruto é colhida; o resto é golpe de construção.
-		local farm = FarmService.hit(target.structure, player, tool)
-		if farm == "full" then
-			notify(player, "gather.full")
-		elseif farm then
-			local entry = target.structure
-			sendFxAt(entry.x, entry.z, dir.X, dir.Z, if farm == "water" then "water" else "leaves")
-		else
-			StructureService.hit(target.structure, player, tool)
+	for _, target in targets do
+		if target.structure then
+			-- Fazenda: regador rega, planta com fruto é colhida; o resto é golpe de construção.
+			local farm = FarmService.hit(target.structure, player, tool)
+			if farm == "full" then
+				notify(player, "gather.full")
+			elseif farm then
+				local entry = target.structure
+				sendFxAt(entry.x, entry.z, dir.X, dir.Z, if farm == "water" then "water" else "leaves")
+			else
+				StructureService.hit(target.structure, player, tool)
+			end
+			continue
 		end
-		return
-	end
-	if target.crate then
-		CrateService.hit(target.crate, player, tool)
-		return
-	end
-	-- Bater em mob ou jogador acaba com a proteção do revive na hora (o
-	-- atributo fica no modelo do personagem, não no Player).
-	local ownCharacter = player.Character
-	if
-		(target.mob or target.character)
-		and ownCharacter
-		and ownCharacter:GetAttribute(StatNames.SpawnShieldUntil) ~= nil
-	then
-		ownCharacter:SetAttribute(StatNames.SpawnShieldUntil, nil)
-	end
-	if target.mob then
-		MobService.hit(target.mob, player, tool)
-		return
-	end
-	if target.character then
-		CharacterService.hurt(
-			target.character,
-			MobRules.damageOf(tool, ArmorService.worn(player)),
-			PLAYER_CAUSE,
-			"player",
-			player
-		)
-		return
-	end
-	local entry = target.resource
-	if entry == nil then
-		return
-	end
+		if target.crate then
+			CrateService.hit(target.crate, player, tool)
+			continue
+		end
+		-- Bater em mob ou jogador acaba com a proteção do revive na hora (o
+		-- atributo fica no modelo do personagem, não no Player).
+		local ownCharacter = player.Character
+		if
+			(target.mob or target.character)
+			and ownCharacter
+			and ownCharacter:GetAttribute(StatNames.SpawnShieldUntil) ~= nil
+		then
+			ownCharacter:SetAttribute(StatNames.SpawnShieldUntil, nil)
+		end
+		if target.mob then
+			MobService.hit(target.mob, player, tool)
+			continue
+		end
+		if target.character then
+			CharacterService.hurt(
+				target.character,
+				MobRules.damageOf(tool, ArmorService.worn(player)),
+				PLAYER_CAUSE,
+				"player",
+				player
+			)
+			continue
+		end
+		local entry = target.resource
+		if entry == nil then
+			continue
+		end
 
-	-- Ponto do golpe na borda do recurso, do lado de quem bateu (lasquinhas).
-	local toPlayer = Vector3.new(root.Position.X - entry.x, 0, root.Position.Z - entry.z)
-	local side = if toPlayer.Magnitude > 1e-3 then toPlayer.Unit else -dir
-	sendFx(entry, entry.x + side.X * entry.radius, entry.z + side.Z * entry.radius, dir.X, dir.Z)
+		-- Ponto do golpe na borda do recurso, do lado de quem bateu (lasquinhas).
+		local toPlayer = Vector3.new(root.Position.X - entry.x, 0, root.Position.Z - entry.z)
+		local side = if toPlayer.Magnitude > 1e-3 then toPlayer.Unit else -dir
+		sendFx(entry, entry.x + side.X * entry.radius, entry.z + side.Z * entry.radius, dir.X, dir.Z)
 
-	local gather = entry.gather
-	local yield = GatherRules.yield(tool, gather)
-	if yield == nil then
-		notify(player, "gather.needTool", GatherRules.requiredPickaxe(Defs.Items, gather.hardness or 0))
-		return
+		local gather = entry.gather
+		local yield = GatherRules.yield(tool, gather)
+		if yield == nil then
+			notify(player, "gather.needTool", GatherRules.requiredPickaxe(Defs.Items, gather.hardness or 0))
+			continue
+		end
+		if entry.amount <= 0 then
+			notify(player, "gather.empty")
+			continue
+		end
+		local wanted = math.min(yield, entry.amount)
+		local given = wanted - InventoryService.give(player, gather.item, wanted)
+		if given <= 0 then
+			notify(player, "gather.full")
+			continue
+		end
+		ResourceService.take(entry, given)
+		ScoreService.add(player, given * gather.points)
+		StatsService.add(player, "resources_gathered", given, gather.item)
 	end
-	if entry.amount <= 0 then
-		notify(player, "gather.empty")
-		return
-	end
-	local wanted = math.min(yield, entry.amount)
-	local given = wanted - InventoryService.give(player, gather.item, wanted)
-	if given <= 0 then
-		notify(player, "gather.full")
-		return
-	end
-	ResourceService.take(entry, given)
-	ScoreService.add(player, given * gather.points)
-	StatsService.add(player, "resources_gathered", given, gather.item)
 end
 
 local function step()

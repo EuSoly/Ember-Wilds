@@ -95,4 +95,21 @@ return {
 			eq(GatherRules.berriesVisible(amount, bush.amount.max, parts), amount, `reserva {amount}`)
 		end
 	end,
+
+	["pickTargets devolve todos no círculo, do mais perto ao mais longe"] = function()
+		local c1 = { name = "c1", x = 0, z = 0, radius = 1 }
+		local c2 = { name = "c2", x = 2, z = 0, radius = 1 }
+		local c3 = { name = "c3", x = 10, z = 0, radius = 1 }
+		local picked = GatherRules.pickTargets({ c3, c2, c1 }, 0, 0, 2.5)
+		eq(#picked, 2, "dois alvos no círculo")
+		eq(picked[1], c1, "primeiro é o mais perto")
+		eq(picked[2], c2, "segundo é o próximo")
+	end,
+
+	["pickTargets vazio quando nada encosta"] = function()
+		local far = { name = "longe", x = 10, z = 0, radius = 1 }
+		local picked = GatherRules.pickTargets({ far }, 0, 0, 2.5)
+		eq(#picked, 0, "lista vazia")
+		eq(#GatherRules.pickTargets({}, 0, 0, 2.5), 0, "sem candidato")
+	end,
 }
