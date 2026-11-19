@@ -27,7 +27,9 @@ local SAND_COLOR = Color3.fromHex("d6b26c") -- só a cor dos marcadores no Studi
 local SAND_MARK = 45 -- studs de areia da beira da água para dentro (marcadores)
 local TILE = 240 -- lado de cada pedaço pintado (igual aos Forest_*)
 local RES = 1024 -- pixels de cada imagem da costa
-local PAD = 1 -- pixels de cada borda que ficam de fora (sem linha na emenda)
+-- Pixels de cada borda que ficam de fora (sem linha na emenda). 1 bastava de
+-- perto, mas de longe as versões reduzidas da imagem ainda misturavam o mar.
+local PAD = 4
 -- Imagens da costa (ColorMap de cada Coast_<ix>_<iz>), enviadas em 19/11/2026 (2º envio, nonce=1: o 1º travou na moderação).
 local COAST_IMAGES: { [string]: string } = {
 	["-1_-1"] = "rbxassetid://74791546363642",
@@ -117,6 +119,18 @@ for _, child in ground:GetChildren() do
 		child:Destroy()
 	end
 end
+-- Os Forest_* da borda tinham textura de grama nas faces de lado (de quando ali
+-- era o fim do mapa): encostadas na costa, elas desenhavam uma linha escura na
+-- emenda (achado em 19/11). Só a de cima (Top) fica.
+for _, child in ground:GetChildren() do
+	if string.sub(child.Name, 1, 7) == "Forest_" then
+		for _, texture in child:GetChildren() do
+			if texture:IsA("Texture") and texture.Face ~= Enum.NormalId.Top then
+				texture:Destroy()
+			end
+		end
+	end
+end
 local template = ground:FindFirstChild("Forest_0_0") :: BasePart
 for iz = -1, 4 do
 	for ix = -1, 4 do
@@ -127,7 +141,7 @@ for iz = -1, 4 do
 		local tile = template:Clone()
 		tile.Name = "Coast_" .. key
 		for _, child in tile:GetChildren() do
-			-- Só a imagem e a grama de cima (os lados ficam escondidos pelos vizinhos).
+			-- Só a imagem e a grama de cima (textura de lado faz linha na emenda).
 			if child.Name ~= "ColorMap" and child.Name ~= "Top" then
 				child:Destroy()
 			end
