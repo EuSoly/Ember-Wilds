@@ -157,10 +157,10 @@ return {
 		assert(inv.capacity == 10, "capacidade deveria ser 10")
 	end,
 
-	["capacity formula adds bag and bonus"] = function()
-		assert(Inventory.capacityFor(0, 0) == 10, "só a base")
-		assert(Inventory.capacityFor(6, 0) == 16, "mochila de 6")
-		assert(Inventory.capacityFor(6, 3) == 19, "mochila + bônus")
+	["capacidade base é 16 e o VIP soma 3"] = function()
+		assert(Inventory.capacityFor(0, 0) == 16, "só a base (10 hotbar + 6 fixos)")
+		assert(Inventory.capacityFor(0, 3) == 19, "base + bônus do VIP")
+		assert(Inventory.capacityFor(6, 3) == 25, "base + mochila + bônus")
 	end,
 
 	["removeAt takes only from that slot"] = function()
@@ -207,7 +207,7 @@ return {
 
 	["capacity formula is capped"] = function()
 		assert(Inventory.capacityFor(100, 100) == 40, "limite de 40 slots")
-		assert(Inventory.capacityFor(-5, 0) == 10, "nunca abaixo da base")
+		assert(Inventory.capacityFor(-5, 0) == 16, "nunca abaixo da base")
 	end,
 
 	["findSlot finds the item inside the range"] = function()

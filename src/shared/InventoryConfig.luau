@@ -4,9 +4,12 @@
 -- Capacidade de um jogador = BASE_SLOTS + slots da mochila vestida + bônus do
 -- VIP, nunca passando de MAX_SLOTS. Para mudar o limite máximo também é
 -- preciso mudar as faixas u8(1..40) em net/game.blink.
+-- Decisão do Elizeu (19/11): a mochila como item sai do jogo por enquanto;
+-- todo jogador começa com 16 espaços (10 da hotbar + 6 no painel), e o VIP
+-- soma 3 (16 / 19).
 return table.freeze({
 	-- Slots que todo jogador tem; os primeiros HOTBAR_SLOTS são a hotbar.
-	BASE_SLOTS = 10,
+	BASE_SLOTS = 16,
 	HOTBAR_SLOTS = 10,
 	-- Limite absoluto de slots (mochila maior + VIP).
 	MAX_SLOTS = 40,

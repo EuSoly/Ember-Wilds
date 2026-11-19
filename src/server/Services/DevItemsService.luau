@@ -40,7 +40,6 @@ local function giveKit(player: Player)
 	if character and character:GetAttribute(StatNames.SpawnShieldUntil) ~= nil then
 		return
 	end
-	InventoryService.equipBag(player, "leather_bag")
 	for _, item in KIT do
 		InventoryService.give(player, item.id, item.count)
 	end

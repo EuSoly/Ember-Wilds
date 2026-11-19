@@ -130,7 +130,7 @@ return {
 	end,
 
 	["bag sits with armor"] = function()
-		assert(has(BookInfo.items("armor", false), "leather_bag"), "mochila em Armaduras")
+		assert(has(BookInfo.items("armor", true), "leather_bag"), "mochila em Armaduras (no Studio)")
 	end,
 
 	["raw items are resources and food at once"] = function()

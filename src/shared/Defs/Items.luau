@@ -183,9 +183,10 @@ local Items: { [string]: ItemDef } = {
 	firefly = { id = "firefly", testOnly = true, nameKey = "item.firefly", category = "misc", maxStack = 255 },
 
 	-- Mochilas (vestidas, não ocupam slot; dão bagSlots slots a mais).
-	-- Para uma mochila maior num update, é só adicionar outra entrada aqui.
+	-- Fora do jogo por enquanto (decisão do Elizeu, 19/11): todo mundo tem 16 espaços.
 	leather_bag = {
 		id = "leather_bag",
+		testOnly = true,
 		nameKey = "item.leather_bag",
 		category = "bag",
 		maxStack = 1,

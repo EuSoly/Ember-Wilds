@@ -2,8 +2,8 @@
 
 O inventário de cada jogador existe **só no servidor**. O cliente recebe uma cópia para desenhar a hotbar e a mochila, e para mudar algo ele **pede**: o servidor valida, aplica e manda de volta só o que mudou.
 
-- Capacidade = 10 slots básicos (a hotbar = slots 1–10) + os slots da **mochila vestida** + o bônus do **gamepass VIP**, até no máximo 40. Os números ficam em `src/shared/InventoryConfig.luau`.
-- Os slots além da hotbar aparecem no painel da mochila. Sem mochila (e sem gamepass), o botão e o painel nem aparecem.
+- Capacidade = 16 slots básicos (a hotbar = slots 1–10 + 6 fixos no painel) + o bônus do **VIP** (+3 = 19), até no máximo 40. Os números ficam em `src/shared/InventoryConfig.luau`. (As mochilas como item, como `leather_bag`, estão guardadas com `testOnly = true` por enquanto.)
+- Os slots além da hotbar (11 até a capacidade) aparecem no painel de inventário (tecla **B** ou botão da mochila).
 - O tamanho máximo de cada pilha vem de `Defs.Items[id].maxStack`. Itens que não existem em `Defs` são recusados.
 - O inventário **não é salvo**: acaba junto com a partida.
 
@@ -11,7 +11,7 @@ O inventário de cada jogador existe **só no servidor**. O cliente recebe uma c
 
 | Arquivo | O que é |
 |---|---|
-| `src/shared/InventoryConfig.luau` | Base (10), hotbar (10), máximo (40) e o gamepass VIP (ID e slots extras) |
+| `src/shared/InventoryConfig.luau` | Base (16), hotbar (10), máximo (40) e o bônus do VIP (+3) |
 | `src/shared/Inventory.luau` | Lógica pura (`new`, `add`, `remove`, `count`, `move`, `setCapacity`, `capacityFor`), testada no Lune (`tests/inventory.spec.luau`) |
 | `net/game.blink` | Contrato de rede (Blink). Gera `src/server/Net.luau` e `src/client/Net.luau` |
 | `src/server/Services/InventoryService.luau` | Inventário de cada jogador, valida os pedidos, manda as mudanças (deltas), veste mochilas (`equipBag`) e soma o gamepass |
