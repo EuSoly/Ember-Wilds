@@ -58,6 +58,7 @@ local Types = require(ReplicatedStorage.Shared.Defs.Types)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
 local WorldConfig = require(ReplicatedStorage.Shared.WorldConfig)
 local ArmorService = require(script.Parent.ArmorService)
+local MapService = require(script.Parent.MapService)
 local CharacterService = require(script.Parent.CharacterService)
 local ResourceService = require(script.Parent.ResourceService)
 local ScoreService = require(script.Parent.ScoreService)
@@ -332,9 +333,14 @@ local function circlesAround(
 	return circles
 end
 
--- O corpo do mob cabe no chão em (x, z): no bioma, fora da água, sem sobrepor nada.
+-- Fora do habitat do mob (habitat "beach": só a areia da praia, Map/Sand).
+local function outsideHabitat(def: MobDef, x: number, z: number): boolean
+	return def.habitat == "beach" and not MapService.isBeachAt(x, z)
+end
+
+-- O corpo do mob cabe no chão em (x, z): no bioma e no habitat, fora da água, sem sobrepor nada.
 local function groundFree(mob: Mob, x: number, z: number, bodies: { MobBrain.Seen }): boolean
-	if not inRect(mob.rect, x, z) or WaterSim.isWaterAt(x, z) then
+	if not inRect(mob.rect, x, z) or WaterSim.isWaterAt(x, z) or outsideHabitat(mob.def, x, z) then
 		return false
 	end
 	for _, circle in circlesAround(mob, x, z, mob.radius, bodies) do
@@ -489,10 +495,11 @@ local function blockedFor(mob: Mob): (number, number) -> boolean
 			return not inRect(rect, px, pz)
 		end
 	end
+	local def = mob.def
 	return function(px: number, pz: number): boolean
 		-- Água bruta: a ponte não é chão para mob (ponte que some não o
-		-- deixa preso na água).
-		return not inRect(rect, px, pz) or WaterSim.isWaterAt(px, pz)
+		-- deixa preso na água). Caranguejo (habitat "beach") não sai da areia.
+		return not inRect(rect, px, pz) or WaterSim.isWaterAt(px, pz) or outsideHabitat(def, px, pz)
 	end
 end
 
@@ -704,7 +711,7 @@ local function population()
 				continue
 			end
 			local function isFree(x: number, z: number): boolean
-				return spawnFree(radiusFor(def), x, z, bodies)
+				return not outsideHabitat(def, x, z) and spawnFree(radiusFor(def), x, z, bodies)
 			end
 			for _ = 1, math.min(delta, SPAWN_PER_TYPE) do
 				local x, z = MobSpawn.pick(rng, rect, isFree, SPAWN_TRIES)

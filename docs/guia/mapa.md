@@ -175,3 +175,13 @@ O mapa vive no place. Para guardar uma cópia com histórico:
 3. Commite a pasta `map/`.
 
 O `map.project.json` é separado do `default.project.json` de propósito: o `rojo serve` do dia a dia **não** toma conta do mapa, então você continua desenhando livre no Studio.
+
+## Praia viva (19/11/2026)
+
+Modelos do Elizeu (`assets/praia/Praia.blend`), importados por `scripts/studio/import-praia.luau` para `ServerStorage.Assets.Resources`:
+
+- **Palmeira** (`palm_1` alta, `palm_2` inclinada): recurso `palm`, dá madeira como a árvore e some quando o boneco passa atrás (`occluder`). Cada modelo é uma malha só; o pé do tronco é um `Attachment` "Foot" achado pelos vértices mais baixos (o `ResourceModels` ancora o recurso ali — na inclinada o tronco fica a 6,6 studs do centro).
+- **Enfeites** (sem colisão): `sand_mound_1..3` (montinhos de areia) e `shell_1..2` (conchas).
+- **Onde nascem:** zonas `ZoneType = "beach"` em `Map/Zones/Praia` (4 faixas na areia, a 4 studs da água, sem os cantos redondos). Densidade em `Defs/ResourceZones.luau` (`beach`): ~24 palmeiras, ~70 montinhos e ~100 conchas.
+- **Areia da praia** fica em `Map/Sand` (não no `NoSpawn`): conta como areia para a pá e para não plantar, mas deixa a zona `beach` espalhar recursos.
+- **Caranguejo** (`Defs/Mobs.luau`, `habitat = "beach"`): nasce e anda só na areia da praia (`MapService.isBeachAt`), 10 de dia e 10 de noite; dropa palito e garra de caranguejo.

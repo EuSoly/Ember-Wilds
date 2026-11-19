@@ -39,6 +39,8 @@ local MapService = {}
 
 local hasMap = false
 local sandShapes: { Shapes.Shape } = {}
+-- Só a areia da praia (Map/Sand), sem a das margens: o habitat "beach" dos mobs.
+local beachShapes: { Shapes.Shape } = {}
 -- Formas de Map/Water e Map/NoSpawn (onde não nasce recurso nem jogador).
 local blockerShapes: { Shapes.Shape } = {}
 
@@ -197,9 +199,15 @@ local function ensureSpawn()
 	spawn.Parent = Workspace
 end
 
--- true se (x, z) está na areia das margens (peças de Map/NoSpawn marcadas Sand).
+-- true se (x, z) está na areia: das margens (peças de Map/NoSpawn marcadas
+-- Sand) ou da praia (Map/Sand).
 function MapService.isSandAt(x: number, z: number): boolean
 	return Shapes.anyContains(sandShapes, x, z)
+end
+
+-- true se (x, z) está na areia da praia (Map/Sand): o habitat "beach" dos mobs.
+function MapService.isBeachAt(x: number, z: number): boolean
+	return Shapes.anyContains(beachShapes, x, z)
 end
 
 -- true se (x, z) está na água (Map/Water) ou numa área sem nascimento
@@ -253,6 +261,7 @@ function MapService.Init(_self)
 	readShapes(map:FindFirstChild(SAND_FOLDER), function(part, shape)
 		hideMarker(part)
 		table.insert(sandShapes, shape)
+		table.insert(beachShapes, shape)
 	end)
 
 	local zones = readZones(map:FindFirstChild("Zones"))

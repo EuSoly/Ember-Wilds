@@ -26,6 +26,9 @@ local ResourceZones: { [string]: ResourceZoneDef } = {
 	berry_field = zone("berry_field", { berry_bush = 8, tree = 1, pebble = 3, flower = 5 }),
 	-- Margem em volta da água: flores e pedrinhas (a água em si nunca recebe nada).
 	shore = zone("shore", { flower = 12, pebble = 6 }),
+	-- Praia (faixa de areia em volta da floresta, Map/Zones/Praia): palmeiras
+	-- espalhadas, montinhos de areia e conchas (~30, ~80 e ~120 na praia toda).
+	beach = zone("beach", { palm = 1.5, sand_mound = 4, shell = 6 }),
 }
 
 return table.freeze(ResourceZones)

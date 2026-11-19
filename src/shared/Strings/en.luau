@@ -930,6 +930,9 @@ return table.freeze({
 	["resource.pebble"] = "Pebble",
 	["resource.flower"] = "Flower",
 	["resource.leaves"] = "Fallen leaves",
+	["resource.palm"] = "Palm tree",
+	["resource.sand_mound"] = "Sand mound",
+	["resource.shell"] = "Seashell",
 
 	-- Zonas de recurso (Map/Zones, atributo ZoneType)
 	["zone.forest_dense"] = "Dense forest",
@@ -937,6 +940,7 @@ return table.freeze({
 	["zone.quarry"] = "Quarry",
 	["zone.berry_field"] = "Berry field",
 	["zone.shore"] = "Shore",
+	["zone.beach"] = "Beach",
 
 	["mob.rabbit"] = "Rabbit",
 	["mob.wolf"] = "Wolf",

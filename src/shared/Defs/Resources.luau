@@ -18,6 +18,7 @@ type Options = {
 	sizeJitter: number?,
 	sink: number?,
 	decorative: boolean?,
+	occluder: boolean?,
 	gather: Types.GatherDef?,
 }
 
@@ -40,6 +41,7 @@ local function resource(
 		sizeJitter = o.sizeJitter,
 		sink = o.sink,
 		decorative = o.decorative,
+		occluder = o.occluder,
 		gather = o.gather,
 	})
 end
@@ -62,6 +64,7 @@ local Resources: { [string]: ResourceDef } = {
 		size = 14,
 		sizeAxis = "height",
 		sizeJitter = 0.15,
+		occluder = true,
 		gather = gather({
 			item = "wood",
 			points = 1,
@@ -110,6 +113,27 @@ local Resources: { [string]: ResourceDef } = {
 		}),
 	}),
 	-- Pedras do chão: só enfeite, metade enterradas, espalhadas junto com os recursos.
+	-- Praia (19/11, modelos do Elizeu: scripts/studio/import-praia.luau). A
+	-- palmeira dá madeira como a árvore; o modelo é uma malha só, com o pé do
+	-- tronco marcado por um Attachment "Foot" (a inclinada tem o tronco longe
+	-- do centro). Medida pela altura, um pouco mais alta que a árvore.
+	palm = resource("palm", 5, 1.2, 2, {
+		size = 17,
+		sizeAxis = "height",
+		sizeJitter = 0.15,
+		occluder = true,
+		gather = gather({
+			item = "wood",
+			points = 1,
+			material = "wood",
+			hardness = 0,
+			amount = { min = 20, max = 80 },
+			regen = { amount = 2, every = 10 },
+		}),
+	}),
+	-- Enfeites da praia (sem colisão): montinhos de areia e conchas.
+	sand_mound = resource("sand_mound", 3, 0.3, 3, { size = 4.5, sizeJitter = 0.3, sink = 0.2, decorative = true }),
+	shell = resource("shell", 1, 0.3, 2, { size = 1.6, sizeJitter = 0.3, decorative = true }),
 	pebble = resource("pebble", 1.5, 0.4, 10, { size = 1.8, sizeJitter = 0.4, sink = 0.5, decorative = true }),
 	-- Flores e folhas caídas: só enfeite (vida no chão), sem colisão.
 	flower = resource("flower", 1.2, 0.3, 4, { size = 1.6, sizeJitter = 0.3, decorative = true }),

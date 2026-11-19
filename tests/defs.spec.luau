@@ -1087,7 +1087,8 @@ return {
 		assert(containsError(errors, "behavior"), `faltou erro de behavior: {table.concat(errors, "; ")}`)
 	end,
 	["forest mobs have stats and population, the others do not"] = function()
-		local forest = { rabbit = true, wolf = true, spider = true, boar = true, hawk = true }
+		-- crab (19/11): só na praia (habitat "beach"), mas conta no bioma da floresta.
+		local forest = { rabbit = true, wolf = true, spider = true, boar = true, hawk = true, crab = true }
 		for id, mob in Defs.Mobs do
 			if forest[id] then
 				assert(mob.stats ~= nil, `{id} deveria ter stats`)
@@ -1110,6 +1111,7 @@ return {
 			spider = { { id = "thread", count = 2 } },
 			boar = { { id = "raw_meat", count = 4 }, { id = "boar_fur", count = 1 } },
 			hawk = { { id = "raw_meat", count = 2 }, { id = "hawk_feather", count = 4 } },
+			crab = { { id = "crab_sticks", count = 1 }, { id = "crab_claws", count = 1 } },
 		}
 		for id, mob in Defs.Mobs do
 			local want = expected[id]

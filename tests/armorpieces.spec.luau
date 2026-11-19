@@ -63,8 +63,7 @@ local MATERIALS = {
 	"flame",
 	"dragon_heart",
 	"lava_heart",
-	"crab_claws",
-	"crab_sticks",
+	-- crab_claws e crab_sticks saíram da lista em 19/11: liberados com o caranguejo da praia.
 	"blue_thread",
 	"orange_gem",
 	"blue_cube",

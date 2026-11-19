@@ -295,9 +295,9 @@ local function fromTemplate(template: Model, def: Types.ResourceDef, scale: numb
 		part.CanCollide = false
 		part.CanQuery = false
 		part.CanTouch = false
-		-- Árvore inteira (copa e tronco com galhos): o tronco também esconde o
-		-- boneco quando ele passa atrás dela.
-		if def.id == "tree" then
+		-- Árvore/palmeira inteira (copa e tronco): o tronco também esconde o
+		-- boneco quando ele passa atrás dela (def.occluder).
+		if def.occluder then
 			part:AddTag(StatNames.OccluderTag)
 		end
 	end

@@ -332,6 +332,9 @@ export type ResourceDef = {
 	sizeJitter: number?,
 	-- true = só enfeite (pedras do chão): sem colisão e sem a tag Resource.
 	decorative: boolean?,
+	-- true = o modelo inteiro some quando o boneco passa atrás ou embaixo
+	-- (tag Occluder do CanopyFade): árvores e palmeiras.
+	occluder: boolean?,
 	-- Coleta (obrigatória em todo recurso que não é enfeite; proibida nos enfeites).
 	gather: GatherDef?,
 }
@@ -370,6 +373,9 @@ export type MobDef = {
 	population: { [string]: MobPopulation }?, -- por id de bioma (WorldConfig.BIOMES)
 	loot: { MobLoot }?, -- o que a caixa do mob guarda ao morrer
 	mountFlies: boolean?, -- gancho: montado, voa (montaria ainda não existe)
+	-- "beach" = só nasce e anda na areia da praia (Map/Sand), dentro do bioma.
+	-- nil = o bioma inteiro (fora da água).
+	habitat: "beach"?,
 }
 
 -- As Defs reais trazem todas as tabelas. Validate.all aceita a falta de

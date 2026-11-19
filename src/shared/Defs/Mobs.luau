@@ -47,7 +47,15 @@ return table.freeze({
 		population = { forest = { day = 10, night = 10 } },
 		mountFlies = true,
 	}),
-	crab = mob("crab", "neutral"),
+	-- Caranguejo (19/11): só na areia da praia. Números do Starve (vida 240,
+	-- dano 35, até 18) escalados como os outros mobs daqui: vida igual,
+	-- mordida perto da metade (lobo 40 → 24), pontos como a aranha/lobo.
+	crab = mob("crab", "neutral", {
+		loot = { { id = "crab_sticks", count = 1 }, { id = "crab_claws", count = 1 } },
+		stats = { health = 240, bite = 20, speed = 13, radius = 2.2, points = 60 },
+		population = { forest = { day = 10, night = 10 } },
+		habitat = "beach",
+	}),
 	king_crab = mob("king_crab", "neutral"),
 	baby_mammoth = mob("baby_mammoth", "neutral"),
 	baby_dragon = mob("baby_dragon", "neutral", { mountFlies = true }),

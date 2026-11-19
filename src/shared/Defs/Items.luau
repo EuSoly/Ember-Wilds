@@ -131,10 +131,10 @@ local Items: { [string]: ItemDef } = {
 		category = "resource",
 		maxStack = 255,
 	},
-	-- Caranguejo: comida no Starve (fome 20 e 10).
+	-- Caranguejo: comida no Starve (fome 20 e 10). Liberados em 19/11 com o
+	-- caranguejo da praia (loot dele).
 	crab_sticks = {
 		id = "crab_sticks",
-		testOnly = true,
 		nameKey = "item.crab_sticks",
 		category = "food",
 		maxStack = 255,
@@ -142,7 +142,6 @@ local Items: { [string]: ItemDef } = {
 	},
 	crab_claws = {
 		id = "crab_claws",
-		testOnly = true,
 		nameKey = "item.crab_claws",
 		category = "food",
 		maxStack = 255,
