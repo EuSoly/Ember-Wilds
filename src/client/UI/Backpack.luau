@@ -41,13 +41,13 @@ function Backpack.Button(): TextButton
 		Name = "BackpackButton",
 		icon = HudImages.ICON.backpack,
 		fallback = Strings.get("hud.backpack"),
-		Visible = function()
-			return isTouch() and BackpackState.hasBag()
-		end,
-		-- Filho da hotbar, logo à direita dos anéis de status (HudBottom), em
-		-- qualquer tela de toque (12/11/2026).
+		Visible = BackpackState.hasBag,
+		-- Filho da hotbar: no toque fica logo à direita dos anéis de status;
+		-- no PC fica logo à direita do último slot da hotbar.
 		AnchorPoint = Vector2.new(0, 0.5),
-		Position = HudBottom.rightOfRings,
+		Position = function()
+			return if isTouch() then HudBottom.rightOfRings() else HudBottom.rightOfHotbar()
+		end,
 		Size = UDim2.fromOffset(56, 56),
 		minSize = Theme.touchMinSize + Vector2.new(12, 12),
 		maxSize = Vector2.new(76, 76),

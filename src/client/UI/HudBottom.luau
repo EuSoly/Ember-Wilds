@@ -96,10 +96,20 @@ function HudBottom.besideRings(): UDim2
 end
 
 -- Ponto (borda esquerda, meio) logo à direita dos anéis, no toque: botão da
--- mochila (só existe no toque).
+-- mochila no celular.
 function HudBottom.rightOfRings(): UDim2
 	local w, h = HudLayout.ringsSize()
 	return UDim2.new(0.5, w / 2 + HudLayout.PANEL_GAP, 0, -(HudLayout.RINGS_LIFT + h / 2))
+end
+
+-- Ponto (borda esquerda, meio) logo à direita da hotbar, centrado na altura
+-- dela (no PC: usa a largura da hotbar; no toque: mede com HudBottom.hotbar()).
+function HudBottom.rightOfHotbar(): UDim2
+	local layout = HudBottom.hotbar()
+	if layout then
+		return UDim2.new(0.5, layout.width / 2 + HudLayout.PANEL_GAP, 0.5, 0)
+	end
+	return UDim2.new(1, HudLayout.PANEL_GAP, 0.5, 0)
 end
 
 -- Lado do joystick de mirar (px), para quem precisa desviar dele.
