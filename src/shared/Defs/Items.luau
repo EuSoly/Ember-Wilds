@@ -1523,7 +1523,7 @@ local Items: { [string]: ItemDef } = {
 			radius = 2.6, -- tamanho do modelo (bancada)
 			kind = "well",
 			health = 500, -- provisório
-			well = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20 }, -- drinksPerBucket: wiki
+			well = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20, refillEvery = 30 }, -- drinksPerBucket: wiki; refillEvery: 1 gole a cada 30 s
 		},
 	},
 	bed = {

@@ -2,9 +2,20 @@
 local WellRules = require("../src/shared/Build/WellRules")
 
 -- Os números da wiki (poço dos Defs).
-local WELL = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20 }
+local WELL = { drinksPerBucket = 12, maxDrinks = 48, thirstPerDrink = 20, refillEvery = 30 }
 
 local spec = {}
+
+function spec.refill_junta_agua_com_o_tempo()
+	local d, r = WellRules.refill(0, 30, WELL)
+	assert(d == 1 and r == 0, `refill(0, 30) -> ({d}, {r})`)
+	d, r = WellRules.refill(0, 75, WELL)
+	assert(d == 2 and r == 15, `refill(0, 75) -> ({d}, {r})`)
+	d, r = WellRules.refill(47, 120, WELL)
+	assert(d == 48 and r == 0, `refill(47, 120) -> ({d}, {r})`)
+	d, r = WellRules.refill(48, 999, WELL)
+	assert(d == 48 and r == 0, `refill(48, 999) -> ({d}, {r})`)
+end
 
 function spec.balde_enche_12_goles()
 	assert(WellRules.fill(0, WELL) == 12, "poço vazio + balde = 12")

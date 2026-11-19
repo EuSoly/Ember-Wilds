@@ -1044,7 +1044,7 @@ local STRUCTURE_BLOCKS: { { kind: string, field: string, numbers: { string } } }
 		numbers = { "woodPerCycle", "cycleSeconds", "yield", "maxWood", "maxStock" },
 	},
 	{ kind = "furnace", field = "furnace", numbers = { "burnEvery", "maxWood" } },
-	{ kind = "well", field = "well", numbers = { "drinksPerBucket", "maxDrinks", "thirstPerDrink" } },
+	{ kind = "well", field = "well", numbers = { "drinksPerBucket", "maxDrinks", "thirstPerDrink", "refillEvery" } },
 	{ kind = "bed", field = "bed", numbers = { "regenFactor", "drainFactor" } },
 	{
 		kind = "plant",

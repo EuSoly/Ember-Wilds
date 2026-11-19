@@ -100,7 +100,7 @@ export type ExtractorDef = {
 	maxStock: number,
 }
 export type FurnaceDef = { burnEvery: number, maxWood: number }
-export type WellDef = { drinksPerBucket: number, maxDrinks: number, thirstPerDrink: number }
+export type WellDef = { drinksPerBucket: number, maxDrinks: number, thirstPerDrink: number, refillEvery: number }
 export type BedDef = { regenFactor: number, drainFactor: number }
 export type StructureDef = {
 	kind: StructureKind,

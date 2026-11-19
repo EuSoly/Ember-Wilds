@@ -43,4 +43,18 @@ function WellRules.fraction(drinks: number, def: WellDef): number
 	return math.clamp(drinks / def.maxDrinks, 0, 1)
 end
 
+-- Gera água com o tempo: soma `elapsed` segundos e devolve (goles novos, sobra
+-- de tempo que não completou um gole). Nunca passa de maxDrinks (no teto, sobra 0).
+function WellRules.refill(drinks: number, elapsed: number, def: WellDef): (number, number)
+	if drinks >= def.maxDrinks or not (elapsed > 0) or not (def.refillEvery > 0) then
+		return math.min(drinks, def.maxDrinks), 0
+	end
+	local gained = math.floor(elapsed / def.refillEvery)
+	local after = math.min(drinks + gained, def.maxDrinks)
+	if after >= def.maxDrinks then
+		return def.maxDrinks, 0
+	end
+	return after, elapsed - gained * def.refillEvery
+end
+
 return WellRules

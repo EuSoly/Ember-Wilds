@@ -35,6 +35,7 @@ local REPEAT_CHECK = 0.1 -- segundos entre conferências de quem está segurando
 type Entry = StructureService.Entry
 
 local drinks: { [Entry]: number } = {}
+local refillElapsed: { [Entry]: number } = {}
 local lastFill: { [Player]: number } = {}
 
 local WellService = {}
@@ -130,13 +131,37 @@ function WellService.Start(_self)
 	StructureService.onCreated(function(entry: Entry)
 		if entry.def.kind == "well" and entry.def.well then
 			drinks[entry] = 0
+			refillElapsed[entry] = 0
 			entry.model:SetAttribute(StatNames.Drinks, 0)
 		end
 	end)
 	StructureService.onRemoved(function(entry: Entry)
 		drinks[entry] = nil
+		refillElapsed[entry] = nil
 	end)
 	InteractService.register("well", onWell)
+
+	-- O poço junta água sozinho com o tempo (1 gole a cada def.refillEvery s).
+	task.spawn(function()
+		local last = os.clock()
+		while true do
+			task.wait(1)
+			local now = os.clock()
+			local dt = now - last
+			last = now
+			for entry, count in drinks do
+				local def = entry.def.well
+				if def then
+					local after, rem = WellRules.refill(count, (refillElapsed[entry] or 0) + dt, def)
+					refillElapsed[entry] = rem
+					if after ~= count then
+						drinks[entry] = after
+						entry.model:SetAttribute(StatNames.Drinks, after)
+					end
+				end
+			end
+		end
+	end)
 
 	Players.PlayerAdded:Connect(setupPlayer)
 	Players.PlayerRemoving:Connect(function(player)
