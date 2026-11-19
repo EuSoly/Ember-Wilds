@@ -31,6 +31,7 @@ export type Channel = {
 
 export type Motion = {
 	channels: { Channel },
+	compass: boolean?,
 	spin: number?, -- radianos por segundo em volta de Y
 }
 
@@ -163,9 +164,32 @@ for i = 1, 12 do
 	}
 end
 
+local SQUID: { [string]: Motion } = {}
+for i = 1, 10 do
+	local phase = (i - 1) * TWO_PI / 10
+	local side = if i <= 5 then 1 else -1
+	SQUID[string.format("anim_tentaculo_%02d", i)] = {
+		channels = { channel("y", math.rad(5), 2, side * math.rad(12), 1, phase) },
+	}
+	if i == 2 or i == 9 then
+		SQUID[string.format("anim_ponta_%02d", i)] = {
+			channels = { channel("y", math.rad(5), 2, side * math.rad(8), 1, phase - 0.4) },
+		}
+	end
+end
+
+-- Peças presas em outra peça animada (e não no corpo): a ponta segue o
+-- tentáculo e soma o próprio balanço. Sem isso, cada uma gira no seu pivô e a
+-- ponta descola do tentáculo (bug da Lula, 18/11/2026).
+local PARENT: { [string]: { [string]: string } } = {
+	body_lula = { anim_ponta_02 = "anim_tentaculo_02", anim_ponta_09 = "anim_tentaculo_09" },
+}
+
 local BY_SKIN: { [string]: { [string]: Motion } } = {
 	body_dragao = DRAGON,
 	body_polvo = OCTOPUS,
+	body_lula = SQUID,
+	book_bussola = { anim_agulha = { channels = {}, compass = true } },
 	body_toco = STUMP,
 	book_gelo = ICE_TOME,
 	book_tentaculo = ABYSS_TOME,
@@ -178,6 +202,12 @@ function SkinMotion.of(skinId: string, papel: string): Motion?
 	return skin and skin[papel]
 end
 
+-- Papel da peça em que `papel` fica presa; nil = presa no corpo (ou na alça).
+function SkinMotion.parentOf(skinId: string, papel: string): string?
+	local skin = PARENT[skinId]
+	return skin and skin[papel]
+end
+
 -- Skins que têm peças animadas.
 function SkinMotion.skins(): { string }
 	local list = {}
@@ -186,6 +216,33 @@ function SkinMotion.skins(): { string }
 	end
 	table.sort(list)
 	return list
+end
+
+-- Agulha da Bússola (Norte Perdido), em ciclos de COMPASS_LOOP s contados de
+-- quando o livro apareceu, a 24 quadros por segundo: gira até -34°, assenta
+-- em -28° e treme apontando a rota, depois volta ao zero e procura de novo.
+-- (Antes era uma vez só e parecia parada: pedido do Elizeu, 18/11/2026.)
+SkinMotion.COMPASS_LOOP = 4
+
+function SkinMotion.compassAngle(t: number): number
+	local frame = (math.max(t, 0) % SkinMotion.COMPASS_LOOP) * 24
+	if frame < 8 then
+		return -34 * frame / 8
+	elseif frame < 14 then
+		return -34 + 6 * (frame - 8) / 6
+	elseif frame < 60 then
+		return -28 + 3 * math.sin((frame - 14) / 24 * 2 * math.pi * 1.5)
+	elseif frame < 72 then
+		return -28 * (1 - (frame - 60) / 12)
+	end
+	return 0
+end
+
+-- O ponto `i` (1 a 3) da rota no mapa do livro está aceso no tempo `t`? Os três
+-- acendem em sequência quando a agulha assenta e apagam quando ela volta.
+function SkinMotion.compassDot(i: number, t: number): boolean
+	local frame = (math.max(t, 0) % SkinMotion.COMPASS_LOOP) * 24
+	return frame >= 14 + 4 * (i - 1) and frame < 60
 end
 
 -- Pose no tempo `t` (s), com a fase dos passos `stepPhase` (rad, do
@@ -201,6 +258,9 @@ function SkinMotion.pose(motion: Motion, t: number, stepPhase: number, walk: num
 			value = still * (1 - walk) + moving * walk
 		end
 		pose[c.axis] += value
+	end
+	if motion.compass then
+		pose.y = math.rad(SkinMotion.compassAngle(t))
 	end
 	if motion.spin then
 		pose.y += (motion.spin * t) % TWO_PI

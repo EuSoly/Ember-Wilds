@@ -7,10 +7,10 @@ end
 
 return {
 	["one background per rarity, clamped"] = function()
-		assert(#RarityImages.BACKGROUND == 5, "5 raridades")
+		assert(#RarityImages.BACKGROUND == 6, "6 raridades")
 		assert(RarityImages.background(0) == RarityImages.BACKGROUND[1], "abaixo de 1 = Comum")
-		assert(RarityImages.background(9) == RarityImages.BACKGROUND[5], "acima de 5 = Mítico")
-		assert(RarityImages.background(3) == RarityImages.BACKGROUND[3], "Épico")
+		assert(RarityImages.background(9) == RarityImages.BACKGROUND[6], "acima de 6 = Mítico")
+		assert(RarityImages.background(4) == RarityImages.BACKGROUND[4], "Épico")
 	end,
 
 	["corners keep the same share of the tile at any size"] = function()

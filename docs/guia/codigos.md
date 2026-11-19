@@ -27,6 +27,10 @@ Código não encontrado; ainda não começou; já venceu; já usou; espere um po
 - `src/server/Services/CodeService.luau`: confere e entrega (`ShopService.giveAll`), marca no perfil (`Shop.Codes`).
 - `src/client/Menu/CodePanel.luau`: botão e janela. Ícone: `MonetizationImages.CODES_ICON` (vazio = o de presente).
 
-## Código de teste
+## Códigos ativos
 
-`TESTE` (100 Golden Ember, vence 30/11/2026): tirar antes do lançamento.
+| Código | Prêmio | Validade | Onde saiu |
+|---|---|---|---|
+| `RELEASE` | skin Gato (`body_gato`) + 1.000 Golden Ember | sem validade | anúncio de lançamento no Discord (19/11/2026) |
+
+O `TESTE` (18/11) saiu no lançamento.

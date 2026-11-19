@@ -25,11 +25,14 @@
 local CodeRules = require("./CodeRules")
 
 local Codes: { CodeRules.CodeDef } = {
-	-- Teste do sistema (18/11/2026): tirar antes do lançamento.
+	-- Lançamento (anúncio no Discord, 19/11/2026): skin do Gato + 1.000
+	-- Golden Ember, sem validade. (O TESTE de 18/11 saiu no lançamento.)
 	{
-		code = "TESTE",
-		rewards = { { kind = "ember", amount = 100 } },
-		endsAt = "2026-11-30 23:59",
+		code = "RELEASE",
+		rewards = {
+			{ kind = "cosmetic", id = "body_gato" },
+			{ kind = "ember", amount = 1000 },
+		},
 	},
 }
 

@@ -135,26 +135,12 @@ return {
 	end,
 
 	["restricted blocks bundles with spins only"] = function()
-		local withSpins, withoutSpins = nil, nil
-		for _, p in Products.all() do
-			if p.kind == "bundle" then
-				if Products.hasRandom(p) then
-					withSpins = withSpins or p
-				else
-					withoutSpins = withoutSpins or p
-				end
-			end
-		end
-		assert(withSpins ~= nil, "há pacote com giros")
-		local at = withSpins.startsAt :: number
-		assert(PurchaseRules.check(withSpins, ShopData.empty(), at, 0, true) == "restricted", "com giros")
-		assert(PurchaseRules.check(withSpins, ShopData.empty(), at, 0, false) == nil, "liberado compra")
-		if withoutSpins ~= nil then
-			assert(
-				PurchaseRules.check(withoutSpins, ShopData.empty(), withoutSpins.startsAt :: number, 0, true) == nil,
-				"sem giros passa"
-			)
-		end
+		local withoutSpins = product("bundle_gelo")
+		local withSpins = table.clone(withoutSpins)
+		withSpins.rewards = { { kind = "spins", spin = "paid", count = 1 } }
+		assert(PurchaseRules.check(withSpins, ShopData.empty(), 0, 0, true) == "restricted", "giro pago barrado")
+		assert(PurchaseRules.check(withSpins, ShopData.empty(), 0, 0, false) == nil, "giro pago liberado")
+		assert(PurchaseRules.check(withoutSpins, ShopData.empty(), 0, 0, true) == nil, "pacote sem giro passa")
 		assert(PurchaseRules.check(product("pack_300"), ShopData.empty(), 0, 0, true) == nil, "outros passam")
 	end,
 

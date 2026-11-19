@@ -28,6 +28,7 @@ export type Emitter = {
 	transparency: { number },
 	lifetime: { number },
 	speed: { number },
+	stopCount: number?,
 	rate: number, -- partículas por segundo andando a toda
 	spread: number, -- graus
 	acceleration: { number },
@@ -45,6 +46,23 @@ BagFxConfig.GROUND_Y = -1.25
 local GROUND = BagFxConfig.GROUND_Y
 
 local BY_BAG: { [string]: { Emitter } } = {
+	bag_cartografo = {
+		{
+			texture = BagFxConfig.TEXTURES.brilho,
+			-- Poeira dourada da estrada atrás da mochila andando (antes só 3
+			-- grãos ao parar, quase invisível) e um punhado ao parar.
+			colors = { "#FFD27A", "#C7A574" },
+			size = { 0.16, 0.26, 0.06 },
+			transparency = { 0.15, 0.5, 1 },
+			lifetime = { 0.6, 0.9 },
+			speed = { 0.7, 1.3 },
+			rate = 7,
+			stopCount = 5,
+			spread = 75,
+			acceleration = { 0, -2, 0 },
+			offset = { 0, -1.01, 0 },
+		},
+	},
 	bag_cubo_gelo = {
 		{ -- flocos girando e caindo devagar
 			texture = BagFxConfig.TEXTURES.floco,

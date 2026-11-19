@@ -2,19 +2,20 @@
 local MockStore = require("../src/shared/UIFlow/MockStore")
 local Strings = require("../src/shared/Strings")
 local CosmeticCatalog = require("../src/shared/UIFlow/CosmeticCatalog")
+local SpinRules = require("../src/shared/UIFlow/SpinRules")
 
 local function checkKey(key: string)
 	assert(Strings.has(key), `chave de texto faltando: {key}`)
 end
 
 return {
-	["pesos da vitrine têm 5 raridades e somam 100"] = function()
+	["pesos da vitrine têm 6 raridades e somam 100"] = function()
 		for name, odds in
 			{
 				vitrine = MockStore.SHOWCASE_WEIGHTS,
 			}
 		do
-			assert(#odds == 5, `{name}: {#odds} valores`)
+			assert(#odds == 6, `{name}: {#odds} valores`)
 			local total = 0
 			for _, v in odds do
 				assert(v > 0, `{name}: chance não positiva`)
@@ -31,8 +32,11 @@ return {
 			table.insert(colors, rarity.color)
 			checkKey(rarity.nameKey)
 		end
-		assert(table.concat(ids, ",") == "common,rare,epic,legendary,mythic", table.concat(ids, ","))
-		assert(table.concat(colors, ",") == "#9CA3AF,#3B9DFF,#A855F7,#FFBD38,#FF4545", table.concat(colors, ","))
+		assert(table.concat(ids, ",") == "common,uncommon,rare,epic,legendary,mythic", table.concat(ids, ","))
+		assert(
+			table.concat(colors, ",") == "#9CA3AF,#2ECC71,#3B9DFF,#A855F7,#FFBD38,#FF4545",
+			table.concat(colors, ",")
+		)
 	end,
 
 	["tipos de giro na ordem, com as skins reais do catálogo"] = function()
@@ -41,12 +45,22 @@ return {
 			table.insert(ids, t.id)
 			local expected = CosmeticCatalog.spinItems(t.id)
 			assert(#t.items == #expected, `{t.id}: {#t.items} itens, catálogo tem {#expected}`)
+			local hasRarity = {}
 			for i, item in t.items do
 				assert(item.id == expected[i].id, `{t.id}[{i}]: {item.id} ~= {expected[i].id}`)
-				assert(item.rarity >= 1 and item.rarity <= 5, `{item.id}: raridade {item.rarity}`)
+				assert(item.rarity >= 1 and item.rarity <= 6, `{item.id}: raridade {item.rarity}`)
 				assert(string.match(item.color, "^#%x%x%x%x%x%x$"), `{item.id}: cor {item.color}`)
+				hasRarity[item.rarity] = true
 			end
 			assert(#t.items > 0, `{t.id}: sem itens`)
+			for r = 1, 6 do
+				if t.id == "book" and r == 4 and not hasRarity[r] then
+					-- A Bússola épica ainda não foi lançada e o Trepadeira passou a lendário.
+					assert(SpinRules.pickItem(t.items, r, 0).rarity == 3, "livro épico cai para raro")
+				else
+					assert(hasRarity[r], `{t.id}: sem item de raridade {r}`)
+				end
+			end
 		end
 		-- Acessórios fora da loja até terem skins (decisão do Elizeu, 10/11/2026).
 		assert(table.concat(ids, ",") == "body,bag,book,crate", table.concat(ids, ","))
@@ -68,11 +82,9 @@ return {
 		assert(table.concat(got, ",") == table.concat(bodyIds, ","), table.concat(got, ","))
 		assert(byId.accessory == nil, "acessório fora da loja")
 		assert(
-			#byId.book.items == 21 and byId.book.items[1].id == "book_default",
-			"21 livros começando por book_default"
+			#byId.book.items == 8 and byId.book.items[1].id == "book_default",
+			"8 livros liberados no giro começando por book_default"
 		)
-		-- Raridades do corpo desligadas até o Elizeu definir as das skins 3D
-		-- (todas estão Comum; ver docs/pendencias.md, "Skins 3D"). Religar depois.
 	end,
 
 	["kit panel strings exist"] = function()

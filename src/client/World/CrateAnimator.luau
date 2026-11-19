@@ -11,12 +11,14 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local TweenService = game:GetService("TweenService")
+
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local CrateMotion = require(Shared:WaitForChild("Models"):WaitForChild("CrateMotion"))
 local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 
-type Moving = { part: BasePart, rest: CFrame, motion: CrateMotion.Motion }
+type Moving = { part: BasePart, rest: CFrame, transparency: number, motion: CrateMotion.Motion }
 type Entry = { model: Model, parts: { Moving } }
 
 local CrateAnimator = {}
@@ -33,10 +35,12 @@ local function collect(model: Model): { Moving }
 			local info = SkinManifest.PARTS[descendant.Name]
 			local motion = info and CrateMotion.of(info.papel)
 			if motion then
-				table.insert(
-					parts,
-					{ part = descendant, rest = pivot:ToObjectSpace(descendant.CFrame), motion = motion }
-				)
+				table.insert(parts, {
+					part = descendant,
+					rest = pivot:ToObjectSpace(descendant.CFrame),
+					transparency = descendant.Transparency,
+					motion = motion,
+				})
 			end
 		end
 	end
@@ -52,6 +56,11 @@ local function step()
 		end
 		local pivot = model:GetPivot()
 		for _, moving in entry.parts do
+			if moving.motion.kind == "bloom" then
+				-- Duas coberturas de neon sobre os miolos das flores; a base continua visível.
+				moving.part.Transparency = 0.45 + 0.4 * math.cos(2 * math.pi * t / 2.8 - moving.motion.phase)
+				continue
+			end
 			local angle, height = CrateMotion.pose(moving.motion, t)
 			-- Gira em volta do eixo vertical do pivô da caixa (o meio dela) e sobe.
 			moving.part.CFrame = pivot * CFrame.Angles(0, angle, 0) * CFrame.new(0, height, 0) * moving.rest
@@ -66,6 +75,42 @@ end
 -- Começa a animar `model` (nada acontece se ele não tem peças móveis).
 -- Devolve como parar (volta as peças para o descanso).
 function CrateAnimator.attach(model: Model): () -> ()
+	-- As duas caixas de peça única balançam uma vez ao aparecer.
+	for _, part in model:GetDescendants() do
+		local info = SkinManifest.PARTS[part.Name]
+		if part:IsA("BasePart") and info and (info.skinId == "crate_kraken" or info.skinId == "crate_aventureiro") then
+			local rest = part.CFrame
+			local pivot = model:GetPivot()
+			local offset = pivot:ToObjectSpace(rest)
+			local first = if info.skinId == "crate_kraken" then 6 else -5
+			local running: Tween? = nil
+			local thread = task.defer(function()
+				for _, angle in { first, -math.sign(first) * 3, 0 } do
+					local tween = TweenService:Create(
+						part,
+						TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+						{
+							CFrame = pivot * CFrame.Angles(0, 0, math.rad(angle)) * offset,
+						}
+					)
+					running = tween
+					tween:Play()
+					tween.Completed:Wait()
+				end
+			end)
+			return function()
+				if coroutine.status(thread) ~= "dead" then
+					task.cancel(thread)
+				end
+				if running then
+					running:Cancel()
+				end
+				if part.Parent then
+					part.CFrame = rest
+				end
+			end
+		end
+	end
 	local parts = collect(model)
 	if #parts == 0 then
 		return function() end
@@ -84,6 +129,9 @@ function CrateAnimator.attach(model: Model): () -> ()
 			local pivot = model:GetPivot()
 			for _, moving in entry.parts do
 				moving.part.CFrame = pivot * moving.rest
+				if moving.motion.kind == "bloom" then
+					moving.part.Transparency = moving.transparency
+				end
 			end
 		end
 	end

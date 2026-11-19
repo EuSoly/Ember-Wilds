@@ -19,6 +19,7 @@ local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ShopData = require(Client:WaitForChild("ShopData"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
+local BundleBanner = require(script.Parent:WaitForChild("BundleBanner"))
 local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local RewardView = require(script.Parent:WaitForChild("RewardView"))
@@ -49,10 +50,15 @@ local function timerText(seconds: number): string
 	return Strings.format("shop.timer", { d = s // 86400, h = (s % 86400) // 3600, m = (s % 3600) // 60 })
 end
 
-local function slide(product: Products.Product, visible: () -> boolean, now: () -> number): Frame
+local function slide(product: Products.Product, visible: () -> boolean, now: () -> number, open: () -> boolean): Frame
 	local bundleId = string.sub(product.id, #"bundle_" + 1)
 	local def = Products.bundleDef(bundleId) :: Products.BundleDef
 	local theme = Color3.fromHex(def.theme)
+	local artIds =
+		{ mar = "mare_profunda", floresta = "bosque_desperto", gelo = "norte_perdido" } :: { [string]: string }
+	local animated = BundleBanner.build(artIds[bundleId] or bundleId, function()
+		return open() and visible() and ShopState.spinType() == nil
+	end)
 	local preview: { Instance } = {
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,
@@ -63,7 +69,7 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 	-- Prévia: as skins do pacote, a primeira grande e as outras menores.
 	local shown = 0
 	for _, reward in product.rewards do
-		if shown < MAX_PREVIEW then
+		if not animated and shown < MAX_PREVIEW then
 			local tile = RewardView.tile(reward, if shown == 0 then 0.62 else 0.36)
 			if tile then
 				shown += 1
@@ -95,7 +101,7 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 		Name = "Slide_" .. bundleId,
 		Visible = visible,
 		Size = UDim2.fromScale(1, 1),
-		create("Frame")({
+		animated or create("Frame")({
 			Name = "Preview",
 			Position = UDim2.new(0, ARROW + 22, 0.08, 0),
 			Size = UDim2.fromScale(0.42, 0.6),
@@ -107,7 +113,7 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 			Position = UDim2.new(0, ARROW + 22, 0.66, 0),
 			Size = UDim2.fromScale(0.5, 0.18),
 			FontFace = Theme.font.title,
-			Text = string.upper(Strings.get(def.nameKey)),
+			Text = Strings.get(def.nameKey),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 48,
 		}),
@@ -235,7 +241,7 @@ function Featured.build(layout: () -> ShopLayout.Layout, open: () -> boolean): F
 				return openIds()[current()] == product.id
 			end, function()
 				return now()
-			end)
+			end, open)
 		)
 	end
 

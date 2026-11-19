@@ -20,6 +20,7 @@ local MonetizationImages = require(Shared:WaitForChild("MonetizationImages"))
 local Palette = require(Shared:WaitForChild("Palette"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local SkinAssets = require(Shared:WaitForChild("Models"):WaitForChild("SkinAssets"))
+local SkinMotion = require(Shared:WaitForChild("Models"):WaitForChild("SkinMotion"))
 local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local ToolModel = require(Shared:WaitForChild("Models"):WaitForChild("ToolModel"))
@@ -477,6 +478,7 @@ local function applySkinMeshes(boneco: Boneco, skinId: string?)
 		end
 	end
 
+	local animated: { [string]: BasePart } = {}
 	for _, partName in partNames do
 		local info = SkinManifest.PARTS[partName]
 		if info then
@@ -488,12 +490,12 @@ local function applySkinMeshes(boneco: Boneco, skinId: string?)
 					table.insert(boneco.skinParts, clone)
 				end
 			elseif SkinAssets.isAnimated(partName) then
-				-- Asa, rabo, tentáculo, raiz...: presa no corpo por uma junta no
-				-- pivô dela; o SkinAnimator mexe a junta (BonecoRenderer).
+				-- Asa, rabo, tentáculo, raiz...: a junta sai depois do laço,
+				-- quando todas as peças animadas já existem (ver abaixo).
 				local clone = SkinAssets.clonePart(skinId, partName, body.CFrame)
 				if clone then
 					clone.Parent = boneco.model
-					SkinAssets.attachPart(body, clone, body.CFrame)
+					animated[info.papel] = clone
 					table.insert(boneco.skinParts, clone)
 				end
 			elseif info.papel == "mao" then
@@ -521,6 +523,15 @@ local function applySkinMeshes(boneco: Boneco, skinId: string?)
 				end
 			end
 		end
+	end
+
+	-- Juntas das peças animadas, presas no corpo ou na peça-pai (a ponta do
+	-- tentáculo da Lula segue o tentáculo: SkinMotion.parentOf). O SkinAnimator
+	-- mexe as juntas (BonecoRenderer).
+	for papel, clone in animated do
+		local parentPapel = skinId and SkinMotion.parentOf(skinId, papel)
+		local base = parentPapel and animated[parentPapel] or body
+		SkinAssets.attachPart(base, clone, body.CFrame)
 	end
 
 	setProceduralVisible(boneco, #boneco.skinParts == 0)

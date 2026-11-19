@@ -92,8 +92,11 @@ local function validateCosmetics(errors: { string }, defs: Types.DefsTables, has
 			table.insert(errors, `Cosmetic "{key}": slot "{cosmetic.slot}" não existe em CosmeticSlots`)
 		end
 		local rarity = (cosmetic :: any).rarity
-		if type(rarity) ~= "number" or rarity % 1 ~= 0 or rarity < 1 or rarity > 5 then
-			table.insert(errors, `Cosmetic "{key}": rarity deve ser inteira de 1 a 5`)
+		if type(rarity) ~= "number" or rarity % 1 ~= 0 or rarity < 1 or rarity > 6 then
+			table.insert(errors, `Cosmetic "{key}": rarity deve ser inteira de 1 a 6`)
+		end
+		if cosmetic.unreleased ~= nil and type(cosmetic.unreleased) ~= "boolean" then
+			table.insert(errors, `Cosmetic "{key}": unreleased deve ser boolean`)
 		end
 		-- Etiquetas à mão (UIFlow/CosmeticTags.MANUAL): hoje só "limited".
 		local tags = (cosmetic :: any).tags
@@ -159,6 +162,8 @@ local function validateCosmetics(errors: { string }, defs: Types.DefsTables, has
 			table.insert(errors, `CosmeticSlot "{key}": default "{slot.default}" não existe em Cosmetics`)
 		elseif default.slot ~= key then
 			table.insert(errors, `CosmeticSlot "{key}": default "{slot.default}" é do slot "{default.slot}"`)
+		elseif default.unreleased == true then
+			table.insert(errors, `CosmeticSlot "{key}": default "{slot.default}" não pode ser unreleased`)
 		end
 	end
 end

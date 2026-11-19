@@ -6,11 +6,12 @@ local CosmeticCatalog = require("./CosmeticCatalog")
 
 local MockStore = {}
 
--- Raridades das skins (tabela do Elizeu, 04/11): 5 níveis com cores próprias,
--- do mais comum ao mais raro. Mítico (vermelho) fica acima de Lendário.
+-- Raridades das skins (6 níveis com cores próprias, do mais comum ao mais raro).
+-- Incomum (verde) entra entre Comum e Raro; Mítico (vermelho) fica acima de Lendário.
 export type Rarity = { id: string, nameKey: string, color: string }
 MockStore.RARITIES = {
 	{ id = "common", nameKey = "shop.rarity.common", color = "#9CA3AF" },
+	{ id = "uncommon", nameKey = "shop.rarity.uncommon", color = "#2ECC71" },
 	{ id = "rare", nameKey = "shop.rarity.rare", color = "#3B9DFF" },
 	{ id = "epic", nameKey = "shop.rarity.epic", color = "#A855F7" },
 	{ id = "legendary", nameKey = "shop.rarity.legendary", color = "#FFBD38" },
@@ -18,7 +19,7 @@ MockStore.RARITIES = {
 } :: { Rarity }
 
 -- Só para o carrossel ocioso mostrar as raridades misturadas (não é chance).
-MockStore.SHOWCASE_WEIGHTS = { 30, 30, 20, 13, 7 } :: { number }
+MockStore.SHOWCASE_WEIGHTS = { 24, 24, 22, 16, 9, 5 } :: { number }
 
 export type SpinItem = { id: string, nameKey: string, rarity: number, color: string }
 export type SpinType = { id: string, nameKey: string, theme: string, items: { SpinItem } }

@@ -530,6 +530,25 @@ function ShopService.Start(_self)
 		local d = data.Shop :: ShopData.ShopData
 		-- Posse no perfil é a verdade; só limpa marcas false (ShopData.clean).
 		ShopData.clean(d)
+		-- Os três produtos mantiveram os IDs comerciais quando suas skins mudaram.
+		-- Complete a coleção de quem já comprou ou recebeu a edição anterior.
+		local restored = false
+		for _, id in { "bundle_mar", "bundle_floresta", "bundle_gelo" } do
+			local product = if d.Purchased[id] then Products.get(id) else nil
+			if product then
+				for _, reward in product.rewards do
+					local skin = reward.id
+					if reward.kind == "cosmetic" and skin and not CosmeticService.owns(player, skin) then
+						if CosmeticService.grantOwnership(player, skin) then
+							restored = true
+						end
+					end
+				end
+			end
+		end
+		if restored then
+			DataService.save(player)
+		end
 		publish(player)
 		-- Consulta a política em segundo plano (não trava o carregamento). Até a
 		-- resposta, e se ela falhar, o jogador fica restrito.

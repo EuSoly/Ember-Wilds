@@ -148,17 +148,17 @@ return {
 		end
 	end,
 
-	["example bundles mix reward kinds"] = function()
-		local kinds = {}
-		for _, product in Products.all() do
-			if product.kind == "bundle" then
-				for _, reward in product.rewards do
-					kinds[reward.kind] = true
-				end
+	["each featured bundle grants four different cosmetic slots at the configured price"] = function()
+		for id, price in { bundle_mar = 499, bundle_floresta = 399, bundle_gelo = 299 } do
+			local p = assert(Products.get(id))
+			assert(p.price.amount == price and #p.rewards == 4, `{id}: preço e 4 peças`)
+			local slots = {}
+			for _, reward in p.rewards do
+				assert(reward.kind == "cosmetic", `{id}: só cosméticos`)
+				local slot = Defs.Cosmetics[reward.id :: string].slot
+				assert(not slots[slot], `{id}: slot repetido {slot}`)
+				slots[slot] = true
 			end
-		end
-		for _, kind in { "cosmetic", "ember", "spins", "kit" } do
-			assert(kinds[kind], `nenhum pacote de exemplo tem {kind}`)
 		end
 	end,
 
@@ -186,8 +186,8 @@ return {
 	end,
 
 	["spin odds and refunds"] = function()
-		assert(table.concat(ShopConfig.SPIN_ODDS.normal, ",") == "30,40,23,6,1", "chances do normal")
-		assert(table.concat(ShopConfig.SPIN_ODDS.paid, ",") == "5,25,40,25,5", "chances do especial")
+		assert(table.concat(ShopConfig.SPIN_ODDS.normal, ",") == "30,30,22,13,4,1", "chances do normal")
+		assert(table.concat(ShopConfig.SPIN_ODDS.paid, ",") == "4,11,20,35,25,5", "chances do especial")
 		assert(ShopConfig.DUPLICATE_REFUND.normal == 50 and ShopConfig.DUPLICATE_REFUND.paid == 150, "devolução")
 	end,
 

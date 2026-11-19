@@ -87,6 +87,24 @@ return {
 		assert(not near(SkinMotion.pose(one, 0.5, 0, 0).y, SkinMotion.pose(two, 0.5, 0, 0).y), "fora de compasso")
 	end,
 
+	["compass needle searches again every loop"] = function()
+		local loop = SkinMotion.COMPASS_LOOP
+		assert(near(SkinMotion.compassAngle(0), 0), "começa no zero")
+		assert(near(SkinMotion.compassAngle(8 / 24), -34), "gira até -34")
+		assert(near(SkinMotion.compassAngle(14 / 24), -28), "assenta em -28")
+		assert(near(SkinMotion.compassAngle(3.5), 0), "volta ao zero")
+		assert(near(SkinMotion.compassAngle(loop + 8 / 24), -34), "procura de novo no ciclo seguinte")
+		assert(not SkinMotion.compassDot(1, 0.1) and SkinMotion.compassDot(1, 1), "ponto 1 acende")
+		assert(not SkinMotion.compassDot(3, 0.7) and SkinMotion.compassDot(3, 1), "ponto 3 acende depois")
+		assert(not SkinMotion.compassDot(1, 3) and SkinMotion.compassDot(1, loop + 1), "apaga e acende de novo")
+	end,
+
+	["squid tips hang on their tentacles"] = function()
+		assert(SkinMotion.parentOf("body_lula", "anim_ponta_02") == "anim_tentaculo_02", "ponta 02")
+		assert(SkinMotion.parentOf("body_lula", "anim_ponta_09") == "anim_tentaculo_09", "ponta 09")
+		assert(SkinMotion.parentOf("body_lula", "anim_tentaculo_02") == nil, "tentáculo no corpo")
+	end,
+
 	["books move the same walking or not"] = function()
 		local leaf = SkinMotion.of("book_trepadeira", "anim_folha_03") :: SkinMotion.Motion
 		local a = SkinMotion.pose(leaf, 1.1, 0, 0)

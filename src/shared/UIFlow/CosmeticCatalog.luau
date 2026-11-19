@@ -39,7 +39,7 @@ function CosmeticCatalog.items(slot: string, owns: ((id: string) -> boolean)?): 
 	local defaultId = slotDef and slotDef.default
 	local list: { CosmeticDef } = {}
 	for _, def in Defs.Cosmetics do
-		if def.slot == slot then
+		if def.slot == slot and (def.unreleased ~= true or (owns and owns(def.id))) then
 			table.insert(list, def)
 		end
 	end

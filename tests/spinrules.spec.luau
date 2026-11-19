@@ -71,16 +71,18 @@ return {
 
 	["confete por raridade"] = function()
 		local paid = {}
-		for r = 1, 5 do
+		for r = 1, 6 do
 			table.insert(paid, SpinRules.confettiFor(r, true))
 		end
-		assert(table.concat(paid, ",") == "20,35,60,100,150", table.concat(paid, ","))
+		assert(table.concat(paid, ",") == "20,28,35,60,100,150", table.concat(paid, ","))
 		assert(
-			SpinRules.confettiFor(1, false) == 0 and SpinRules.confettiFor(2, false) == 0,
-			"normal comum/incomum sem confete"
+			SpinRules.confettiFor(1, false) == 0
+				and SpinRules.confettiFor(2, false) == 0
+				and SpinRules.confettiFor(3, false) == 0,
+			"normal comum/incomum/raro sem confete"
 		)
-		assert(SpinRules.confettiFor(3, false) == 20, "normal épico com 20")
-		assert(SpinRules.confettiFor(4, false) == 40 and SpinRules.confettiFor(5, false) == 70, "normal cresce")
+		assert(SpinRules.confettiFor(4, false) == 20, "normal épico com 20")
+		assert(SpinRules.confettiFor(5, false) == 40 and SpinRules.confettiFor(6, false) == 70, "normal cresce")
 		assert(SpinRules.confettiFor(9, false) == 70 and SpinRules.confettiFor(0, false) == 0, "fora da faixa")
 	end,
 
@@ -90,14 +92,14 @@ return {
 		assert(not common.rays and not common.ring, "Comum normal sem raios nem anel")
 		assert(common.hold > 0 and common.hold < 0.5, "espera curta no Comum")
 		for _, paid in { false, true } do
-			for r = 2, 5 do
+			for r = 2, 6 do
 				local low, high = SpinRules.revealFor(r - 1, paid), SpinRules.revealFor(r, paid)
 				assert(high.hold >= low.hold, `espera caiu em {r}`)
 				assert(high.shake >= low.shake, `tremida caiu em {r}`)
 				assert(high.flash >= low.flash, `clarão caiu em {r}`)
 			end
 		end
-		local mythic = SpinRules.revealFor(5, true)
+		local mythic = SpinRules.revealFor(6, true)
 		assert(mythic.hold <= 1, "ninguém espera mais de 1 s")
 		assert(mythic.flash <= 0.8, "o clarão nunca cobre a tela toda")
 		assert(mythic.rays and mythic.ring, "Mítico com tudo")
@@ -106,14 +108,14 @@ return {
 	["giro pago sempre tem raios, anel, tremida e clarão"] = function()
 		local paid = SpinRules.revealFor(1, true)
 		assert(paid.rays and paid.ring and paid.shake > 0 and paid.flash > 0, "pago Comum")
-		assert(SpinRules.revealFor(2, false).rays and not SpinRules.revealFor(2, false).ring, "Raro normal: só raios")
-		assert(SpinRules.revealFor(3, false).ring, "Épico normal: anel")
+		assert(SpinRules.revealFor(3, false).rays and not SpinRules.revealFor(3, false).ring, "Raro normal: só raios")
+		assert(SpinRules.revealFor(4, false).ring, "Épico normal: anel")
 	end,
 
 	["só o Mítico tem a comemoração mística, pago ou não"] = function()
 		for _, paid in { false, true } do
-			assert(SpinRules.revealFor(5, paid).mystic, "Mítico místico")
-			for r = 1, 4 do
+			assert(SpinRules.revealFor(6, paid).mystic, "Mítico místico")
+			for r = 1, 5 do
 				assert(not SpinRules.revealFor(r, paid).mystic, `raridade {r} sem místico`)
 			end
 		end
