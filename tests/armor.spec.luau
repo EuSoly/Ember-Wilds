@@ -29,10 +29,13 @@ return {
 		assert(ArmorRules.reduce(24, m, "mob") == 11, `mob: {ArmorRules.reduce(24, m, "mob")}`)
 	end,
 
-	["defense never heals"] = function()
-		local m = ArmorRules.modifiers(helmet({ mobDefense = 30 }))
-		assert(ArmorRules.reduce(16, m, "mob") == 0, "golpe menor que a defesa = 0")
-		assert(ArmorRules.reduce(16, m, "player") == 16, "defesa contra mob não vale para jogador")
+	["defense never heals and guarantees minimum 25%"] = function()
+		local m = ArmorRules.modifiers(helmet({ defense = 15, mobDefense = 15 }))
+		assert(ArmorRules.reduce(40, m, "player") == 25, "40 com defesa 15 = 25")
+		assert(ArmorRules.reduce(16, m, "player") == 4, "16 com defesa 15 = 4 (25% de 16)")
+		assert(ArmorRules.reduce(1, m, "player") == 0.25, "1 com defesa 15 = 0.25 (25% de 1)")
+		assert(ArmorRules.reduce(0, m, "player") == 0, "0 = 0")
+		assert(ArmorRules.reduce(10, ArmorRules.NONE, "player") == 10, "10 sem defesa = 10")
 	end,
 
 	["coat keeps cold at day"] = function()

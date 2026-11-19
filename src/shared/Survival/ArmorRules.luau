@@ -102,15 +102,22 @@ function ArmorRules.modifiers(def: Types.ItemDef?): Modifiers
 	}
 end
 
--- Golpe depois da defesa (Starve: golpe − defesa, nunca abaixo de 0). `held`
--- = o que o atingido tem na mão: um escudo soma a defesa dele.
+-- Todo golpe causa pelo menos 25% do dano original (decisão do Elizeu, 19/11).
+ArmorRules.MIN_DAMAGE_SHARE = 0.25
+
+-- Golpe depois da defesa: `math.max(amount - defense, amount * MIN_DAMAGE_SHARE)`,
+-- e 0 só quando `amount <= 0`. `held` = o que o atingido tem na mão: um escudo
+-- soma a defesa dele.
 function ArmorRules.reduce(amount: number, mods: Modifiers, source: HitSource, held: Types.ItemDef?): number
+	if not (amount > 0) then
+		return 0
+	end
 	local defense = if source == "mob" then mods.mobDefense else mods.defense
 	local shield = held and held.shield
 	if shield then
 		defense += if source == "mob" then shield.mobDefense else shield.defense
 	end
-	return math.max(amount - defense, 0)
+	return math.max(amount - defense, amount * ArmorRules.MIN_DAMAGE_SHARE)
 end
 
 -- Quanto a NOSSA perda de frio é multiplicada com a peça no lugar e hora:

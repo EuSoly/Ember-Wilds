@@ -19,8 +19,9 @@ local GOLD_SHIELD = item({ mobDamage = 3, shield = { defense = 3, mobDefense = 8
 return {
 	["shield in hand adds to the helmet"] = function()
 		assert(ArmorRules.reduce(22, GOLD_HELMET, "player", GOLD_SHIELD) == 15, "jogador: 22 − 4 − 3")
-		assert(ArmorRules.reduce(24, GOLD_HELMET, "mob", GOLD_SHIELD) == 3, "mob: 24 − 13 − 8")
-		assert(ArmorRules.reduce(5, GOLD_HELMET, "player", GOLD_SHIELD) == 0, "nunca abaixo de 0")
+		assert(ArmorRules.reduce(30, GOLD_HELMET, "mob", GOLD_SHIELD) == 9, "mob: 30 − 13 − 8")
+		assert(ArmorRules.reduce(24, GOLD_HELMET, "mob", GOLD_SHIELD) == 6, "mob: 24 − 21 = 3, mínimo 25% = 6")
+		assert(ArmorRules.reduce(5, GOLD_HELMET, "player", GOLD_SHIELD) == 1.25, "mínimo 25% de 5")
 	end,
 
 	["no shield is the helmet alone"] = function()
