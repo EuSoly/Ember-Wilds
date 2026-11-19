@@ -15,6 +15,7 @@ local Inventory = require(ReplicatedStorage.Shared.Inventory)
 local ItemAccess = require(ReplicatedStorage.Shared.ItemAccess)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
 local WaterSim = require(ReplicatedStorage.Shared.Simulation.WaterSim)
+local ArmorService = require(script.Parent.ArmorService)
 local InventoryService = require(script.Parent.InventoryService)
 local StatsService = require(script.Parent.StatsService)
 local CreativeService = require(script.Parent.CreativeService)
@@ -124,16 +125,21 @@ local function start(player: Player, recipeId: string)
 			return
 		end
 	end
+	-- A peça de cabeça vestida conta como ingrediente (capacete de pedra pede o
+	-- de madeira etc.). Só é consumida se o inventário não tiver outra igual.
+	local worn = ArmorService.worn(player)
+	local wornId = if worn then worn.id else nil
 	local counts = countsOf(inv)
-	if not CraftRules.hasIngredients(recipe, counts) then
+	if not CraftRules.hasIngredients(recipe, CraftRules.withWorn(counts, wornId)) then
 		return
 	end
-	if not CraftRules.fits(inv, recipe, maxStackOf) then
+	local fromInventory, usesWorn = CraftRules.split(recipe, counts, wornId)
+	if not CraftRules.fits(inv, recipe, maxStackOf, fromInventory) then
 		notify(player, "craft.full")
 		return
 	end
 	local removed: { { id: string, count: number } } = {}
-	for _, part in recipe.ingredients do
+	for _, part in fromInventory do
 		if not InventoryService.take(player, part.id, part.count) then
 			for _, taken in removed do
 				InventoryService.give(player, taken.id, taken.count)
@@ -141,6 +147,14 @@ local function start(player: Player, recipeId: string)
 			return
 		end
 		table.insert(removed, part)
+	end
+	if usesWorn and wornId then
+		-- Tira da cabeça (síncrono, sem trava de troca). Fica em `removed`: se o
+		-- jogador cancelar, a peça volta para o inventário (não para a cabeça),
+		-- igual ao resto do reembolso. O capacete novo vai para o inventário,
+		-- como todo craft; o jogador veste segurando e usando (WearService).
+		ArmorService.wear(player, nil)
+		table.insert(removed, { id = wornId, count = 1 })
 	end
 	-- Item na mão pelo slot selecionado (síncrono): um livro recém-escolhido no
 	-- mesmo quadro já conta para a velocidade. O atributo Equipped é gravado um

@@ -184,4 +184,13 @@ return {
 		-- segundo giro no meio (a tela travava girando).
 		assert(not SpinRules.canPress(3, false, true), "prêmio na tela: não")
 	end,
+
+	["choose button opens the spin screen only when none is open"] = function()
+		assert(SpinRules.canOpen(nil, 5), "nenhuma aberta, tipo com skins: abre")
+		assert(not SpinRules.canOpen(nil, 0), "tipo sem skins (Em breve): não abre")
+		-- O bug de 19/11/2026: com a roleta de um tipo aberta, o cartão de outro
+		-- tipo ainda abria (e o segundo clique de um clique duplo também).
+		assert(not SpinRules.canOpen("body", 5), "outra tela aberta: não abre")
+		assert(not SpinRules.canOpen("accessory", 5), "a mesma tela aberta: não reabre")
+	end,
 }

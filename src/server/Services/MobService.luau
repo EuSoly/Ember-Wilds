@@ -112,8 +112,9 @@ type Slot = { id: string, biome: string, untilAt: number }
 -- Jogadores vivos de um bioma neste passo (`who` = o personagem).
 type View = { list: { MobBrain.Seen }, byWho: { [any]: MobBrain.Seen } }
 
--- Biomas com tipo de dicionário (o frozen de WorldConfig não se deixa percorrer tipado).
-local BIOMES: { [string]: WorldConfig.Rect } = WorldConfig.BIOMES :: any
+-- Área de cada bioma para os mobs (a floresta inclui a praia), com tipo de
+-- dicionário (o frozen de WorldConfig não se deixa percorrer tipado).
+local BIOMES: { [string]: WorldConfig.Rect } = WorldConfig.MOB_AREAS :: any
 
 local MobService = {}
 
@@ -296,8 +297,8 @@ local function retire(mob: Mob)
 end
 
 -- Círculos que seguram um corpo no chão perto de (x, z), até `reach` do centro:
--- peças sólidas (porta aberta, ponte e telhado não), recursos, outros mobs no
--- chão e jogadores vivos.
+-- peças que seguram corpos (porta aberta, ponte, telhado e planta não), recursos,
+-- outros mobs no chão e jogadores vivos.
 local function circlesAround(
 	mob: Mob,
 	x: number,
@@ -307,7 +308,7 @@ local function circlesAround(
 ): { MobMove.Circle }
 	local circles: { MobMove.Circle } = {}
 	for _, entry in StructureService.near(x, z, reach) do
-		if BuildRules.isSolid(entry.def.kind) and entry.model:GetAttribute(StatNames.DoorOpen) ~= true then
+		if BuildRules.blocksBodies(entry.def.kind) and entry.model:GetAttribute(StatNames.DoorOpen) ~= true then
 			table.insert(circles, { x = entry.x, z = entry.z, radius = entry.radius })
 		end
 	end

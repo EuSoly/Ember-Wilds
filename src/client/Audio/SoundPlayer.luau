@@ -29,11 +29,10 @@ local loops: { [string]: Sound } = {}
 local listener: Part? = nil
 local started = false
 
--- SoundGroup das configurações (Music, Ambient ou Effects).
-function SoundPlayer.group(name: SoundConfig.Group): SoundGroup?
-	AudioSettings.start() -- cria os grupos se ainda não existem (só na 1ª vez)
-	local group = SoundService:FindFirstChild(name)
-	return if group and group:IsA("SoundGroup") then group else nil
+-- SoundGroup das configurações (Music, Ambient ou Effects). Nunca nil: um som
+-- sem grupo tocaria no volume cheio, ignorando a barra das configurações.
+function SoundPlayer.group(name: SoundConfig.Group): SoundGroup
+	return AudioSettings.group(name)
 end
 
 -- Onde está o ouvido: o ponto que a câmera segue (o boneco, ou quem o menu

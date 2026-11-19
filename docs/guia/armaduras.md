@@ -7,6 +7,7 @@ São as 32 peças de cabeça do Starve: capacetes, roupas de frio, proteções d
 - Segura a peça na mão e usa (clique ou toque): veste. Se já tinha uma, ela volta para o inventário. Precisa caber.
 - Depois de vestir, só dá para trocar de novo depois de **5 s** (`SurvivalConfig.ARMOR_SWAP_LOCK`, igual ao `helmet_delay` do Starve).
 - Ao morrer, a peça vai para a caixa do morto, como item.
+- **Craft com a peça vestida:** a peça da cabeça conta como ingrediente (o capacete de pedra pede o de madeira etc.). Se o inventário já tiver outra igual, usa a do inventário; senão, a da cabeça sai no início do craft (cancelar devolve ao inventário). A peça nova vai para o inventário, como todo craft (`CraftRules.withWorn`/`split`).
 - A peça fica **por cima da skin**, no centro do corpo, sem esconder nada. Numa skin gorda ela entra um pouco no corpo; numa magra aparece inteira.
 
 ## O que cada número faz

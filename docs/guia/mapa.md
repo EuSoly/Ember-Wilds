@@ -15,6 +15,16 @@ O mapa é um quadrado de **2.220 × 2.220 studs**, centrado na origem (no Studio
 | Lava | +150 a +1110 | −1110 a −150 (em cima à direita) | fechado |
 | Deserto | +150 a +1110 | +150 a +1110 (embaixo à direita) | fechado |
 
+- **No lançamento (desde 19/11/2026) só existe a floresta, com praia e mar em volta.** Os chãos de Inverno, Lava e Deserto e o oceano antigo foram guardados em `ServerStorage.ImportsOriginais.BiomasFuturos`, e voltam quando o bioma abrir. O script `scripts/studio/mar-em-volta.luau` monta tudo (pode rodar de novo):
+  - **Praia** de **60 studs** em volta da floresta (`WorldConfig.BEACH_WIDTH`).
+    - Chão `Ground/Beach_*`, liso na cor `#D6B26C`. O material Sand do Roblox deixava a areia cinza.
+    - Marcadores `NoSpawn/Praia` com `Sand = true`: nada nasce na praia, a pá cava areia e não dá para plantar.
+    - A praia conta como terra (`WorldConfig.LAND`): dá para construir, os mobs da floresta entram nela (`MOB_AREAS`) e o aviso do mar não aparece.
+  - **Chão de mar** `Ground/Ocean_1..4` (azul `#1F6F9F`, topo em Y = −0,2) cobre até **600 studs** depois da floresta. A câmera vê ~100 studs em volta, então nunca chega ao fim dele.
+  - **Água** `Water/Mar`, da beira da praia para fora. Tem `Painted = true`, ou seja, fica invisível e vale só a forma. No mar o jogador nada devagar e perde fôlego, como num lago, e não dá para construir em cima.
+  - **Paredes invisíveis** `Borders` ficam a **150 studs da beira da praia** (`WorldConfig.SEA_MARGIN`).
+  - **Aviso:** a mais de 4 studs mar adentro (`SEA_WARNING_DEPTH`), aparece "Volte para a terra!" a cada 4 s (`client/World/BorderWarning`).
+  - **Mobs:** nunca entram na água.
 - A floresta tem **960 × 960** e leva ~1 minuto para atravessar andando.
 - O boneco nasce no **centro da floresta** (−630, 0, 630). A câmera do menu gira em volta desse ponto.
 - O chão fica com o topo em **Y = 0**.
@@ -29,7 +39,7 @@ O mapa é um quadrado de **2.220 × 2.220 studs**, centrado na origem (no Studio
 | `NoSpawn` | Parts cobrindo caminhos e clareiras | nenhum recurso nasce ali; ficam invisíveis no jogo |
 | `Zones` | Parts com o atributo **`ZoneType`** | o jogo espalha os recursos daquele tipo de zona dentro de cada uma; ficam invisíveis no jogo |
 | `Resources` | Parts ou Models com o atributo **`ResourceId`** | cada um vira um recurso de verdade na mesma posição e rotação |
-| `Borders` | paredes invisíveis em volta da área jogável | não deixam passar |
+| `Borders` | paredes invisíveis no mar, a 150 studs da beira da praia | não deixam passar |
 
 No Studio você pode deixar zonas e caminhos coloridos e meio transparentes para enxergar o desenho: o jogo os esconde sozinho.
 

@@ -345,7 +345,15 @@ function spec.canteiro_na_camada_do_chao_mas_fora_da_agua()
 	assert(not BuildRules.waterAllows("plot", true), "canteiro não vai na água")
 	assert(BuildRules.waterAllows("plot", false), "canteiro na terra")
 	assert(BuildRules.waterAllows("bridge", true), "piso continua indo na água")
-	assert(BuildRules.isSolid("plant"), "planta colide como o arbusto")
+	assert(BuildRules.isSolid("plant"), "planta fica na camada sólida (leva golpe)")
+end
+
+function spec.planta_atravessavel_mas_sem_plantar_em_cima()
+	assert(not BuildRules.blocksBodies("plant"), "planta não segura jogador nem mob")
+	assert(BuildRules.blocksPlacement("plant", "plant"), "não se planta uma em cima da outra")
+	assert(BuildRules.blocksBodies("wall") and BuildRules.blocksBodies("spike"), "parede e espinho seguram")
+	assert(not BuildRules.blocksBodies("bridge") and not BuildRules.blocksBodies("plot"), "piso e canteiro não")
+	assert(not BuildRules.blocksBodies("roof"), "telhado não")
 end
 
 return spec

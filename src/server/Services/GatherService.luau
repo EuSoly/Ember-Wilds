@@ -133,7 +133,7 @@ end
 -- Golpe de pá sem alvo: cava o chão em (x, z). Terra no chão da floresta,
 -- areia nas margens, nada na água ou fora do mapa (DigRules).
 local function dig(player: Player, tool: Defs.ItemDef, x: number, z: number, dir: Vector3)
-	local rect = WorldConfig.PLAYABLE
+	local rect = WorldConfig.LAND
 	if x < rect.minX or x > rect.maxX or z < rect.minZ or z > rect.maxZ then
 		return
 	end

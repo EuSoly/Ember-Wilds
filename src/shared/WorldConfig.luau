@@ -19,6 +19,18 @@ local BIOMES = table.freeze({
 	desert = rect(150, 150, 1110, 1110), -- inferior direito
 })
 
+-- Praia em volta da floresta (studs). Conta como terra: dá para andar, construir
+-- e cavar areia (não plantar), os mobs da floresta entram nela e não aparece o
+-- aviso de mar. Desenhada por scripts/studio/mar-em-volta.luau.
+local BEACH_WIDTH = 60
+
+local function grow(area: Rect, by: number): Rect
+	return rect(area.minX - by, area.minZ - by, area.maxX + by, area.maxZ + by)
+end
+
+-- Terra firme no lançamento: a floresta mais a praia.
+local LAND = grow(BIOMES.forest, BEACH_WIDTH)
+
 return table.freeze({
 	-- Lado do chão de teste em studs (só existe sem Workspace.Map), centrado no SPAWN.
 	size = 256,
@@ -34,8 +46,19 @@ return table.freeze({
 	-- leva 1 min 16 s).
 	MAP_SIZE = 2220,
 	BIOMES = BIOMES,
-	-- Área jogável no lançamento (só a floresta); a borda tem paredes (Map/Borders).
+	-- Bioma aberto no lançamento (só a floresta): minimapa e nascimento.
 	PLAYABLE = BIOMES.forest,
+	BEACH_WIDTH = BEACH_WIDTH,
+	-- Terra firme (floresta + praia): aviso de mar, pá e área dos mobs.
+	LAND = LAND,
+	-- Onde os mobs de cada bioma podem andar: a floresta inclui a praia (senão a
+	-- praia viraria lugar seguro contra os bichos).
+	MOB_AREAS = table.freeze({
+		forest = LAND,
+		winter = BIOMES.winter,
+		lava = BIOMES.lava,
+		desert = BIOMES.desert,
+	}),
 	-- Onde o boneco nasce e para onde a câmera do menu olha: centro da floresta.
 	SPAWN = table.freeze({ x = -630, y = 0, z = 630 }),
 
@@ -54,6 +77,12 @@ return table.freeze({
 	OXYGEN_EMPTY_SECONDS = 30,
 	-- Segundos fora da água para o fôlego encher de zero a cheio.
 	OXYGEN_REFILL_SECONDS = 5,
-	-- A essa distância (studs) da borda da área jogável aparece o aviso world.locked.
-	BORDER_WARNING_DISTANCE = 12,
+	-- Em volta da praia é mar (Map/Water/Mar e chão Map/Ground/Ocean_*, feitos
+	-- por scripts/studio/mar-em-volta.luau). As paredes invisíveis (Map/Borders)
+	-- ficam a SEA_MARGIN studs da beira da praia: perto o bastante para a câmera
+	-- (vê ~100 studs em volta) nunca alcançar o fim do chão de mar, que vai a 600
+	-- da floresta.
+	SEA_MARGIN = 150,
+	-- Studs mar adentro (fora da LAND) até aparecer o aviso world.backToLand.
+	SEA_WARNING_DEPTH = 4,
 })

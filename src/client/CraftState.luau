@@ -32,12 +32,9 @@ local CraftState = {
 	equipped = vide.source(nil :: string?),
 }
 
+-- Com a peça vestida somada: o servidor aceita o capacete da cabeça na receita.
 local function counts(): { [string]: number }
-	local result = {}
-	for _, slot in InventoryState.slots() do
-		result[slot.id] = (result[slot.id] or 0) + slot.count
-	end
-	return result
+	return InventoryState.craftCounts()
 end
 
 local function updateNear()
@@ -235,6 +232,7 @@ function CraftState.Start(_self)
 	end)
 	task.spawn(function()
 		local previousSlots = nil
+		local previousWorn: string? = nil
 		local initialized = false
 		while true do
 			local nearChanged = updateNear()
@@ -257,10 +255,12 @@ function CraftState.Start(_self)
 				restoreBook()
 			end
 			local slots = InventoryState.slots()
-			if not initialized or nearChanged or currentChanged or slots ~= previousSlots then
+			local worn = InventoryState.worn()
+			if not initialized or nearChanged or currentChanged or slots ~= previousSlots or worn ~= previousWorn then
 				updateRows()
 				initialized = true
 				previousSlots = slots
+				previousWorn = worn
 				currentChanged = false
 			end
 			task.wait(0.1)

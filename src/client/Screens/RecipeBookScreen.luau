@@ -104,12 +104,9 @@ local function tutorialHighlights()
 	return TutorialState.highlights(RecipeBookScreen.open(), RecipeBookScreen.tab())
 end
 
+-- Com a peça vestida somada (o capacete da cabeça vale na receita do próximo).
 local function counts(): { [string]: number }
-	local result = {}
-	for _, slot in InventoryState.slots() do
-		result[slot.id] = (result[slot.id] or 0) + slot.count
-	end
-	return result
+	return InventoryState.craftCounts()
 end
 
 local function slicedArt(kind: string, id: string | () -> string, corner: number): ImageLabel

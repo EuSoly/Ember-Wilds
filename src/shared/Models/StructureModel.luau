@@ -145,9 +145,11 @@ builders.plot = function(model, side, color)
 	return decor(deck)
 end
 
--- Planta: um tronco baixo que colide (como o arbusto); o visual é o estágio.
+-- Planta: um tronco baixo que NÃO colide (atravessa-se, BuildRules.blocksBodies);
+-- o visual é o estágio. Continua sendo a peça principal (pivô) e fica invisível
+-- com o modelo por cima; o golpe acha a planta pelo círculo, não pela peça.
 builders.plant = function(model, side, color)
-	return newPart("Stem", Vector3.new(side * 0.6, 1.5, side * 0.6), CFrame.new(0, 0.75, 0), color, model)
+	return decor(newPart("Stem", Vector3.new(side * 0.6, 1.5, side * 0.6), CFrame.new(0, 0.75, 0), color, model))
 end
 
 -- Provisórios (colisor = bloco da bancada pelo raio da peça): extrator, fornalha,

@@ -913,7 +913,7 @@ return table.freeze({
 	["kit.premiumBadge"] = "Premium", -- selo do kit liberado pelo Premium
 
 	-- Mundo
-	["world.locked"] = "Região ainda não descoberta",
+	["world.backToLand"] = "Volte para a terra!",
 
 	-- Recursos do mundo
 	["resource.tree"] = "Árvore",

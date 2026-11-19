@@ -156,6 +156,19 @@ function spec.fogos_mais_proximos_ganham_o_som()
 	assert(#few == 1 and few[1] == 2, "fora do alcance não entra")
 end
 
+function spec.volume_do_grupo_respeita_o_zero()
+	-- 0% é mudo de verdade: nunca vira o padrão (bug de 19/11/2026).
+	assert(SoundRules.groupVolume(0, 0.8) == 0, "0% fica mudo")
+	assert(SoundRules.groupVolume(0.35, 0.8) == 0.35, "valor salvo vale")
+	-- Perfil ainda não carregou (sem atributo) ou valor estranho: o padrão.
+	assert(SoundRules.groupVolume(nil, 0.8) == 0.8, "sem atributo usa o padrão")
+	assert(SoundRules.groupVolume("alto", 0.8) == 0.8, "texto usa o padrão")
+	assert(SoundRules.groupVolume(0 / 0, 0.8) == 0.8, "NaN usa o padrão")
+	-- Fora da faixa fica preso em 0..1.
+	assert(SoundRules.groupVolume(-1, 0.8) == 0, "negativo vira mudo")
+	assert(SoundRules.groupVolume(3, 0.8) == 1, "acima de 1 vira cheio")
+end
+
 function spec.vida_baixa_liga_o_batimento()
 	assert(SoundRules.heartbeat(40, 200, 0.25), "abaixo de 25% bate")
 	assert(not SoundRules.heartbeat(60, 200, 0.25), "acima não")

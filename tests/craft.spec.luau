@@ -77,6 +77,39 @@ return {
 		assert(not CraftRules.fits(inv, r, maxStack), "o resultado não cabe no espaço ocupado")
 	end,
 
+	["worn piece counts as ingredient"] = function()
+		local r = recipe("stone_helmet", 1, nil)
+		r.ingredients = { { id = "stone", count = 2 }, { id = "wood_helmet", count = 1 } }
+		local counts = { stone = 2 }
+		assert(not CraftRules.hasIngredients(r, counts), "sem o capacete no inventário")
+		assert(CraftRules.hasIngredients(r, CraftRules.withWorn(counts, "wood_helmet")), "o vestido conta")
+		assert(counts.wood_helmet == nil, "withWorn não altera o original")
+		local parts, usesWorn = CraftRules.split(r, counts, "wood_helmet")
+		assert(usesWorn, "consome o vestido")
+		assert(#parts == 1 and parts[1].id == "stone", "só a pedra sai do inventário")
+	end,
+
+	["inventory copy is used before the worn piece"] = function()
+		local r = recipe("stone_helmet", 1, nil)
+		r.ingredients = { { id = "wood_helmet", count = 1 } }
+		local parts, usesWorn = CraftRules.split(r, { wood_helmet = 1 }, "wood_helmet")
+		assert(not usesWorn and #parts == 1, "o do inventário vai primeiro")
+		local other, usesOther = CraftRules.split(r, {}, "hood")
+		assert(not usesOther and #other == 1, "peça vestida diferente não entra")
+	end,
+
+	["fits counts only what leaves the inventory"] = function()
+		-- Inventário cheio só de pedra: sem o capacete na mochila, a pedra
+		-- gasta libera o slot do capacete novo.
+		local inv = Inventory.new(1)
+		Inventory.add(inv, "stone", 2, 255)
+		local r = recipe("tool", 1, nil)
+		r.ingredients = { { id = "stone", count = 2 }, { id = "wood_helmet", count = 1 } }
+		local parts = CraftRules.split(r, { stone = 2 }, "wood_helmet")
+		assert(CraftRules.fits(inv, r, maxStack, parts), "cabe usando o capacete vestido")
+		assert(not CraftRules.fits(inv, r, maxStack), "sem split falta o capacete no inventário")
+	end,
+
 	["progress clamps and handles zero duration"] = function()
 		assert(CraftRules.progress(0, 10, 5) == 0.5, "metade do tempo dá metade do progresso")
 		assert(CraftRules.progress(0, 10, -1) == 0, "progresso não fica abaixo de zero")

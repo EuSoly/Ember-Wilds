@@ -878,6 +878,8 @@ local Items: { [string]: ItemDef } = {
 		armor = {
 			warm = { day = 1, night = 10, winterDay = 4, winterNight = 10, lavaDay = 10, lavaNight = 10 },
 			sand = { damage = 2, every = 8 },
+			-- Starve: a roupa ninja cobre o rosto e esconde o nick, como o capuz.
+			hidesName = true,
 		},
 	},
 	pilot = {

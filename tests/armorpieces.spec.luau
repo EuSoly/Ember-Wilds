@@ -130,6 +130,7 @@ return {
 		assert(armorOf("diamond_protection").fireHeatFactor == 0, "proteção anula o fogo")
 		assert(armorOf("hood").hidesName == true, "capuz esconde o nome")
 		assert(armorOf("winter_hood").hidesName == true, "capuz de inverno esconde o nome")
+		assert(armorOf("ninja").hidesName == true, "chapéu de ninja esconde o nome")
 		assert(armorOf("explorer").explorer == true, "explorador")
 		assert(armorOf("life_crown").regenHeal == 40, "coroa da vida")
 		assert(armorOf("coat").warm.day == 2 and armorOf("coat").warm.night == 13, "casaco 2/13")

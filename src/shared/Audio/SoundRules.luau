@@ -202,6 +202,16 @@ function SoundRules.nearest(distances: { number }, count: number, range: number)
 	return indexes
 end
 
+-- Volume (0 a 1) de um grupo de som (Music, Ambient, Effects) pelo valor do
+-- atributo Setting_<id>_volume. Sem número válido (perfil ainda não carregou)
+-- vale `fallback`; 0 é mudo de verdade (nunca vira o padrão).
+function SoundRules.groupVolume(value: unknown, fallback: number): number
+	if type(value) ~= "number" or value ~= value then
+		return fallback
+	end
+	return math.clamp(value, 0, 1)
+end
+
 -- Batimento cardíaco: vivo e com a vida abaixo de `fraction` do máximo.
 function SoundRules.heartbeat(health: number, max: number, fraction: number): boolean
 	return health > 0 and max > 0 and health / max < fraction

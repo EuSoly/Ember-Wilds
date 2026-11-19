@@ -197,7 +197,9 @@ local function samples(spinType: MockStore.SpinType, open: () -> boolean, compac
 end
 
 -- Botão de baixo do cartão: "Escolher", ou "Em breve" (apagado) se o tipo ainda
--- não tem skins.
+-- não tem skins. Com uma tela de giro aberta, todos ficam apagados e sem
+-- clique (no PC o clique passava pelo fundo e abria a roleta de outro tipo
+-- por baixo da tela, que bugava); ao fechar a tela, voltam ao normal.
 local function bottomButton(spinType: MockStore.SpinType): Instance
 	local soon = #spinType.items == 0
 	return Rustic.button({
@@ -206,9 +208,13 @@ local function bottomButton(spinType: MockStore.SpinType): Instance
 		Position = UDim2.fromScale(0.5, 1),
 		Size = UDim2.new(0.9, 0, 0, 46),
 		ZIndex = 4,
-		kind = if soon then "disabled" else "ember",
+		kind = function(): Rustic.Kind
+			return if soon or not ShopState.canChoose() then "disabled" else "ember"
+		end,
 		text = Strings.get(if soon then "cosmetics.soon" else "shop.choose"),
 		Activated = function()
+			-- A trava de verdade é a do openSpin (vale também para o 2º
+			-- clique de um clique duplo rápido).
 			ShopState.openSpin(spinType.id)
 		end,
 	})

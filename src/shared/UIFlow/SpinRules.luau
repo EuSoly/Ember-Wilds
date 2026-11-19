@@ -126,6 +126,15 @@ function SpinRules.canPress(spins: number, spinning: boolean, prizeOpen: boolean
 	return spins > 0 and not spinning and not prizeOpen
 end
 
+-- Um botão "Escolher" da loja pode abrir a tela do giro: o tipo tem skins e
+-- nenhuma tela de giro está aberta. Com uma aberta, clicar no cartão de outro
+-- tipo (no PC o clique passava pelo fundo escurecido) trocava a roleta por
+-- baixo da tela, às vezes no meio do giro, e ela bugava (19/11/2026). O mesmo
+-- vale para o clique duplo rápido: o segundo clique já encontra a tela aberta.
+function SpinRules.canOpen(openType: string?, itemCount: number): boolean
+	return openType == nil and itemCount > 0
+end
+
 function SpinRules.canAfford(balance: number, price: number): boolean
 	if type(balance) ~= "number" or balance ~= balance or balance == math.huge or balance == -math.huge then
 		return false

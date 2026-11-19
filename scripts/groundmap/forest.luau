@@ -31,8 +31,25 @@ local RES = 1024 -- pixels de cada imagem
 local TILES = 4 -- pedaços por lado
 local TILE = SIZE / TILES -- studs de cada pedaço
 local CELL = 1.5 -- studs por célula da grade grossa (campos suaves)
-local N = math.floor(SIZE / CELL) + 2
 local MAXD = 80 -- studs: mais longe que isso da água conta como "longe"
+
+-- Costa (19/11/2026): praia e mar em volta da floresta, num anel de pedaços
+-- Coast_<ix>_<iz> (ix, iz de -1 a 4, fora do miolo 0..3) com o mesmo tamanho.
+-- `lune run forest coast serve` grava e serve só esses 20 pedaços.
+-- A terra firme vai até BEACH studs fora da floresta (WorldConfig.BEACH_WIDTH);
+-- dali para fora é mar (Map/Water/Mar). A areia da costa tem COAST_SAND de
+-- largura e toda a transição acaba antes da borda da floresta, então os
+-- pedaços Forest_* não mudam (a emenda continua igual).
+local BEACH = 60
+local COAST_SAND = { 38, 12 } -- largura da areia: 38 + até 12 (ruído)
+local COAST_DARK = 6 -- faixa de grama escura depois da areia da costa
+local COAST_WAVE = 8 -- studs: a linha da costa entorta ±4
+local COAST_CORNER = 40 -- raio dos cantos da praia
+local LAND = { x0 = X0 - BEACH, x1 = X0 + SIZE + BEACH, z0 = Z0 - BEACH, z1 = Z0 + SIZE + BEACH }
+-- A grade cobre a floresta e o anel da costa. A origem anda TILE studs (160
+-- células): os pontos da grade são os mesmos de antes no miolo.
+local GX0, GZ0 = X0 - TILE, Z0 - TILE
+local N = math.floor((SIZE + 2 * TILE) / CELL) + 2
 
 local DENSE = { x0 = -1100, x1 = -780, z0 = 160, z1 = 500 } -- zona DenseNorthWest
 local BAY = { x = -240, z = 778 } -- baía: praia mais larga
@@ -101,15 +118,15 @@ local function idx(i: number, j: number): number
 	return j * N + i + 1
 end
 local function visit(cx: number, cz: number, reach: number, sdf: (number, number) -> number)
-	local i0 = math.max(0, math.floor((cx - reach - X0) / CELL))
-	local i1 = math.min(N - 1, math.ceil((cx + reach - X0) / CELL))
-	local j0 = math.max(0, math.floor((cz - reach - Z0) / CELL))
-	local j1 = math.min(N - 1, math.ceil((cz + reach - Z0) / CELL))
+	local i0 = math.max(0, math.floor((cx - reach - GX0) / CELL))
+	local i1 = math.min(N - 1, math.ceil((cx + reach - GX0) / CELL))
+	local j0 = math.max(0, math.floor((cz - reach - GZ0) / CELL))
+	local j1 = math.min(N - 1, math.ceil((cz + reach - GZ0) / CELL))
 	for j = j0, j1 do
-		local z = Z0 + j * CELL
+		local z = GZ0 + j * CELL
 		for i = i0, i1 do
 			local k = idx(i, j)
-			local d = sdf(X0 + i * CELL, z)
+			local d = sdf(GX0 + i * CELL, z)
 			if d < dist[k] then
 				dist[k] = d
 			end
@@ -137,6 +154,31 @@ for line in (fs.readFile("water.txt")):gmatch("[^\r\n]+") do
 			local ox, oz = math.max(qx, 0), math.max(qz, 0)
 			return math.sqrt(ox * ox + oz * oz) + math.min(math.max(qx, qz), 0)
 		end)
+	end
+end
+
+-- O mar: tudo fora da terra firme (LAND, cantos arredondados), com a costa um
+-- pouco torta. `sea` é o quanto o mar é a água mais perto (0 = lago/rio, 1 =
+-- mar), em degradê: trocar de uma vez a largura da areia fazia degraus na grama
+-- entre a baía e a praia.
+local sea = table.create(N * N, 0)
+do
+	local cx, cz = (LAND.x0 + LAND.x1) / 2, (LAND.z0 + LAND.z1) / 2
+	local hx, hz = (LAND.x1 - LAND.x0) / 2 - COAST_CORNER, (LAND.z1 - LAND.z0) / 2 - COAST_CORNER
+	for j = 0, N - 1 do
+		local z = GZ0 + j * CELL
+		for i = 0, N - 1 do
+			local x = GX0 + i * CELL
+			-- Distância até a borda do retângulo de cantos redondos (positiva dentro).
+			local qx, qz = math.abs(x - cx) - hx, math.abs(z - cz) - hz
+			local outside = math.sqrt(math.max(qx, 0) ^ 2 + math.max(qz, 0) ^ 2) + math.min(math.max(qx, qz), 0)
+			local d = COAST_CORNER - outside + (fbm(x / 60, z / 60, 31) - 0.5) * COAST_WAVE
+			local k = idx(i, j)
+			sea[k] = smoothstep(-8, 8, dist[k] - d)
+			if d < dist[k] then
+				dist[k] = d
+			end
+		end
 	end
 end
 
@@ -202,15 +244,20 @@ local function softRect(x: number, z: number, r: typeof(DENSE), warp: number, se
 	return smoothstep(e0, e1, math.min(wx - r.x0, r.x1 - wx, wz - r.z0, r.z1 - wz))
 end
 for j = 0, N - 1 do
-	local z = Z0 + j * CELL
+	local z = GZ0 + j * CELL
 	for i = 0, N - 1 do
-		local x = X0 + i * CELL
+		local x = GX0 + i * CELL
 		local k = idx(i, j)
 		tone[k] = fbm(x / 140, z / 140, 1)
 		mottle[k] = fbm(x / 22, z / 22, 9)
+		-- Lagos e rio: areia fina. Costa: praia larga e grama escura curta (tudo
+		-- acaba antes da floresta). Mistura pelo `sea`.
 		local bay = 1 - smoothstep(95, 170, math.sqrt((x - BAY.x) ^ 2 + (z - BAY.z) ^ 2))
+		local w = sea[k]
 		sandW[k] = 3 + 7 * fbm(x / 30, z / 30, 3) + 10 * bay
+		sandW[k] += (COAST_SAND[1] + COAST_SAND[2] * fbm(x / 45, z / 45, 33) - sandW[k]) * w
 		darkW[k] = 18 + 28 * fbm(x / 60, z / 60, 5)
+		darkW[k] += (COAST_DARK - darkW[k]) * w
 		dense[k] = softRect(x, z, DENSE, 160, 7, -40, 60)
 		patchA[k] = smoothstep(0.53, 0.68, fbm(x / 55, z / 55, 11))
 		patchB[k] = smoothstep(0.55, 0.7, fbm(x / 50, z / 50, 17))
@@ -230,7 +277,7 @@ local function sample(field: { number }, gx: number, gz: number): number
 end
 
 local function colorAt(x: number, z: number): RGB
-	local gx, gz = (x - X0) / CELL, (z - Z0) / CELL
+	local gx, gz = (x - GX0) / CELL, (z - GZ0) / CELL
 	local t = sample(tone, gx, gz)
 	local base = if t < 0.5
 		then mix(GRASS_LIGHT, GRASS_MID, smoothstep(0.25, 0.5, t))
@@ -271,7 +318,7 @@ local FOAM = hex("eefcff")
 local OCEAN = hex("0f5f97")
 
 local function waterAt(x: number, z: number): (RGB, number)
-	local gx, gz = (x - X0) / CELL, (z - Z0) / CELL
+	local gx, gz = (x - GX0) / CELL, (z - GZ0) / CELL
 	local d = sample(dist, gx, gz)
 	local alpha = 1 - smoothstep(-0.5, 0.5, d)
 	if alpha <= 0 then
@@ -283,8 +330,12 @@ local function waterAt(x: number, z: number): (RGB, number)
 		else mix(WATER_MID, WATER_DEEP, smoothstep(6, 28, depth))
 	local m = (sample(mottle, gx, gz) - 0.5) * 0.08
 	col = { col[1] * (1 + m), col[2] * (1 + m), col[3] * (1 + m) }
+	local atSea = sample(sea, gx, gz)
 	-- Perto da borda leste, a baía vira a cor do oceano.
-	col = mix(col, OCEAN, smoothstep(-215, -152, x) * smoothstep(4, 20, depth))
+	col = mix(col, OCEAN, smoothstep(-215, -152, x) * smoothstep(4, 20, depth) * (1 - atSea))
+	-- Mar: clareia na beira e escurece até a cor do chão de mar (Ocean_*) bem
+	-- antes da borda de fora do pedaço.
+	col = mix(col, OCEAN, smoothstep(14, 90, depth) * atSea)
 	-- Espuma: faixa fina na beira, falhada pelo ruído.
 	local foam = (1 - smoothstep(0.4, 2.2, depth)) * (0.55 + 0.45 * smoothstep(0.35, 0.6, sample(stones, gx, gz)))
 	return mix(col, FOAM, foam * 0.85), alpha
@@ -362,10 +413,17 @@ do
 	print(`forest_minimap.png: {MINIMAP_RES}x{MINIMAP_RES}, {#png // 1024} KB`)
 end
 -- `lune run forest minimap [serve]`: só a imagem do minimapa (os pedaços levam minutos).
+-- `lune run forest coast [serve]`: só o anel da costa (coast_<ix>_<iz>.png).
+local coast = table.find(process.args, "coast") ~= nil
 local tiles = if table.find(process.args, "minimap") then 0 else TILES
-for iz = 0, tiles - 1 do
-	for ix = 0, tiles - 1 do
-		local name = `forest_{ix}_{iz}.png`
+local first, last = if coast then -1 else 0, if coast then tiles else tiles - 1
+for iz = first, last do
+	for ix = first, last do
+		local inner = ix >= 0 and ix < TILES and iz >= 0 and iz < TILES
+		if coast == inner then
+			continue
+		end
+		local name = if coast then `coast_{ix}_{iz}.png` else `forest_{ix}_{iz}.png`
 		local png = render(false, X0 + ix * TILE, Z0 + iz * TILE, TILE, function(x, z)
 			local water, alpha = waterAt(x, z)
 			return mix(colorAt(x, z), water, alpha), 1

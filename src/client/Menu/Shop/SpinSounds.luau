@@ -18,6 +18,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local SpinSoundConfig = require(Shared:WaitForChild("SpinSoundConfig"))
 local SpinRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("SpinRules"))
+local AudioSettings = require(script.Parent.Parent.Parent:WaitForChild("AudioSettings"))
 
 local TICK_POOL = 6 -- tiques podem se sobrepor no começo (giro rápido)
 local MIN_TICK_GAP = 0.03 -- s; no começo passam ~30 quadradinhos por segundo
@@ -54,7 +55,9 @@ local function make(parent: Instance, name: string, entry: SpinSoundConfig.Sound
 	s.SoundId = entry.soundId
 	s.Volume = entry.volume
 	s.Looped = looped
-	s.SoundGroup = SoundService:FindFirstChild("Effects") :: SoundGroup?
+	-- Pelo AudioSettings (cria se faltar): com FindFirstChild, um giro antes
+	-- do grupo existir deixava a roleta sem grupo, no volume cheio para sempre.
+	s.SoundGroup = AudioSettings.group("Effects")
 	s.Parent = parent
 	return s
 end

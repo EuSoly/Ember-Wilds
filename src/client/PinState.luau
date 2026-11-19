@@ -24,12 +24,9 @@ function PinState.toggle(recipeId: string)
 	end
 end
 
+-- Com a peça vestida somada (o capacete da cabeça vale na receita do próximo).
 local function counts(): { [string]: number }
-	local result: { [string]: number } = {}
-	for _, item in InventoryState.slots() do
-		result[item.id] = (result[item.id] or 0) + item.count
-	end
-	return result
+	return InventoryState.craftCounts()
 end
 
 -- Linhas do painel (ingredientes, tem/precisa); vazio sem receita fixada.

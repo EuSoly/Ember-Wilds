@@ -208,6 +208,14 @@ function BuildRules.isSolid(kind: string): boolean
 	return BuildRules.layerOf(kind) == "solid"
 end
 
+-- A peça segura quem anda (jogador e mob)? As sólidas, menos a planta da
+-- fazenda: ela fica na camada sólida (leva golpe, não se planta uma em cima da
+-- outra), mas atravessa-se como no Starve. Se segurasse só os mobs, um muro de
+-- sementes baratas viraria barreira contra bicho que o dono atravessa.
+function BuildRules.blocksBodies(kind: string): boolean
+	return BuildRules.isSolid(kind) and kind ~= "plant"
+end
+
 -- Uma peça `kind` sobrepondo outra `otherKind` impede colocar? Só na mesma
 -- camada: ponte com ponte, telhado com telhado, sólida com sólida.
 function BuildRules.blocksPlacement(kind: string, otherKind: string): boolean
