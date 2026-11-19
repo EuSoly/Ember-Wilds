@@ -9,7 +9,7 @@ local LeaderboardRules = {}
 
 -- Lista completa (janela no meio da tela): até LIMIT linhas.
 LeaderboardRules.LIMIT = 50
--- Placar compacto do canto (no lugar do antigo selo de pontos): só o pódio.
+-- Pódio (cores de ouro, prata e bronze na lista).
 LeaderboardRules.PODIUM = 3
 
 function LeaderboardRules.top(entries: { InputEntry }, limit: number, me: number): { Row }
@@ -58,17 +58,16 @@ function LeaderboardRules.top(entries: { InputEntry }, limit: number, me: number
 	return out
 end
 
--- Só os PODIUM primeiros, sem acrescentar o jogador local (pedido do Elizeu,
--- 19/11: o canto mostra o top 3; a posição de cada um está na lista completa).
-function LeaderboardRules.podium(entries: { InputEntry }, me: number): { Row }
-	local rows = LeaderboardRules.top(entries, LeaderboardRules.PODIUM, me)
-	local out: { Row } = {}
-	for _, row in rows do
-		if row.rank <= LeaderboardRules.PODIUM then
-			table.insert(out, row)
+-- A linha do jogador local, com a posição real (o canto do HUD mostra só ela;
+-- os outros aparecem na lista completa — pedido do Elizeu, 19/11). nil se ele
+-- não está na lista.
+function LeaderboardRules.mine(entries: { InputEntry }, me: number): Row?
+	for _, row in LeaderboardRules.top(entries, #entries, me) do
+		if row.isMe then
+			return row
 		end
 	end
-	return out
+	return nil
 end
 
 return table.freeze(LeaderboardRules)

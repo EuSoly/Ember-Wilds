@@ -43,19 +43,15 @@ return {
 		assert(#top == 0, "vazia")
 	end,
 
-	["pódio: só os 3 primeiros, sem acrescentar o local"] = function()
+	["mine: a linha do local com a posição real"] = function()
 		local entries = {}
 		for i = 1, 6 do
 			table.insert(entries, { name = string.format("P%02d", i), score = (7 - i) * 10, userId = i })
 		end
-		local fora = LeaderboardRules.podium(entries, 5)
-		assert(#fora == 3, `esperava 3 linhas, veio {#fora}`)
-		assert(fora[1].rank == 1 and fora[3].rank == 3, "ranks 1 a 3")
-		for _, row in fora do
-			assert(not row.isMe, "o local (5º) não entra no pódio")
-		end
-		local dentro = LeaderboardRules.podium(entries, 2)
-		assert(#dentro == 3 and dentro[2].isMe, "o local em 2º aparece marcado")
-		assert(#LeaderboardRules.podium({ { name = "Só", score = 0, userId = 9 } }, 9) == 1, "1 jogador: 1 linha")
+		local row = LeaderboardRules.mine(entries, 5)
+		assert(row ~= nil and row.rank == 5 and row.name == "P05" and row.isMe, "5º lugar")
+		assert(LeaderboardRules.mine(entries, 1).rank == 1, "1º lugar")
+		assert(LeaderboardRules.mine(entries, 99) == nil, "fora da lista")
+		assert(LeaderboardRules.mine({}, 1) == nil, "lista vazia")
 	end,
 }

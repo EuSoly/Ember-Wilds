@@ -1,9 +1,10 @@
 --!strict
 -- Placar da partida (estilo Starve.io), no lugar do antigo selo de pontos
 -- (pedido do Elizeu, 19/11):
--- - canto de cima à esquerda: uma placa de madeira só com o top 3
---   (LeaderboardRules.podium). A altura vem do HudColumn.pillBottom, a mesma
---   conta que a coluna de receitas e o boost de XP usam para começar abaixo;
+-- - canto de cima à esquerda: uma placa de madeira só com a linha do jogador
+--   ("#3 Nome 1.240", LeaderboardRules.mine), do tamanho do selo antigo. A
+--   altura vem do HudColumn.pillBottom, a mesma conta que a coluna de receitas
+--   e o boost de XP usam para começar abaixo;
 -- - clicar/tocar na placa abre a lista completa (até LeaderboardRules.LIMIT)
 --   numa janela no meio da tela (sem escurecer o fundo); clicar fora fecha.
 -- Pontos = atributo Score de cada Player. A lista é refeita no máximo a cada
@@ -105,7 +106,7 @@ end
 
 local function Leaderboard(): Frame
 	local all = vide.source({} :: { LeaderboardRules.Row })
-	local podium = vide.source({} :: { LeaderboardRules.Row })
+	local mine = vide.source({} :: { LeaderboardRules.Row }) -- 0 ou 1 linha
 	local open = vide.source(false)
 	local me = Players.LocalPlayer
 	local myId = if me then me.UserId else 0
@@ -118,7 +119,8 @@ local function Leaderboard(): Frame
 			table.insert(entries, { name = p.DisplayName, score = score, userId = p.UserId })
 		end
 		all(LeaderboardRules.top(entries, LeaderboardRules.LIMIT, myId))
-		podium(LeaderboardRules.podium(entries, myId))
+		local row = LeaderboardRules.mine(entries, myId)
+		mine(if row then { row } else {})
 	end
 
 	local pending = false
@@ -163,9 +165,9 @@ local function Leaderboard(): Frame
 	end)
 	rebuild()
 
-	-- Placa do canto (top 3). Altura em px a partir da conta compartilhada.
+	-- Placa do canto (a linha do jogador). Altura em px da conta compartilhada.
 	local plate = Rustic.plate({
-		Name = "Podium",
+		Name = "MyRank",
 		Active = true,
 		Position = UDim2.fromScale(HudColumn.PILL_LEFT, HudColumn.PILL_TOP),
 		Size = function()
@@ -177,18 +179,12 @@ local function Leaderboard(): Frame
 		-- da madeira): o texto não encosta na borda nem nos pregos dos cantos.
 		create("Frame")({
 			Name = "Rows",
-			Position = UDim2.fromScale(0.1, 0.16),
-			Size = UDim2.fromScale(0.8, 0.68),
+			Position = UDim2.fromScale(0.1, 0.18),
+			Size = UDim2.fromScale(0.8, 0.64),
 			BackgroundTransparency = 1,
 			ZIndex = 2,
-			-- Com 1 ou 2 jogadores, as linhas ficam no meio da placa.
-			create("UIListLayout")({
-				FillDirection = Enum.FillDirection.Vertical,
-				VerticalAlignment = Enum.VerticalAlignment.Center,
-				SortOrder = Enum.SortOrder.LayoutOrder,
-			}),
-			vide.indexes(podium, function(row, index)
-				return RowView(row, index, UDim2.fromScale(1, 1 / LeaderboardRules.PODIUM), 22)
+			vide.indexes(mine, function(row, index)
+				return RowView(row, index, UDim2.fromScale(1, 1), 22)
 			end),
 		}),
 		-- A placa inteira é o botão que abre a lista completa.
