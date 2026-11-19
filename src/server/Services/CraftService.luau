@@ -181,7 +181,10 @@ local function start(player: Player, recipeId: string)
 		if not alive then
 			return
 		end
-		if InventoryService.give(player, recipe.result, recipe.count) > 0 then
+		local rest = InventoryService.give(player, recipe.result, recipe.count)
+		if rest > 0 then
+			local CrateService = require(script.Parent.CrateService) :: any
+			CrateService.dropNear(player, recipe.result, rest)
 			notify(player, "craft.full")
 		end
 		StatsService.add(player, "items_crafted", recipe.count, recipe.result)

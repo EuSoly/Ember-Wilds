@@ -171,8 +171,10 @@ local function onTake(player: Player, chest: Instance?)
 	-- Quanto cabe é calculado sem mudar o inventário; só depois tira e dá.
 	local amount = math.min(c.count, InventoryService.spaceFor(player, id))
 	if amount <= 0 then
+		Net.CraftNotice.Fire(player, "inventory.full")
 		return
 	end
+	local hadMore = amount < c.count
 	local takenId, taken = ChestRules.take(c, amount)
 	if takenId == nil or taken <= 0 then
 		return
@@ -181,6 +183,9 @@ local function onTake(player: Player, chest: Instance?)
 	if rest > 0 then
 		-- Não acontece (spaceFor = o que give aceita); se acontecer, volta ao baú.
 		ChestRules.put(c, takenId, rest)
+		Net.CraftNotice.Fire(player, "inventory.full")
+	elseif hadMore then
+		Net.CraftNotice.Fire(player, "inventory.full")
 	end
 	publish(entry, c)
 end

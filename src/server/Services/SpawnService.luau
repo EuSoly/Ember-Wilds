@@ -95,7 +95,8 @@ end
 
 -- Dá os itens do kit. Chamado depois de nascer: o inventário já foi zerado na
 -- morte (DeathService) e os itens entram por cima dele. A mochila é vestida
--- primeiro, para os itens poderem usar os slots dela.
+-- primeiro, para os itens poderem usar os slots dela. Qualquer sobra cai no
+-- chão perto do jogador (CrateService.dropNear) e avisa inventory.full.
 local function deliverKit(player: Player, kit: Defs.KitDef)
 	for _, entry in kit.items do
 		local def = Defs.Items[entry.id]
@@ -103,16 +104,20 @@ local function deliverKit(player: Player, kit: Defs.KitDef)
 			InventoryService.equipBag(player, entry.id)
 		end
 	end
+	local dropped = false
 	for _, entry in kit.items do
 		local def = Defs.Items[entry.id]
 		if def and def.category ~= "bag" then
-			-- A validação garante que o kit cabe num inventário novo; sobra aqui
-			-- quer dizer que algo mudou (ex. o inventário não estava vazio).
 			local rest = InventoryService.give(player, entry.id, entry.count)
 			if rest > 0 then
-				warn(`[SpawnService] kit "{kit.id}" de {player.Name}: {rest}× {entry.id} não couberam`)
+				local CrateService = require(script.Parent.CrateService) :: any
+				CrateService.dropNear(player, entry.id, rest)
+				dropped = true
 			end
 		end
+	end
+	if dropped then
+		Net.CraftNotice.Fire(player, "inventory.full")
 	end
 end
 
@@ -187,13 +192,19 @@ local function giveSpawnItems(player: Player, kitId: string?)
 	if not PerkService.forLife(player).book then
 		return
 	end
+	local dropped = false
 	for _, entry in SPAWN_ITEMS do
 		if not kitHasItem(kitId, entry.id) then
 			local rest = InventoryService.give(player, entry.id, entry.count)
 			if rest > 0 then
-				warn(`[SpawnService] item inicial de {player.Name}: {rest}× {entry.id} não couberam`)
+				local CrateService = require(script.Parent.CrateService) :: any
+				CrateService.dropNear(player, entry.id, rest)
+				dropped = true
 			end
 		end
+	end
+	if dropped then
+		Net.CraftNotice.Fire(player, "inventory.full")
 	end
 end
 

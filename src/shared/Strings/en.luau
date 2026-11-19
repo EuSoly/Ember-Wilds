@@ -874,6 +874,7 @@ return table.freeze({
 	["gather.empty"] = "This resource is depleted",
 	["gather.needTool"] = "Requires {item}",
 	["gather.full"] = "Inventory full",
+	["inventory.full"] = "Inventory full",
 	["craft.needWorkbench"] = "Must be near a workbench",
 	["craft.needFire"] = "Must be near a fire",
 	["craft.needWater"] = "Must be near water",

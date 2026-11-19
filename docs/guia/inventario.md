@@ -81,6 +81,25 @@ print(game.ServerStorage.DevEquipBag:Invoke(player, "leather_bag")) -- veste de 
 
 Em código do servidor, use `InventoryService.give(player, id, count)` (devolve a sobra) e `InventoryService.take(player, id, count)` (tudo ou nada).
 
+## Inventário cheio — o que acontece em cada caso
+
+Regra geral: **nenhum item pode sumir** quando o inventário enche, e o jogador **sempre recebe aviso** (`inventory.full`, `gather.full`, `craft.full`, `creative.full` ou `missions.inventory_full`).
+
+| Caso | Serviço | O que acontece com o item | Aviso ao jogador |
+|---|---|---|---|
+| Coletar recurso / cavar com pá | `GatherService` | Só tira do recurso o que couber no inventário (`given = wanted - rest`) | `gather.full` |
+| Colher planta | `FarmService` / `GatherService` | Só colhe da planta os frutos que couberem; o resto fica no pé | `gather.full` |
+| Craftar receita | `CraftService` | Confere espaço ao começar; se encher durante o tempo de preparo, a sobra cai numa caixa no chão (`CrateService.dropNear`) | `craft.full` |
+| Saquear caixa | `CrateService.onTake` | Leva o que couber e deixa a sobra no slot da caixa | `inventory.full` |
+| Tirar do baú | `ChestService.onTake` | Mede `spaceFor` antes de tirar; qualquer sobra volta ao baú | `inventory.full` |
+| Pegar do extrator | `MachineService.onExtractor` | Mede `spaceFor` antes de tirar; o resto permanece no estoque | `inventory.full` |
+| Encher/esvaziar balde | `WellService` | Troca no mesmo slot (`InventoryService.swapAt`, 1 por 1): não precisa de espaço extra | — |
+| Pegar no modo criativo | `CreativeService.onGive` | Dá até onde couber | `creative.full` |
+| Kit e livro no nascimento | `SpawnService` (`deliverKit` / `giveSpawnItems`) | Qualquer sobra cai numa caixa no chão perto do jogador (`CrateService.dropNear`) | `inventory.full` |
+| Revive | `InventoryService.restore` | `InventorySnapshot.apply` cresce a capacidade até caber toda a foto | — |
+| Missão da partida (Chrono) | `QuestService.claim` | Recusa o resgate sem consumir a missão se `spaceFor < rewardCount` | `missions.inventory_full` |
+| Missões diárias/semanais, conquistas, presentes e loja | `MissionService` / `ShopService` / `GiftService` | Recompensas são de perfil (moeda, giros, skins, kits, VIP), não ocupam slot da partida | — |
+
 ## Mochilas
 
 Mochilas são itens com `category = "bag"` e `bagSlots` (quantos slots dão). Vestida, a mochila **não ocupa slot**; o servidor guarda qual é (atributo `Bag` do Player, com o id) e recalcula a capacidade.

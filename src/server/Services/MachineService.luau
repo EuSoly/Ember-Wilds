@@ -26,6 +26,7 @@ local StructureModel = require(ReplicatedStorage.Shared.Models.StructureModel)
 local InteractService = require(script.Parent.InteractService)
 local InventoryService = require(script.Parent.InventoryService)
 local StructureService = require(script.Parent.StructureService)
+local Net = require(script.Parent.Parent.Net)
 
 -- Segundos entre passos do loop das máquinas.
 local TICK = 0.5
@@ -112,14 +113,23 @@ local function onExtractor(player: Player, entry: Entry, action: number, _arg: n
 		state.wood += amount
 	elseif action == InteractRules.ACTIONS.take then
 		local id = def.output
+		if state.stock <= 0 then
+			return
+		end
 		-- Quanto cabe é calculado sem mudar o inventário; só depois tira e dá.
 		local amount = math.min(state.stock, InventoryService.spaceFor(player, id))
 		if amount <= 0 then
+			Net.CraftNotice.Fire(player, "inventory.full")
 			return
 		end
+		local hadMore = amount < state.stock
 		state.stock -= amount
 		-- Não sobra (spaceFor = o que give aceita); se sobrar, volta ao estoque.
-		state.stock += InventoryService.give(player, id, amount)
+		local rest = InventoryService.give(player, id, amount)
+		state.stock += rest
+		if rest > 0 or hadMore then
+			Net.CraftNotice.Fire(player, "inventory.full")
+		end
 	else
 		return
 	end

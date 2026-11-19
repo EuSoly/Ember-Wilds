@@ -874,6 +874,7 @@ return table.freeze({
 	["gather.empty"] = "Este recurso acabou",
 	["gather.needTool"] = "Precisa de {item}",
 	["gather.full"] = "Inventário cheio",
+	["inventory.full"] = "Inventário cheio",
 	["craft.needWorkbench"] = "Precisa estar perto de uma bancada",
 	["craft.needFire"] = "Precisa estar perto do fogo",
 	["craft.needWater"] = "Precisa estar perto da água",

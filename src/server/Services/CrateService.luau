@@ -406,7 +406,11 @@ local function onTake(player: Player, data: { Crate: Instance?, Slot: number, It
 	end
 	local given = slot.count - InventoryService.give(player, slot.id, slot.count)
 	if given <= 0 then
+		Net.CraftNotice.Fire(player, "inventory.full")
 		return
+	end
+	if given < slot.count then
+		Net.CraftNotice.Fire(player, "inventory.full")
 	end
 	slot.count -= given
 	if slot.count <= 0 then
@@ -434,6 +438,36 @@ local function ownDropNear(player: Player, x: number, z: number): Entry?
 	return best
 end
 
+-- Solta `count` de `id` numa caixa de item largado de `player`, logo à frente
+-- dele (ou junta na caixa própria que já está ali). Modo criativo não gera caixa.
+function CrateService.dropNear(player: Player, id: string, count: number): boolean
+	if count <= 0 or Defs.Items[id] == nil then
+		return false
+	end
+	local root = rootOf(player)
+	if root == nil then
+		return false
+	end
+	if not CreativeRules.sharesItems(CreativeService.isOn(player)) then
+		return true
+	end
+	local ahead = root.Position + root.CFrame.LookVector * CrateRules.DROP_DISTANCE
+	local entry = ownDropNear(player, ahead.X, ahead.Z)
+	if entry and CrateRules.mergeDrop(entry.slots, id, count, MAX_COUNT) then
+		entry.expiresAt = os.clock() + CrateRules.DROP_LIFETIME
+		publish(entry)
+		return true
+	end
+	local skin = CosmeticService.equipped(player, CRATE_SLOT)
+	local model = CrateService.spawn(ahead.X, ahead.Z, { { id = id, count = count } }, skin, CrateRules.DROP_LIFETIME)
+	local created = model and byModel[model]
+	if created == nil then
+		return false
+	end
+	created.dropOwner = player
+	return true
+end
+
 -- Largar a pilha inteira do slot `index`. Tudo sem pausa: o slot é conferido,
 -- a caixa recebe o item e só então o slot é esvaziado.
 local function onDrop(player: Player, index: number)
@@ -452,28 +486,9 @@ local function onDrop(player: Player, index: number)
 	if slot == nil then
 		return
 	end
-	local id, count = slot.id, slot.count
-	-- Modo criativo: os itens dele não vão para os outros (como na morte).
-	if not CreativeRules.sharesItems(CreativeService.isOn(player)) then
-		InventoryService.takeAt(player, index, count)
-		return
+	if CrateService.dropNear(player, slot.id, slot.count) then
+		InventoryService.takeAt(player, index, slot.count)
 	end
-	local ahead = root.Position + root.CFrame.LookVector * CrateRules.DROP_DISTANCE
-	local entry = ownDropNear(player, ahead.X, ahead.Z)
-	if entry and CrateRules.mergeDrop(entry.slots, id, count, MAX_COUNT) then
-		entry.expiresAt = os.clock() + CrateRules.DROP_LIFETIME
-		publish(entry)
-	else
-		local skin = CosmeticService.equipped(player, CRATE_SLOT)
-		local model =
-			CrateService.spawn(ahead.X, ahead.Z, { { id = id, count = count } }, skin, CrateRules.DROP_LIFETIME)
-		local created = model and byModel[model]
-		if created == nil then
-			return
-		end
-		created.dropOwner = player
-	end
-	InventoryService.takeAt(player, index, count)
 end
 
 -- Itens do morto, em ordem: slots do inventário (com os da mochila), a
