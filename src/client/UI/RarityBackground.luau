@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local RarityImages = require(Shared:WaitForChild("RarityImages"))
+local MockStore = require(Shared:WaitForChild("UIFlow"):WaitForChild("MockStore"))
 
 local RarityBackground = {}
 
@@ -29,6 +30,9 @@ function RarityBackground.build(rarity: number): ImageLabel?
 	image.Size = UDim2.fromScale(1, 1)
 	image.BackgroundTransparency = 1
 	image.Image = id
+	if math.floor(rarity) == 2 then
+		image.ImageColor3 = Color3.fromHex(MockStore.RARITIES[2].color)
+	end
 	image.ScaleType = Enum.ScaleType.Slice
 	image.SliceCenter = SLICE
 	image.ZIndex = 0

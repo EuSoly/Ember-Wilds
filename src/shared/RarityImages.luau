@@ -8,9 +8,10 @@
 -- Puro (sem Rect/Vector2): o cliente monta o 9 partes com SLICE.
 local RarityImages = {}
 
+local NEUTRAL_BACKGROUND = "rbxassetid://94940242033685"
 RarityImages.BACKGROUND = {
-	"rbxassetid://94940242033685", -- rarity_1.png: Comum
-	"", -- Incomum: usa a cor lisa (#2ECC71) até a arte verde entrar
+	NEUTRAL_BACKGROUND, -- rarity_1.png: Comum
+	NEUTRAL_BACKGROUND, -- Incomum: a mesma arte recebe a cor verde no cliente
 	"rbxassetid://96613162113425", -- rarity_2.png: Raro
 	"rbxassetid://140676752204319", -- rarity_3.png: Épico
 	"rbxassetid://87614583588173", -- rarity_4.png: Lendário
