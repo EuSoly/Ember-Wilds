@@ -95,6 +95,19 @@ local function validateCosmetics(errors: { string }, defs: Types.DefsTables, has
 		if type(rarity) ~= "number" or rarity % 1 ~= 0 or rarity < 1 or rarity > 5 then
 			table.insert(errors, `Cosmetic "{key}": rarity deve ser inteira de 1 a 5`)
 		end
+		-- Etiquetas à mão (UIFlow/CosmeticTags.MANUAL): hoje só "limited".
+		local tags = (cosmetic :: any).tags
+		if tags ~= nil then
+			if type(tags) ~= "table" then
+				table.insert(errors, `Cosmetic "{key}": tags deve ser uma lista`)
+			else
+				for _, tag in tags do
+					if tag ~= "limited" then
+						table.insert(errors, `Cosmetic "{key}": etiqueta "{tag}" desconhecida (use "limited")`)
+					end
+				end
+			end
+		end
 		if cosmetic.slot == "bag" then
 			local bag = cosmetic.bag
 			if bag == nil then

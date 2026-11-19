@@ -245,6 +245,9 @@ export type CosmeticDef = {
 	slot: string, -- id em CosmeticSlots
 	rarity: number, -- 1 Comum, 2 Raro, 3 Épico, 4 Lendário, 5 Mítico
 	inSpins: boolean?, -- entra no giro da loja? (padrão do slot: só se true)
+	-- Etiquetas marcadas à mão (UIFlow/CosmeticTags): hoje só "limited"
+	-- (Limitada, faixa no canto de cima à direita). Animada e Efeitos saem sozinhas.
+	tags: { string }?,
 	body: BodyLook?, -- dados do slot "body"
 	bag: BagLook?, -- dados do slot "bag"
 	crate: CrateLook?, -- dados do slot "crate"

@@ -26,6 +26,7 @@ local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vi
 local Defs = require(Shared:WaitForChild("Defs"))
 local UIFlow = Shared:WaitForChild("UIFlow")
 local CosmeticCatalog = require(UIFlow:WaitForChild("CosmeticCatalog"))
+local CosmeticTags = require(UIFlow:WaitForChild("CosmeticTags"))
 local CosmeticsLayout = require(UIFlow:WaitForChild("CosmeticsLayout"))
 local MockStore = require(UIFlow:WaitForChild("MockStore"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
@@ -97,6 +98,45 @@ local function rarityOf(id: string): MockStore.Rarity
 end
 
 -- Cadeadinho de peças (alça e corpo), no canto do quadradinho.
+-- Etiquetas (UIFlow/CosmeticTags): faixa na diagonal no canto de cima à
+-- esquerda (Animada ou Efeitos) ou à direita (Limitada).
+local TAG_COLOR: { [string]: Color3 } = {
+	limited = Color3.fromHex("#C0392B"),
+	animated = Color3.fromHex("#8E44AD"),
+	effects = Color3.fromHex("#2E86DE"),
+}
+
+local function tagRibbon(tag: string, right: boolean): Frame
+	return create("Frame")({
+		Name = "Tag_" .. tag,
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		ClipsDescendants = true,
+		ZIndex = 5,
+		create("Frame")({
+			Name = "Strip",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = if right then UDim2.fromScale(0.8, 0.2) else UDim2.fromScale(0.2, 0.2),
+			Size = UDim2.fromScale(0.9, 0.15),
+			Rotation = if right then 45 else -45,
+			BackgroundColor3 = TAG_COLOR[tag],
+			BorderSizePixel = 0,
+			ZIndex = 5,
+			create("UIStroke")({ Color = R.outline, Thickness = 1.5, ApplyStrokeMode = Enum.ApplyStrokeMode.Border }),
+			outlined({
+				Name = "Text",
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(0.62, 0.86),
+				FontFace = Theme.font.title,
+				Text = Strings.get("cosmetics.tag." .. tag),
+				maxSize = 12,
+				ZIndex = 6,
+			}, 1),
+		}),
+	}) :: Frame
+end
+
 local function lockIcon(): Frame
 	return create("Frame")({
 		Name = "Lock",
@@ -226,8 +266,19 @@ local function tile(state: Slot, id: string, i: number, rect: (i: number) -> Cos
 			create("UICorner")({ CornerRadius = UDim.new(0, 8) }),
 		})
 	)
+	local tags = CosmeticTags.of(def)
+	if tags.left then
+		table.insert(props, tagRibbon(tags.left, false))
+	end
+	if tags.limited then
+		table.insert(props, tagRibbon("limited", true))
+	end
 	local lock = lockIcon()
-	vide.apply(lock)({ Visible = locked })
+	-- Com a faixa de Limitada no canto, o cadeado desce para baixo dela.
+	vide.apply(lock)({
+		Visible = locked,
+		Position = if tags.limited then UDim2.new(1, -4, 0.36, 0) else UDim2.new(1, -4, 0, 4),
+	})
 	table.insert(props, lock)
 
 	local button = create("TextButton")(props) :: TextButton
@@ -395,8 +446,16 @@ local function view(
 			TextColor3 = function()
 				return Color3.fromHex(rarityOf(state.selected()).color)
 			end,
+			-- Raridade e as etiquetas: "Lendário · Animada · Limitada".
 			Text = function()
-				return Strings.get(rarityOf(state.selected()).nameKey)
+				local text = Strings.get(rarityOf(state.selected()).nameKey)
+				local def = selectedDef()
+				if def then
+					for _, tag in CosmeticTags.list(def) do
+						text ..= " · " .. Strings.get("cosmetics.tagName." .. tag)
+					end
+				end
+				return text
 			end,
 			maxSize = 18,
 			place(function()

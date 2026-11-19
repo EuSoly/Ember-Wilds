@@ -469,6 +469,15 @@ return {
 		assert(#errors == 0, `erros inesperados: {table.concat(errors, "; ")}`)
 	end,
 
+	["cosmetic with unknown tag is an error"] = function()
+		local defs = validLookDefs()
+		defs.Cosmetics.body_default.tags = { "brilho" }
+		local errors = Validate.all(defs, alwaysHas)
+		assert(containsError(errors, "brilho"), `faltou erro de etiqueta: {table.concat(errors, "; ")}`)
+		defs.Cosmetics.body_default.tags = { "limited" }
+		assert(not containsError(Validate.all(defs, alwaysHas), "etiqueta"), "limited é válida")
+	end,
+
 	["cosmetic with unknown slot is an error"] = function()
 		local defs = validLookDefs()
 		defs.Cosmetics.hat_red = { id = "hat_red", nameKey = "cosmetic.hat_red", slot = "hat", rarity = 1 }
