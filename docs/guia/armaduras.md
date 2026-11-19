@@ -39,6 +39,8 @@ Os números ficam no bloco `armor` do item (`src/shared/Defs/Items.luau`), **em 
 
 **Liberadas:** capacetes de madeira, pedra e ouro, protetor de orelha, casaco, turbante, chapéu de explorador, capuz e túnica de camponês. Os materiais e os sistemas delas já existem.
 
+**Ajuste de 19/11 (fora do Starve):** o protetor de orelha e o casaco esquentam um pouco mais na floresta. O protetor ficou com dia 1,5 / noite 12 (no Starve é 1 / 10), e o casaco com noite 15 (no Starve, 13). À noite, a perda de frio cai 67% com o protetor e 83% com o casaco.
+
 **Só para teste (`testOnly = true`):** as outras 23 peças e todos os materiais novos:
 - minérios: diamante e ametista;
 - drops de mobs que ainda não existem: peles de inverno e de mamute, penas de pinguim e de abutre, pele de kraken, escama de piranha, chama, corações de dragão e de lava, garra e palito de caranguejo;

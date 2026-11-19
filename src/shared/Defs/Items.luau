@@ -825,13 +825,15 @@ local Items: { [string]: ItemDef } = {
 		armor = { defense = 9, mobDefense = 30, gearSet = "lava", spiderImmune = true },
 	},
 	-- Roupas de frio (warm = quanto somam no frio por tick do Starve).
+	-- 19/11: protetor e casaco um pouco mais quentes na floresta que no Starve
+	-- (pedido do Elizeu): noite +2 nos dois, dia do protetor 1 → 1,5.
 	earmuffs = {
 		id = "earmuffs",
 		nameKey = "item.earmuffs",
 		category = "armor",
 		maxStack = 1,
 		armor = {
-			warm = { day = 1, night = 10, winterDay = 4, winterNight = 10, lavaDay = -4, lavaNight = -10 },
+			warm = { day = 1.5, night = 12, winterDay = 4, winterNight = 10, lavaDay = -4, lavaNight = -10 },
 			blizzard = 8,
 		},
 	},
@@ -841,7 +843,7 @@ local Items: { [string]: ItemDef } = {
 		category = "armor",
 		maxStack = 1,
 		armor = {
-			warm = { day = 2, night = 13, winterDay = 8, winterNight = 15, lavaDay = -8, lavaNight = -15 },
+			warm = { day = 2, night = 15, winterDay = 8, winterNight = 15, lavaDay = -8, lavaNight = -15 },
 			blizzard = 12,
 		},
 	},
