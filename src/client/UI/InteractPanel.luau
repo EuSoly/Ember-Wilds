@@ -336,6 +336,7 @@ local function InteractPanel(): Frame
 	end
 	return Kit.panel({
 		Name = "InteractPanel",
+		Active = true,
 		AnchorPoint = Vector2.new(0.5, 1),
 		-- Acima dos anéis (filho da hotbar, HudBottom); sobe a altura do baú e
 		-- da caixa visíveis.

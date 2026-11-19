@@ -58,6 +58,7 @@ end
 local function ChestPanel(): Frame
 	return create("Frame")({
 		Name = "ChestPanel",
+		Active = true,
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = function()
 			return HudBottom.above(0)

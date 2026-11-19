@@ -87,6 +87,7 @@ local function Hotbar(above: { Instance }?): Frame
 
 	return create("Frame")({
 		Name = "Hotbar",
+		Active = true,
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = function()
 			local layout = HudBottom.hotbar()

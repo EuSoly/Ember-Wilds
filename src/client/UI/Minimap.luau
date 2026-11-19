@@ -162,6 +162,7 @@ local function Minimap(): Frame
 		else Kit.panel({})
 	return vide.apply(frame)({
 		Name = "Minimap",
+		Active = true,
 		AnchorPoint = Vector2.new(1, 0),
 		Position = function()
 			local layout = CornerLayout.get()

@@ -112,6 +112,7 @@ local function TutorialPanel(): Frame
 	local white = Color3.new(1, 1, 1)
 	return Scroll.panel({
 		Name = "TutorialPanel",
+		Active = true,
 		AnchorPoint = HudColumnState.anchor,
 		Position = function()
 			return UDim2.fromScale(HudColumnState.x(), HudColumnState.column().tutorialY)

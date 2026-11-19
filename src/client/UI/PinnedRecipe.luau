@@ -77,6 +77,7 @@ local function PinnedRecipe(): Frame
 	local lines = vide.derive(PinState.lines)
 	local props: { [any]: any } = {
 		Name = "PinnedRecipe",
+		Active = true,
 		AnchorPoint = HudColumnState.anchor,
 		Visible = function()
 			return #lines() > 0 and not HudColumnState.yieldsToPanel()

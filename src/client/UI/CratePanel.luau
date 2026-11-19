@@ -25,6 +25,7 @@ local CHEST_SPACE = 76 -- px: altura do painel do baú (64) + folga, para não s
 local function CratePanel(): Frame
 	return Kit.panel({
 		Name = "CratePanel",
+		Active = true,
 		AnchorPoint = Vector2.new(0.5, 1),
 		-- Acima dos anéis (filho da hotbar, HudBottom); sobe a altura do baú só
 		-- quando ele está visível.

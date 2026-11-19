@@ -63,16 +63,22 @@ local function slotAt(position: Vector2): number?
 	return nil
 end
 
--- Esta peça da interface aparece na tela (cobre o mundo)? Moldura invisível
--- que só organiza o HUD não conta.
+-- Esta peça da interface bloqueia o soltar no mundo? Só bloqueia o que
+-- recebe clique (botões, painéis com Active = true ou ancestral com o atributo
+-- BlocksDrop = true). Overlays decorativos (ex.: StatusVignette, Active = false)
+-- não bloqueiam.
 local function isSolid(gui: GuiObject): boolean
-	if gui:IsA("GuiButton") or gui.BackgroundTransparency < 1 then
+	if gui:IsA("GuiButton") or gui.Active or gui:GetAttribute("BlocksDrop") == true then
 		return true
 	end
-	if (gui:IsA("ImageLabel") or gui:IsA("ImageButton")) and gui.Image ~= "" and gui.ImageTransparency < 1 then
-		return true
+	local current: Instance? = gui.Parent
+	while current and not current:IsA("ScreenGui") do
+		if current:GetAttribute("BlocksDrop") == true then
+			return true
+		end
+		current = current.Parent
 	end
-	return (gui:IsA("TextLabel") or gui:IsA("TextBox")) and gui.Text ~= "" and gui.TextTransparency < 1
+	return false
 end
 
 -- O ponto (x, y) está no mundo: nenhuma peça visível da interface em cima
