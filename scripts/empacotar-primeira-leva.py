@@ -42,16 +42,16 @@ with TemporaryDirectory() as temp:
     with ZipFile(arquivo, "w", ZIP_DEFLATED) as z:
         for nome in ("IMPORTAR.md", "ANIMACOES.md", "pacotes.json"):
             z.write(modelos / nome, nome)
-        for nome in ("manifest.json", "primeira_leva_palette.png", "skins-primeira_leva.fbx"):
+        for nome in ("manifest.json", "primeira_leva_palette.png", "skins-primeira_leva.fbx", "norte-perdido.fbx"):
             z.write(modelos / nome, "modelos/" + nome)
         z.write(tmp / "SkinManifest.luau", "modelos/SkinManifest.luau")
         z.write(root / "scripts/studio/import-skins.luau", "modelos/import-skins.luau")
-        for module in ("src/shared/Models/CrateMotion.luau", "src/client/World/CrateAnimator.luau"):
+        for module in ("src/client/Boneco/BonecoRenderer.luau", "src/client/Boneco/SkinAnimator.luau", "src/client/Boneco/BagFx.luau", "src/shared/BagFxConfig.luau", "src/shared/Models/SkinMotion.luau", "src/shared/Models/CrateMotion.luau", "src/client/World/CrateAnimator.luau"):
             z.write(root / module, "modelos/codigo/" + Path(module).name)
         for f in sorted((modelos / "movimentos").glob("*.fbx")):
             z.write(f, "movimentos/" + f.name)
         z.write(tmp / "ArteBundles.rbxmx", "vitrine/ArteBundles.rbxmx")
-        for nome in ("Featured.luau", "BundleBanner.luau"):
+        for nome in ("Featured.luau", "BundleBanner.luau", "BundleImages.luau"):
             z.write(root / "src/client/Menu/Shop" / nome, "vitrine/codigo/" + nome)
         for slug in colecoes:
             for nome in camadas:

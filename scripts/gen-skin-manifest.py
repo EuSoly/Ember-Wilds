@@ -30,7 +30,7 @@ MONTADAS = {"caixas"}
 
 # Pacotes que substituem skins das categorias acima (mesmo id, no mesmo lugar
 # da lista): as skins com peças animadas (assets/skins/skin_animacao.py).
-SUBSTITUTAS = ["corpo_animado", "livros_animados"]
+SUBSTITUTAS = ["corpo_animado", "livros_animados", "primeira_leva"]
 
 # Skin sem malha própria que usa a de outra (entra logo antes da original).
 # O livro padrão (book_default) é o Assets.Tools.book do Elizeu: sem apelido.

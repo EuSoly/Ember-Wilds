@@ -968,6 +968,9 @@ return table.freeze({
 	["shop.type.book"] = "Livro",
 	["shop.type.crate"] = "Caixa",
 	-- Pacotes em destaque (Shop/Bundles): o nome de cada pacote.
+	["shop.bundle.mare_profunda"] = "Maré Profunda",
+	["shop.bundle.bosque_desperto"] = "Bosque Desperto",
+	["shop.bundle.norte_perdido"] = "Norte Perdido",
 	["shop.bundle.brasa"] = "Pacote Brasa",
 	["shop.bundle.geada"] = "Pacote Geada",
 	["shop.bundle.musgo"] = "Pacote Musgo",

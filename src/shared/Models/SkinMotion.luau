@@ -31,6 +31,7 @@ export type Channel = {
 
 export type Motion = {
 	channels: { Channel },
+	compass: boolean?,
 	spin: number?, -- radianos por segundo em volta de Y
 }
 
@@ -163,9 +164,25 @@ for i = 1, 12 do
 	}
 end
 
+local SQUID: { [string]: Motion } = {}
+for i = 1, 10 do
+	local phase = (i - 1) * TWO_PI / 10
+	local side = if i <= 5 then 1 else -1
+	SQUID[string.format("anim_tentaculo_%02d", i)] = {
+		channels = { channel("y", math.rad(5), 2, side * math.rad(12), 1, phase) },
+	}
+	if i == 2 or i == 9 then
+		SQUID[string.format("anim_ponta_%02d", i)] = {
+			channels = { channel("y", math.rad(5), 2, side * math.rad(8), 1, phase - 0.4) },
+		}
+	end
+end
+
 local BY_SKIN: { [string]: { [string]: Motion } } = {
 	body_dragao = DRAGON,
 	body_polvo = OCTOPUS,
+	body_lula = SQUID,
+	book_bussola = { anim_agulha = { channels = {}, compass = true } },
 	body_toco = STUMP,
 	book_gelo = ICE_TOME,
 	book_tentaculo = ABYSS_TOME,
@@ -201,6 +218,12 @@ function SkinMotion.pose(motion: Motion, t: number, stepPhase: number, walk: num
 			value = still * (1 - walk) + moving * walk
 		end
 		pose[c.axis] += value
+	end
+	if motion.compass then
+		-- Tempo desde que o livro apareceu na mão, a 24 quadros por segundo.
+		local frame = math.max(t, 0) * 24
+		local angle = if frame < 8 then -34 * frame / 8 else -28 - 6 * math.max(0, 1 - (frame - 8) / 6)
+		pose.y = math.rad(angle)
 	end
 	if motion.spin then
 		pose.y += (motion.spin * t) % TWO_PI

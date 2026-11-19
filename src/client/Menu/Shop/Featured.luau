@@ -110,7 +110,7 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 			Position = UDim2.new(0, ARROW + 22, 0.66, 0),
 			Size = UDim2.fromScale(0.5, 0.18),
 			FontFace = Theme.font.title,
-			Text = string.upper(Strings.get(def.nameKey)),
+			Text = Strings.get(def.nameKey),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			maxSize = 48,
 		}),

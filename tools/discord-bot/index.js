@@ -325,16 +325,18 @@ async function translateText(text, sourceLang = "pt", targetLang = "en") {
 	// 4. Text inside hyphens: -...-
 	processed = processed.replace(/(?:^|(?<=\s))-[^\s-][^\n-]*-[^\s-]*(?=\s|$|[.,!?])/g, protect);
 
-	// 5. Standalone ALL-CAPS promo codes (4+ uppercase/digits/underscores)
-	processed = processed.replace(/\b[A-Z0-9_]{4,}\b/g, protect);
+	// 5. Standalone ALL-CAPS promo codes (4+ uppercase/digits/underscores), EXCLUDING our own TK_0 tokens!
+	processed = processed.replace(/\b(?!TK_\d+\b)[A-Z0-9_]{4,}\b/g, protect);
 
 	try {
 		let translated = await callTranslatorProvider(processed, sourceLang, targetLang);
 
-		placeholders.forEach((original, idx) => {
+		// Restore in reverse order just in case any token was nested
+		for (let idx = placeholders.length - 1; idx >= 0; idx--) {
+			const original = placeholders[idx];
 			const regex = new RegExp(`\\[\\s*\\[\\s*TK_?${idx}\\s*\\]\\s*\\]`, "gi");
 			translated = translated.replace(regex, original);
-		});
+		}
 
 		translated = translated.replace(/Ember Wilds/gi, "Ember Wilds");
 		return translated;
@@ -405,6 +407,107 @@ client.once(Events.ClientReady, async (readyClient) => {
 		}
 	} catch (err) {
 		console.warn("Could not update influencer button:", err.message);
+	}
+
+	// Catch-up check: if any recent messages in PT mirror channels were sent while the bot was briefly offline, mirror them now!
+	try {
+		for (const [ptChanId, targets] of Object.entries(CONFIG.mirrorChannels)) {
+			const ptChan = await client.channels.fetch(ptChanId).catch(() => null);
+			if (!ptChan || !ptChan.isTextBased()) continue;
+			const ptMsgs = await ptChan.messages.fetch({ limit: 3 });
+			const latestPt = ptMsgs.first();
+			if (!latestPt || latestPt.author.bot) continue;
+
+			// Only catch up if the message was sent in the last 30 minutes
+			if (Date.now() - latestPt.createdTimestamp > 30 * 60 * 1000) continue;
+
+			const enTarget = targets.find((t) => t.lang === "en");
+			if (!enTarget) continue;
+			const enChan = await client.channels.fetch(enTarget.targetId).catch(() => null);
+			if (!enChan || !enChan.isTextBased()) continue;
+			const enMsgs = await enChan.messages.fetch({ limit: 3 });
+			const latestEn = enMsgs.first();
+
+			// If the latest EN message contains leftover [[TK_...]] or is older than latest PT, fix or mirror it!
+			if (
+				latestEn &&
+				latestEn.author.id === readyClient.user.id &&
+				latestEn.content.includes("TK_")
+			) {
+				console.log(`🔧 Fixing [[TK_0]] in all 7 languages for PT message ${latestPt.id}...`);
+				const mirroredList = [];
+				await Promise.all(
+					targets.map(async (targetCfg) => {
+						try {
+							const targetChannel = await client.channels.fetch(targetCfg.targetId);
+							if (!targetChannel || !targetChannel.isTextBased()) return;
+							const tMsgs = await targetChannel.messages.fetch({ limit: 3 });
+							const latestT = tMsgs.first();
+							if (latestT && latestT.author.id === readyClient.user.id) {
+								const translatedContent = await translateText(
+									latestPt.content,
+									"pt",
+									targetCfg.lang
+								);
+								await latestT.edit({ content: translatedContent });
+								mirroredList.push({
+									targetChannelId: targetChannel.id,
+									targetMessageId: latestT.id,
+									lang: targetCfg.lang,
+								});
+								console.log(
+									`✅ Fixed ${targetCfg.lang.toUpperCase()} message: ${translatedContent}`
+								);
+							}
+						} catch (e) {
+							console.error(`[Fix Error -> ${targetCfg.lang}]`, e.message);
+						}
+					})
+				);
+				if (mirroredList.length > 0) {
+					mirroredMessages.set(latestPt.id, mirroredList);
+				}
+			} else if (!latestEn || latestEn.createdTimestamp < latestPt.createdTimestamp) {
+				console.log(`🔄 Catching up missed PT message ${latestPt.id} in #${ptChan.name}...`);
+				const mirroredList = [];
+				await Promise.all(
+					targets.map(async (targetCfg) => {
+						try {
+							const targetChannel = await client.channels.fetch(targetCfg.targetId);
+							if (!targetChannel || !targetChannel.isTextBased()) return;
+							const translatedContent = await translateText(
+								latestPt.content,
+								"pt",
+								targetCfg.lang
+							);
+							const files = latestPt.attachments.map((att) => ({
+								attachment: att.url,
+								name: att.name,
+							}));
+							const sent = await targetChannel.send({
+								content: translatedContent || undefined,
+								files: files.length > 0 ? files : undefined,
+							});
+							mirroredList.push({
+								targetChannelId: targetChannel.id,
+								targetMessageId: sent.id,
+								lang: targetCfg.lang,
+							});
+							console.log(
+								`[Catch-up PT -> ${targetCfg.lang.toUpperCase()}] #${ptChan.name} -> #${targetChannel.name}`
+							);
+						} catch (e) {
+							console.error(`[Catch-up Error -> ${targetCfg.lang}]`, e.message);
+						}
+					})
+				);
+				if (mirroredList.length > 0) {
+					mirroredMessages.set(latestPt.id, mirroredList);
+				}
+			}
+		}
+	} catch (err) {
+		console.warn("Catch-up check warning:", err.message);
 	}
 });
 
@@ -1145,5 +1248,13 @@ if (!process.env.DISCORD_BOT_TOKEN) {
 	console.error("❌ Missing DISCORD_BOT_TOKEN in .env file!");
 	process.exit(1);
 }
+
+// Prevent unexpected network drops or unhandled errors from crashing the bot process
+process.on("unhandledRejection", (err) => {
+	console.error("[Unhandled Rejection]", err);
+});
+process.on("uncaughtException", (err) => {
+	console.error("[Uncaught Exception]", err);
+});
 
 client.login(process.env.DISCORD_BOT_TOKEN);

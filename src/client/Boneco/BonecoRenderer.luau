@@ -79,6 +79,7 @@ type Entry = {
 	-- (trocou a skin ou o item na mão).
 	skinJoints: { SkinAnimator.Joint }?,
 	bookCosmeticId: string?,
+	readingLean: number?,
 	equippedId: string?,
 	hurtAt: number?,
 	-- Sem raiz no personagem: o visual fica escondido até ela voltar.
@@ -472,7 +473,10 @@ local function animate(entry: Entry, dt: number, speed: number, now: number, ser
 	if entry.anim.swingCount ~= swingsBefore then
 		GameSounds.characterSwing(character, entry.hrp.Position)
 	end
-	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0)
+	local reading = entry.cosmeticId == "body_explorador" and entry.equippedId == "book"
+	local lean = math.clamp((entry.readingLean or 0) + (if reading then 1 else -1) * dt * 24 / 7, 0, 1)
+	entry.readingLean = lean
+	boneco.bodyJoint.Transform = CFrame.new(0, pose.bodyY, 0) * CFrame.Angles(-math.rad(7) * lean, 0, 0)
 	boneco.leftHandJoint.Transform = CFrame.new(pose.left.x, pose.left.y, pose.left.z)
 	boneco.rightHandJoint.Transform = rightHandTransform(boneco.rightHandJoint.C0, pose.right)
 

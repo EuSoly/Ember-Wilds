@@ -30,7 +30,7 @@ return {
 				end
 				assert(#e.size >= 2 and #e.size <= 3 and #e.transparency >= 2 and #e.transparency <= 3, where)
 				assert(e.lifetime[1] > 0 and e.lifetime[1] <= e.lifetime[2], where .. ": vida")
-				assert(e.rate > 0 and #e.acceleration == 3, where)
+				assert((e.rate > 0 or (e.rate == 0 and (e.stopCount or 0) > 0)) and #e.acceleration == 3, where)
 			end
 		end
 	end,

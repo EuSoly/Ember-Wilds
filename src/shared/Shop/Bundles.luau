@@ -75,6 +75,48 @@ local Bundles: { Types.BundleDef } = {
 			{ kind = "kit", id = "kit_explorer" },
 		},
 	},
+	{
+		id = "mare_profunda",
+		nameKey = "shop.bundle.mare_profunda",
+		theme = "#126684",
+		rarity = 6,
+		robux = 499,
+		rascunho = true,
+		rewards = {
+			{ kind = "cosmetic", id = "body_lula" },
+			{ kind = "cosmetic", id = "crate_kraken" },
+			{ kind = "cosmetic", id = "bag_caranguejo" },
+			{ kind = "cosmetic", id = "book_tentaculo" },
+		},
+	},
+	{
+		id = "bosque_desperto",
+		nameKey = "shop.bundle.bosque_desperto",
+		theme = "#497632",
+		rarity = 5,
+		robux = 399,
+		rascunho = true,
+		rewards = {
+			{ kind = "cosmetic", id = "body_toco" },
+			{ kind = "cosmetic", id = "crate_jardim" },
+			{ kind = "cosmetic", id = "bag_cubos_esmeralda" },
+			{ kind = "cosmetic", id = "book_trepadeira" },
+		},
+	},
+	{
+		id = "norte_perdido",
+		nameKey = "shop.bundle.norte_perdido",
+		theme = "#966337",
+		rarity = 4,
+		robux = 299,
+		rascunho = true,
+		rewards = {
+			{ kind = "cosmetic", id = "body_explorador" },
+			{ kind = "cosmetic", id = "crate_aventureiro" },
+			{ kind = "cosmetic", id = "bag_cartografo" },
+			{ kind = "cosmetic", id = "book_bussola" },
+		},
+	},
 }
 
 return Bundles

@@ -28,6 +28,7 @@ export type Emitter = {
 	transparency: { number },
 	lifetime: { number },
 	speed: { number },
+	stopCount: number?,
 	rate: number, -- partículas por segundo andando a toda
 	spread: number, -- graus
 	acceleration: { number },
@@ -45,6 +46,21 @@ BagFxConfig.GROUND_Y = -1.25
 local GROUND = BagFxConfig.GROUND_Y
 
 local BY_BAG: { [string]: { Emitter } } = {
+	bag_cartografo = {
+		{
+			texture = BagFxConfig.TEXTURES.brilho,
+			colors = { "#C7A574", "#9D815C" },
+			size = { 0.12, 0.22, 0.05 },
+			transparency = { 0.2, 0.55, 1 },
+			lifetime = { 0.4, 0.55 },
+			speed = { 0.7, 1.3 },
+			rate = 0,
+			stopCount = 3,
+			spread = 75,
+			acceleration = { 0, -2, 0 },
+			offset = { 0, -1.01, 0 },
+		},
+	},
 	bag_cubo_gelo = {
 		{ -- flocos girando e caindo devagar
 			texture = BagFxConfig.TEXTURES.floco,

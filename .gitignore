@@ -35,3 +35,4 @@ scripts/groundmap/*.png
 # Discord bot secrets & node_modules
 tools/discord-bot/.env
 tools/discord-bot/node_modules/
+tools/discord-bot/bot-service.log

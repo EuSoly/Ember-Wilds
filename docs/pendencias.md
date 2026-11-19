@@ -2,6 +2,14 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Para ver depois (18/11)
+
+Pedidos do Elizeu para a próxima sessão:
+
+- **Plantações sem colisão:** as plantas da fazenda não podem bloquear o jogador (CanCollide desligado nas peças da plantação). Conferir todas as culturas, inclusive as 8 que ainda são `testOnly` (`docs/guia/fazenda.md`).
+- **Bug da loja nas roletas:** arrumar. Ainda falta descobrir qual é o bug; perguntar ao Elizeu o que acontece antes de mexer.
+- **Craft dos capacetes com um equipado:** o craft precisa funcionar quando o jogador está usando algum capacete. Provável causa: a receita pede o capacete anterior e o craft só procura no inventário, sem contar o que está equipado (ou não deixa trocar o equipado). Ver `docs/guia/armaduras.md`.
+
 ## Sons (11/11)
 
 Guia: `docs/guia/sons.md`. Os ids foram escolhidos pelo nome e pela descrição da loja e conferidos só por carregar: **ninguém ouviu ainda**.

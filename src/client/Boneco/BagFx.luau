@@ -86,8 +86,13 @@ function BagFx.update(fx: Fx, walk: number)
 	if walk == fx.walk then
 		return
 	end
+	local stopped = fx.walk > 0 and walk == 0
 	fx.walk = walk
 	for i, emitter in fx.emitters do
+		local count = fx.defs[i].stopCount
+		if stopped and count then
+			emitter:Emit(count)
+		end
 		local rate = BagFxConfig.rate(fx.defs[i], walk)
 		emitter.Rate = rate
 		emitter.Enabled = rate > 0
