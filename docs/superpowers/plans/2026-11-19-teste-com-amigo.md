@@ -27,30 +27,33 @@
 - **Inventário cheio no meio de uma operação que já tirou item de algum lugar** (baú, caixa, colheita, poço): o item não pode sumir. Teste em `tests/chestrules.spec.luau` (Task 9) e conferência no relatório da Task 3.
 - **Golpe em vários alvos com aliado no meio**: colega de time e fantasma não levam dano do golpe em área. Teste em `tests/gather.spec.luau` (Task 5).
 - **Dano mínimo com dano original muito pequeno** (ex.: 1 de espinho): 25% de 1 é 0,25 — arredondar sem virar 0 nem passar do original. Teste na Task 6.
-- **Mochila inicial com kit que também dá mochila** e **revive** (que devolve o inventário da vida anterior): não pode haver duas mochilas nem perder a do kit. Teste na Task 1.
+- **Inventário de quem já estava jogando com 10 espaços** (servidor atualizado no meio da vida, ou revive que restaura a foto antiga com capacidade 10): tem de crescer para 16 sem perder item. Conferência na Task 1, Step 4.
 - **Baú antigo com conteúdo de um tipo só (formato velho)** não existe em produção (baú não persiste), mas o servidor recebe pedidos de clientes antigos durante a atualização: `ChestTake` sem slot deve tirar do slot 1. Teste na Task 9.
 
 ---
 
 ## Parte A — Inventário
 
-### Task 1: Todo mundo nasce com a mochila básica
+### Task 1: Sem mochila por enquanto — todo mundo tem 16 espaços (+3 do VIP)
+
+**Decisão do Elizeu (19/11):** a ideia de mochila como item sai do jogo por enquanto. Todo jogador tem **10 espaços da hotbar + 6 fixos**, e o VIP soma 3 (16 / 19). As **skins de mochila** (cosméticos, `Assets.Bags`, loja e roletas) **não mudam**: são só visual nas costas.
 
 **Files:**
-- Modify: `src/shared/InventoryConfig.luau` (nova constante)
-- Modify: `src/server/Services/SpawnService.luau` (`deliverKit` ~L96, fluxo de nascer ~L225-L240)
-- Test: `tests/kits.spec.luau`
+- Modify: `src/shared/InventoryConfig.luau` (`BASE_SLOTS`)
+- Modify: `src/shared/Defs/Items.luau` (`leather_bag` ~L187: `testOnly = true`)
+- Modify (se usarem a mochila): `src/shared/Defs/Kits.luau`, `src/server/Services/SpawnService.luau` (`deliverKit` ~L96 continua aceitando mochila, mas nenhum kit liberado dá uma)
+- Test: `tests/inventory.spec.luau` (ou o spec que testa `Inventory.capacityFor`), `tests/defs.spec.luau`, `tests/bookinfo.spec.luau`, `tests/iteminfo.spec.luau` (citam `leather_bag`)
 - Docs: `docs/guia/inventario.md`
 
 **Interfaces:**
-- Produces: `InventoryConfig.STARTER_BAG: string = "leather_bag"` (6 slots, a única mochila de `Defs/Items.luau`).
+- Produces: `InventoryConfig.BASE_SLOTS = 16` (`HOTBAR_SLOTS` continua `10`; `MAX_SLOTS` continua `40`). `Inventory.capacityFor(bagSlots, bonusSlots)` não muda de assinatura: sem mochila, `capacityFor(0, 0) == 16` e `capacityFor(0, 3) == 19`.
 
-- [ ] **Step 1: Teste** em `tests/kits.spec.luau`: `["mochila inicial existe e é mochila"]` — `Defs.Items[InventoryConfig.STARTER_BAG].category == "bag"` e `bagSlots > 0`.
-- [ ] **Step 2:** Rodar `lune run tests/run` — falha (constante não existe).
-- [ ] **Step 3:** Criar a constante. No `SpawnService`, depois de `giveKit`/`giveSpawnItems` no nascimento normal (não no revive, que restaura a foto do inventário com a mochila que o jogador tinha), se `player:GetAttribute(StatNames.Bag) == nil`, chamar `InventoryService.equipBag(player, InventoryConfig.STARTER_BAG)`. Vale também para a vida de tutorial. Ordem: a mochila tem de ser vestida **antes** de entregar os itens do kit (o `deliverKit` já veste a do kit primeiro); então vista a inicial logo depois de `LifeService.begin(player)` e deixe o `deliverKit` trocar se o kit trouxer outra.
-- [ ] **Step 4:** `lune run tests/run` passa. Atualizar `docs/guia/inventario.md` (todo mundo nasce com 16 espaços: 10 da hotbar + 6 da mochila; VIP soma 3).
-- [ ] **Step 5:** Commit `feat(inventario): todo mundo nasce com a mochila de couro`.
-- **Decisão pendente (anotar no relatório, não decidir):** com todo mundo nascendo com `leather_bag`, a receita dela perde sentido. Perguntar ao Elizeu se tira a receita ou cria uma mochila maior.
+- [ ] **Step 1: Teste:** `["capacidade base é 16 e o VIP soma 3"]` — `Inventory.capacityFor(0, 0) == 16`, `Inventory.capacityFor(0, 3) == 19`.
+- [ ] **Step 2:** Rodar `lune run tests/run` — falha (hoje dá 10 e 13).
+- [ ] **Step 3:** `BASE_SLOTS = 16`, com o comentário do topo do `InventoryConfig` explicando a decisão. `leather_bag` ganha `testOnly = true` (some do livro e a receita deixa de ser liberada; volta tirando a marca). Conferir que nenhum kit liberado (`Defs/Kits.luau`) dá `leather_bag` — se der, tirar do kit. Ajustar os testes que citam `leather_bag` só se quebrarem.
+- [ ] **Step 4:** O painel da mochila (`UI/Backpack.luau`, `BackpackState.hasBag`) continua: ele mostra os espaços além da hotbar, que agora todo mundo tem (6). Trocar o título do painel e a dica, se disserem "mochila" de um jeito que pressuponha o item, para "Inventário" (ptBR e en). Conferir que perfis e inventários antigos com 10 espaços crescem para 16 sem perder item (`Inventory.setCapacity` aumentar sempre pode).
+- [ ] **Step 5:** `bash scripts/check.sh` verde. Atualizar `docs/guia/inventario.md` (16 espaços: 10 na hotbar + 6 no painel; VIP +3; mochila como item guardada como `testOnly`).
+- [ ] **Step 6:** Commit `feat(inventario): todo mundo tem 16 espaços; mochila como item sai por enquanto`.
 
 ### Task 2: Botão da mochila no PC, à direita da hotbar
 
@@ -61,7 +64,7 @@
 **Interfaces:**
 - Produces: `HudBottom.rightOfHotbar(): UDim2` — posição logo à direita do último slot da hotbar, centrada na altura dela (use `HudBottom.hotbar()` para medir).
 
-- [ ] **Step 1:** Hoje o botão só aparece em tela de toque (`Visible = isTouch() and hasBag()`). Passar a aparecer também no PC (`Visible = BackpackState.hasBag()`). No PC usar `HudBottom.rightOfHotbar()`; no toque manter `HudBottom.rightOfRings`. A tecla B continua funcionando.
+- [ ] **Step 1:** Depois da Task 1 todo mundo tem espaços além da hotbar, então o botão sempre aparece em jogo. Hoje ele só aparece em tela de toque (`Visible = isTouch() and hasBag()`). Passar a aparecer também no PC (`Visible = BackpackState.hasBag()`). No PC usar `HudBottom.rightOfHotbar()`; no toque manter `HudBottom.rightOfRings`. A tecla B continua funcionando.
 - [ ] **Step 2:** `bash scripts/check.sh` verde.
 - [ ] **Step 3 [Studio — Elizeu]:** Conferir no PC (1280×720 e 1920×1080) e no emulador de celular 749×330 que o botão não cobre nada e que a tela do celular não passa a rolar.
 - [ ] **Step 4:** Commit `feat(hud): botão da mochila também no PC, à direita da hotbar`.
@@ -142,7 +145,7 @@
 
 - [ ] **Step 1:** Conferir a regeneração: `SurvivalConfig.REGEN_RATE = 0.5` vida/s, só com fome, frio e sede ≥ `REGEN_MIN` (35) e calor < `REGEN_MAX_HEAT` (65) (`SurvivalRules.step` ~L141). Escrever (ou confirmar) um teste `["regenera 0.5/s com barras ok e para com fome abaixo de 35"]`. Reescrever o trecho confuso de regeneração em `docs/guia/sobrevivencia.md` (pendência em `docs/pendencias.md`, "Caixas e combate").
 - [ ] **Step 2:** Item: `bandage = { id = "bandage", nameKey = "item.bandage", category = "food", maxStack = 20, food = { health = 30, crumbColor = "#F2E6D0" } }` (usar como comida: cura 30 na hora; `FoodEffect.health` já existe em `Defs/Types.luau` L18). Receita `recipe("bandage", 1, { ingredient("thread", 2) }, 5, "workbench", <próximo order livre>)`. Textos `item.bandage` (ptBR "Curativo", en "Bandage") e `desc.bandage` (ptBR "Cura 30 de vida na hora.", en "Heals 30 health instantly.").
-- [ ] **Step 3:** Sem modelo 3D ainda: o ícone usa o reserva por iniciais do `ItemIcon` (anotar no relatório que falta modelo em `Assets.Icons.bandage`). Não marcar `testOnly`.
+- [ ] **Step 3:** O Elizeu vai modelar o curativo e importar o modelo em `ReplicatedStorage.Assets.Icons.bandage` (no padrão dos ícones de comida). O código não precisa esperar: até o modelo chegar, o `ItemIcon` usa o reserva por iniciais. Não marcar `testOnly`.
 - [ ] **Step 4:** `bash scripts/check.sh` verde (o `Validate` das Defs confere receita e textos).
 - [ ] **Step 5:** Commit `feat(vida): curativo (2 linhas na bancada, cura 30) e regeneração conferida`.
 
@@ -292,4 +295,4 @@ Sem código, a não ser que apareça bug. No Studio, **Test → Clients and Serv
 - [ ] `bash scripts/check.sh` verde na branch inteira.
 - [ ] `& (Get-Content graphify-out\.graphify_python) -m graphify update .`
 - [ ] Riscar os itens feitos da seção "Teste com amigo (19/11)" em `docs/pendencias.md`.
-- [ ] Relatório final: o que foi feito por tarefa, os passos **[Studio — Elizeu]** que ficaram para ele, e as decisões pendentes (receita da mochila de couro; modelo do curativo).
+- [ ] Relatório final: o que foi feito por tarefa e os passos **[Studio — Elizeu]** que ficaram para ele (inclusive importar o modelo do curativo em `Assets.Icons.bandage`).

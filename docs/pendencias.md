@@ -6,7 +6,8 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 Pedidos do Elizeu depois de jogar com um amigo (decisões já tomadas entre parênteses):
 
-- **Mochila:** todo mundo nasce com uma mochila básica; botão de abrir a mochila no PC, à direita da hotbar (hoje só tecla B).
+- **Mochila (decidido):** a mochila como item sai por enquanto; todo mundo tem 16 espaços (10 da hotbar + 6) e o VIP soma 3. Botão de abrir o painel no PC, à direita da hotbar (hoje só tecla B). Skins de mochila continuam (visual).
+- **Curativo:** o Elizeu faz o modelo 3D e importa em `Assets.Icons.bandage`.
 - **Inventário cheio:** conferir todos os casos (coletar, craftar, saquear caixa, baú, pegar do chão, colher, kit, revive, recompensas) — nunca perder item em silêncio, sempre avisar.
 - **Soltar item arrastando:** arrastar o item para fora do inventário não solta no chão no jogo publicado (no Studio solta); só o botão direito funciona.
 - **Golpe em vários alvos:** o golpe deve acertar mais de uma hitbox por vez (hoje acerta uma).
