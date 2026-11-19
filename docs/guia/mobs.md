@@ -205,3 +205,12 @@ Quando os outros biomas ficarem jogáveis, o sistema já serve: é só dado.
 - **Domesticar e montar**: só existe o campo `mountFlies` nos dados.
 - Mobs quebrando construções, telhado (que protegeria de voadores), bosses e cavernas. (O PvP e as caixas de drop entraram na G6: `combate.md`.)
 - Busca de caminho inteligente.
+
+## Desvio de obstáculos (19/11/2026)
+
+Perseguindo ou fugindo, o mob não fica mais parado empurrando uma pedra ou árvore entre ele e o alvo: quando a reta bate num círculo (recurso, peça sólida, outro mob, jogador), ele segue a tangente do obstáculo pelo lado de caminho mais curto e guarda esse lado por `MobRules.STEER_HOLD` (0,6 s) para não ficar indeciso. Círculos colados (árvores lado a lado, parede) contam como um obstáculo só.
+
+- Regras puras em `src/shared/Mobs/MobSteer.luau` (testes em `tests/mobsteer.spec.luau`, inclusive um que reproduz o mob preso sem o desvio).
+- `MobBrain` diz até onde olhar (`intent.reach`: o alvo ao perseguir; `FLEE_LOOKAHEAD` ao fugir) e o giro máximo (`FLEE_MAX_TURN`: fugindo não vira de volta para o jogador). Passeando (`reach = 0`) anda reto e escorrega como antes, que é o caso mais comum e fica barato.
+- No `MobService.move`, uma busca de círculos só (até `STEER_LOOKAHEAD`, 8 studs) serve ao desvio e ao passo. Lado que cairia na água ou fora do bioma não é escolhido. Voando não desvia (passa por cima).
+- O mob olha para a direção desviada.

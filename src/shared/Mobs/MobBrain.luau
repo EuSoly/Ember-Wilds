@@ -48,6 +48,11 @@ export type Intent = {
 	flying: boolean,
 	hostile: boolean, -- vai para MobHostile
 	wantsLand: boolean, -- voando e querendo pousar (o servidor diz se pode com canLand)
+	-- Desvio (MobSteer): distância até o objetivo (perseguindo: o alvo; fugindo:
+	-- MobRules.FLEE_LOOKAHEAD) e giro máximo. reach = 0: anda reto e escorrega
+	-- (passeio: tem o prazo do ponto e é o caso mais comum, então fica barato).
+	reach: number,
+	maxTurn: number,
 }
 
 local WANDER_PAUSE = { 1, 4 } -- segundos parado ao chegar no ponto do passeio
@@ -170,6 +175,9 @@ local function thinkPassive(
 	end
 	intent.dirX, intent.dirZ = dirX, dirZ
 	intent.speed = stats.speed
+	-- Pedra no caminho da fuga: contorna, mas sem virar de volta para o jogador.
+	intent.reach = MobRules.FLEE_LOOKAHEAD
+	intent.maxTurn = MobRules.FLEE_MAX_TURN
 end
 
 -- Perseguindo: vai atrás do alvo; voando, pousa perto dele; no chão, morde.
@@ -195,6 +203,7 @@ local function chase(
 
 	intent.dirX, intent.dirZ = unit(seen.x - x, seen.z - z)
 	intent.speed = stats.speed
+	intent.reach = gap -- contorna o que estiver entre ele e o alvo
 
 	local reach = stats.radius + MobRules.BITE_REACH + BuildRules.PLAYER_RADIUS
 	if not brain.flying and stats.bite ~= nil and gap <= reach and now >= brain.nextBiteAt then
@@ -314,6 +323,8 @@ function MobBrain.think(
 		flying = false,
 		hostile = false,
 		wantsLand = false,
+		reach = 0,
+		maxTurn = math.pi,
 	}
 
 	if def.behavior == "passive" then

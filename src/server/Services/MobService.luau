@@ -50,6 +50,7 @@ local MobBrain = require(ReplicatedStorage.Shared.Mobs.MobBrain)
 local MobMove = require(ReplicatedStorage.Shared.Mobs.MobMove)
 local MobRules = require(ReplicatedStorage.Shared.Mobs.MobRules)
 local MobSpawn = require(ReplicatedStorage.Shared.Mobs.MobSpawn)
+local MobSteer = require(ReplicatedStorage.Shared.Mobs.MobSteer)
 local Rng = require(ReplicatedStorage.Shared.World.Rng)
 local SpatialGrid = require(ReplicatedStorage.Shared.World.SpatialGrid)
 local StatNames = require(ReplicatedStorage.Shared.StatNames)
@@ -101,6 +102,7 @@ export type Mob = {
 	hurts: number, -- espelho de MobHurt
 	facing: Vector3, -- frente da raiz (unitária, no chão)
 	brain: MobBrain.Brain,
+	steer: MobSteer.Memory, -- lado do desvio guardado (MobSteer)
 	lastStep: number, -- os.clock() do último passo
 	gridX: number, -- posição com que está no índice (para tirar de lá)
 	gridZ: number,
@@ -432,6 +434,7 @@ local function spawnMob(def: MobDef, biome: string, rect: WorldConfig.Rect, x: n
 		hurts = 0,
 		facing = facing,
 		brain = MobBrain.new(def, x, z, now, rng),
+		steer = MobSteer.new(),
 		lastStep = now,
 		gridX = x,
 		gridZ = z,
@@ -477,45 +480,75 @@ local function bite(mob: Mob, character: Model, web: boolean)
 	CharacterService.hurt(character, amount, mob.def.nameKey, "mob")
 end
 
--- Anda o que a intenção pede; devolve a nova CFrame da raiz, ou nil se nada mudou.
+-- Onde o mob não pode pisar: fora do bioma e, no chão, a água.
+local function blockedFor(mob: Mob): (number, number) -> boolean
+	local rect = mob.rect
+	if mob.flying then
+		-- Voando passa por cima de tudo; só não sai do bioma.
+		return function(px: number, pz: number): boolean
+			return not inRect(rect, px, pz)
+		end
+	end
+	return function(px: number, pz: number): boolean
+		-- Água bruta: a ponte não é chão para mob (ponte que some não o
+		-- deixa preso na água).
+		return not inRect(rect, px, pz) or WaterSim.isWaterAt(px, pz)
+	end
+end
+
 -- Anda `distance` na direção dada, escorregando pelos obstáculos (voando só
--- não sai do bioma). Devolve a nova posição; não mexe no mob.
+-- não sai do bioma). `circles`: os já juntados no passo (o desvio busca mais
+-- longe e reaproveita). Devolve a nova posição; não mexe no mob.
 local function slide(
 	mob: Mob,
 	dirX: number,
 	dirZ: number,
 	distance: number,
-	bodies: { MobBrain.Seen }
+	bodies: { MobBrain.Seen },
+	circles: { MobMove.Circle }?
 ): (number, number)
 	local x, z = mob.x, mob.z
-	local rect = mob.rect
-	local circles: { MobMove.Circle }
-	local blocked: (number, number) -> boolean
+	local around: { MobMove.Circle }
 	if mob.flying then
-		-- Voando passa por cima de tudo; só não sai do bioma.
-		circles = {}
-		blocked = function(px: number, pz: number): boolean
-			return not inRect(rect, px, pz)
-		end
+		around = {}
 	else
-		circles = circlesAround(mob, x, z, mob.radius + distance, bodies)
-		blocked = function(px: number, pz: number): boolean
-			-- Água bruta: a ponte não é chão para mob (ponte que some não o
-			-- deixa preso na água).
-			return not inRect(rect, px, pz) or WaterSim.isWaterAt(px, pz)
-		end
+		around = circles or circlesAround(mob, x, z, mob.radius + distance, bodies)
 	end
-	return MobMove.step(x, z, dirX, dirZ, distance, mob.radius, circles, blocked)
+	return MobMove.step(x, z, dirX, dirZ, distance, mob.radius, around, blockedFor(mob))
 end
 
+-- Anda o que a intenção pede; devolve a nova CFrame da raiz, ou nil se nada mudou.
+-- No chão, perseguindo ou fugindo (intent.reach > 0), o MobSteer troca a reta
+-- pela tangente do obstáculo no caminho (dá a volta na pedra em vez de ficar
+-- empurrando); a direção desviada é também para onde o mob olha.
 local function move(mob: Mob, intent: MobBrain.Intent, dt: number, bodies: { MobBrain.Seen }): CFrame?
-	local hasDir = intent.dirX ~= 0 or intent.dirZ ~= 0
+	local dirX, dirZ = intent.dirX, intent.dirZ
+	local hasDir = dirX ~= 0 or dirZ ~= 0
 	local distance = intent.speed * dt
 	local x, z = mob.x, mob.z
 	if hasDir and distance > 0 then
-		x, z = slide(mob, intent.dirX, intent.dirZ, distance, bodies)
+		local circles: { MobMove.Circle }? = nil
+		if not mob.flying and intent.reach > 0 then
+			-- Uma busca só, longa o bastante para o desvio e para o passo.
+			local look = math.max(distance, math.min(intent.reach, MobRules.STEER_LOOKAHEAD))
+			circles = circlesAround(mob, x, z, mob.radius + look, bodies)
+			dirX, dirZ = MobSteer.steer(
+				mob.steer,
+				os.clock(),
+				x,
+				z,
+				mob.radius,
+				dirX,
+				dirZ,
+				intent.reach,
+				intent.maxTurn,
+				circles :: { MobMove.Circle },
+				blockedFor(mob)
+			)
+		end
+		x, z = slide(mob, dirX, dirZ, distance, bodies, circles)
 	end
-	local facing = if hasDir then Vector3.new(intent.dirX, 0, intent.dirZ).Unit else mob.facing
+	local facing = if hasDir then Vector3.new(dirX, 0, dirZ).Unit else mob.facing
 	if x == mob.x and z == mob.z and facing == mob.facing then
 		return nil
 	end

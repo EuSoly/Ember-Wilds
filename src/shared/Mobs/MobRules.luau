@@ -25,6 +25,13 @@ local MobRules = {
 	RESPAWN_DELAY = 30, -- segundos para repor um mob morto
 	DEATH_REMOVE = 0.6, -- segundos entre a morte e a remoção do modelo
 	TICK = 0.1, -- passo da IA (s)
+	-- Desvio (MobSteer): até onde o mob olha à frente por obstáculos (studs; é
+	-- também o raio extra da busca de círculos do servidor, então pesa no custo),
+	-- e por quanto tempo mantém o lado escolhido (não fica indeciso).
+	STEER_LOOKAHEAD = 8,
+	STEER_HOLD = 0.6,
+	FLEE_LOOKAHEAD = 8, -- fugindo: o "objetivo" é um ponto a tantos studs à frente
+	FLEE_MAX_TURN = math.pi * 0.6, -- fugindo: desvia no máximo isso (não volta para o jogador)
 }
 
 -- Dano do golpe em mob: o do item, ou o de mão.
