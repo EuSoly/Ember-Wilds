@@ -20,7 +20,7 @@ Todos ficam em `src/shared/SurvivalConfig.luau`. Mudou um número, o jogo muda n
 | Em cima do fogo (até 3 studs do centro) | esquenta 20 por segundo: enche o frio e, cheio, enche o **calor** | calor cheio em ~5 s |
 | Fora do fogo, com calor | o calor esfria 5 por segundo; o frio só volta a cair depois | |
 | Calor cheio | −1,2 de vida por segundo | a vida só regenera com o calor abaixo de 65 |
-| Frutinha | +10 de fome | |
+| Frutinha | +10 de fome, +5 de sede | |
 
 Vida zerada é morte (a mesma do resto do jogo: pontos viram Golden Ember, e o inventário, a mochila e a armadura vão para uma **caixa** no lugar da morte, que qualquer um pode saquear; veja `combate.md`). A vida tem teto próprio (`StatNames.HealthMax` = 200); as outras barras continuam em `StatNames.StatusMax` = 100, e a comida e a regeneração curam os mesmos pontos de antes. A tela de morte mostra a causa: **Fome**, **Frio**, **Calor**, **Sede** ou **Afogado** (a barra que mais tirou vida no fim).
 

@@ -22,12 +22,13 @@ local Items: { [string]: ItemDef } = {
 	},
 
 	-- Comida
+	-- 19/11: pedido do Elizeu, frutinha mata um pouco a sede
 	berry = {
 		id = "berry",
 		nameKey = "item.berry",
 		category = "food",
 		maxStack = 255,
-		food = { hunger = 10, crumbColor = "#7B3FA6" },
+		food = { hunger = 10, thirst = 5, crumbColor = "#7B3FA6" },
 	},
 
 	-- Carne dos mobs (crua vem do loot; assada na fogueira)
