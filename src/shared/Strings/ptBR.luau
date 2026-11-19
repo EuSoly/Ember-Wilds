@@ -1091,6 +1091,8 @@ return table.freeze({
 	["shop.spin.title"] = "Giro · {type}",
 	["shop.spin.normal"] = "Giro com Golden Ember",
 	["shop.spin.paid"] = "Giro especial",
+	["shop.odds.title"] = "Chances de cada item",
+	["shop.odds.item"] = "Item",
 	["shop.spin.have"] = "Você tem {count} giro(s)",
 	["shop.spin.go"] = "GIRAR",
 	["shop.spin.won"] = "VOCÊ GANHOU!",

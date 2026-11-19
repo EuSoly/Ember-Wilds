@@ -1091,6 +1091,8 @@ return table.freeze({
 	["shop.spin.title"] = "Spin · {type}",
 	["shop.spin.normal"] = "Golden Ember Spin",
 	["shop.spin.paid"] = "Premium Spin",
+	["shop.odds.title"] = "Drop chances",
+	["shop.odds.item"] = "Item",
 	["shop.spin.have"] = "You have {count} spin(s)",
 	["shop.spin.go"] = "SPIN",
 	["shop.spin.won"] = "YOU WON!",

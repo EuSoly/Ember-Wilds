@@ -53,6 +53,67 @@ function SpinRules.pickItem(items: { Item }, rarity: number, r: number): Item
 	error("[SpinRules] lista de itens vazia")
 end
 
+-- Chance (%) de cada item sair, com as chances por raridade `odds` (1..6):
+-- a mesma conta do sorteio (pickIndex + pickItem): a chance da raridade se
+-- divide igual entre os itens dela; raridade sem item cai na de baixo (ou
+-- sobe), como no pickItem. Tabela de painel de chances da tela do giro.
+function SpinRules.itemChances(items: { Item }, odds: { number }): { [string]: number }
+	local chances: { [string]: number } = {}
+	if #items == 0 then
+		return chances
+	end
+	local total = 0
+	for _, w in odds do
+		total += w
+	end
+	if total <= 0 then
+		return chances
+	end
+	for rarity, weight in odds do
+		local order: { number } = {}
+		for wanted = rarity, 1, -1 do
+			table.insert(order, wanted)
+		end
+		for wanted = rarity + 1, MAX_RARITY do
+			table.insert(order, wanted)
+		end
+		for _, wanted in order do
+			local pool: { Item } = {}
+			for _, item in items do
+				if item.rarity == wanted then
+					table.insert(pool, item)
+				end
+			end
+			if #pool > 0 then
+				local share = 100 * weight / total / #pool
+				for _, item in pool do
+					chances[item.id] = (chances[item.id] or 0) + share
+				end
+				break
+			end
+		end
+	end
+	return chances
+end
+
+-- Porcentagem para mostrar: até 2 casas, sem zeros sobrando ("2,5%",
+-- "0,83%", "15%"); `comma` = vírgula decimal (português). Abaixo de 0,01,
+-- "<0,01%" (nunca "0%" para um item que pode sair).
+function SpinRules.formatPercent(value: number, comma: boolean): string
+	local text: string
+	if value > 0 and value < 0.01 then
+		text = "<0.01"
+	else
+		text = string.format("%.2f", value)
+		text = string.gsub(text, "0+$", "")
+		text = string.gsub(text, "%.$", "")
+	end
+	if comma then
+		text = string.gsub(text, "%.", ",")
+	end
+	return text .. "%"
+end
+
 -- Skin em destaque no cartão do giro (loja): uma das mais raras do tipo —
 -- Míticas, ou a maior raridade que existir — escolhida por r em [0, 1).
 -- Lista vazia: nil.

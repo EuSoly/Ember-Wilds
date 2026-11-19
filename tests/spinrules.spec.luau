@@ -193,4 +193,31 @@ return {
 		assert(not SpinRules.canOpen("body", 5), "outra tela aberta: não abre")
 		assert(not SpinRules.canOpen("accessory", 5), "a mesma tela aberta: não reabre")
 	end,
+
+	["itemChances: divide a raridade e cai na de baixo quando falta item"] = function()
+		local items = {
+			{ id = "a", nameKey = "", rarity = 1, color = "" },
+			{ id = "b", nameKey = "", rarity = 1, color = "" },
+			{ id = "c", nameKey = "", rarity = 3, color = "" },
+		}
+		local chances = SpinRules.itemChances(items, { 30, 30, 22, 13, 4, 1 })
+		-- Comum (30) e Incomum sem item (30, cai na Comum) entre a e b.
+		assert(math.abs(chances.a - 30) < 1e-9 and math.abs(chances.b - 30) < 1e-9, "a/b 30%")
+		-- Raro (22) + Épico, Lendário e Mítico sem item (caem até o Raro).
+		assert(math.abs(chances.c - 40) < 1e-9, `c 40%: {chances.c}`)
+		local sum = 0
+		for _, v in chances do
+			sum += v
+		end
+		assert(math.abs(sum - 100) < 1e-9, "soma 100")
+		assert(next(SpinRules.itemChances({}, { 1 })) == nil, "lista vazia")
+	end,
+
+	["formatPercent: até 2 casas, sem zeros, vírgula em português"] = function()
+		assert(SpinRules.formatPercent(15, true) == "15%", "inteiro")
+		assert(SpinRules.formatPercent(2.5, true) == "2,5%", "vírgula")
+		assert(SpinRules.formatPercent(2.5, false) == "2.5%", "ponto")
+		assert(SpinRules.formatPercent(1 / 1.2, true) == "0,83%", "2 casas")
+		assert(SpinRules.formatPercent(0.001, true) == "<0,01%", "muito pequeno")
+	end,
 }

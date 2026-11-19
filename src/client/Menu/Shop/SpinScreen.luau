@@ -32,6 +32,7 @@ local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
 local ShopState = require(script.Parent:WaitForChild("ShopState"))
 local SpinTile = require(script.Parent:WaitForChild("SpinTile"))
+local SpinOdds = require(script.Parent:WaitForChild("SpinOdds"))
 local Reel = require(script.Parent:WaitForChild("Reel"))
 
 local create = vide.create
@@ -741,9 +742,24 @@ function SpinScreen.build(
 				PaddingLeft = UDim.new(0, 4),
 				PaddingRight = UDim.new(0, 4),
 			}),
-			sidesList,
-			normalSide,
-			paidSide,
+			-- Os dois lados numa linha própria (lado a lado ou um embaixo do
+			-- outro) e, embaixo deles, as chances de cada item (SpinOdds).
+			create("UIListLayout")({ SortOrder = Enum.SortOrder.LayoutOrder, Padding = UDim.new(0, 16) }),
+			create("Frame")({
+				Name = "SidesRow",
+				LayoutOrder = 1,
+				Size = UDim2.fromScale(1, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+				BackgroundTransparency = 1,
+				sidesList :: Instance,
+				normalSide :: Instance,
+				paidSide :: Instance,
+			}),
+			vide.apply(SpinOdds.panel(function()
+				local id = ShopState.spinType()
+				local spinType = if id then typeOf(id) else nil
+				return if spinType then spinType.items else {}
+			end))({ LayoutOrder = 2 }),
 		}),
 	}) :: Frame
 
