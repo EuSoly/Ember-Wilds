@@ -1,0 +1,11 @@
+C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\build_assets.py:212: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world=bpy.data.worlds.new('Studio_World');scene.world.use_nodes=True
+00:00.547  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_39056_1a94796a1537a4cae46d16f449e761e3.png.png"
+00:07.047  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\empty-bucket-preview.png'
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "empty-bucket.blend"
+EMPTY_BUCKET_COMPLETE: existing bucket geometry, water mesh removed
+BUILD_COMPLETE: 16 inventory assets + bush with 5 purple fruits
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

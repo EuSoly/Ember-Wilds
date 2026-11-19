@@ -479,9 +479,9 @@ return {
 		)
 	end,
 
-	["cosmetic with rarity 6 is an error"] = function()
+	["cosmetic with rarity 7 is an error"] = function()
 		local defs = validLookDefs()
-		defs.Cosmetics.body_default.rarity = 6
+		defs.Cosmetics.body_default.rarity = 7
 		local errors = Validate.all(defs, alwaysHas)
 		assert(containsError(errors, "rarity"), `faltou erro de rarity: {table.concat(errors, "; ")}`)
 	end,

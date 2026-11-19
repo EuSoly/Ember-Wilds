@@ -1,0 +1,262 @@
+00:00.610  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\farming\farming-plants.blend"
+00:00.766  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\farming\planter-box.blend"
+00:00.797  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\farming\farming-icons.blend"
+C:\Users\Elize\Desktop\Roblox\starve\assets\farming\export_farming.py:48: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat=bpy.data.materials.new('Farming_Palette');mat.use_nodes=True
+00:02.563  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_41892_412402fc7283aa7361adf53802efea33.png.png"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\farming-pack.fbx'
+export finished in 0.1391 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\berry_stage_01.fbx'
+export finished in 0.0071 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\berry_stage_02.fbx'
+export finished in 0.0073 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\berry_stage_03.fbx'
+export finished in 0.0077 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\berry_stage_04.fbx'
+export finished in 0.0120 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\wheat_stage_01.fbx'
+export finished in 0.0069 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\wheat_stage_02.fbx'
+export finished in 0.0077 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\wheat_stage_03.fbx'
+export finished in 0.0080 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\wheat_stage_04.fbx'
+export finished in 0.0084 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\pumpkin_stage_01.fbx'
+export finished in 0.0077 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\pumpkin_stage_02.fbx'
+export finished in 0.0067 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\pumpkin_stage_03.fbx'
+export finished in 0.0083 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\pumpkin_stage_04.fbx'
+export finished in 0.0068 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\thorn_stage_01.fbx'
+export finished in 0.0072 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\thorn_stage_02.fbx'
+export finished in 0.0071 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\thorn_stage_03.fbx'
+export finished in 0.0061 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\thorn_stage_04.fbx'
+export finished in 0.0073 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\carrot_stage_01.fbx'
+export finished in 0.0069 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\carrot_stage_02.fbx'
+export finished in 0.0074 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\carrot_stage_03.fbx'
+export finished in 0.0081 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\carrot_stage_04.fbx'
+export finished in 0.0098 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\tomato_stage_01.fbx'
+export finished in 0.0069 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\tomato_stage_02.fbx'
+export finished in 0.0060 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\tomato_stage_03.fbx'
+export finished in 0.0081 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\tomato_stage_04.fbx'
+export finished in 0.0108 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\watermelon_stage_01.fbx'
+export finished in 0.0064 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\watermelon_stage_02.fbx'
+export finished in 0.0078 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\watermelon_stage_03.fbx'
+export finished in 0.0072 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\watermelon_stage_04.fbx'
+export finished in 0.0080 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\aloe_vera_stage_01.fbx'
+export finished in 0.0071 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\aloe_vera_stage_02.fbx'
+export finished in 0.0067 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\aloe_vera_stage_03.fbx'
+export finished in 0.0096 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\aloe_vera_stage_04.fbx'
+export finished in 0.0079 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\garlic_stage_01.fbx'
+export finished in 0.0077 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\garlic_stage_02.fbx'
+export finished in 0.0076 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\garlic_stage_03.fbx'
+export finished in 0.0079 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\garlic_stage_04.fbx'
+export finished in 0.0123 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\planter_box.fbx'
+export finished in 0.0103 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\berry_seeds.fbx'
+export finished in 0.0066 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\wheat_seeds.fbx'
+export finished in 0.0081 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\pumpkin_seeds.fbx'
+export finished in 0.0077 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\thorn_seeds.fbx'
+export finished in 0.0081 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\carrot_seeds.fbx'
+export finished in 0.0075 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\tomato_seeds.fbx'
+export finished in 0.0083 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\watermelon_seeds.fbx'
+export finished in 0.0059 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\aloe_vera_seeds.fbx'
+export finished in 0.0064 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\garlic_seeds.fbx'
+export finished in 0.0072 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\bottle_empty.fbx'
+export finished in 0.0073 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\bottle_full.fbx'
+export finished in 0.0068 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\farming\\roblox\\individual\\ice_cube.fbx'
+export finished in 0.0076 sec.
+Info: Saved as "farming-export.blend"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+FARM_VALIDATED {"models": 49, "meshes": 67, "triangles": 15622, "roundtrips": 50}
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

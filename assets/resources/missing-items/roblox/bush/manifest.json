@@ -1,0 +1,125 @@
+{
+  "format": "FBX",
+  "source": "berry-bush.blend",
+  "combined_file": "berry-bush.fbx",
+  "texture": "berry_bush_palette.png",
+  "color_swatches": 5,
+  "mesh_count": 6,
+  "total_triangles": 880,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "Blender Z-up; Roblox Y-up, volumetric world resource",
+  "individual_origin": "shared bush base origin; retain all relative part positions",
+  "items": [
+    {
+      "item_id": "Berry_01",
+      "label": "Berry_01",
+      "triangles": 80,
+      "vertices": 42,
+      "local_dimensions": [
+        0.7418240308761597,
+        0.7306021889671683,
+        0.7999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Berry_01"
+      ],
+      "file": "individual/Berry_01.fbx"
+    },
+    {
+      "item_id": "Berry_02",
+      "label": "Berry_02",
+      "triangles": 80,
+      "vertices": 42,
+      "local_dimensions": [
+        0.7418240904808044,
+        0.7306021451950073,
+        0.8000000715255737
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Berry_02"
+      ],
+      "file": "individual/Berry_02.fbx"
+    },
+    {
+      "item_id": "Berry_03",
+      "label": "Berry_03",
+      "triangles": 80,
+      "vertices": 42,
+      "local_dimensions": [
+        0.7418240308761597,
+        0.7306022047996521,
+        0.7999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Berry_03"
+      ],
+      "file": "individual/Berry_03.fbx"
+    },
+    {
+      "item_id": "Berry_04",
+      "label": "Berry_04",
+      "triangles": 80,
+      "vertices": 42,
+      "local_dimensions": [
+        0.7418240755796432,
+        0.7306021675467491,
+        0.7999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Berry_04"
+      ],
+      "file": "individual/Berry_04.fbx"
+    },
+    {
+      "item_id": "Berry_05",
+      "label": "Berry_05",
+      "triangles": 80,
+      "vertices": 42,
+      "local_dimensions": [
+        0.7418240308761597,
+        0.7306021600961685,
+        0.7999999523162842
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Berry_05"
+      ],
+      "file": "individual/Berry_05.fbx"
+    },
+    {
+      "item_id": "Foliage",
+      "label": "Foliage",
+      "triangles": 480,
+      "vertices": 252,
+      "local_dimensions": [
+        5.6129584312438965,
+        3.883573532104492,
+        3.450000047683716
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "source_Foliage"
+      ],
+      "file": "individual/Foliage.fbx"
+    }
+  ],
+  "model_id": "berry_bush_1",
+  "fruit_count": 5,
+  "roblox_names": {
+    "Berry_01": "Berry",
+    "Berry_02": "Berry",
+    "Berry_03": "Berry",
+    "Berry_04": "Berry",
+    "Berry_05": "Berry"
+  }
+}

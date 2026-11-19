@@ -1,7 +1,7 @@
 --!strict
 -- Regras dos giros da loja (puras, testadas no Lune): sorteio por peso,
 -- escolha do item pela raridade, contadores de giros comprados e confete.
--- Raridade é um índice 1..5 na ordem de MockStore.RARITIES (Comum → Mítico).
+-- Raridade é um índice 1..6 na ordem de MockStore.RARITIES (Comum → Mítico).
 -- Os contadores são imutáveis: cada função devolve uma tabela nova (assim a
 -- fonte do Vide sempre muda e a tela atualiza).
 local SpinRules = {}
@@ -27,7 +27,7 @@ function SpinRules.pickIndex(weights: { number }, r: number): number
 	return #weights
 end
 
-local MAX_RARITY = 5
+local MAX_RARITY = 6
 
 -- Item da raridade pedida (r escolhe entre eles). Sem nenhum dessa raridade,
 -- desce até achar; sem nada abaixo, sobe: o sorteio nunca fica sem prêmio.
@@ -134,9 +134,9 @@ function SpinRules.canAfford(balance: number, price: number): boolean
 end
 
 -- Peças de confete na janelinha do prêmio: no pago sempre (mais quanto mais
--- raro); no normal só de Épico (3) para cima, crescendo com a raridade.
-local CONFETTI_PAID = { 20, 35, 60, 100, 150 }
-local CONFETTI_NORMAL = { 0, 0, 20, 40, 70 }
+-- raro); no normal só de Épico (4) para cima, crescendo com a raridade.
+local CONFETTI_PAID = { 20, 28, 35, 60, 100, 150 }
+local CONFETTI_NORMAL = { 0, 0, 0, 20, 40, 70 }
 
 function SpinRules.confettiFor(rarity: number, paid: boolean): number
 	local list = if paid then CONFETTI_PAID else CONFETTI_NORMAL
@@ -157,14 +157,14 @@ end
 --           combinando com o som etéreo da revelação (12/11).
 export type Reveal = { hold: number, shake: number, flash: number, rays: boolean, ring: boolean, mystic: boolean }
 
-local HOLD = { 0.3, 0.4, 0.55, 0.7, 0.9 }
-local SHAKE = { 0, 0, 3, 6, 9 }
-local FLASH = { 0, 0.15, 0.3, 0.45, 0.6 }
+local HOLD = { 0.3, 0.35, 0.4, 0.55, 0.7, 0.9 }
+local SHAKE = { 0, 0, 0, 3, 6, 9 }
+local FLASH = { 0, 0.08, 0.15, 0.3, 0.45, 0.6 }
 local PAID_SHAKE = 3
 local PAID_FLASH = 0.15
-local RAYS_FROM = 2
-local RING_FROM = 3
-local MYSTIC_FROM = 5
+local RAYS_FROM = 3
+local RING_FROM = 4
+local MYSTIC_FROM = 6
 
 function SpinRules.revealFor(rarity: number, paid: boolean): Reveal
 	local r = math.clamp(rarity, 1, #HOLD)

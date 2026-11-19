@@ -16,7 +16,7 @@ local CrateMotion = require(Shared:WaitForChild("Models"):WaitForChild("CrateMot
 local SkinManifest = require(Shared:WaitForChild("Defs"):WaitForChild("SkinManifest"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 
-type Moving = { part: BasePart, rest: CFrame, motion: CrateMotion.Motion }
+type Moving = { part: BasePart, rest: CFrame, transparency: number, motion: CrateMotion.Motion }
 type Entry = { model: Model, parts: { Moving } }
 
 local CrateAnimator = {}
@@ -35,7 +35,12 @@ local function collect(model: Model): { Moving }
 			if motion then
 				table.insert(
 					parts,
-					{ part = descendant, rest = pivot:ToObjectSpace(descendant.CFrame), motion = motion }
+					{
+						part = descendant,
+						rest = pivot:ToObjectSpace(descendant.CFrame),
+						transparency = descendant.Transparency,
+						motion = motion,
+					}
 				)
 			end
 		end
@@ -52,6 +57,11 @@ local function step()
 		end
 		local pivot = model:GetPivot()
 		for _, moving in entry.parts do
+			if moving.motion.kind == "bloom" then
+				-- Duas coberturas de neon sobre os miolos das flores; a base continua visível.
+				moving.part.Transparency = 0.45 + 0.4 * math.cos(2 * math.pi * t / 2.8 - moving.motion.phase)
+				continue
+			end
 			local angle, height = CrateMotion.pose(moving.motion, t)
 			-- Gira em volta do eixo vertical do pivô da caixa (o meio dela) e sobe.
 			moving.part.CFrame = pivot * CFrame.Angles(0, angle, 0) * CFrame.new(0, height, 0) * moving.rest
@@ -84,6 +94,9 @@ function CrateAnimator.attach(model: Model): () -> ()
 			local pivot = model:GetPivot()
 			for _, moving in entry.parts do
 				moving.part.CFrame = pivot * moving.rest
+				if moving.motion.kind == "bloom" then
+					moving.part.Transparency = moving.transparency
+				end
 			end
 		end
 	end

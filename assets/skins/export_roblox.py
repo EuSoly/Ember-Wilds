@@ -193,8 +193,13 @@ def png_paleta(paleta, caminho):
 def exportar(categoria):
     out = os.path.join(OUT, categoria); os.makedirs(os.path.join(out, "individual"), exist_ok=True)
     skin_lib.RES_CURVA = RES_EXPORT
-    lote = carregar(categoria); montar(categoria, lote)
-    skins, paleta = coletar(categoria)
+    if categoria == "primeira_leva":
+        from primeira_leva import preparar
+        skins, paleta, lotes = preparar(coletar)
+    else:
+        lote = carregar(categoria); montar(categoria, lote)
+        skins, paleta = coletar(categoria)
+        lotes = LOTES[categoria]
     textura = f"{categoria}_palette.png"; grid, size = png_paleta(paleta, os.path.join(out, textura))
     # cena limpa só com as malhas de exportação
     cena = bpy.context.scene; cena.name = f"Skins_{categoria}_Export"
@@ -213,6 +218,14 @@ def exportar(categoria):
         raiz = bpy.data.objects.new(sk["id"], None); col.objects.link(raiz); raiz.location = sk["gallery"]; raiz["item_id"] = sk["id"]
         raizes[sk["id"]] = raiz; objs_por[sk["id"]] = [raiz]
         rec = dict(id=sk["id"], nome=sk["nome"], file=f"individual/{sk['id']}.fbx", parts=[])
+        for nome, pos in sk.get("anchors", {}).items():
+            marker = bpy.data.objects.new(f"{sk['id']}_{nome}", None)
+            marker.empty_display_type = "PLAIN_AXES"
+            marker.empty_display_size = .08
+            col.objects.link(marker); marker.parent = raiz; marker.location = pos
+            marker["anchor"] = nome
+            objs_por[sk["id"]].append(marker)
+            rec.setdefault("anchors_blender", {})[nome] = pos
         for p in sk["parts"]:
             me = bpy.data.meshes.new(p["name"]); me.from_pydata(p["vertices"], [], p["faces"]); me.materials.append(mat); me.update()
             uv = me.uv_layers.new(name="UVMap")
@@ -267,7 +280,7 @@ def exportar(categoria):
     for o in cena.objects: o.select_set(False)
     img.pack(); img.filepath = "//" + textura
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out, f"skins-{categoria}-export.blend"))
-    manifesto = dict(categoria=categoria, lotes=LOTES[categoria], skin_count=len(registros),
+    manifesto = dict(categoria=categoria, lotes=lotes, skin_count=len(registros),
                      mesh_count=sum(len(r["parts"]) for r in registros),
                      total_triangles=sum(p["triangles"] for r in registros for p in r["parts"]),
                      palette_colors=len(paleta), texture=textura, texture_size=size, arquivo_geral=geral,
@@ -300,6 +313,9 @@ def validar(categoria, manifesto):
             if any(abs(a - b) > 0.02 for a, b in zip(got, want)): erros.append(f"{o.name}: dimensões {got} != {want}")
         if arq == manifesto["arquivo_geral"] and len(malhas) != manifesto["mesh_count"]:
             erros.append(f"geral com {len(malhas)} malhas, esperado {manifesto['mesh_count']}")
+        if categoria == "primeira_leva":
+            from primeira_leva import validar_fbx
+            validar_fbx(manifesto, arq, erros)
         res.append(dict(file=arq, malhas=len(malhas), ok=not erros, erros=erros))
     val = dict(categoria=categoria, arquivos=len(res), ok=all(r["ok"] for r in res), resultados=res)
     json.dump(val, open(os.path.join(out, "validation.json"), "w", encoding="utf8"), indent=2, ensure_ascii=False)
@@ -310,10 +326,14 @@ resumo = {}
 # blender -b --factory-startup --python assets/skins/export_roblox.py -- caixas
 categorias = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else list(LOTES)
 for cat in categorias:
-    if cat not in LOTES: raise ValueError(f'categoria desconhecida: {cat}')
+    if cat not in LOTES and cat != "primeira_leva": raise ValueError(f'categoria desconhecida: {cat}')
     bpy.ops.wm.read_factory_settings(use_empty=True)
     man = exportar(cat)
     val = validar(cat, man)
+    if cat == "primeira_leva":
+        from primeira_leva import salvar_editavel, validar_lote
+        validar_lote(man, val)
+        salvar_editavel(os.path.join(OUT, cat, "primeira-leva-editavel.blend"))
     resumo[cat] = dict(skins=man["skin_count"], malhas=man["mesh_count"], triangulos=man["total_triangles"], max_por_skin=max(sum(p["triangles"] for p in s["parts"]) for s in man["skins"]), decimadas=sum(1 for s in man["skins"] for p in s["parts"] if p["triangles"] < p["triangles_antes_decimate"]),
                        cores=man["palette_colors"], textura=man["texture_size"], validacao_ok=val["ok"],
                        falhas=[r for r in val["resultados"] if not r["ok"]][:5])

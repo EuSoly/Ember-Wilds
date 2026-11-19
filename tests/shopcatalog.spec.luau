@@ -177,8 +177,8 @@ return {
 	end,
 
 	["spin odds and refunds"] = function()
-		assert(table.concat(ShopConfig.SPIN_ODDS.normal, ",") == "30,40,23,6,1", "chances do normal")
-		assert(table.concat(ShopConfig.SPIN_ODDS.paid, ",") == "5,25,40,25,5", "chances do especial")
+		assert(table.concat(ShopConfig.SPIN_ODDS.normal, ",") == "30,30,22,13,4,1", "chances do normal")
+		assert(table.concat(ShopConfig.SPIN_ODDS.paid, ",") == "4,11,20,35,25,5", "chances do especial")
 		assert(ShopConfig.DUPLICATE_REFUND.normal == 50 and ShopConfig.DUPLICATE_REFUND.paid == 150, "devolução")
 	end,
 

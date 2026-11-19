@@ -59,8 +59,8 @@ function Products.validateBundles(list: { BundleDef }, defs: DefsTables, strings
 		if type(bundle.theme) ~= "string" or not string.match(bundle.theme, "^#%x%x%x%x%x%x$") then
 			fail("theme precisa ser #RRGGBB")
 		end
-		if not isPositiveInt(bundle.rarity) or bundle.rarity > 5 then
-			fail("rarity precisa ser inteiro de 1 a 5")
+		if not isPositiveInt(bundle.rarity) or bundle.rarity > 6 then
+			fail("rarity precisa ser inteiro de 1 a 6")
 		end
 		if not isPositiveInt(bundle.robux) then
 			fail("robux precisa ser inteiro ≥ 1")

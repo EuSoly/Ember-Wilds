@@ -1,0 +1,39 @@
+{
+  "format": "FBX",
+  "source": "empty-bucket.blend",
+  "combined_file": "empty-bucket.fbx",
+  "texture": "empty_bucket_palette.png",
+  "color_swatches": 6,
+  "mesh_count": 1,
+  "total_triangles": 340,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "item deitado: no Roblox a face de cima aponta para +Y",
+  "individual_origin": "centro do item, base em Y=0",
+  "items": [
+    {
+      "item_id": "bucket",
+      "label": "Balde vazio",
+      "triangles": 340,
+      "vertices": 172,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.9803077578544617,
+        1.495384693145752
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "bucket_body",
+        "bucket_bottom_band",
+        "bucket_handle",
+        "bucket_rim"
+      ],
+      "file": "individual/bucket.fbx"
+    }
+  ]
+}

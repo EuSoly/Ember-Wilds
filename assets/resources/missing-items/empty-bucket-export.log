@@ -1,0 +1,19 @@
+00:00.453  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\empty-bucket.blend"
+00:00.828  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_29564_09eb3c80ae555c10c5342b82a1334a51.png.png"
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\empty-bucket\\empty-bucket.fbx'
+export finished in 0.0052 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\empty-bucket\\individual\\bucket.fbx'
+export finished in 0.0040 sec.
+Info: Saved as "empty-bucket-export.blend"
+EXPORT_RESULT {"meshes": 1, "triangles": 340, "colors": 6}
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+VALIDATION_RESULT {"combined": {"meshes": 1, "geometry_bounds_max_error": 1.4901161193847656e-07, "materials_and_textures_valid": true}, "individual_files_passed": 1}
+REQUESTED_EXPORTS_VALIDATED
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

@@ -1,0 +1,85 @@
+{
+  "categoria": "primeira_leva",
+  "arquivos": 13,
+  "ok": true,
+  "resultados": [
+    {
+      "file": "skins-primeira_leva.fbx",
+      "malhas": 57,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_lula.fbx",
+      "malhas": 15,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_kraken.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_caranguejo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_tentaculo.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_toco.fbx",
+      "malhas": 11,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_jardim.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cubos_esmeralda.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_trepadeira.fbx",
+      "malhas": 15,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/body_explorador.fbx",
+      "malhas": 3,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/crate_aventureiro.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/bag_cartografo.fbx",
+      "malhas": 1,
+      "ok": true,
+      "erros": []
+    },
+    {
+      "file": "individual/book_bussola.fbx",
+      "malhas": 2,
+      "ok": true,
+      "erros": []
+    }
+  ]
+}

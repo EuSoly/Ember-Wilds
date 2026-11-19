@@ -1,0 +1,59 @@
+{
+  "format": "FBX",
+  "source": "areia-e-terra.blend",
+  "combined_file": "areia-e-terra.fbx",
+  "texture": "soil_palette.png",
+  "color_swatches": 8,
+  "mesh_count": 2,
+  "total_triangles": 442,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "item deitado: no Roblox a face de cima aponta para +Y",
+  "individual_origin": "centro do item, base em Y=0",
+  "items": [
+    {
+      "item_id": "ground",
+      "label": "Terra",
+      "triangles": 255,
+      "vertices": 182,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.7648985385894775,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "ground_body",
+        "ground_earth_body",
+        "ground_front_clod",
+        "ground_large_clod",
+        "ground_outline"
+      ],
+      "file": "individual/ground.fbx"
+    },
+    {
+      "item_id": "sand",
+      "label": "Areia",
+      "triangles": 187,
+      "vertices": 134,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.744994044303894,
+        0.1459999978542328
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "sand_body",
+        "sand_grain",
+        "sand_outline",
+        "sand_sand_body"
+      ],
+      "file": "individual/sand.fbx"
+    }
+  ]
+}

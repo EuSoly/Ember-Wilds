@@ -243,8 +243,9 @@ export type CosmeticDef = {
 	id: string,
 	nameKey: string,
 	slot: string, -- id em CosmeticSlots
-	rarity: number, -- 1 Comum, 2 Raro, 3 Épico, 4 Lendário, 5 Mítico
+	rarity: number, -- 1 Comum, 2 Incomum, 3 Raro, 4 Épico, 5 Lendário, 6 Mítico
 	inSpins: boolean?, -- entra no giro da loja? (padrão do slot: só se true)
+	unreleased: boolean?, -- de um update futuro: fora da loja e escondida de quem ainda não a tem
 	body: BodyLook?, -- dados do slot "body"
 	bag: BagLook?, -- dados do slot "bag"
 	crate: CrateLook?, -- dados do slot "crate"

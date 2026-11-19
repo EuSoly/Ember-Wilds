@@ -12,25 +12,37 @@ end
 return {
 	["items body starts at default and rarity never decreases"] = function()
 		local items = CosmeticCatalog.items("body")
-		assert(#items == 181, `esperava 181 skins de corpo, veio {#items}`)
+		assert(#items == 47, `esperava 47 skins de corpo liberadas, veio {#items}`)
 		assert(items[1].id == "body_default", "primeiro deve ser body_default")
 		for i = 2, #items do
 			assert(items[i].rarity >= items[i - 1].rarity, "raridade decresceu")
+			assert(items[i].unreleased ~= true, `{items[i].id} não devia aparecer sem posse`)
 		end
 	end,
 
-	["spinItems body has no default"] = function()
+	["items includes unreleased skins only when owned"] = function()
+		local all = CosmeticCatalog.items("body", function(_id: string)
+			return true
+		end)
+		assert(#all == 181, `com todas possuídas, esperava as 181 skins de corpo, veio {#all}`)
+		local withOne = CosmeticCatalog.items("body", function(id: string)
+			return id == "body_dragao"
+		end)
+		assert(#withOne == 48, `esperava 48 skins com body_dragao possuído, veio {#withOne}`)
+	end,
+
+	["spinItems body has no default and no bundle or unreleased skins"] = function()
 		for _, item in CosmeticCatalog.spinItems("body") do
 			assert(item.id ~= "body_default", "padrão não entra no giro")
 		end
-		assert(#CosmeticCatalog.spinItems("body") == 180, "180 skins no giro do corpo")
+		assert(#CosmeticCatalog.spinItems("body") == 43, "43 skins liberadas no giro do corpo")
 	end,
 
-	["spinItems book includes all book skins"] = function()
+	["spinItems book includes released non-bundle book skins"] = function()
 		local list = CosmeticCatalog.spinItems("book")
 		assert(
-			#list == 21 and list[1].id == "book_default",
-			`esperava 21 livros começando em book_default, veio {#list}`
+			#list == 8 and list[1].id == "book_default",
+			`esperava 8 livros no giro começando em book_default, veio {#list}`
 		)
 	end,
 

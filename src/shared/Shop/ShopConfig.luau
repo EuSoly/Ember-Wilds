@@ -8,10 +8,10 @@ local ShopConfig = {}
 
 export type SpinKind = ShopTypes.SpinKind -- "paid" = giro especial
 
--- Chances (%) por raridade, da Comum à Mítica (tabela do Elizeu).
+-- Chances (%) por raridade, da Comum à Mítica (6 níveis: Comum, Incomum, Raro, Épico, Lendário, Mítico).
 ShopConfig.SPIN_ODDS = table.freeze({
-	normal = table.freeze({ 30, 40, 23, 6, 1 }), -- giro normal (Golden Ember)
-	paid = table.freeze({ 5, 25, 40, 25, 5 }), -- giro especial (Robux)
+	normal = table.freeze({ 30, 30, 22, 13, 4, 1 }), -- giro normal (Golden Ember)
+	paid = table.freeze({ 4, 11, 20, 35, 25, 5 }), -- giro especial (Robux)
 })
 
 -- Skin que o jogador já tem: devolve esta Golden Ember no lugar.

@@ -1,0 +1,24 @@
+00:00.641  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\resources\soil\areia-e-terra.blend"
+00:01.078  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_39128_fb5a226d133c603776b3eaebd46f8b8c.png.png"
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\soil\\roblox\\areia-e-terra.fbx'
+export finished in 0.0075 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\soil\\roblox\\individual\\ground.fbx'
+export finished in 0.0051 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\soil\\roblox\\individual\\sand.fbx'
+export finished in 0.0046 sec.
+Info: Saved as "areia-e-terra-export.blend"
+EXPORT_RESULT {"meshes": 2, "triangles": 442, "colors": 8}
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+VALIDATION_RESULT {"combined": {"meshes": 2, "geometry_bounds_max_error": 8.26299952905174e-08, "materials_and_textures_valid": true}, "individual_files_passed": 2}
+SOIL_EXPORT_VALIDATED
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

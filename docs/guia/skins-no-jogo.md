@@ -31,7 +31,7 @@ Diferente do corpo e da mochila, a caixa é montada uma vez só: o gerador soma 
 
 ## Skins animadas e mochilas com efeito (09/11)
 
-São as 9 skins dos pacotes do lançamento: **Gelo** (Dragão, Tomo de Gelo, Cubo de Gelo), **Abissal** (Polvo, Tomo Abissal, Mochila Caranguejo) e **Floresta** (Toco da Floresta, Tomo Trepadeira, Cubos de Esmeralda).
+São as 9 skins dos pacotes do lançamento: **Gelo** (Dragão, Tomo de Gelo, Cubo de Gelo), **Abissal** (Polvo, Tomo Abissal, Mochila Caranguejo) e **Floresta** (Toco da Floresta, Tomo Trepadeira, Sementes de Esmeralda).
 
 **Corpo e livro: peças que se mexem.** O desenho aprovado não muda: `assets/skins/skin_animacao.py` só separa as peças que se mexem em grupos com um pivô (a junta), e o export as tira em malhas próprias `<id>_anim_<grupo>`.
 
@@ -57,6 +57,6 @@ São as 9 skins dos pacotes do lançamento: **Gelo** (Dragão, Tomo de Gelo, Cub
 |---|---|
 | Cubo de Gelo | flocos de neve girando, geada no chão, faíscas frias |
 | Mochila Caranguejo | bolhas subindo, respingos de água |
-| Cubos de Esmeralda | vaga-lumes verdes, faíscas místicas, folhinhas caindo, névoa verde no chão |
+| Sementes de Esmeralda | vaga-lumes verdes, faíscas místicas, folhinhas caindo, névoa verde no chão |
 
 Texturas brancas (o emissor tinge) em `assets/skins/vfx/`, geradas por `gerar_texturas.py` e enviadas na conta do Elizeu (ids em `BagFxConfig.TEXTURES`).

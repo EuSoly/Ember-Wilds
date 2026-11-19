@@ -1,0 +1,27 @@
+{
+  "item_id": "bandage",
+  "label": "Bandagem",
+  "category": "utility",
+  "recipe": {
+    "station": "workbench",
+    "ingredients": {
+      "thread": 2
+    }
+  },
+  "effect": "Triplica regeneração natural (15% a cada 10s) enquanto barras > 35%",
+  "stack_size": 20,
+  "colors": {
+    "cloth_white": "#FFFFFF",
+    "cloth_cream": "#F3EDE0",
+    "cloth_shadow": "#D2C8B5",
+    "red_cross": "#E61C1C",
+    "outline": "#1E2230",
+    "spool": "#A0907A",
+    "core": "#23202E"
+  },
+  "files": {
+    "blend": "assets/resources/bandage/bandage.blend",
+    "fbx": "assets/resources/bandage/bandage.fbx",
+    "preview": "assets/resources/bandage/bandage-preview.png"
+  }
+}

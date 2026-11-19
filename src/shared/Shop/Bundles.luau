@@ -7,7 +7,7 @@
 --   	id = "outono",                     -- único; vira o produto "bundle_outono"
 --   	nameKey = "shop.bundle.outono",    -- texto em Strings/ptBR.luau
 --   	theme = "#C8641E",                 -- cor do card
---   	rarity = 4,                        -- moldura: 1 Comum … 5 Mítico
+--   	rarity = 5,                        -- moldura: 1 Comum … 6 Mítico
 --   	robux = 299,                       -- preço (ainda não é cobrado)
 --   	startsAt = "2026-11-20 18:00",     -- horário de Brasília; sem = já começou
 --   	endsAt = "2026-11-27 18:00",       -- sem = não acaba
@@ -31,7 +31,7 @@ local Bundles: { Types.BundleDef } = {
 		id = "brasa",
 		nameKey = "shop.bundle.brasa",
 		theme = "#B8361A",
-		rarity = 5,
+		rarity = 6,
 		robux = 399,
 		startsAt = "2026-11-09 00:00",
 		endsAt = "2026-11-11 10:00",
@@ -47,7 +47,7 @@ local Bundles: { Types.BundleDef } = {
 		id = "geada",
 		nameKey = "shop.bundle.geada",
 		theme = "#2F7FD8",
-		rarity = 4,
+		rarity = 5,
 		robux = 349,
 		startsAt = "2026-11-09 00:00",
 		endsAt = "2026-11-14 02:40",
@@ -63,7 +63,7 @@ local Bundles: { Types.BundleDef } = {
 		id = "musgo",
 		nameKey = "shop.bundle.musgo",
 		theme = "#4E9A2E",
-		rarity = 2,
+		rarity = 3,
 		robux = 299,
 		startsAt = "2026-11-09 00:00",
 		endsAt = "2026-11-10 12:05",

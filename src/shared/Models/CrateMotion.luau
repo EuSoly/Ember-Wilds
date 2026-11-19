@@ -17,6 +17,7 @@ local PHASE_STEP = 2.1 -- radianos entre uma peça e a próxima do mesmo tipo
 
 export type Motion =
 	{ kind: "spin", speed: number }
+	| { kind: "bloom", phase: number }
 	| {
 		kind: "bob",
 		amplitude: number,
@@ -33,6 +34,9 @@ local BOB_GROUPS = { pena = 0, nuvem = 0.7, cristal = 1.4 } :: { [string]: numbe
 
 -- Movimento da peça com este papel; nil = fica parada.
 function CrateMotion.of(papel: string): Motion?
+	if papel == "anim_semente_01" or papel == "anim_semente_02" then
+		return { kind = "bloom", phase = if papel == "anim_semente_01" then 0 else math.pi / 2 }
+	end
 	local speed = SPIN[papel]
 	if speed then
 		return { kind = "spin", speed = speed }
@@ -53,6 +57,9 @@ end
 -- Pose no tempo `t` (segundos): giro em volta do eixo vertical (radianos) e
 -- subida (studs), somados à posição de descanso.
 function CrateMotion.pose(motion: Motion, t: number): (number, number)
+	if motion.kind == "bloom" then
+		return 0, 0
+	end
 	if motion.kind == "spin" then
 		return motion.speed * t, 0
 	end
