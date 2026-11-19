@@ -1,5 +1,8 @@
 --!strict
+local Bundles = require("../src/shared/Shop/Bundles")
+local BundleSkins = require("../src/shared/UIFlow/BundleSkins")
 local CosmeticCatalog = require("../src/shared/UIFlow/CosmeticCatalog")
+local Defs = require("../src/shared/Defs")
 
 local function numbers(n: number): { number }
 	local list = {}
@@ -12,12 +15,86 @@ end
 return {
 	["items body starts at default and rarity never decreases"] = function()
 		local items = CosmeticCatalog.items("body")
-		assert(#items == 47, `esperava 47 skins de corpo liberadas, veio {#items}`)
+		-- 47 liberadas + 2 de pacote `unreleased` (body_lula, body_toco).
+		assert(#items == 49, `esperava 49 skins de corpo na grade, veio {#items}`)
 		assert(items[1].id == "body_default", "primeiro deve ser body_default")
 		for i = 2, #items do
 			assert(items[i].rarity >= items[i - 1].rarity, "raridade decresceu")
-			assert(items[i].unreleased ~= true, `{items[i].id} não devia aparecer sem posse`)
+			assert(
+				items[i].unreleased ~= true or BundleSkins.has(items[i].id),
+				`{items[i].id} não devia aparecer sem posse`
+			)
 		end
+	end,
+
+	["bundle skins show locked even when unreleased; other unreleased stay hidden"] = function()
+		-- Toda skin de pacote da loja aparece na grade (trancada) sem posse,
+		-- em qualquer slot; `unreleased` fora de pacote continua escondida.
+		local inBundle = BundleSkins.fromBundles(Bundles)
+		for _, slot in { "body", "bag", "book", "crate", "accessory" } do
+			local seen: { [string]: boolean } = {}
+			for _, def in CosmeticCatalog.items(slot) do
+				seen[def.id] = true
+				assert(def.unreleased ~= true or inBundle[def.id], `{def.id} unreleased sem pacote apareceu`)
+			end
+			for id in inBundle do
+				local def = Defs.Cosmetics[id]
+				if def and def.slot == slot then
+					assert(seen[id], `{id} (de pacote) devia aparecer na grade de {slot}`)
+				end
+			end
+		end
+		assert(not BundleSkins.has("body_dragao"), "dragão não é de pacote")
+		local visible = CosmeticCatalog.items("body")
+		for _, def in visible do
+			assert(def.id ~= "body_dragao", "body_dragao (unreleased, sem pacote) continua escondida")
+		end
+	end,
+
+	["bundle skins never enter spins through unreleased"] = function()
+		-- As de pacote `unreleased` agora estão em items(), mas não nas roletas.
+		for _, slot in { "body", "bag", "book", "crate" } do
+			for _, item in CosmeticCatalog.spinItems(slot) do
+				local def = Defs.Cosmetics[item.id]
+				assert(def.unreleased ~= true, `{item.id} unreleased entrou no giro`)
+			end
+		end
+	end,
+
+	["fromBundles ignores drafts, unpriced bundles and non-cosmetic rewards"] = function()
+		local set = BundleSkins.fromBundles({
+			{
+				id = "a",
+				nameKey = "x",
+				theme = "#000000",
+				rarity = 1,
+				robux = 99,
+				rewards = {
+					{ kind = "cosmetic", id = "body_a" },
+					{ kind = "ember", amount = 10 },
+					{ kind = "kit", id = "kit_x" },
+				},
+			},
+			{
+				id = "b",
+				nameKey = "x",
+				theme = "#000000",
+				rarity = 1,
+				robux = 99,
+				rascunho = true,
+				rewards = { { kind = "cosmetic", id = "body_b" } },
+			},
+			{
+				id = "c",
+				nameKey = "x",
+				theme = "#000000",
+				rarity = 1,
+				rewards = { { kind = "cosmetic", id = "body_c" } },
+			},
+		})
+		assert(set.body_a == true, "skin do pacote à venda entra")
+		assert(set.body_b == nil and set.body_c == nil, "rascunho/sem preço não contam")
+		assert(set.kit_x == nil, "kit não é skin")
 	end,
 
 	["items includes unreleased skins only when owned"] = function()
@@ -28,7 +105,7 @@ return {
 		local withOne = CosmeticCatalog.items("body", function(id: string)
 			return id == "body_dragao"
 		end)
-		assert(#withOne == 48, `esperava 48 skins com body_dragao possuído, veio {#withOne}`)
+		assert(#withOne == 50, `esperava 50 skins com body_dragao possuído, veio {#withOne}`)
 	end,
 
 	["owned skins come first, then rarity"] = function()

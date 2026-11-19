@@ -12,6 +12,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local Banner = require(script.Parent:WaitForChild("Banner"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
@@ -69,7 +70,7 @@ function BoostCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 		button = GiftPanel.attach(
 			product.id,
 			ShopParts.priceButton({
-				robux = product.price.amount,
+				robux = LivePrices.of(product.id), -- preço do Roblox (o do código até chegar)
 				onClick = function()
 					Purchase.buy(product.id)
 				end,

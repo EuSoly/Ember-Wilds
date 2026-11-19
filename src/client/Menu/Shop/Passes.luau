@@ -18,6 +18,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
@@ -189,7 +190,7 @@ local function card(pass: Pass, order: number, compact: () -> boolean): Frame
 		GiftPanel.attach(
 			pass.product.id,
 			ShopParts.priceButton({
-				robux = pass.product.price.amount,
+				robux = LivePrices.of(pass.product.id), -- preço do Roblox (o do código até chegar)
 				owned = owned,
 				onClick = function()
 					Purchase.buy(pass.product.id)

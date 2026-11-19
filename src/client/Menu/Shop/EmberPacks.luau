@@ -13,6 +13,7 @@ local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local UiImages = require(Shared:WaitForChild("UiImages"))
 local ShopImages = require(Shared:WaitForChild("ShopImages"))
+local LivePrices = require(script.Parent.Parent.Parent:WaitForChild("LivePrices"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local GiftPanel = require(script.Parent:WaitForChild("GiftPanel"))
@@ -141,7 +142,7 @@ local function smallCard(pack: ShopConfig.EmberPack, index: number, paged: () ->
 		GiftPanel.attach(
 			`pack_{pack.amount}`,
 			ShopParts.priceButton({
-				robux = pack.robux,
+				robux = LivePrices.of(`pack_{pack.amount}`, pack.robux), -- preço do Roblox (o do código até chegar)
 				onClick = function()
 					buy(pack)
 				end,
@@ -187,7 +188,7 @@ local function wideCard(pack: ShopConfig.EmberPack, index: number): Frame
 		GiftPanel.attach(
 			`pack_{pack.amount}`,
 			ShopParts.priceButton({
-				robux = pack.robux,
+				robux = LivePrices.of(`pack_{pack.amount}`, pack.robux), -- preço do Roblox (o do código até chegar)
 				onClick = function()
 					buy(pack)
 				end,

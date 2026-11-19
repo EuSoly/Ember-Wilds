@@ -20,6 +20,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ClientShop = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local PopIn = require(Client:WaitForChild("UI"):WaitForChild("PopIn"))
 local ScreenMetrics = require(Client:WaitForChild("UI"):WaitForChild("ScreenMetrics"))
@@ -253,10 +254,15 @@ function GiftPanel.build(): Frame
 		task.defer(refreshRoster)
 	end)
 
+	-- Quem paga compra o "Presente: X" (RobloxIds.GIFT), outro produto com
+	-- preço próprio no Roblox: mostra o dele (o do código até chegar).
 	local function price(): number
 		local productId = current()
 		local product = if productId then Products.get(productId) else nil
-		return if product then product.price.amount else 0
+		if productId == nil or product == nil then
+			return 0
+		end
+		return LivePrices.robux(productId, product.price.amount, true)
 	end
 	local function canSend(): boolean
 		local userId = chosen()

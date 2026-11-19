@@ -3,13 +3,15 @@
 -- da tela de Cosméticos e a lista no painel da skin escolhida.
 --   "animated" (Animada): a skin tem peças que se mexem (Models/SkinMotion)
 --   "effects"  (Efeitos): a mochila solta partículas (BagFxConfig)
---   "limited"  (Limitada): marcada à mão no Defs/Cosmetics (`tags`), skin
---              que não volta (evento, pacote...)
+--   "limited"  (Limitada): skin que não volta. Sai sozinha para toda skin
+--              de pacote da loja (UIFlow/BundleSkins, lido de Shop/Bundles);
+--              para outras (evento...), marca à mão no Defs/Cosmetics (`tags`)
 -- Animada e Efeitos saem sozinhas: skin nova com animação ou partículas
 -- ganha a etiqueta sem ninguém marcar. Limitada fica no canto de cima à
 -- direita; Animada (ou, sem ela, Efeitos) no de cima à esquerda (pedido do
 -- Elizeu, 18/11/2026).
 local BagFxConfig = require("../BagFxConfig")
+local BundleSkins = require("./BundleSkins")
 local SkinMotion = require("../Models/SkinMotion")
 local Types = require("../Defs/Types")
 
@@ -34,16 +36,22 @@ local function marked(def: Types.CosmeticDef, tag: string): boolean
 	return tags ~= nil and table.find(tags, tag) ~= nil
 end
 
+-- Limitada: marcada à mão ou vinda de pacote da loja (pacote futuro já ganha
+-- a etiqueta só de entrar em Shop/Bundles).
+local function limited(def: Types.CosmeticDef): boolean
+	return marked(def, "limited") or BundleSkins.has(def.id)
+end
+
 -- O que vai em cada canto do quadradinho.
 function CosmeticTags.of(def: Types.CosmeticDef): Corners
 	local left: Tag? = if animated(def.id) then "animated" elseif effects(def.id) then "effects" else nil
-	return { limited = marked(def, "limited"), left = left }
+	return { limited = limited(def), left = left }
 end
 
 -- Todas as etiquetas, na ordem do painel: Limitada, Animada, Efeitos.
 function CosmeticTags.list(def: Types.CosmeticDef): { Tag }
 	local list: { Tag } = {}
-	if marked(def, "limited") then
+	if limited(def) then
 		table.insert(list, "limited")
 	end
 	if animated(def.id) then

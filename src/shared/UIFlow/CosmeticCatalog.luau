@@ -1,6 +1,7 @@
 --!strict
 -- Catálogo dos cosméticos (puro, sem Roblox): lê Defs.Cosmetics e entrega as
 -- listas já ordenadas para a tela de Cosméticos e para o carrossel da loja.
+local BundleSkins = require("./BundleSkins")
 local Defs = require("../Defs")
 local Types = require("../Defs/Types")
 
@@ -35,14 +36,20 @@ end
 -- liberou vêm antes das trancadas (pedido do Elizeu, 18/11/2026); cada grupo
 -- da mais comum para a mais rara. Sem `owns`, esconde as skins `unreleased`
 -- (ainda não lançadas no update atual); com `owns`, quem já tem uma skin
--- `unreleased` continua vendo ela na grade para poder equipar.
+-- `unreleased` continua vendo ela na grade para poder equipar. Skin de pacote
+-- da loja (UIFlow/BundleSkins) aparece sempre, trancada para quem não tem,
+-- mesmo `unreleased`: ela se ganha comprando o pacote, então precisa estar
+-- na grade como as outras (o `unreleased` dela só a tira das roletas).
 function CosmeticCatalog.items(slot: string, owns: ((id: string) -> boolean)?): { CosmeticDef }
 	local slotDef = Defs.CosmeticSlots[slot]
 	local defaultId = slotDef and slotDef.default
 	local list: { CosmeticDef } = {}
 	for _, def in Defs.Cosmetics do
 		if def.slot == slot then
-			local visible = def.id == defaultId or def.unreleased ~= true or (owns ~= nil and owns(def.id))
+			local visible = def.id == defaultId
+				or def.unreleased ~= true
+				or BundleSkins.has(def.id)
+				or (owns ~= nil and owns(def.id))
 			if visible then
 				table.insert(list, def)
 			end
@@ -77,7 +84,9 @@ end
 
 -- Skins que podem sair no giro da loja. A padrão do slot só entra com
 -- inSpins == true; as demais liberadas saem, a menos que inSpins == false.
--- Skins `unreleased` (de updates futuros) nunca entram no giro.
+-- Skins `unreleased` (de updates futuros) nunca entram no giro. Como items()
+-- agora também devolve as skins de pacote `unreleased` (sem `owns`), é o
+-- teste de `unreleased` abaixo que as mantém fora das roletas.
 function CosmeticCatalog.spinItems(slot: string): { SpinItem }
 	local slotDef = Defs.CosmeticSlots[slot]
 	local list: { SpinItem } = {}

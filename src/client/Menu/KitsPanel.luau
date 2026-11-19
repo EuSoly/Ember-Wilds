@@ -25,6 +25,7 @@ local ItemIcon = require(Client:WaitForChild("UI"):WaitForChild("ItemIcon"))
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local KitList = require(Client:WaitForChild("Screens"):WaitForChild("KitList"))
 local KitShop = require(script.Parent:WaitForChild("KitShop"))
 local GiftPanel = require(script.Parent:WaitForChild("Shop"):WaitForChild("GiftPanel"))
@@ -118,7 +119,12 @@ local function buyButtons(kit: Defs.KitDef, points: () -> number, visible: () ->
 			third(2, {
 				Name = "RobuxOnce",
 				kind = "leather",
-				text = Strings.format("kit.robux", { price = if robux then robux.once else 0 }),
+				-- Preço que o Roblox cobra deste jogador (o do código até chegar).
+				text = function()
+					return Strings.format("kit.robux", {
+						price = LivePrices.robux(`kitonce_{kit.id}`, if robux then robux.once else nil),
+					})
+				end,
 				subtext = Strings.get("kit.once"),
 				Activated = function()
 					KitShop.buyOnce(kit.id)
@@ -137,7 +143,9 @@ local function buyButtons(kit: Defs.KitDef, points: () -> number, visible: () ->
 					if ShopData.kitOwned(kit.id) then
 						return Strings.get("shop.bundle.bought")
 					end
-					return Strings.format("kit.robux", { price = if robux then robux.forever else 0 })
+					return Strings.format("kit.robux", {
+						price = LivePrices.robux(`kit_{kit.id}`, if robux then robux.forever else nil),
+					})
 				end,
 				subtext = Strings.get("kit.forever"),
 				Activated = function()

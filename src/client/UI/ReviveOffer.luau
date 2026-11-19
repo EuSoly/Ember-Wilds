@@ -24,6 +24,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent
 local Net = require(Client:WaitForChild("Net"))
 local ScreenState = require(Client:WaitForChild("ScreenState"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
 
 local create = vide.create
@@ -371,7 +372,9 @@ function ReviveOffer.build(place: { [string]: any }, layout: () -> DeathLayout.L
 					end,
 					Text = function()
 						local o = offer()
-						return if o then Strings.format("revive.price", { price = o.Robux }) else ""
+						-- O servidor manda o preço do degrau; a tela mostra o que o
+						-- Roblox cobra deste jogador no produto do degrau (revive_N).
+						return if o then Strings.format("revive.price", { price = LivePrices.revive(o.Robux) }) else ""
 					end,
 					maxSize = 36,
 				}),

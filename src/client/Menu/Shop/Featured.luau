@@ -17,6 +17,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local ShopParts = require(script.Parent:WaitForChild("ShopParts"))
 local BundleBanner = require(script.Parent:WaitForChild("BundleBanner"))
@@ -157,7 +158,7 @@ local function slide(product: Products.Product, visible: () -> boolean, now: () 
 		GiftPanel.attach(
 			product.id,
 			ShopParts.priceButton({
-				robux = product.price.amount,
+				robux = LivePrices.of(product.id), -- preço do Roblox (o do código até chegar)
 				owned = function()
 					return ShopData.purchased(product.id)
 				end,

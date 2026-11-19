@@ -16,6 +16,7 @@ local Theme = require(Shared:WaitForChild("Theme"))
 local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
 local Banner = require(script.Parent:WaitForChild("Banner"))
 
@@ -35,7 +36,13 @@ end
 function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 	local product = Products.get("vip_30d")
 	assert(product, "produto vip_30d sumiu de Shop/Products")
-	local price = product.price.amount
+	-- Preço da assinatura que o Roblox devolve para este jogador (preço por
+	-- região; exigência do Creator Hub para a assinatura). DisplayPrice já vem
+	-- com a moeda; sem ele, o símbolo do Robux e o número (o do código até
+	-- chegar). Ver LivePrices.
+	local function price(): string
+		return LivePrices.label(product.id)
+	end
 
 	local button = Rustic.button({
 		Name = "Buy",
@@ -43,9 +50,9 @@ function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 		kind = "green",
 		text = function()
 			if VipCard.active() then
-				return Strings.format("shop.vip.renew", { price = price })
+				return Strings.format("shop.vip.renew", { price = price() })
 			end
-			return Strings.format("kit.robux", { price = price })
+			return price()
 		end,
 		maxSize = 22,
 		Activated = function()
@@ -80,7 +87,7 @@ function VipCard.build(frame: { [any]: any }, compact: () -> boolean): Frame
 					if VipCard.active() then
 						return Strings.format("shop.vip.active", { date = ShopDates.dayMonth(ShopData.vipUntil()) })
 					end
-					return Strings.format("shop.vip.month", { price = price })
+					return Strings.format("shop.vip.month", { price = price() })
 				end,
 				-- Celular: com VIP a data; sem VIP, os benefícios em poucas palavras.
 				compactText = function()

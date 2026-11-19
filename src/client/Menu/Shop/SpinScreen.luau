@@ -24,6 +24,7 @@ local Client = script.Parent.Parent.Parent
 local Rustic = require(Client:WaitForChild("UI"):WaitForChild("Rustic"))
 local Sources = require(Client:WaitForChild("UI"):WaitForChild("Sources"))
 local ShopData = require(Client:WaitForChild("ShopData"))
+local LivePrices = require(Client:WaitForChild("LivePrices"))
 local Net = require(Client:WaitForChild("Net"))
 local MenuState = require(script.Parent.Parent:WaitForChild("MenuState"))
 local Purchase = require(script.Parent.Parent:WaitForChild("Purchase"))
@@ -199,7 +200,8 @@ local function side(
 				GiftPanel.attach(
 					`spins_{kind}_{offer.qty}`,
 					ShopParts.priceButton({
-						robux = if paid then offer.price else nil,
+						-- Giro especial: preço do Roblox (o do código até chegar).
+						robux = if paid then LivePrices.of(`spins_{kind}_{offer.qty}`, offer.price) else nil,
 						ember = if paid then nil else offer.price,
 						missing = if paid
 							then nil

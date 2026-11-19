@@ -1053,7 +1053,7 @@ return table.freeze({
 	["shop.premium.short"] = "+20% Golden Ember",
 	["shop.vip.month"] = "{price} por mês",
 	["shop.vip.active"] = "VIP ativo até {date}",
-	["shop.vip.renew"] = "Renovar \u{E002} {price}",
+	["shop.vip.renew"] = "Renovar {price}", -- {price} já vem com a moeda (LivePrices.label)
 	["shop.boost.desc"] = "Dobra o XP que você ganha. +1 h a cada compra.",
 	["shop.boost.left"] = "Faltam {time}",
 	["shop.premium.title"] = "Roblox Premium",
