@@ -280,7 +280,14 @@ local function fromTemplate(template: Model, def: Types.ResourceDef, scale: numb
 		end
 	end
 	local boxCFrame = model:GetBoundingBox()
-	local foot = if def.id == "tree" and lowest then lowest.Position else boxCFrame.Position
+	-- Um Attachment "Foot" no modelo marca o pé à mão (o ScaleTo já o moveu
+	-- junto): malha de uma peça só com o tronco fora do centro, como a palmeira
+	-- inclinada (scripts/studio/import-praia.luau acha o pé pelos vértices).
+	local footMark = model:FindFirstChild("Foot", true)
+	local foot = if footMark and footMark:IsA("Attachment")
+		then footMark.WorldPosition
+		elseif def.id == "tree" and lowest then lowest.Position
+		else boxCFrame.Position
 	local height = maxY - minY
 
 	for _, part in parts do

@@ -32,6 +32,8 @@ local PAINTED_ATTRIBUTE = "Painted"
 -- Pasta de Map/NoSpawn com Sand = true: as peças dela são a areia das margens
 -- (a pá cava areia ali, não terra; DigRules).
 local SAND_ATTRIBUTE = "Sand"
+-- Pasta de Map com areia que não bloqueia recurso (a praia; veja Init).
+local SAND_FOLDER = "Sand"
 
 local MapService = {}
 
@@ -244,6 +246,13 @@ function MapService.Init(_self)
 		if noSpawn and marked(part, noSpawn, SAND_ATTRIBUTE) then
 			table.insert(sandShapes, shape)
 		end
+	end)
+	-- Map/Sand: areia que NÃO bloqueia o espalhador (a praia, onde nascem
+	-- palmeiras, conchas e montinhos pela zona "beach"). A pá cava areia e não
+	-- se planta, como na areia das margens (que fica no NoSpawn).
+	readShapes(map:FindFirstChild(SAND_FOLDER), function(part, shape)
+		hideMarker(part)
+		table.insert(sandShapes, shape)
 	end)
 
 	local zones = readZones(map:FindFirstChild("Zones"))

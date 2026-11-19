@@ -169,12 +169,19 @@ for iz = -1, 4 do
 	end
 end
 
--- Marcadores Sand: da beira da água até SAND_MARK studs terra adentro (a areia
--- pintada tem 38 a 50): a pá cava areia, nada nasce, não se planta.
-local oldBeach = noSpawn:FindFirstChild("Praia")
-if oldBeach then
-	oldBeach:Destroy()
+-- Marcadores de areia: da beira da água até SAND_MARK studs terra adentro (a
+-- areia pintada tem 38 a 50): a pá cava areia e não se planta. Ficam em
+-- Map/Sand (não no NoSpawn): ali nascem as palmeiras e enfeites da zona
+-- "beach" (MapService, 19/11).
+for _, folder in { noSpawn, map:FindFirstChild("Sand") } do
+	local oldBeach = folder and folder:FindFirstChild("Praia")
+	if oldBeach then
+		oldBeach:Destroy()
+	end
 end
+local sandFolder = map:FindFirstChild("Sand") or Instance.new("Folder")
+sandFolder.Name = "Sand"
+sandFolder.Parent = map
 local beachMarks = Instance.new("Folder")
 beachMarks.Name = "Praia"
 beachMarks:SetAttribute("Sand", true)
@@ -192,7 +199,33 @@ ring(sandInner, LAND, function(name, minX, maxX, minZ, maxZ)
 	part:SetAttribute("Sand", true)
 	part.Parent = beachMarks
 end)
-beachMarks.Parent = noSpawn
+beachMarks.Parent = sandFolder
+
+-- Zonas "beach" (palmeiras, montinhos de areia e conchas: Defs/ResourceZones)
+-- na faixa de areia, a 4 studs da água e sem os cantos (a costa pintada é
+-- redonda ali e o recurso cairia na água desenhada).
+local zones = map:WaitForChild("Zones")
+local oldZones = zones:FindFirstChild("Praia")
+if oldZones then
+	oldZones:Destroy()
+end
+local beachZones = Instance.new("Folder")
+beachZones.Name = "Praia"
+local zoneInner = sandInner
+local zoneOuter = { minX = LAND.minX + 4, maxX = LAND.maxX - 4, minZ = LAND.minZ + 4, maxZ = LAND.maxZ - 4 }
+local function zoneStrip(name: string, minX: number, maxX: number, minZ: number, maxZ: number)
+	local part = flat(name, minX, maxX, minZ, maxZ, 0.4, 0.3)
+	part.CanCollide = false
+	part.Transparency = 0.7
+	part.Color = Color3.fromHex("e8c070")
+	part:SetAttribute("ZoneType", "beach")
+	part.Parent = beachZones
+end
+zoneStrip("Norte", zoneInner.minX, zoneInner.maxX, zoneOuter.minZ, zoneInner.minZ)
+zoneStrip("Sul", zoneInner.minX, zoneInner.maxX, zoneInner.maxZ, zoneOuter.maxZ)
+zoneStrip("Oeste", zoneOuter.minX, zoneInner.minX, zoneInner.minZ, zoneInner.maxZ)
+zoneStrip("Leste", zoneInner.maxX, zoneOuter.maxX, zoneInner.minZ, zoneInner.maxZ)
+beachZones.Parent = zones
 
 -- 3. Chão de mar em 4 placas (o Roblox limita peça a 2048 de lado). Topo em
 -- -0,2: abaixo do chão da terra (0), sem brigar com ele.
