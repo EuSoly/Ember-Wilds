@@ -1548,6 +1548,16 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 1,
 		handModel = true,
 	},
+	-- Garrafas (config oficial do Starve: bottle_empty = 25 areias na bancada + fogo;
+	-- bottle_full = 1 bottle_empty perto da água, mata 50 de sede).
+	bottle_empty = { id = "bottle_empty", nameKey = "item.bottle_empty", category = "misc", maxStack = 255 },
+	bottle_full = {
+		id = "bottle_full",
+		nameKey = "item.bottle_full",
+		category = "food",
+		maxStack = 255,
+		food = { thirst = 50, crumbColor = "#9FD8F0" },
+	},
 	paper = { id = "paper", nameKey = "item.paper", category = "resource", maxStack = 255 },
 	-- Cavados com a pá (DigRules): terra no chão da floresta, areia nas margens.
 	ground = { id = "ground", nameKey = "item.ground", category = "resource", maxStack = 255 },
