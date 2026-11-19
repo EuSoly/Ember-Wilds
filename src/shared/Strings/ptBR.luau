@@ -848,7 +848,7 @@ return table.freeze({
 	["revive.free"] = "GRÁTIS",
 	["revive.accept"] = "REVIVER",
 	["revive.decline"] = "Não, obrigado",
-	["ember.tag.2x"] = "2×",
+	["ember.tag.2x"] = "2x", -- a fonte de números não tem o "×"
 	["ember.tag.vip"] = "VIP +50%",
 	["ember.tag.premium"] = "Premium +20%",
 	["death.cause.dev"] = "Teste",

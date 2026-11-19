@@ -139,7 +139,7 @@ return {
 	["stacked summary grows by the ember tags row"] = function()
 		-- O resumo empilhado tinha 210 com o espaço vazio de 6; a linha de
 		-- etiquetas tem 20 (cresce 14).
-		assert(DeathLayout.EMBER_TAGS_EMPTY == 6 and DeathLayout.EMBER_TAGS_ROW == 20, "linha de etiquetas")
+		assert(DeathLayout.EMBER_TAGS_EMPTY == 6 and DeathLayout.EMBER_TAGS_ROW == 30, "linha de etiquetas")
 		assert(
 			DeathLayout.SUMMARY_STACKED == 210 + DeathLayout.EMBER_TAGS_ROW - DeathLayout.EMBER_TAGS_EMPTY,
 			`resumo empilhado {DeathLayout.SUMMARY_STACKED}`

@@ -3,7 +3,10 @@
 -- a mochila (temos hotbar e inventário próprios) e a barra de vida (temos os anéis).
 -- O botão "Reset Character" do menu do Roblox passa pelo DeathService do jogo,
 -- que só reseta depois de 10 s parado; a contagem fica em UI/ResetCountdown.
--- O chat padrão continua ligado.
+-- O chat padrão continua ligado. No celular o jogo só roda deitado
+-- (LandscapeSensor: vira entre as duas horizontais, nunca em pé); o
+-- StarterGui do projeto já vem assim e aqui garante no PlayerGui.
+local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 
 local Net = require(script.Parent.Parent:WaitForChild("Net"))
@@ -26,6 +29,16 @@ local function retry(call: () -> ())
 end
 
 function CoreGuiController.Start(_self)
+	-- O PlayerGui copia a orientação do StarterGui ao entrar, às vezes depois
+	-- deste script: se trocar para outra, volta para a horizontal.
+	local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui") :: PlayerGui
+	local function landscape()
+		if playerGui.ScreenOrientation ~= Enum.ScreenOrientation.LandscapeSensor then
+			playerGui.ScreenOrientation = Enum.ScreenOrientation.LandscapeSensor
+		end
+	end
+	landscape()
+	playerGui:GetPropertyChangedSignal("ScreenOrientation"):Connect(landscape)
 	task.spawn(function()
 		for _, coreGuiType in DISABLED do
 			retry(function()

@@ -118,58 +118,81 @@ type Shown = {
 local TAG_HEIGHT = DeathLayout.EMBER_TAGS_ROW - 4
 
 -- Linha de etiquetas ao lado da Golden Ember. Três etiquetas fixas, cada uma
--- visível pelo seu bit; com a arte (MULTIPLIER_TAG) vira 9-slice, senão é uma
--- placa de brasa feita por código.
+-- visível pelo seu bit: placa de brasa (degradê, contorno escuro) com texto
+-- creme contornado, para destacar no papel claro do resumo. A arte 19
+-- (MULTIPLIER_TAG) era clara demais no papel e saiu em 18/11/2026. A do 2×
+-- leva o ícone da gamepass.
 local function emberTags(bonus: () -> number): Frame
-	local withArt = MonetizationImages.has(MonetizationImages.MULTIPLIER_TAG)
 	local children: { Instance } = {
 		create("UIListLayout")({
 			FillDirection = Enum.FillDirection.Horizontal,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			VerticalAlignment = Enum.VerticalAlignment.Center,
-			Padding = UDim.new(0, 4),
+			Padding = UDim.new(0, 6),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 	}
 	local keys = { "ember.tag.2x", "ember.tag.vip", "ember.tag.premium" }
+	local icons: { [string]: string } = { ["ember.tag.2x"] = MonetizationImages.EMBER_2X }
 	for index, key in keys do
-		local tag = create(if withArt then "ImageLabel" else "Frame")({
+		local icon = icons[key]
+		local tag = create("Frame")({
 			Name = `Tag{index}`,
 			LayoutOrder = index,
 			AutomaticSize = Enum.AutomaticSize.X,
 			Size = UDim2.fromOffset(0, TAG_HEIGHT),
-			BackgroundColor3 = R.ember,
-			BackgroundTransparency = if withArt then 1 else 0,
+			BackgroundColor3 = Color3.new(1, 1, 1),
 			BorderSizePixel = 0,
 			Visible = function()
 				return table.find(ReviveRules.emberTagKeys(bonus()), key) ~= nil
 			end,
-			create("UICorner")({ CornerRadius = UDim.new(0, 4) }),
-			create("UIPadding")({ PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6) }),
+			create("UICorner")({ CornerRadius = UDim.new(0, 7) }),
+			create("UIGradient")({
+				Rotation = 90,
+				Color = ColorSequence.new(R.emberLight, R.emberShadow),
+			}),
+			create("UIStroke")({
+				Color = R.outline,
+				Thickness = 2,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			}),
+			create("UIPadding")({
+				PaddingLeft = UDim.new(0, if icon then 3 else 8),
+				PaddingRight = UDim.new(0, 8),
+			}),
+			create("UIListLayout")({
+				FillDirection = Enum.FillDirection.Horizontal,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				Padding = UDim.new(0, 3),
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}),
+			create("ImageLabel")({
+				Name = "Icon",
+				LayoutOrder = 1,
+				Visible = icon ~= nil and MonetizationImages.has(icon),
+				Size = UDim2.fromOffset(TAG_HEIGHT - 2, TAG_HEIGHT - 2),
+				BackgroundTransparency = 1,
+				Image = icon or "",
+				ScaleType = Enum.ScaleType.Fit,
+			}),
 			Rustic.label({
 				Name = "TagLabel",
+				LayoutOrder = 2,
 				AutomaticSize = Enum.AutomaticSize.X,
 				Size = UDim2.fromScale(0, 1),
 				TextScaled = false,
-				TextSize = 12,
+				TextSize = 17,
+				maxSize = 17,
 				FontFace = Theme.font.number,
-				TextColor3 = if withArt then R.cream else R.charcoal,
+				TextColor3 = R.cream,
 				Text = Strings.get(key),
+				create("UIStroke")({
+					Color = R.outline,
+					Thickness = 1.5,
+					ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+				}),
 			}),
 		})
-		if withArt then
-			local image = tag :: ImageLabel
-			image.Image = MonetizationImages.MULTIPLIER_TAG
-			image.ScaleType = Enum.ScaleType.Slice
-			image.SliceCenter = MonetizationImages.MULTIPLIER_TAG_SLICE
-		else
-			local stroke = create("UIStroke")({
-				Color = R.outline,
-				Thickness = 1.5,
-				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			})
-			stroke.Parent = tag
-		end
 		table.insert(children, tag)
 	end
 	return create("Frame")({
@@ -267,6 +290,9 @@ local function summary(shown: Shown, rect: () -> DeathLayout.Rect): Frame
 				Size = UDim2.fromScale(0, 1),
 				TextScaled = false,
 				TextSize = 22,
+				-- Sem quebra: com AutomaticSize, a largura às vezes era medida antes
+				-- da fonte carregar e o "Ember" caía para uma 2ª linha cortada.
+				TextWrapped = false,
 				FontFace = Theme.font.number,
 				TextColor3 = R.emberShadow,
 				Text = function()

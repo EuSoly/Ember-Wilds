@@ -52,7 +52,7 @@ DeathLayout.KIT_LIST_INSET = 3
 -- Linha das etiquetas da Golden Ember no resumo (2×, VIP, Premium): sem
 -- nenhuma é só um espaço; com alguma, a altura da etiqueta + 4.
 DeathLayout.EMBER_TAGS_EMPTY = 6
-DeathLayout.EMBER_TAGS_ROW = 20
+DeathLayout.EMBER_TAGS_ROW = 30
 -- Altura do resumo quando empilhado (no largo ocupa a coluna inteira): 210
 -- com o espaço vazio, mais o que a linha das etiquetas cresce.
 DeathLayout.SUMMARY_STACKED = 210 + DeathLayout.EMBER_TAGS_ROW - DeathLayout.EMBER_TAGS_EMPTY
