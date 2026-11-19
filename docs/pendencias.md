@@ -6,23 +6,23 @@ Arestas que as revisões e os testes acharam e que não bloquearam o merge da fa
 
 Pedidos do Elizeu depois de jogar com um amigo (decisões já tomadas entre parênteses):
 
-- **Mochila (decidido):** a mochila como item sai por enquanto; todo mundo tem 16 espaços (10 da hotbar + 6) e o VIP soma 3. Botão de abrir o painel no PC, à direita da hotbar (hoje só tecla B). Skins de mochila continuam (visual).
-- **Curativo:** o Elizeu faz o modelo 3D e importa em `Assets.Icons.bandage`.
-- **Inventário cheio:** conferir todos os casos (coletar, craftar, saquear caixa, baú, pegar do chão, colher, kit, revive, recompensas) — nunca perder item em silêncio, sempre avisar.
-- **Soltar item arrastando:** arrastar o item para fora do inventário não solta no chão no jogo publicado (no Studio solta); só o botão direito funciona.
-- **Golpe em vários alvos:** o golpe deve acertar mais de uma hitbox por vez (hoje acerta uma).
-- **Dano mínimo (decidido: sempre passa 25%):** a defesa reduz, mas todo golpe causa pelo menos 25% do dano original. Substitui a pendência "Dano mínimo garantido" lá embaixo.
-- **Vida:** conferir a regeneração e criar o curativo (bandage do Starve).
-- **Frutinhas dão água** (um pouco de sede além da fome).
-- **Poço:** gera água com o tempo; o balde acelera — dá para encher o balde e despejar no poço.
-- **Baú com 3 espaços** (decidido: guarda 3 tipos de item, cada um uma pilha).
-- **Mais mobs:** aumentar um pouco a população, porque o mapa cresceu (praia).
-- **Receitas:** conferir todos os crafts dos itens liberados aos jogadores.
-- **Minimapa:** mostrar onde o jogador colocou construções.
-- **Receita fixada:** mostrar as bancadas/fogo/água que o craft exige.
-- **Dados com 2 jogadores:** conferir o perfil salvo com dois jogadores ao mesmo tempo.
-- **Lista de jogadores** no jogo.
-- **Garrafa de vidro e garrafa de água**, no padrão dos outros itens (modelos `bottle_empty`/`bottle_full` vieram no pacote da fazenda).
+- ~~**Mochila (decidido):** a mochila como item sai por enquanto; todo mundo tem 16 espaços (10 da hotbar + 6) e o VIP soma 3. Botão de abrir o painel no PC, à direita da hotbar (hoje só tecla B). Skins de mochila continuam (visual).~~ (19/11; falta só conferir visualmente no Studio)
+- **Curativo:** o Elizeu faz o modelo 3D e importa em `Assets.Icons.bandage` (item e receita `bandage` prontos em 19/11).
+- ~~**Inventário cheio:** conferir todos os casos (coletar, craftar, saquear caixa, baú, pegar do chão, colher, kit, revive, recompensas) — nunca perder item em silêncio, sempre avisar.~~ (19/11)
+- ~~**Soltar item arrastando:** arrastar o item para fora do inventário não solta no chão no jogo publicado (no Studio solta); só o botão direito funciona.~~ (19/11; falta publicar e conferir no jogo publicado)
+- ~~**Golpe em vários alvos:** o golpe deve acertar mais de uma hitbox por vez (hoje acerta uma).~~ (19/11)
+- ~~**Dano mínimo (decidido: sempre passa 25%):** a defesa reduz, mas todo golpe causa pelo menos 25% do dano original. Substitui a pendência "Dano mínimo garantido" lá embaixo.~~ (19/11)
+- ~~**Vida:** conferir a regeneração e criar o curativo (bandage do Starve).~~ (19/11)
+- ~~**Frutinhas dão água** (um pouco de sede além da fome).~~ (19/11)
+- ~~**Poço:** gera água com o tempo; o balde acelera — dá para encher o balde e despejar no poço.~~ (19/11)
+- ~~**Baú com 3 espaços** (decidido: guarda 3 tipos de item, cada um uma pilha).~~ (19/11; falta conferir no Studio)
+- ~~**Mais mobs:** aumentar um pouco a população, porque o mapa cresceu (praia).~~ (19/11)
+- ~~**Receitas:** conferir todos os crafts dos itens liberados aos jogadores.~~ (19/11, `docs/game-design/auditoria-receitas.md`)
+- ~~**Minimapa:** mostrar onde o jogador colocou construções.~~ (19/11; falta conferir no Studio)
+- ~~**Receita fixada:** mostrar as bancadas/fogo/água que o craft exige.~~ (19/11; falta conferir no Studio)
+- **Dados com 2 jogadores:** conferir o perfil salvo com dois jogadores ao mesmo tempo (Studio → Test → 2 Players).
+- ~~**Lista de jogadores** no jogo.~~ (19/11; falta conferir no Studio com 2 Players)
+- ~~**Garrafa de vidro e garrafa de água**, no padrão dos outros itens (modelos `bottle_empty`/`bottle_full` vieram no pacote da fazenda).~~ (19/11; falta rodar `scripts/studio/import-bottles.luau` no Studio e salvar o place)
 
 ## Para ver depois (18/11)
 
