@@ -14,7 +14,7 @@ Todos ficam em `src/shared/SurvivalConfig.luau`. Mudou um número, o jogo muda n
 | Frio cai de noite | 1,6 por segundo | ~1 min sem fogo |
 | Na água | frio cai 2× mais rápido; sede **sobe** 5 por segundo | enche a sede em ~20 s |
 | Perto do fogo | frio **sobe** 5 por segundo (mesmo de noite ou na água) | enche em ~20 s |
-| Vida regenera | 0,5 por segundo (com 200 de vida, enche na metade da velocidade em proporção) | só com fome, frio e sede **≥ 35** e sem tomar dano |
+| Vida regenera | 0,5 de vida por segundo (0 → 200 em ~6 min 40 s; com cama 2×, com Coroa da Vida 40/12×) | só com fome, frio e sede **≥ 35**, calor **< 65** e sem tomar dano |
 | Fome vazia | −1,5 de vida por segundo | |
 | Frio, sede ou fôlego vazios | −1 de vida por segundo cada (somam) | tudo vazio = morte em ~30 s |
 | Em cima do fogo (até 3 studs do centro) | esquenta 20 por segundo: enche o frio e, cheio, enche o **calor** | calor cheio em ~5 s |

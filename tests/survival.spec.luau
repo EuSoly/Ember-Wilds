@@ -196,7 +196,7 @@ return {
 		assert(r.cause == "oxygen", `causa {r.cause}`)
 	end,
 
-	["regen needs all bars at 35"] = function()
+	["regenera 0.5/s com barras ok e para com fome abaixo de 35"] = function()
 		local ok = SurvivalRules.step(bars({ health = 50, hunger = 60, cold = 60, thirst = 60 }), ctx(), 10)
 		expect("vida com tudo acima de 35", ok.bars.health, 55)
 		local hungry = SurvivalRules.step(bars({ health = 50, hunger = 38, cold = 60, thirst = 60 }), ctx(), 10)

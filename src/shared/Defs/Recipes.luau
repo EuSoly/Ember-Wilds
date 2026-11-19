@@ -168,6 +168,7 @@ local Recipes: { [string]: RecipeDef } = {
 	chest = recipe("chest", 1, { ingredient("wood", 25), ingredient("gold", 2) }, 20, "workbench", 25),
 	paper = recipe("paper", 1, { ingredient("wood", 20) }, 5, "fire", 26),
 	cooked_meat = recipe("cooked_meat", 1, { ingredient("raw_meat", 1) }, 3, "fire", 40),
+	bandage = recipe("bandage", 1, { ingredient("thread", 2) }, 5, "workbench", 41),
 	-- Provisórias até os mobs (Starve: pele de lobo/coelho e linha). Trocar = só estes dados.
 	book = recipe("book", 1, { ingredient("paper", 4), ingredient("gold", 10) }, 30, "workbench", 27),
 	earmuffs = recipe("earmuffs", 1, { i("rabbit_fur", 1), i("thread", 2) }, 5, "workbench", 28),

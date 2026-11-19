@@ -45,6 +45,14 @@ local Items: { [string]: ItemDef } = {
 		maxStack = 255,
 		food = { hunger = 35, crumbColor = "#8B4A2B" },
 	},
+	-- Curativo (bandage do Starve: 2 linhas na bancada, cura 30, pilha 20).
+	bandage = {
+		id = "bandage",
+		nameKey = "item.bandage",
+		category = "food",
+		maxStack = 20,
+		food = { health = 30, crumbColor = "#F2E6D0" },
+	},
 
 	-- Peles, pena e linha (loot dos mobs)
 	rabbit_fur = { id = "rabbit_fur", nameKey = "item.rabbit_fur", category = "resource", maxStack = 255 },

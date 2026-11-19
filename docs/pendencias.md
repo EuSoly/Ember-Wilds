@@ -192,7 +192,6 @@ Menores da revisão final (nenhum quebra o jogo hoje):
 - **Teste automático do saque:** a lógica de pegar da caixa podia ir para `CrateRules` com um teste no Lune.
 - **Validação do loot dos mobs:** o `Validate` não confere se cada entrada do `loot` é uma tabela com `id` texto (dado nosso; um erro aparece na hora mesmo assim).
 - **Comida com cura acima de 100:** o `Validate` ainda limita `food.health` a 100; se um dia uma comida curar mais que 100 (vida agora é 200), mudar o limite.
-- **Texto da regeneração** em `docs/guia/sobrevivencia.md` está confuso.
 
 ## Mobs (G5, 02/11)
 
