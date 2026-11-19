@@ -5,8 +5,8 @@ return table.freeze({
 	-- DataStore do perfil. No Studio usa DEV_STORE_PREFIX .. STORE_NAME, para
 	-- testes nunca sujarem os dados do jogo real.
 	-- 18/11/2026: "PlayerData" → "PlayerData_v2" para ZERAR todos os perfis
-	-- antes de ligar a cobrança (a loja entregava tudo de graça). Os perfis
-	-- antigos continuam no store "PlayerData", sem uso.
+	-- antes de ligar a cobrança (a loja entregava tudo de graça). O store
+	-- antigo "PlayerData" foi apagado pelo Elizeu em 19/11/2026.
 	STORE_NAME = "PlayerData_v2",
 	DEV_STORE_PREFIX = "Dev_",
 	-- Chave = KEY_PREFIX .. UserId (padrão para o template de deleção do GDPR).
