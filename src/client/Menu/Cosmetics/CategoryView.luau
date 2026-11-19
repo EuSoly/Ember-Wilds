@@ -323,12 +323,6 @@ local function view(
 	local player = Players.LocalPlayer
 	local default = Defs.CosmeticSlots[slot].default
 	local owned = Sources.childNames(player, StatNames.OwnedFolder)
-	-- Liberadas na frente (a ordem é da abertura: uma skin ganha com a tela
-	-- aberta não pula de lugar até reabrir).
-	local ownedNow = vide.untrack(owned)
-	local items = CosmeticCatalog.items(slot, function(id: string): boolean
-		return ownedNow[id] == true
-	end)
 	local equipped = Sources.attribute(player, StatNames.CosmeticPrefix .. slot, default)
 	local state: Slot = {
 		slot = slot,
@@ -338,8 +332,20 @@ local function view(
 		end,
 		selected = vide.source(vide.untrack(equipped)) :: any,
 	}
-	local pageCount = CosmeticCatalog.pageCount(#items, PER_PAGE)
-	local page: Source<number> = vide.source(CosmeticCatalog.pageOf(items, vide.untrack(equipped), PER_PAGE)) :: any
+	local allItems = CosmeticCatalog.items(slot, function(_id: string): boolean
+		return true
+	end)
+	-- Liberadas na frente, cada grupo por raridade (pedido do Elizeu,
+	-- 18/11/2026); reativa para a skin `unreleased` aparecer ao ser ganha.
+	local items = vide.derive(function(): { Defs.CosmeticDef }
+		return CosmeticCatalog.items(slot, state.has)
+	end)
+	local maxPages = CosmeticCatalog.pageCount(#allItems, PER_PAGE)
+	local function pageCount(): number
+		return CosmeticCatalog.pageCount(#items(), PER_PAGE)
+	end
+	local page: Source<number> =
+		vide.source(CosmeticCatalog.pageOf(vide.untrack(items), vide.untrack(equipped), PER_PAGE)) :: any
 
 	local function selectedDef(): Defs.CosmeticDef?
 		return Defs.Cosmetics[state.selected()]
@@ -351,14 +357,14 @@ local function view(
 	-- Grade: uma página de quadradinhos por vez (vide.switch monta a nova e
 	-- desmonta a velha); posse, equipada e seleção só mudam propriedades.
 	local pages: { [number]: (present: () -> boolean) -> Instance } = {}
-	for number = 1, pageCount do
+	for number = 1, maxPages do
 		pages[number] = function(_present: () -> boolean): Instance
 			local holder = create("Frame")({
 				Name = "Page" .. number,
 				Size = UDim2.fromScale(1, 1),
 				BackgroundTransparency = 1,
 			}) :: Frame
-			for i, def in CosmeticCatalog.page(items, number, PER_PAGE) do
+			for i, def in CosmeticCatalog.page(vide.untrack(items), number, PER_PAGE) do
 				tile(state, def.id, i, tileRect).Parent = holder
 			end
 			destroyLater(holder)
@@ -369,13 +375,15 @@ local function view(
 		Name = "Grid",
 		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
-		vide.switch(page)(pages :: any),
+		vide.switch(function(): number
+			return math.clamp(page(), 1, pageCount())
+		end)(pages :: any),
 	}) :: Frame
 
 	local function arrow(name: string, text: string, step: number, rect: () -> CosmeticsLayout.Rect): TextButton
 		local function can(): boolean
 			local target = page() + step
-			return target >= 1 and target <= pageCount
+			return target >= 1 and target <= pageCount()
 		end
 		local props: { [any]: any } = place(rect)
 		props.Name = name

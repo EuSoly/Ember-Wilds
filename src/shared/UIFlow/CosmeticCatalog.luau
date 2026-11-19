@@ -33,14 +33,19 @@ end
 
 -- Todas as skins do slot: a padrão primeiro; com `owns`, as que o jogador já
 -- liberou vêm antes das trancadas (pedido do Elizeu, 18/11/2026); cada grupo
--- da mais comum para a mais rara.
+-- da mais comum para a mais rara. Sem `owns`, esconde as skins `unreleased`
+-- (ainda não lançadas no update atual); com `owns`, quem já tem uma skin
+-- `unreleased` continua vendo ela na grade para poder equipar.
 function CosmeticCatalog.items(slot: string, owns: ((id: string) -> boolean)?): { CosmeticDef }
 	local slotDef = Defs.CosmeticSlots[slot]
 	local defaultId = slotDef and slotDef.default
 	local list: { CosmeticDef } = {}
 	for _, def in Defs.Cosmetics do
-		if def.slot == slot and (def.unreleased ~= true or (owns and owns(def.id))) then
-			table.insert(list, def)
+		if def.slot == slot then
+			local visible = def.id == defaultId or def.unreleased ~= true or (owns ~= nil and owns(def.id))
+			if visible then
+				table.insert(list, def)
+			end
 		end
 	end
 	table.sort(list, function(a: CosmeticDef, b: CosmeticDef): boolean
@@ -71,13 +76,14 @@ function CosmeticCatalog.colorOf(def: CosmeticDef): string
 end
 
 -- Skins que podem sair no giro da loja. A padrão do slot só entra com
--- inSpins == true; as demais saem, a menos que inSpins == false.
+-- inSpins == true; as demais liberadas saem, a menos que inSpins == false.
+-- Skins `unreleased` (de updates futuros) nunca entram no giro.
 function CosmeticCatalog.spinItems(slot: string): { SpinItem }
 	local slotDef = Defs.CosmeticSlots[slot]
 	local list: { SpinItem } = {}
 	for _, def in CosmeticCatalog.items(slot) do
 		local isDefault = slotDef ~= nil and slotDef.default == def.id
-		local enters = if isDefault then def.inSpins == true else def.inSpins ~= false
+		local enters = def.unreleased ~= true and (if isDefault then def.inSpins == true else def.inSpins ~= false)
 		if enters then
 			table.insert(list, {
 				id = def.id,

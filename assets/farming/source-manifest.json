@@ -1,0 +1,351 @@
+{
+  "models": [
+    {
+      "id": "berry_stage_01",
+      "label": "Frutinha / 1",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 1
+    },
+    {
+      "id": "berry_stage_02",
+      "label": "Frutinha / 2",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 2
+    },
+    {
+      "id": "berry_stage_03",
+      "label": "Frutinha / 3",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 3
+    },
+    {
+      "id": "berry_stage_04",
+      "label": "Frutinha / 4",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 4
+    },
+    {
+      "id": "wheat_stage_01",
+      "label": "Trigo / 1",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 1
+    },
+    {
+      "id": "wheat_stage_02",
+      "label": "Trigo / 2",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 2
+    },
+    {
+      "id": "wheat_stage_03",
+      "label": "Trigo / 3",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 3
+    },
+    {
+      "id": "wheat_stage_04",
+      "label": "Trigo / 4",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 4
+    },
+    {
+      "id": "pumpkin_stage_01",
+      "label": "Abóbora / 1",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 1
+    },
+    {
+      "id": "pumpkin_stage_02",
+      "label": "Abóbora / 2",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 2
+    },
+    {
+      "id": "pumpkin_stage_03",
+      "label": "Abóbora / 3",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 3
+    },
+    {
+      "id": "pumpkin_stage_04",
+      "label": "Abóbora / 4",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 4
+    },
+    {
+      "id": "thorn_stage_01",
+      "label": "Espinho / 1",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 1
+    },
+    {
+      "id": "thorn_stage_02",
+      "label": "Espinho / 2",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 2
+    },
+    {
+      "id": "thorn_stage_03",
+      "label": "Espinho / 3",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 3
+    },
+    {
+      "id": "thorn_stage_04",
+      "label": "Espinho / 4",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 4
+    },
+    {
+      "id": "carrot_stage_01",
+      "label": "Cenoura / 1",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 1
+    },
+    {
+      "id": "carrot_stage_02",
+      "label": "Cenoura / 2",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 2
+    },
+    {
+      "id": "carrot_stage_03",
+      "label": "Cenoura / 3",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 3
+    },
+    {
+      "id": "carrot_stage_04",
+      "label": "Cenoura / 4",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 4
+    },
+    {
+      "id": "tomato_stage_01",
+      "label": "Tomate / 1",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 1
+    },
+    {
+      "id": "tomato_stage_02",
+      "label": "Tomate / 2",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 2
+    },
+    {
+      "id": "tomato_stage_03",
+      "label": "Tomate / 3",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 3
+    },
+    {
+      "id": "tomato_stage_04",
+      "label": "Tomate / 4",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 4
+    },
+    {
+      "id": "watermelon_stage_01",
+      "label": "Melancia / 1",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 1
+    },
+    {
+      "id": "watermelon_stage_02",
+      "label": "Melancia / 2",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 2
+    },
+    {
+      "id": "watermelon_stage_03",
+      "label": "Melancia / 3",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 3
+    },
+    {
+      "id": "watermelon_stage_04",
+      "label": "Melancia / 4",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 4
+    },
+    {
+      "id": "aloe_vera_stage_01",
+      "label": "Babosa / 1",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 1
+    },
+    {
+      "id": "aloe_vera_stage_02",
+      "label": "Babosa / 2",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 2
+    },
+    {
+      "id": "aloe_vera_stage_03",
+      "label": "Babosa / 3",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 3
+    },
+    {
+      "id": "aloe_vera_stage_04",
+      "label": "Babosa / 4",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 4
+    },
+    {
+      "id": "garlic_stage_01",
+      "label": "Alho / 1",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 1
+    },
+    {
+      "id": "garlic_stage_02",
+      "label": "Alho / 2",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 2
+    },
+    {
+      "id": "garlic_stage_03",
+      "label": "Alho / 3",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 3
+    },
+    {
+      "id": "garlic_stage_04",
+      "label": "Alho / 4",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 4
+    },
+    {
+      "id": "planter_box",
+      "label": "Caixa de plantação",
+      "kind": "structure",
+      "crop": null,
+      "stage": null
+    },
+    {
+      "id": "berry_seeds",
+      "label": "Sementes de Frutinha",
+      "kind": "seed",
+      "crop": "berry",
+      "stage": null
+    },
+    {
+      "id": "wheat_seeds",
+      "label": "Sementes de Trigo",
+      "kind": "seed",
+      "crop": "wheat",
+      "stage": null
+    },
+    {
+      "id": "pumpkin_seeds",
+      "label": "Sementes de Abóbora",
+      "kind": "seed",
+      "crop": "pumpkin",
+      "stage": null
+    },
+    {
+      "id": "thorn_seeds",
+      "label": "Sementes de Espinho",
+      "kind": "seed",
+      "crop": "thorn",
+      "stage": null
+    },
+    {
+      "id": "carrot_seeds",
+      "label": "Sementes de Cenoura",
+      "kind": "seed",
+      "crop": "carrot",
+      "stage": null
+    },
+    {
+      "id": "tomato_seeds",
+      "label": "Sementes de Tomate",
+      "kind": "seed",
+      "crop": "tomato",
+      "stage": null
+    },
+    {
+      "id": "watermelon_seeds",
+      "label": "Sementes de Melancia",
+      "kind": "seed",
+      "crop": "watermelon",
+      "stage": null
+    },
+    {
+      "id": "aloe_vera_seeds",
+      "label": "Sementes de Babosa",
+      "kind": "seed",
+      "crop": "aloe_vera",
+      "stage": null
+    },
+    {
+      "id": "garlic_seeds",
+      "label": "Sementes de Alho",
+      "kind": "seed",
+      "crop": "garlic",
+      "stage": null
+    },
+    {
+      "id": "bottle_empty",
+      "label": "Garrafa vazia",
+      "kind": "supply",
+      "crop": null,
+      "stage": null
+    },
+    {
+      "id": "bottle_full",
+      "label": "Garrafa com água",
+      "kind": "supply",
+      "crop": null,
+      "stage": null
+    },
+    {
+      "id": "ice_cube",
+      "label": "Cubo de gelo",
+      "kind": "supply",
+      "crop": null,
+      "stage": null
+    }
+  ],
+  "soil_height": 0.54,
+  "stages": 4,
+  "seed_style": "loose",
+  "fruit_colors_source": "existing food.blend materials"
+}

@@ -1,0 +1,144 @@
+{
+  "combined": {
+    "meshes": 15,
+    "geometry_bounds_max_error": 2.384185791015625e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "black_wolf_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.5675441744633645e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "blue_cube",
+      "triangles": 62,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.624829764068636e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "blue_gem",
+      "triangles": 57,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2630935941615462e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "blue_thread",
+      "triangles": 372,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2733775633932964e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "dragon_orb",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.738519443961195e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "firefly",
+      "triangles": 316,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 6.366370541854849e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "green_gem",
+      "triangles": 57,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2630935941615462e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "lava_cube",
+      "triangles": 62,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.624829764068636e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "lava_orb",
+      "triangles": 182,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.738519443961195e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "orange_gem",
+      "triangles": 57,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.2630935941615462e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "paper",
+      "triangles": 62,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.752988225689478e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "pilot_glasses",
+      "triangles": 216,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1249511544519919e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "pitchfork_part",
+      "triangles": 186,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.0385678567436116e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "water_bucket",
+      "triangles": 384,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.9802322387695312e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "white_wolf_fur",
+      "triangles": 202,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.5675441744633645e-07,
+      "pivot_at_origin": true
+    }
+  ]
+}

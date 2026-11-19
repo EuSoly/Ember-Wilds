@@ -1,0 +1,63 @@
+{
+  "combined": {
+    "meshes": 6,
+    "geometry_bounds_max_error": 5.587935447692871e-07,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "Berry_01",
+      "triangles": 80,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.9802322387695312e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "Berry_02",
+      "triangles": 80,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1920928955078125e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "Berry_03",
+      "triangles": 80,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 5.960464477539063e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "Berry_04",
+      "triangles": 80,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 2.9802322387695312e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "Berry_05",
+      "triangles": 80,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4901161193847656e-08,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "Foliage",
+      "triangles": 480,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.1920928955078125e-07,
+      "pivot_at_origin": true
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+00:00.859  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27384_15b301470f02b0e24d253418485665b2.png.png"
+00:17.343  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\growth-1.png'
+00:33.156  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\growth-2.png'
+00:48.968  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\growth-3.png'
+00:49.093  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27384_48bc223acafa6ab1a1c8f535ae142c47.png.png"
+00:57.687  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\planter-preview.png'
+00:57.812  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27384_5e2fea81ae98ee671411e594eddd3ce9.png.png"
+01:12.547  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\seeds-water-ice.png'
+01:12.750  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27384_a605d3415d317df532dd73e5c823c82e.png.png"
+01:34.109  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\farming\farming-preview.png'
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "farming-plants.blend"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "planter-box.blend"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "farming-icons.blend"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "farming-preview.blend"
+FARM_BUILD_COMPLETE: 49 models
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

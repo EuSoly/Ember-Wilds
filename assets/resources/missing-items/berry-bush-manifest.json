@@ -1,0 +1,18 @@
+{
+  "model": "berry_bush_1",
+  "fruit_count": 5,
+  "fruit_base": "#4A3A8C",
+  "fruit_highlight": "#8565C4",
+  "leaf_base": "#118A57",
+  "color_source": "assets/resources/food/food.blend > berry_part / berry_shine",
+  "held_item_source": "src/client/Boneco/BonecoModel.luau: holdFood uses Assets.Icons/<id>",
+  "parts": [
+    "Foliage",
+    "Berry_01",
+    "Berry_02",
+    "Berry_03",
+    "Berry_04",
+    "Berry_05"
+  ],
+  "roblox_note": "Rename each Berry_XX MeshPart to Berry; keep all five separate. Visual count does not change resource yield."
+}

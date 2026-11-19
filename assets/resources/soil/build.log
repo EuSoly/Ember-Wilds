@@ -1,0 +1,8 @@
+00:00.688  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_42368_cad7a74115a5a63d17f7353f02e49ef1.png.png"
+00:09.172  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\resources\soil\areia-e-terra.png'
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "areia-e-terra.blend"
+SOIL_ICONS_READY: sand, ground
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

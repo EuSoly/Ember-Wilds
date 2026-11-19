@@ -62,7 +62,7 @@ function Products.validateBundles(list: { BundleDef }, defs: DefsTables, strings
 		if not isPositiveInt(bundle.rarity) or bundle.rarity > 6 then
 			fail("rarity precisa ser inteiro de 1 a 6")
 		end
-		if not isPositiveInt(bundle.robux) then
+		if (not bundle.rascunho or bundle.robux ~= nil) and not isPositiveInt(bundle.robux) then
 			fail("robux precisa ser inteiro ≥ 1")
 		end
 		local startsAt = if bundle.startsAt ~= nil then ShopDates.parse(bundle.startsAt) else nil
@@ -98,6 +98,9 @@ local function build(): { Product }
 		table.insert(list, product)
 	end
 	for _, bundle in Bundles do
+		if bundle.rascunho or bundle.robux == nil then
+			continue
+		end
 		add({
 			id = `bundle_{bundle.id}`,
 			kind = "bundle",

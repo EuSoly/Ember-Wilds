@@ -1,0 +1,349 @@
+{
+  "combined_mesh_count_with_origins": 116,
+  "combined_bounds_error": 1.9073486328125e-06,
+  "individual": [
+    {
+      "id": "berry_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "berry_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "berry_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "berry_stage_04",
+      "parts": 6,
+      "independent_harvest_parts": 5,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "wheat_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "wheat_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "wheat_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "wheat_stage_04",
+      "parts": 4,
+      "independent_harvest_parts": 3,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "pumpkin_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "pumpkin_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "pumpkin_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "pumpkin_stage_04",
+      "parts": 2,
+      "independent_harvest_parts": 1,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "thorn_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "thorn_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "thorn_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "thorn_stage_04",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "carrot_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "carrot_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "carrot_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "carrot_stage_04",
+      "parts": 3,
+      "independent_harvest_parts": 3,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "tomato_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "tomato_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "tomato_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "tomato_stage_04",
+      "parts": 4,
+      "independent_harvest_parts": 3,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "watermelon_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "watermelon_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "watermelon_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "watermelon_stage_04",
+      "parts": 2,
+      "independent_harvest_parts": 1,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "aloe_vera_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "aloe_vera_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "aloe_vera_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "aloe_vera_stage_04",
+      "parts": 1,
+      "independent_harvest_parts": 1,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "garlic_stage_01",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "garlic_stage_02",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "garlic_stage_03",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "garlic_stage_04",
+      "parts": 3,
+      "independent_harvest_parts": 3,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "planter_box",
+      "parts": 2,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "berry_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "wheat_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "pumpkin_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "thorn_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "carrot_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "tomato_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "watermelon_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "aloe_vera_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "garlic_seeds",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "bottle_empty",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "bottle_full",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    },
+    {
+      "id": "ice_cube",
+      "parts": 1,
+      "independent_harvest_parts": 0,
+      "pivot_at_origin": true,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\build_assets.py:212: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  scene.world=bpy.data.worlds.new('Studio_World');scene.world.use_nodes=True
+00:00.812  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27656_2b4c030114a1f43cfba90154a4317172.png.png"
+00:18.953  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\missing-items-preview.png'
+00:19.031  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_27656_c7eaed07cbce9d7b5b90b0e7758c6781.png.png"
+00:32.078  render           | Saved: 'C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\berry-bush-preview.png'
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "missing-items.blend"
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+Info: Saved as "berry-bush.blend"
+BUILD_COMPLETE: 15 inventory assets + bush with 5 purple fruits
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

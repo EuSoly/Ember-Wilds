@@ -1,0 +1,27 @@
+{
+  "combined": {
+    "meshes": 2,
+    "geometry_bounds_max_error": 8.26299952905174e-08,
+    "materials_and_textures_valid": true
+  },
+  "individual": [
+    {
+      "name": "ground",
+      "triangles": 255,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.0679105599820105e-07,
+      "pivot_at_origin": true
+    },
+    {
+      "name": "sand",
+      "triangles": 187,
+      "materials": 1,
+      "uv": true,
+      "texture": true,
+      "scale_error": 1.4223464006590802e-07,
+      "pivot_at_origin": true
+    }
+  ]
+}

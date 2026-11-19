@@ -1,0 +1,38 @@
+[
+  {
+    "id": "mare_profunda",
+    "nome": "Maré Profunda",
+    "raridade": "Mítico",
+    "rarity": 6,
+    "itens": {
+      "body_lula": "Lula",
+      "crate_kraken": "Caixa do kraken",
+      "bag_caranguejo": "Mochila Caranguejo",
+      "book_tentaculo": "Tomo Abissal"
+    }
+  },
+  {
+    "id": "bosque_desperto",
+    "nome": "Bosque Desperto",
+    "raridade": "Lendário",
+    "rarity": 5,
+    "itens": {
+      "body_toco": "Toco da Floresta",
+      "crate_jardim": "Caixa jardim",
+      "bag_cubos_esmeralda": "Sementes de Esmeralda",
+      "book_trepadeira": "Tomo Trepadeira"
+    }
+  },
+  {
+    "id": "norte_perdido",
+    "nome": "Norte Perdido",
+    "raridade": "Épico",
+    "rarity": 4,
+    "itens": {
+      "body_explorador": "Explorador",
+      "crate_aventureiro": "Caixa do aventureiro",
+      "bag_cartografo": "Mochila Cartógrafo",
+      "book_bussola": "Tomo da Bússola"
+    }
+  }
+]

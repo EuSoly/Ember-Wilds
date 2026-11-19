@@ -1,0 +1,2062 @@
+{
+  "model_count": 49,
+  "plant_stages": 36,
+  "seed_icons": 9,
+  "supplies": 3,
+  "planter": 1,
+  "palette_colors": 65,
+  "combined_file": "farming-pack.fbx",
+  "texture": "farming_palette.png",
+  "models": [
+    {
+      "id": "berry_stage_01",
+      "label": "Frutinha / 1",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "berry_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "berry_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/berry_stage_01.fbx"
+    },
+    {
+      "id": "berry_stage_02",
+      "label": "Frutinha / 2",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "berry_stage_02__Foliage",
+          "triangles": 240,
+          "local_bounds": [
+            -0.532638430595398,
+            -0.35041123628616333,
+            -0.014700000174343586,
+            0.5236217379570007,
+            0.236378476023674,
+            0.6358799934387207
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "berry_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/berry_stage_02.fbx"
+    },
+    {
+      "id": "berry_stage_03",
+      "label": "Frutinha / 3",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "berry_stage_03__Foliage",
+          "triangles": 480,
+          "local_bounds": [
+            -0.8877307176589966,
+            -0.5840187668800354,
+            -0.02449999935925007,
+            0.8727028965950012,
+            0.39396414160728455,
+            1.2799999713897705
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "berry_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/berry_stage_03.fbx"
+    },
+    {
+      "id": "berry_stage_04",
+      "label": "Frutinha / 4",
+      "kind": "plant",
+      "crop": "berry",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "berry_stage_04__Foliage",
+          "triangles": 480,
+          "local_bounds": [
+            -1.360284686088562,
+            -0.8941136002540588,
+            0.0,
+            1.3339353799819946,
+            0.9700016379356384,
+            1.656000018119812
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "berry_stage_04__Harvest_01",
+          "triangles": 80,
+          "local_bounds": [
+            -1.0660377740859985,
+            -0.343344509601593,
+            1.007938027381897,
+            -0.7099621891975403,
+            0.007344524376094341,
+            1.3919379711151123
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "berry_stage_04__Harvest_02",
+          "triangles": 80,
+          "local_bounds": [
+            -0.4900377690792084,
+            -0.8233444690704346,
+            0.8877313137054443,
+            -0.1339622139930725,
+            -0.47265544533729553,
+            1.2717312574386597
+          ],
+          "role": "Harvest_02"
+        },
+        {
+          "name": "berry_stage_04__Harvest_03",
+          "triangles": 80,
+          "local_bounds": [
+            0.39796221256256104,
+            -0.7273445129394531,
+            1.1496039628982544,
+            0.7540377378463745,
+            -0.3766554594039917,
+            1.5336039066314697
+          ],
+          "role": "Harvest_03"
+        },
+        {
+          "name": "berry_stage_04__Harvest_04",
+          "triangles": 80,
+          "local_bounds": [
+            -0.44203776121139526,
+            -0.05534452572464943,
+            1.515160322189331,
+            -0.08596221357584,
+            0.2953445017337799,
+            1.8991602659225464
+          ],
+          "role": "Harvest_04"
+        },
+        {
+          "name": "berry_stage_04__Harvest_05",
+          "triangles": 80,
+          "local_bounds": [
+            0.5659622550010681,
+            0.06465547531843185,
+            1.1194716691970825,
+            0.9220377802848816,
+            0.4153445065021515,
+            1.5034716129302979
+          ],
+          "role": "Harvest_05"
+        },
+        {
+          "name": "berry_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/berry_stage_04.fbx"
+    },
+    {
+      "id": "wheat_stage_01",
+      "label": "Trigo / 1",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "wheat_stage_01__Foliage",
+          "triangles": 48,
+          "local_bounds": [
+            -0.08582384139299393,
+            -0.14816787838935852,
+            -0.017999999225139618,
+            0.17000000178813934,
+            0.14674559235572815,
+            0.41999998688697815
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "wheat_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/wheat_stage_01.fbx"
+    },
+    {
+      "id": "wheat_stage_02",
+      "label": "Trigo / 2",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "wheat_stage_02__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -0.49000000953674316,
+            -0.085999995470047,
+            -0.0015403825091198087,
+            0.49000000953674316,
+            0.18000000715255737,
+            1.0259473323822021
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "wheat_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/wheat_stage_02.fbx"
+    },
+    {
+      "id": "wheat_stage_03",
+      "label": "Trigo / 3",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "wheat_stage_03__Foliage",
+          "triangles": 852,
+          "local_bounds": [
+            -0.7839999794960022,
+            -0.13500000536441803,
+            -0.000964114791713655,
+            0.7839999794960022,
+            0.24562574923038483,
+            2.2016117572784424
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "wheat_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/wheat_stage_03.fbx"
+    },
+    {
+      "id": "wheat_stage_04",
+      "label": "Trigo / 4",
+      "kind": "plant",
+      "crop": "wheat",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "wheat_stage_04__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -0.9800000190734863,
+            -0.1459999978542328,
+            -0.0007715464453212917,
+            0.9800000190734863,
+            0.29777517914772034,
+            2.050474166870117
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "wheat_stage_04__Harvest_01",
+          "triangles": 232,
+          "local_bounds": [
+            -0.6146695613861084,
+            -0.04874999821186066,
+            1.5629115104675293,
+            -0.24533045291900635,
+            0.04874999821186066,
+            2.4513003826141357
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "wheat_stage_04__Harvest_02",
+          "triangles": 232,
+          "local_bounds": [
+            -0.13466954231262207,
+            0.15125000476837158,
+            1.8629117012023926,
+            0.23466956615447998,
+            0.2487500011920929,
+            2.75130033493042
+          ],
+          "role": "Harvest_02"
+        },
+        {
+          "name": "wheat_stage_04__Harvest_03",
+          "triangles": 232,
+          "local_bounds": [
+            0.24533045291900635,
+            -0.16875000298023224,
+            1.6629116535186768,
+            0.6146695613861084,
+            -0.07124999910593033,
+            2.551300287246704
+          ],
+          "role": "Harvest_03"
+        },
+        {
+          "name": "wheat_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/wheat_stage_04.fbx"
+    },
+    {
+      "id": "pumpkin_stage_01",
+      "label": "Abóbora / 1",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "pumpkin_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "pumpkin_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/pumpkin_stage_01.fbx"
+    },
+    {
+      "id": "pumpkin_stage_02",
+      "label": "Abóbora / 2",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "pumpkin_stage_02__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -0.5412811040878296,
+            -0.5744921565055847,
+            0.01793346367776394,
+            0.5101231336593628,
+            0.39832985401153564,
+            0.2800000011920929
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "pumpkin_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/pumpkin_stage_02.fbx"
+    },
+    {
+      "id": "pumpkin_stage_03",
+      "label": "Abóbora / 3",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "pumpkin_stage_03__Foliage",
+          "triangles": 376,
+          "local_bounds": [
+            -0.9226382374763489,
+            -0.9792479276657104,
+            0.0,
+            0.86952805519104,
+            0.6789713501930237,
+            0.657977283000946
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "pumpkin_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/pumpkin_stage_03.fbx"
+    },
+    {
+      "id": "pumpkin_stage_04",
+      "label": "Abóbora / 4",
+      "kind": "plant",
+      "crop": "pumpkin",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "pumpkin_stage_04__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -1.2301843166351318,
+            -1.3056639432907104,
+            -0.003935407847166061,
+            1.1593706607818604,
+            0.9052950739860535,
+            0.3199999928474426
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "pumpkin_stage_04__Harvest_01",
+          "triangles": 220,
+          "local_bounds": [
+            -0.49063390493392944,
+            -1.0048719644546509,
+            0.0,
+            0.7160000205039978,
+            0.20487193763256073,
+            1.1379772424697876
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "pumpkin_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/pumpkin_stage_04.fbx"
+    },
+    {
+      "id": "thorn_stage_01",
+      "label": "Espinho / 1",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "thorn_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "thorn_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/thorn_stage_01.fbx"
+    },
+    {
+      "id": "thorn_stage_02",
+      "label": "Espinho / 2",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "thorn_stage_02__Foliage",
+          "triangles": 288,
+          "local_bounds": [
+            -0.28296512365341187,
+            -0.344478040933609,
+            -0.021938683465123177,
+            0.3557153642177582,
+            0.27382853627204895,
+            0.5789999961853027
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "thorn_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/thorn_stage_02.fbx"
+    },
+    {
+      "id": "thorn_stage_03",
+      "label": "Espinho / 3",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "thorn_stage_03__Foliage",
+          "triangles": 288,
+          "local_bounds": [
+            -0.4989122152328491,
+            -0.6073691248893738,
+            -0.03868136554956436,
+            0.6271823644638062,
+            0.48280295729637146,
+            0.8834999799728394
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "thorn_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/thorn_stage_03.fbx"
+    },
+    {
+      "id": "thorn_stage_04",
+      "label": "Espinho / 4",
+      "kind": "plant",
+      "crop": "thorn",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "thorn_stage_04__Foliage",
+          "triangles": 288,
+          "local_bounds": [
+            -0.7446450591087341,
+            -0.9065211415290833,
+            -0.05773337557911873,
+            0.9360931515693665,
+            0.7206014394760132,
+            1.2300000190734863
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "thorn_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/thorn_stage_04.fbx"
+    },
+    {
+      "id": "carrot_stage_01",
+      "label": "Cenoura / 1",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "carrot_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "carrot_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/carrot_stage_01.fbx"
+    },
+    {
+      "id": "carrot_stage_02",
+      "label": "Cenoura / 2",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "carrot_stage_02__Foliage",
+          "triangles": 720,
+          "local_bounds": [
+            -0.4107130467891693,
+            -0.2612883746623993,
+            0.012000000104308128,
+            0.40107035636901855,
+            0.3822377920150757,
+            0.40799999237060547
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "carrot_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/carrot_stage_02.fbx"
+    },
+    {
+      "id": "carrot_stage_03",
+      "label": "Cenoura / 3",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "carrot_stage_03__Foliage",
+          "triangles": 900,
+          "local_bounds": [
+            -0.6571407914161682,
+            -0.41806140542030334,
+            0.004999999888241291,
+            0.6417126059532166,
+            0.611580491065979,
+            0.979200005531311
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "carrot_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/carrot_stage_03.fbx"
+    },
+    {
+      "id": "carrot_stage_04",
+      "label": "Cenoura / 4",
+      "kind": "plant",
+      "crop": "carrot",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "carrot_stage_04__Harvest_01",
+          "triangles": 300,
+          "local_bounds": [
+            -0.912695586681366,
+            -0.5691101551055908,
+            0.004999999888241291,
+            -0.10518570244312286,
+            0.17629222571849823,
+            1.3600000143051147
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "carrot_stage_04__Harvest_02",
+          "triangles": 300,
+          "local_bounds": [
+            0.08553440868854523,
+            -0.5806408524513245,
+            0.004999999888241291,
+            0.8912674784660339,
+            0.16371896862983704,
+            1.3600000143051147
+          ],
+          "role": "Harvest_02"
+        },
+        {
+          "name": "carrot_stage_04__Harvest_03",
+          "triangles": 300,
+          "local_bounds": [
+            -0.41779834032058716,
+            0.14089420437812805,
+            0.004999999888241291,
+            0.4198756217956543,
+            0.8494173288345337,
+            1.3600000143051147
+          ],
+          "role": "Harvest_03"
+        },
+        {
+          "name": "carrot_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/carrot_stage_04.fbx"
+    },
+    {
+      "id": "tomato_stage_01",
+      "label": "Tomate / 1",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "tomato_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "tomato_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/tomato_stage_01.fbx"
+    },
+    {
+      "id": "tomato_stage_02",
+      "label": "Tomate / 2",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "tomato_stage_02__Foliage",
+          "triangles": 200,
+          "local_bounds": [
+            -0.43966594338417053,
+            -0.4523477554321289,
+            -0.0010871088597923517,
+            0.4615597128868103,
+            0.41806477308273315,
+            0.833299994468689
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "tomato_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/tomato_stage_02.fbx"
+    },
+    {
+      "id": "tomato_stage_03",
+      "label": "Tomate / 3",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "tomato_stage_03__Foliage",
+          "triangles": 740,
+          "local_bounds": [
+            -0.7537130117416382,
+            -0.7754533290863037,
+            -0.001088169403374195,
+            0.7912452220916748,
+            0.7166824340820312,
+            1.3665599822998047
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "tomato_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/tomato_stage_03.fbx"
+    },
+    {
+      "id": "tomato_stage_04",
+      "label": "Tomate / 4",
+      "kind": "plant",
+      "crop": "tomato",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "tomato_stage_04__Foliage",
+          "triangles": 260,
+          "local_bounds": [
+            -1.0468236207962036,
+            -1.0770184993743896,
+            -0.0010884333169087768,
+            1.0989516973495483,
+            0.9953923225402832,
+            1.8305209875106812
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "tomato_stage_04__Harvest_01",
+          "triangles": 160,
+          "local_bounds": [
+            -0.8162958025932312,
+            -0.5932623744010925,
+            0.621999979019165,
+            -0.28370416164398193,
+            -0.08673761785030365,
+            1.0980000495910645
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "tomato_stage_04__Harvest_02",
+          "triangles": 160,
+          "local_bounds": [
+            0.28370416164398193,
+            -0.5332623720169067,
+            0.8119999766349792,
+            0.8162958025932312,
+            -0.026737621054053307,
+            1.2879999876022339
+          ],
+          "role": "Harvest_02"
+        },
+        {
+          "name": "tomato_stage_04__Harvest_03",
+          "triangles": 160,
+          "local_bounds": [
+            -0.3162958323955536,
+            -0.11326237767934799,
+            1.4220000505447388,
+            0.21629582345485687,
+            0.3932623863220215,
+            1.8980000019073486
+          ],
+          "role": "Harvest_03"
+        },
+        {
+          "name": "tomato_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/tomato_stage_04.fbx"
+    },
+    {
+      "id": "watermelon_stage_01",
+      "label": "Melancia / 1",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "watermelon_stage_01__Foliage",
+          "triangles": 52,
+          "local_bounds": [
+            -0.3199999928474426,
+            -0.1085050106048584,
+            0.0,
+            0.3199999928474426,
+            0.11725850403308868,
+            0.4000000059604645
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "watermelon_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/watermelon_stage_01.fbx"
+    },
+    {
+      "id": "watermelon_stage_02",
+      "label": "Melancia / 2",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "watermelon_stage_02__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -0.5412811040878296,
+            -0.5744921565055847,
+            0.01793346367776394,
+            0.5101231336593628,
+            0.39832985401153564,
+            0.2800000011920929
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "watermelon_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/watermelon_stage_02.fbx"
+    },
+    {
+      "id": "watermelon_stage_03",
+      "label": "Melancia / 3",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "watermelon_stage_03__Foliage",
+          "triangles": 376,
+          "local_bounds": [
+            -0.9226382374763489,
+            -0.9792479276657104,
+            0.0,
+            0.86952805519104,
+            0.6789713501930237,
+            0.657977283000946
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "watermelon_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/watermelon_stage_03.fbx"
+    },
+    {
+      "id": "watermelon_stage_04",
+      "label": "Melancia / 4",
+      "kind": "plant",
+      "crop": "watermelon",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "watermelon_stage_04__Foliage",
+          "triangles": 156,
+          "local_bounds": [
+            -1.2301843166351318,
+            -1.3056639432907104,
+            -0.003935407847166061,
+            1.1593706607818604,
+            0.9052950739860535,
+            0.3199999928474426
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "watermelon_stage_04__Harvest_01",
+          "triangles": 220,
+          "local_bounds": [
+            -0.699999988079071,
+            -1.0,
+            0.0,
+            0.8600000143051147,
+            0.20000000298023224,
+            1.1379772424697876
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "watermelon_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/watermelon_stage_04.fbx"
+    },
+    {
+      "id": "aloe_vera_stage_01",
+      "label": "Babosa / 1",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "aloe_vera_stage_01__Foliage",
+          "triangles": 48,
+          "local_bounds": [
+            -0.08582384139299393,
+            -0.14816787838935852,
+            -0.017999999225139618,
+            0.17000000178813934,
+            0.14674559235572815,
+            0.41999998688697815
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "aloe_vera_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/aloe_vera_stage_01.fbx"
+    },
+    {
+      "id": "aloe_vera_stage_02",
+      "label": "Babosa / 2",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "aloe_vera_stage_02__Foliage",
+          "triangles": 240,
+          "local_bounds": [
+            -0.36038753390312195,
+            -0.38997116684913635,
+            -0.026000000536441803,
+            0.4000000059604645,
+            0.38997116684913635,
+            0.6600000262260437
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "aloe_vera_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/aloe_vera_stage_02.fbx"
+    },
+    {
+      "id": "aloe_vera_stage_03",
+      "label": "Babosa / 3",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "aloe_vera_stage_03__Foliage",
+          "triangles": 240,
+          "local_bounds": [
+            -0.6306782364845276,
+            -0.6824495196342468,
+            -0.045499999076128006,
+            0.699999988079071,
+            0.6824495196342468,
+            1.1549999713897705
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "aloe_vera_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/aloe_vera_stage_03.fbx"
+    },
+    {
+      "id": "aloe_vera_stage_04",
+      "label": "Babosa / 4",
+      "kind": "plant",
+      "crop": "aloe_vera",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "aloe_vera_stage_04__Harvest_01",
+          "triangles": 240,
+          "local_bounds": [
+            -0.9009688496589661,
+            -0.9749279022216797,
+            -0.06499999761581421,
+            1.0,
+            0.9749279022216797,
+            1.649999976158142
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "aloe_vera_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/aloe_vera_stage_04.fbx"
+    },
+    {
+      "id": "garlic_stage_01",
+      "label": "Alho / 1",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 1,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "garlic_stage_01__Foliage",
+          "triangles": 48,
+          "local_bounds": [
+            -0.08582384139299393,
+            -0.14816787838935852,
+            -0.017999999225139618,
+            0.17000000178813934,
+            0.14674559235572815,
+            0.41999998688697815
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "garlic_stage_01__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/garlic_stage_01.fbx"
+    },
+    {
+      "id": "garlic_stage_02",
+      "label": "Alho / 2",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 2,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "garlic_stage_02__Foliage",
+          "triangles": 240,
+          "local_bounds": [
+            -0.3990236818790436,
+            -0.2612883746623993,
+            0.012000000104308128,
+            0.3814915418624878,
+            0.3822377920150757,
+            0.40799999237060547
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "garlic_stage_02__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/garlic_stage_02.fbx"
+    },
+    {
+      "id": "garlic_stage_03",
+      "label": "Alho / 3",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 3,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "garlic_stage_03__Foliage",
+          "triangles": 624,
+          "local_bounds": [
+            -0.6384378671646118,
+            -0.41806140542030334,
+            -0.02160000056028366,
+            0.6103864908218384,
+            0.611580491065979,
+            0.892799973487854
+          ],
+          "role": "Foliage"
+        },
+        {
+          "name": "garlic_stage_03__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/garlic_stage_03.fbx"
+    },
+    {
+      "id": "garlic_stage_04",
+      "label": "Alho / 4",
+      "kind": "plant",
+      "crop": "garlic",
+      "stage": 4,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "garlic_stage_04__Harvest_01",
+          "triangles": 208,
+          "local_bounds": [
+            -0.886719286441803,
+            -0.5691101551055908,
+            -0.029999999329447746,
+            -0.1457921862602234,
+            0.17629222571849823,
+            1.2400000095367432
+          ],
+          "role": "Harvest_01"
+        },
+        {
+          "name": "garlic_stage_04__Harvest_02",
+          "triangles": 208,
+          "local_bounds": [
+            0.11006255447864532,
+            -0.5806408524513245,
+            -0.029999999329447746,
+            0.8477590084075928,
+            0.16371896862983704,
+            1.2400000095367432
+          ],
+          "role": "Harvest_02"
+        },
+        {
+          "name": "garlic_stage_04__Harvest_03",
+          "triangles": 208,
+          "local_bounds": [
+            -0.39599698781967163,
+            0.14089420437812805,
+            -0.029999999329447746,
+            0.39977383613586426,
+            0.8494173288345337,
+            1.2400000095367432
+          ],
+          "role": "Harvest_03"
+        },
+        {
+          "name": "garlic_stage_04__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/garlic_stage_04.fbx"
+    },
+    {
+      "id": "planter_box",
+      "label": "Caixa de plantação",
+      "kind": "structure",
+      "crop": null,
+      "stage": null,
+      "soil_height": 0.54,
+      "parts": [
+        {
+          "name": "planter_box__Frame",
+          "triangles": 192,
+          "local_bounds": [
+            -1.9900000095367432,
+            -1.9600000381469727,
+            0.0,
+            1.9900000095367432,
+            1.9600000381469727,
+            0.7599999904632568
+          ],
+          "role": "Frame"
+        },
+        {
+          "name": "planter_box__Soil",
+          "triangles": 48,
+          "local_bounds": [
+            -1.7000000476837158,
+            -1.7000000476837158,
+            0.07999999821186066,
+            1.7000000476837158,
+            1.7000000476837158,
+            0.5640000104904175
+          ],
+          "role": "Soil"
+        },
+        {
+          "name": "planter_box__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/planter_box.fbx"
+    },
+    {
+      "id": "berry_seeds",
+      "label": "Sementes de Frutinha",
+      "kind": "seed",
+      "crop": "berry",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "berry_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.4361644983291626,
+            -0.4305134415626526,
+            0.0,
+            0.37134888768196106,
+            0.43139001727104187,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "berry_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/berry_seeds.fbx"
+    },
+    {
+      "id": "wheat_seeds",
+      "label": "Sementes de Trigo",
+      "kind": "seed",
+      "crop": "wheat",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "wheat_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.442767858505249,
+            -0.4777563214302063,
+            0.0,
+            0.3752460479736328,
+            0.4749067723751068,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "wheat_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/wheat_seeds.fbx"
+    },
+    {
+      "id": "pumpkin_seeds",
+      "label": "Sementes de Abóbora",
+      "kind": "seed",
+      "crop": "pumpkin",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "pumpkin_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.442767858505249,
+            -0.4777563214302063,
+            0.0,
+            0.3752460479736328,
+            0.4749067723751068,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "pumpkin_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/pumpkin_seeds.fbx"
+    },
+    {
+      "id": "thorn_seeds",
+      "label": "Sementes de Espinho",
+      "kind": "seed",
+      "crop": "thorn",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "thorn_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.4361644983291626,
+            -0.4305134415626526,
+            0.0,
+            0.37134888768196106,
+            0.43139001727104187,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "thorn_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/thorn_seeds.fbx"
+    },
+    {
+      "id": "carrot_seeds",
+      "label": "Sementes de Cenoura",
+      "kind": "seed",
+      "crop": "carrot",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "carrot_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.4361644983291626,
+            -0.4305134415626526,
+            0.0,
+            0.37134888768196106,
+            0.43139001727104187,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "carrot_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/carrot_seeds.fbx"
+    },
+    {
+      "id": "tomato_seeds",
+      "label": "Sementes de Tomate",
+      "kind": "seed",
+      "crop": "tomato",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "tomato_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.4361644983291626,
+            -0.4305134415626526,
+            0.0,
+            0.37134888768196106,
+            0.43139001727104187,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "tomato_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/tomato_seeds.fbx"
+    },
+    {
+      "id": "watermelon_seeds",
+      "label": "Sementes de Melancia",
+      "kind": "seed",
+      "crop": "watermelon",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "watermelon_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.442767858505249,
+            -0.4777563214302063,
+            0.0,
+            0.3752460479736328,
+            0.4749067723751068,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "watermelon_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/watermelon_seeds.fbx"
+    },
+    {
+      "id": "aloe_vera_seeds",
+      "label": "Sementes de Babosa",
+      "kind": "seed",
+      "crop": "aloe_vera",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "aloe_vera_seeds__Icon",
+          "triangles": 234,
+          "local_bounds": [
+            -0.4361644983291626,
+            -0.4305134415626526,
+            0.0,
+            0.37134888768196106,
+            0.43139001727104187,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "aloe_vera_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/aloe_vera_seeds.fbx"
+    },
+    {
+      "id": "garlic_seeds",
+      "label": "Sementes de Alho",
+      "kind": "seed",
+      "crop": "garlic",
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "garlic_seeds__Icon",
+          "triangles": 162,
+          "local_bounds": [
+            -0.44618937373161316,
+            -0.4350000023841858,
+            0.0,
+            0.3970586955547333,
+            0.5240219831466675,
+            0.125
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "garlic_seeds__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/garlic_seeds.fbx"
+    },
+    {
+      "id": "bottle_empty",
+      "label": "Garrafa vazia",
+      "kind": "supply",
+      "crop": null,
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "bottle_empty__Icon",
+          "triangles": 114,
+          "local_bounds": [
+            -0.3653408885002136,
+            -0.5149999856948853,
+            0.0,
+            0.3653408885002136,
+            0.5449999570846558,
+            0.1589999943971634
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "bottle_empty__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/bottle_empty.fbx"
+    },
+    {
+      "id": "bottle_full",
+      "label": "Garrafa com água",
+      "kind": "supply",
+      "crop": null,
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "bottle_full__Icon",
+          "triangles": 146,
+          "local_bounds": [
+            -0.3653408885002136,
+            -0.5149999856948853,
+            0.0,
+            0.3653408885002136,
+            0.5449999570846558,
+            0.1589999943971634
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "bottle_full__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/bottle_full.fbx"
+    },
+    {
+      "id": "ice_cube",
+      "label": "Cubo de gelo",
+      "kind": "supply",
+      "crop": null,
+      "stage": null,
+      "soil_height": null,
+      "parts": [
+        {
+          "name": "ice_cube__Icon",
+          "triangles": 84,
+          "local_bounds": [
+            -0.45500001311302185,
+            -0.5183516144752502,
+            0.0,
+            0.45500001311302185,
+            0.5189182162284851,
+            0.15800000727176666
+          ],
+          "role": "Icon"
+        },
+        {
+          "name": "ice_cube__Origin",
+          "triangles": 12,
+          "local_bounds": [
+            -0.019999999552965164,
+            -0.019999999552965164,
+            -0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164,
+            0.019999999552965164
+          ],
+          "role": "Origin"
+        }
+      ],
+      "file": "individual/ice_cube.fbx"
+    }
+  ],
+  "note": "Origin meshes are temporary markers removed by import-farming.luau. Keep all other parts separate.",
+  "final_mesh_count": 67,
+  "total_triangles": 15622
+}

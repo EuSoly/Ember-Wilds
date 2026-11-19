@@ -1,0 +1,312 @@
+{
+  "format": "FBX",
+  "source": "missing-items.blend",
+  "combined_file": "missing-items.fbx",
+  "texture": "missing_items_palette.png",
+  "color_swatches": 56,
+  "mesh_count": 15,
+  "total_triangles": 2599,
+  "settings": {
+    "axis_forward": "Z",
+    "axis_up": "Y",
+    "scale": 1,
+    "apply_scalings": "FBX_SCALE_UNITS",
+    "embedded_textures": true
+  },
+  "orientation": "item deitado: no Roblox a face de cima aponta para +Y",
+  "individual_origin": "centro do item, base em Y=0",
+  "items": [
+    {
+      "item_id": "black_wolf_fur",
+      "label": "Pele de lobo negro",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.9217067956924438,
+        1.0800000429153442,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "black_wolf_fur_body",
+        "black_wolf_fur_hl",
+        "black_wolf_fur_outline",
+        "black_wolf_fur_shade"
+      ],
+      "file": "individual/black_wolf_fur.fbx"
+    },
+    {
+      "item_id": "blue_cube",
+      "label": "Cubo azul",
+      "triangles": 62,
+      "vertices": 48,
+      "local_dimensions": [
+        0.9264410138130188,
+        1.0800000429153442,
+        0.1459999978542328
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "blue_cube_body",
+        "blue_cube_glint",
+        "blue_cube_left",
+        "blue_cube_outline",
+        "blue_cube_top"
+      ],
+      "file": "individual/blue_cube.fbx"
+    },
+    {
+      "item_id": "blue_gem",
+      "label": "Gema azul",
+      "triangles": 57,
+      "vertices": 46,
+      "local_dimensions": [
+        1.0800000429153442,
+        1.0017865896224976,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "blue_gem_body",
+        "blue_gem_crown",
+        "blue_gem_left",
+        "blue_gem_outline"
+      ],
+      "file": "individual/blue_gem.fbx"
+    },
+    {
+      "item_id": "blue_thread",
+      "label": "Linha azul",
+      "triangles": 372,
+      "vertices": 256,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.8489207625389099,
+        0.18000000715255737
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "blue_thread_body",
+        "blue_thread_hole",
+        "blue_thread_outline",
+        "blue_thread_part"
+      ],
+      "file": "individual/blue_thread.fbx"
+    },
+    {
+      "item_id": "dragon_orb",
+      "label": "Orbe azul",
+      "triangles": 182,
+      "vertices": 128,
+      "local_dimensions": [
+        1.0800000429153442,
+        1.0800000429153442,
+        0.1550000011920929
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "dragon_orb_body",
+        "dragon_orb_core",
+        "dragon_orb_glint",
+        "dragon_orb_outline"
+      ],
+      "file": "individual/dragon_orb.fbx"
+    },
+    {
+      "item_id": "firefly",
+      "label": "Vaga-lume",
+      "triangles": 316,
+      "vertices": 228,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.9994722008705139,
+        0.1419999897480011
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "firefly_antenna",
+        "firefly_glow",
+        "firefly_glow_glint",
+        "firefly_head",
+        "firefly_wing",
+        "firefly_wing_glint"
+      ],
+      "file": "individual/firefly.fbx"
+    },
+    {
+      "item_id": "green_gem",
+      "label": "Gema verde",
+      "triangles": 57,
+      "vertices": 46,
+      "local_dimensions": [
+        1.0800000429153442,
+        1.0017865896224976,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "green_gem_body",
+        "green_gem_crown",
+        "green_gem_left",
+        "green_gem_outline"
+      ],
+      "file": "individual/green_gem.fbx"
+    },
+    {
+      "item_id": "lava_cube",
+      "label": "Cubo de lava",
+      "triangles": 62,
+      "vertices": 48,
+      "local_dimensions": [
+        0.9264410138130188,
+        1.0800000429153442,
+        0.1459999978542328
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "lava_cube_body",
+        "lava_cube_glint",
+        "lava_cube_left",
+        "lava_cube_outline",
+        "lava_cube_top"
+      ],
+      "file": "individual/lava_cube.fbx"
+    },
+    {
+      "item_id": "lava_orb",
+      "label": "Orbe de lava",
+      "triangles": 182,
+      "vertices": 128,
+      "local_dimensions": [
+        1.0800000429153442,
+        1.0800000429153442,
+        0.1550000011920929
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "lava_orb_body",
+        "lava_orb_core",
+        "lava_orb_glint",
+        "lava_orb_outline"
+      ],
+      "file": "individual/lava_orb.fbx"
+    },
+    {
+      "item_id": "orange_gem",
+      "label": "Gema laranja",
+      "triangles": 57,
+      "vertices": 46,
+      "local_dimensions": [
+        1.0800000429153442,
+        1.0017865896224976,
+        0.14000000059604645
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "orange_gem_body",
+        "orange_gem_crown",
+        "orange_gem_left",
+        "orange_gem_outline"
+      ],
+      "file": "individual/orange_gem.fbx"
+    },
+    {
+      "item_id": "paper",
+      "label": "Papel",
+      "triangles": 62,
+      "vertices": 48,
+      "local_dimensions": [
+        0.8425238728523254,
+        1.0800000429153442,
+        0.16300000250339508
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "paper_body",
+        "paper_fold",
+        "paper_fold_shadow",
+        "paper_outline",
+        "paper_sheet"
+      ],
+      "file": "individual/paper.fbx"
+    },
+    {
+      "item_id": "pilot_glasses",
+      "label": "Óculos de piloto",
+      "triangles": 216,
+      "vertices": 156,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.47984805703163147,
+        0.16699999570846558
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "pilot_glasses_body",
+        "pilot_glasses_glint",
+        "pilot_glasses_lens",
+        "pilot_glasses_outline",
+        "pilot_glasses_rim"
+      ],
+      "file": "individual/pilot_glasses.fbx"
+    },
+    {
+      "item_id": "pitchfork_part",
+      "label": "Peça do forcado",
+      "triangles": 186,
+      "vertices": 132,
+      "local_dimensions": [
+        0.879656970500946,
+        1.0800000429153442,
+        0.15299999713897705
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "pitchfork_part_body",
+        "pitchfork_part_edge",
+        "pitchfork_part_metal",
+        "pitchfork_part_outline"
+      ],
+      "file": "individual/pitchfork_part.fbx"
+    },
+    {
+      "item_id": "water_bucket",
+      "label": "Balde com água",
+      "triangles": 384,
+      "vertices": 196,
+      "local_dimensions": [
+        1.0800000429153442,
+        0.9803077578544617,
+        1.495384693145752
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "water_bucket_body",
+        "water_bucket_bottom_band",
+        "water_bucket_handle",
+        "water_bucket_rim",
+        "water_bucket_water"
+      ],
+      "file": "individual/water_bucket.fbx"
+    },
+    {
+      "item_id": "white_wolf_fur",
+      "label": "Pele de lobo branco",
+      "triangles": 202,
+      "vertices": 140,
+      "local_dimensions": [
+        0.9217067956924438,
+        1.0800000429153442,
+        0.1599999964237213
+      ],
+      "palette_materials": 1,
+      "source_parts": [
+        "white_wolf_fur_body",
+        "white_wolf_fur_hl",
+        "white_wolf_fur_outline",
+        "white_wolf_fur_shade"
+      ],
+      "file": "individual/white_wolf_fur.fbx"
+    }
+  ]
+}

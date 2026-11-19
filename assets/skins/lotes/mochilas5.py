@@ -264,7 +264,7 @@ def noite_estrelada(m):
                TOPO + 0.032, 0.024, "#342444", outline="#2C1404", ow=0.08, smooth=False)
 
 
-# ---------------------------------------------------------------- 9. Cubos de Esmeralda (ref. 68)
+# ---------------------------------------------------------------- 9. Sementes de Esmeralda (ref. 68)
 def cubos_esmeralda(m):
     # Hastes de madeira escura (#442410, miolo #583014) conectando os 3 blocos de esmeralda
     m.flat(_rect(0.42, 0.15, 0.38, 0.55), Z0 + 0.15, MH - 0.20, "#583014", outline="#442410", ow=0.05, smooth=False)

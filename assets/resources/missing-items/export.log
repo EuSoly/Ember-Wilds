@@ -1,0 +1,129 @@
+00:00.469  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\missing-items.blend"
+00:01.000  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_2800_5ef7563a9fe9de219a686e9ca2771987.png.png"
+00:01.797  blend            | Read blend: "C:\Users\Elize\Desktop\Roblox\starve\assets\resources\missing-items\berry-bush.blend"
+00:01.875  image.write      | ERROR OpenImageIO write failed: Could not open file "C:\Users\Elize\.thumbnails\large\blender_2800_097a60333d6291e04314136bf34d5d70.png.png"
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\missing-items.fbx'
+export finished in 0.0170 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\black_wolf_fur.fbx'
+export finished in 0.0037 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\blue_cube.fbx'
+export finished in 0.0038 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\blue_gem.fbx'
+export finished in 0.0034 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\blue_thread.fbx'
+export finished in 0.0040 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\dragon_orb.fbx'
+export finished in 0.0045 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\firefly.fbx'
+export finished in 0.0039 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\green_gem.fbx'
+export finished in 0.0037 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\lava_cube.fbx'
+export finished in 0.0041 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\lava_orb.fbx'
+export finished in 0.0042 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\orange_gem.fbx'
+export finished in 0.0039 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\paper.fbx'
+export finished in 0.0034 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\pilot_glasses.fbx'
+export finished in 0.0034 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\pitchfork_part.fbx'
+export finished in 0.0032 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\water_bucket.fbx'
+export finished in 0.0036 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\items\\individual\\white_wolf_fur.fbx'
+export finished in 0.0036 sec.
+Info: Saved as "missing-items-export.blend"
+EXPORT_RESULT {"meshes": 15, "triangles": 2599, "colors": 56}
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+VALIDATION_RESULT {"combined": {"meshes": 15, "geometry_bounds_max_error": 2.384185791015625e-07, "materials_and_textures_valid": true}, "individual_files_passed": 15}
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\berry-bush.fbx'
+export finished in 0.0081 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Berry_01.fbx'
+export finished in 0.0034 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Berry_02.fbx'
+export finished in 0.0036 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Berry_03.fbx'
+export finished in 0.0033 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Berry_04.fbx'
+export finished in 0.0032 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Berry_05.fbx'
+export finished in 0.0031 sec.
+
+FBX export starting... 'C:\\Users\\Elize\\Desktop\\Roblox\\starve\\assets\\resources\\missing-items\\roblox\\bush\\individual\\Foliage.fbx'
+export finished in 0.0044 sec.
+Info: Saved as "berry-bush-export.blend"
+EXPORT_RESULT {"meshes": 6, "triangles": 880, "colors": 5}
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+Extensions: writing cache failed ([WinError 5] Acesso negado: 'C:\\Users\\Elize\\AppData\\Roaming\\Blender Foundation\\Blender\\5.3\\extensions').
+FBX version: 7400
+VALIDATION_RESULT {"combined": {"meshes": 6, "geometry_bounds_max_error": 5.587935447692871e-07, "materials_and_textures_valid": true}, "individual_files_passed": 6}
+ALL_EXPORTS_VALIDATED: 15 icons, 1 bush with 5 independent berries
+Blender 5.3.0 (hash 02f0899d78e3 built 2026-11-10 01:33:43)
+
+Blender quit

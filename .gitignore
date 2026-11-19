@@ -31,3 +31,8 @@ __pycache__/
 
 # Imagens do chão (geradas por scripts/groundmap/forest.luau)
 scripts/groundmap/*.png
+
+# Discord bot secrets & node_modules
+tools/discord-bot/.env
+tools/discord-bot/node_modules/
+tools/discord-bot/bot-service.log
