@@ -45,6 +45,14 @@ local COAST_SAND = { 38, 12 } -- largura da areia: 38 + até 12 (ruído)
 local COAST_DARK = 6 -- faixa de grama escura depois da areia da costa
 local COAST_WAVE = 8 -- studs: a linha da costa entorta ±4
 local COAST_CORNER = 40 -- raio dos cantos da praia
+-- `nonce=N` na linha de comando muda 1 pixel de cada imagem (veja render).
+local NONCE = 0
+for _, arg in process.args do
+	local n = string.match(arg, "^nonce=(%d+)$")
+	if n then
+		NONCE = tonumber(n) :: number
+	end
+end
 local LAND = { x0 = X0 - BEACH, x1 = X0 + SIZE + BEACH, z0 = Z0 - BEACH, z1 = Z0 + SIZE + BEACH }
 -- A grade cobre a floresta e o anel da costa. A origem anda TILE studs (160
 -- células): os pontos da grade são os mesmos de antes no miolo.
@@ -386,6 +394,11 @@ local function render(
 		for col = 0, RES - 1 do
 			local x = if minimap then x0 + (col + 0.5) * size / RES else x0 + size - (col + 0.5) * size / RES
 			local c, a = pixel(x, z)
+			if row == 0 and col == 0 and NONCE ~= 0 then
+				-- `nonce=N`: muda 1 pixel para gerar imagem nova (id novo) quando
+				-- a Roblox trava uma recém-enviada (carrega com Failure).
+				c = { (c[1] + NONCE) % 256, c[2], c[3] }
+			end
 			buffer.writeu8(raw, o, byte(c[1]))
 			buffer.writeu8(raw, o + 1, byte(c[2]))
 			buffer.writeu8(raw, o + 2, byte(c[3]))

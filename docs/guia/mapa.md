@@ -17,8 +17,13 @@ O mapa é um quadrado de **2.220 × 2.220 studs**, centrado na origem (no Studio
 
 - **No lançamento (desde 19/11/2026) só existe a floresta, com praia e mar em volta.** Os chãos de Inverno, Lava e Deserto e o oceano antigo foram guardados em `ServerStorage.ImportsOriginais.BiomasFuturos`, e voltam quando o bioma abrir. O script `scripts/studio/mar-em-volta.luau` monta tudo (pode rodar de novo):
   - **Praia** de **60 studs** em volta da floresta (`WorldConfig.BEACH_WIDTH`).
-    - Chão `Ground/Beach_*`, liso na cor `#D6B26C`. O material Sand do Roblox deixava a areia cinza.
-    - Marcadores `NoSpawn/Praia` com `Sand = true`: nada nasce na praia, a pá cava areia e não dá para plantar.
+    - **Pintada como as margens dos lagos:** 20 pedaços `Ground/Coast_<ix>_<iz>` de 240 studs em anel em volta dos `Forest_*` (`ix` e `iz` de −1 a 4). São cópias do `Forest_0_0`, com a textura de grama por cima e a imagem da costa no `ColorMap`.
+      - O `ColorMap` da costa é um `Texture`, não um `Decal`, e fica esticado 1 pixel além de cada borda. O Roblox repete a imagem e o filtro mistura a borda com o lado oposto. Num `Decal`, isso fazia uma linha escura, da cor do mar, na emenda com a floresta.
+      - **Imagem nova enviada pelo MCP** vai para a conta pessoal, e o jogo é do grupo. No Output aparece "A experiência não tem permissão…": clique para compartilhar o acesso. Depois disso, o Studio só mostra a imagem depois de reaberto.
+    - **O que a imagem mostra:** areia de 38 a 50 studs, cantos arredondados e costa um pouco torta, espuma, água rasa e clara e o mar escurecendo até a cor do chão `Ocean_*`.
+    - **Como gerar:** `lune run forest coast serve` em `scripts/groundmap`. Os ids ficam no `COAST_IMAGES` do script `mar-em-volta.luau`.
+    - **A emenda com a floresta não muda:** toda a transição da costa acaba antes da borda da floresta, então os `Forest_*` não precisam ser refeitos.
+    - **Marcadores:** `NoSpawn/Praia` com `Sand = true` cobre 45 studs da beira da água para dentro. Ali nada nasce, a pá cava areia e não dá para plantar.
     - A praia conta como terra (`WorldConfig.LAND`): dá para construir, os mobs da floresta entram nela (`MOB_AREAS`) e o aviso do mar não aparece.
   - **Chão de mar** `Ground/Ocean_1..4` (azul `#1F6F9F`, topo em Y = −0,2) cobre até **600 studs** depois da floresta. A câmera vê ~100 studs em volta, então nunca chega ao fim dele.
   - **Água** `Water/Mar`, da beira da praia para fora. Tem `Painted = true`, ou seja, fica invisível e vale só a forma. No mar o jogador nada devagar e perde fôlego, como num lago, e não dá para construir em cima.

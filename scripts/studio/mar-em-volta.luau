@@ -26,8 +26,31 @@ local OCEAN_COLOR = Color3.fromHex("1f6f9f") -- a cor do Ocean antigo
 local SAND_COLOR = Color3.fromHex("d6b26c") -- só a cor dos marcadores no Studio
 local SAND_MARK = 45 -- studs de areia da beira da água para dentro (marcadores)
 local TILE = 240 -- lado de cada pedaço pintado (igual aos Forest_*)
--- Imagens da costa (ColorMap de cada Coast_<ix>_<iz>), enviadas em 19/11/2026.
-local COAST_IMAGES: { [string]: string } = {}
+local RES = 1024 -- pixels de cada imagem da costa
+local PAD = 1 -- pixels de cada borda que ficam de fora (sem linha na emenda)
+-- Imagens da costa (ColorMap de cada Coast_<ix>_<iz>), enviadas em 19/11/2026 (2º envio, nonce=1: o 1º travou na moderação).
+local COAST_IMAGES: { [string]: string } = {
+	["-1_-1"] = "rbxassetid://74791546363642",
+	["0_-1"] = "rbxassetid://77193647890941",
+	["1_-1"] = "rbxassetid://113306184103394",
+	["2_-1"] = "rbxassetid://121396178939162",
+	["3_-1"] = "rbxassetid://107678253873005",
+	["4_-1"] = "rbxassetid://131744398868356",
+	["-1_0"] = "rbxassetid://75464944742144",
+	["4_0"] = "rbxassetid://70487425946923",
+	["-1_1"] = "rbxassetid://93218625925095",
+	["4_1"] = "rbxassetid://95807118698734",
+	["-1_2"] = "rbxassetid://77553756041065",
+	["4_2"] = "rbxassetid://136733518334607",
+	["-1_3"] = "rbxassetid://98756115779841",
+	["4_3"] = "rbxassetid://106540733273827",
+	["-1_4"] = "rbxassetid://132818259743240",
+	["0_4"] = "rbxassetid://127270044621827",
+	["1_4"] = "rbxassetid://108386195759839",
+	["2_4"] = "rbxassetid://110084088071988",
+	["3_4"] = "rbxassetid://121571783647398",
+	["4_4"] = "rbxassetid://82130588734750",
+}
 local WALL_HEIGHT = 60
 local WALL_THICKNESS = 4
 
@@ -110,8 +133,24 @@ for iz = -1, 4 do
 			end
 		end
 		tile.Position = Vector3.new(FOREST.minX + (ix + 0.5) * TILE, template.Position.Y, FOREST.minZ + (iz + 0.5) * TILE)
-		local colorMap = tile:FindFirstChild("ColorMap") :: Decal
+		-- Texture no lugar do Decal: o Roblox repete a imagem e o filtro mistura
+		-- a borda com o lado oposto (aqui o mar fundo), o que fazia uma linha
+		-- escura na emenda com a floresta (visto em 19/11). Esticada PAD pixels
+		-- além da peça, a borda nunca encosta no outro lado.
+		local decal = tile:FindFirstChild("ColorMap")
+		if decal then
+			decal:Destroy()
+		end
+		local colorMap = Instance.new("Texture")
+		colorMap.Name = "ColorMap"
+		colorMap.Face = Enum.NormalId.Top
+		colorMap.ZIndex = 1
 		colorMap.Texture = COAST_IMAGES[key] or ""
+		colorMap.StudsPerTileU = TILE * RES / (RES - 2 * PAD)
+		colorMap.StudsPerTileV = colorMap.StudsPerTileU
+		colorMap.OffsetStudsU = colorMap.StudsPerTileU * PAD / RES
+		colorMap.OffsetStudsV = colorMap.OffsetStudsU
+		colorMap.Parent = tile
 		tile.Parent = ground
 	end
 end
