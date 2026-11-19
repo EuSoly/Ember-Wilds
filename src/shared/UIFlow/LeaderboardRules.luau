@@ -7,7 +7,10 @@ export type Row = { rank: number, name: string, score: number, isMe: boolean }
 
 local LeaderboardRules = {}
 
-LeaderboardRules.LIMIT = 10
+-- Lista completa (janela no meio da tela): até LIMIT linhas.
+LeaderboardRules.LIMIT = 50
+-- Placar compacto do canto (no lugar do antigo selo de pontos): só o pódio.
+LeaderboardRules.PODIUM = 3
 
 function LeaderboardRules.top(entries: { InputEntry }, limit: number, me: number): { Row }
 	if #entries == 0 or limit <= 0 then
@@ -50,6 +53,19 @@ function LeaderboardRules.top(entries: { InputEntry }, limit: number, me: number
 				})
 				break
 			end
+		end
+	end
+	return out
+end
+
+-- Só os PODIUM primeiros, sem acrescentar o jogador local (pedido do Elizeu,
+-- 19/11: o canto mostra o top 3; a posição de cada um está na lista completa).
+function LeaderboardRules.podium(entries: { InputEntry }, me: number): { Row }
+	local rows = LeaderboardRules.top(entries, LeaderboardRules.PODIUM, me)
+	local out: { Row } = {}
+	for _, row in rows do
+		if row.rank <= LeaderboardRules.PODIUM then
+			table.insert(out, row)
 		end
 	end
 	return out

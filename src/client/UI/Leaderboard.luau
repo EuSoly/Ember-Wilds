@@ -1,22 +1,23 @@
 --!strict
--- Placar da partida (estilo Starve.io): lista de jogadores ordenada por pontos
--- (LeaderboardRules.top). Fica no canto direito, abaixo dos botões do minimapa
--- (e abaixo do tutorial / receita fixada quando eles estão na coluna da direita).
--- No PC aparece sempre; no celular (tela baixa) fica atrás de um botão redondo
--- ao lado do botão das Missões, para caber em 749×330.
+-- Placar da partida (estilo Starve.io), no lugar do antigo selo de pontos
+-- (pedido do Elizeu, 19/11):
+-- - canto de cima à esquerda: uma placa de madeira só com o top 3
+--   (LeaderboardRules.podium). A altura vem do HudColumn.pillBottom, a mesma
+--   conta que a coluna de receitas e o boost de XP usam para começar abaixo;
+-- - clicar/tocar na placa abre a lista completa (até LeaderboardRules.LIMIT)
+--   numa janela no meio da tela (sem escurecer o fundo); clicar fora fecha.
+-- Pontos = atributo Score de cada Player. A lista é refeita no máximo a cada
+-- REBUILD_EVERY (os pontos mudam a cada golpe de coleta de qualquer um).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
+local HudColumn = require(Shared:WaitForChild("UIFlow"):WaitForChild("HudColumn"))
 local LeaderboardRules = require(Shared:WaitForChild("UIFlow"):WaitForChild("LeaderboardRules"))
-local RankingImages = require(Shared:WaitForChild("RankingImages"))
 local StatNames = require(Shared:WaitForChild("StatNames"))
 local Strings = require(Shared:WaitForChild("Strings"))
 local Theme = require(Shared:WaitForChild("Theme"))
-local CornerLayout = require(script.Parent:WaitForChild("CornerLayout"))
-local HudArt = require(script.Parent:WaitForChild("HudArt"))
-local HudColumnState = require(script.Parent:WaitForChild("HudColumnState"))
 local Kit = require(script.Parent:WaitForChild("Kit"))
 local Rustic = require(script.Parent:WaitForChild("Rustic"))
 local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
@@ -24,11 +25,19 @@ local ScreenMetrics = require(script.Parent:WaitForChild("ScreenMetrics"))
 local create = vide.create
 local R = Theme.rustic
 
-local PANEL_WIDTH = 210
-local TITLE_HEIGHT = 22
-local ROW_HEIGHT = 18
-local GAP = 4
 local REBUILD_EVERY = 0.5 -- segundos: no máximo 2 atualizações da lista por segundo
+-- Janela da lista completa.
+local WINDOW_WIDTH = 360
+local WINDOW_MAX_SHARE = 0.8 -- da altura da tela
+local TITLE_HEIGHT = 28
+local ROW_HEIGHT = 24
+local ROW_GAP = 2
+-- Ouro, prata e bronze no número do pódio.
+local MEDAL = {
+	Color3.fromHex("#FFD24A"),
+	Color3.fromHex("#E2E6EA"),
+	Color3.fromHex("#E39B5B"),
+}
 
 local function formatScore(n: number): string
 	local s = tostring(math.floor(math.max(n, 0)))
@@ -40,79 +49,78 @@ local function formatScore(n: number): string
 	return out
 end
 
-local function RowView(row: () -> LeaderboardRules.Row, index: number): Frame
-	local color = function(): Color3
+-- Uma linha "#1  Nome  1.240". `size` = tamanho da linha; `maxText` = teto
+-- da fonte. O jogador local fica na cor de brasa.
+local function RowView(row: () -> LeaderboardRules.Row, index: number, size: UDim2, maxText: number): Frame
+	local nameColor = function(): Color3
 		return if row().isMe then R.emberLight else R.cream
+	end
+	local rankColor = function(): Color3
+		return MEDAL[row().rank] or nameColor()
 	end
 	return create("Frame")({
 		Name = `Row{index}`,
 		LayoutOrder = index,
-		Size = UDim2.new(1, 0, 0, ROW_HEIGHT),
+		Size = size,
 		BackgroundTransparency = 1,
 		Rustic.label({
 			Name = "Rank",
-			Size = UDim2.fromOffset(30, ROW_HEIGHT),
+			Size = UDim2.fromScale(0.2, 1),
 			FontFace = Theme.font.number,
 			TextXAlignment = Enum.TextXAlignment.Left,
-			TextColor3 = color,
+			TextColor3 = rankColor,
 			Text = function()
 				return `#{row().rank}`
 			end,
-			maxSize = 14,
+			maxSize = maxText,
 		}),
 		Rustic.label({
 			Name = "Name",
-			Position = UDim2.fromOffset(32, 0),
-			Size = UDim2.new(1, -92, 0, ROW_HEIGHT),
+			Position = UDim2.fromScale(0.2, 0),
+			Size = UDim2.fromScale(0.52, 1),
 			FontFace = Theme.font.label,
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextTruncate = Enum.TextTruncate.AtEnd,
-			TextColor3 = color,
+			TextColor3 = nameColor,
 			Text = function()
 				return row().name
 			end,
-			maxSize = 14,
+			maxSize = maxText,
 		}),
 		Rustic.label({
 			Name = "Score",
 			AnchorPoint = Vector2.new(1, 0),
 			Position = UDim2.fromScale(1, 0),
-			Size = UDim2.fromOffset(58, ROW_HEIGHT),
+			Size = UDim2.fromScale(0.28, 1),
 			FontFace = Theme.font.number,
 			TextXAlignment = Enum.TextXAlignment.Right,
-			TextColor3 = color,
+			TextColor3 = nameColor,
 			Text = function()
 				return formatScore(row().score)
 			end,
-			maxSize = 14,
+			maxSize = maxText,
 		}),
 	}) :: Frame
 end
 
 local function Leaderboard(): Frame
-	local rows = vide.source({} :: { LeaderboardRules.Row })
-	local mobileOpen = vide.source(false)
+	local all = vide.source({} :: { LeaderboardRules.Row })
+	local podium = vide.source({} :: { LeaderboardRules.Row })
+	local open = vide.source(false)
 	local me = Players.LocalPlayer
 	local myId = if me then me.UserId else 0
-
-	local playerConns: { [Player]: RBXScriptConnection } = {}
 
 	local function rebuild()
 		local entries: { LeaderboardRules.InputEntry } = {}
 		for _, p in Players:GetPlayers() do
 			local raw = p:GetAttribute(StatNames.Score)
 			local score = if type(raw) == "number" and raw == raw and raw > 0 then math.floor(raw) else 0
-			table.insert(entries, {
-				name = p.DisplayName,
-				score = score,
-				userId = p.UserId,
-			})
+			table.insert(entries, { name = p.DisplayName, score = score, userId = p.UserId })
 		end
-		rows(LeaderboardRules.top(entries, LeaderboardRules.LIMIT, myId))
+		all(LeaderboardRules.top(entries, LeaderboardRules.LIMIT, myId))
+		podium(LeaderboardRules.podium(entries, myId))
 	end
 
-	-- Os pontos mudam a cada golpe de coleta de qualquer jogador: junta as
-	-- mudanças e refaz a lista no máximo a cada REBUILD_EVERY.
 	local pending = false
 	local function scheduleRebuild()
 		if pending then
@@ -125,19 +133,19 @@ local function Leaderboard(): Frame
 		end)
 	end
 
+	local playerConns: { [Player]: RBXScriptConnection } = {}
 	local function watchPlayer(p: Player)
 		if playerConns[p] then
 			playerConns[p]:Disconnect()
 		end
 		playerConns[p] = p:GetAttributeChangedSignal(StatNames.Score):Connect(scheduleRebuild)
 	end
-
 	for _, p in Players:GetPlayers() do
 		watchPlayer(p)
 	end
 	vide.cleanup(Players.PlayerAdded:Connect(function(p)
 		watchPlayer(p)
-		rebuild()
+		scheduleRebuild()
 	end))
 	vide.cleanup(Players.PlayerRemoving:Connect(function(p)
 		local conn = playerConns[p]
@@ -155,98 +163,117 @@ local function Leaderboard(): Frame
 	end)
 	rebuild()
 
-	local button = HudArt.roundButton({
-		Name = "LeaderboardButton",
-		icon = RankingImages.TROPHY,
-		fallback = "#",
-		Visible = ScreenMetrics.short,
-		AnchorPoint = Vector2.new(1, 0),
-		Position = function()
-			return CornerLayout.secondRowLeftPosition()
+	-- Placa do canto (top 3). Altura em px a partir da conta compartilhada.
+	local plate = Rustic.plate({
+		Name = "Podium",
+		Active = true,
+		Position = UDim2.fromScale(HudColumn.PILL_LEFT, HudColumn.PILL_TOP),
+		Size = function()
+			local h = ScreenMetrics.guiHeight()
+			return UDim2.new(HudColumn.PILL_WIDTH, 0, 0, HudColumn.pillBottom(h) - HudColumn.PILL_TOP * h)
 		end,
-		Size = CornerLayout.buttonSize,
-		SizeConstraint = Enum.SizeConstraint.RelativeXY,
-		minSize = Theme.touchMinSize,
-		maxSize = Vector2.new(68, 68),
-		Activated = function()
-			mobileOpen(not vide.untrack(mobileOpen))
-		end,
+		create("UISizeConstraint")({ MinSize = Vector2.new(150, 0) }),
+		-- Margem só nas linhas (um UIPadding na placa encolheria a própria arte
+		-- da madeira): o texto não encosta na borda nem nos pregos dos cantos.
+		create("Frame")({
+			Name = "Rows",
+			Position = UDim2.fromScale(0.1, 0.16),
+			Size = UDim2.fromScale(0.8, 0.68),
+			BackgroundTransparency = 1,
+			ZIndex = 2,
+			-- Com 1 ou 2 jogadores, as linhas ficam no meio da placa.
+			create("UIListLayout")({
+				FillDirection = Enum.FillDirection.Vertical,
+				VerticalAlignment = Enum.VerticalAlignment.Center,
+				SortOrder = Enum.SortOrder.LayoutOrder,
+			}),
+			vide.indexes(podium, function(row, index)
+				return RowView(row, index, UDim2.fromScale(1, 1 / LeaderboardRules.PODIUM), 22)
+			end),
+		}),
+		-- A placa inteira é o botão que abre a lista completa.
+		create("TextButton")({
+			Name = "Open",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			Text = "",
+			ZIndex = 5,
+			Activated = function()
+				open(true)
+			end,
+		}),
 	})
 
-	local pad = Kit.panelPadding(10)
-	local panel = Kit.panel({
-		Name = "LeaderboardPanel",
-		Active = true,
-		AnchorPoint = Vector2.new(1, 0),
-		Visible = function()
-			if #rows() == 0 then
-				return false
-			end
-			if ScreenMetrics.short() then
-				return mobileOpen()
-			end
-			return not HudColumnState.yieldsToPanel()
+	local pad = Kit.panelPadding(12)
+	local window = Kit.panel({
+		Name = "Window",
+		Active = true, -- clique dentro da janela não chega ao fundo (não fecha)
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = function()
+			local rows = #all()
+			local content = TITLE_HEIGHT + 6 + rows * (ROW_HEIGHT + ROW_GAP)
+			local maxHeight = WINDOW_MAX_SHARE * ScreenMetrics.guiHeight()
+			return UDim2.fromOffset(WINDOW_WIDTH, math.min(content + 2 * pad, maxHeight))
 		end,
-		Position = function()
-			local layout = CornerLayout.get()
-			local gap = math.max(math.round(layout.buttonSize * 0.15), 4)
-			local belowButtons = layout.buttonTop + 2 * layout.buttonSize + gap + 10
-			if ScreenMetrics.short() then
-				return UDim2.new(1, -layout.margin, 0, belowButtons)
-			end
-			local height = ScreenMetrics.guiHeight()
-			local col = HudColumnState.column()
-			local topPx = belowButtons
-			local th = HudColumnState.tutorialHeight()
-			local ph = HudColumnState.pinnedHeight()
-			if ph > 0 then
-				topPx = math.max(topPx, math.round((col.pinnedY + ph + 0.01) * height))
-			elseif th > 0 then
-				topPx = math.max(topPx, math.round((col.tutorialY + th + 0.01) * height))
-			end
-			return UDim2.new(1, -layout.margin, 0, topPx)
-		end,
-		AutomaticSize = Enum.AutomaticSize.Y,
-		Size = UDim2.fromOffset(PANEL_WIDTH, 0),
+		ZIndex = 2,
 		create("UIPadding")({
 			PaddingTop = UDim.new(0, pad),
 			PaddingBottom = UDim.new(0, pad),
 			PaddingLeft = UDim.new(0, pad),
 			PaddingRight = UDim.new(0, pad),
 		}),
-		create("UIListLayout")({
-			FillDirection = Enum.FillDirection.Vertical,
-			Padding = UDim.new(0, GAP),
-			SortOrder = Enum.SortOrder.LayoutOrder,
-		}),
 		Kit.text({
 			Name = "Title",
-			LayoutOrder = 0,
 			Size = UDim2.new(1, 0, 0, TITLE_HEIGHT),
 			FontFace = Theme.font.number,
 			Text = Strings.get("hud.players"),
-			maxSize = 16,
+			maxSize = 22,
 		}),
-		create("Frame")({
-			Name = "Rows",
-			LayoutOrder = 1,
-			AutomaticSize = Enum.AutomaticSize.Y,
-			Size = UDim2.fromScale(1, 0),
+		create("ScrollingFrame")({
+			Name = "List",
+			Position = UDim2.fromOffset(0, TITLE_HEIGHT + 6),
+			Size = UDim2.new(1, 0, 1, -(TITLE_HEIGHT + 6)),
 			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			ScrollBarThickness = 4,
+			ScrollBarImageColor3 = R.cream,
+			CanvasSize = UDim2.new(),
+			AutomaticCanvasSize = Enum.AutomaticSize.Y,
+			ScrollingDirection = Enum.ScrollingDirection.Y,
 			create("UIListLayout")({
 				FillDirection = Enum.FillDirection.Vertical,
-				Padding = UDim.new(0, 2),
+				Padding = UDim.new(0, ROW_GAP),
 				SortOrder = Enum.SortOrder.LayoutOrder,
 			}),
-			vide.indexes(rows, RowView),
+			vide.indexes(all, function(row, index)
+				return RowView(row, index, UDim2.new(1, -8, 0, ROW_HEIGHT), 18)
+			end),
 		}),
 	})
 
+	-- Fundo invisível da tela inteira (sem escurecer, pedido do Elizeu):
+	-- tocar fora da janela fecha.
+	local overlay = create("TextButton")({
+		Name = "LeaderboardOverlay",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		AutoButtonColor = false,
+		Text = "",
+		Visible = open,
+		Activated = function()
+			open(false)
+		end,
+		window,
+	})
+
+	-- Por cima do resto do HUD (a janela precisa cobrir a coluna da direita).
 	return create("Frame")({
 		Name = "Leaderboard",
 		Size = UDim2.fromScale(1, 1),
 		BackgroundTransparency = 1,
-		{ button :: Instance, panel :: Instance },
+		ZIndex = 10,
+		{ plate :: Instance, overlay :: Instance },
 	}) :: Frame
 end
 

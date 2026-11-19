@@ -53,11 +53,14 @@ return {
 		assert(HudLayout.panelLift() == HudLayout.RINGS_LIFT + 55 + HudLayout.PANEL_GAP, "acima dos anéis")
 	end,
 	["recipe column starts below the score pill on phones"] = function()
+		-- Placar top 3 (19/11): 2% + no mínimo 64 px no celular (6,6 + 64).
 		local bottom = HudLayout.scorePillBottom(749, 330)
-		assert(math.abs(bottom - 44.6) < 0.5, `base do selo: {bottom}`)
+		assert(math.abs(bottom - 70.6) < 0.5, `base do placar: {bottom}`)
 		assert(HudLayout.craftTop(749, 330) >= bottom + 8, "coluna encosta no selo")
 	end,
-	["recipe column stays where it was on pc"] = function()
-		assert(HudLayout.craftTop(1280, 720) == 0.12 * 720, "PC igual")
+	["recipe column starts below the leaderboard on pc"] = function()
+		-- O placar top 3 (13% da tela) passou dos 12% de antes: a coluna desce junto.
+		local bottom = HudLayout.scorePillBottom(1280, 720)
+		assert(HudLayout.craftTop(1280, 720) == bottom + 8, "coluna logo abaixo do placar")
 	end,
 }

@@ -9,14 +9,16 @@ HudColumn.GAP = 0.01
 HudColumn.NOTIFICATIONS_ALONE = 0.4 -- onde os avisos ficam quando não há mais nada
 HudColumn.WIDTH = 0.24 -- largura dos painéis (fração da largura da tela)
 
--- Selo de pontos (UI/ScorePill), no canto de cima à esquerda: 2% do topo e da
--- esquerda, 21% da largura e 7,5% da altura (ou PILL_MIN_HEIGHT px). No
--- celular a coluna começa logo abaixo dele e o boost de XP fica ao lado.
+-- Placar da partida (UI/Leaderboard, top 3), no canto de cima à esquerda, no
+-- lugar do antigo selo de pontos (19/11): 2% do topo e da esquerda, 21% da
+-- largura e 13% da altura (ou PILL_MIN_HEIGHT px, para 3 linhas legíveis no
+-- celular). No celular a coluna começa logo abaixo dele e o boost de XP fica
+-- ao lado. Os nomes PILL_* ficaram do selo antigo.
 HudColumn.PILL_LEFT = 0.02
 HudColumn.PILL_TOP = 0.02
 HudColumn.PILL_WIDTH = 0.21
-HudColumn.PILL_HEIGHT = 0.075
-HudColumn.PILL_MIN_HEIGHT = 38
+HudColumn.PILL_HEIGHT = 0.13
+HudColumn.PILL_MIN_HEIGHT = 64
 
 -- Base do selo de pontos (px) numa tela de `screenHeight` px.
 function HudColumn.pillBottom(screenHeight: number): number

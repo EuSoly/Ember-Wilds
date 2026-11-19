@@ -25,7 +25,6 @@ local MissionsButton = require(script.Parent:WaitForChild("MissionsButton"))
 local Notifications = require(script.Parent:WaitForChild("Notifications"))
 local RecipeBookButton = require(script.Parent:WaitForChild("RecipeBookButton"))
 local RotateButton = require(script.Parent:WaitForChild("RotateButton"))
-local ScorePill = require(script.Parent:WaitForChild("ScorePill"))
 local SettingsButton = require(script.Parent:WaitForChild("SettingsButton"))
 local StatusRings = require(script.Parent:WaitForChild("StatusRings"))
 local TeamPanel = require(script.Parent:WaitForChild("TeamPanel"))
@@ -41,7 +40,7 @@ local create = vide.create
 local function App(): ScreenGui
 	-- Componentes do HUD, na ordem em que são desenhados.
 	local children: { Instance } = {
-		ScorePill(),
+		Leaderboard(), -- placar top 3 no canto (abre a lista completa no meio)
 		CraftColumn(),
 		Clock(),
 		XpBoostBadge.hud(), -- logo abaixo do selo de pontos
@@ -50,7 +49,6 @@ local function App(): ScreenGui
 		SettingsButton(),
 		RecipeBookButton(),
 		MissionsButton(),
-		Leaderboard(),
 		TutorialPanel(),
 		PinnedRecipe(),
 		GhostPanel(),

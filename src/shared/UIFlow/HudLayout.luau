@@ -8,6 +8,8 @@
 -- controles (joystick de andar à esquerda, de mirar à direita). Se a linha de
 -- 10 não couber, vira duas linhas de 5 (1–5 em cima, 6–0 embaixo). O slot
 -- nunca encolhe abaixo do mínimo de toque.
+local HudColumn = require("./HudColumn")
+
 local HudLayout = {}
 
 HudLayout.MARGIN = 12 -- px da borda da tela até os controles
@@ -83,12 +85,11 @@ function HudLayout.panelLift(): number
 	return HudLayout.RINGS_LIFT + ringHeight + HudLayout.PANEL_GAP
 end
 
--- Selo de pontos (UI/ScorePill): em 2% da tela, 0,21 × 0,075 com aspecto 4
--- (cabe no menor dos dois) e no mínimo 38 de altura. Base do selo, em px.
-HudLayout.PILL_MIN_HEIGHT = 38
-function HudLayout.scorePillBottom(width: number, height: number): number
-	local pill = math.max(math.min(0.075 * height, 0.21 * width / 4), HudLayout.PILL_MIN_HEIGHT)
-	return 0.02 * height + pill
+-- Placar da partida no canto de cima à esquerda (UI/Leaderboard, no lugar do
+-- antigo selo de pontos): a mesma conta do HudColumn.pillBottom. Base, em px.
+-- `width` ficou do selo antigo (tinha aspecto fixo); não muda mais nada.
+function HudLayout.scorePillBottom(_width: number, height: number): number
+	return HudColumn.pillBottom(height)
 end
 
 -- Topo da coluna de receitas (UI/CraftColumn): 12% da tela, como sempre, mas
