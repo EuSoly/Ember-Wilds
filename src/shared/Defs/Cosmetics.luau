@@ -1835,6 +1835,9 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		nameKey = "cosmetic.bag_cubos_esmeralda",
 		slot = "bag",
 		rarity = 5,
+		-- 19/11: é do pacote (Limitada): fora das roletas. A carapaça dourada
+		-- entrou no lugar dela como a Lendária do giro de Mochila.
+		inSpins = false,
 		bag = { color = "#046840", strapColor = "#1C7C44" },
 	},
 	bag_carapaca_joias = {
@@ -2078,8 +2081,9 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		id = "bag_carapaca_dourada",
 		nameKey = "cosmetic.bag_carapaca_dourada",
 		slot = "bag",
-		rarity = 1,
-		unreleased = true,
+		-- 19/11: lançada como a Lendária do giro de Mochila (no lugar da de
+		-- cubos de esmeralda, que é do pacote).
+		rarity = 5,
 		bag = { color = "#8C5408", strapColor = "#643C04" },
 	},
 	bag_explorador_pa_couro = {
