@@ -9,10 +9,12 @@
 -- O mapa grande (a tela inteira) vem depois.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local vide = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Vide"))
 local Palette = require(Shared:WaitForChild("Palette"))
+local StatNames = require(Shared:WaitForChild("StatNames"))
 local Theme = require(Shared:WaitForChild("Theme"))
 local WorldConfig = require(Shared:WaitForChild("WorldConfig"))
 local HudImages = require(Shared:WaitForChild("HudImages"))
@@ -25,6 +27,9 @@ local create = vide.create
 
 local REFRESH = 0.1 -- 10 vezes por segundo
 local OUTLINE = Color3.fromRGB(45, 28, 16)
+local OWN_DOT_COLOR = Theme.rustic.cream
+local TEAM_DOT_COLOR = Color3.fromRGB(120, 230, 120)
+local MAX_STRUCTURE_DOTS = 200
 local OVERLAP = 0.035 -- fração do lado que o mapa entra por baixo da moldura
 
 -- Desenho de cada bioma (gerado por scripts/groundmap: `lune run forest minimap
@@ -87,26 +92,118 @@ local function Marker(position: () -> UDim2, rotation: () -> number): Frame
 	}) :: Frame
 end
 
+type Dot = { position: UDim2, team: boolean }
+
+local function StructureDot(dot: () -> Dot, index: number): Frame
+	return create("Frame")({
+		Name = `StructureDot{index}`,
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = function()
+			return dot().position
+		end,
+		Size = UDim2.fromOffset(4, 4),
+		BackgroundColor3 = function()
+			return if dot().team then TEAM_DOT_COLOR else OWN_DOT_COLOR
+		end,
+		BorderSizePixel = 0,
+		ZIndex = 2,
+		create("UICorner")({ CornerRadius = UDim.new(1, 0) }),
+		create("UIStroke")({ Color = OUTLINE, Thickness = 1 }),
+	}) :: Frame
+end
+
 local function Minimap(): Frame
 	local biome = vide.source("forest")
 	local position = vide.source(UDim2.fromScale(0.5, 0.5))
 	local rotation = vide.source(0)
+	local dots = vide.source({} :: { Dot })
+
+	-- Acompanha Workspace.Structures (cuidado com streaming: a pasta ou a peça podem chegar depois).
+	local tracked: { [Instance]: boolean } = {}
+	local function trackFolder(folder: Instance)
+		for _, child in folder:GetChildren() do
+			tracked[child] = true
+		end
+		vide.cleanup(folder.ChildAdded:Connect(function(child)
+			tracked[child] = true
+		end))
+		vide.cleanup(folder.ChildRemoved:Connect(function(child)
+			tracked[child] = nil
+		end))
+	end
+	local existing = Workspace:FindFirstChild("Structures")
+	if existing then
+		trackFolder(existing)
+	end
+	vide.cleanup(Workspace.ChildAdded:Connect(function(child)
+		if child.Name == "Structures" then
+			trackFolder(child)
+		end
+	end))
+
 	vide.cleanup(task.spawn(function()
 		while true do
 			-- Sempre o personagem atual: depois do respawn segue o novo.
-			local character = Players.LocalPlayer.Character
+			local me = Players.LocalPlayer
+			local character = me.Character
 			local root = character and character:FindFirstChild("HumanoidRootPart")
+			local px, pz = 0, 0
+			local currentBiome = vide.untrack(biome)
 			if root and root:IsA("BasePart") then
 				local at = root.Position
-				local name = MinimapRules.biomeAt(at.X, at.Z)
-				if vide.untrack(biome) ~= name then
+				px, pz = at.X, at.Z
+				local name = MinimapRules.biomeAt(px, pz)
+				if currentBiome ~= name then
+					currentBiome = name
 					biome(name)
 				end
-				local x, z = MinimapRules.toView(at.X, at.Z, WorldConfig.BIOMES[name])
+				local x, z = MinimapRules.toView(px, pz, WorldConfig.BIOMES[name])
 				position(UDim2.fromScale(x, z))
 				local look = root.CFrame.LookVector
 				rotation(MinimapRules.heading(look.X, look.Z))
 			end
+			-- Construções do jogador (e do time) no bioma mostrado, limitadas a 200 (as mais perto).
+			local myId = me.UserId
+			local myTeam = me:GetAttribute(StatNames.Team)
+			local teamMembers: { [number]: boolean } = {}
+			if type(myTeam) == "number" then
+				for _, p in Players:GetPlayers() do
+					if p:GetAttribute(StatNames.Team) == myTeam then
+						teamMembers[p.UserId] = true
+					end
+				end
+			end
+			local rect = WorldConfig.BIOMES[currentBiome]
+			local candidates: { { x: number, z: number, distSq: number, team: boolean } } = {}
+			for inst in tracked do
+				if inst.Parent == nil then
+					tracked[inst] = nil
+					continue
+				end
+				local owner = inst:GetAttribute(StatNames.Owner)
+				if type(owner) ~= "number" then
+					continue
+				end
+				local isOwn = owner == myId
+				local isTeam = not isOwn and teamMembers[owner] == true
+				if (isOwn or isTeam) and inst:IsA("PVInstance") then
+					local pos = inst:GetPivot().Position
+					local dx, dz = pos.X - px, pos.Z - pz
+					table.insert(candidates, { x = pos.X, z = pos.Z, distSq = dx * dx + dz * dz, team = isTeam })
+				end
+			end
+			if #candidates > MAX_STRUCTURE_DOTS then
+				table.sort(candidates, function(a, b)
+					return a.distSq < b.distSq
+				end)
+			end
+			local nextDots: { Dot } = {}
+			for i = 1, math.min(#candidates, MAX_STRUCTURE_DOTS) do
+				local c = candidates[i]
+				local fx, fz = MinimapRules.toView(c.x, c.z, rect)
+				table.insert(nextDots, { position = UDim2.fromScale(fx, fz), team = c.team })
+			end
+			dots(nextDots)
 			task.wait(REFRESH)
 		end
 	end))
@@ -147,6 +244,13 @@ local function Minimap(): Frame
 			end,
 			BorderSizePixel = 0,
 			ZIndex = 2,
+		}),
+		create("Frame")({
+			Name = "Structures",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ZIndex = 2,
+			vide.indexes(dots, StructureDot),
 		}),
 		Marker(position, rotation),
 	})
