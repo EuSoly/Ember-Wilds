@@ -2,6 +2,27 @@
 
 Arestas que as revisões e os testes acharam e que não bloquearam o merge da fase. Nenhuma quebra o jogo; são acabamento. Quando resolver uma, apague a linha (ou marque a data).
 
+## Teste com amigo (19/11) — antes de lançar
+
+Pedidos do Elizeu depois de jogar com um amigo (decisões já tomadas entre parênteses):
+
+- **Mochila:** todo mundo nasce com uma mochila básica; botão de abrir a mochila no PC, à direita da hotbar (hoje só tecla B).
+- **Inventário cheio:** conferir todos os casos (coletar, craftar, saquear caixa, baú, pegar do chão, colher, kit, revive, recompensas) — nunca perder item em silêncio, sempre avisar.
+- **Soltar item arrastando:** arrastar o item para fora do inventário não solta no chão no jogo publicado (no Studio solta); só o botão direito funciona.
+- **Golpe em vários alvos:** o golpe deve acertar mais de uma hitbox por vez (hoje acerta uma).
+- **Dano mínimo (decidido: sempre passa 25%):** a defesa reduz, mas todo golpe causa pelo menos 25% do dano original. Substitui a pendência "Dano mínimo garantido" lá embaixo.
+- **Vida:** conferir a regeneração e criar o curativo (bandage do Starve).
+- **Frutinhas dão água** (um pouco de sede além da fome).
+- **Poço:** gera água com o tempo; o balde acelera — dá para encher o balde e despejar no poço.
+- **Baú com 3 espaços** (decidido: guarda 3 tipos de item, cada um uma pilha).
+- **Mais mobs:** aumentar um pouco a população, porque o mapa cresceu (praia).
+- **Receitas:** conferir todos os crafts dos itens liberados aos jogadores.
+- **Minimapa:** mostrar onde o jogador colocou construções.
+- **Receita fixada:** mostrar as bancadas/fogo/água que o craft exige.
+- **Dados com 2 jogadores:** conferir o perfil salvo com dois jogadores ao mesmo tempo.
+- **Lista de jogadores** no jogo.
+- **Garrafa de vidro e garrafa de água**, no padrão dos outros itens (modelos `bottle_empty`/`bottle_full` vieram no pacote da fazenda).
+
 ## Para ver depois (18/11)
 
 Pedidos do Elizeu para a próxima sessão:
