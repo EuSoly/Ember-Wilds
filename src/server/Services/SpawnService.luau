@@ -236,6 +236,20 @@ function SpawnService.spawn(player: Player, kitId: string?, source: string?): bo
 	if not loadCharacter(player) then
 		return false
 	end
+	-- Nasce num ponto aleatório da floresta (19/11, pedido do Elizeu): o mesmo
+	-- sorteio do revive (perto do totem do time, se tiver; longe de água,
+	-- construções e outros jogadores; sem lugar, o centro).
+	local character = player.Character
+	if character then
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		local root = character:FindFirstChild("HumanoidRootPart")
+		local rootHeight = if humanoid
+				and root
+				and root:IsA("BasePart")
+			then humanoid.HipHeight + root.Size.Y / 2
+			else 3
+		character:PivotTo(CFrame.new(SpawnService.reviveSpot(player) + Vector3.new(0, rootHeight, 0)))
+	end
 	-- A vida começa já (se o CharacterAdded ainda não começou): a foto das
 	-- vantagens (PerkService) e os espaços do VIP vêm antes do kit e do livro.
 	LifeService.begin(player)
