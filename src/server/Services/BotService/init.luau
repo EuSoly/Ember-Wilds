@@ -13,7 +13,9 @@
 -- Studio (barra de comandos do servidor):
 -- - ServerStorage.DevBots:Invoke(n): força n bots (nil = volta ao automático);
 -- - ServerStorage.DevBotInfo:Invoke(): nome, objetivo, vida, fome, frio, pontos;
--- - ServerStorage.DevKillBot:Invoke(nome?): mata um bot (o primeiro, sem nome).
+-- - ServerStorage.DevKillBot:Invoke(nome?): mata um bot (o primeiro, sem nome);
+-- - ServerStorage.DevBotCost:Invoke(segundos) -> ms médios por quadro gastos
+--   pelos bots no servidor (também aparece como "BotService" no MicroProfiler).
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -140,8 +142,9 @@ local function sweepDead()
 end
 
 local moveAcc, survivalAcc, populationAcc = 0, 0, 0
+local costSeconds, costFrames = 0, 0 -- DevBotCost
 
-local function heartbeat(dt: number)
+local function step(dt: number)
 	moveAcc += dt
 	survivalAcc += dt
 	populationAcc += dt
@@ -162,7 +165,7 @@ local function heartbeat(dt: number)
 	if moveAcc < MOVE_TICK then
 		return
 	end
-	local step = moveAcc
+	local elapsed = moveAcc
 	moveAcc = 0
 	local clock = os.clock()
 	local now = Workspace:GetServerTimeNow()
@@ -177,7 +180,7 @@ local function heartbeat(dt: number)
 			bot.nextThink = clock + (if far then FAR_THINK_EVERY else THINK_EVERY)
 			Actor.think(bot, now)
 		end
-		local frame = Actor.step(bot, step)
+		local frame = Actor.step(bot, elapsed)
 		if not bot.dead then
 			table.insert(parts, bot.root)
 			table.insert(frames, frame)
@@ -187,6 +190,15 @@ local function heartbeat(dt: number)
 		Workspace:BulkMoveTo(parts, frames, Enum.BulkMoveMode.FireCFrameChanged)
 	end
 	sweepDead()
+end
+
+local function heartbeat(dt: number)
+	debug.profilebegin("BotService")
+	local started = os.clock()
+	step(dt)
+	costSeconds += os.clock() - started
+	costFrames += 1
+	debug.profileend()
 end
 
 local function setupDev()
@@ -256,6 +268,11 @@ local function setupDev()
 			)
 		end
 		return lines
+	end)
+	command("DevBotCost", function(seconds: number?): number
+		costSeconds, costFrames = 0, 0
+		task.wait(seconds or 10)
+		return if costFrames > 0 then costSeconds / costFrames * 1000 else 0
 	end)
 	command("DevKillBot", function(name: string?): boolean
 		for _, bot in bots do
