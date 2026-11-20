@@ -2,6 +2,7 @@
 local CodeRules = require("../src/shared/Shop/CodeRules")
 local Codes = require("../src/shared/Shop/Codes")
 local Defs = require("../src/shared/Defs")
+local GroupReward = require("../src/shared/Shop/GroupReward")
 local ShopDates = require("../src/shared/Shop/ShopDates")
 
 local function has(errors: { string }, fragment: string): boolean
@@ -70,5 +71,39 @@ return {
 	["the real codes file is valid"] = function()
 		local errors = CodeRules.validate(Codes, Defs)
 		assert(#errors == 0, table.concat(errors, "\n"))
+	end,
+
+	["news: last marked code that is valid now"] = function()
+		local list: { CodeRules.CodeDef } = {
+			{ code = "VELHO", rewards = { { kind = "ember", amount = 1 } }, news = true },
+			{
+				code = "NOVO",
+				rewards = { { kind = "ember", amount = 1 } },
+				news = true,
+				startsAt = "2026-12-20 00:00",
+			},
+			{ code = "SEMDESTAQUE", rewards = { { kind = "ember", amount = 1 } } },
+		}
+		local starts = ShopDates.parse("2026-12-20 00:00") :: number
+		local before = CodeRules.news(list, starts - 1)
+		assert(before ~= nil and before.code == "VELHO", "antes do NOVO começar, o VELHO")
+		local after = CodeRules.news(list, starts)
+		assert(after ~= nil and after.code == "NOVO", "o último marcado que vale")
+		assert(CodeRules.news({ list[3] }, 0) == nil, "sem marcado, nenhum")
+		local wrong: { any } = { { code = "XYZ", rewards = { { kind = "ember", amount = 1 } }, news = 1 } }
+		assert(has(CodeRules.validate(wrong, Defs), "news"), "news precisa ser boolean")
+	end,
+
+	["group reward: valid, mark never collides with a code"] = function()
+		local errors = CodeRules.validate({ { code = "GRUPO", rewards = GroupReward.rewards } }, Defs)
+		assert(#errors == 0, table.concat(errors, "\n"))
+		local mark = GroupReward.mark(GroupReward.GROUP_ID)
+		assert(not CodeRules.isCodeShape(mark), mark)
+		assert(CodeRules.find(Codes, mark) == nil, "marca não é código")
+		assert(not GroupReward.claimed({}, GroupReward.GROUP_ID), "sem marca")
+		assert(GroupReward.claimed({ [mark] = true }, GroupReward.GROUP_ID), "com marca")
+		local skin = Defs.Cosmetics.body_gaio_azul
+		assert(skin.unreleased == true, "fora dos giros")
+		assert(skin.tags ~= nil and table.find(skin.tags, "limited") ~= nil, "etiqueta Limitada")
 	end,
 }

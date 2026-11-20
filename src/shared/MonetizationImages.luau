@@ -91,6 +91,11 @@ MonetizationImages.NOTICE_DOT = "rbxassetid://100592441558127"
 -- 17. Ícone do boost de XP.
 -- Ícone do botão de códigos de resgate (arte do Elizeu; vazio = o de presente).
 MonetizationImages.CODES_ICON = "rbxassetid://129965746418656" -- assets/ui/codigos/icone_codigos.png
+-- Passarinho do Twitter no botão de códigos: imagem pública da Creator Store
+-- (Decal 1181444990 "Twitter Bird Transparent", imagem 1181444986), 20/11/2026.
+-- O desenho nosso (assets/ui/codigos/icone_passaro.png, rbxassetid://78389645905704)
+-- ficou em branco no jogo do grupo. Vazio = usa o CODES_ICON.
+MonetizationImages.CODES_BIRD = "rbxassetid://1181444986"
 MonetizationImages.XP_BOOST = "rbxassetid://83488962407228"
 
 -- 18. Cartão de benefícios do Premium (1024x400). Com as camadas 44

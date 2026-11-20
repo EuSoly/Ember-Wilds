@@ -97,6 +97,11 @@ return table.freeze({
 	-- CheckInDay = próximo prêmio (1..7), CheckInReady = há prêmio para resgatar hoje.
 	CheckInDay = "CheckInDay",
 	CheckInReady = "CheckInReady",
+	-- Janela de Códigos (ShopService escreve), atributos da pasta Shop:
+	-- CodeNotice = há código em destaque (Shop/Codes, news) que o jogador ainda
+	-- não usou; GroupClaimed = já pegou o prêmio do grupo (Shop/GroupReward).
+	CodeNotice = "CodeNotice",
+	GroupClaimed = "GroupClaimed",
 	-- Item aleatório pago proibido para o jogador (PolicyService), também atributo
 	-- da pasta Shop. Sem resposta ainda ou com erro = true (lado seguro).
 	PaidRandomBlocked = "PaidRandomBlocked",

@@ -178,9 +178,10 @@ Queue.Reliable[35] = table.create(256)
 Queue.Reliable[36] = table.create(256)
 Queue.Reliable[39] = table.create(256)
 Queue.Reliable[41] = table.create(256)
-Queue.Reliable[49] = table.create(256)
-Queue.Reliable[53] = table.create(256)
+Queue.Reliable[43] = table.create(256)
+Queue.Reliable[51] = table.create(256)
 Queue.Reliable[55] = table.create(256)
+Queue.Reliable[57] = table.create(256)
 export type Slot = { Id: string, Count: number }
 export type SlotMap = {[number]: { Id: string, Count: number }}
 export type ReviveOffer = { Robux: number, Free: boolean }
@@ -795,10 +796,32 @@ function SerdesFunctions.ReadEVENT_CodeResult(): ({ Ok: boolean, Reason: string?
 	return Value
 end
 
+function SerdesFunctions.WriteEVENT_RequestGroupReward(Value: nil): ()
+	-- Allocate BLOCK: 1 bytes
+	local BLOCK_START = Allocate(1)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 40)
+end
+
+function SerdesFunctions.ReadEVENT_GroupRewardResult(): ({ Ok: boolean, Reason: string? })
+	-- Read BLOCK: 2 bytes
+	local BLOCK_START = Read(2)
+	local Value = {} :: any
+	Value.Ok = (buffer.readu8(RecieveBuffer, BLOCK_START + 0) == 1)
+	if buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1 then
+		-- Read BLOCK: 1 bytes
+		local BLOCK_START = Read(1)
+		local Length = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
+		Value.Reason = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		if #Value.Reason < 1 then error(`Expected length of "Value.Reason" to be larger than or equal to 1, got {#Value.Reason} instead.`) end
+		if #Value.Reason > 16 then error(`Expected length of "Value.Reason" to be smaller than or equal to  16, got {#Value.Reason} instead.`) end
+	end
+	return Value
+end
+
 function SerdesFunctions.WriteEVENT_RequestSpin(Value: { TypeId: string, Paid: boolean }): ()
 	-- Allocate BLOCK: 3 bytes
 	local BLOCK_START = Allocate(3)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 40)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 42)
 	local Length = #Value.TypeId
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
 	Allocate(Length)
@@ -832,7 +855,7 @@ end
 function SerdesFunctions.WriteEVENT_SetActiveKit(Value: { KitId: string? }): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 42)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 44)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.KitId ~= nil and 1 or 0)
 	if Value.KitId ~= nil then
 		-- Allocate BLOCK: 1 bytes
@@ -847,7 +870,7 @@ end
 function SerdesFunctions.WriteEVENT_CreativeGive(Value: { Id: string }): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 43)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 45)
 	local Length = #Value.Id
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Length)
 	Allocate(Length)
@@ -857,33 +880,33 @@ end
 function SerdesFunctions.WriteEVENT_Resurrect(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 44)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 46)
 end
 
 function SerdesFunctions.WriteEVENT_TeamJoin(Value: { Leader: number }): ()
 	-- Allocate BLOCK: 9 bytes
 	local BLOCK_START = Allocate(9)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 45)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 47)
 	buffer.writef64(SendBuffer, BLOCK_START + 1, Value.Leader)
 end
 
 function SerdesFunctions.WriteEVENT_TeamLeave(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 46)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 48)
 end
 
 function SerdesFunctions.WriteEVENT_TeamKick(Value: { UserId: number }): ()
 	-- Allocate BLOCK: 9 bytes
 	local BLOCK_START = Allocate(9)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 47)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 49)
 	buffer.writef64(SendBuffer, BLOCK_START + 1, Value.UserId)
 end
 
 function SerdesFunctions.WriteEVENT_TeamLock(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 48)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 50)
 end
 
 function SerdesFunctions.ReadEVENT_MissionsData(): ({ Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } })
@@ -1069,20 +1092,20 @@ end
 function SerdesFunctions.WriteEVENT_WatchMissions(Value: boolean): ()
 	-- Allocate BLOCK: 2 bytes
 	local BLOCK_START = Allocate(2)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 50)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 52)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value and 1 or 0)
 end
 
 function SerdesFunctions.WriteEVENT_RequestMissions(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 51)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 53)
 end
 
 function SerdesFunctions.WriteEVENT_ClaimMission(Value: { Kind: number, Id: string }): ()
 	-- Allocate BLOCK: 3 bytes
 	local BLOCK_START = Allocate(3)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 52)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 54)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, Value.Kind)
 	local Length = #Value.Id
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, Length)
@@ -1108,7 +1131,7 @@ end
 function SerdesFunctions.WriteEVENT_CheckInClaim(Value: nil): ()
 	-- Allocate BLOCK: 1 bytes
 	local BLOCK_START = Allocate(1)
-	buffer.writeu8(SendBuffer, BLOCK_START + 0, 54)
+	buffer.writeu8(SendBuffer, BLOCK_START + 0, 56)
 end
 
 function SerdesFunctions.ReadEVENT_CheckInResult(): ({ Ok: boolean, Day: number })
@@ -1244,6 +1267,12 @@ if not RunService:IsRunning() then
 		Fire = NOOP
 	},
 	CodeResult = {
+		On = NOOP
+	},
+	RequestGroupReward = {
+		Fire = NOOP
+	},
+	GroupRewardResult = {
 		On = NOOP
 	},
 	RequestSpin = {
@@ -1497,44 +1526,54 @@ Reliable.OnClientEvent:Connect(function(Buffer: buffer, Instances: {Instance})
 				table.insert(Queue.Reliable[39], {Value} :: {any})
 			end
 		elseif Index == 41 then
-			local Value: { TypeId: string, Paid: boolean, Ok: boolean, ItemId: string?, Duplicate: boolean, Refund: number } = SerdesFunctions.ReadEVENT_SpinResult()
+			local Value: { Ok: boolean, Reason: string? } = SerdesFunctions.ReadEVENT_GroupRewardResult()
 			if Events.Reliable[41] ~= nil then
 				task.spawn(Events.Reliable[41], Value)
 			else
 				if #Queue.Reliable[41] > 256 then
-					warn("[Blink]: Event queue of \"SpinResult\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"GroupRewardResult\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[41], {Value} :: {any})
 			end
-		elseif Index == 49 then
-			local Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } } = SerdesFunctions.ReadEVENT_MissionsData()
-			if Events.Reliable[49] ~= nil then
-				task.spawn(Events.Reliable[49], Value)
+		elseif Index == 43 then
+			local Value: { TypeId: string, Paid: boolean, Ok: boolean, ItemId: string?, Duplicate: boolean, Refund: number } = SerdesFunctions.ReadEVENT_SpinResult()
+			if Events.Reliable[43] ~= nil then
+				task.spawn(Events.Reliable[43], Value)
 			else
-				if #Queue.Reliable[49] > 256 then
+				if #Queue.Reliable[43] > 256 then
+					warn("[Blink]: Event queue of \"SpinResult\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[43], {Value} :: {any})
+			end
+		elseif Index == 51 then
+			local Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } } = SerdesFunctions.ReadEVENT_MissionsData()
+			if Events.Reliable[51] ~= nil then
+				task.spawn(Events.Reliable[51], Value)
+			else
+				if #Queue.Reliable[51] > 256 then
 					warn("[Blink]: Event queue of \"MissionsData\" exceeded 256, did you forget to implement a listener?")
 				end
-				table.insert(Queue.Reliable[49], {Value} :: {any})
-			end
-		elseif Index == 53 then
-			local Value: { Kind: number, Id: string, Done: boolean } = SerdesFunctions.ReadEVENT_MissionNotice()
-			if Events.Reliable[53] ~= nil then
-				task.spawn(Events.Reliable[53], Value)
-			else
-				if #Queue.Reliable[53] > 256 then
-					warn("[Blink]: Event queue of \"MissionNotice\" exceeded 256, did you forget to implement a listener?")
-				end
-				table.insert(Queue.Reliable[53], {Value} :: {any})
+				table.insert(Queue.Reliable[51], {Value} :: {any})
 			end
 		elseif Index == 55 then
-			local Value: { Ok: boolean, Day: number } = SerdesFunctions.ReadEVENT_CheckInResult()
+			local Value: { Kind: number, Id: string, Done: boolean } = SerdesFunctions.ReadEVENT_MissionNotice()
 			if Events.Reliable[55] ~= nil then
 				task.spawn(Events.Reliable[55], Value)
 			else
 				if #Queue.Reliable[55] > 256 then
-					warn("[Blink]: Event queue of \"CheckInResult\" exceeded 256, did you forget to implement a listener?")
+					warn("[Blink]: Event queue of \"MissionNotice\" exceeded 256, did you forget to implement a listener?")
 				end
 				table.insert(Queue.Reliable[55], {Value} :: {any})
+			end
+		elseif Index == 57 then
+			local Value: { Ok: boolean, Day: number } = SerdesFunctions.ReadEVENT_CheckInResult()
+			if Events.Reliable[57] ~= nil then
+				task.spawn(Events.Reliable[57], Value)
+			else
+				if #Queue.Reliable[57] > 256 then
+					warn("[Blink]: Event queue of \"CheckInResult\" exceeded 256, did you forget to implement a listener?")
+				end
+				table.insert(Queue.Reliable[57], {Value} :: {any})
 			end
 		end
 	end
@@ -1921,13 +1960,13 @@ local Returns = table.freeze({
 			end
 		end
 	},
-	RequestSpin = {
-		Fire = function(Value: { TypeId: string, Paid: boolean }): ()
-			SerdesFunctions.WriteEVENT_RequestSpin(Value)
+	RequestGroupReward = {
+		Fire = function(Value: nil): ()
+			SerdesFunctions.WriteEVENT_RequestGroupReward(Value)
 		end
 	},
-	SpinResult = {
-		On = function(Listener: (Value: { TypeId: string, Paid: boolean, Ok: boolean, ItemId: string?, Duplicate: boolean, Refund: number }) -> ()): () -> ()
+	GroupRewardResult = {
+		On = function(Listener: (Value: { Ok: boolean, Reason: string? }) -> ()): () -> ()
 			Events.Reliable[41] = Listener
 			for Index, Arguments in Queue.Reliable[41] do
 				task.spawn(Listener, table.unpack(Arguments))
@@ -1936,6 +1975,25 @@ local Returns = table.freeze({
 			return function (): ()
 				if Events.Reliable[41] == Listener then
 					Events.Reliable[41] = nil
+				end
+			end
+		end
+	},
+	RequestSpin = {
+		Fire = function(Value: { TypeId: string, Paid: boolean }): ()
+			SerdesFunctions.WriteEVENT_RequestSpin(Value)
+		end
+	},
+	SpinResult = {
+		On = function(Listener: (Value: { TypeId: string, Paid: boolean, Ok: boolean, ItemId: string?, Duplicate: boolean, Refund: number }) -> ()): () -> ()
+			Events.Reliable[43] = Listener
+			for Index, Arguments in Queue.Reliable[43] do
+				task.spawn(Listener, table.unpack(Arguments))
+			end
+			Queue.Reliable[43] = {}
+			return function (): ()
+				if Events.Reliable[43] == Listener then
+					Events.Reliable[43] = nil
 				end
 			end
 		end
@@ -1977,14 +2035,14 @@ local Returns = table.freeze({
 	},
 	MissionsData = {
 		On = function(Listener: (Value: { Creative: boolean, InLife: boolean, Chrono: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, LifeDay: number, Daily: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, DailyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Weekly: { { Id: string, Progress: number, Target: number, State: number, EndsAt: number } }, WeeklyFinal: { Id: string, Progress: number, Target: number, State: number, EndsAt: number }, Achievements: { { Id: string, Progress: number, Claimed: number, Ready: boolean, Soon: boolean } } }) -> ()): () -> ()
-			Events.Reliable[49] = Listener
-			for Index, Arguments in Queue.Reliable[49] do
+			Events.Reliable[51] = Listener
+			for Index, Arguments in Queue.Reliable[51] do
 				task.spawn(Listener, table.unpack(Arguments))
 			end
-			Queue.Reliable[49] = {}
+			Queue.Reliable[51] = {}
 			return function (): ()
-				if Events.Reliable[49] == Listener then
-					Events.Reliable[49] = nil
+				if Events.Reliable[51] == Listener then
+					Events.Reliable[51] = nil
 				end
 			end
 		end
@@ -2006,14 +2064,14 @@ local Returns = table.freeze({
 	},
 	MissionNotice = {
 		On = function(Listener: (Value: { Kind: number, Id: string, Done: boolean }) -> ()): () -> ()
-			Events.Reliable[53] = Listener
-			for Index, Arguments in Queue.Reliable[53] do
+			Events.Reliable[55] = Listener
+			for Index, Arguments in Queue.Reliable[55] do
 				task.spawn(Listener, table.unpack(Arguments))
 			end
-			Queue.Reliable[53] = {}
+			Queue.Reliable[55] = {}
 			return function (): ()
-				if Events.Reliable[53] == Listener then
-					Events.Reliable[53] = nil
+				if Events.Reliable[55] == Listener then
+					Events.Reliable[55] = nil
 				end
 			end
 		end
@@ -2025,14 +2083,14 @@ local Returns = table.freeze({
 	},
 	CheckInResult = {
 		On = function(Listener: (Value: { Ok: boolean, Day: number }) -> ()): () -> ()
-			Events.Reliable[55] = Listener
-			for Index, Arguments in Queue.Reliable[55] do
+			Events.Reliable[57] = Listener
+			for Index, Arguments in Queue.Reliable[57] do
 				task.spawn(Listener, table.unpack(Arguments))
 			end
-			Queue.Reliable[55] = {}
+			Queue.Reliable[57] = {}
 			return function (): ()
-				if Events.Reliable[55] == Listener then
-					Events.Reliable[55] = nil
+				if Events.Reliable[57] == Listener then
+					Events.Reliable[57] = nil
 				end
 			end
 		end

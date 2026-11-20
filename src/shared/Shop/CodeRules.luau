@@ -16,10 +16,19 @@ export type CodeDef = {
 	rewards: { ShopTypes.Reward },
 	startsAt: string?, -- "AAAA-MM-DD HH:MM", horário de Brasília; sem = já vale
 	endsAt: string?, -- idem; sem = não vence
+	-- Código em destaque: a janela mostra "NOVO CÓDIGO: X" e o botão acende o
+	-- aviso vermelho para quem ainda não usou. Vale o último marcado que estiver
+	-- valendo agora (CodeRules.news).
+	news: boolean?,
 }
 export type Refusal = "unknown" | "notYet" | "expired" | "used"
 
 local CodeRules = {}
+
+-- Só A–Z e 0–9, de 3 a 24 letras (o formato de um código no arquivo).
+function CodeRules.isCodeShape(code: any): boolean
+	return type(code) == "string" and string.match(code, "^[A-Z0-9]+$") ~= nil and #code >= 3 and #code <= 24
+end
 
 -- Texto digitado → código: sem espaços e em maiúsculas.
 function CodeRules.normalize(text: string): string
@@ -55,6 +64,21 @@ function CodeRules.check(def: CodeDef?, used: { [string]: boolean }, now: number
 	return nil
 end
 
+-- O código em destaque agora: o último da lista com `news = true` que já
+-- começou e não venceu (nil = nenhum).
+function CodeRules.news(list: { CodeDef }, now: number): CodeDef?
+	local found: CodeDef? = nil
+	for _, def in list do
+		if def.news == true then
+			local refusal = CodeRules.check(def, {}, now)
+			if refusal == nil then
+				found = def
+			end
+		end
+	end
+	return found
+end
+
 -- Erros do arquivo de códigos (vazio = tudo certo).
 function CodeRules.validate(list: { CodeDef }, defs: DefsTypes.DefsTables): { string }
 	local errors: { string } = {}
@@ -64,12 +88,7 @@ function CodeRules.validate(list: { CodeDef }, defs: DefsTypes.DefsTables): { st
 		local function fail(message: string)
 			table.insert(errors, `{label}: {message}`)
 		end
-		if
-			type(def.code) ~= "string"
-			or not string.match(def.code, "^[A-Z0-9]+$")
-			or #def.code < 3
-			or #def.code > 24
-		then
+		if not CodeRules.isCodeShape(def.code) then
 			fail("só A–Z e 0–9, de 3 a 24 letras")
 		elseif seen[def.code] then
 			fail("repetido")
@@ -84,6 +103,9 @@ function CodeRules.validate(list: { CodeDef }, defs: DefsTypes.DefsTables): { st
 					fail(problem)
 				end
 			end
+		end
+		if def.news ~= nil and type(def.news) ~= "boolean" then
+			fail("news precisa ser true ou false")
 		end
 		local startsAt = if def.startsAt ~= nil then ShopDates.parse(def.startsAt) else nil
 		local endsAt = if def.endsAt ~= nil then ShopDates.parse(def.endsAt) else nil

@@ -516,6 +516,27 @@ event CodeResult {
 	}
 }
 
+-- Prêmio do grupo do Roblox (Shop/GroupReward, janela de Códigos): o cliente
+-- só pede depois de entrar; o servidor confere a entrada (IsInGroupAsync),
+-- uma vez por jogador, e entrega.
+event RequestGroupReward {
+	From: Client,
+	Type: Reliable,
+	Call: SingleAsync
+}
+
+-- Resultado do prêmio do grupo. Reason = "notMember", "claimed", "wait",
+-- "inGame" ou "error".
+event GroupRewardResult {
+	From: Server,
+	Type: Reliable,
+	Call: SingleAsync,
+	Data: struct {
+		Ok: boolean,
+		Reason: string(1..16)?
+	}
+}
+
 -- Girar a roleta TypeId (body, bag, book, crate...) gastando um giro normal
 -- (Paid = false) ou especial (Paid = true).
 event RequestSpin {

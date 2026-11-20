@@ -475,7 +475,9 @@ local Cosmetics: { [string]: CosmeticDef } = {
 		nameKey = "cosmetic.body_gaio_azul",
 		slot = "body",
 		rarity = 3,
+		-- Prêmio do grupo do Roblox (Shop/GroupReward): fora dos giros, Limitada.
 		unreleased = true,
+		tags = { "limited" },
 		body = { bodyColor = "#6090E4", outlineColor = "#484878", handColor = "#6090E4" },
 	},
 	body_zumbi = {

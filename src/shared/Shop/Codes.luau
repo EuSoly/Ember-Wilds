@@ -18,6 +18,7 @@
 --   	},
 --   	startsAt = "2026-11-20 18:00", -- horário de Brasília; sem = já vale
 --   	endsAt = "2026-11-27 18:00",   -- sem = não vence
+--   	news = true, -- destaque: "NOVO CÓDIGO: X" na janela + aviso vermelho no botão
 --   },
 --
 -- Depois de editar: bash scripts/check.sh (avisa código repetido, prêmio que
@@ -29,6 +30,7 @@ local Codes: { CodeRules.CodeDef } = {
 	-- Golden Ember, sem validade. (O TESTE de 18/11 saiu no lançamento.)
 	{
 		code = "RELEASE",
+		news = true,
 		rewards = {
 			{ kind = "cosmetic", id = "body_gato" },
 			{ kind = "ember", amount = 1000 },

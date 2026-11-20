@@ -63,3 +63,5 @@ Os kits 30–36 foram recortados de uma imagem do ChatGPT com fundo xadrez desen
 Não enviados: kits 42 (temas antigos, substituídos pelos 30–36) e os do Creator Hub (fase 9).
 
 | codigos/icone_codigos.png (botão de códigos, 18/11) | rbxassetid://129965746418656 |
+| codigos/icone_passaro.png (passarinho nosso, 20/11; fica em branco no jogo do grupo, não usado) | rbxassetid://78389645905704 |
+| passarinho do Twitter (botão de códigos, 20/11): imagem pública da Creator Store, Decal 1181444990 "Twitter Bird Transparent" (não é nossa) | rbxassetid://1181444986 |
