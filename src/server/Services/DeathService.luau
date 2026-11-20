@@ -105,7 +105,9 @@ local function killerNameOf(killer: Player): string
 	return name
 end
 
-function DeathService.kill(player: Player, causeKey: string, killer: Player?)
+-- `killerName`: quem matou quando não é um Player (bot do BotService). Só vai
+-- para a tela de morte; pontos, abate e revive seguem como morte sem matador.
+function DeathService.kill(player: Player, causeKey: string, killer: Player?, killerName: string?)
 	if player.Parent ~= Players then
 		return
 	end
@@ -201,7 +203,10 @@ function DeathService.kill(player: Player, causeKey: string, killer: Player?)
 		Currency = clampInt(summary.currency, MAX_U32),
 		Xp = clampInt(summary.xp, MAX_U32),
 		XpTotal = clampInt(StatsService.get(player, "xp_total"), MAX_U32),
-		KillerName = if validKiller then killerNameOf(validKiller) else nil,
+		KillerName = if validKiller
+			then killerNameOf(validKiller)
+			elseif killerName then string.sub(killerName, 1, MAX_KILLER_NAME)
+			else nil,
 		Revive = if offer then { Robux = clampInt(offer.Robux, MAX_U16), Free = offer.Free } else nil,
 		EmberBonus = emberBonus,
 	})

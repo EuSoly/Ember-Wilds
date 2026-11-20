@@ -19,6 +19,7 @@
 -- Com uma peça placeable na mão não bate: soltar o botão constrói (StructureService).
 -- Avisos (picareta que falta, recurso vazio, inventário cheio) vão só para
 -- quem bateu, no máximo um da mesma chave a cada NOTICE_EVERY.
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -110,6 +111,17 @@ local function sendFx(entry: ResourceService.Entry, hitX: number, hitZ: number, 
 			Material = entry.gather.material,
 		})
 	end
+end
+
+-- Golpe de um bot (BotService) num recurso: o mesmo tranco, lasquinhas e som
+-- que o golpe de um jogador em (fromX, fromZ) mostra para quem está perto.
+function GatherService.resourceFx(entry: ResourceService.Entry, fromX: number, fromZ: number)
+	local toBot = Vector3.new(fromX - entry.x, 0, fromZ - entry.z)
+	if toBot.Magnitude < 1e-3 then
+		return
+	end
+	local side = toBot.Unit
+	sendFx(entry, entry.x + side.X * entry.radius, entry.z + side.Z * entry.radius, -side.X, -side.Z)
 end
 
 -- Lasquinhas e som num ponto do chão (cavar: sem recurso para dar o tranco).
@@ -222,6 +234,15 @@ local function hit(player: Player, character: Model, root: BasePart)
 				candidates,
 				{ x = pos.X, z = pos.Z, radius = BuildRules.PLAYER_RADIUS, character = otherCharacter }
 			)
+		end
+	end
+	-- Bots (BotService): alvo como um jogador; o dano vai para o BotService pelo
+	-- CharacterService.hurt (onNonPlayerHurt).
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		local botRoot = bot:FindFirstChild("HumanoidRootPart")
+		if bot:IsA("Model") and botRoot and botRoot:IsA("BasePart") and bot:FindFirstChildOfClass("Humanoid") then
+			local pos = botRoot.Position
+			table.insert(candidates, { x = pos.X, z = pos.Z, radius = BuildRules.PLAYER_RADIUS, character = bot })
 		end
 	end
 	-- Tutorial: o protegido não acerta jogador, bicho, caixa nem peça alheia.

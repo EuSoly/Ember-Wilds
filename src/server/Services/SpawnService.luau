@@ -22,6 +22,7 @@
 -- onSpawned: aviso depois de nascer (viaMenu = true no spawn pelo menu, false
 -- no spawnAt do revive). O ReviveService usa para zerar a contagem da corrida
 -- sem este serviço precisar dele (sem ciclo de require).
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -291,12 +292,21 @@ function SpawnService.spawnAt(player: Player, position: Vector3): boolean
 	return true
 end
 
--- Outro jogador vivo a menos de PLAYER_GAP studs de (x, z)?
-local function nearOtherPlayer(player: Player, x: number, z: number): boolean
+-- Outro jogador vivo (ou bot, BotService) a menos de PLAYER_GAP studs de (x, z)?
+local function nearOtherPlayer(player: Player?, x: number, z: number): boolean
 	for _, other in Players:GetPlayers() do
 		local character = other.Character
 		local root = character and character:FindFirstChild("HumanoidRootPart")
 		if other ~= player and isAlive(other) and root and root:IsA("BasePart") then
+			local dx, dz = root.Position.X - x, root.Position.Z - z
+			if dx * dx + dz * dz < PLAYER_GAP * PLAYER_GAP then
+				return true
+			end
+		end
+	end
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		local root = bot:FindFirstChild("HumanoidRootPart")
+		if root and root:IsA("BasePart") then
 			local dx, dz = root.Position.X - x, root.Position.Z - z
 			if dx * dx + dz * dz < PLAYER_GAP * PLAYER_GAP then
 				return true
@@ -336,6 +346,14 @@ function SpawnService.reviveSpot(player: Player): Vector3
 	if totem then
 		return besideTotem(totem)
 	end
+	return SpawnService.forestSpot(player)
+end
+
+-- Ponto ao acaso na floresta fora de Water/NoSpawn, a STRUCTURE_GAP de
+-- construções e a PLAYER_GAP de jogadores e bots vivos (fora `avoid`, quem vai
+-- nascer); se PICK_TRIES pontos falharem (ou não há mapa), o WorldConfig.SPAWN.
+-- Usado pelo revive e pelos bots (BotService).
+function SpawnService.forestSpot(avoid: Player?): Vector3
 	local spawn = WorldConfig.SPAWN
 	local fallback = Vector3.new(spawn.x, spawn.y, spawn.z)
 	-- Sem mapa desenhado só existe o chão de teste em volta do SPAWN.
@@ -352,7 +370,7 @@ function SpawnService.reviveSpot(player: Player): Vector3
 	local x, z = SpawnPoint.pick(nextNumber, zone, function(px: number, pz: number): boolean
 		return MapService.isBlockedAt(px, pz)
 			or #StructureService.near(px, pz, STRUCTURE_GAP) > 0
-			or nearOtherPlayer(player, px, pz)
+			or nearOtherPlayer(avoid, px, pz)
 	end, PICK_TRIES)
 	return if x and z then Vector3.new(x, 0, z) else fallback
 end

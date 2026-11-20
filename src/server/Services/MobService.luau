@@ -227,6 +227,13 @@ local function livingBodies(): { MobBrain.Seen }
 			})
 		end
 	end
+	-- Bots (BotService) são vistos e mordidos como jogadores.
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		local root = bot:IsA("Model") and rootOf(bot) or nil
+		if root then
+			table.insert(bodies, { who = bot, x = root.Position.X, z = root.Position.Z, stealth = false })
+		end
+	end
 	return bodies
 end
 
@@ -389,6 +396,10 @@ local function groundY(x: number, z: number): number
 	local structures = Workspace:FindFirstChild("Structures")
 	if structures then
 		table.insert(ignore, structures)
+	end
+	local bots = Workspace:FindFirstChild("Bots")
+	if bots then
+		table.insert(ignore, bots)
 	end
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude

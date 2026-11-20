@@ -278,8 +278,8 @@ local function syncAttributes(entry: Entry)
 		entry.vip = vip
 		BonecoModel.setVip(entry.boneco, vip)
 	end
-	-- Peça de cabeça: atributo do Player (bonecos de teste não têm).
-	local armorValue = if owner then owner:GetAttribute(StatNames.Armor) else nil
+	-- Peça de cabeça: atributo do Player; sem Player (bots), do próprio modelo.
+	local armorValue = (owner or character):GetAttribute(StatNames.Armor)
 	local armorId = if type(armorValue) == "string" then armorValue else nil
 	if armorId ~= entry.armorId then
 		applyArmor(entry, armorId)

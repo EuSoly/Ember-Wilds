@@ -69,7 +69,25 @@ function CharacterService.onPlayerAttacked(listener: (attacker: Player, victim: 
 	table.insert(attackedListeners, listener)
 end
 
-function CharacterService.hurt(character: Model, amount: number, causeKey: string, kind: HurtKind, attacker: Player?)
+-- Personagem sem jogador que não é boneco de teste (bots, BotService): quem
+-- cuida da vida dele recebe o dano depois da careta. Um ouvinte só.
+type NonPlayerHurt = (character: Model, amount: number, causeKey: string, kind: HurtKind, attacker: Player?) -> ()
+local nonPlayerHurt: NonPlayerHurt? = nil
+
+function CharacterService.onNonPlayerHurt(listener: NonPlayerHurt)
+	nonPlayerHurt = listener
+end
+
+-- `attackerName`: nome de quem bateu quando não é um Player (bot), para a tela
+-- de morte mostrar quem matou (DeathService.kill).
+function CharacterService.hurt(
+	character: Model,
+	amount: number,
+	causeKey: string,
+	kind: HurtKind,
+	attacker: Player?,
+	attackerName: string?
+)
 	-- `not (amount > 0)` também recusa NaN (NaN <= 0 seria false e passaria).
 	if not (amount > 0) or character:FindFirstChildOfClass("Humanoid") == nil then
 		return
@@ -139,7 +157,15 @@ function CharacterService.hurt(character: Model, amount: number, causeKey: strin
 		end
 		-- Só o personagem atual morre (um antigo, já trocado, não mata o novo).
 		if health <= 0 and player.Character == character then
-			DeathService.kill(player, causeKey, attacker)
+			DeathService.kill(player, causeKey, attacker, attackerName)
+		end
+	elseif nonPlayerHurt then
+		local listener = nonPlayerHurt :: NonPlayerHurt
+		local ok, err = pcall(function()
+			listener(character, amount, causeKey, kind, attacker)
+		end)
+		if not ok then
+			warn(`[CharacterService] dano sem jogador: {err}`)
 		end
 	end
 end

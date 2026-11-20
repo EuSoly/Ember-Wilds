@@ -4,6 +4,7 @@
 -- coleta). O LifeService converte o Score em Golden Ember no fim da vida e o
 -- zera. O Rank é recalculado a cada RANK_EVERY só entre quem está vivo; quem
 -- está no menu fica sem posição (atributo nil).
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -49,9 +50,18 @@ local function updateRanks()
 			player:SetAttribute(StatNames.Rank, nil)
 		end
 	end
+	-- Bots (BotService) entram na conta para a posição dos jogadores (quem chegou
+	-- antes desempata: bot conta como chegado no começo). Eles não ganham Rank.
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		local id = bot:GetAttribute(StatNames.BotId)
+		local score = bot:GetAttribute(StatNames.BotScore)
+		if type(id) == "number" then
+			table.insert(entries, { id = id, score = if type(score) == "number" then score else 0, order = 0 })
+		end
+	end
 	for id, rank in Ranking.compute(entries) do
 		local player = byId[id]
-		if player:GetAttribute(StatNames.Rank) ~= rank then
+		if player and player:GetAttribute(StatNames.Rank) ~= rank then
 			player:SetAttribute(StatNames.Rank, rank)
 		end
 	end

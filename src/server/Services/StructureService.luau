@@ -375,6 +375,29 @@ local function create(
 	return true
 end
 
+-- Dono das peças de um bot (BotService): o bot não é um Player, mas as peças
+-- guardam o dono como Player. Quem lê o dono de fogueira/bancada só usa
+-- UserId (negativo = ninguém é aliado) ou a tabela como chave, então o bot
+-- entra com esta "ficha" no lugar do Player. Só fogueira e bancada.
+export type BotOwner = { UserId: number, Name: string }
+local BOT_KINDS: { [string]: boolean } = { fire = true, station = true }
+
+-- Coloca `itemId` (campfire, workbench) para um bot em (x, z), se o lugar está
+-- livre pelas mesmas regras do jogador. true = colocou.
+function StructureService.placeForBot(owner: BotOwner, itemId: string, x: number, z: number, yaw: number): boolean
+	local item = Defs.Items[itemId]
+	local def = if item and item.category == "placeable" then item.structure else nil
+	if def == nil or not BOT_KINDS[def.kind] then
+		return false
+	end
+	local player = owner :: any
+	local radius = BuildRules.radiusOf(def)
+	if not canPlace(player, def.kind, x, z, radius) then
+		return false
+	end
+	return create(player, itemId, def, x, z, radius, yaw)
+end
+
 -- Tira a peça do mundo agora (como se tivesse sido destruída por fora). Usado
 -- pela pedra da ressurreição gasta (GhostService).
 function StructureService.remove(entry: Entry)
