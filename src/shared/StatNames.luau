@@ -102,6 +102,12 @@ return table.freeze({
 	-- não usou; GroupClaimed = já pegou o prêmio do grupo (Shop/GroupReward).
 	CodeNotice = "CodeNotice",
 	GroupClaimed = "GroupClaimed",
+	-- Bots que parecem jogadores (BotService): tag no modelo do bot e, nele,
+	-- BotScore = pontos (o Score do bot, com teto) e BotId = id negativo único
+	-- (no lugar do UserId no placar e nas posições).
+	BotTag = "Bot",
+	BotScore = "BotScore",
+	BotId = "BotId",
 	-- Item aleatório pago proibido para o jogador (PolicyService), também atributo
 	-- da pasta Shop. Sem resposta ainda ou com erro = true (lado seguro).
 	PaidRandomBlocked = "PaidRandomBlocked",
