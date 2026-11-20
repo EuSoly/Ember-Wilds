@@ -7,8 +7,10 @@
 --   e o boost de XP usam para começar abaixo;
 -- - clicar/tocar na placa abre a lista completa (até LeaderboardRules.LIMIT)
 --   numa janela no meio da tela (sem escurecer o fundo); clicar fora fecha.
--- Pontos = atributo Score de cada Player. A lista é refeita no máximo a cada
+-- Pontos = atributo Score de cada Player; os bots (BotService, tag Bot) entram
+-- com o nome do modelo, o BotScore e o BotId no lugar do UserId. A lista é refeita no máximo a cada
 -- REBUILD_EVERY (os pontos mudam a cada golpe de coleta de qualquer um).
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -118,6 +120,14 @@ local function Leaderboard(): Frame
 			local score = if type(raw) == "number" and raw == raw and raw > 0 then math.floor(raw) else 0
 			table.insert(entries, { name = p.DisplayName, score = score, userId = p.UserId })
 		end
+		for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+			local id = bot:GetAttribute(StatNames.BotId)
+			local raw = bot:GetAttribute(StatNames.BotScore)
+			if type(id) == "number" then
+				local score = if type(raw) == "number" and raw == raw and raw > 0 then math.floor(raw) else 0
+				table.insert(entries, { name = bot.Name, score = score, userId = id })
+			end
+		end
 		all(LeaderboardRules.top(entries, LeaderboardRules.LIMIT, myId))
 		local row = LeaderboardRules.mine(entries, myId)
 		mine(if row then { row } else {})
@@ -162,6 +172,34 @@ local function Leaderboard(): Frame
 			conn:Disconnect()
 		end
 		table.clear(playerConns)
+	end)
+	-- Bots: entram, saem e ganham pontos (o modelo não é previsto pelo cliente,
+	-- então o sinal do atributo chega).
+	local botConns: { [Instance]: RBXScriptConnection } = {}
+	local function watchBot(bot: Instance)
+		if botConns[bot] then
+			botConns[bot]:Disconnect()
+		end
+		botConns[bot] = bot:GetAttributeChangedSignal(StatNames.BotScore):Connect(scheduleRebuild)
+		scheduleRebuild()
+	end
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		watchBot(bot)
+	end
+	vide.cleanup(CollectionService:GetInstanceAddedSignal(StatNames.BotTag):Connect(watchBot))
+	vide.cleanup(CollectionService:GetInstanceRemovedSignal(StatNames.BotTag):Connect(function(bot)
+		local conn = botConns[bot]
+		if conn then
+			conn:Disconnect()
+			botConns[bot] = nil
+		end
+		task.defer(rebuild)
+	end))
+	vide.cleanup(function()
+		for _, conn in botConns do
+			conn:Disconnect()
+		end
+		table.clear(botConns)
 	end)
 	rebuild()
 
