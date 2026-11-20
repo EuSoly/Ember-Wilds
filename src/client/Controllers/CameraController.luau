@@ -12,6 +12,7 @@
 --
 -- Como a câmera nunca gira, "para cima" no joystick/WASD é sempre o -Z do mundo,
 -- que aparece como o topo da tela.
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -60,14 +61,24 @@ local function rootOf(player: Player?): BasePart?
 	return nil
 end
 
--- Jogador que o servidor mandou assistir (atributo do Player: chega no
--- cliente). O personagem dele pode nem ter chegado pelo streaming ainda.
+-- Jogador (ou bot, pelo BotId) que o servidor mandou assistir (atributo do
+-- Player: chega no cliente). O personagem pode nem ter chegado pelo streaming.
 local function spectateRoot(): BasePart?
 	local userId = Players.LocalPlayer:GetAttribute(StatNames.SpectateTarget)
 	if type(userId) ~= "number" or userId == 0 then
 		return nil
 	end
-	return rootOf(Players:GetPlayerByUserId(userId))
+	local player = Players:GetPlayerByUserId(userId)
+	if player then
+		return rootOf(player)
+	end
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		if bot:GetAttribute(StatNames.BotId) == userId then
+			local root = bot:FindFirstChild("HumanoidRootPart")
+			return if root and root:IsA("BasePart") then root else nil
+		end
+	end
+	return nil
 end
 
 type Mode = "own" | "spectate" | "orbit"

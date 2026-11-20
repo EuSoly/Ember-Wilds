@@ -574,8 +574,6 @@ function CrateService.isLocked(model: Model): boolean
 	return entry ~= nil and alive[entry] == true and entry.locked == true
 end
 
--- Tira a caixa deste modelo do mundo, com os itens (o revive devolve os
--- itens pela foto do inventário). Idempotente.
 -- Esvazia e tira a caixa agora, devolvendo o que tinha (bot que matou o mob
 -- pega o loot da caixa dele, BotService). Trancada não entrega nada.
 function CrateService.takeAll(entry: Entry): { Item }
@@ -587,6 +585,8 @@ function CrateService.takeAll(entry: Entry): { Item }
 	return items
 end
 
+-- Tira a caixa deste modelo do mundo, com os itens (o revive devolve os
+-- itens pela foto do inventário). Idempotente.
 function CrateService.removeModel(model: Model)
 	local entry = byModel[model]
 	if entry ~= nil then

@@ -38,6 +38,7 @@ local FAR_THINK_EVERY = 2
 local FAR_RADIUS = 150
 local HIDE_DISTANCE = 120
 local RESPAWN_DELAY = 20
+local BOT_ID_BASE = 1000000
 
 local BotService = {}
 
@@ -71,7 +72,8 @@ local function spawnBot()
 	local name = BotNames.pick(nextNumber, taken)
 	taken[name] = true
 	local spot = SpawnService.forestSpot(nil)
-	local bot = Actor.new(-nextId, name, spot.X, spot.Z, Random.new(rng:NextInteger(1, 2 ^ 30)))
+	-- Ids negativos longe dos jogadores de teste do Studio (-1, -2...).
+	local bot = Actor.new(-(BOT_ID_BASE + nextId), name, spot.X, spot.Z, Random.new(rng:NextInteger(1, 2 ^ 30)))
 	table.insert(bots, bot)
 	byModel[bot.model] = bot
 end
@@ -141,6 +143,18 @@ local function sweepDead()
 	end
 end
 
+-- Roda `fn` de um bot protegido: com erro, avisa e tira só esse bot (a vaga
+-- volta pela conta normal); os outros seguem no mesmo quadro.
+local function guard(bot: Actor.Bot, fn: () -> ())
+	local ok, err = pcall(function()
+		fn()
+	end)
+	if not ok and not bot.dead then
+		warn(`[BotService] {bot.name} deu erro e saiu: {err}`)
+		Actor.remove(bot)
+	end
+end
+
 local moveAcc, survivalAcc, populationAcc = 0, 0, 0
 local costSeconds, costFrames = 0, 0 -- DevBotCost
 
@@ -157,8 +171,11 @@ local function step(dt: number)
 	end
 	if survivalAcc >= SurvivalConfig.TICK then
 		local night = SurvivalService.isNight()
+		local tickDt = survivalAcc
 		for _, bot in bots do
-			Actor.survive(bot, survivalAcc, night)
+			guard(bot, function()
+				Actor.survive(bot, tickDt, night)
+			end)
 		end
 		survivalAcc = 0
 	end
@@ -175,13 +192,16 @@ local function step(dt: number)
 		if bot.dead then
 			continue
 		end
-		if clock >= bot.nextThink then
-			local far = nearestPlayerDistance(bot.x, bot.z) > FAR_RADIUS
-			bot.nextThink = clock + (if far then FAR_THINK_EVERY else THINK_EVERY)
-			Actor.think(bot, now)
-		end
-		local frame = Actor.step(bot, elapsed)
-		if not bot.dead then
+		local frame: CFrame? = nil
+		guard(bot, function()
+			if clock >= bot.nextThink then
+				local far = nearestPlayerDistance(bot.x, bot.z) > FAR_RADIUS
+				bot.nextThink = clock + (if far then FAR_THINK_EVERY else THINK_EVERY)
+				Actor.think(bot, now)
+			end
+			frame = Actor.step(bot, elapsed)
+		end)
+		if frame and not bot.dead then
 			table.insert(parts, bot.root)
 			table.insert(frames, frame)
 		end

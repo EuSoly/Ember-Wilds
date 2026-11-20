@@ -21,14 +21,21 @@ Números para mexer (`src/shared/Bots/BotRules.luau`):
 
 Na ordem: briga com quem provocou (foge com vida abaixo de 30%) → mob perigoso (luta armado com vida acima de 50%, senão foge) → noite ou frio (vai para a fogueira perto ou coloca uma) → fome (come, caça ou pega frutinha; de dia guarda 2 comidas) → escada de itens (`BotLadder`: picareta e espada de madeira, picareta e espada de pedra, capacete de madeira e de pedra; coloca a bancada quando a receita pede) → coleta.
 
-Mesmas regras do jogador: fome, frio, receitas, rendimento da coleta, dano das armas e defesa da armadura. A sede não é simulada (fica cheia). Nada do bot é salvo.
+Mesmas regras do jogador: fome, frio, receitas, rendimento da coleta, dano das armas e defesa da armadura. A sede não é simulada (fica cheia). Craft não dá pontos (nem para o jogador). Nada do bot é salvo.
+
+- Provocado ou com bicho perigoso perto, larga o craft (devolve os ingredientes) e reage.
+- Inventário cheio: joga fora metade do item que mais tem; só crafta se o resultado couber.
+- Um erro num bot tira só esse bot (aviso no Output); os outros seguem.
 
 ## Para quem joga
 
 - Mesmo boneco, nome em cima, skin e mochila sorteadas entre as que saem nos giros (nunca Limitadas).
 - Matar bot: caixa com o que ele tinha e o bônus de kill de sempre (com o teto acima). Não conta em missão, estatística nem ranking.
 - Bot que mata alguém aparece na tela de morte como "Causa: NomeDoBot".
-- Mobs atacam bots, e bots caçam bicho fraco para comer.
+- Mobs atacam bots e reagem ao golpe deles (coelho foge, lobo vira para o bot); bots caçam bicho fraco para comer e ficam parados na teia.
+- **Câmera do menu:** quem está no menu ou na tela de morte também assiste bots vivos, como assiste jogadores (`SpectateService`; o atributo `SpectateTarget` leva o `BotId`).
+- Bots ficam dentro da floresta (as barras deles usam os números da floresta).
+- Ids dos bots: −1.000.001, −1.000.002… (longe dos jogadores de teste do Studio, −1, −2…).
 
 ## Onde fica cada coisa
 

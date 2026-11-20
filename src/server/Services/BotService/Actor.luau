@@ -126,6 +126,19 @@ local function addItem(bot: Bot, id: string, count: number): number
 	return count - left
 end
 
+-- Abre espaço: metade da pilha do item que o bot mais tem.
+local function makeRoom(bot: Bot)
+	local bestId, bestCount = nil, 0
+	for id, count in Actor.counts(bot) do
+		if count > bestCount then
+			bestId, bestCount = id, count
+		end
+	end
+	if bestId then
+		Inventory.remove(bot.inv, bestId, math.max(1, bestCount // 2))
+	end
+end
+
 -- O id do inventário com a maior nota (nil se nenhum tem nota).
 local function best(bot: Bot, score: (Defs.ItemDef) -> number?): string?
 	local bestId, bestScore = nil, -math.huge
@@ -192,7 +205,20 @@ local function serverNow(): number
 	return Workspace:GetServerTimeNow()
 end
 
+-- Fora da floresta também é bloqueado: as barras do bot usam os números da
+-- floresta (o único bioma jogável), então ele não sai dela.
+local FOREST = WorldConfig.BIOMES.forest
+local FOREST_EDGE = 8
+
 local function blocked(x: number, z: number): boolean
+	if
+		x < FOREST.minX + FOREST_EDGE
+		or x > FOREST.maxX - FOREST_EDGE
+		or z < FOREST.minZ + FOREST_EDGE
+		or z > FOREST.maxZ - FOREST_EDGE
+	then
+		return true
+	end
 	return MapService.isBlockedAt(x, z) or WaterSim.isWaterAt(x, z)
 end
 
@@ -415,6 +441,13 @@ local function startCraft(bot: Bot, recipeId: string): boolean
 			return false
 		end
 	end
+	-- O resultado tem de caber (senão o craft se perderia).
+	if Inventory.spaceFor(bot.inv, recipe.result, maxStackOf(recipe.result)) < recipe.count then
+		makeRoom(bot)
+		if Inventory.spaceFor(bot.inv, recipe.result, maxStackOf(recipe.result)) < recipe.count then
+			return false
+		end
+	end
 	for _, ingredient in recipe.ingredients do
 		Inventory.remove(bot.inv, ingredient.id, ingredient.count)
 	end
@@ -459,10 +492,24 @@ local function eat(bot: Bot, itemId: string)
 end
 
 function Actor.think(bot: Bot, now: number)
-	if bot.dead or bot.craft ~= nil then
+	if bot.dead then
 		return
 	end
-	local decision = BotBrain.decide(Actor.snapshot(bot, now))
+	local snapshot = Actor.snapshot(bot, now)
+	local craft = bot.craft
+	if craft ~= nil then
+		-- Craftando: só larga o craft (devolve os ingredientes) se provocado ou com
+		-- bicho perigoso perto.
+		if snapshot.provoker == nil and not snapshot.threat then
+			return
+		end
+		for _, ingredient in craft.recipe.ingredients do
+			addItem(bot, ingredient.id, ingredient.count)
+		end
+		bot.craft = nil
+		bot.placeAfterCraft = nil
+	end
+	local decision = BotBrain.decide(snapshot)
 	-- Travado: o recurso, o bicho ou a fogueira atual fica de lado por um tempo.
 	local stuckOn = bot.target and (bot.target.resource or bot.target.mob or bot.target.fire)
 	if decision.goal == "wander" and stuckOn then
@@ -638,11 +685,17 @@ local function hit(bot: Bot, target: Target)
 			return
 		end
 		local given = addItem(bot, entry.gather.item, math.min(yield, entry.amount))
-		GatherService.resourceFx(entry, bot.x, bot.z)
 		if given <= 0 then
-			bot.nextThink = 0 -- inventário cheio: o cérebro decide outra coisa
-			return
+			-- Inventário cheio (escada completa, coletando só por pontos): joga
+			-- fora metade do que mais tem (ninguém vê) e bate de novo.
+			makeRoom(bot)
+			given = addItem(bot, entry.gather.item, math.min(yield, entry.amount))
+			if given <= 0 then
+				bot.nextThink = 0
+				return
+			end
 		end
+		GatherService.resourceFx(entry, bot.x, bot.z)
 		ResourceService.take(entry, given)
 		addScore(bot, given * entry.gather.points)
 		bot.progressAt = os.clock()
@@ -653,7 +706,7 @@ local function hit(bot: Bot, target: Target)
 			return
 		end
 		local before = cratesNear(mob.x, mob.z)
-		MobService.damage(mob, MobRules.damageOf(tool, armorDef(bot)), nil)
+		MobService.damage(mob, MobRules.damageOf(tool, armorDef(bot)), nil, bot.model)
 		bot.progressAt = os.clock()
 		if mob.dead then
 			addScore(bot, mob.stats.points)
@@ -717,7 +770,10 @@ function Actor.step(bot: Bot, dt: number): CFrame
 				bot.bestDistance = d
 				bot.progressAt = os.clock()
 			end
-			if d > target.stop + ARRIVE_SLACK then
+			local webbed = MobRules.isWebbed(bot.model:GetAttribute(StatNames.WebbedUntil), serverNow())
+			if d > target.stop + ARRIVE_SLACK and webbed then
+				face(bot, target.x, target.z) -- preso na teia: só vira
+			elseif d > target.stop + ARRIVE_SLACK then
 				local speed = WorldConfig.WALK_SPEED * HeldItem.speedFactor(heldDef(bot))
 				local dirX, dirZ = target.x - bot.x, target.z - bot.z
 				local stepLength = math.min(speed * dt, d - target.stop)
@@ -847,6 +903,11 @@ function Actor.hurt(bot: Bot, amount: number, kind: string, attacker: Player?)
 		end
 	end
 	local now = serverNow()
+	for who in bot.provoke do
+		if typeof(who) == "Instance" and who.Parent ~= Players then
+			bot.provoke[who] = nil
+		end
+	end
 	if attacker and kind == "player" and aimedAt(bot, attacker) then
 		BotRules.recordHit(bot.provoke, attacker, now)
 		if BotRules.provoked(bot.provoke, attacker, now) then

@@ -836,20 +836,20 @@ function MobService.list(): { Mob }
 end
 
 -- Dano genérico (espinho: attacker nil, sem pontos nem reação de perseguir).
--- Morto não apanha de novo: pontos e remoção só uma vez.
-function MobService.damage(mob: Mob, amount: number, attacker: Player?)
+-- Morto não apanha de novo: pontos e remoção só uma vez. `attackerCharacter`:
+-- quem bateu sem ser Player (bot do BotService), para o mob reagir a ele
+-- (fugir ou perseguir) como reage a um jogador; pontos continuam só de Player.
+function MobService.damage(mob: Mob, amount: number, attacker: Player?, attackerCharacter: Model?)
 	if mob.dead or not (amount > 0) then
 		return
 	end
 	mob.health -= amount
 	mob.hurts += 1
 	mob.root:SetAttribute(StatNames.MobHurt, mob.hurts)
-	if attacker then
-		local character = attacker.Character
-		local root = rootOf(character)
-		if character and root then
-			MobBrain.onHit(mob.brain, mob.def, character, root.Position.X, root.Position.Z, os.clock())
-		end
+	local character = if attacker then attacker.Character else attackerCharacter
+	local root = rootOf(character)
+	if character and root then
+		MobBrain.onHit(mob.brain, mob.def, character, root.Position.X, root.Position.Z, os.clock())
 	end
 	if mob.health <= 0 then
 		die(mob, attacker)

@@ -11,6 +11,9 @@
 --
 -- O alvo troca a cada SWITCH_SECONDS (uma única thread) e, entre as trocas, só
 -- muda se o atual morrer ou sair. Bonecos de teste não contam (não são jogadores).
+-- Bots vivos (BotService, tag Bot) também são assistidos, como jogadores: o
+-- atributo leva o BotId (negativo) no lugar do UserId.
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -25,9 +28,11 @@ local SpectateService = {}
 local anchor: Part
 local refreshQueued = false
 
-local function rootOf(player: Player): BasePart?
-	local character = player.Character
-	if character == nil then
+-- Quem dá para assistir: um jogador ou um bot (o modelo dele).
+type Watchable = { id: number, character: Model? }
+
+local function rootOfCharacter(character: Model?): BasePart?
+	if character == nil or character.Parent == nil then
 		return nil
 	end
 	local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -38,23 +43,33 @@ local function rootOf(player: Player): BasePart?
 	return if root and root:IsA("BasePart") then root else nil
 end
 
-local function aliveOthers(viewer: Player): { Player }
-	local list: { Player } = {}
+local function rootOf(player: Player): BasePart?
+	return rootOfCharacter(player.Character)
+end
+
+local function aliveOthers(viewer: Player): { Watchable }
+	local list: { Watchable } = {}
 	for _, other in Players:GetPlayers() do
 		-- Parent ~= Players: está saindo (o PlayerRemoving ainda não terminou).
 		if other ~= viewer and other.Parent == Players and rootOf(other) ~= nil then
-			table.insert(list, other)
+			table.insert(list, { id = other.UserId, character = other.Character })
+		end
+	end
+	for _, bot in CollectionService:GetTagged(StatNames.BotTag) do
+		local id = bot:GetAttribute(StatNames.BotId)
+		if bot:IsA("Model") and type(id) == "number" and rootOfCharacter(bot) ~= nil then
+			table.insert(list, { id = id, character = bot })
 		end
 	end
 	return list
 end
 
-local function setTarget(viewer: Player, target: Player?)
-	local userId = if target then target.UserId else 0
+local function setTarget(viewer: Player, target: Watchable?)
+	local userId = if target then target.id else 0
 	if viewer:GetAttribute(StatNames.SpectateTarget) ~= userId then
 		viewer:SetAttribute(StatNames.SpectateTarget, userId)
 	end
-	local focus: Instance = if target then rootOf(target) :: BasePart else anchor
+	local focus: Instance = if target then rootOfCharacter(target.character) :: BasePart else anchor
 	if viewer.ReplicationFocus ~= focus then
 		viewer.ReplicationFocus = focus
 	end
@@ -78,9 +93,9 @@ local function refreshAll(rotate: boolean)
 
 		local candidates = aliveOthers(viewer)
 		local currentId = viewer:GetAttribute(StatNames.SpectateTarget)
-		local current: Player? = nil
+		local current: Watchable? = nil
 		for _, candidate in candidates do
-			if candidate.UserId == currentId then
+			if candidate.id == currentId then
 				current = candidate
 			end
 		end
@@ -94,7 +109,7 @@ local function refreshAll(rotate: boolean)
 			if current ~= nil and #candidates > 1 then
 				pool = {}
 				for _, candidate in candidates do
-					if candidate ~= current then
+					if candidate.id ~= (current :: Watchable).id then
 						table.insert(pool, candidate)
 					end
 				end
@@ -156,6 +171,9 @@ function SpectateService.Start(_self)
 		setupPlayer(player)
 	end
 	Players.PlayerRemoving:Connect(queueRefresh)
+	-- Bot morreu ou saiu: quem o assistia troca na hora.
+	CollectionService:GetInstanceRemovedSignal(StatNames.BotTag):Connect(queueRefresh)
+	CollectionService:GetInstanceAddedSignal(StatNames.BotTag):Connect(queueRefresh)
 
 	task.spawn(function()
 		while true do
