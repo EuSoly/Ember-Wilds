@@ -111,6 +111,11 @@ local function fireAround(position: Vector3): (boolean, boolean)
 	return near, on
 end
 
+-- Para os bots (BotService), que têm barras próprias: as mesmas contas de
+-- noite e de calor do jogador.
+SurvivalService.isNight = isNight
+SurvivalService.fireAround = fireAround
+
 local function step(player: Player, dt: number, night: boolean)
 	-- Fantasma: as barras não mudam (GhostService).
 	if GhostRules.isGhostPlayer(player, Workspace:GetServerTimeNow()) then

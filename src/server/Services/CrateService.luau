@@ -576,6 +576,17 @@ end
 
 -- Tira a caixa deste modelo do mundo, com os itens (o revive devolve os
 -- itens pela foto do inventário). Idempotente.
+-- Esvazia e tira a caixa agora, devolvendo o que tinha (bot que matou o mob
+-- pega o loot da caixa dele, BotService). Trancada não entrega nada.
+function CrateService.takeAll(entry: Entry): { Item }
+	if entry.locked then
+		return {}
+	end
+	local items = table.clone(entry.slots)
+	remove(entry)
+	return items
+end
+
 function CrateService.removeModel(model: Model)
 	local entry = byModel[model]
 	if entry ~= nil then

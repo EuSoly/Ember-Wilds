@@ -67,6 +67,22 @@ return {
 		expect(BotBrain.decide(snap({ isNight = true, nearFire = true })), "warm")
 	end,
 
+	["night by the fire: starving and warm enough leaves to find food"] = function()
+		expect(BotBrain.decide(snap({ isNight = true, nearFire = true, hunger = 15, cold = 80 })), "gather", "berry")
+		expect(
+			BotBrain.decide(snap({ isNight = true, nearFire = true, hunger = 15, cold = 80, hasWeapon = true })),
+			"hunt"
+		)
+		expect(BotBrain.decide(snap({ isNight = true, nearFire = true, hunger = 15, cold = 30 })), "warm")
+		expect(BotBrain.decide(snap({ isNight = true, nearFire = true, hunger = 60, cold = 80 })), "warm")
+	end,
+
+	["daytime: keeps a food stock before the ladder"] = function()
+		expect(BotBrain.decide(snap({ hunger = 60, counts = { wood = 10 } })), "gather", "berry")
+		expect(BotBrain.decide(snap({ hunger = 60, counts = { wood = 10, berry = 3 } })), "craft", "wood_pickaxe")
+		expect(BotBrain.decide(snap({ hunger = 90, counts = { wood = 10 } })), "craft", "wood_pickaxe")
+	end,
+
 	["hungry: eats food, hunts armed, else gathers berries"] = function()
 		expect(BotBrain.decide(snap({ hunger = 30, food = "berry" })), "eat", "berry")
 		expect(BotBrain.decide(snap({ hunger = 30, hasWeapon = true })), "hunt")

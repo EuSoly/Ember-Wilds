@@ -33,6 +33,9 @@ export type Decision = { goal: Goal, item: string? }
 local LOW_HEALTH = 0.3 -- briga: abaixo disso foge
 local SAFE_HEALTH = 0.5 -- mob: só enfrenta acima disso
 local LOW_HUNGER = 0.4
+local STARVING = 0.2 -- de noite, abaixo disso sai do fogo atrás de comida (se o frio deixa)
+local STOCK_HUNGER = 0.7 -- de dia, abaixo disso e sem estoque, junta comida antes da escada
+local FOOD_STOCK = 2 -- quantas comidas ele gosta de ter guardadas
 local LOW_COLD = 0.4
 local STUCK_SECONDS = 6
 -- Ordem de coleta quando falta mais de um ingrediente cru.
@@ -90,6 +93,21 @@ local function ladder(s: Snapshot): Decision
 	return { goal = "craft", item = step }
 end
 
+local function foodCount(counts: { [string]: number }): number
+	local total = 0
+	for id, count in counts do
+		local def = Defs.Items[id]
+		if def and def.food and (def.food.hunger or 0) > 0 then
+			total += count
+		end
+	end
+	return total
+end
+
+local function findFood(s: Snapshot): Decision
+	return if s.hasWeapon then { goal = "hunt" } else { goal = "gather", item = "berry" }
+end
+
 local function choose(s: Snapshot): Decision
 	local healthMax = StatNames.HealthMax
 	local statusMax = StatNames.StatusMax
@@ -106,6 +124,10 @@ local function choose(s: Snapshot): Decision
 			if s.hunger < LOW_HUNGER * statusMax and s.food then
 				return { goal = "eat", item = s.food }
 			end
+			-- Morrendo de fome e ainda quente: sai rápido atrás de comida.
+			if s.hunger < STARVING * statusMax and not cold then
+				return findFood(s)
+			end
 			return { goal = "warm" }
 		end
 		return placeOrGather("campfire", s.counts)
@@ -114,7 +136,11 @@ local function choose(s: Snapshot): Decision
 		if s.food then
 			return { goal = "eat", item = s.food }
 		end
-		return if s.hasWeapon then { goal = "hunt" } else { goal = "gather", item = "berry" }
+		return findFood(s)
+	end
+	-- Estoque para a noite (no fogo ele não sai para comer).
+	if s.hunger < STOCK_HUNGER * statusMax and foodCount(s.counts) < FOOD_STOCK then
+		return { goal = "gather", item = "berry" }
 	end
 	return ladder(s)
 end
