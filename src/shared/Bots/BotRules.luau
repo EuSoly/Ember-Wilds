@@ -40,6 +40,13 @@ function BotRules.addScore(score: number, points: number): number
 	return math.min(score + points, BotRules.BOT_SCORE_CAP)
 end
 
+-- O golpe em área acerta tudo no círculo: quem coleta na árvore ao lado do
+-- bot acerta o bot sem querer. Conta como provocação só se o bot estava mais
+-- perto do centro do golpe que o recurso mais perto (nil = nenhum recurso).
+function BotRules.aimedAtBot(botDistance: number, resourceDistance: number?): boolean
+	return resourceDistance == nil or botDistance <= resourceDistance
+end
+
 -- Guarda um golpe de `attacker` (só os da janela ficam).
 function BotRules.recordHit(state: Provoke, attacker: any, now: number)
 	local kept: { number } = {}

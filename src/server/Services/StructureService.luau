@@ -87,6 +87,8 @@ local byModel: { [Model]: Entry } = {}
 local owned: { [Player]: { [Entry]: boolean } } = {}
 local counts: { [Player]: number } = {}
 local createdListeners: { (Entry) -> () } = {}
+-- Donos que são bots (placeForBot): as tabelas deles são limpas quando ficam vazias.
+local botOwners: { [any]: boolean } = {}
 local removedListeners: { (Entry) -> () } = {}
 local folder: Folder? = nil
 -- Giro escolhido (passos de BuildRules.ROTATE_STEP) por jogador; nil = 0.
@@ -172,6 +174,12 @@ local function remove(entry: Entry)
 	if mine and mine[entry] then
 		mine[entry] = nil
 		counts[entry.owner] = math.max((counts[entry.owner] or 1) - 1, 0)
+		-- Dono bot sem peças: some das tabelas (bots vêm e vão o jogo todo).
+		if botOwners[entry.owner] and next(mine) == nil then
+			owned[entry.owner] = nil
+			counts[entry.owner] = nil
+			botOwners[entry.owner] = nil
+		end
 	end
 	for _, listener in removedListeners do
 		local ok, err = pcall(listener :: any, entry)
@@ -395,7 +403,26 @@ function StructureService.placeForBot(owner: BotOwner, itemId: string, x: number
 	if not canPlace(player, def.kind, x, z, radius) then
 		return false
 	end
+	botOwners[owner] = true
 	return create(player, itemId, def, x, z, radius, yaw)
+end
+
+-- Bot morreu ou saiu: some com as peças dele, menos as do tipo `keepKind`
+-- (a fogueira apaga sozinha no tempo dela).
+function StructureService.removeBotPieces(owner: BotOwner, keepKind: string?)
+	local mine = owned[owner :: any]
+	if mine == nil then
+		return
+	end
+	local list = {}
+	for entry in mine do
+		if entry.def.kind ~= keepKind then
+			table.insert(list, entry)
+		end
+	end
+	for _, entry in list do
+		remove(entry)
+	end
 end
 
 -- Tira a peça do mundo agora (como se tivesse sido destruída por fora). Usado

@@ -104,6 +104,11 @@ return {
 		expect(BotBrain.decide(snap({ counts = { wood = 3 }, stuckSeconds = 6 })), "wander")
 	end,
 
+	["stuck hunting or walking to a fire: wanders too"] = function()
+		expect(BotBrain.decide(snap({ hunger = 30, hasWeapon = true, stuckSeconds = 6 })), "wander")
+		expect(BotBrain.decide(snap({ isNight = true, fireNearby = true, stuckSeconds = 6 })), "wander")
+	end,
+
 	["ladder done: keeps gathering for points"] = function()
 		local all = {}
 		for _, id in BotLadder.STEPS do

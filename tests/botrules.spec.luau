@@ -54,6 +54,12 @@ return {
 		assert(not BotRules.provoked(mixed, b, 101), "atacantes diferentes não somam (b)")
 	end,
 
+	["aimed: a hit counts only when no resource is nearer to the swing than the bot"] = function()
+		assert(BotRules.aimedAtBot(1.5, nil), "nada em volta: mirou no bot")
+		assert(BotRules.aimedAtBot(1.5, 3), "bot mais perto do golpe que a árvore")
+		assert(not BotRules.aimedAtBot(2.5, 0.5), "árvore mais perto: golpe era na árvore")
+	end,
+
 	["names: Roblox style, never repeated"] = function()
 		local rng = Rng.new(7)
 		local function nextNumber(): number

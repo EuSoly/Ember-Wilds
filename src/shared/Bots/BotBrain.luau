@@ -147,8 +147,10 @@ end
 
 function BotBrain.decide(s: Snapshot): Decision
 	local decision = choose(s)
-	-- Preso indo até um recurso: anda um pouco para outro lado e tenta outro.
-	if decision.goal == "gather" and s.stuckSeconds >= STUCK_SECONDS then
+	-- Preso indo até um recurso, um bicho ou uma fogueira (do outro lado da
+	-- água, atrás de parede): anda um pouco para outro lado e tenta outro.
+	local goal = decision.goal
+	if (goal == "gather" or goal == "hunt" or goal == "warm") and s.stuckSeconds >= STUCK_SECONDS then
 		return { goal = "wander" }
 	end
 	return decision

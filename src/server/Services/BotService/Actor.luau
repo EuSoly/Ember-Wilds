@@ -60,6 +60,7 @@ local PLACE_DISTANCE = 3.5 -- fogueira/bancada a essa distância à frente
 local BODY_RADIUS = BuildRules.PLAYER_RADIUS
 local LOOT_RADIUS = 5 -- caixa do mob que o bot matou: até essa distância do mob
 local ARRIVE_SLACK = 0.5 -- chegou se está até isso além do ponto de parada
+local PLAYER_SPACE = 6 -- não disputa recurso com jogador a menos disso dele
 
 local HAND_DAMAGE = MobRules.damageOf(nil, nil)
 
@@ -71,6 +72,7 @@ export type Target = {
 	resource: ResourceService.Entry?,
 	mob: MobService.Mob?,
 	character: Model?,
+	fire: StructureService.Entry?, -- "warm": a fogueira para onde vai
 }
 
 export type Bot = {
@@ -262,7 +264,7 @@ end
 local function nearestFire(bot: Bot, radius: number): StructureService.Entry?
 	local found, bestD = nil, math.huge
 	for _, entry in StructureService.near(bot.x, bot.z, radius) do
-		if entry.def.kind == "fire" then
+		if entry.def.kind == "fire" and (bot.avoid[entry] or 0) < os.clock() then
 			local d = distance(entry.x, entry.z, bot.x, bot.z)
 			if d < bestD then
 				found, bestD = entry, d
@@ -297,6 +299,16 @@ local function activeProvoker(bot: Bot, now: number): (Player?, BasePart?)
 	return player, root
 end
 
+-- Tempo sem chegar mais perto do alvo; parado no alvo (na fogueira, batendo
+-- na árvore) não conta como travado.
+local function stuckSeconds(bot: Bot): number
+	local target = bot.target
+	if target == nil or distance(target.x, target.z, bot.x, bot.z) <= target.stop + ARRIVE_SLACK then
+		return 0
+	end
+	return os.clock() - bot.progressAt
+end
+
 function Actor.snapshot(bot: Bot, now: number): BotBrain.Snapshot
 	local counts = Actor.counts(bot)
 	local nearStation: { [string]: boolean } = {}
@@ -321,7 +333,7 @@ function Actor.snapshot(bot: Bot, now: number): BotBrain.Snapshot
 		threat = threatOf(bot) ~= nil,
 		hasWeapon = weaponOf(bot) ~= nil,
 		food = bestFood(counts),
-		stuckSeconds = if bot.target then os.clock() - bot.progressAt else 0,
+		stuckSeconds = stuckSeconds(bot),
 	}
 end
 
@@ -336,7 +348,7 @@ local function sameTarget(a: Target?, b: Target?): boolean
 	if a.kind == "point" then
 		return math.abs(a.x - b.x) < 1 and math.abs(a.z - b.z) < 1
 	end
-	return a.resource == b.resource and a.mob == b.mob and a.character == b.character
+	return a.resource == b.resource and a.mob == b.mob and a.character == b.character and a.fire == b.fire
 end
 
 local function setTarget(bot: Bot, target: Target?)
@@ -348,12 +360,28 @@ local function setTarget(bot: Bot, target: Target?)
 	end
 end
 
+-- Algum jogador vivo a menos de `radius` de (x, z)?
+local function playerNear(x: number, z: number, radius: number): boolean
+	for _, player in Players:GetPlayers() do
+		local root = rootOf(player.Character)
+		if root and distance(root.Position.X, root.Position.Z, x, z) <= radius then
+			return true
+		end
+	end
+	return false
+end
+
 local function findResource(bot: Bot, item: string): (ResourceService.Entry?, string?)
 	local clock = os.clock()
 	for _, radius in SEARCH_RADII do
 		local found, tool, bestD = nil, nil, math.huge
 		for _, entry in ResourceService.near(bot.x, bot.z, radius) do
-			if entry.gather.item == item and entry.amount > 0 and (bot.avoid[entry] or 0) < clock then
+			if
+				entry.gather.item == item
+				and entry.amount > 0
+				and (bot.avoid[entry] or 0) < clock
+				and not playerNear(entry.x, entry.z, entry.radius + PLAYER_SPACE)
+			then
 				local toolId = toolFor(bot, entry.gather)
 				local toolDef = if toolId then Defs.Items[toolId] else nil
 				if GatherRules.yield(toolDef, entry.gather) ~= nil then
@@ -435,9 +463,15 @@ function Actor.think(bot: Bot, now: number)
 		return
 	end
 	local decision = BotBrain.decide(Actor.snapshot(bot, now))
-	-- Travado: o recurso atual fica de lado por um tempo.
-	if decision.goal == "wander" and bot.target and bot.target.resource then
-		bot.avoid[bot.target.resource] = os.clock() + AVOID_SECONDS
+	-- Travado: o recurso, o bicho ou a fogueira atual fica de lado por um tempo.
+	local stuckOn = bot.target and (bot.target.resource or bot.target.mob or bot.target.fire)
+	if decision.goal == "wander" and stuckOn then
+		bot.avoid[stuckOn] = os.clock() + AVOID_SECONDS
+	end
+	for key, untilAt in bot.avoid do
+		if untilAt < os.clock() then
+			bot.avoid[key] = nil
+		end
 	end
 	local goal: BotBrain.Goal = decision.goal
 	local item = decision.item
@@ -477,7 +511,7 @@ function Actor.think(bot: Bot, now: number)
 		local fire = nearestFire(bot, FIRE_SEEK)
 		equip(bot, weaponOf(bot))
 		if fire then
-			setTarget(bot, { kind = "point", x = fire.x, z = fire.z, stop = FIRE_STOP + fire.radius })
+			setTarget(bot, { kind = "point", x = fire.x, z = fire.z, stop = FIRE_STOP + fire.radius, fire = fire })
 		else
 			setTarget(bot, nil)
 		end
@@ -515,7 +549,7 @@ function Actor.think(bot: Bot, now: number)
 	elseif goal == "hunt" then
 		local found, bestD = nil, math.huge
 		for _, mob in MobService.near(bot.x, bot.z, HUNT_RADIUS) do
-			if not mob.dead and not mob.flying and mob.stats.bite == nil then
+			if not mob.dead and not mob.flying and mob.stats.bite == nil and (bot.avoid[mob] or 0) < os.clock() then
 				local d = distance(mob.x, mob.z, bot.x, bot.z)
 				if d < bestD then
 					found, bestD = mob, d
@@ -564,10 +598,32 @@ local function finishCraft(bot: Bot)
 	bot.nextThink = 0
 end
 
-local function lootNear(bot: Bot, x: number, z: number)
+-- Caixas perto do mob antes do golpe (a de morte de um jogador, um item
+-- largado): o bot só pega a caixa nova, a que o mob soltou ao morrer.
+local function cratesNear(x: number, z: number): { [any]: boolean }
+	local set: { [any]: boolean } = {}
 	for _, crate in CrateService.near(x, z, LOOT_RADIUS) do
-		for _, item in CrateService.takeAll(crate) do
-			addItem(bot, item.id, item.count)
+		set[crate] = true
+	end
+	return set
+end
+
+-- Pega a caixa que o mob soltou, se tudo cabe (senão deixa para quem passar).
+local function lootNew(bot: Bot, x: number, z: number, before: { [any]: boolean })
+	for _, crate in CrateService.near(x, z, LOOT_RADIUS) do
+		if before[crate] then
+			continue
+		end
+		local fits = true
+		for _, item in crate.slots do
+			if Inventory.spaceFor(bot.inv, item.id, maxStackOf(item.id)) < item.count then
+				fits = false
+			end
+		end
+		if fits then
+			for _, item in CrateService.takeAll(crate) do
+				addItem(bot, item.id, item.count)
+			end
 		end
 	end
 end
@@ -596,11 +652,12 @@ local function hit(bot: Bot, target: Target)
 			bot.nextThink = 0
 			return
 		end
+		local before = cratesNear(mob.x, mob.z)
 		MobService.damage(mob, MobRules.damageOf(tool, armorDef(bot)), nil)
 		bot.progressAt = os.clock()
 		if mob.dead then
 			addScore(bot, mob.stats.points)
-			lootNear(bot, mob.x, mob.z)
+			lootNew(bot, mob.x, mob.z, before)
 			bot.nextThink = 0
 		end
 	elseif target.kind == "character" then
@@ -743,7 +800,39 @@ local function die(bot: Bot, killer: Player?)
 	if killer and killer.Parent == Players and killer.Character ~= nil then
 		ScoreService.add(killer, CrateRules.killBonus(bot.score))
 	end
+	-- A bancada some com ele; a fogueira apaga sozinha no tempo dela.
+	StructureService.removeBotPieces(bot.owner, "fire")
 	bot.model:Destroy()
+end
+
+-- O golpe do jogador era no bot ou no recurso do lado? (Golpe em área: quem
+-- coleta na mesma árvore acerta o bot sem querer.) Refaz o centro do golpe
+-- como o GatherService: da raiz, na direção em que olha, HIT_REACH + alcance.
+local function aimedAt(bot: Bot, attacker: Player): boolean
+	local character = attacker.Character
+	local root = rootOf(character)
+	if character == nil or root == nil then
+		return true
+	end
+	local look = root.CFrame.LookVector
+	local flat = Vector3.new(look.X, 0, look.Z)
+	if flat.Magnitude < 1e-3 then
+		return true
+	end
+	local equipped = character:GetAttribute(StatNames.Equipped)
+	local held = if type(equipped) == "string" then Defs.Items[equipped] else nil
+	local reach = GatherRules.HIT_REACH + HeldItem.reach(held)
+	local dir = flat.Unit
+	local px, pz = root.Position.X + dir.X * reach, root.Position.Z + dir.Z * reach
+	local botDistance = math.max(distance(bot.x, bot.z, px, pz) - BODY_RADIUS, 0)
+	local resourceDistance: number? = nil
+	for _, entry in ResourceService.near(px, pz, GatherRules.HIT_RADIUS) do
+		local d = math.max(distance(entry.x, entry.z, px, pz) - entry.radius, 0)
+		if resourceDistance == nil or d < resourceDistance then
+			resourceDistance = d
+		end
+	end
+	return BotRules.aimedAtBot(botDistance, resourceDistance)
 end
 
 -- Dano vindo do CharacterService.hurt (golpe de jogador, mordida, barras).
@@ -758,7 +847,7 @@ function Actor.hurt(bot: Bot, amount: number, kind: string, attacker: Player?)
 		end
 	end
 	local now = serverNow()
-	if attacker and kind == "player" then
+	if attacker and kind == "player" and aimedAt(bot, attacker) then
 		BotRules.recordHit(bot.provoke, attacker, now)
 		if BotRules.provoked(bot.provoke, attacker, now) then
 			bot.provoker = attacker
@@ -814,7 +903,7 @@ end
 -- Sai do jogo (sobrou bot): some com o corpo e as peças dele.
 function Actor.remove(bot: Bot)
 	bot.dead = true
-	StructureService.removeOwned(bot.owner :: any)
+	StructureService.removeBotPieces(bot.owner, nil)
 	if bot.model.Parent then
 		bot.model:Destroy()
 	end
